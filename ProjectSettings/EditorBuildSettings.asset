@@ -6,7 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/JellyGarden/Scenes/main.unity
+    guid: 5a1da6f22e6f4dd48919e014948915b4
+  - enabled: 1
+    path: Assets/JellyGarden/Scenes/game.unity
+    guid: e1598a256fd12c548bf8bcbe4d821fe7
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 4366d55c3ac544935910fb67eece7332,
+      type: 3}

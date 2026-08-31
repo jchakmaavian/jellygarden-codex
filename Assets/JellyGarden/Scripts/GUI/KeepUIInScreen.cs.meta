@@ -1,0 +1,10 @@
+﻿fileFormatVersion: 2
+guid: 0f5fe096a1984427b3710449e2f6f7b6
+timeCreated: 1576772861
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/GUI/KeepUIInScreen.cs
+  uploadId: 894794

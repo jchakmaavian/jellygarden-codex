@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: a40c9c2c428a705468855dda352c0a68
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Animation/button_controller.controller
+  uploadId: 894794

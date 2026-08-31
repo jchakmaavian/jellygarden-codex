@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 1838efbf74cbf4b25843f6a86adb8be9
+timeCreated: 1475670386
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/Integrations/Network/NetworkFriendsManager.cs
+  uploadId: 894794

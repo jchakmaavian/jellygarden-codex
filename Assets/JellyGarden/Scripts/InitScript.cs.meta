@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b04bb4abd8356e04894093fdaaa1805b
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 950
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/InitScript.cs
+  uploadId: 894794

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: a68584ad045a5cd418030d966aa695b3
+timeCreated: 1461047890
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/GUI/Avatar/FriendAvatar.cs
+  uploadId: 894794

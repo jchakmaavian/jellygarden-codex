@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9da349f92f12c4122bd4f500a7eaafd0
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Resources/Targets/TargetBlocks.prefab
+  uploadId: 894794

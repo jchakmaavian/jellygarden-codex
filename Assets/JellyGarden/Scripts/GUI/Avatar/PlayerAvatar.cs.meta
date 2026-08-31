@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 77e8d85adcb576249a115933a953924d
+timeCreated: 1459776759
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/GUI/Avatar/PlayerAvatar.cs
+  uploadId: 894794
