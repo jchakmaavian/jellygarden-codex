@@ -51,6 +51,37 @@ Art is resolved **by convention**, not by inspector reference:
 wires it up with no code change. A miss warns **once per key** and falls back to
 the arc backdrop — never per frame, never blank.
 
+## The repair cutscene
+
+Pressing Repair plays a four-second, skippable sequence: the room fills the
+screen, the task's own words appear, the work happens, and the repaired state
+wipes across with the story's line for it.
+
+Nothing about it is authored per task. The 807 tasks use 83 verbs but describe
+ten kinds of work, so `RepairWork.Classify` reads the label and
+`RepairVfx` picks the effect from that — dust for clearing, sparks for
+rebuilding, embers for lighting, a gold sweep for polishing. 93% of tasks
+classify specifically; the rest get a generic effect. The classifier reads the
+WHOLE label, not the first word: "Clear the flooded corridor" is water, "Clear
+the last rubble" is stone.
+
+Two things worth knowing before changing it:
+
+**The particles are UI quads, not a ParticleSystem.** A ParticleSystem does not
+render inside a ScreenSpaceOverlay canvas at all — it is a mesh renderer and the
+overlay draws after everything in the scene, so the effect is simply invisible.
+
+**Layer order in the cutscene is the whole trick**: Before, then the neglect
+wash, then After on top. Putting the wash above the clean layer dirties the
+thing the repair just cleaned. Below it, an area with only ONE picture still
+reads as before-and-after — which is why 23 of the 25 Arc 1 areas ship a single
+`area_NNN_restored` image rather than a picture per repair.
+
+Outside play mode `RepairCutscene.Play` calls straight back: there is no frame
+loop for its coroutine, so it would otherwise hang. Editor tests cover the
+economy and the classifier; the cutscene itself is verified by running the
+built player with `-storydemo`.
+
 ## The economy
 
 A level win pays **one star into that area's pool**. Repairs are bought with

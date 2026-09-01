@@ -25,6 +25,7 @@ namespace JellyGarden.Scripts.Story
         private readonly List<float> _revealStartedAt = new List<float>();
 
         private RectTransform _root;
+        private Image _damage;
         private int _areaId;
 
         public int AreaId
@@ -61,20 +62,21 @@ namespace JellyGarden.Scripts.Story
                 if (layer != null) Destroy(layer.gameObject);
             _layers.Clear();
             _revealStartedAt.Clear();
+            if (_damage != null) Destroy(_damage.gameObject);
 
             StoryArea area = StoryDatabase.GetArea(_areaId);
             if (area == null) return;
 
             int done = StoryProgress.TasksCompletedIn(_areaId);
 
-            // The base state, then one layer per completed repair.
+            // Areas 001 and 002 ship a picture per repair; the rest ship one
+            // restored room. Both are handled the same way — draw whatever states
+            // exist, then lay the neglect over them so an area with a single
+            // picture still shows its progress.
             for (int state = 0; state <= area.Tasks.Count; state++)
             {
                 Sprite sprite = StoryArt.AreaState(_areaId, state);
-
-                // State 0 is the only one that must exist; without it there is
-                // nothing to draw, so the arc backdrop stands in.
-                if (sprite == null && state == 0) sprite = StoryArt.ArcBackdrop(_areaId);
+                if (sprite == null && state == 0) sprite = StoryArt.AreaRestored(_areaId);
                 if (sprite == null)
                 {
                     _layers.Add(null);
@@ -90,6 +92,16 @@ namespace JellyGarden.Scripts.Story
                 _layers.Add(image);
                 _revealStartedAt.Add(0f);
             }
+
+            // How ruined the room still looks. Full at the start, gone once every
+            // repair is paid for — the same wash the repair cutscene lifts.
+            float progress = area.Tasks.Count == 0
+                ? 1f
+                : Mathf.Clamp01((float)done / area.Tasks.Count);
+
+            _damage = StoryUi.CreateImage("Damage", _root, null,
+                new Color(0.05f, 0.07f, 0.05f, Mathf.Lerp(0.55f, 0f, progress)));
+            StoryUi.Stretch(_damage.rectTransform);
         }
 
         /// <summary>

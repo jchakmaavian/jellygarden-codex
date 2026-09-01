@@ -75,6 +75,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 GeneratedArtIsWiredUp();
                 SabotageStartsWhereTheStorySaysItDoes();
                 TheGameIsFree();
+                RepairsAreClassifiedByWhatTheyAre();
                 EveryArcHasATheme();
                 EveryAreaOpens();
             }
@@ -500,6 +501,71 @@ namespace JellyGarden.Scripts.Story.Editor
             StoryFreeGame.GrantStarterBoosters();
             Expect(PlayerPrefs.GetInt("Hand", 0) == 2,
                 "the starter grant happens once, not every boot");
+        }
+
+        private static void RepairsAreClassifiedByWhatTheyAre()
+        {
+            // The cutscene picks its effect from the task's own words, so a
+            // misclassification is a lantern being swept away or rubble catching
+            // fire. These are the cases the wording actually turns on.
+            var expected = new Dictionary<string, RepairWorkType>
+            {
+                { "Cut back the ivy choking the portcullis", RepairWorkType.Clear },
+                { "Replace the rotted gate timbers", RepairWorkType.Rebuild },
+                { "Rehang the royal banner", RepairWorkType.Hang },
+                { "Relight the gate lanterns", RepairWorkType.Light },
+                { "Repave the cracked stones", RepairWorkType.Rebuild },
+                { "Sweep out the debris", RepairWorkType.Clear },
+                { "Restock the pantry shelves", RepairWorkType.Restock },
+                { "Polish the great doors", RepairWorkType.Polish },
+                { "Break the cell door", RepairWorkType.Force },
+
+                // The ones that hinge on reading the whole label: both start with
+                // "clear", and one of them is water.
+                { "Clear the flooded corridor", RepairWorkType.Water },
+                { "Clear the last rubble", RepairWorkType.Clear },
+                { "Drain the bath house", RepairWorkType.Water },
+            };
+
+            foreach (KeyValuePair<string, RepairWorkType> pair in expected)
+            {
+                RepairWorkType actual = RepairWork.Classify(pair.Key);
+                Expect(actual == pair.Value,
+                    "'" + pair.Key + "' classifies as " + pair.Value + " (got " + actual + ")");
+            }
+
+            // And no task anywhere in the story may fall through without a line
+            // to say, or a repair plays in silence.
+            int voiceless = 0;
+            foreach (StoryArea area in StoryDatabase.AllAreas)
+            {
+                foreach (StoryTask task in area.Tasks)
+                {
+                    RepairWorkType work = RepairWork.Classify(task.Label);
+                    if (string.IsNullOrEmpty(RepairWork.WorkingLine(work)) ||
+                        string.IsNullOrEmpty(RepairWork.CompletedLine(work)) ||
+                        string.IsNullOrEmpty(RepairWork.SoundKey(work)))
+                        voiceless++;
+                }
+            }
+            Expect(voiceless == 0,
+                "every one of the 807 repairs has a line and a sound (" + voiceless + " do not)");
+
+            // A repair should not be classified General very often; that would
+            // mean the classifier is not reading the story's words.
+            int general = 0, total = 0;
+            foreach (StoryArea area in StoryDatabase.AllAreas)
+                foreach (StoryTask task in area.Tasks)
+                {
+                    total++;
+                    if (RepairWork.Classify(task.Label) == RepairWorkType.General) general++;
+                }
+            int percent = total == 0 ? 0 : general * 100 / total;
+            Expect(percent <= 15,
+                "at most 15% of repairs fall through to a generic effect (" + percent + "%)");
+            Debug.Log(string.Format(
+                "[Story] Repair classification: {0} of {1} tasks generic ({2}%).",
+                general, total, percent));
         }
 
         private static void EveryArcHasATheme()

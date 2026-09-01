@@ -93,27 +93,43 @@ namespace JellyGarden.Scripts.Story
             Log(string.Format("{0} stars earned; every repair should now be payable",
                 StoryProgress.StarsIn(areaId)));
 
-            // Spend them, one repair at a time.
+            // Spend them, one repair at a time, watching the cutscene each time.
             for (int i = 0; i < area.Tasks.Count; i++)
             {
                 StoryTask task = area.Tasks[i];
+                RepairWorkType work = RepairWork.Classify(task.Label);
+
                 bool paid = StoryRepair.Perform(areaId, task.Index,
                     () => { if (AreaScreen.Instance != null) AreaScreen.Instance.Refresh(); });
 
-                Log(string.Format("repair {0}/{1} '{2}': {3}",
-                    i + 1, area.Tasks.Count, task.Label, paid ? "done" : "REFUSED"));
+                Log(string.Format("repair {0}/{1} '{2}' [{3}]: {4}",
+                    i + 1, area.Tasks.Count, task.Label, work, paid ? "done" : "REFUSED"));
 
-                yield return new WaitForSecondsRealtime(1.2f);
-                yield return Shot(string.Format("05_repair_{0}", i + 1));
+                // Catch the cutscene at its two beats: the work happening, and
+                // the repaired state wiping in.
+                yield return new WaitForSecondsRealtime(1.5f);
+                yield return Shot(string.Format("05_repair{0}_working", i + 1));
+
+                yield return new WaitForSecondsRealtime(1.3f);
+                yield return Shot(string.Format("06_repair{0}_reveal", i + 1));
+
+                // And wait for it to finish before touching anything else.
+                float guard = 0f;
+                while (RepairCutscene.IsPlaying && guard < 8f)
+                {
+                    guard += Time.unscaledDeltaTime;
+                    yield return null;
+                }
+                Log(string.Format("repair {0} cutscene finished", i + 1));
             }
 
             // The last repair fires the clue and closes the area.
-            yield return new WaitForSecondsRealtime(1.5f);
-            yield return Shot("06_clue");
+            yield return new WaitForSecondsRealtime(1.2f);
+            yield return Shot("07_clue");
             Log("clue seen: " + StoryProgress.IsClueSeen(areaId));
 
             yield return new WaitForSecondsRealtime(4f);
-            yield return Shot("07_after_clue");
+            yield return Shot("08_after_clue");
 
             Log(string.Format("area {0} complete={1}; area {2} unlocked={3}",
                 areaId, StoryProgress.IsAreaComplete(areaId),
@@ -122,10 +138,46 @@ namespace JellyGarden.Scripts.Story
             // And the next area, to show the story moving on.
             StoryFlow.HandleMapNodeClicked(areaId + 1);
             yield return new WaitForSecondsRealtime(1.5f);
-            yield return Shot("08_area_two");
+            yield return Shot("09_area_two");
 
             StoryArea next = StoryDatabase.GetArea(areaId + 1);
             Log(string.Format("area {0} is '{1}': {2}", next.Id, next.Name, next.Goal));
+
+            // Areas 001-002 ship a picture per repair. Everything else ships one
+            // restored room, which is a different path through the cutscene, so
+            // one of those gets demonstrated too.
+            const int SingleImageArea = 5;
+            StoryProgress.ResetAll();
+            for (int i = 1; i < SingleImageArea; i++)
+            {
+                StoryArea done = StoryDatabase.GetArea(i);
+                StoryProgress.AddStar(i, done.StarCost);
+                foreach (StoryTask t in done.Tasks) StoryProgress.CompleteTask(i, t.Index);
+            }
+
+            StoryArea hall = StoryDatabase.GetArea(SingleImageArea);
+            StoryProgress.AddStar(SingleImageArea, hall.StarCost);
+            StoryFlow.HandleMapNodeClicked(SingleImageArea);
+            yield return new WaitForSecondsRealtime(1.2f);
+            yield return Shot("10_single_image_area");
+
+            StoryTask first = hall.Tasks[0];
+            Log(string.Format("area {0} '{1}': repairing '{2}' [{3}]",
+                SingleImageArea, hall.Name, first.Label, RepairWork.Classify(first.Label)));
+            StoryRepair.Perform(SingleImageArea, first.Index,
+                () => { if (AreaScreen.Instance != null) AreaScreen.Instance.Refresh(); });
+
+            yield return new WaitForSecondsRealtime(1.5f);
+            yield return Shot("11_single_working");
+            yield return new WaitForSecondsRealtime(1.3f);
+            yield return Shot("12_single_reveal");
+
+            float guard2 = 0f;
+            while (RepairCutscene.IsPlaying && guard2 < 8f)
+            {
+                guard2 += Time.unscaledDeltaTime;
+                yield return null;
+            }
 
             Log("demo complete");
         }

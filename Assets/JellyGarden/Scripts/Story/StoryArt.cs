@@ -40,6 +40,37 @@ namespace JellyGarden.Scripts.Story
             return Load(string.Format("area_{0:000}_state{1}", areaId, state));
         }
 
+        /// <summary>
+        /// The area fully restored. Most areas have one of these rather than a
+        /// picture per repair — the repair cutscene wipes it in over the ruined
+        /// version, and the neglect wash carries the steps in between.
+        /// </summary>
+        public static Sprite AreaRestored(int areaId)
+        {
+            Sprite restored = Load(string.Format("area_{0:000}_restored", areaId));
+            if (restored != null) return restored;
+
+            // An area with per-state art: the last state IS the restored one.
+            StoryArea area = StoryDatabase.GetArea(areaId);
+            if (area != null)
+            {
+                for (int state = area.Tasks.Count; state >= 0; state--)
+                {
+                    Sprite exact = AreaState(areaId, state);
+                    if (exact != null) return exact;
+                }
+            }
+
+            return ArcBackdrop(areaId);
+        }
+
+        /// <summary>Whether this area has artwork of its own at all.</summary>
+        public static bool HasAreaArt(int areaId)
+        {
+            return Load(string.Format("area_{0:000}_restored", areaId)) != null
+                   || AreaState(areaId, 0) != null;
+        }
+
         /// <summary>The picture on an area's clue card.</summary>
         public static Sprite ClueImage(int areaId)
         {

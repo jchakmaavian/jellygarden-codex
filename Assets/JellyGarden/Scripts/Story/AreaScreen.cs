@@ -99,9 +99,15 @@ namespace JellyGarden.Scripts.Story
             _canvas = StoryUi.CreateOverlayCanvas("AreaCanvas", 400);
             _canvas.transform.SetParent(transform, false);
 
-            // The room itself, behind everything: the player watches it change as
-            // they pay for repairs, which is the whole point of the screen.
-            _scene = StoryUi.Stretch(StoryUi.CreateRect("Scene", _canvas.transform));
+            // The room itself, in the band above the panel. Not stretched to the
+            // whole canvas: the paintings are 4:3 and preserveAspect letterboxes
+            // them into a tall screen, which put the room entirely behind the
+            // panel and left the map showing through the top.
+            _scene = StoryUi.CreateRect("Scene", _canvas.transform);
+            _scene.anchorMin = new Vector2(0f, 0.66f);
+            _scene.anchorMax = new Vector2(1f, 1f);
+            _scene.offsetMin = new Vector2(0f, 0f);
+            _scene.offsetMax = new Vector2(0f, 0f);
 
             StoryUi.CreateFullScreenButton("Scrim", _canvas.transform,
                 new Color(0f, 0f, 0f, 0.35f), null);

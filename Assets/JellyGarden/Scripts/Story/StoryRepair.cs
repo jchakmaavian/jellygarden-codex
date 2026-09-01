@@ -26,20 +26,22 @@ namespace JellyGarden.Scripts.Story
             if (!StoryProgress.CompleteTask(areaId, taskIndex))
                 return false;
 
-            StorySfx.PlayRepair(StoryProgress.IsAreaComplete(areaId));
+            // How many repairs the room has had once this one lands — the state
+            // the cutscene reveals.
+            int stateAfter = StoryProgress.TasksCompletedIn(areaId);
+
             AreaSceneView.NotifyTaskCompleted(areaId, taskIndex);
 
-            // The line the story wrote for this repair. Arc 1 authors one per
-            // task; later arcs do not, and a toast with nothing in it is worse
-            // than no toast.
-            if (!string.IsNullOrEmpty(task.OnComplete))
-                StoryToast.Show(task.OnComplete);
+            // The repair plays out before anything else happens. Everything that
+            // follows — the refreshed screen, the clue, the next area — waits for
+            // it, so the player is never reading a task list over a cutscene.
+            RepairCutscene.Play(areaId, task, stateAfter, () =>
+            {
+                if (onChanged != null) onChanged();
 
-            if (onChanged != null) onChanged();
-
-            bool areaFinished = StoryProgress.IsAreaComplete(areaId);
-            if (areaFinished)
-                OnAreaFinished(areaId);
+                if (StoryProgress.IsAreaComplete(areaId))
+                    OnAreaFinished(areaId);
+            });
 
             return true;
         }
