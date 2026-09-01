@@ -131,11 +131,23 @@ namespace JellyGarden.Scripts.Story
             if (MenuManager.Instance != null)
                 MenuManager.Instance.ShowMenuPlay(false);
 
+            // Gameplay before story: the opening is owed after the first win,
+            // never before it, so this is the only place it can play.
+            if (OpeningSequence.PlayIfDue(areaId, () => OpenAfterLevel(areaId)))
+                return;
+
+            OpenAfterLevel(areaId);
+        }
+
+        private static void OpenAfterLevel(int areaId)
+        {
             // The clue and the arc beat are owed from the last repair, not from
             // the level; if one is pending it plays before the area screen so the
             // player is not looking at a task list during a story beat.
-            if (!StoryPresentation.PlayPending(areaId, () => AreaScreen.Open(areaId)))
-                AreaScreen.Open(areaId);
+            if (StoryPresentation.PlayPending(areaId, () => AreaScreen.Open(areaId)))
+                return;
+
+            AreaScreen.Open(areaId);
         }
 
         public static bool CameBackFromLevel

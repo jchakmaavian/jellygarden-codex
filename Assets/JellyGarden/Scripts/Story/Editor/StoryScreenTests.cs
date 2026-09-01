@@ -71,6 +71,8 @@ namespace JellyGarden.Scripts.Story.Editor
                 ClueCardShowsTheClueVerbatimAndDismissesItself();
                 DialogueTypesOutAndAdvancesOnTap();
                 ArcBeatsHaveScenesAndPlayThemOnce();
+                OpeningPlaysAfterTheFirstWinAndOnlyOnce();
+                GeneratedArtIsWiredUp();
                 EveryAreaOpens();
             }
             finally
@@ -318,6 +320,75 @@ namespace JellyGarden.Scripts.Story.Editor
             StoryPresentation.PlayAreaPayoff(5, () => replayed = true);
             Expect(!CutsceneRunner.IsPlaying, "a seen scene does not play itself again");
             Expect(replayed, "an already-seen payoff hands straight back");
+        }
+
+        private static void OpeningPlaysAfterTheFirstWinAndOnlyOnce()
+        {
+            StoryProgress.ResetAll();
+
+            // Rule zero: gameplay before story. Nothing plays until a level has
+            // actually been won.
+            Expect(!OpeningSequence.PlayIfDue(1, null),
+                "the opening does not play before the first level is won");
+
+            StoryProgress.MarkLevelBeaten(1);
+            bool done = false;
+            Expect(OpeningSequence.PlayIfDue(1, () => done = true),
+                "the opening plays after the first win");
+            Expect(OpeningSequence.IsPlaying, "the opening is on screen");
+
+            var dialogue = Object.FindFirstObjectByType<DialogueSystem>();
+            Button advance = dialogue.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(b => b.name == "Advance");
+            if (advance == null)
+            {
+                Fail("the opening has no way to advance");
+                return;
+            }
+
+            // The hook is one unanswered word; check it is actually spoken, and
+            // that nobody follows it with an explanation.
+            var spoken = new List<string>();
+            for (int i = 0; i < 40 && OpeningSequence.IsPlaying; i++)
+            {
+                // Let the line finish typing before reading it, or the assertion
+                // races the typewriter.
+                StoryClock.Advance(3f);
+                dialogue.Tick(StoryClock.Now);
+                spoken.AddRange(TextsIn(dialogue.gameObject));
+                advance.onClick.Invoke();
+            }
+
+            Expect(spoken.Any(t => t.Contains("Freya")),
+                "Leo says her name in the opening");
+            Expect(spoken.Any(t => t.Contains("eleven weeks")),
+                "Alfred's first line is in the opening");
+            Expect(done, "the opening hands back when it is over");
+            Expect(StoryProgress.OpeningSeen, "the opening is marked seen");
+            Expect(!OpeningSequence.PlayIfDue(1, null),
+                "the opening never plays a second time");
+        }
+
+        private static void GeneratedArtIsWiredUp()
+        {
+            // Naming is the whole of the art wiring, so a rename that breaks it
+            // has to fail here rather than show up as a blank screen.
+            StoryArt.ClearCache();
+
+            Expect(StoryArt.ArcBackdrop(1) != null, "arc 1 has a backdrop");
+            Expect(StoryArt.ClueImage(1) != null, "area 1's clue has a picture");
+            Expect(StoryArt.Portrait("Leo") != null, "Leo has a portrait");
+            Expect(StoryArt.Portrait("Mimi") != null, "Mimi has a portrait");
+
+            StoryArea area1 = StoryDatabase.GetArea(1);
+            for (int state = 0; state <= area1.Tasks.Count; state++)
+                Expect(StoryArt.AreaState(1, state) != null,
+                    "area 1 has artwork for state " + state);
+
+            Expect(StoryAudio.LoadVoice("alfred_open_01") != null,
+                "Alfred's first opening line is present");
+            Expect(StoryAudio.LoadVoice("alfred_clue_001") != null,
+                "Alfred's area 1 clue line is present");
         }
 
         private static void EveryAreaOpens()
