@@ -39,6 +39,7 @@ namespace JellyGarden.Scripts.Story
         private Text _starCount;
         private Button _playButton;
         private Text _playLabel;
+        private Button _replayButton;
         private Text _toast;
         private float _toastUntil;
 
@@ -190,6 +191,14 @@ namespace JellyGarden.Scripts.Story
             StoryUi.BottomAnchored(_playButton.GetComponent<RectTransform>(), 70f, 150f, 200f);
             _playLabel = _playButton.GetComponentInChildren<Text>();
 
+            _replayButton = StoryUi.CreateButton("Replay", panel, "Scene", 30, OnReplayScene);
+            RectTransform replayRect = _replayButton.GetComponent<RectTransform>();
+            replayRect.anchorMin = new Vector2(1f, 0f);
+            replayRect.anchorMax = new Vector2(1f, 0f);
+            replayRect.pivot = new Vector2(1f, 0f);
+            replayRect.anchoredPosition = new Vector2(-40f, 80f);
+            replayRect.sizeDelta = new Vector2(180f, 110f);
+
             Button back = StoryUi.CreateButton("Back", panel, "Map", 34, OnBack);
             RectTransform backRect = back.GetComponent<RectTransform>();
             backRect.anchorMin = new Vector2(0f, 0f);
@@ -324,6 +333,11 @@ namespace JellyGarden.Scripts.Story
             StoryUi.SetInteractable(_playButton, !complete && next > 0);
             if (_playLabel != null)
                 _playLabel.text = complete ? "Restored" : "Play level " + next;
+
+            // A beat's scene can be watched again once it has been earned.
+            bool canReplay = complete && CutsceneRunner.Has(_areaId);
+            if (_replayButton != null)
+                _replayButton.gameObject.SetActive(canReplay);
         }
 
         #endregion
@@ -359,6 +373,13 @@ namespace JellyGarden.Scripts.Story
             }
 
             StoryRepair.Perform(_areaId, taskIndex, Refresh);
+        }
+
+        private void OnReplayScene()
+        {
+            int areaId = _areaId;
+            Close();
+            CutsceneRunner.Play(areaId, () => Open(areaId));
         }
 
         private void OnBack()

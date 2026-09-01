@@ -70,6 +70,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 SpendingStarsCompletesTheAreaAndUnlocksTheNext();
                 ClueCardShowsTheClueVerbatimAndDismissesItself();
                 DialogueTypesOutAndAdvancesOnTap();
+                ArcBeatsHaveScenesAndPlayThemOnce();
                 EveryAreaOpens();
             }
             finally
@@ -243,6 +244,80 @@ namespace JellyGarden.Scripts.Story.Editor
 
             Expect(!DialogueSystem.IsPlaying, "dialogue finishes");
             Expect(done, "dialogue calls back");
+        }
+
+        private static void ArcBeatsHaveScenesAndPlayThemOnce()
+        {
+            StoryProgress.ResetAll();
+
+            // Every fifth area is a beat and must have a scene; the six arc
+            // finales carry the payoff and need more than a card's worth.
+            int beats = 0;
+            for (int areaId = 5; areaId <= StoryDatabase.AreaCount; areaId += 5)
+            {
+                if (!CutsceneRunner.Has(areaId))
+                {
+                    Fail("arc beat area " + areaId + " has no cutscene");
+                    return;
+                }
+
+                Cutscene scene = CutsceneRunner.Get(areaId);
+                int minimum = areaId % 25 == 0 ? 6 : 3;
+                if (scene.Lines.Count < minimum)
+                {
+                    Fail("area " + areaId + " has " + scene.Lines.Count +
+                         " lines, needs " + minimum);
+                    return;
+                }
+
+                foreach (DialogueLine line in scene.Lines)
+                {
+                    if (string.IsNullOrEmpty(line.Text))
+                    {
+                        Fail("area " + areaId + " has an empty line");
+                        return;
+                    }
+                    if (line.Text.StartsWith("ARC PAYOFF"))
+                    {
+                        Fail("area " + areaId + " speaks a production label aloud");
+                        return;
+                    }
+                }
+                beats++;
+            }
+
+            Expect(beats == StoryDatabase.AreaCount / 5,
+                "every fifth area has a scene (" + beats + " found)");
+
+            // A beat plays its scene, then its clue, then hands back.
+            bool done = false;
+            StoryPresentation.PlayAreaPayoff(5, () => done = true);
+            Expect(CutsceneRunner.IsPlaying, "the beat's scene starts playing");
+
+            var dialogue = Object.FindFirstObjectByType<DialogueSystem>();
+            Button skip = dialogue.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(b => b.name == "Skip");
+            if (skip == null)
+            {
+                Fail("the cutscene offers no Skip control");
+                return;
+            }
+            skip.onClick.Invoke();
+
+            Expect(!CutsceneRunner.IsPlaying, "the scene is skippable");
+            Expect(StoryProgress.IsCutsceneSeen(5), "the scene is marked seen");
+            Expect(ClueCard.IsShowing, "the clue follows the scene");
+
+            var card = Object.FindFirstObjectByType<ClueCard>();
+            StoryClock.Advance(3.5f);
+            card.Tick(StoryClock.Now);
+            Expect(done, "the payoff hands back when the clue is gone");
+
+            // Second time round it must not replay itself.
+            bool replayed = false;
+            StoryPresentation.PlayAreaPayoff(5, () => replayed = true);
+            Expect(!CutsceneRunner.IsPlaying, "a seen scene does not play itself again");
+            Expect(replayed, "an already-seen payoff hands straight back");
         }
 
         private static void EveryAreaOpens()

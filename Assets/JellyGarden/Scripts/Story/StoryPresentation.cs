@@ -34,7 +34,10 @@ namespace JellyGarden.Scripts.Story
                 if (onDone != null) onDone();
             };
 
-            if (area.IsArcBeat && CutsceneRunner.Has(areaId))
+            // Seen scenes do not replay themselves; the area screen offers a
+            // Replay button for anyone who wants them again.
+            if (area.IsArcBeat && CutsceneRunner.Has(areaId) &&
+                !StoryProgress.IsCutsceneSeen(areaId))
             {
                 CutsceneRunner.Play(areaId, () => ClueThenFinish(areaId, finish));
                 return;

@@ -32,8 +32,8 @@
         "Typecheck passes"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-002",
@@ -43,14 +43,14 @@
         "Add Assets/JellyGarden/Scripts/Story/StoryData.cs with [Serializable] classes: StoryArcFile, StoryArea, StoryTask, StoryBoard, StoryLevelDef, StoryIndex",
         "StoryArea exposes id, name, phase, beatType, goal, tasks[], clue, pointsTo, arc, stars, status, board, levels[]",
         "Add Assets/JellyGarden/Scripts/Story/StoryDatabase.cs: static singleton, Load() reads Resources/Story/arc1..arc6 via Resources.Load<TextAsset> and JsonUtility, exposes GetArea(int id), AllAreas, ArcOf(int areaId), TotalStars",
-        "JsonUtility cannot parse a bare top-level array — confirm arcN.json has an object root before relying on it",
+        "JsonUtility cannot parse a bare top-level array \u2014 confirm arcN.json has an object root before relying on it",
         "StoryDatabase.Load() is idempotent and logs one line: 'Story loaded: 150 areas, 807 tasks, 1209 stars'",
         "Add Assets/JellyGarden/Scripts/Story/Editor/StoryDatabaseTests.cs with an [MenuItem] validation that asserts 150 areas, contiguous ids 1..150, every area has >=1 task and a non-empty clue",
         "Typecheck passes"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-003",
@@ -66,8 +66,8 @@
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-004",
@@ -82,8 +82,8 @@
         "Typecheck passes"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-005",
@@ -99,8 +99,8 @@
         "Typecheck passes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-006",
@@ -117,8 +117,8 @@
         "Typecheck passes"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-007",
@@ -135,8 +135,8 @@
         "Typecheck passes"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-008",
@@ -152,8 +152,8 @@
         "Typecheck passes"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-009",
@@ -169,8 +169,8 @@
         "Typecheck passes"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-010",
@@ -184,8 +184,8 @@
         "Typecheck passes"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-011",
@@ -202,8 +202,8 @@
         "Verify by running the Unity editor in batchmode with a smoke-test menu item and confirming no exceptions in the log"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "US-011..US-016 landed as one commit: they do not compile independently."
     },
     {
       "id": "US-012",
@@ -218,8 +218,8 @@
         "Typecheck passes"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-013",
@@ -234,8 +234,8 @@
         "Typecheck passes"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-014",
@@ -249,8 +249,8 @@
         "Typecheck passes"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-015",
@@ -265,8 +265,8 @@
         "Typecheck passes"
       ],
       "priority": 15,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-016",
@@ -277,12 +277,12 @@
         "The clue fires on the last repair task of an area, never on a level win",
         "The clue is never shown twice: StoryProgress.MarkClueSeen gates it",
         "After the clue dismisses, control returns to the map with the next area unlocked",
-        "Clue text is never accompanied by an explanatory line — the raw clue only",
+        "Clue text is never accompanied by an explanatory line \u2014 the raw clue only",
         "Typecheck passes"
       ],
       "priority": 16,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-017",
@@ -356,7 +356,7 @@
       "description": "As a player, I want the board to look like the room I am repairing, without losing any existing animation.",
       "acceptanceCriteria": [
         "Add Assets/JellyGarden/Scripts/Story/ArcTheme.cs and Resources/Story/themes.json defining, per arc, a tile sprite set, a board background and an obstacle sprite mapping",
-        "Skins are applied by swapping SpriteRenderer sprites on the existing item and block prefabs at level load — prefabs, Animators and ParticleSystems are untouched",
+        "Skins are applied by swapping SpriteRenderer sprites on the existing item and block prefabs at level load \u2014 prefabs, Animators and ParticleSystems are untouched",
         "The six arcs map to castle / village / mines and roads / border / ruins and crypts / siege",
         "A missing themed sprite falls back to the shipped Jelly Garden sprite and logs one warning",
         "Reverting the theme restores the original sprites exactly",
@@ -389,7 +389,7 @@
       "acceptanceCriteria": [
         "Levels whose plan entry has sabotage=true include at least one active obstacle type from the existing kit (thriving/spreading blocks)",
         "The first sabotage level in area 019 shows a one-time dialogue line attributing it to Grimm",
-        "Anything that appears on the board by itself plays an arrival animation using an existing particle prefab — never pops in",
+        "Anything that appears on the board by itself plays an arrival animation using an existing particle prefab \u2014 never pops in",
         "Areas 001-018 contain no self-acting obstacles",
         "Typecheck passes"
       ],
@@ -406,7 +406,7 @@
         "Ad calls (Unity Ads, Admob, Chartboost) are compiled out or short-circuited so no ad is ever requested",
         "IAP entry points and the gem/life shops are hidden from the UI",
         "Boosters are granted on level win rather than sold; the gem shop button does not appear",
-        "The existing scripts remain in the repo and merely become inert — no files are deleted",
+        "The existing scripts remain in the repo and merely become inert \u2014 no files are deleted",
         "Typecheck passes"
       ],
       "priority": 24,
@@ -442,8 +442,8 @@
         "Typecheck passes"
       ],
       "priority": 26,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified headless; see ralph/progress.txt."
     },
     {
       "id": "US-027",

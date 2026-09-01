@@ -1,0 +1,1295 @@
+{
+ "cutsceneCount": 30,
+ "cutscenes": [
+  {
+   "areaId": 5,
+   "title": "Area 005 — Entrance Hall",
+   "arc": 1,
+   "arcTitle": "The Missing Queen",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Entrance Hall. Setup.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Make the front hall fit for a king again.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Small, cruel, personal.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Sets Grimm's character without a line of dialogue.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Freya's portrait has been turned to face the wall.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 10,
+   "title": "Area 010 — The Pantry",
+   "arc": 1,
+   "arcTitle": "The Missing Queen",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Pantry. First hard evidence.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Stock the pantry before winter.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The most important clue of Act 1.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Someone is alive below.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The pantry ledger shows meals sent down to the lower levels — long after the Queen supposedly left. Someone down there is being fed.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 15,
+   "title": "Area 015 — Fountain Plaza",
+   "arc": 1,
+   "arcTitle": "The Missing Queen",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Fountain Plaza. Villain pushes back.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The fountain hasn't run in months.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Environmental clue.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Sets up the flood sabotage in Area 19.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The water runs black. Something is blocking the pipes further down — where no pipes should be.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 20,
+   "title": "Area 020 — The Bath House",
+   "arc": 1,
+   "arcTitle": "The Missing Queen",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Bath House. Allies gathered.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Get the water out of the lower castle.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The way down is found.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Now it just has to be opened.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Draining the baths reveals an old service shaft, bricked up recently — the mortar is still soft.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 25,
+   "title": "Area 025 — The Sealed Dungeon",
+   "arc": 1,
+   "arcTitle": "The Missing Queen",
+   "isFinale": true,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Sealed Dungeon.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Get her out.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Rescue cutscene, reunion, then the sting: Grimm escapes.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Freya becomes co-lead from Area 26 on.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Freya is alive. Thin, furious, and holding a stack of evidence she has been building for eleven weeks. Grimm is already riding out the north gate.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Where is Queen Freya?",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Freya found alive in the sealed dungeon. Grimm flees the castle.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Leo returns from the royal hunt to a rotted castle and a missing wife.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Grimm says she left.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Every room Leo rebuilds says otherwise.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "It does not end here.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 30,
+   "title": "Area 030 — Blacksmith's Forge",
+   "arc": 2,
+   "arcTitle": "Grimm's Trail",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Blacksmith's Forge. Setup.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Get a fire lit in the forge. Nothing gets rebuilt without a smith.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Smith joins the cast.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Gruff, ashamed, useful.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "He kept one of the old keys back out of spite.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The smith was ordered to melt down the old castle keys — all of them — and cast new ones to a pattern he was given.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 35,
+   "title": "Area 035 — The Harbour",
+   "arc": 2,
+   "arcTitle": "Grimm's Trail",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Harbour. First hard evidence.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The harbour is silting up and trade has stopped.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Second independent source pointing at the same place.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The player should now be ahead of Leo, and impatient.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The harbourmaster's book records the barge. Under owner it says only: the house on the ridge.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 40,
+   "title": "Area 040 — Weaver's Hall",
+   "arc": 2,
+   "arcTitle": "Grimm's Trail",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Weaver's Hall. Villain pushes back.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The weavers have no wool and no wages.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The timeline breaks.",
+     "voice": ""
+    },
+    {
+     "speaker": "Grimm",
+     "text": "Grimm did not seize an opportunity —",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "he was given a date.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Vane livery was woven here, in quantity, months before Leo rode out on the hunt. This was planned long in advance.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 45,
+   "title": "Area 045 — The Toll Gate",
+   "arc": 2,
+   "arcTitle": "Grimm's Trail",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Toll Gate. Allies gathered.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Reopen the toll gate so the road north is legally passable.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The paperwork of a kidnapping.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Bureaucratic, banal, damning.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The toll ledger shows a single carriage passing north eleven weeks ago, at night, exempt from toll by order of House Vane.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 50,
+   "title": "Area 050 — Harvest Court",
+   "arc": 2,
+   "arcTitle": "Grimm's Trail",
+   "isFinale": true,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Harvest Court.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Hold the Harvest Court. Make the whole kingdom watch.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Public, loud, satisfying —",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "then the floor drops out.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Vane is the answer to Arc 2 and the question for Arc 3.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Big spectacle area; the whole village is present.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Before the assembled kingdom, Freya reads the agreement aloud. Lord Aldric Vane is stripped and taken. He laughs, and says Grimm was never working for him — he was working for someone else.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Who helped Grimm? He could not have done this alone.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The traitor inside the court is named and exposed at the Harvest Court.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Grimm is gone but not alone.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Someone opened doors for him.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Leo and Freya rebuild the ruined village outside the walls, and every grateful villager remembers a face that shouldn't have been there.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "It does not end here.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 55,
+   "title": "Area 055 — Assay Room",
+   "arc": 3,
+   "arcTitle": "The Empty Treasury",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Assay Room. Setup.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The assayer will not speak. Give him his workshop back.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "ARC BEAT.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The question sharpens: not *where did the gold go* but *what is the fake coin buying?* Assayer joins the cast, terrified of what he certified.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The assayer tested the new coin himself. It is debased — a third silver, two thirds tin. Somebody has been paying wages in false money.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 60,
+   "title": "Area 060 — Trade Road North",
+   "arc": 3,
+   "arcTitle": "The Empty Treasury",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Trade Road North. First hard evidence.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The north road is impassable and the caravans have stopped.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Infrastructure built for war, paid for as maintenance.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The kingdom funded its own siege.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The road was widened this year — quietly, at crown expense — to take wagons far heavier than any trade cart.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 65,
+   "title": "Area 065 — The Smelter",
+   "arc": 3,
+   "arcTitle": "The Empty Treasury",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Smelter. Villain pushes back.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The smelter is cold and the ore is stacked outside.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "ARC BEAT.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The gold's destination is finally concrete.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Iron, not treasure.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The arc's question is answered but the answer is worse.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The smelter has not been making coin. It has been making weapons — and the moulds are still warm.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 70,
+   "title": "Area 070 — The River Crossing",
+   "arc": 3,
+   "arcTitle": "The Empty Treasury",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The River Crossing. Allies gathered.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Reopen the crossing. Everything beyond it is out of the crown's hands.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "ARC BEAT.",
+     "voice": ""
+    },
+    {
+     "speaker": "Grimm",
+     "text": "Grimm has a handler.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The arc's real answer starts here —",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "and it belongs to Arc 4.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The ferryman has carried Grimm across four times this year. Each time, Grimm was met on the far bank by a rider in colours Leo does not recognise.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 75,
+   "title": "Area 075 — Ledger Room",
+   "arc": 3,
+   "arcTitle": "The Empty Treasury",
+   "isFinale": true,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Ledger Room.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Put the whole account together, in one room, on one table.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "No spectacle, no crowd.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Two people and a table, working it out.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The horror is arithmetic.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Ends by pointing straight at Arc 4.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The whole scheme laid out end to end: the kingdom's gold traded abroad, an army bought with it, and Grimm signing for all of it on behalf of a crown that is not Leo's. Freya names the crest. It belongs to the neighbouring kingdom — and its monarch is expected at the border within the month.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The kingdom is broke. Where did the gold go?",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The gold bought an army. Grimm is not hiding — he is arming.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The crown cannot pay its own guards.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Ledgers are clean, which is the problem —",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "they are too clean.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "It does not end here.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 80,
+   "title": "Area 080 — Snow Chapel",
+   "arc": 4,
+   "arcTitle": "The Rival Crown",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Snow Chapel. Setup.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The chapel in the snow is the last shelter before the pass.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "ARC BEAT.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "First voice from inside the enemy.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "He asks for Freya specifically, which nobody can explain yet.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "A monk has been sheltering a deserter from the northern army. The man will talk — for a price, and only to the Queen.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 85,
+   "title": "Area 085 — Ice Harbour",
+   "arc": 4,
+   "arcTitle": "The Rival Crown",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Ice Harbour. First hard evidence.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The ice harbour is where the foreign gold came ashore.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Written proof she was presented at a foreign court against her will —",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "and recorded as willing.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The customs book records Freya's arrival by name, as a guest of the northern crown, eleven weeks ago. Signed for by Grimm.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 90,
+   "title": "Area 090 — Winter Ballroom",
+   "arc": 4,
+   "arcTitle": "The Rival Crown",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Winter Ballroom. Villain pushes back.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Attend the winter ball. Refusing would be the same as declaring war.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "ARC BEAT.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The arc's cruellest scene.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Nobody draws a weapon.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Leo has to stand and applaud with everyone else, or start a war in a ballroom.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "The betrothal is announced publicly, to applause: Queen Freya of the south to King Haldor of the north, upon the annulment of an invalid marriage.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 95,
+   "title": "Area 095 — Hall of Banners",
+   "arc": 4,
+   "arcTitle": "The Rival Crown",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Hall of Banners. Allies gathered.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The hall of banners records every treaty the north has ever signed.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "ARC BEAT.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Haldor stops being a rival and becomes a pattern.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The scale of the danger jumps.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Haldor has done this before. Three smaller kingdoms, three arranged marriages, three annulments, three absorptions. Freya is the fourth.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 100,
+   "title": "Area 100 — The Broken Treaty",
+   "arc": 4,
+   "arcTitle": "The Rival Crown",
+   "isFinale": true,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Broken Treaty.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Break the treaty publicly, on Leo's terms, before Haldor can break it on his.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Public vindication, then the ground opens.",
+     "voice": ""
+    },
+    {
+     "speaker": "Grimm",
+     "text": "Grimm is captured and immediately becomes the mystery.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Arc 5 begins with that sentence.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Before both courts, Freya lays out the forgeries and Haldor's own seal. The annulment collapses and the treaty with it. Haldor withdraws — and leaves Grimm behind, disowned, standing alone between two armies. As he is taken, Grimm looks at Leo and says: ask your father's confessor what he did with his second son.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Who is paying Grimm now?",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "A neighbouring crown is revealed as Grimm's patron. War is one insult away.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Banners appear on the northern ridge.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Leo must repair the border forts he let rot and host a peace summit he cannot afford.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Freya negotiates.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "It does not end here.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 105,
+   "title": "Area 105 — Bell Tower",
+   "arc": 5,
+   "arcTitle": "The Old King's Secret",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Bell Tower. Setup.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The bell has not rung since the old king died.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The name arrives in a child's handwriting, in a place adults never look.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Devastating and quiet.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Scratched inside the bell chamber, where only a child climbing to hide would put it: a name — Aldous — and beside it, son of the King.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 110,
+   "title": "Area 110 — The Standing Stones",
+   "arc": 5,
+   "arcTitle": "The Old King's Secret",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Standing Stones. First hard evidence.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The standing stones mark the boundary of the old estate.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Two sons, one born to a crown and one to a grave marker with no name.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Leo works it out standing there.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "One stone is newer than the rest, and it is a grave marker. No name. The date is the year Leo was born.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 115,
+   "title": "Area 115 — Sealed Wing",
+   "arc": 5,
+   "arcTitle": "The Old King's Secret",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Sealed Wing. Villain pushes back.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The sealed wing has been bricked up since Leo was a boy.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "A grief nobody ever processed, preserved in dust.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Leo has not been in these rooms since he was six.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "This wing was closed the week Leo's mother died. Her rooms are exactly as she left them, and her letters are still on the desk.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 120,
+   "title": "Area 120 — The Hidden Chamber",
+   "arc": 5,
+   "arcTitle": "The Old King's Secret",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Hidden Chamber. Allies gathered.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "A chamber behind the crypt wall that appears on no plan.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "ARC BEAT.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "He built a museum of the family that erased him.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Pity and horror in the same object.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Grimm's own archive: every document of his life, kept in order, in a hidden room under a castle he was never allowed to enter.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 125,
+   "title": "Area 125 — The Old King's Study",
+   "arc": 5,
+   "arcTitle": "The Old King's Secret",
+   "isFinale": true,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Old King's Study.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "Go back to Leo's father's study and read it as it really is.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The emotional summit of the whole game.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "No spectacle —",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "two brothers and a letter.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Ends by launching the siege of Arc 6.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "In the hidden drawer: the old king's unsent letter, asking his elder son to come home and take what was his. Leo reads it aloud to Grimm in his cell. Grimm does not believe him — and then does, and breaks. Then he tells them what he has already set in motion, and that it is too late to stop: the army is coming, and it is coming for the castle.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Why did Grimm hate Leo from the beginning?",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Grimm is Leo's half-brother. The old king hid him. Grimm never forgave either of them.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "A sealed crypt, a monk who kept a secret for forty years, and a second name in the old king's records.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Leo rebuilds the places his father tried to erase —",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "and finds out the man who buried his wife shares his blood.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "It does not end here.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 130,
+   "title": "Area 130 — Powder Store",
+   "arc": 6,
+   "arcTitle": "The Reckoning",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Powder Store. Setup.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The powder store is under the wall and one spark ends the siege badly.",
+     "voice": ""
+    },
+    {
+     "speaker": "Grimm",
+     "text": "Grimm's contingency, laid before any of this.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The castle has a bomb in its heart.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Someone has already moved half the powder — inward, under the throne room. It was placed months ago.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 135,
+   "title": "Area 135 — Shattered Hall",
+   "arc": 6,
+   "arcTitle": "The Reckoning",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Shattered Hall. First hard evidence.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The great hall roof is down. Clear it before the next assault.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The proof survives the building.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Paper outlasting stone is the whole theme of the game.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Under the rubble, the Arc 2 evidence chest — the agreement, the ledgers, the forged letters — crushed but readable.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 140,
+   "title": "Area 140 — Ruined Bedchamber",
+   "arc": 6,
+   "arcTitle": "The Reckoning",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Ruined Bedchamber. Villain pushes back.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The bedchamber has taken a stone from a trebuchet.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Quiet beat in the middle of a siege.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "They sit in the wreck of their bedroom and read it again.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Under the broken floorboard, Freya's note from Area 021, still there. One word: BELOW.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 145,
+   "title": "Area 145 — The Surrender Field",
+   "arc": 6,
+   "arcTitle": "The Reckoning",
+   "isFinale": false,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "The Surrender Field. Allies gathered.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The field where it stops. Take the surrender and the cost.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Do not skip the bill.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The game has been generous; this area is where it is honest.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Eleven hundred names on both sides. Freya reads all of them aloud. It takes until dark.",
+     "voice": ""
+    }
+   ]
+  },
+  {
+   "areaId": 150,
+   "title": "Area 150 — Grand Courtyard",
+   "arc": 6,
+   "arcTitle": "The Reckoning",
+   "isFinale": true,
+   "lines": [
+    {
+     "speaker": "Alfred",
+     "text": "Grand Courtyard.",
+     "voice": ""
+    },
+    {
+     "speaker": "Leo",
+     "text": "The Grand Courtyard. Everything, restored, in daylight.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "End on the courtyard from Area 002 in full sun.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The last repair task lights the whole castle at once.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Hold on the wide shot and roll credits.",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Leo and Freya are crowned together, by the kingdom's consent rather than by a document. Aldous stands in the crowd, named, pardoned, and not restored — and that is the ending he accepts. The old king's statue is raised again with both his sons' names on the base.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Can the kingdom survive Grimm's last move?",
+     "voice": ""
+    },
+    {
+     "speaker": "Freya",
+     "text": "Grimm defeated. The castle restored to full glory. Leo and Freya crowned together before the whole kingdom.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "Grimm comes back with an army and burns what Leo rebuilt.",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "The last arc is the whole game in reverse —",
+     "voice": ""
+    },
+    {
+     "speaker": "Alfred",
+     "text": "repairing under fire, room by room, until the castle stands and the crown is finally, publicly, undisputed.",
+     "voice": ""
+    }
+   ]
+  }
+ ]
+}
