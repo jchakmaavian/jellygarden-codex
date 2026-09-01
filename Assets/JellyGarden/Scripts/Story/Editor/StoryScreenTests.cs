@@ -75,6 +75,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 GeneratedArtIsWiredUp();
                 SabotageStartsWhereTheStorySaysItDoes();
                 TheGameIsFree();
+                EveryArcHasATheme();
                 EveryAreaOpens();
             }
             finally
@@ -480,6 +481,44 @@ namespace JellyGarden.Scripts.Story.Editor
             StoryFreeGame.GrantStarterBoosters();
             Expect(PlayerPrefs.GetInt("Hand", 0) == 2,
                 "the starter grant happens once, not every boot");
+        }
+
+        private static void EveryArcHasATheme()
+        {
+            Expect(StoryTheme.Count == 6, "all six arcs have a theme (" + StoryTheme.Count + ")");
+
+            for (int arc = 1; arc <= 6; arc++)
+            {
+                ArcTheme theme = StoryTheme.ForArc(arc);
+                if (theme == null)
+                {
+                    Fail("arc " + arc + " has no theme");
+                    return;
+                }
+                Expect(!string.IsNullOrEmpty(theme.ThemeKey), "arc " + arc + " has a theme key");
+            }
+
+            // Every level must resolve to a theme, or a board somewhere in the
+            // game falls back to whatever the previous one left behind.
+            int unthemed = 0;
+            for (int levelNumber = 1; levelNumber <= StoryLevelPlan.LevelCount; levelNumber++)
+                if (StoryTheme.ForLevel(levelNumber) == null) unthemed++;
+            Expect(unthemed == 0, "every level resolves to an arc theme (" + unthemed + " do not)");
+
+            // The six arcs must not all land on the same look. Background picks
+            // one of five shipped pictures by currentLevel / 20, which across
+            // 1209 levels is one picture for ninety per cent of the game; that is
+            // the regression this replaces.
+            var keys = new HashSet<string>();
+            var tints = new HashSet<string>();
+            for (int arc = 1; arc <= 6; arc++)
+            {
+                ArcTheme theme = StoryTheme.ForArc(arc);
+                keys.Add(theme.ThemeKey);
+                tints.Add(theme.SquareTint.ToString());
+            }
+            Expect(keys.Count == 6, "the six arcs are six different themes");
+            Expect(tints.Count >= 5, "the arcs do not all tint the board the same");
         }
 
         private static void EveryAreaOpens()
