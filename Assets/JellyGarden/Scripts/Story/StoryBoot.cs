@@ -28,6 +28,7 @@ namespace JellyGarden.Scripts.Story
             StoryDatabase.Load();
             StoryProgress.Load();
             StoryLevelPlan.Load();
+            CutsceneRunner.Load();
             StoryMapProgressManager.Install();
 
             Debug.Log(string.Format(

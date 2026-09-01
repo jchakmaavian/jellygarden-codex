@@ -326,6 +326,26 @@ namespace JellyGarden.Scripts.GUI
         public void CloseMenu()
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+
+            // --- King Leo story layer -------------------------------------
+            // The kit steps to the next level number and reopens its pre-play
+            // popup. The story goes back to the area instead, so the player can
+            // spend the star they just earned on a repair. Additive: delete this
+            // block and the original behaviour returns untouched.
+            if (gameObject.name == "MenuComplete" &&
+                JellyGarden.Scripts.Story.StoryFlow.HandleLevelComplete())
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            if (gameObject.name == "MenuFailed" &&
+                JellyGarden.Scripts.Story.StoryFlow.HandleLevelFailed())
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            // --------------------------------------------------------------
+
             if (gameObject.name == "MenuComplete")
             {
                 LevelManager.THIS.gameStatus = GameState.Map;

@@ -709,7 +709,16 @@ using Facebook.Unity;
         {
             if (EventSystem.current.IsPointerOverGameObject(-1))
                 return;
-            
+
+            // --- King Leo story layer -------------------------------------
+            // A map node is a story area, not a level. The area screen shows the
+            // room's goal and repair tasks and decides which level to launch, so
+            // the kit's pre-play popup is skipped. Additive: delete these two
+            // lines and the original behaviour returns untouched.
+            if (JellyGarden.Scripts.Story.StoryFlow.HandleMapNodeClicked(args.Number))
+                return;
+            // --------------------------------------------------------------
+
             if (!MenuManager.Instance.menuPlay.activeSelf &&
                 !MenuManager.Instance.gemsShop.activeSelf &&
                 !MenuManager.Instance.liveShop.activeSelf &&

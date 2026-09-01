@@ -443,7 +443,7 @@ namespace JellyGarden.Scripts.Story
 
             var host = new GameObject("~StoryProgressWriter");
             host.hideFlags = HideFlags.HideAndDontSave;
-            DontDestroyOnLoad(host);
+            StoryObjects.Persist(host);
             _instance = host.AddComponent<StoryProgressWriter>();
         }
 
