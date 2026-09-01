@@ -95,7 +95,8 @@ namespace JellyGarden.Scripts.Story
             StoryUi.BottomAnchored(box, 90f, 560f, 50f);
 
             Image backdrop = StoryUi.CreateImage("Backdrop", box, StoryUi.PanelSprite,
-                StoryUi.PanelSprite != null ? Color.white : new Color(0.07f, 0.05f, 0.04f, 0.94f));
+                new Color(0.96f, 0.91f, 0.80f, 0.97f));
+            backdrop.type = Image.Type.Sliced;
             StoryUi.Stretch(backdrop.rectTransform);
 
             _portrait = StoryUi.CreateImage("Portrait", box, null, Color.white);

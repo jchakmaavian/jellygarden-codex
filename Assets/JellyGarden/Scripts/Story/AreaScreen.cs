@@ -103,32 +103,45 @@ namespace JellyGarden.Scripts.Story
             // they pay for repairs, which is the whole point of the screen.
             _scene = StoryUi.Stretch(StoryUi.CreateRect("Scene", _canvas.transform));
 
-            StoryUi.CreateFullScreenButton("Scrim", _canvas.transform, StoryUi.Dim, null);
+            StoryUi.CreateFullScreenButton("Scrim", _canvas.transform,
+                new Color(0f, 0f, 0f, 0.35f), null);
 
+            // Anchored with margins rather than a fixed size: the canvas scales
+            // with the screen, and a fixed 1560px panel overflowed a short window
+            // and pushed the task rows into each other.
+            // The panel sits in the lower two thirds so the room's artwork stays
+            // visible above it. Watching the gate change as repairs land is the
+            // whole point of the screen — a panel over the top of it would have
+            // hidden the one thing the player is paying stars for.
             RectTransform panel = StoryUi.CreateRect("Panel", _canvas.transform);
-            panel.anchorMin = new Vector2(0.5f, 0.5f);
-            panel.anchorMax = new Vector2(0.5f, 0.5f);
-            panel.pivot = new Vector2(0.5f, 0.5f);
-            panel.sizeDelta = new Vector2(PanelWidth, 1560f);
+            panel.anchorMin = new Vector2(0f, 0f);
+            panel.anchorMax = new Vector2(1f, 0.74f);
+            panel.offsetMin = new Vector2(40f, 90f);
+            panel.offsetMax = new Vector2(-40f, 0f);
 
             var panelImage = panel.gameObject.AddComponent<Image>();
             panelImage.sprite = StoryUi.PanelSprite;
-            panelImage.color = panelImage.sprite != null ? Color.white : StoryUi.Parchment;
-            panelImage.type = Image.Type.Simple;
+            panelImage.color = StoryUi.Parchment;
+            panelImage.type = Image.Type.Sliced;
 
             _chapter = StoryUi.CreateText("Chapter", panel, "", 34, StoryUi.Muted,
                 TextAnchor.UpperCenter);
-            StoryUi.TopAnchored(_chapter.rectTransform, 46f, 46f, 60f);
+            StoryUi.TopAnchored(_chapter.rectTransform, 30f, 44f, 50f);
 
             _title = StoryUi.CreateText("Title", panel, "", 56, StoryUi.Ink,
                 TextAnchor.UpperCenter);
-            StoryUi.TopAnchored(_title.rectTransform, 96f, 76f, 60f);
+            StoryUi.TopAnchored(_title.rectTransform, 74f, 72f, 50f);
 
             _goal = StoryUi.CreateText("Goal", panel, "", 34, StoryUi.Ink,
                 TextAnchor.UpperCenter);
-            StoryUi.TopAnchored(_goal.rectTransform, 180f, 130f, 70f);
+            StoryUi.TopAnchored(_goal.rectTransform, 152f, 110f, 60f);
 
             BuildStarCounter(panel);
+
+            Image rule = StoryUi.CreateImage("Rule", panel, null,
+                new Color(0.45f, 0.36f, 0.26f, 0.45f));
+            StoryUi.TopAnchored(rule.rectTransform, 342f, 3f, 45f);
+
             BuildTaskList(panel);
             BuildFooter(panel);
 
@@ -141,7 +154,7 @@ namespace JellyGarden.Scripts.Story
         private void BuildStarCounter(RectTransform panel)
         {
             RectTransform holder = StoryUi.CreateRect("Stars", panel);
-            StoryUi.TopAnchored(holder, 320f, 76f, 70f);
+            StoryUi.TopAnchored(holder, 268f, 66f, 60f);
 
             Image star = StoryUi.CreateImage("Star", holder, StoryUi.StarSprite,
                 StoryUi.StarSprite != null ? Color.white : StoryUi.Gold);
@@ -163,8 +176,8 @@ namespace JellyGarden.Scripts.Story
             RectTransform viewport = StoryUi.CreateRect("TaskViewport", panel);
             viewport.anchorMin = new Vector2(0f, 0f);
             viewport.anchorMax = new Vector2(1f, 1f);
-            viewport.offsetMin = new Vector2(60f, 260f);
-            viewport.offsetMax = new Vector2(-60f, -410f);
+            viewport.offsetMin = new Vector2(45f, 210f);
+            viewport.offsetMax = new Vector2(-45f, -354f);
 
             var mask = viewport.gameObject.AddComponent<Image>();
             mask.color = new Color(0f, 0f, 0f, 0.02f);
@@ -261,6 +274,11 @@ namespace JellyGarden.Scripts.Story
 
                 var row = new TaskRow { TaskIndex = task.Index };
 
+                Image card = StoryUi.CreateImage("Card", rowRect, StoryUi.PanelSprite,
+                    new Color(1f, 1f, 1f, 0.35f));
+                card.type = Image.Type.Sliced;
+                StoryUi.Stretch(card.rectTransform);
+
                 row.Label = StoryUi.CreateText("Label", rowRect, task.Label, 34, StoryUi.Ink);
                 row.Label.rectTransform.anchorMin = new Vector2(0f, 0f);
                 row.Label.rectTransform.anchorMax = new Vector2(1f, 1f);
@@ -314,8 +332,13 @@ namespace JellyGarden.Scripts.Story
                 bool isNext = next != null && next.Index == task.Index;
                 bool affordable = StoryProgress.CanCompleteTask(_areaId, task.Index);
 
+                // Legacy UI Text supports <b>, <i>, <size>, <color> and nothing
+                // else — an <s> for strikethrough renders as literal "<s>" on
+                // screen. A completed repair is marked by its colour and its
+                // star instead.
                 row.Label.color = done ? StoryUi.Muted : StoryUi.Ink;
-                row.Label.text = done ? "<s>" + task.Label + "</s>" : task.Label;
+                row.Label.fontStyle = done ? FontStyle.Italic : FontStyle.Normal;
+                row.Label.text = task.Label;
 
                 row.Cost.gameObject.SetActive(!done);
                 row.Tick.gameObject.SetActive(done);

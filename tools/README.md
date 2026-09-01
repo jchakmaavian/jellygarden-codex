@@ -73,3 +73,26 @@ assert it is reachable.
 **Every generated Unity asset needs a sibling `.meta`.** GUIDs are derived from
 the asset path (`story_common.guid_for`) so a regeneration does not move them and
 break every reference.
+
+## Running the game
+
+```bash
+UNITY=/Applications/Unity/Hub/Editor/6000.5.10f1/Unity.app/Contents/MacOS/Unity
+
+# Build a macOS player
+"$UNITY" -batchmode -quit -nographics -projectPath . -logFile - \
+  -executeMethod JellyGarden.Scripts.Story.Editor.StoryBuild.BuildMac
+
+# Play it
+open -a Builds/Mac/KingLeo.app
+
+# Or have it drive itself through the story loop, screenshotting each beat
+open -a Builds/Mac/KingLeo.app --args -storydemo
+tail -f ~/Library/Logs/DefaultCompany/"Match3 Games"/Player.log | grep StoryDemo
+open ~/Library/Application\ Support/DefaultCompany/Match3\ Games/demo
+```
+
+`-storydemo` exists because driving the player with synthetic mouse clicks does
+not work here: the window cascades to a new position on every launch and Unity
+moves it again after start, so screen coordinates go stale between reading them
+and clicking. The driver walks the game through its own API instead.

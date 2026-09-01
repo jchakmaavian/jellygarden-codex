@@ -24,19 +24,19 @@ namespace JellyGarden.Scripts.Story
         private const float CrossFadeSeconds = 0.5f;
 
         private static StoryMusic _instance;
-        private static bool _installed;
 
         private AudioSource _source;
         private AudioClip _lastClip;
         private float _fadeStartedAt;
         private float _targetVolume = 1f;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        /// <summary>Called by StorySceneHooks on every scene load; a no-op when this scene has no map or board.</summary>
         public static void Install()
         {
-            if (_installed) return;
+            // No one-shot flag: MusicBase does not exist until the scene that
+            // owns it loads, so a flag set on the menu would block it forever.
             if (MusicBase.Instance == null) return;
-            _installed = true;
+            if (_instance != null) return;
 
             ReplaceTracks();
 

@@ -69,7 +69,7 @@ namespace JellyGarden.Scripts.Story
             _group.alpha = 0f;
             _group.blocksRaycasts = false;
 
-            StoryUi.CreateFullScreenButton("Dismiss", root, new Color(0f, 0f, 0f, 0.88f), Dismiss);
+            StoryUi.CreateFullScreenButton("Dismiss", root, new Color(0f, 0f, 0f, 0.97f), Dismiss);
 
             RectTransform card = StoryUi.CreateRect("Card", root);
             card.anchorMin = new Vector2(0.5f, 0.5f);

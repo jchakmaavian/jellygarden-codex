@@ -24,7 +24,7 @@ namespace JellyGarden.Scripts.Story
 
         private int _themedLevel = -1;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        /// <summary>Called by StorySceneHooks on every scene load; a no-op when this scene has no map or board.</summary>
         public static void Install()
         {
             if (_instance != null) return;

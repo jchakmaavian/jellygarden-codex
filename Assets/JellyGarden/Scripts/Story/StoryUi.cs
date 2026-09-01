@@ -18,8 +18,14 @@ namespace JellyGarden.Scripts.Story
     {
         // The kit's UI sprites live outside Resources, where a built player
         // cannot reach them, so tools/ui_sprites.py copies the handful the story
-        // needs into Resources/Story/UI with their original import settings. A
-        // miss degrades to flat colour rather than rendering nothing.
+        // needs into Resources/Story/UI with their original import settings.
+        //
+        // Panels and buttons are NOT taken from there. Every panel the kit ships
+        // is bespoke artwork with its labels painted in — play_menu_01 has
+        // "Level", "Target:" and "Choose the boost:" baked into the image, and
+        // play_button has "Play" baked into it. Borrowing one as a generic frame
+        // put someone else's labels behind the story's own text, which is exactly
+        // how it looked on screen. The story draws its own instead.
         private const string SpriteRoot = "Story/UI/";
 
         public static readonly Color Ink = new Color(0.16f, 0.11f, 0.07f, 1f);
@@ -52,14 +58,75 @@ namespace JellyGarden.Scripts.Story
             }
         }
 
-        public static Sprite PanelSprite { get { return LoadSprite("panel"); } }
-        public static Sprite ButtonSprite { get { return LoadSprite("button"); } }
+        // Unlabelled kit art is still fair game — a star is a star.
         public static Sprite StarSprite { get { return LoadSprite("star"); } }
-        public static Sprite BannerSprite { get { return LoadSprite("banner"); } }
-        public static Sprite CloseSprite { get { return LoadSprite("close"); } }
-        public static Sprite NextSprite { get { return LoadSprite("next"); } }
-        public static Sprite CloudSprite { get { return LoadSprite("cloud"); } }
         public static Sprite LockSprite { get { return LoadSprite("lock"); } }
+
+        private static Sprite _panelSprite;
+        private static Sprite _buttonSprite;
+
+        /// <summary>A plain rounded card, drawn rather than borrowed.</summary>
+        public static Sprite PanelSprite
+        {
+            get
+            {
+                if (_panelSprite == null) _panelSprite = RoundedRect(48, Color.white);
+                return _panelSprite;
+            }
+        }
+
+        /// <summary>A plain rounded pill for buttons, tinted by the caller.</summary>
+        public static Sprite ButtonSprite
+        {
+            get
+            {
+                if (_buttonSprite == null) _buttonSprite = RoundedRect(28, Color.white);
+                return _buttonSprite;
+            }
+        }
+
+        /// <summary>
+        /// Builds a white rounded rectangle as a 9-sliced sprite, so one texture
+        /// serves every panel size without stretching its corners. White so the
+        /// Image colour decides the look.
+        /// </summary>
+        private static Sprite RoundedRect(int radius, Color colour)
+        {
+            int size = radius * 2 + 2;
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                filterMode = FilterMode.Bilinear,
+                wrapMode = TextureWrapMode.Clamp,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+
+            var pixels = new Color32[size * size];
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    // Distance from the nearest corner centre, so the corners
+                    // round and the edges stay straight when sliced.
+                    float dx = Mathf.Max(radius - x, x - (size - 1 - radius), 0f);
+                    float dy = Mathf.Max(radius - y, y - (size - 1 - radius), 0f);
+                    float distance = Mathf.Sqrt(dx * dx + dy * dy);
+
+                    // One pixel of feather so the edge is not stair-stepped.
+                    float alpha = Mathf.Clamp01(radius - distance);
+                    pixels[y * size + x] = new Color(colour.r, colour.g, colour.b, alpha);
+                }
+            }
+
+            texture.SetPixels32(pixels);
+            texture.Apply();
+
+            var sprite = Sprite.Create(texture, new Rect(0f, 0f, size, size),
+                new Vector2(0.5f, 0.5f), 100f, 0,
+                SpriteMeshType.FullRect,
+                new Vector4(radius, radius, radius, radius));
+            sprite.hideFlags = HideFlags.HideAndDontSave;
+            return sprite;
+        }
 
         private static readonly Dictionary<string, Sprite> _sprites =
             new Dictionary<string, Sprite>();
@@ -156,8 +223,8 @@ namespace JellyGarden.Scripts.Story
 
             var image = rect.gameObject.AddComponent<Image>();
             image.sprite = ButtonSprite;
-            image.color = image.sprite != null ? Color.white : Gold;
-            image.type = Image.Type.Simple;
+            image.color = Gold;
+            image.type = Image.Type.Sliced;
 
             var button = rect.gameObject.AddComponent<Button>();
             button.targetGraphic = image;
@@ -192,9 +259,7 @@ namespace JellyGarden.Scripts.Story
 
             var image = button.targetGraphic as Image;
             if (image != null)
-                image.color = interactable
-                    ? (image.sprite != null ? Color.white : Gold)
-                    : new Color(0.65f, 0.63f, 0.60f, 1f);
+                image.color = interactable ? Gold : new Color(0.62f, 0.60f, 0.57f, 1f);
 
             var label = button.GetComponentInChildren<Text>();
             if (label != null) label.color = interactable ? Ink : Muted;

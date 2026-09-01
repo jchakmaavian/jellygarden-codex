@@ -60,12 +60,43 @@ namespace JellyGarden.Scripts.Story
 
             if (!StoryProgress.IsAreaUnlocked(areaId))
             {
+                Debug.Log("[Story] Area " + areaId + " tapped but still locked.");
                 ShowLockedToast(areaId);
                 return true;
             }
 
+            StoryArea area = StoryDatabase.GetArea(areaId);
+            Debug.Log(string.Format("[Story] Opening area {0} ({1}): {2} tasks, {3} stars held.",
+                areaId, area.Name, area.Tasks.Count, StoryProgress.StarsIn(areaId)));
+
             AreaScreen.Open(areaId);
+            if (_instance != null) _instance.StartCoroutine(ReportOpenMenus());
             return true;
+        }
+
+        /// <summary>
+        /// Lists the kit menus that are on screen a frame after the area screen
+        /// opens. The story is supposed to replace the pre-play popup, not sit on
+        /// top of it, and only the game can say which is happening.
+        /// </summary>
+        private static global::System.Collections.IEnumerator ReportOpenMenus()
+        {
+            yield return null;
+
+            if (MenuManager.Instance == null) yield break;
+            Transform canvas = MenuManager.Instance.GetCanvasGlobal();
+            if (canvas == null) yield break;
+
+            var open = new global::System.Text.StringBuilder("[Story] Kit menus open: ");
+            bool any = false;
+            foreach (Transform child in canvas)
+            {
+                if (!child.gameObject.activeSelf) continue;
+                open.Append(child.name).Append(' ');
+                any = true;
+            }
+            if (!any) open.Append("(none)");
+            Debug.Log(open.ToString());
         }
 
         /// <summary>

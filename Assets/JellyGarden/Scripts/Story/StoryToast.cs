@@ -48,11 +48,12 @@ namespace JellyGarden.Scripts.Story
             _group.interactable = false;
             _group.alpha = 0f;
 
-            Image backdrop = StoryUi.CreateImage("Backdrop", holder, StoryUi.CloudSprite,
-                StoryUi.CloudSprite != null ? Color.white : new Color(0f, 0f, 0f, 0.75f));
+            Image backdrop = StoryUi.CreateImage("Backdrop", holder, StoryUi.PanelSprite,
+                new Color(0.10f, 0.08f, 0.06f, 0.92f));
+            backdrop.type = Image.Type.Sliced;
             StoryUi.Stretch(backdrop.rectTransform);
 
-            _text = StoryUi.CreateText("Text", holder, "", 38, StoryUi.Ink,
+            _text = StoryUi.CreateText("Text", holder, "", 38, StoryUi.Parchment,
                 TextAnchor.MiddleCenter);
             StoryUi.Stretch(_text.rectTransform, 24f);
         }

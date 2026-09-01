@@ -76,6 +76,19 @@ Two seams exist only for this and should be preserved:
 - `StoryObjects.Persist` — `DontDestroyOnLoad`, no-op outside play mode
 - `StoryClock` — Unity's unscaled time, overridable by a test
 
+## Two traps that have bitten more than once
+
+**`System.*` resolves into the kit's namespace.** The kit has
+`JellyGarden.Scripts.System`, so inside `JellyGarden.Scripts.Story` a bare
+`System.Random` or `System.Text.StringBuilder` fails to compile. Write
+`global::System.Random`, or add a `using`.
+
+**`RuntimeInitializeOnLoadMethod` runs once, in the startup scene.** This game
+opens on `main` and loads `game` afterwards, so anything needing the map or the
+board found nothing and silently did nothing. Per-scene setup belongs in
+`StorySceneHooks`, which subscribes to `SceneManager.sceneLoaded`; only
+once-per-process work belongs in `StoryBoot`.
+
 ## Typecheck
 
 Unity writes an explicit `<Compile Include>` per file, so a newly added script is
