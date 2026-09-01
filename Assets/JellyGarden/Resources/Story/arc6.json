@@ -1,0 +1,1065 @@
+{
+  "schemaVersion": 1,
+  "arc": {
+    "id": 6,
+    "title": "The Reckoning",
+    "areaCount": 25
+  },
+  "areas": [
+    {
+      "id": 126,
+      "name": "Outer Wall Breach",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "The wall is breached and the enemy is inside the outer bailey. Close it.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the rubble breach",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Raise the timber palisade",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the wall walk",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Set the caltrops",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the breach",
+          "stars": 1
+        }
+      ],
+      "clue": "The breach is exactly where Leo rebuilt the wall in Arc 1. Grimm knew the repairs because he read every report.",
+      "pointsTo": 127,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-126-outer-wall-breach.md",
+      "stars": 7,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 127,
+      "name": "The Siege Camp",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "Break the nearest siege camp before it can bring up engines.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Fire the siege engines",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Clear the enemy lines",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the sally port",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Recover the wounded",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Fortify the ditch",
+          "stars": 2
+        }
+      ],
+      "clue": "The northern army is not here. These are Haldor's disowned mercenaries, unpaid and desperate — fighting because there is nothing to go back to.",
+      "pointsTo": 128,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-127-the-siege-camp.md",
+      "stars": 8,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 128,
+      "name": "Burning Gatehouse",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "The gatehouse is burning with people still inside.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Douse the gate fire",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Clear the burning timbers",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Shore up the arch",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Recover the wounded",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Rehang the gate",
+          "stars": 2
+        }
+      ],
+      "clue": "The gate Leo hung in Area 004 holds long enough for everyone to get out, and then falls.",
+      "pointsTo": 129,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-128-burning-gatehouse.md",
+      "stars": 9,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 129,
+      "name": "The Barricades",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "Hold the inner barricades through the night.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Build the street barricades",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the shield wall",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Set the archer posts",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Distribute the arms",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the line",
+          "stars": 1
+        }
+      ],
+      "clue": "The villagers from Arc 2 are on the barricade. Nobody ordered them to be. They walked up from the valley.",
+      "pointsTo": 130,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-129-the-barricades.md",
+      "stars": 7,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 130,
+      "name": "Powder Store",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "The powder store is under the wall and one spark ends the siege badly.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the powder store",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the magazine door",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Move the barrels",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Wet the timbers",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Set the guard",
+          "stars": 1
+        }
+      ],
+      "clue": "Someone has already moved half the powder — inward, under the throne room. It was placed months ago.",
+      "pointsTo": 131,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-130-powder-store.md",
+      "stars": 8,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 131,
+      "name": "The Field Hospital",
+      "phase": "First hard evidence",
+      "beatType": "ARC BEAT",
+      "goal": "ARC BEAT. The wounded are lying in the courtyard. Make a hospital.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the great hall floor",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Set the beds",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the water supply",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the stores",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the hall",
+          "stars": 1
+        },
+        {
+          "index": 6,
+          "label": "Repair the surgeon's table",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. Freya runs the hospital. Among the wounded brought in is Grimm, dragged from the collapsed dungeon — and she treats him.",
+      "pointsTo": 132,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-131-the-field-hospital.md",
+      "stars": 9,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 132,
+      "name": "Wall Walk",
+      "phase": "First hard evidence",
+      "beatType": "Texture",
+      "goal": "Walk the walls and hold them until dawn.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the parapet",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the hoardings",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the stair towers",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Set the braziers",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rehang the standards",
+          "stars": 1
+        }
+      ],
+      "clue": "Roderick's guards — the ones dismissed by a forged order in Arc 1 — are holding the north wall. All of them came back.",
+      "pointsTo": 133,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-132-wall-walk.md",
+      "stars": 7,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 133,
+      "name": "The Ruined Stables",
+      "phase": "First hard evidence",
+      "beatType": "Texture",
+      "goal": "The stables are burning and the horses are still inside.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Break the stable doors",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Douse the roof fire",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Lead out the horses",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Clear the fallen beams",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rebuild the stalls",
+          "stars": 1
+        }
+      ],
+      "clue": "Juniper — Freya's mare, the horse that proved she never left — is led out alive.",
+      "pointsTo": 134,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-133-the-ruined-stables.md",
+      "stars": 8,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 134,
+      "name": "Broken Courtyard",
+      "phase": "First hard evidence",
+      "beatType": "ARC BEAT",
+      "goal": "ARC BEAT. The courtyard is lost. Take it back.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the enemy hold",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Rebuild the barricade",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the well",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Recover the fallen",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Right the old king's statue",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. The statue of Leo's father is thrown down again in the fighting. Leo leaves it where it lies.",
+      "pointsTo": 135,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-134-broken-courtyard.md",
+      "stars": 9,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 135,
+      "name": "Shattered Hall",
+      "phase": "First hard evidence",
+      "beatType": "Texture",
+      "goal": "The great hall roof is down. Clear it before the next assault.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the fallen roof",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Shore up the walls",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the hall doors",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Set the inner line",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the hall",
+          "stars": 1
+        }
+      ],
+      "clue": "Under the rubble, the Arc 2 evidence chest — the agreement, the ledgers, the forged letters — crushed but readable.",
+      "pointsTo": 136,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-135-shattered-hall.md",
+      "stars": 7,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 136,
+      "name": "The Burnt Kitchen",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The kitchen is burnt out and the castle has not eaten in two days.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the burnt range",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Rebuild the hearth",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Restore the water supply",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Recover the stores",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Set the cook fires",
+          "stars": 1
+        }
+      ],
+      "clue": "Cook is still working, in a kitchen with no roof, feeding four hundred people from a fire in the floor.",
+      "pointsTo": 137,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-136-the-burnt-kitchen.md",
+      "stars": 7,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 137,
+      "name": "Ash Garden",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The garden is burnt. Clear it so the wounded have somewhere to lie in the air.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the burnt beds",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the garden wall",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Restore the water channels",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Salvage the roses",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Set the lamps",
+          "stars": 1
+        }
+      ],
+      "clue": "Freya's roses are burnt to the root — and the gardener has already taken cuttings and potted them in the cellar.",
+      "pointsTo": 138,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-137-ash-garden.md",
+      "stars": 7,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 138,
+      "name": "The Fallen Library",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "ARC BEAT",
+      "goal": "ARC BEAT. The library is on fire. Choose what to carry out.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Fight the fire",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Clear the fallen shelves",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Save the archive",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Recover the forged decrees",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Shore up the roof",
+          "stars": 1
+        },
+        {
+          "index": 6,
+          "label": "Light the ruin",
+          "stars": 1
+        }
+      ],
+      "clue": "ARC BEAT. Leo saves the true will — the one naming Aldous heir — rather than the forgery that makes him king.",
+      "pointsTo": 139,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-138-the-fallen-library.md",
+      "stars": 10,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 139,
+      "name": "Flooded Pool",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "Grimm's old sabotage returns: the pool floods the lower castle again.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Close the sluice gates",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Pump out the halls",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Shore up the tunnels",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the pump house",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the lower halls",
+          "stars": 1
+        }
+      ],
+      "clue": "The flood puts out the fire in the powder store below the throne room. Grimm's oldest trap disarms his newest one.",
+      "pointsTo": 140,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-139-flooded-pool.md",
+      "stars": 8,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 140,
+      "name": "Ruined Bedchamber",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The bedchamber has taken a stone from a trebuchet.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the fallen wall",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Shore up the floor",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Recover the belongings",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the roof",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Set a lamp",
+          "stars": 1
+        }
+      ],
+      "clue": "Under the broken floorboard, Freya's note from Area 021, still there. One word: BELOW.",
+      "pointsTo": 141,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-140-ruined-bedchamber.md",
+      "stars": 8,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 141,
+      "name": "The Last Barricade",
+      "phase": "Allies gathered",
+      "beatType": "ARC BEAT",
+      "goal": "The last barricade. If this goes, the castle goes.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Build the final line",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Set the archers",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Arm the household",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Bar the inner doors",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the line",
+          "stars": 1
+        }
+      ],
+      "clue": "ARC BEAT. The mercenaries are offered the truth: they were paid in false coin by a king who has disowned them. Half of them put down their weapons.",
+      "pointsTo": 142,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-141-the-last-barricade.md",
+      "stars": 8,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 142,
+      "name": "Throne Room Stand",
+      "phase": "Allies gathered",
+      "beatType": "Texture",
+      "goal": "Hold the throne room. Grimm is already in it.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the throne room",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Bar the great doors",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the dais",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Secure the powder below",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the room",
+          "stars": 2
+        }
+      ],
+      "clue": "Grimm is sitting on the throne, alone, with the fuse in his hand and no army left outside.",
+      "pointsTo": 143,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-142-throne-room-stand.md",
+      "stars": 9,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 143,
+      "name": "The Tower Duel",
+      "phase": "Allies gathered",
+      "beatType": "Texture",
+      "goal": "ARC BEAT. Grimm takes the tower. Follow him up.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the tower stair",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the collapsed landing",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Force the tower door",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Shore up the roof",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Reach the top",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. No duel. Leo climbs the tower carrying the true will and their father's unsent letter, and hands Grimm both.",
+      "pointsTo": 144,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-143-the-tower-duel.md",
+      "stars": 9,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 144,
+      "name": "Grimm's Last Room",
+      "phase": "Allies gathered",
+      "beatType": "ARC BEAT",
+      "goal": "The room at the top of the tower, where it ends.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the tower room",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the window",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Clear the wreckage",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Set the lamp",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Open the door",
+          "stars": 2
+        }
+      ],
+      "clue": "Grimm reads the letter and gives up the fuse. He asks for one thing: that his mother's name be in the record. Leo tells him it already is — cut in stone on Widow's Hill.",
+      "pointsTo": 145,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-144-grimms-last-room.md",
+      "stars": 9,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 145,
+      "name": "The Surrender Field",
+      "phase": "Allies gathered",
+      "beatType": "Texture",
+      "goal": "The field where it stops. Take the surrender and the cost.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the field",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Set the surrender line",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Recover the fallen",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Treat the wounded",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Raise the truce banners",
+          "stars": 2
+        }
+      ],
+      "clue": "Eleven hundred names on both sides. Freya reads all of them aloud. It takes until dark.",
+      "pointsTo": 146,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-145-the-surrender-field.md",
+      "stars": 10,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 146,
+      "name": "Rebuilt Gates",
+      "phase": "Dead end / betrayal",
+      "beatType": "ARC BEAT",
+      "goal": "Rebuild the gates. Start again, from the beginning.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the burnt gateway",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Set the new timbers",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Rehang the gate",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Raise the banner",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the lanterns",
+          "stars": 2
+        }
+      ],
+      "clue": "The same four repairs as Area 001, in the same order. This time the whole village turns out to do them.",
+      "pointsTo": 147,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-146-rebuilt-gates.md",
+      "stars": 10,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 147,
+      "name": "The New Garden",
+      "phase": "Dead end / betrayal",
+      "beatType": "Texture",
+      "goal": "Replant the garden from the gardener's cuttings.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the ash",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Turn the beds",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Plant the cuttings",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Repair the trellises",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Set the benches",
+          "stars": 1
+        }
+      ],
+      "clue": "The roses take. It will be three years before they flower, and Freya plants them anyway.",
+      "pointsTo": 148,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-147-the-new-garden.md",
+      "stars": 8,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 148,
+      "name": "Restored Ballroom",
+      "phase": "Dead end / betrayal",
+      "beatType": "ARC BEAT",
+      "goal": "ARC BEAT. Rebuild the ballroom and open the castle to everyone.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the floor",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the chandeliers",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the gallery",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Rehang the banners",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Set the tables",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Light the ballroom",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. The feast is held for the village, the guards, the staff and the surrendered. Aldous attends, under guard, and is seated.",
+      "pointsTo": 149,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-148-restored-ballroom.md",
+      "stars": 12,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 149,
+      "name": "Crown Vault",
+      "phase": "Dead end / betrayal",
+      "beatType": "Texture",
+      "goal": "The crown vault, and the question of who the crown belongs to.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the vault door",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the regalia",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the record shelf",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Set the true will in the record",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the vault",
+          "stars": 2
+        }
+      ],
+      "clue": "Leo enters both documents into the record — the true will and his father's letter — and lets the council rule. It rules by the first king's line: the crown to the elder, the kingdom to whoever tends it.",
+      "pointsTo": 150,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-149-crown-vault.md",
+      "stars": 10,
+      "arc": 6,
+      "status": "locked"
+    },
+    {
+      "id": 150,
+      "name": "Grand Courtyard",
+      "phase": "ARC PAYOFF",
+      "beatType": "ARC PAYOFF",
+      "goal": "The Grand Courtyard. Everything, restored, in daylight.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the last rubble",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repave the courtyard",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Raise the statue anew",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Restore the fountain",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Set the coronation dais",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Seat the kingdom",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Crown the King and Queen",
+          "stars": 3
+        },
+        {
+          "index": 8,
+          "label": "Light the whole castle",
+          "stars": 3
+        }
+      ],
+      "clue": "ARC PAYOFF. Leo and Freya are crowned together, by the kingdom's consent rather than by a document. Aldous stands in the crowd, named, pardoned, and not restored — and that is the ending he accepts. The old king's statue is raised again with both his sons' names on the base.",
+      "pointsTo": null,
+      "board": {},
+      "source": "arc-6-the-reckoning/area-150-grand-courtyard.md",
+      "stars": 18,
+      "arc": 6,
+      "status": "locked"
+    }
+  ]
+}

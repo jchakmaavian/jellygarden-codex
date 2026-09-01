@@ -1,0 +1,61 @@
+{
+ "totalAreas": 150,
+ "totalTasks": 807,
+ "totalStars": 1209,
+ "arcs": [
+  {
+   "arc": 1,
+   "title": "The Missing Queen",
+   "firstArea": 1,
+   "lastArea": 25,
+   "areaCount": 25,
+   "taskCount": 162,
+   "starCount": 255
+  },
+  {
+   "arc": 2,
+   "title": "Grimm's Trail",
+   "firstArea": 26,
+   "lastArea": 50,
+   "areaCount": 25,
+   "taskCount": 130,
+   "starCount": 181
+  },
+  {
+   "arc": 3,
+   "title": "The Empty Treasury",
+   "firstArea": 51,
+   "lastArea": 75,
+   "areaCount": 25,
+   "taskCount": 128,
+   "starCount": 178
+  },
+  {
+   "arc": 4,
+   "title": "The Rival Crown",
+   "firstArea": 76,
+   "lastArea": 100,
+   "areaCount": 25,
+   "taskCount": 128,
+   "starCount": 187
+  },
+  {
+   "arc": 5,
+   "title": "The Old King's Secret",
+   "firstArea": 101,
+   "lastArea": 125,
+   "areaCount": 25,
+   "taskCount": 128,
+   "starCount": 186
+  },
+  {
+   "arc": 6,
+   "title": "The Reckoning",
+   "firstArea": 126,
+   "lastArea": 150,
+   "areaCount": 25,
+   "taskCount": 131,
+   "starCount": 222
+  }
+ ]
+}

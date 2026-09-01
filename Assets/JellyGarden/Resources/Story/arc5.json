@@ -1,0 +1,1050 @@
+{
+  "schemaVersion": 1,
+  "arc": {
+    "id": 5,
+    "title": "The Old King's Secret",
+    "areaCount": 25
+  },
+  "areas": [
+    {
+      "id": 101,
+      "name": "The Old Ruins",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "Find the ruin Grimm named. Nobody has kept this place on a map for forty years.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the overgrown approach",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Shore up the standing walls",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the courtyard",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Clear the fallen masonry",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Set lamps in the ruin",
+          "stars": 1
+        }
+      ],
+      "clue": "The ruin was a royal house once. Someone went to the trouble of striking it from every survey in the kingdom.",
+      "pointsTo": 102,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-101-the-old-ruins.md",
+      "stars": 6,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 102,
+      "name": "Collapsed Cloister",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "The cloister roof is down and the cells are open to the weather.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the collapsed vault",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the cloister arches",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the walkway",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the cell doors",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rebuild the well head",
+          "stars": 1
+        }
+      ],
+      "clue": "Forty years of leaf litter, and under it a child's wooden horse, carved with a royal cypher.",
+      "pointsTo": 103,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-102-collapsed-cloister.md",
+      "stars": 6,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 103,
+      "name": "The Monastery Gate",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "The monastery is still occupied. Ask to be let in.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the gatehouse",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Restore the gate bell",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Repair the guest lodge",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Clear the entry court",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Relight the gate lamps",
+          "stars": 1
+        }
+      ],
+      "clue": "The abbot has been expecting a king for forty years. He says only: not this one. Your father.",
+      "pointsTo": 104,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-103-the-monastery-gate.md",
+      "stars": 6,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 104,
+      "name": "Scriptorium",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "The scriptorium holds the monastery's records. Make it dry enough to read.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the roof lantern",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the writing desks",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Dry the damp shelves",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Repair the ink store",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Relight the reading lamps",
+          "stars": 1
+        }
+      ],
+      "clue": "The house register lists a boy placed here in secret, fees paid from the royal purse, no family name given.",
+      "pointsTo": 105,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-104-scriptorium.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 105,
+      "name": "Bell Tower",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "The bell has not rung since the old king died.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the bell frame",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the bell rope",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Repair the tower stair",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Clear the belfry",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rehang the bell",
+          "stars": 2
+        }
+      ],
+      "clue": "Scratched inside the bell chamber, where only a child climbing to hide would put it: a name — Aldous — and beside it, son of the King.",
+      "pointsTo": 106,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-105-bell-tower.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 106,
+      "name": "The Herb Garden",
+      "phase": "First hard evidence",
+      "beatType": "ARC BEAT",
+      "goal": "The herb garden still feeds the house. Put it right.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the beds",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the garden wall",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the drying shed",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Repair the water channels",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rebuild the potting bench",
+          "stars": 1
+        }
+      ],
+      "clue": "ARC BEAT. The infirmarian remembers the boy: clever, angry, and told at fourteen exactly who his father was and why he could never say so.",
+      "pointsTo": 107,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-106-the-herb-garden.md",
+      "stars": 6,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 107,
+      "name": "Monk's Cellar",
+      "phase": "First hard evidence",
+      "beatType": "Texture",
+      "goal": "The cellar has been sealed since the old king's last visit.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Break the cellar seal",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Clear the collapsed steps",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the storage racks",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the strongbox",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the cellar",
+          "stars": 1
+        }
+      ],
+      "clue": "The old king came here four times. The last time he brought a lawyer, and left with a signed renunciation.",
+      "pointsTo": 108,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-107-monks-cellar.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 108,
+      "name": "The Reliquary",
+      "phase": "First hard evidence",
+      "beatType": "Texture",
+      "goal": "The reliquary is the only locked room in the monastery.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the reliquary door",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the display cases",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Repair the alarm bell",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Clean the silverware",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the reliquary",
+          "stars": 2
+        }
+      ],
+      "clue": "Kept among the relics like a saint's bone: the old king's signet, given to the monastery for safekeeping — and its match, the one Grimm has been using all along.",
+      "pointsTo": 109,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-108-the-reliquary.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 109,
+      "name": "Pilgrim Road",
+      "phase": "First hard evidence",
+      "beatType": "ARC BEAT",
+      "goal": "The pilgrim road is the only way to the old ruins beyond.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the washed-out road",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the pilgrim shelters",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the waymark crosses",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the ford",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Relight the road shrines",
+          "stars": 1
+        }
+      ],
+      "clue": "ARC BEAT. A pilgrim's account, forty years old: a woman walking this road with a baby, turned away from the castle gate on the king's order.",
+      "pointsTo": 110,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-109-pilgrim-road.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 110,
+      "name": "The Standing Stones",
+      "phase": "First hard evidence",
+      "beatType": "Texture",
+      "goal": "The standing stones mark the boundary of the old estate.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the fallen stones",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Re-raise the boundary marker",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the stone circle path",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Clear the burial mounds",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Set the boundary lamps",
+          "stars": 1
+        }
+      ],
+      "clue": "One stone is newer than the rest, and it is a grave marker. No name. The date is the year Leo was born.",
+      "pointsTo": 111,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-110-the-standing-stones.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 111,
+      "name": "Sunken Keep",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The sunken keep is half underwater and holds the estate's records.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Pump out the lower floors",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Shore up the walls",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the record room",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Clear the flooded stair",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the keep",
+          "stars": 1
+        }
+      ],
+      "clue": "The estate was drowned deliberately — a dam raised the river the same year the boy was sent away.",
+      "pointsTo": 112,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-111-sunken-keep.md",
+      "stars": 8,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 112,
+      "name": "The Drowned Hall",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The drowned hall still has furniture standing in the silt.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the silt",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the hall floor",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the long table",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the wall panels",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the hall",
+          "stars": 1
+        }
+      ],
+      "clue": "A family portrait, ruined by water except for one corner: a boy's hand holding a woman's, both painted out afterwards with a knife.",
+      "pointsTo": 113,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-112-the-drowned-hall.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 113,
+      "name": "Old Nursery",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "ARC BEAT",
+      "goal": "ARC BEAT. The nursery in the drowned house was used. Find out by whom.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the nursery",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the shutters",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the cot",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Repair the toy chest",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the room",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. Two cots. Two sets of clothes, the same size, the same year. Leo and Aldous were born months apart and lived here together as infants.",
+      "pointsTo": 114,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-113-old-nursery.md",
+      "stars": 8,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 114,
+      "name": "The Portrait Gallery",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The portrait gallery records every royal face. Someone has edited it.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the gallery roof",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the frames",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Clean the canvases",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Repair the hanging rail",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the gallery",
+          "stars": 1
+        }
+      ],
+      "clue": "Every portrait of the old king has been repainted to remove a second child from his side. The overpaint is flaking.",
+      "pointsTo": 115,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-114-the-portrait-gallery.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 115,
+      "name": "Sealed Wing",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The sealed wing has been bricked up since Leo was a boy.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Break the sealed door",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Clear the corridor",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Repair the floors",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Restore the shuttered rooms",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the wing",
+          "stars": 2
+        }
+      ],
+      "clue": "This wing was closed the week Leo's mother died. Her rooms are exactly as she left them, and her letters are still on the desk.",
+      "pointsTo": 116,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-115-sealed-wing.md",
+      "stars": 8,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 116,
+      "name": "The Birth Records Room",
+      "phase": "Allies gathered",
+      "beatType": "ARC BEAT",
+      "goal": "The birth records room holds what the kingdom officially believes.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the record cabinets",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the register",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the clerk's desk",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Dry the damaged volumes",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the room",
+          "stars": 1
+        }
+      ],
+      "clue": "ARC BEAT. The register is honest. Aldous is recorded, legitimate, and older than Leo by four months. The forged will did not steal Leo's throne. It protected it.",
+      "pointsTo": 117,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-116-the-birth-records-room.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 117,
+      "name": "Chapel of Ashes",
+      "phase": "Allies gathered",
+      "beatType": "Texture",
+      "goal": "The chapel of ashes is where the family burned what it could not keep.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the ash pit",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the chapel roof",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the altar",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the memorial plaques",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the chapel",
+          "stars": 1
+        }
+      ],
+      "clue": "Among the ashes, the unburnt corner of the true will — naming Aldous heir, in the old king's own hand.",
+      "pointsTo": 118,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-117-chapel-of-ashes.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 118,
+      "name": "The Royal Crypt",
+      "phase": "Allies gathered",
+      "beatType": "Texture",
+      "goal": "Open the royal crypt. Everything ends here.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the crypt stair",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the vault doors",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Restore the tomb slabs",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the lamp niches",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the crypt",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. The old king's tomb has been opened before — recently — and something was taken out, not put in.",
+      "pointsTo": 119,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-118-the-royal-crypt.md",
+      "stars": 8,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 119,
+      "name": "First King's Tomb",
+      "phase": "Allies gathered",
+      "beatType": "ARC BEAT",
+      "goal": "The first king's tomb is the oldest thing in the kingdom.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the antechamber",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the sarcophagus",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the wall carvings",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Repair the offering shelf",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the tomb",
+          "stars": 1
+        }
+      ],
+      "clue": "Carved above the first king: the crown passes to the elder, and the kingdom to whoever tends it. Both halves have been law all along.",
+      "pointsTo": 120,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-119-first-kings-tomb.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 120,
+      "name": "The Hidden Chamber",
+      "phase": "Allies gathered",
+      "beatType": "Texture",
+      "goal": "A chamber behind the crypt wall that appears on no plan.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Break through the wall",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Clear the chamber",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Repair the strongbox",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Restore the document chest",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the chamber",
+          "stars": 1
+        }
+      ],
+      "clue": "ARC BEAT. Grimm's own archive: every document of his life, kept in order, in a hidden room under a castle he was never allowed to enter.",
+      "pointsTo": 121,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-120-the-hidden-chamber.md",
+      "stars": 8,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 121,
+      "name": "Grimm's Childhood Room",
+      "phase": "Dead end / betrayal",
+      "beatType": "ARC BEAT",
+      "goal": "The room they kept him in, before the monastery.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the door",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Restore the small bed",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Repair the window bars",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Clear the scratched walls",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Light the room",
+          "stars": 1
+        }
+      ],
+      "clue": "The walls are covered, floor to ceiling, in one word in a child's hand, thousands of times: Aldous.",
+      "pointsTo": 122,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-121-grimms-childhood-room.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 122,
+      "name": "The Burned Cottage",
+      "phase": "Dead end / betrayal",
+      "beatType": "Texture",
+      "goal": "The cottage where his mother was sent to live, and to die.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the burnt frame",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Rebuild the hearth",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the garden",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the roof",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Set a lamp in the window",
+          "stars": 1
+        }
+      ],
+      "clue": "The cottage was burned with her inside it, on a night the castle records as a lamp overturned.",
+      "pointsTo": 123,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-122-the-burned-cottage.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 123,
+      "name": "Widow's Hill",
+      "phase": "Dead end / betrayal",
+      "beatType": "ARC BEAT",
+      "goal": "ARC BEAT. Widow's Hill, where she is buried, unmarked.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the hillside",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the grave enclosure",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Set a headstone",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Plant the hill",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Set the lamps",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. Leo has a stone cut with her name and Aldous's beside it. It is the first time either has been written down as royal in forty years.",
+      "pointsTo": 124,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-123-widows-hill.md",
+      "stars": 8,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 124,
+      "name": "The Confession Room",
+      "phase": "Dead end / betrayal",
+      "beatType": "Texture",
+      "goal": "The confessor Grimm named is still alive, and still bound by his vow.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the confession room",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Restore the screen",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the chapel bench",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Light the room",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Repair the vestry",
+          "stars": 2
+        }
+      ],
+      "clue": "The confessor releases himself from the vow at last, and confirms all of it — and adds one thing nobody expected: the old king repented, and sent for Aldous. The letter never arrived. Grimm never knew he was wanted back.",
+      "pointsTo": 125,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-124-the-confession-room.md",
+      "stars": 7,
+      "arc": 5,
+      "status": "locked"
+    },
+    {
+      "id": 125,
+      "name": "The Old King's Study",
+      "phase": "ARC PAYOFF",
+      "beatType": "ARC PAYOFF",
+      "goal": "Go back to Leo's father's study and read it as it really is.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the study door",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the desk",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the bookshelves",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Recover the hidden drawer",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Restore the correspondence",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the window",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Light the study",
+          "stars": 2
+        },
+        {
+          "index": 8,
+          "label": "Set the record straight",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC PAYOFF. In the hidden drawer: the old king's unsent letter, asking his elder son to come home and take what was his. Leo reads it aloud to Grimm in his cell. Grimm does not believe him — and then does, and breaks. Then he tells them what he has already set in motion, and that it is too late to stop: the army is coming, and it is coming for the castle.",
+      "pointsTo": 126,
+      "board": {},
+      "source": "arc-5-the-old-kings-secret/area-125-the-old-kings-study.md",
+      "stars": 16,
+      "arc": 5,
+      "status": "locked"
+    }
+  ]
+}

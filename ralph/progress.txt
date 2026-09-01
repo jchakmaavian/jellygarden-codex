@@ -1,0 +1,10 @@
+# Ralph Progress Log
+Started: Tue Sep  1 19:14:41 +06 2026
+---
+
+## Codebase Patterns
+- Typecheck: `/Users/avian/.dotnet/dotnet build Assembly-CSharp.csproj -v q --nologo` (0 errors expected, 34 pre-existing warnings)
+- Story source data already exists: 150 areas / 807 tasks / 1209 stars in arc1-6.json
+- Unity 6000.5.10f1 at /Applications/Unity/Hub/Editor/6000.5.10f1
+- Every generated Unity asset needs a sibling .meta with a stable GUID
+---

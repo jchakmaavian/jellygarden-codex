@@ -1,0 +1,511 @@
+{
+  "project": "King Leo (Jelly Garden Match-3)",
+  "branchName": "ralph/king-leo-story",
+  "description": "Implement the complete 150-area, 6-arc King Leo story (from /Users/avian/Desktop/story) inside the existing Jelly Garden Unity match-3 game, preserving every existing animation, particle effect and VFX. Story data (arc1-6.json, 150 areas / 807 repair tasks / 1209 stars) is already authored and only needs a runtime, a meta layer, generated level content, a 150-node map and narrative presentation.",
+  "conventions": {
+    "unityProject": "/Users/avian/Desktop/Project/match3/Match3-Games",
+    "storySource": "/Users/avian/Desktop/story",
+    "typecheckCommand": "/Users/avian/.dotnet/dotnet build Assembly-CSharp.csproj -v q --nologo",
+    "unityEditor": "/Applications/Unity/Hub/Editor/6000.5.10f1/Unity.app/Contents/MacOS/Unity",
+    "unityBatchCheck": "\"/Applications/Unity/Hub/Editor/6000.5.10f1/Unity.app/Contents/MacOS/Unity\" -batchmode -quit -nographics -projectPath . -logFile -",
+    "newCodeNamespace": "JellyGarden.Scripts.Story",
+    "newCodeRoot": "Assets/JellyGarden/Scripts/Story",
+    "toolsRoot": "tools",
+    "hardRules": [
+      "NEVER delete, rename or restructure existing prefabs, particle systems, Animator controllers, Animation clips or VFX. Additive changes only.",
+      "NEVER modify the match-3 board simulation in LevelManager.cs/Item.cs/Square.cs beyond additive hooks.",
+      "Every new .asset/.prefab/.png written by a tool MUST get a matching .meta file with a fresh deterministic GUID.",
+      "Every generated file must be reproducible by re-running its generator script in tools/.",
+      "No story logic may hardcode an area id. All behaviour comes from Resources/Story/*.json."
+    ]
+  },
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Import story JSON data into Unity Resources",
+      "description": "As the game, I need the authored 150-area story data available at runtime so every later system reads one source of truth.",
+      "acceptanceCriteria": [
+        "Create tools/story_sync.py that copies /Users/avian/Desktop/story/game/unity/Assets/StreamingAssets/story/arc1.json .. arc6.json to Assets/JellyGarden/Resources/Story/arc1.json .. arc6.json",
+        "Script writes a .meta file for each copied json with a deterministic GUID (md5 of the asset path, first 32 hex chars)",
+        "Script also writes Assets/JellyGarden/Resources/Story/index.json listing: totalAreas, totalTasks, totalStars, and per-arc {arc, title, firstArea, lastArea, areaCount, taskCount, starCount}",
+        "Running `python3 tools/story_sync.py` prints 'areas=150 tasks=807 stars=1209' and exits 0",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Add StoryData C# models and StoryDatabase loader",
+      "description": "As a developer, I need typed access to the story JSON so screens can bind to areas, tasks and clues.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/StoryData.cs with [Serializable] classes: StoryArcFile, StoryArea, StoryTask, StoryBoard, StoryLevelDef, StoryIndex",
+        "StoryArea exposes id, name, phase, beatType, goal, tasks[], clue, pointsTo, arc, stars, status, board, levels[]",
+        "Add Assets/JellyGarden/Scripts/Story/StoryDatabase.cs: static singleton, Load() reads Resources/Story/arc1..arc6 via Resources.Load<TextAsset> and JsonUtility, exposes GetArea(int id), AllAreas, ArcOf(int areaId), TotalStars",
+        "JsonUtility cannot parse a bare top-level array — confirm arcN.json has an object root before relying on it",
+        "StoryDatabase.Load() is idempotent and logs one line: 'Story loaded: 150 areas, 807 tasks, 1209 stars'",
+        "Add Assets/JellyGarden/Scripts/Story/Editor/StoryDatabaseTests.cs with an [MenuItem] validation that asserts 150 areas, contiguous ids 1..150, every area has >=1 task and a non-empty clue",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Add StoryProgress save system",
+      "description": "As a player, I want my area, task and star progress to survive quitting the app.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/StoryProgress.cs with fields: version, currentArea, areaStars (per-area unspent star pool), tasksCompleted (areaId -> task indexes), areasCompleted, cluesSeen, cutscenesSeen, levelsBeaten",
+        "Persist as JSON at Application.persistentDataPath/story_save.json using write-to-temp + File.Replace atomic rename",
+        "Load on first access; missing or corrupt file yields a fresh save without throwing",
+        "API: AddStar(areaId), CanCompleteTask(areaId, taskIndex), CompleteTask(areaId, taskIndex), IsAreaComplete(areaId), IsAreaUnlocked(areaId), MarkClueSeen, MarkCutsceneSeen",
+        "IsAreaUnlocked(1) is always true; IsAreaUnlocked(n) is true only when IsAreaComplete(n-1)",
+        "Save() is called on every mutating API and is debounced to at most one write per frame",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Harvest the 100 shipped levels into a template library",
+      "description": "As a level generator, I need known-good hand-tuned boards to remix so generated levels stay playable.",
+      "acceptanceCriteria": [
+        "Add tools/level_templates.py that parses all Assets/JellyGarden/Resources/Levels/*.txt into structured records",
+        "Each record captures: number, mode, cols, rows, limitType, limit, colorLimit, star thresholds, collect counts/items, and the 2-digit block/obstacle grid",
+        "Each record is classified with a difficulty score derived from limit, colorLimit, board area, blocked-cell ratio and obstacle density, normalised 0..1",
+        "Output written to tools/out/level_templates.json",
+        "Running the script prints 'templates=100' and exits 0",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Build the story level plan (1209 level slots)",
+      "description": "As the meta layer, I need a deterministic mapping from every story star to a concrete playable level number.",
+      "acceptanceCriteria": [
+        "Add tools/level_plan.py that reads the arc JSON and emits tools/out/level_plan.json",
+        "Plan assigns sequential level numbers 1..N covering every star of every area, in area order then task order",
+        "Each entry records: levelNumber, areaId, arc, taskIndex, starIndexWithinArea, difficulty (0..1), themeKey (arc theme), sabotage (true for areaId >= 19)",
+        "Difficulty rises monotonically across the 150 areas with a per-arc reset dip, and never exceeds 1.0",
+        "Script prints 'levels=1209' and exits 0",
+        "Assets/JellyGarden/Resources/Story/level_plan.json is written with a .meta file so Unity can read the plan at runtime",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Generate 1209 level .txt files from templates",
+      "description": "As a player, I need a real board for every star the story asks me to earn.",
+      "acceptanceCriteria": [
+        "Add tools/level_gen.py that reads level_templates.json + level_plan.json and writes Assets/JellyGarden/Resources/Levels/N.txt for every planned level number",
+        "Levels 1..100 keep their original hand-tuned content byte-for-byte (they are re-emitted from the template library unchanged)",
+        "Generated levels pick a template whose difficulty band matches the plan entry, then apply seeded deterministic mutations: horizontal mirror, colour-limit shift, move-limit scaling and star-threshold scaling",
+        "Every emitted file re-parses cleanly through the same parser used in tools/level_templates.py and has exactly `rows` grid lines of exactly `cols` two-digit tokens",
+        "No emitted board is fully blocked: at least 60% of cells are playable",
+        "A .meta file with a deterministic GUID is written for every new .txt",
+        "Running the script prints 'levels written=1209 (100 preserved)' and exits 0",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Generate 1209 Target ScriptableObject assets",
+      "description": "As LevelManager, I need Resources/Targets/LevelN.asset to exist for every level or loading throws a null reference.",
+      "acceptanceCriteria": [
+        "Add tools/target_gen.py that writes Assets/JellyGarden/Resources/Targets/LevelN.asset for every planned level",
+        "Levels 1..100 keep their existing .asset files untouched",
+        "Generated assets use the same YAML shape and m_Script guid 64dfa6917005141638ae80ab5e1a157a as the shipped ones, with m_Name matching the file name",
+        "Target entries and icon GUIDs are copied from the source template level's target asset, with targetCount scaled to the generated level's objective",
+        "Each generated .asset gets a .meta with a deterministic GUID and mainObjectFileID 11400000",
+        "Running the script prints 'targets written=1209 (100 preserved)' and exits 0",
+        "A verification pass confirms every N in the level plan has both Levels/N.txt and Targets/LevelN.asset",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Extend the map prefab from 100 to 150 area nodes",
+      "description": "As a player, I want every one of the 150 story areas to exist as a node on the existing hand-made map.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/Editor/StoryMapExtender.cs with a menu item 'JellyGarden/Story/Extend Map To 150 Areas'",
+        "It clones existing Level* nodes under the 'Levels' transform of Assets/JellyGarden/Prefabs/Prefabs/LevelsMap.prefab to produce Level101..Level150, each with Number set and a PathPivot positioned by continuing the existing path direction",
+        "It duplicates and stacks the map_background sprites so the extended path stays on painted background",
+        "It is idempotent: running twice does not create Level101 twice",
+        "No existing node, sprite, animation or particle system is deleted or reordered",
+        "After running, the prefab contains exactly 150 MapLevel components",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "Drive map node lock state from StoryProgress",
+      "description": "As a player, I want map nodes to unlock by finishing a story area, not by scoring a star on a level.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/StoryMapProgressManager.cs implementing IMapProgressManager",
+        "LoadLevelStarsCount(areaId) returns 3 when StoryProgress.IsAreaComplete(areaId), else 0",
+        "SaveLevelStarsCount is a no-op that forwards to StoryProgress",
+        "It is installed via LevelsMap.OverrideMapProgressManager during boot, before LevelsMap.Reset() runs",
+        "Area 1 is always unlocked on a fresh save; area 2 is locked until area 1 completes",
+        "Existing PlayerPrefsMapProgressManager is left in the codebase untouched",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Show area names and arc chapter markers on the map",
+      "description": "As a player, I want the map to read as a story, not a level list.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/StoryMapLabels.cs that, at runtime, sets each MapLevel's Number/Text child to the area name from StoryDatabase",
+        "A chapter banner is shown above the first node of each arc with the arc title from Resources/Story/index.json",
+        "Labels degrade gracefully (fall back to the number) when StoryDatabase has no entry",
+        "No MapLevel prefab structure is modified; only text content and an added child banner object",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Add the Area screen UI (goal, repair tasks, star pool)",
+      "description": "As a player, I want tapping a map node to open the area with its goal and repair task list.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/AreaScreen.cs plus a runtime-built UI (no scene edit required) parented under MenuManager's global canvas",
+        "Screen shows: area number and name, the goal line, the unspent star count for that area, and one row per repair task with label and star cost",
+        "A completed task row is visually struck through; the next affordable task row shows an active 'Repair' button",
+        "A 'Play' button starts the next unbeaten level for this area, using the level plan",
+        "A back button returns to the map",
+        "Opening the screen for a locked area is impossible: map nodes for locked areas do not raise LevelSelected",
+        "Typecheck passes",
+        "Verify by running the Unity editor in batchmode with a smoke-test menu item and confirming no exceptions in the log"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Route level wins into the area star pool",
+      "description": "As a player, winning a level should give me a star I can spend on repairs, and it must not break the existing win flow.",
+      "acceptanceCriteria": [
+        "Add an additive hook in the existing level-complete path that calls StoryProgress.AddStar(currentAreaId) and StoryProgress.MarkLevelBeaten(levelNumber)",
+        "The existing complete-menu animation, particle and sound sequence is unchanged and still plays in full",
+        "After the complete menu is dismissed the player returns to the AreaScreen of the area they came from, not the map",
+        "Losing a level returns to the AreaScreen with no star awarded and no life consumed",
+        "Replaying an already-beaten level awards no additional star",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Spend stars to complete repair tasks",
+      "description": "As a player, I want to spend earned stars on the area's repair tasks and see the area visibly change.",
+      "acceptanceCriteria": [
+        "Tapping 'Repair' on an affordable task deducts its star cost, marks the task complete and persists immediately",
+        "The task's onComplete line from the story JSON is shown as a short toast",
+        "Repair plays the existing star-spend / reward sound and particle prefabs already in the project (reused, not recreated)",
+        "Completing the final task of an area marks the area complete and unlocks the next area on the map",
+        "A task whose star cost exceeds the pool is not tappable and shows the shortfall",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Add the layered area scene art system",
+      "description": "As a player, I want each repair to visibly change the area artwork.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/AreaSceneView.cs that renders an area as a stack of sprite layers: base state plus one reveal layer per completed task",
+        "Layer sources are resolved by convention from Resources/Story/Art/area_{id:000}_state{n} and fall back to an arc-themed backdrop when a file is absent",
+        "A missing layer logs one warning per area, never per frame, and never renders blank",
+        "A newly revealed layer fades and scales in using a tween, and triggers the existing repair particle prefab",
+        "Typecheck passes"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Add the dialogue system",
+      "description": "As a player, I want characters to speak with portraits and typed-out lines.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/DialogueSystem.cs: queue of lines, each with speaker, portrait, text, optional VO clip",
+        "Text types out character by character; tapping completes the current line, tapping again advances",
+        "Portraits resolve through a registry keyed by character name (Leo, Freya, Grimm, Mimi, Cook, Gardener, Alfred, Roderick)",
+        "VO clip, when present, plays through the existing SoundBase and ducks MusicBase volume for its duration, restoring it after",
+        "DialogueSystem.Play(lines, onComplete) is awaitable via callback and blocks input underneath",
+        "Typecheck passes"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "Add the clue card",
+      "description": "As a player, I want the area's clue to land on the final repair, exactly as the story bible specifies.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/ClueCard.cs showing the area's clue text over a clue image with a 3-second auto-dismiss and tap-to-dismiss",
+        "The clue fires on the last repair task of an area, never on a level win",
+        "The clue is never shown twice: StoryProgress.MarkClueSeen gates it",
+        "After the clue dismisses, control returns to the map with the next area unlocked",
+        "Clue text is never accompanied by an explanatory line — the raw clue only",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Author arc-beat cutscene data for all 30 beats",
+      "description": "As a player, I want every fifth area to pay off with a real scene rather than a card.",
+      "acceptanceCriteria": [
+        "Add tools/cutscene_build.py that reads the arc markdown for every area whose id is a multiple of 5 and emits Assets/JellyGarden/Resources/Story/cutscenes.json",
+        "Each cutscene entry has: areaId, title, and lines[] of {speaker, text}, derived from the area markdown's Direction and Clue sections",
+        "All 30 beat areas (5,10,...,150) have a cutscene with at least 3 lines",
+        "The six arc-finale areas (25,50,75,100,125,150) have at least 6 lines",
+        "A .meta file is written for cutscenes.json",
+        "Script prints 'cutscenes=30' and exits 0",
+        "Typecheck passes"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Play arc-beat cutscenes at the right moment",
+      "description": "As a player, I want the beat cutscene to play when I finish the beat area.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/CutsceneRunner.cs that plays a cutscenes.json entry through DialogueSystem over the area art",
+        "It runs after the final repair of a beat area, replacing the 3-second clue card",
+        "StoryProgress.MarkCutsceneSeen prevents replays; a 'Replay scene' entry point exists on the AreaScreen for completed areas",
+        "Cutscenes are skippable with a visible Skip control",
+        "Non-beat areas still use the clue card path",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Implement the opening sequence",
+      "description": "As a new player, I want the cold open from 00-OPENING.md after my first level, gameplay first.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/OpeningSequence.cs implementing the beats specified in /Users/avian/Desktop/story/arc-1-the-missing-queen/00-OPENING.md",
+        "It plays once, after the first level win, not before it",
+        "Alfred's four opening VO lines play in order against the castle reveal art",
+        "It ends on Leo's single line '...Freya?' with no reply and no second line",
+        "It is skippable and gated by a flag in StoryProgress so it never replays",
+        "Typecheck passes"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-020",
+      "title": "Import the already-generated Arc 1 art and audio",
+      "description": "As a player, I want the real King Leo art and narration that was already paid for and generated.",
+      "acceptanceCriteria": [
+        "Add tools/asset_import.py copying /Users/avian/Desktop/story/game/unity/Assets/Resources/Art/* and Audio/* into Assets/JellyGarden/Resources/Story/Art and Assets/JellyGarden/Resources/Story/Audio",
+        "The five gate states map to area 001 scene layers state0..state4",
+        "The parked Area 002 courtyard art in /Users/avian/Desktop/story/game/_area002_parked is imported and mapped to area 002 layers",
+        "Character images (leo, mimi) are registered as dialogue portraits",
+        "Alfred's five VO mp3s and the two music themes and eight SFX are imported with correct Unity import settings via a .meta that marks textures as Sprite and audio as decompress-on-load (SFX) / streaming (music)",
+        "No existing Jelly Garden art or audio file is overwritten",
+        "Typecheck passes"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-021",
+      "title": "Add arc-themed board and obstacle skins",
+      "description": "As a player, I want the board to look like the room I am repairing, without losing any existing animation.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/ArcTheme.cs and Resources/Story/themes.json defining, per arc, a tile sprite set, a board background and an obstacle sprite mapping",
+        "Skins are applied by swapping SpriteRenderer sprites on the existing item and block prefabs at level load — prefabs, Animators and ParticleSystems are untouched",
+        "The six arcs map to castle / village / mines and roads / border / ruins and crypts / siege",
+        "A missing themed sprite falls back to the shipped Jelly Garden sprite and logs one warning",
+        "Reverting the theme restores the original sprites exactly",
+        "Typecheck passes"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-022",
+      "title": "Wire story music, SFX and VO ducking",
+      "description": "As a player, I want the story's audio bed rather than the stock kit music.",
+      "acceptanceCriteria": [
+        "theme_ruin plays on the map and area screens; theme_level plays during levels; they cross-fade over 0.5s on screen change",
+        "Story SFX (vine_cut, timber_break, lantern_light, star_earned, repair_done, invalid) are registered in SoundBase alongside the existing clips",
+        "Music ducks to 30% under any VO line and restores when it ends",
+        "Existing Jelly Garden SFX for matches, combos and boosters continue to play unchanged",
+        "Music and sound respect the existing PlayerPrefs Music/Sound toggles",
+        "Typecheck passes"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-023",
+      "title": "Escalate board sabotage from Area 019 onward",
+      "description": "As a player, I want the difficulty ramp to read as Grimm fighting back, per GAMEPLAY.md.",
+      "acceptanceCriteria": [
+        "Levels whose plan entry has sabotage=true include at least one active obstacle type from the existing kit (thriving/spreading blocks)",
+        "The first sabotage level in area 019 shows a one-time dialogue line attributing it to Grimm",
+        "Anything that appears on the board by itself plays an arrival animation using an existing particle prefab — never pops in",
+        "Areas 001-018 contain no self-acting obstacles",
+        "Typecheck passes"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-024",
+      "title": "Remove the monetisation gates per TECH.md",
+      "description": "As a player of a free story game, I want instant unlimited retry and no ads or offers.",
+      "acceptanceCriteria": [
+        "Lives gating is disabled: losing a level costs nothing and the retry button is immediate and unlimited",
+        "Ad calls (Unity Ads, Admob, Chartboost) are compiled out or short-circuited so no ad is ever requested",
+        "IAP entry points and the gem/life shops are hidden from the UI",
+        "Boosters are granted on level win rather than sold; the gem shop button does not appear",
+        "The existing scripts remain in the repo and merely become inert — no files are deleted",
+        "Typecheck passes"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-025",
+      "title": "Generate the missing arc backdrops and character portraits",
+      "description": "As a player, I want each arc and each speaking character to look authored rather than placeholder.",
+      "acceptanceCriteria": [
+        "Check the available Magnific credit balance first and record it in progress.txt before generating anything",
+        "Generate at most 6 arc backdrops and at most 8 character portraits (Leo, Freya, Grimm, Mimi, Cook, Gardener, Alfred, Roderick), reusing the already-generated Leo and Mimi images rather than regenerating them",
+        "All prompts use the established style brief: painterly storybook illustration, mobile game art, clean silhouette, no text",
+        "Generated images are written to Assets/JellyGarden/Resources/Story/Art with .meta files marking them as Sprites",
+        "If credits are insufficient, the story is completed with the arc-tinted procedural fallback and that is recorded in progress.txt rather than silently skipped",
+        "Typecheck passes"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-026",
+      "title": "Boot the story layer from the existing scene flow",
+      "description": "As a player, I want the game to start in the story flow without a separate scene.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/StoryBoot.cs with [RuntimeInitializeOnLoadMethod(BeforeSceneLoad)] that loads StoryDatabase and StoryProgress and installs StoryMapProgressManager",
+        "Boot order is safe: nothing touches LevelsMap before its Awake",
+        "The existing main -> game scene transition is unchanged",
+        "Tapping a map node opens the AreaScreen instead of the stock pre-play popup",
+        "Booting on a fresh save lands on area 001 with 0 stars and 4 incomplete tasks",
+        "Typecheck passes"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-027",
+      "title": "Add a headless content validator",
+      "description": "As a maintainer, I need one command that proves all 150 areas are actually playable content.",
+      "acceptanceCriteria": [
+        "Add tools/validate_story.py that checks: 150 areas present, ids contiguous, every task has a positive star cost, every area has a clue, every planned level number has both a Levels/N.txt and a Targets/LevelN.asset, every generated .txt parses and every generated file has a .meta",
+        "It also checks that the sum of area star costs equals the number of planned levels",
+        "It prints a per-arc summary table and exits non-zero on any failure",
+        "Running it on the finished repo exits 0",
+        "Typecheck passes"
+      ],
+      "priority": 27,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-028",
+      "title": "Add an editor smoke test that walks all 150 areas",
+      "description": "As a maintainer, I need proof the runtime can open every area without throwing.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/Editor/StorySmokeTest.cs with a menu item and a static entry point callable via -executeMethod",
+        "It iterates all 150 areas: loads the area, resolves its art layers, resolves its level plan entries and its clue or cutscene, and asserts none are null",
+        "It runs via `Unity -batchmode -quit -nographics -projectPath . -executeMethod JellyGarden.Scripts.Story.Editor.StorySmokeTest.RunAll -logFile -` and exits 0",
+        "Any failure prints the failing area id and fails the run",
+        "The batchmode run is captured in progress.txt with its exit code",
+        "Typecheck passes"
+      ],
+      "priority": 28,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-029",
+      "title": "Verify no existing animation or VFX regressed",
+      "description": "As the owner, my one hard requirement is that the existing visuals still work.",
+      "acceptanceCriteria": [
+        "Produce a git diff summary proving no .anim, .controller, .prefab particle component or ParticleSystem asset was deleted",
+        "Enumerate every prefab under Assets/JellyGarden/Prefabs and Resources/Particles before and after, and assert the sets are identical or strictly grown",
+        "Assert LevelManager.cs, Item.cs, Square.cs and AnimationManager.cs changes are additive only (no removed methods)",
+        "Record the check as a script at tools/check_vfx_intact.py that exits non-zero on regression",
+        "Running it exits 0",
+        "Typecheck passes"
+      ],
+      "priority": 29,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-030",
+      "title": "Document the story layer",
+      "description": "As a future maintainer, I need to know how the story data, generators and runtime fit together.",
+      "acceptanceCriteria": [
+        "Add Assets/JellyGarden/Scripts/Story/CLAUDE.md describing the runtime architecture, the data contract and the hard rule about not touching existing VFX",
+        "Add tools/README.md documenting every generator, its inputs, outputs and the order to run them in",
+        "Update the repo root CLAUDE.md (create if absent) with the typecheck command and the story regeneration pipeline",
+        "Every documented command is copy-pasteable and was actually run",
+        "Typecheck passes"
+      ],
+      "priority": 30,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

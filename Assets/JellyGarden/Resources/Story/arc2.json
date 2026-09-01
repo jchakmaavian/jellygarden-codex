@@ -1,0 +1,1060 @@
+{
+  "schemaVersion": 1,
+  "arc": {
+    "id": 2,
+    "title": "Grimm's Trail",
+    "areaCount": 25
+  },
+  "areas": [
+    {
+      "id": 26,
+      "name": "Castle Bridge",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "Get the bridge safe enough to cross. The village has been cut off since the spring.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Replace the rotted deck planks",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Re-rope the handrails",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Clear the silted piers",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the toll post",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Relight the bridge lamps",
+          "stars": 1
+        }
+      ],
+      "clue": "The bridge was not neglected — it was cut. Someone sawed the deck beams from underneath, on the castle side.",
+      "pointsTo": 27,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-026-castle-bridge.md",
+      "stars": 5,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 27,
+      "name": "The Village Road",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "Clear the road so carts can reach the castle again.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Haul the fallen tree aside",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Fill the washed-out ruts",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Rebuild the drainage ditch",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Re-set the milestones",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Repair the roadside shrine",
+          "stars": 2
+        }
+      ],
+      "clue": "Every milestone between the village and the castle has been pulled up and turned to face the wrong way.",
+      "pointsTo": 28,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-027-the-village-road.md",
+      "stars": 6,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 28,
+      "name": "Village Square",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "The village square is empty at midday. Find out why.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the market stalls",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the square's paving",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Rebuild the notice board",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the water trough",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rehang the village bell",
+          "stars": 2
+        }
+      ],
+      "clue": "The notice board is thick with royal orders, all sealed with Leo's seal, none of them his. They start eleven weeks ago.",
+      "pointsTo": 29,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-028-village-square.md",
+      "stars": 6,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 29,
+      "name": "The Old Mill",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "The mill has not turned in a season. The village is short of flour.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the jammed millrace",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the waterwheel",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Re-dress the millstones",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Rebuild the grain loft",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Fix the sack hoist",
+          "stars": 1
+        }
+      ],
+      "clue": "The miller was paid to stop grinding. He still has the purse — and it carries a crest that is not the crown's.",
+      "pointsTo": 30,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-029-the-old-mill.md",
+      "stars": 6,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 30,
+      "name": "Blacksmith's Forge",
+      "phase": "Setup — small goals, texture clues",
+      "beatType": "Texture",
+      "goal": "Get a fire lit in the forge. Nothing gets rebuilt without a smith.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Rebuild the forge chimney",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the bellows",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Re-hang the tool wall",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restock the coal bunker",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Repair the anvil block",
+          "stars": 2
+        }
+      ],
+      "clue": "The smith was ordered to melt down the old castle keys — all of them — and cast new ones to a pattern he was given.",
+      "pointsTo": 31,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-030-blacksmiths-forge.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 31,
+      "name": "The Bakery",
+      "phase": "First hard evidence",
+      "beatType": "ARC BEAT",
+      "goal": "There has been no bread in the village for weeks.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Rebuild the bread oven",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the kneading table",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restock the flour bins",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Fix the shop shutters",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Re-hang the baker's sign",
+          "stars": 1
+        },
+        {
+          "index": 6,
+          "label": "Repair the cellar stair",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. The baker's ledger shows a standing order — bread delivered nightly to an empty manor on the ridge. Someone has been living there in secret all year.",
+      "pointsTo": 32,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-031-the-bakery.md",
+      "stars": 8,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 32,
+      "name": "Village Chapel",
+      "phase": "First hard evidence",
+      "beatType": "Texture",
+      "goal": "The chapel roof has fallen in on the village's records.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the collapsed roof",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the rafters",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the pews",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Rehang the chapel bell",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Dry out the parish register",
+          "stars": 2
+        }
+      ],
+      "clue": "The parish register is missing a page — the year of Leo's wedding. Someone tore out the record of who witnessed it.",
+      "pointsTo": 33,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-032-village-chapel.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 33,
+      "name": "The Orchard",
+      "phase": "First hard evidence",
+      "beatType": "Texture",
+      "goal": "The orchard is choked and the harvest is rotting on the ground.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Prune the dead wood",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Clear the windfall",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Repair the orchard wall",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Re-stake the young trees",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rebuild the cider press",
+          "stars": 2
+        }
+      ],
+      "clue": "The orchard wall was rebuilt this year — badly, and in a hurry — to enclose a new cart track running north to the ridge.",
+      "pointsTo": 34,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-033-the-orchard.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 34,
+      "name": "Fisherman's Pier",
+      "phase": "First hard evidence",
+      "beatType": "ARC BEAT",
+      "goal": "The pier is unusable and the boats have not gone out.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Replace the broken decking",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Re-drive the pilings",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the mooring rings",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the fish store",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rehang the landing lamps",
+          "stars": 1
+        }
+      ],
+      "clue": "ARC BEAT. A fisherman saw a covered barge leave at night, eleven weeks ago, riding low. Two men, no colours, and a woman who did not go willingly.",
+      "pointsTo": 35,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-034-fishermans-pier.md",
+      "stars": 6,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 35,
+      "name": "The Harbour",
+      "phase": "First hard evidence",
+      "beatType": "Texture",
+      "goal": "The harbour is silting up and trade has stopped.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Dredge the channel",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the quay wall",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Restore the crane",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Rebuild the harbourmaster's hut",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Relight the harbour beacon",
+          "stars": 1
+        }
+      ],
+      "clue": "The harbourmaster's book records the barge. Under owner it says only: the house on the ridge.",
+      "pointsTo": 36,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-035-the-harbour.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 36,
+      "name": "Shipwright's Yard",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "No boat has been built or mended here in a year.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the slipway",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the frame jigs",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restock the timber rack",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Rebuild the tar shed",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Repair the yard crane",
+          "stars": 2
+        }
+      ],
+      "clue": "The shipwright was commissioned to build a fast shallow boat with no name and no colours. It was collected. It has not come back.",
+      "pointsTo": 37,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-036-shipwrights-yard.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 37,
+      "name": "The Warehouse",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The warehouse is padlocked and nobody claims to own it.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Break the rusted padlock",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Clear the collapsed shelving",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the loading door",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the weighing floor",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rebuild the tally office",
+          "stars": 2
+        }
+      ],
+      "clue": "Crates of castle silver, packed for travel, addressed to no one. The tally slips are signed with a looping V.",
+      "pointsTo": 38,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-037-the-warehouse.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 38,
+      "name": "Market Street",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "ARC BEAT",
+      "goal": "Market Street has been shut for a season and the traders have gone.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the abandoned stalls",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the street paving",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Rebuild the awnings",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the traders' scales",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Rehang the market bell",
+          "stars": 1
+        },
+        {
+          "index": 6,
+          "label": "Repair the strongbox stand",
+          "stars": 1
+        }
+      ],
+      "clue": "ARC BEAT. The traders were driven out by a new levy, collected by armed men in Vane livery. Grimm did not act alone — he had a house behind him.",
+      "pointsTo": 39,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-038-market-street.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 39,
+      "name": "The Tavern",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The tavern is the only building still busy. Make it worth being in.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the taproom floor",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Rebuild the bar",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restock the cellar",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Repair the hearth",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Fix the guest rooms",
+          "stars": 2
+        }
+      ],
+      "clue": "The innkeeper kept every tab. Lord Aldric Vane drank here the night the Queen vanished, and paid for the whole room.",
+      "pointsTo": 40,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-039-the-tavern.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 40,
+      "name": "Weaver's Hall",
+      "phase": "Villain pushes back — sabotage",
+      "beatType": "Texture",
+      "goal": "The weavers have no wool and no wages.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the looms",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restock the wool store",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Rebuild the dye vats",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Repair the drying racks",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Fix the hall roof",
+          "stars": 1
+        }
+      ],
+      "clue": "Vane livery was woven here, in quantity, months before Leo rode out on the hunt. This was planned long in advance.",
+      "pointsTo": 41,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-040-weavers-hall.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 41,
+      "name": "The Schoolhouse",
+      "phase": "Allies gathered",
+      "beatType": "ARC BEAT",
+      "goal": "The schoolhouse has been shut and the children put to work.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the schoolroom roof",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Rebuild the benches",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the slates",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the stove",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rehang the school bell",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. The schoolmaster hid the village's copy of the old king's will. It does not match the one in the castle library.",
+      "pointsTo": 42,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-041-the-schoolhouse.md",
+      "stars": 6,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 42,
+      "name": "Village Well",
+      "phase": "Allies gathered",
+      "beatType": "Texture",
+      "goal": "The well is fouled and the village is carrying water from the river.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the fouled shaft",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the winding gear",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Rebuild the well head",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Re-line the shaft",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Restore the water trough",
+          "stars": 1
+        }
+      ],
+      "clue": "At the bottom of the well: the castle's missing seal matrix, thrown down and forgotten. Grimm's forgeries end here.",
+      "pointsTo": 43,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-042-village-well.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 43,
+      "name": "The Almshouse",
+      "phase": "Allies gathered",
+      "beatType": "Texture",
+      "goal": "The almshouse has taken in more people than it can feed.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the dormitory roof",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Rebuild the kitchen range",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Restock the stores",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the infirmary",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Fix the well pump",
+          "stars": 1
+        }
+      ],
+      "clue": "Half the castle's dismissed staff are living here. They were told the King himself turned them out.",
+      "pointsTo": 44,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-043-the-almshouse.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 44,
+      "name": "Watchman's Post",
+      "phase": "Allies gathered",
+      "beatType": "ARC BEAT",
+      "goal": "Sabotage. The watch post burns down the night Leo starts asking questions.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Douse the fire",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Clear the burnt timbers",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Rebuild the watch tower",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Restore the signal brazier",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Repair the duty book stand",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. The fire was set. In the ashes, a courier's satchel someone tried very hard to burn — and half a letter that survived.",
+      "pointsTo": 45,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-044-watchmans-post.md",
+      "stars": 8,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 45,
+      "name": "The Toll Gate",
+      "phase": "Allies gathered",
+      "beatType": "Texture",
+      "goal": "Reopen the toll gate so the road north is legally passable.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the gate arm",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Rebuild the toll house",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Restore the ledger desk",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the boundary wall",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rehang the royal arms",
+          "stars": 1
+        }
+      ],
+      "clue": "The toll ledger shows a single carriage passing north eleven weeks ago, at night, exempt from toll by order of House Vane.",
+      "pointsTo": 46,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-045-the-toll-gate.md",
+      "stars": 6,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 46,
+      "name": "Courier Station",
+      "phase": "Dead end / betrayal",
+      "beatType": "ARC BEAT",
+      "goal": "The courier station has not sent or received a letter in months.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the stables",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Rebuild the sorting room",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Restore the horse lines",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the message chest",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Rehang the route board",
+          "stars": 1
+        }
+      ],
+      "clue": "ARC BEAT. Every letter Freya wrote from her cell was collected, sealed, and delivered — to Vane. He read all of them and answered none.",
+      "pointsTo": 47,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-046-courier-station.md",
+      "stars": 7,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 47,
+      "name": "The Noble's Manor",
+      "phase": "Dead end / betrayal",
+      "beatType": "Texture",
+      "goal": "The manor on the ridge stands empty and open. Walk in.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Force the manor door",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Clear the shuttered hall",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the great stair",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Restore the portrait wall",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Relight the manor lamps",
+          "stars": 2
+        }
+      ],
+      "clue": "The manor is not abandoned — it is packed. Every valuable is crated and labelled for a ship that has already been built.",
+      "pointsTo": 48,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-047-the-nobles-manor.md",
+      "stars": 8,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 48,
+      "name": "Manor Gardens",
+      "phase": "Dead end / betrayal",
+      "beatType": "ARC BEAT",
+      "goal": "ARC BEAT. Search the grounds before Vane's people finish clearing them.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the burnt papers",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the garden wall",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Drain the ornamental pond",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Restore the glasshouse",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Dig out the ice house",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC BEAT. In the ice house, the castle's true accounts — and a signed agreement between Grimm and Vane, dated a year before the hunt.",
+      "pointsTo": 49,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-048-manor-gardens.md",
+      "stars": 8,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 49,
+      "name": "The Manor Vault",
+      "phase": "Dead end / betrayal",
+      "beatType": "Texture",
+      "goal": "The vault is sealed and the household has fled. Open it.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the blocked passage",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Break the vault door",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Shore up the ceiling",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Repair the strongboxes",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Light the vault",
+          "stars": 2
+        }
+      ],
+      "clue": "The vault is empty but for one thing: Freya's stolen wedding ring box, and a note in Vane's hand — she was the price, not the plan.",
+      "pointsTo": 50,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-049-the-manor-vault.md",
+      "stars": 8,
+      "arc": 2,
+      "status": "locked"
+    },
+    {
+      "id": 50,
+      "name": "Harvest Court",
+      "phase": "ARC PAYOFF",
+      "beatType": "ARC PAYOFF",
+      "goal": "Hold the Harvest Court. Make the whole kingdom watch.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Rebuild the court dais",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the great tables",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Restore the banners",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Prepare the harvest feast",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Repair the courtyard gates",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Light the court",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Set the record before the court",
+          "stars": 2
+        },
+        {
+          "index": 8,
+          "label": "Seat the village",
+          "stars": 2
+        }
+      ],
+      "clue": "ARC PAYOFF. Before the assembled kingdom, Freya reads the agreement aloud. Lord Aldric Vane is stripped and taken. He laughs, and says Grimm was never working for him — he was working for someone else.",
+      "pointsTo": 51,
+      "board": {},
+      "source": "arc-2-grimms-trail/area-050-harvest-court.md",
+      "stars": 16,
+      "arc": 2,
+      "status": "locked"
+    }
+  ]
+}
