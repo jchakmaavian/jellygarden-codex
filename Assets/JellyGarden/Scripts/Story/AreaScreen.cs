@@ -365,6 +365,7 @@ namespace JellyGarden.Scripts.Story
 
             if (!StoryProgress.CanCompleteTask(_areaId, taskIndex))
             {
+                StorySfx.PlayInvalid();
                 int short_ = task.Stars - StoryProgress.StarsIn(_areaId);
                 Toast(short_ == 1
                     ? "One more star needed."

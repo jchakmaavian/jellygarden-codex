@@ -114,6 +114,17 @@ namespace JellyGarden.Scripts.Story
                 return;
             }
 
+            // The one level where the board starts fighting back gets its line
+            // first, so the new obstacle reads as Grimm rather than as difficulty.
+            if (StorySabotage.PlayIntroIfDue(levelNumber, StartLoadedLevel))
+                return;
+
+            StartLoadedLevel();
+        }
+
+        private static void StartLoadedLevel()
+        {
+            if (LevelManager.THIS == null) return;
             LevelManager.THIS.LoadLevel();
             LevelManager.THIS.gameStatus = GameState.PrepareGame;
         }
@@ -177,6 +188,7 @@ namespace JellyGarden.Scripts.Story
 
             StoryProgress.MarkLevelBeaten(levelNumber);
             StoryProgress.AddStar(PlayingArea);
+            StorySfx.PlayStarEarned();
 
             Debug.Log(string.Format("[Story] Level {0} won: area {1} now holds {2} star(s).",
                 levelNumber, PlayingArea, StoryProgress.StarsIn(PlayingArea)));

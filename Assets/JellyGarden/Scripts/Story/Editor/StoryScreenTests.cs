@@ -73,6 +73,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 ArcBeatsHaveScenesAndPlayThemOnce();
                 OpeningPlaysAfterTheFirstWinAndOnlyOnce();
                 GeneratedArtIsWiredUp();
+                SabotageStartsWhereTheStorySaysItDoes();
                 EveryAreaOpens();
             }
             finally
@@ -389,6 +390,53 @@ namespace JellyGarden.Scripts.Story.Editor
                 "Alfred's first opening line is present");
             Expect(StoryAudio.LoadVoice("alfred_clue_001") != null,
                 "Alfred's area 1 clue line is present");
+        }
+
+        private static void SabotageStartsWhereTheStorySaysItDoes()
+        {
+            // GAMEPLAY.md: areas 001-018 are static neglect. Nothing on the board
+            // may act on its own before Grimm opens the sluice gates at area 019.
+            Expect(StorySabotage.FirstSabotageArea == 19,
+                "sabotage begins at area 19 (plan says " +
+                StorySabotage.FirstSabotageArea + ")");
+
+            int earlySabotaged = 0;
+            for (int areaId = 1; areaId < 19; areaId++)
+                foreach (int levelNumber in StoryLevelPlan.LevelsFor(areaId))
+                    if (StorySabotage.IsSabotaged(levelNumber)) earlySabotaged++;
+
+            Expect(earlySabotaged == 0,
+                "no level before area 19 is sabotaged (" + earlySabotaged + " are)");
+
+            // And it must actually ramp rather than latch on: a spreading blocker
+            // on every level from area 19 would be a tax, not a villain.
+            int earlyBand = CountSabotaged(19, 40);
+            int lateBand = CountSabotaged(130, 150);
+            Expect(earlyBand > 0, "sabotage appears soon after area 19");
+            Expect(lateBand > earlyBand,
+                "sabotage becomes more common by the siege (" + earlyBand +
+                " then " + lateBand + " per cent)");
+
+            // The beat itself is marked exactly once.
+            int beats = 0;
+            for (int levelNumber = 1; levelNumber <= StoryLevelPlan.LevelCount; levelNumber++)
+            {
+                StoryLevelEntry entry = StoryLevelPlan.Get(levelNumber);
+                if (entry != null && entry.SabotageBeat) beats++;
+            }
+            Expect(beats == 1, "exactly one level carries the sabotage beat (" + beats + ")");
+        }
+
+        private static int CountSabotaged(int fromArea, int toArea)
+        {
+            int total = 0, sabotaged = 0;
+            for (int areaId = fromArea; areaId <= toArea; areaId++)
+                foreach (int levelNumber in StoryLevelPlan.LevelsFor(areaId))
+                {
+                    total++;
+                    if (StorySabotage.IsSabotaged(levelNumber)) sabotaged++;
+                }
+            return total == 0 ? 0 : sabotaged * 100 / total;
         }
 
         private static void EveryAreaOpens()

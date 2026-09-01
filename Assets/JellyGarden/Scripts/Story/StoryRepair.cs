@@ -26,7 +26,7 @@ namespace JellyGarden.Scripts.Story
             if (!StoryProgress.CompleteTask(areaId, taskIndex))
                 return false;
 
-            PlayRepairFeedback();
+            StorySfx.PlayRepair(StoryProgress.IsAreaComplete(areaId));
             AreaSceneView.NotifyTaskCompleted(areaId, taskIndex);
 
             // The line the story wrote for this repair. Arc 1 authors one per
@@ -42,21 +42,6 @@ namespace JellyGarden.Scripts.Story
                 OnAreaFinished(areaId);
 
             return true;
-        }
-
-        /// <summary>
-        /// Reuses the kit's own reward sound rather than introducing a new one.
-        /// SoundBase is optional at this point in a scene, so every access is
-        /// guarded.
-        /// </summary>
-        private static void PlayRepairFeedback()
-        {
-            if (SoundBase.Instance == null) return;
-
-            AudioClip clip = SoundBase.Instance.getStarIngr != null
-                ? SoundBase.Instance.getStarIngr
-                : SoundBase.Instance.click;
-            if (clip != null) SoundBase.Instance.PlaySound(clip);
         }
 
         private static void OnAreaFinished(int areaId)
