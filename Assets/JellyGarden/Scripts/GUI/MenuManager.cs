@@ -113,6 +113,13 @@ namespace JellyGarden.Scripts.GUI
 
         public void ShowGemsShop(bool show = true)
         {
+            // --- King Leo story layer -------------------------------------
+            // Nothing is for sale (TECH.md). Additive: delete this and the two
+            // lines in ShowLiveShop below, and the shops open again.
+            if (show && !JellyGarden.Scripts.Story.StoryFreeGame.ShopsAllowed)
+                return;
+            // --------------------------------------------------------------
+
             if (!show)
             {
                 Close(gemsShop);
@@ -126,6 +133,9 @@ namespace JellyGarden.Scripts.GUI
 
         public void ShowLiveShop(bool show = true)
         {
+            if (show && !JellyGarden.Scripts.Story.StoryFreeGame.ShopsAllowed)
+                return;
+
             if (!show)
             {
                 Close(liveShop);

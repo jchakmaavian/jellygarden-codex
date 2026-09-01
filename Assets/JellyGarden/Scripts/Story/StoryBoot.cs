@@ -30,6 +30,7 @@ namespace JellyGarden.Scripts.Story
             StoryLevelPlan.Load();
             CutsceneRunner.Load();
             StoryMapProgressManager.Install();
+            StoryFreeGame.GrantStarterBoosters();
             // MusicBase does not exist yet at BeforeSceneLoad, so the theme swap
             // installs itself once a scene is up.
 

@@ -190,6 +190,9 @@ namespace JellyGarden.Scripts.Story
             StoryProgress.AddStar(PlayingArea);
             StorySfx.PlayStarEarned();
 
+            // Boosters are earned, never sold. Winning is the price.
+            StoryFreeGame.GrantBoosterForWin(levelNumber);
+
             Debug.Log(string.Format("[Story] Level {0} won: area {1} now holds {2} star(s).",
                 levelNumber, PlayingArea, StoryProgress.StarsIn(PlayingArea)));
         }

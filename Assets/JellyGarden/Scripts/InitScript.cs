@@ -411,6 +411,15 @@ using Facebook.Unity;
 
         public void CheckAdsEvents(GameState state)
         {
+            // --- King Leo story layer -------------------------------------
+            // No ads, no network permission (TECH.md). This is the single point
+            // every ad request passes through, so short-circuiting it here means
+            // no ad is ever requested by any path. Additive: delete these two
+            // lines and the kit's ad events fire again.
+            if (!JellyGarden.Scripts.Story.StoryFreeGame.AdsAllowed)
+                return;
+            // --------------------------------------------------------------
+
             //1.4 added
             foreach (AdEvents item in adsEvents)
             {
@@ -622,6 +631,14 @@ using Facebook.Unity;
 
         public void SpendLife(int count)
         {
+            // --- King Leo story layer -------------------------------------
+            // The five-lives system exists to sell refills, and this game sells
+            // nothing (TECH.md). Retry is instant and unlimited. Additive:
+            // delete these two lines and lives work as the kit shipped them.
+            if (!JellyGarden.Scripts.Story.StoryFreeGame.ShouldSpendLife)
+                return;
+            // --------------------------------------------------------------
+
             if (lifes > 0)
             {
                 lifes -= count;

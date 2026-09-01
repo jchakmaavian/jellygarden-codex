@@ -74,6 +74,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 OpeningPlaysAfterTheFirstWinAndOnlyOnce();
                 GeneratedArtIsWiredUp();
                 SabotageStartsWhereTheStorySaysItDoes();
+                TheGameIsFree();
                 EveryAreaOpens();
             }
             finally
@@ -437,6 +438,48 @@ namespace JellyGarden.Scripts.Story.Editor
                     if (StorySabotage.IsSabotaged(levelNumber)) sabotaged++;
                 }
             return total == 0 ? 0 : sabotaged * 100 / total;
+        }
+
+        private static void TheGameIsFree()
+        {
+            // TECH.md: no ads, no IAP, no lives gate. These are the four gates
+            // every monetisation path in the kit passes through.
+            Expect(StoryFreeGame.Enabled, "the free-game rules are on");
+            Expect(!StoryFreeGame.ShouldSpendLife, "playing a level costs no life");
+            Expect(!StoryFreeGame.AdsAllowed, "no ad may be requested");
+            Expect(!StoryFreeGame.ShopsAllowed, "no shop may open");
+
+            // Losing must never take a life, however many times it happens.
+            if (InitScript.Instance != null)
+            {
+                int before = InitScript.lifes;
+                InitScript.Instance.SpendLife(1);
+                InitScript.Instance.SpendLife(1);
+                Expect(InitScript.lifes == before,
+                    "lives are untouched by playing (" + before + " -> " +
+                    InitScript.lifes + ")");
+            }
+
+            // Boosters are earned. The same level always grants the same one, so
+            // a replay cannot farm them.
+            foreach (string key in new[] { "Hand", "Stripes", "Bomb", "Random_color" })
+                PlayerPrefs.DeleteKey(key);
+
+            StoryFreeGame.GrantBoosterForWin(1);
+            int granted = PlayerPrefs.GetInt("Hand", 0) + PlayerPrefs.GetInt("Stripes", 0) +
+                          PlayerPrefs.GetInt("Bomb", 0) + PlayerPrefs.GetInt("Random_color", 0);
+            Expect(granted == 1, "winning a level grants exactly one booster");
+
+            foreach (string key in new[] { "Hand", "Stripes", "Bomb", "Random_color" })
+                PlayerPrefs.DeleteKey(key);
+            PlayerPrefs.DeleteKey("Story.StarterBoostersGranted");
+            StoryFreeGame.GrantStarterBoosters();
+            Expect(PlayerPrefs.GetInt("Hand", 0) == 2 && PlayerPrefs.GetInt("Random_color", 0) == 1,
+                "first run grants two hammers and a shuffle so the mechanic is discoverable");
+
+            StoryFreeGame.GrantStarterBoosters();
+            Expect(PlayerPrefs.GetInt("Hand", 0) == 2,
+                "the starter grant happens once, not every boot");
         }
 
         private static void EveryAreaOpens()
