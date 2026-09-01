@@ -13,6 +13,7 @@ means a level number alone tells you where in the story you are.
 """
 
 import os
+import random
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -29,6 +30,31 @@ from story_common import (  # noqa: E402
 # GAMEPLAY.md: areas 001-018 are static neglect. At area 019 Grimm opens the
 # sluice gates and obstacles start acting on their own.
 FIRST_SABOTAGE_AREA = 19
+
+# Sabotage is Grimm pushing back, not a permanent tax. It starts occasional and
+# becomes the norm — flagging every level from area 19 onward would put a
+# spreading blocker on three quarters of the game, which reads as the designer
+# being cruel rather than the villain being active.
+SABOTAGE_START_CHANCE = 0.30
+SABOTAGE_END_CHANCE = 0.95
+
+
+def sabotage_chance(area_id):
+    if area_id < FIRST_SABOTAGE_AREA:
+        return 0.0
+    span = max(1, 150 - FIRST_SABOTAGE_AREA)
+    t = (area_id - FIRST_SABOTAGE_AREA) / span
+    return SABOTAGE_START_CHANCE + (SABOTAGE_END_CHANCE - SABOTAGE_START_CHANCE) * t
+
+
+def is_sabotaged(area_id, level_number):
+    """Deterministic per level, so the plan is stable across regenerations."""
+    if area_id < FIRST_SABOTAGE_AREA:
+        return False
+    # The very first sabotage level is always sabotaged — it is the beat where
+    # Grimm opens the sluice gates, and it has a line of dialogue attached.
+    rng = random.Random("kingleo/sabotage/%d" % level_number)
+    return rng.random() < sabotage_chance(area_id)
 
 # Difficulty floor and ceiling as a fraction of the template library's spread.
 # The floor is not 0: area 1 aside, even early boards should have some shape.
@@ -98,7 +124,7 @@ def build_plan():
                             4,
                         ),
                         "themeKey": ARC_THEMES[arc],
-                        "sabotage": area["id"] >= FIRST_SABOTAGE_AREA,
+                        "sabotage": is_sabotaged(area["id"], level_number),
                     }
                 )
 
@@ -127,6 +153,14 @@ def main():
         print("ERROR: level numbers are not contiguous from 1", file=sys.stderr)
         return 1
 
+    # The first level of the first sabotage area carries the story beat, so it
+    # is forced on regardless of the dice.
+    for entry in entries:
+        if entry["areaId"] == FIRST_SABOTAGE_AREA:
+            entry["sabotage"] = True
+            entry["sabotageBeat"] = True
+            break
+
     # Per-area index so the runtime can go from an area to its levels in O(1).
     by_area = {}
     for entry in entries:
@@ -146,6 +180,9 @@ def main():
     first = entries[0]
     last = entries[-1]
     print("levels=%d" % len(entries))
+    sabotaged = sum(1 for e in entries if e["sabotage"])
+    print("sabotaged=%d (%.0f%% of levels, from area %d)"
+          % (sabotaged, 100.0 * sabotaged / len(entries), FIRST_SABOTAGE_AREA))
     print(
         "difficulty: level 1 (area %d) @ %.3f .. level %d (area %d) @ %.3f"
         % (

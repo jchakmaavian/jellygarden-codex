@@ -99,6 +99,8 @@
    "difficulty": 0.1293,
    "playableRatio": 1.0,
    "obstacleDensity": 0.0889,
+   "openRatio": 1.0,
+   "blockTargetCount": 4,
    "difficultyRank": 0.0606
   },
   {
@@ -250,6 +252,8 @@
    "difficulty": 0.1356,
    "playableRatio": 0.8788,
    "obstacleDensity": 0.0,
+   "openRatio": 0.8788,
+   "blockTargetCount": 0,
    "difficultyRank": 0.0808
   },
   {
@@ -350,6 +354,8 @@
    "difficulty": 0.1031,
    "playableRatio": 0.9286,
    "obstacleDensity": 0.0,
+   "openRatio": 0.9286,
+   "blockTargetCount": 0,
    "difficultyRank": 0.0
   },
   {
@@ -501,6 +507,8 @@
    "difficulty": 0.1306,
    "playableRatio": 0.9293,
    "obstacleDensity": 0.0,
+   "openRatio": 0.9293,
+   "blockTargetCount": 0,
    "difficultyRank": 0.0707
   },
   {
@@ -619,6 +627,8 @@
    "difficulty": 0.1176,
    "playableRatio": 0.8485,
    "obstacleDensity": 0.0,
+   "openRatio": 0.8485,
+   "blockTargetCount": 0,
    "difficultyRank": 0.0202
   },
   {
@@ -737,7 +747,9 @@
    "difficulty": 0.231,
    "playableRatio": 1.0,
    "obstacleDensity": 0.2424,
-   "difficultyRank": 0.3535
+   "openRatio": 1.0,
+   "blockTargetCount": 16,
+   "difficultyRank": 0.303
   },
   {
    "mode": 3,
@@ -888,7 +900,9 @@
    "difficulty": 0.3757,
    "playableRatio": 0.9596,
    "obstacleDensity": 0.4545,
-   "difficultyRank": 0.9798
+   "openRatio": 0.9596,
+   "blockTargetCount": 45,
+   "difficultyRank": 0.9394
   },
   {
    "mode": 3,
@@ -1028,7 +1042,9 @@
    "difficulty": 0.3315,
    "playableRatio": 0.8864,
    "obstacleDensity": 0.3182,
-   "difficultyRank": 0.8586
+   "openRatio": 0.8864,
+   "blockTargetCount": 28,
+   "difficultyRank": 0.7273
   },
   {
    "mode": 3,
@@ -1179,7 +1195,9 @@
    "difficulty": 0.3214,
    "playableRatio": 0.9596,
    "obstacleDensity": 0.3333,
-   "difficultyRank": 0.8485
+   "openRatio": 0.9596,
+   "blockTargetCount": 33,
+   "difficultyRank": 0.7071
   },
   {
    "mode": 3,
@@ -1330,7 +1348,9 @@
    "difficulty": 0.3158,
    "playableRatio": 0.9899,
    "obstacleDensity": 0.9899,
-   "difficultyRank": 0.8182
+   "openRatio": 0.9899,
+   "blockTargetCount": 98,
+   "difficultyRank": 0.6667
   },
   {
    "mode": 2,
@@ -1430,6 +1450,8 @@
    "difficulty": 0.1508,
    "playableRatio": 1.0,
    "obstacleDensity": 0.0,
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
    "difficultyRank": 0.101
   },
   {
@@ -1560,6 +1582,8 @@
    "difficulty": 0.1278,
    "playableRatio": 0.875,
    "obstacleDensity": 0.0,
+   "openRatio": 0.875,
+   "blockTargetCount": 0,
    "difficultyRank": 0.0404
   },
   {
@@ -1711,7 +1735,9 @@
    "difficulty": 0.2499,
    "playableRatio": 0.8788,
    "obstacleDensity": 0.0,
-   "difficultyRank": 0.4242
+   "openRatio": 0.8788,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.3535
   },
   {
    "mode": 2,
@@ -1862,7 +1888,9 @@
    "difficulty": 0.1637,
    "playableRatio": 0.9596,
    "obstacleDensity": 0.0,
-   "difficultyRank": 0.1515
+   "openRatio": 0.9596,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.1414
   },
   {
    "mode": 2,
@@ -1958,6 +1986,8 @@
    "difficulty": 0.1165,
    "playableRatio": 0.8889,
    "obstacleDensity": 0.0,
+   "openRatio": 0.8889,
+   "blockTargetCount": 0,
    "difficultyRank": 0.0101
   },
   {
@@ -2109,7 +2139,9 @@
    "difficulty": 0.2686,
    "playableRatio": 0.9091,
    "obstacleDensity": 0.9091,
-   "difficultyRank": 0.5253
+   "openRatio": 0.9091,
+   "blockTargetCount": 90,
+   "difficultyRank": 0.4646
   },
   {
    "mode": 1,
@@ -2260,7 +2292,9 @@
    "difficulty": 0.1804,
    "playableRatio": 0.8788,
    "obstacleDensity": 0.0,
-   "difficultyRank": 0.1919
+   "openRatio": 0.8788,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.1616
   },
   {
    "mode": 3,
@@ -2389,7 +2423,9 @@
    "difficulty": 0.2504,
    "playableRatio": 0.8519,
    "obstacleDensity": 0.2346,
-   "difficultyRank": 0.4343
+   "openRatio": 0.8519,
+   "blockTargetCount": 19,
+   "difficultyRank": 0.3636
   },
   {
    "mode": 3,
@@ -2518,7 +2554,9 @@
    "difficulty": 0.2857,
    "playableRatio": 0.7901,
    "obstacleDensity": 0.4938,
-   "difficultyRank": 0.6364
+   "openRatio": 0.7901,
+   "blockTargetCount": 56,
+   "difficultyRank": 0.5152
   },
   {
    "mode": 1,
@@ -2647,7 +2685,9 @@
    "difficulty": 0.1558,
    "playableRatio": 0.8272,
    "obstacleDensity": 0.0,
-   "difficultyRank": 0.1313
+   "openRatio": 0.8272,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.1212
   },
   {
    "mode": 1,
@@ -2795,10 +2835,12 @@
    "number": 21,
    "modeName": "COLLECT",
    "limitName": "MOVES",
-   "difficulty": 0.3748,
-   "playableRatio": 0.9697,
+   "difficulty": 0.4378,
+   "playableRatio": 0.5758,
    "obstacleDensity": 0.3939,
-   "difficultyRank": 0.9697
+   "openRatio": 0.9697,
+   "blockTargetCount": 0,
+   "difficultyRank": 1.0
   },
   {
    "mode": 2,
@@ -2946,10 +2988,12 @@
    "number": 22,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2435,
-   "playableRatio": 0.7576,
+   "difficulty": 0.2839,
+   "playableRatio": 0.5051,
    "obstacleDensity": 0.2525,
-   "difficultyRank": 0.404
+   "openRatio": 0.7576,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.4949
   },
   {
    "mode": 1,
@@ -3097,10 +3141,12 @@
    "number": 23,
    "modeName": "COLLECT",
    "limitName": "MOVES",
-   "difficulty": 0.3488,
-   "playableRatio": 1.0,
+   "difficulty": 0.3973,
+   "playableRatio": 0.697,
    "obstacleDensity": 0.303,
-   "difficultyRank": 0.9293
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.9596
   },
   {
    "mode": 2,
@@ -3207,6 +3253,8 @@
    "difficulty": 0.1284,
    "playableRatio": 0.9273,
    "obstacleDensity": 0.0,
+   "openRatio": 0.9273,
+   "blockTargetCount": 0,
    "difficultyRank": 0.0505
   },
   {
@@ -3355,10 +3403,12 @@
    "number": 25,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2531,
-   "playableRatio": 0.899,
+   "difficulty": 0.2676,
+   "playableRatio": 0.8081,
    "obstacleDensity": 0.2727,
-   "difficultyRank": 0.4545
+   "openRatio": 0.899,
+   "blockTargetCount": 18,
+   "difficultyRank": 0.4444
   },
   {
    "mode": 2,
@@ -3484,10 +3534,12 @@
    "number": 26,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2937,
-   "playableRatio": 1.0,
+   "difficulty": 0.3471,
+   "playableRatio": 0.6667,
    "obstacleDensity": 0.3333,
-   "difficultyRank": 0.6869
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.8182
   },
   {
    "mode": 1,
@@ -3635,10 +3687,12 @@
    "number": 27,
    "modeName": "COLLECT",
    "limitName": "TIME",
-   "difficulty": 0.2761,
-   "playableRatio": 1.0,
+   "difficulty": 0.3343,
+   "playableRatio": 0.6364,
    "obstacleDensity": 0.3636,
-   "difficultyRank": 0.5556
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.7677
   },
   {
    "mode": 3,
@@ -3775,10 +3829,12 @@
    "number": 28,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2864,
-   "playableRatio": 0.9778,
+   "difficulty": 0.3326,
+   "playableRatio": 0.6889,
    "obstacleDensity": 0.3889,
-   "difficultyRank": 0.6465
+   "openRatio": 0.9778,
+   "blockTargetCount": 18,
+   "difficultyRank": 0.7576
   },
   {
    "mode": 3,
@@ -3926,10 +3982,12 @@
    "number": 29,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.3771,
-   "playableRatio": 1.0,
+   "difficulty": 0.4062,
+   "playableRatio": 0.8182,
    "obstacleDensity": 0.6869,
-   "difficultyRank": 0.9899
+   "openRatio": 1.0,
+   "blockTargetCount": 76,
+   "difficultyRank": 0.9697
   },
   {
    "mode": 1,
@@ -4077,10 +4135,12 @@
    "number": 30,
    "modeName": "COLLECT",
    "limitName": "MOVES",
-   "difficulty": 0.3559,
-   "playableRatio": 1.0,
+   "difficulty": 0.4125,
+   "playableRatio": 0.6465,
    "obstacleDensity": 0.3535,
-   "difficultyRank": 0.9394
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.9899
   },
   {
    "mode": 3,
@@ -4231,7 +4291,9 @@
    "difficulty": 0.3075,
    "playableRatio": 0.5455,
    "obstacleDensity": 0.2727,
-   "difficultyRank": 0.7778
+   "openRatio": 0.5455,
+   "blockTargetCount": 27,
+   "difficultyRank": 0.6061
   },
   {
    "mode": 1,
@@ -4379,10 +4441,12 @@
    "number": 32,
    "modeName": "COLLECT",
    "limitName": "TIME",
-   "difficulty": 0.285,
-   "playableRatio": 0.7677,
+   "difficulty": 0.3319,
+   "playableRatio": 0.4747,
    "obstacleDensity": 0.2929,
-   "difficultyRank": 0.6263
+   "openRatio": 0.7677,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.7374
   },
   {
    "mode": 3,
@@ -4533,7 +4597,9 @@
    "difficulty": 0.2644,
    "playableRatio": 0.8081,
    "obstacleDensity": 0.2424,
-   "difficultyRank": 0.4848
+   "openRatio": 0.8081,
+   "blockTargetCount": 24,
+   "difficultyRank": 0.404
   },
   {
    "mode": 1,
@@ -4684,7 +4750,9 @@
    "difficulty": 0.1524,
    "playableRatio": 0.8384,
    "obstacleDensity": 0.0,
-   "difficultyRank": 0.1212
+   "openRatio": 0.8384,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.1111
   },
   {
    "mode": 3,
@@ -4835,7 +4903,9 @@
    "difficulty": 0.3705,
    "playableRatio": 0.8889,
    "obstacleDensity": 0.8889,
-   "difficultyRank": 0.9596
+   "openRatio": 0.8889,
+   "blockTargetCount": 176,
+   "difficultyRank": 0.899
   },
   {
    "mode": 0,
@@ -4983,10 +5053,12 @@
    "number": 36,
    "modeName": "SCORE",
    "limitName": "MOVES",
-   "difficulty": 0.2341,
-   "playableRatio": 1.0,
+   "difficulty": 0.2487,
+   "playableRatio": 0.9091,
    "obstacleDensity": 0.1818,
-   "difficultyRank": 0.3636
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.3434
   },
   {
    "mode": 3,
@@ -5134,10 +5206,12 @@
    "number": 37,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.3037,
-   "playableRatio": 1.0,
+   "difficulty": 0.3264,
+   "playableRatio": 0.8586,
    "obstacleDensity": 0.3939,
-   "difficultyRank": 0.7273
+   "openRatio": 1.0,
+   "blockTargetCount": 33,
+   "difficultyRank": 0.7172
   },
   {
    "mode": 3,
@@ -5285,10 +5359,12 @@
    "number": 38,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.3057,
-   "playableRatio": 0.9394,
+   "difficulty": 0.3429,
+   "playableRatio": 0.7071,
    "obstacleDensity": 0.4545,
-   "difficultyRank": 0.7576
+   "openRatio": 0.9394,
+   "blockTargetCount": 22,
+   "difficultyRank": 0.798
   },
   {
    "mode": 2,
@@ -5417,7 +5493,9 @@
    "difficulty": 0.2023,
    "playableRatio": 0.9753,
    "obstacleDensity": 0.1111,
-   "difficultyRank": 0.2727
+   "openRatio": 0.9753,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.2525
   },
   {
    "mode": 3,
@@ -5568,7 +5646,9 @@
    "difficulty": 0.4119,
    "playableRatio": 0.8182,
    "obstacleDensity": 0.4848,
-   "difficultyRank": 1.0
+   "openRatio": 0.8182,
+   "blockTargetCount": 54,
+   "difficultyRank": 0.9798
   },
   {
    "mode": 3,
@@ -5719,7 +5799,9 @@
    "difficulty": 0.358,
    "playableRatio": 0.9394,
    "obstacleDensity": 0.4242,
-   "difficultyRank": 0.9495
+   "openRatio": 0.9394,
+   "blockTargetCount": 56,
+   "difficultyRank": 0.8485
   },
   {
    "mode": 2,
@@ -5848,7 +5930,9 @@
    "difficulty": 0.3037,
    "playableRatio": 1.0,
    "obstacleDensity": 0.2099,
-   "difficultyRank": 0.7374
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.5657
   },
   {
    "mode": 1,
@@ -5988,7 +6072,9 @@
    "difficulty": 0.2683,
    "playableRatio": 1.0,
    "obstacleDensity": 0.2667,
-   "difficultyRank": 0.5152
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.4545
   },
   {
    "mode": 2,
@@ -6128,7 +6214,9 @@
    "difficulty": 0.2224,
    "playableRatio": 0.9222,
    "obstacleDensity": 0.1,
-   "difficultyRank": 0.3131
+   "openRatio": 0.9222,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.2828
   },
   {
    "mode": 3,
@@ -6268,7 +6356,9 @@
    "difficulty": 0.2775,
    "playableRatio": 0.9111,
    "obstacleDensity": 0.9111,
-   "difficultyRank": 0.5758
+   "openRatio": 0.9111,
+   "blockTargetCount": 62,
+   "difficultyRank": 0.4848
   },
   {
    "mode": 3,
@@ -6405,10 +6495,12 @@
    "number": 46,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2564,
-   "playableRatio": 0.8667,
+   "difficulty": 0.2849,
+   "playableRatio": 0.6889,
    "obstacleDensity": 0.2778,
-   "difficultyRank": 0.4646
+   "openRatio": 0.8667,
+   "blockTargetCount": 9,
+   "difficultyRank": 0.5051
   },
   {
    "mode": 1,
@@ -6548,7 +6640,9 @@
    "difficulty": 0.3371,
    "playableRatio": 1.0,
    "obstacleDensity": 0.2889,
-   "difficultyRank": 0.899
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.7879
   },
   {
    "mode": 3,
@@ -6699,7 +6793,9 @@
    "difficulty": 0.3068,
    "playableRatio": 0.8586,
    "obstacleDensity": 0.202,
-   "difficultyRank": 0.7677
+   "openRatio": 0.8586,
+   "blockTargetCount": 20,
+   "difficultyRank": 0.5859
   },
   {
    "mode": 2,
@@ -6847,10 +6943,12 @@
    "number": 49,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.3487,
-   "playableRatio": 0.9192,
+   "difficulty": 0.3843,
+   "playableRatio": 0.697,
    "obstacleDensity": 0.2727,
-   "difficultyRank": 0.9192
+   "openRatio": 0.9192,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.9495
   },
   {
    "mode": 3,
@@ -7001,7 +7099,9 @@
    "difficulty": 0.2653,
    "playableRatio": 0.9394,
    "obstacleDensity": 0.3535,
-   "difficultyRank": 0.5051
+   "openRatio": 0.9394,
+   "blockTargetCount": 54,
+   "difficultyRank": 0.4141
   },
   {
    "mode": 3,
@@ -7149,10 +7249,12 @@
    "number": 51,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.3126,
-   "playableRatio": 1.0,
+   "difficulty": 0.3708,
+   "playableRatio": 0.6364,
    "obstacleDensity": 0.4646,
-   "difficultyRank": 0.8081
+   "openRatio": 1.0,
+   "blockTargetCount": 10,
+   "difficultyRank": 0.9192
   },
   {
    "mode": 3,
@@ -7300,10 +7402,12 @@
    "number": 52,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2766,
-   "playableRatio": 0.9596,
+   "difficulty": 0.3203,
+   "playableRatio": 0.6869,
    "obstacleDensity": 0.3636,
-   "difficultyRank": 0.5657
+   "openRatio": 0.9596,
+   "blockTargetCount": 9,
+   "difficultyRank": 0.6869
   },
   {
    "mode": 1,
@@ -7451,10 +7555,12 @@
    "number": 53,
    "modeName": "COLLECT",
    "limitName": "MOVES",
-   "difficulty": 0.3334,
-   "playableRatio": 0.8182,
+   "difficulty": 0.3706,
+   "playableRatio": 0.5859,
    "obstacleDensity": 0.2323,
-   "difficultyRank": 0.8889
+   "openRatio": 0.8182,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.9091
   },
   {
    "mode": 1,
@@ -7602,10 +7708,12 @@
    "number": 54,
    "modeName": "COLLECT",
    "limitName": "TIME",
-   "difficulty": 0.3089,
-   "playableRatio": 0.9596,
+   "difficulty": 0.3509,
+   "playableRatio": 0.697,
    "obstacleDensity": 0.2626,
-   "difficultyRank": 0.798
+   "openRatio": 0.9596,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.8384
   },
   {
    "mode": 3,
@@ -7753,10 +7861,12 @@
    "number": 55,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.1837,
-   "playableRatio": 0.9091,
+   "difficulty": 0.1902,
+   "playableRatio": 0.8687,
    "obstacleDensity": 0.2727,
-   "difficultyRank": 0.202
+   "openRatio": 0.9091,
+   "blockTargetCount": 23,
+   "difficultyRank": 0.1818
   },
   {
    "mode": 1,
@@ -7882,10 +7992,12 @@
    "number": 56,
    "modeName": "COLLECT",
    "limitName": "TIME",
-   "difficulty": 0.3331,
-   "playableRatio": 1.0,
+   "difficulty": 0.3627,
+   "playableRatio": 0.8148,
    "obstacleDensity": 0.3457,
-   "difficultyRank": 0.8788
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.8687
   },
   {
    "mode": 2,
@@ -8011,10 +8123,12 @@
    "number": 57,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2287,
-   "playableRatio": 1.0,
+   "difficulty": 0.2524,
+   "playableRatio": 0.8519,
    "obstacleDensity": 0.1481,
-   "difficultyRank": 0.3333
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.3838
   },
   {
    "mode": 3,
@@ -8162,10 +8276,12 @@
    "number": 58,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2704,
-   "playableRatio": 0.899,
+   "difficulty": 0.2947,
+   "playableRatio": 0.7475,
    "obstacleDensity": 0.3131,
-   "difficultyRank": 0.5354
+   "openRatio": 0.899,
+   "blockTargetCount": 24,
+   "difficultyRank": 0.5556
   },
   {
    "mode": 0,
@@ -8313,10 +8429,12 @@
    "number": 59,
    "modeName": "SCORE",
    "limitName": "TIME",
-   "difficulty": 0.2807,
-   "playableRatio": 1.0,
+   "difficulty": 0.3615,
+   "playableRatio": 0.4949,
    "obstacleDensity": 0.5051,
-   "difficultyRank": 0.596
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.8586
   },
   {
    "mode": 2,
@@ -8464,10 +8582,12 @@
    "number": 60,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2415,
-   "playableRatio": 0.899,
+   "difficulty": 0.2674,
+   "playableRatio": 0.7374,
    "obstacleDensity": 0.1616,
-   "difficultyRank": 0.3939
+   "openRatio": 0.899,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.4343
   },
   {
    "mode": 1,
@@ -8615,10 +8735,12 @@
    "number": 61,
    "modeName": "COLLECT",
    "limitName": "MOVES",
-   "difficulty": 0.3457,
-   "playableRatio": 0.7879,
+   "difficulty": 0.3716,
+   "playableRatio": 0.6263,
    "obstacleDensity": 0.2626,
-   "difficultyRank": 0.9091
+   "openRatio": 0.7879,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.9293
   },
   {
    "mode": 0,
@@ -8755,10 +8877,12 @@
    "number": 62,
    "modeName": "SCORE",
    "limitName": "MOVES",
-   "difficulty": 0.2966,
-   "playableRatio": 1.0,
+   "difficulty": 0.3366,
+   "playableRatio": 0.75,
    "obstacleDensity": 0.5,
-   "difficultyRank": 0.7172
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.7778
   },
   {
    "mode": 3,
@@ -8895,10 +9019,12 @@
    "number": 63,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2237,
-   "playableRatio": 0.9111,
+   "difficulty": 0.2521,
+   "playableRatio": 0.7333,
    "obstacleDensity": 0.2222,
-   "difficultyRank": 0.3232
+   "openRatio": 0.9111,
+   "blockTargetCount": 8,
+   "difficultyRank": 0.3737
   },
   {
    "mode": 0,
@@ -9035,10 +9161,12 @@
    "number": 64,
    "modeName": "SCORE",
    "limitName": "MOVES",
-   "difficulty": 0.1879,
-   "playableRatio": 0.9333,
+   "difficulty": 0.2039,
+   "playableRatio": 0.8333,
    "obstacleDensity": 0.2,
-   "difficultyRank": 0.2323
+   "openRatio": 0.9333,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.2626
   },
   {
    "mode": 1,
@@ -9186,9 +9314,11 @@
    "number": 65,
    "modeName": "COLLECT",
    "limitName": "MOVES",
-   "difficulty": 0.121,
-   "playableRatio": 0.7879,
+   "difficulty": 0.1243,
+   "playableRatio": 0.7677,
    "obstacleDensity": 0.0202,
+   "openRatio": 0.7879,
+   "blockTargetCount": 0,
    "difficultyRank": 0.0303
   },
   {
@@ -9337,10 +9467,12 @@
    "number": 66,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.1861,
-   "playableRatio": 0.8889,
+   "difficulty": 0.199,
+   "playableRatio": 0.8081,
    "obstacleDensity": 0.1616,
-   "difficultyRank": 0.2121
+   "openRatio": 0.8889,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.2222
   },
   {
    "mode": 3,
@@ -9488,10 +9620,12 @@
    "number": 67,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2924,
-   "playableRatio": 0.899,
+   "difficulty": 0.307,
+   "playableRatio": 0.8081,
    "obstacleDensity": 0.2222,
-   "difficultyRank": 0.6768
+   "openRatio": 0.899,
+   "blockTargetCount": 17,
+   "difficultyRank": 0.596
   },
   {
    "mode": 3,
@@ -9642,7 +9776,9 @@
    "difficulty": 0.3324,
    "playableRatio": 0.899,
    "obstacleDensity": 0.7172,
-   "difficultyRank": 0.8687
+   "openRatio": 0.899,
+   "blockTargetCount": 119,
+   "difficultyRank": 0.7475
   },
   {
    "mode": 1,
@@ -9793,7 +9929,9 @@
    "difficulty": 0.191,
    "playableRatio": 0.8788,
    "obstacleDensity": 0.1111,
-   "difficultyRank": 0.2424
+   "openRatio": 0.8788,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.1919
   },
   {
    "mode": 3,
@@ -9941,10 +10079,12 @@
    "number": 70,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2711,
-   "playableRatio": 0.8081,
+   "difficulty": 0.2905,
+   "playableRatio": 0.6869,
    "obstacleDensity": 0.4848,
-   "difficultyRank": 0.5455
+   "openRatio": 0.8081,
+   "blockTargetCount": 56,
+   "difficultyRank": 0.5354
   },
   {
    "mode": 3,
@@ -10095,7 +10235,9 @@
    "difficulty": 0.3194,
    "playableRatio": 0.8081,
    "obstacleDensity": 0.4444,
-   "difficultyRank": 0.8384
+   "openRatio": 0.8081,
+   "blockTargetCount": 44,
+   "difficultyRank": 0.6768
   },
   {
    "mode": 2,
@@ -10243,10 +10385,12 @@
    "number": 72,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2814,
-   "playableRatio": 0.8687,
+   "difficulty": 0.3154,
+   "playableRatio": 0.6566,
    "obstacleDensity": 0.2525,
-   "difficultyRank": 0.6061
+   "openRatio": 0.8687,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.6566
   },
   {
    "mode": 0,
@@ -10394,10 +10538,12 @@
    "number": 73,
    "modeName": "SCORE",
    "limitName": "MOVES",
-   "difficulty": 0.1509,
-   "playableRatio": 0.8889,
+   "difficulty": 0.1929,
+   "playableRatio": 0.6263,
    "obstacleDensity": 0.2626,
-   "difficultyRank": 0.1111
+   "openRatio": 0.8889,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.202
   },
   {
    "mode": 2,
@@ -10545,10 +10691,12 @@
    "number": 74,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.1784,
-   "playableRatio": 0.7374,
+   "difficulty": 0.193,
+   "playableRatio": 0.6465,
    "obstacleDensity": 0.0909,
-   "difficultyRank": 0.1818
+   "openRatio": 0.7374,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.2121
   },
   {
    "mode": 3,
@@ -10699,7 +10847,9 @@
    "difficulty": 0.3045,
    "playableRatio": 0.6768,
    "obstacleDensity": 0.6364,
-   "difficultyRank": 0.7475
+   "openRatio": 0.6768,
+   "blockTargetCount": 112,
+   "difficultyRank": 0.5758
   },
   {
    "mode": 2,
@@ -10850,7 +11000,9 @@
    "difficulty": 0.2004,
    "playableRatio": 0.8485,
    "obstacleDensity": 0.0404,
-   "difficultyRank": 0.2525
+   "openRatio": 0.8485,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.2323
   },
   {
    "mode": 3,
@@ -10976,9 +11128,11 @@
    "number": 77,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.1741,
-   "playableRatio": 0.7778,
+   "difficulty": 0.1899,
+   "playableRatio": 0.679,
    "obstacleDensity": 0.2099,
+   "openRatio": 0.7778,
+   "blockTargetCount": 18,
    "difficultyRank": 0.1717
   },
   {
@@ -11108,7 +11262,9 @@
    "difficulty": 0.2016,
    "playableRatio": 0.8642,
    "obstacleDensity": 0.0988,
-   "difficultyRank": 0.2626
+   "openRatio": 0.8642,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.2424
   },
   {
    "mode": 0,
@@ -11234,10 +11390,12 @@
    "number": 79,
    "modeName": "SCORE",
    "limitName": "MOVES",
-   "difficulty": 0.2795,
-   "playableRatio": 0.9506,
+   "difficulty": 0.321,
+   "playableRatio": 0.6914,
    "obstacleDensity": 0.4568,
-   "difficultyRank": 0.5859
+   "openRatio": 0.9506,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.697
   },
   {
    "mode": 0,
@@ -11385,10 +11543,12 @@
    "number": 80,
    "modeName": "SCORE",
    "limitName": "TIME",
-   "difficulty": 0.219,
-   "playableRatio": 0.9394,
+   "difficulty": 0.2384,
+   "playableRatio": 0.8182,
    "obstacleDensity": 0.3333,
-   "difficultyRank": 0.2929
+   "openRatio": 0.9394,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.3232
   },
   {
    "mode": 2,
@@ -11525,10 +11685,12 @@
    "number": 81,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2963,
-   "playableRatio": 1.0,
+   "difficulty": 0.3087,
+   "playableRatio": 0.9222,
    "obstacleDensity": 0.1778,
-   "difficultyRank": 0.7071
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.6162
   },
   {
    "mode": 2,
@@ -11676,10 +11838,12 @@
    "number": 82,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2954,
-   "playableRatio": 0.899,
+   "difficulty": 0.3697,
+   "playableRatio": 0.4343,
    "obstacleDensity": 0.4646,
-   "difficultyRank": 0.697
+   "openRatio": 0.899,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.8889
   },
   {
    "mode": 0,
@@ -11827,10 +11991,12 @@
    "number": 83,
    "modeName": "SCORE",
    "limitName": "MOVES",
-   "difficulty": 0.2826,
-   "playableRatio": 1.0,
+   "difficulty": 0.3133,
+   "playableRatio": 0.8081,
    "obstacleDensity": 0.3131,
-   "difficultyRank": 0.6162
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.6263
   },
   {
    "mode": 1,
@@ -11978,10 +12144,12 @@
    "number": 84,
    "modeName": "COLLECT",
    "limitName": "TIME",
-   "difficulty": 0.2923,
-   "playableRatio": 0.8485,
+   "difficulty": 0.3473,
+   "playableRatio": 0.5051,
    "obstacleDensity": 0.3434,
-   "difficultyRank": 0.6667
+   "openRatio": 0.8485,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.8283
   },
   {
    "mode": 2,
@@ -12129,10 +12297,12 @@
    "number": 85,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.3077,
-   "playableRatio": 1.0,
+   "difficulty": 0.3691,
+   "playableRatio": 0.6162,
    "obstacleDensity": 0.3838,
-   "difficultyRank": 0.7879
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.8788
   },
   {
    "mode": 3,
@@ -12280,10 +12450,12 @@
    "number": 86,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2651,
-   "playableRatio": 0.9697,
+   "difficulty": 0.2925,
+   "playableRatio": 0.798,
    "obstacleDensity": 0.3535,
-   "difficultyRank": 0.4949
+   "openRatio": 0.9697,
+   "blockTargetCount": 18,
+   "difficultyRank": 0.5455
   },
   {
    "mode": 2,
@@ -12431,10 +12603,12 @@
    "number": 87,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2399,
-   "playableRatio": 0.9091,
+   "difficulty": 0.2754,
+   "playableRatio": 0.6869,
    "obstacleDensity": 0.3131,
-   "difficultyRank": 0.3838
+   "openRatio": 0.9091,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.4747
   },
   {
    "mode": 3,
@@ -12585,7 +12759,9 @@
    "difficulty": 0.1654,
    "playableRatio": 0.7778,
    "obstacleDensity": 0.1818,
-   "difficultyRank": 0.1616
+   "openRatio": 0.7778,
+   "blockTargetCount": 18,
+   "difficultyRank": 0.1515
   },
   {
    "mode": 3,
@@ -12733,10 +12909,12 @@
    "number": 89,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2202,
-   "playableRatio": 0.8687,
+   "difficulty": 0.2235,
+   "playableRatio": 0.8485,
    "obstacleDensity": 0.2828,
-   "difficultyRank": 0.303
+   "openRatio": 0.8687,
+   "blockTargetCount": 38,
+   "difficultyRank": 0.2929
   },
   {
    "mode": 1,
@@ -12887,7 +13065,9 @@
    "difficulty": 0.1566,
    "playableRatio": 0.8182,
    "obstacleDensity": 0.1212,
-   "difficultyRank": 0.1414
+   "openRatio": 0.8182,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.1313
   },
   {
    "mode": 0,
@@ -13035,10 +13215,12 @@
    "number": 91,
    "modeName": "SCORE",
    "limitName": "TIME",
-   "difficulty": 0.1878,
-   "playableRatio": 0.899,
+   "difficulty": 0.2379,
+   "playableRatio": 0.5859,
    "obstacleDensity": 0.3939,
-   "difficultyRank": 0.2222
+   "openRatio": 0.899,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.3131
   },
   {
    "mode": 2,
@@ -13175,10 +13357,12 @@
    "number": 92,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2069,
-   "playableRatio": 0.9556,
+   "difficulty": 0.2158,
+   "playableRatio": 0.9,
    "obstacleDensity": 0.1111,
-   "difficultyRank": 0.2828
+   "openRatio": 0.9556,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.2727
   },
   {
    "mode": 3,
@@ -13315,10 +13499,12 @@
    "number": 93,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.319,
-   "playableRatio": 0.9667,
+   "difficulty": 0.3457,
+   "playableRatio": 0.8,
    "obstacleDensity": 0.8,
-   "difficultyRank": 0.8283
+   "openRatio": 0.9667,
+   "blockTargetCount": 114,
+   "difficultyRank": 0.8081
   },
   {
    "mode": 1,
@@ -13455,10 +13641,12 @@
    "number": 94,
    "modeName": "COLLECT",
    "limitName": "TIME",
-   "difficulty": 0.2343,
-   "playableRatio": 0.9556,
+   "difficulty": 0.2663,
+   "playableRatio": 0.7556,
    "obstacleDensity": 0.2444,
-   "difficultyRank": 0.3737
+   "openRatio": 0.9556,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.4242
   },
   {
    "mode": 2,
@@ -13606,10 +13794,12 @@
    "number": 95,
    "modeName": "INGREDIENT",
    "limitName": "MOVES",
-   "difficulty": 0.2301,
-   "playableRatio": 0.8889,
+   "difficulty": 0.2479,
+   "playableRatio": 0.7778,
    "obstacleDensity": 0.1212,
-   "difficultyRank": 0.3434
+   "openRatio": 0.8889,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.3333
   },
   {
    "mode": 0,
@@ -13757,10 +13947,12 @@
    "number": 96,
    "modeName": "SCORE",
    "limitName": "MOVES",
-   "difficulty": 0.2476,
-   "playableRatio": 0.9394,
+   "difficulty": 0.3139,
+   "playableRatio": 0.5253,
    "obstacleDensity": 0.4545,
-   "difficultyRank": 0.4141
+   "openRatio": 0.9394,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.6465
   },
   {
    "mode": 0,
@@ -13911,6 +14103,8 @@
    "difficulty": 0.1504,
    "playableRatio": 0.6869,
    "obstacleDensity": 0.0,
+   "openRatio": 0.6869,
+   "blockTargetCount": 0,
    "difficultyRank": 0.0909
   },
   {
@@ -14062,7 +14256,9 @@
    "difficulty": 0.2588,
    "playableRatio": 1.0,
    "obstacleDensity": 0.2828,
-   "difficultyRank": 0.4747
+   "openRatio": 1.0,
+   "blockTargetCount": 0,
+   "difficultyRank": 0.3939
   },
   {
    "mode": 3,
@@ -14210,10 +14406,12 @@
    "number": 99,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2518,
-   "playableRatio": 0.9596,
+   "difficulty": 0.2857,
+   "playableRatio": 0.7475,
    "obstacleDensity": 0.3131,
-   "difficultyRank": 0.4444
+   "openRatio": 0.9596,
+   "blockTargetCount": 10,
+   "difficultyRank": 0.5253
   },
   {
    "mode": 3,
@@ -14361,10 +14559,12 @@
    "number": 100,
    "modeName": "BLOCKS",
    "limitName": "MOVES",
-   "difficulty": 0.2894,
-   "playableRatio": 0.9394,
+   "difficulty": 0.3137,
+   "playableRatio": 0.7879,
    "obstacleDensity": 0.3939,
-   "difficultyRank": 0.6566
+   "openRatio": 0.9394,
+   "blockTargetCount": 38,
+   "difficultyRank": 0.6364
   }
  ]
 }

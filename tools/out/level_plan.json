@@ -1580,7 +1580,8 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.0758,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": true,
+   "sabotageBeat": true
   },
   {
    "levelNumber": 159,
@@ -1590,7 +1591,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.0878,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 160,
@@ -1600,7 +1601,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.0998,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 161,
@@ -1610,7 +1611,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.1118,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 162,
@@ -1620,7 +1621,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.1238,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 163,
@@ -1630,7 +1631,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.1358,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 164,
@@ -1650,7 +1651,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.1598,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 166,
@@ -1670,7 +1671,7 @@
    "starIndexWithinArea": 10,
    "difficulty": 0.1838,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 168,
@@ -1680,7 +1681,7 @@
    "starIndexWithinArea": 11,
    "difficulty": 0.1958,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 169,
@@ -1710,7 +1711,7 @@
    "starIndexWithinArea": 14,
    "difficulty": 0.2318,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 172,
@@ -1720,7 +1721,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.09,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 173,
@@ -1730,7 +1731,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.102,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 174,
@@ -1740,7 +1741,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.114,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 175,
@@ -1750,7 +1751,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.126,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 176,
@@ -1760,7 +1761,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.138,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 177,
@@ -1770,7 +1771,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.15,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 178,
@@ -1790,7 +1791,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.174,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 180,
@@ -1810,7 +1811,7 @@
    "starIndexWithinArea": 10,
    "difficulty": 0.198,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 182,
@@ -1820,7 +1821,7 @@
    "starIndexWithinArea": 11,
    "difficulty": 0.21,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 183,
@@ -1830,7 +1831,7 @@
    "starIndexWithinArea": 12,
    "difficulty": 0.222,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 184,
@@ -1840,7 +1841,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.1042,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 185,
@@ -1850,7 +1851,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1162,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 186,
@@ -1860,7 +1861,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.1282,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 187,
@@ -1870,7 +1871,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.1402,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 188,
@@ -1880,7 +1881,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.1522,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 189,
@@ -1890,7 +1891,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.1642,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 190,
@@ -1900,7 +1901,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.1762,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 191,
@@ -1910,7 +1911,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.1882,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 192,
@@ -1920,7 +1921,7 @@
    "starIndexWithinArea": 9,
    "difficulty": 0.2002,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 193,
@@ -1930,7 +1931,7 @@
    "starIndexWithinArea": 10,
    "difficulty": 0.2122,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 194,
@@ -1940,7 +1941,7 @@
    "starIndexWithinArea": 11,
    "difficulty": 0.2242,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 195,
@@ -1970,7 +1971,7 @@
    "starIndexWithinArea": 14,
    "difficulty": 0.2602,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 198,
@@ -1980,7 +1981,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.1184,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 199,
@@ -1990,7 +1991,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1304,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 200,
@@ -2000,7 +2001,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.1424,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 201,
@@ -2010,7 +2011,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.1544,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 202,
@@ -2020,7 +2021,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.1664,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 203,
@@ -2040,7 +2041,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.1904,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 205,
@@ -2050,7 +2051,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.2024,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 206,
@@ -2060,7 +2061,7 @@
    "starIndexWithinArea": 9,
    "difficulty": 0.2144,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 207,
@@ -2090,7 +2091,7 @@
    "starIndexWithinArea": 12,
    "difficulty": 0.2504,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 210,
@@ -2100,7 +2101,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.1327,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 211,
@@ -2110,7 +2111,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1447,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 212,
@@ -2130,7 +2131,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.1687,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 214,
@@ -2140,7 +2141,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.1807,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 215,
@@ -2160,7 +2161,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.2047,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 217,
@@ -2170,7 +2171,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.2167,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 218,
@@ -2180,7 +2181,7 @@
    "starIndexWithinArea": 9,
    "difficulty": 0.2287,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 219,
@@ -2190,7 +2191,7 @@
    "starIndexWithinArea": 10,
    "difficulty": 0.2407,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 220,
@@ -2200,7 +2201,7 @@
    "starIndexWithinArea": 11,
    "difficulty": 0.2527,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 221,
@@ -2210,7 +2211,7 @@
    "starIndexWithinArea": 12,
    "difficulty": 0.2647,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 222,
@@ -2240,7 +2241,7 @@
    "starIndexWithinArea": 15,
    "difficulty": 0.3007,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 225,
@@ -2250,7 +2251,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.1469,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 226,
@@ -2260,7 +2261,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1589,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 227,
@@ -2290,7 +2291,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.1949,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 230,
@@ -2300,7 +2301,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.2069,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 231,
@@ -2320,7 +2321,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.2309,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 233,
@@ -2330,7 +2331,7 @@
    "starIndexWithinArea": 9,
    "difficulty": 0.2429,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 234,
@@ -2340,7 +2341,7 @@
    "starIndexWithinArea": 10,
    "difficulty": 0.2549,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 235,
@@ -2370,7 +2371,7 @@
    "starIndexWithinArea": 13,
    "difficulty": 0.2909,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 238,
@@ -2390,7 +2391,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1731,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 240,
@@ -2400,7 +2401,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.1851,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 241,
@@ -2420,7 +2421,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.2091,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 243,
@@ -2430,7 +2431,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.2211,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 244,
@@ -2440,7 +2441,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.2331,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 245,
@@ -2450,7 +2451,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.2451,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 246,
@@ -2460,7 +2461,7 @@
    "starIndexWithinArea": 9,
    "difficulty": 0.2571,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 247,
@@ -2470,7 +2471,7 @@
    "starIndexWithinArea": 10,
    "difficulty": 0.2691,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 248,
@@ -2500,7 +2501,7 @@
    "starIndexWithinArea": 13,
    "difficulty": 0.3051,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 251,
@@ -2510,7 +2511,7 @@
    "starIndexWithinArea": 14,
    "difficulty": 0.3171,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 252,
@@ -2520,7 +2521,7 @@
    "starIndexWithinArea": 15,
    "difficulty": 0.3291,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 253,
@@ -2530,7 +2531,7 @@
    "starIndexWithinArea": 16,
    "difficulty": 0.3411,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 254,
@@ -2540,7 +2541,7 @@
    "starIndexWithinArea": 17,
    "difficulty": 0.3531,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 255,
@@ -2550,7 +2551,7 @@
    "starIndexWithinArea": 18,
    "difficulty": 0.3651,
    "themeKey": "castle",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 256,
@@ -2560,7 +2561,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.0238,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 257,
@@ -2570,7 +2571,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.0358,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 258,
@@ -2590,7 +2591,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.0598,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 260,
@@ -2610,7 +2611,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.0365,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 262,
@@ -2620,7 +2621,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.0485,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 263,
@@ -2630,7 +2631,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.0605,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 264,
@@ -2640,7 +2641,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.0725,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 265,
@@ -2650,7 +2651,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.0845,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 266,
@@ -2670,7 +2671,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.0492,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 268,
@@ -2700,7 +2701,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.0852,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 271,
@@ -2720,7 +2721,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.1092,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 273,
@@ -2730,7 +2731,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.0619,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 274,
@@ -2760,7 +2761,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.0979,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 277,
@@ -2770,7 +2771,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.1099,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 278,
@@ -2780,7 +2781,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.1219,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 279,
@@ -2790,7 +2791,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.0746,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 280,
@@ -2810,7 +2811,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.0986,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 282,
@@ -2820,7 +2821,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.1106,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 283,
@@ -2830,7 +2831,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.1226,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 284,
@@ -2840,7 +2841,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.1346,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 285,
@@ -2850,7 +2851,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.1466,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 286,
@@ -2880,7 +2881,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.1113,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 289,
@@ -2910,7 +2911,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.1473,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 292,
@@ -2920,7 +2921,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.1593,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 293,
@@ -2930,7 +2931,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.1713,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 294,
@@ -2940,7 +2941,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.1001,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 295,
@@ -2950,7 +2951,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1121,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 296,
@@ -2960,7 +2961,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.1241,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 297,
@@ -3000,7 +3001,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.1721,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 301,
@@ -3020,7 +3021,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1248,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 303,
@@ -3030,7 +3031,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.1368,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 304,
@@ -3040,7 +3041,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.1488,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 305,
@@ -3060,7 +3061,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.1728,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 307,
@@ -3070,7 +3071,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.1848,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 308,
@@ -3090,7 +3091,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1375,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 310,
@@ -3110,7 +3111,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.1615,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 312,
@@ -3120,7 +3121,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.1735,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 313,
@@ -3130,7 +3131,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.1855,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 314,
@@ -3150,7 +3151,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1502,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 316,
@@ -3160,7 +3161,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.1622,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 317,
@@ -3190,7 +3191,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.1982,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 320,
@@ -3200,7 +3201,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.2102,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 321,
@@ -3230,7 +3231,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.1749,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 324,
@@ -3250,7 +3251,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.1989,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 326,
@@ -3270,7 +3271,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.2229,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 328,
@@ -3280,7 +3281,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.1636,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 329,
@@ -3290,7 +3291,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1756,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 330,
@@ -3300,7 +3301,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.1876,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 331,
@@ -3330,7 +3331,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.2236,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 334,
@@ -3340,7 +3341,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.2356,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 335,
@@ -3350,7 +3351,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.1763,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 336,
@@ -3360,7 +3361,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.1883,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 337,
@@ -3370,7 +3371,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.2003,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 338,
@@ -3380,7 +3381,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.2123,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 339,
@@ -3390,7 +3391,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.2243,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 340,
@@ -3400,7 +3401,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.2363,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 341,
@@ -3410,7 +3411,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.2483,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 342,
@@ -3420,7 +3421,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.189,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 343,
@@ -3430,7 +3431,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.201,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 344,
@@ -3460,7 +3461,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.237,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 347,
@@ -3470,7 +3471,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.249,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 348,
@@ -3500,7 +3501,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.2137,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 351,
@@ -3510,7 +3511,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.2257,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 352,
@@ -3560,7 +3561,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.2145,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 357,
@@ -3590,7 +3591,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.2505,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 360,
@@ -3610,7 +3611,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.2745,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 362,
@@ -3630,7 +3631,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.2392,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 364,
@@ -3640,7 +3641,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.2512,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 365,
@@ -3650,7 +3651,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.2632,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 366,
@@ -3710,7 +3711,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.2639,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 372,
@@ -3730,7 +3731,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.2879,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 374,
@@ -3760,7 +3761,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.2526,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 377,
@@ -3790,7 +3791,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.2886,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 380,
@@ -3800,7 +3801,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.3006,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 381,
@@ -3820,7 +3821,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.3246,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 383,
@@ -3830,7 +3831,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.3366,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 384,
@@ -3850,7 +3851,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.2773,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 386,
@@ -3870,7 +3871,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3013,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 388,
@@ -3880,7 +3881,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.3133,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 389,
@@ -3890,7 +3891,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3253,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 390,
@@ -3920,7 +3921,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.302,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 393,
@@ -3930,7 +3931,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.314,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 394,
@@ -3940,7 +3941,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.326,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 395,
@@ -3960,7 +3961,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.35,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 397,
@@ -3980,7 +3981,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.3027,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 399,
@@ -3990,7 +3991,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.3147,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 400,
@@ -4000,7 +4001,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3267,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 401,
@@ -4010,7 +4011,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.3387,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 402,
@@ -4020,7 +4021,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3507,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 403,
@@ -4030,7 +4031,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.3627,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 404,
@@ -4070,7 +4071,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.3274,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 408,
@@ -4080,7 +4081,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3394,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 409,
@@ -4100,7 +4101,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3634,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 411,
@@ -4130,7 +4131,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.3161,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 414,
@@ -4160,7 +4161,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3521,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 417,
@@ -4180,7 +4181,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3761,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 419,
@@ -4190,7 +4191,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.3881,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 420,
@@ -4200,7 +4201,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.4001,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 421,
@@ -4210,7 +4211,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.3289,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 422,
@@ -4220,7 +4221,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.3409,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 423,
@@ -4230,7 +4231,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.3529,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 424,
@@ -4250,7 +4251,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.3769,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 426,
@@ -4270,7 +4271,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.4009,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 428,
@@ -4280,7 +4281,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.4129,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 429,
@@ -4290,7 +4291,7 @@
    "starIndexWithinArea": 9,
    "difficulty": 0.4249,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 430,
@@ -4320,7 +4321,7 @@
    "starIndexWithinArea": 12,
    "difficulty": 0.4609,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 433,
@@ -4350,7 +4351,7 @@
    "starIndexWithinArea": 15,
    "difficulty": 0.4969,
    "themeKey": "village",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 436,
@@ -4370,7 +4371,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.2276,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 438,
@@ -4380,7 +4381,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.2396,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 439,
@@ -4400,7 +4401,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.2636,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 441,
@@ -4420,7 +4421,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.2876,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 443,
@@ -4440,7 +4441,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.2508,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 445,
@@ -4450,7 +4451,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.2628,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 446,
@@ -4460,7 +4461,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.2748,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 447,
@@ -4470,7 +4471,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.2868,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 448,
@@ -4490,7 +4491,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.262,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 450,
@@ -4500,7 +4501,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.274,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 451,
@@ -4540,7 +4541,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.322,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 455,
@@ -4570,7 +4571,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.2852,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 458,
@@ -4580,7 +4581,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.2972,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 459,
@@ -4610,7 +4611,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.3332,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 462,
@@ -4630,7 +4631,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.2844,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 464,
@@ -4640,7 +4641,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.2964,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 465,
@@ -4650,7 +4651,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3084,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 466,
@@ -4670,7 +4671,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3324,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 468,
@@ -4680,7 +4681,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.3444,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 469,
@@ -4690,7 +4691,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.2836,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 470,
@@ -4700,7 +4701,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.2956,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 471,
@@ -4720,7 +4721,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3196,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 473,
@@ -4740,7 +4741,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3436,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 475,
@@ -4770,7 +4771,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.3188,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 478,
@@ -4780,7 +4781,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3308,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 479,
@@ -4800,7 +4801,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3548,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 481,
@@ -4810,7 +4811,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.3061,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 482,
@@ -4820,7 +4821,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.3181,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 483,
@@ -4840,7 +4841,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3421,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 485,
@@ -4850,7 +4851,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.3541,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 486,
@@ -4860,7 +4861,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3661,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 487,
@@ -4870,7 +4871,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.3781,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 488,
@@ -4900,7 +4901,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.3413,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 491,
@@ -4920,7 +4921,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.3653,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 493,
@@ -4950,7 +4951,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.3405,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 496,
@@ -4970,7 +4971,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3645,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 498,
@@ -4980,7 +4981,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.3765,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 499,
@@ -4990,7 +4991,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3885,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 500,
@@ -5010,7 +5011,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.3397,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 502,
@@ -5020,7 +5021,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.3517,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 503,
@@ -5030,7 +5031,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.3637,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 504,
@@ -5040,7 +5041,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.3757,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 505,
@@ -5060,7 +5061,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.3997,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 507,
@@ -5080,7 +5081,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.3629,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 509,
@@ -5090,7 +5091,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.3749,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 510,
@@ -5120,7 +5121,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.4109,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 513,
@@ -5130,7 +5131,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.4229,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 514,
@@ -5160,7 +5161,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.3861,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 517,
@@ -5180,7 +5181,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.4101,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 519,
@@ -5200,7 +5201,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.4341,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 521,
@@ -5240,7 +5241,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.3973,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 525,
@@ -5270,7 +5271,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.4333,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 528,
@@ -5280,7 +5281,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.3845,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 529,
@@ -5290,7 +5291,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.3965,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 530,
@@ -5300,7 +5301,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.4085,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 531,
@@ -5360,7 +5361,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.4077,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 537,
@@ -5420,7 +5421,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.4797,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 543,
@@ -5440,7 +5441,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.419,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 545,
@@ -5490,7 +5491,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.479,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 550,
@@ -5520,7 +5521,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.4422,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 553,
@@ -5550,7 +5551,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.4782,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 556,
@@ -5590,7 +5591,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.4534,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 560,
@@ -5610,7 +5611,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.4774,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 562,
@@ -5630,7 +5631,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.4406,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 564,
@@ -5660,7 +5661,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.4766,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 567,
@@ -5720,7 +5721,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.4758,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 573,
@@ -5750,7 +5751,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.5118,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 576,
@@ -5770,7 +5771,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.463,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 578,
@@ -5780,7 +5781,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.475,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 579,
@@ -5850,7 +5851,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.4862,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 586,
@@ -5870,7 +5871,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.5102,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 588,
@@ -5900,7 +5901,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.5462,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 591,
@@ -5910,7 +5911,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.5582,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 592,
@@ -5930,7 +5931,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.4974,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 594,
@@ -5950,7 +5951,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.5214,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 596,
@@ -5970,7 +5971,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.5454,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 598,
@@ -5990,7 +5991,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.4966,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 600,
@@ -6000,7 +6001,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.5086,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 601,
@@ -6020,7 +6021,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.5326,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 603,
@@ -6100,7 +6101,7 @@
    "starIndexWithinArea": 12,
    "difficulty": 0.6286,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 611,
@@ -6110,7 +6111,7 @@
    "starIndexWithinArea": 13,
    "difficulty": 0.6406,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 612,
@@ -6120,7 +6121,7 @@
    "starIndexWithinArea": 14,
    "difficulty": 0.6526,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 613,
@@ -6140,7 +6141,7 @@
    "starIndexWithinArea": 16,
    "difficulty": 0.6766,
    "themeKey": "mines",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 615,
@@ -6170,7 +6171,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.4554,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 618,
@@ -6200,7 +6201,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.4914,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 621,
@@ -6210,7 +6211,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.4411,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 622,
@@ -6220,7 +6221,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.4531,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 623,
@@ -6230,7 +6231,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.4651,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 624,
@@ -6260,7 +6261,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.5011,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 627,
@@ -6270,7 +6271,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.4508,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 628,
@@ -6290,7 +6291,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.4748,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 630,
@@ -6300,7 +6301,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.4868,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 631,
@@ -6320,7 +6321,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.5108,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 633,
@@ -6340,7 +6341,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.4605,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 635,
@@ -6380,7 +6381,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.5085,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 639,
@@ -6420,7 +6421,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.4822,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 643,
@@ -6540,7 +6541,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.4896,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 655,
@@ -6550,7 +6551,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.5016,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 656,
@@ -6560,7 +6561,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.5136,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 657,
@@ -6570,7 +6571,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.5256,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 658,
@@ -6580,7 +6581,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.5376,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 659,
@@ -6620,7 +6621,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.4993,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 663,
@@ -6660,7 +6661,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.5473,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 667,
@@ -6710,7 +6711,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.545,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 672,
@@ -6720,7 +6721,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.557,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 673,
@@ -6730,7 +6731,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.569,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 674,
@@ -6740,7 +6741,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.581,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 675,
@@ -6770,7 +6771,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.5308,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 678,
@@ -6790,7 +6791,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.5548,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 680,
@@ -6810,7 +6811,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.5788,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 682,
@@ -6820,7 +6821,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.5908,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 683,
@@ -6840,7 +6841,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.5405,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 685,
@@ -6860,7 +6861,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.5645,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 687,
@@ -6920,7 +6921,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.5622,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 693,
@@ -6940,7 +6941,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.5862,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 695,
@@ -6950,7 +6951,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.5982,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 696,
@@ -6970,7 +6971,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.5479,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 698,
@@ -6980,7 +6981,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.5599,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 699,
@@ -6990,7 +6991,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.5719,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 700,
@@ -7000,7 +7001,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.5839,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 701,
@@ -7010,7 +7011,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.5959,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 702,
@@ -7020,7 +7021,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.6079,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 703,
@@ -7100,7 +7101,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.6296,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 711,
@@ -7150,7 +7151,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.6153,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 716,
@@ -7160,7 +7161,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.6273,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 717,
@@ -7240,7 +7241,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.637,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 725,
@@ -7260,7 +7261,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.5867,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 727,
@@ -7280,7 +7281,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.6107,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 729,
@@ -7360,7 +7361,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.6324,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 737,
@@ -7370,7 +7371,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.6444,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 738,
@@ -7380,7 +7381,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.6564,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 739,
@@ -7480,7 +7481,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.6159,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 749,
@@ -7500,7 +7501,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.6399,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 751,
@@ -7520,7 +7521,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.6639,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 753,
@@ -7620,7 +7621,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.6353,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 763,
@@ -7660,7 +7661,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.6833,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 767,
@@ -7700,7 +7701,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.657,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 771,
@@ -7710,7 +7711,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.669,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 772,
@@ -7730,7 +7731,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.693,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 774,
@@ -7740,7 +7741,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.705,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 775,
@@ -7760,7 +7761,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.729,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 777,
@@ -7810,7 +7811,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.6907,
    "themeKey": "border",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 782,
@@ -8020,7 +8021,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.6351,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 803,
@@ -8030,7 +8031,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.6471,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 804,
@@ -8070,7 +8071,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.6951,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 808,
@@ -8080,7 +8081,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.6434,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 809,
@@ -8100,7 +8101,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.6674,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 811,
@@ -8140,7 +8141,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.6516,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 815,
@@ -8180,7 +8181,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.6996,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 819,
@@ -8210,7 +8211,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.6718,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 822,
@@ -8220,7 +8221,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.6838,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 823,
@@ -8250,7 +8251,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.7198,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 826,
@@ -8260,7 +8261,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.7318,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 827,
@@ -8290,7 +8291,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.692,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 830,
@@ -8340,7 +8341,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.6762,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 835,
@@ -8360,7 +8361,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.7002,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 837,
@@ -8400,7 +8401,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.6844,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 841,
@@ -8440,7 +8441,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.7324,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 845,
@@ -8450,7 +8451,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.7444,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 846,
@@ -8490,7 +8491,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.7166,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 850,
@@ -8520,7 +8521,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.7526,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 853,
@@ -8530,7 +8531,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.7646,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 854,
@@ -8560,7 +8561,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.7248,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 857,
@@ -8590,7 +8591,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.7608,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 860,
@@ -8620,7 +8621,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.721,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 863,
@@ -8710,7 +8711,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.7533,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 872,
@@ -8820,7 +8821,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.7975,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 883,
@@ -8860,7 +8861,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.7697,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 887,
@@ -8910,7 +8911,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.7419,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 892,
@@ -8950,7 +8951,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.7899,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 896,
@@ -8990,7 +8991,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.7621,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 900,
@@ -9060,7 +9061,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.7583,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 907,
@@ -9140,7 +9141,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.7785,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 915,
@@ -9180,7 +9181,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.8265,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 919,
@@ -9200,7 +9201,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.7747,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 921,
@@ -9230,7 +9231,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.8107,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 924,
@@ -9360,7 +9361,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.8032,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 937,
@@ -9440,7 +9441,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.8114,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 945,
@@ -9450,7 +9451,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.8234,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 946,
@@ -9490,7 +9491,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.8714,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 950,
@@ -9660,7 +9661,7 @@
    "starIndexWithinArea": 2,
    "difficulty": 0.836,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 967,
@@ -9670,7 +9671,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.848,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 968,
@@ -9700,7 +9701,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.884,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 971,
@@ -9710,7 +9711,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.896,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 972,
@@ -9820,7 +9821,7 @@
    "starIndexWithinArea": 11,
    "difficulty": 0.9522,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 983,
@@ -9870,7 +9871,7 @@
    "starIndexWithinArea": 16,
    "difficulty": 0.98,
    "themeKey": "crypts",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 988,
@@ -9900,7 +9901,7 @@
    "starIndexWithinArea": 3,
    "difficulty": 0.8629,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 991,
@@ -9920,7 +9921,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.8869,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 993,
@@ -9930,7 +9931,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.8989,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 994,
@@ -9980,7 +9981,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.8816,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 999,
@@ -10070,7 +10071,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.9003,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1008,
@@ -10110,7 +10111,7 @@
    "starIndexWithinArea": 9,
    "difficulty": 0.9483,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1012,
@@ -10240,7 +10241,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.9258,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1025,
@@ -10260,7 +10261,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.9498,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1027,
@@ -10310,7 +10311,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.9205,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1032,
@@ -10340,7 +10341,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.9565,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1035,
@@ -10390,7 +10391,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.9152,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1040,
@@ -10400,7 +10401,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.9272,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1041,
@@ -10500,7 +10501,7 @@
    "starIndexWithinArea": 8,
    "difficulty": 0.9699,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1051,
@@ -10780,7 +10781,7 @@
    "starIndexWithinArea": 5,
    "difficulty": 0.9608,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1079,
@@ -10800,7 +10801,7 @@
    "starIndexWithinArea": 7,
    "difficulty": 0.98,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1081,
@@ -10990,7 +10991,7 @@
    "starIndexWithinArea": 1,
    "difficulty": 0.9329,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1100,
@@ -11200,7 +11201,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.98,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1121,
@@ -11380,7 +11381,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.98,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1139,
@@ -11550,7 +11551,7 @@
    "starIndexWithinArea": 4,
    "difficulty": 0.98,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1156,
@@ -11750,7 +11751,7 @@
    "starIndexWithinArea": 6,
    "difficulty": 0.98,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1176,
@@ -12050,7 +12051,7 @@
    "starIndexWithinArea": 14,
    "difficulty": 0.98,
    "themeKey": "siege",
-   "sabotage": true
+   "sabotage": false
   },
   {
    "levelNumber": 1206,

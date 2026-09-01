@@ -15,7 +15,13 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from story_common import LEVELS_RES, OUT, dump_json, ensure_dir  # noqa: E402
+from story_common import LEVELS_RES, OUT, PROJECT_ROOT, dump_json, ensure_dir  # noqa: E402
+
+# A pristine copy of the kit's original 100 levels. The harvester reads from
+# here rather than from Resources/Levels, because after level_gen.py has run
+# that folder holds 1209 files and re-harvesting it would feed generated levels
+# back into the library that generated them.
+SHIPPED_DIR = os.path.join(PROJECT_ROOT, "tools", "shipped_levels")
 
 # Mirrors JellyGarden.Scripts.InitScript.Target
 MODE_NAMES = {0: "SCORE", 1: "COLLECT", 2: "INGREDIENT", 3: "BLOCKS"}
@@ -35,7 +41,25 @@ SQUARE_NAMES = {
 
 # A cell is two digits: block type then obstacle type. "10" is a plain playable
 # cell; "00" is a hole in the board.
+#
+# The two digits accept DISJOINT sets of SquareTypes — LevelMakerEditor.SetType
+# is the authority. The block digit is only ever NONE/EMPTY/BLOCK/DOUBLEBLOCK;
+# the obstacle digit is only ever NONE/WIREBLOCK/SOLIDBLOCK/UNDESTROYABLE/
+# THRIVING. Writing an obstacle code into the block digit does not make a
+# tougher blocker — LevelManager's block switch has no branch for it, so the
+# cell silently becomes a plain empty one.
 CELL_RE = re.compile(r"^\d\d$")
+
+BLOCK_DIGITS = {"0", "1", "2", "5"}          # NONE, EMPTY, BLOCK, DOUBLEBLOCK
+OBSTACLE_DIGITS = {"0", "3", "4", "6", "7"}  # NONE, WIRE, SOLID, UNDESTROYABLE, THRIVING
+
+# Obstacles that stop a gem occupying the cell at all (Square.CanGoInto).
+IMPASSABLE_OBSTACLES = {"4", "6", "7"}
+
+# Of those, the ones the player can never clear. Solid and thriving blocks are
+# destructible (Square.IsHaveDestroybleObstacle), so a cell under one is closed
+# now but open later; an undestroyable block and a hole never open.
+PERMANENT_OBSTACLES = {"6"}
 
 
 class LevelParseError(ValueError):
@@ -82,6 +106,17 @@ def parse_level(text, name="<level>"):
             cells = line.split()
             if not cells or not all(CELL_RE.match(c) for c in cells):
                 raise LevelParseError("%s: unrecognised line %r" % (name, raw))
+            for cell in cells:
+                if cell[0] not in BLOCK_DIGITS:
+                    raise LevelParseError(
+                        "%s: %r has %r in the block digit, which LevelManager ignores"
+                        % (name, cell, cell[0])
+                    )
+                if cell[1] not in OBSTACLE_DIGITS:
+                    raise LevelParseError(
+                        "%s: %r has %r in the obstacle digit, which LevelManager ignores"
+                        % (name, cell, cell[1])
+                    )
             grid.append(cells)
 
     for key in ("mode", "cols", "rows", "limitType", "limit", "colorLimit", "stars"):
@@ -120,13 +155,60 @@ def format_level(level):
     return "\n".join(lines)
 
 
+def is_playable(cell):
+    """
+    Can a gem live here? Mirrors Square.CanGoInto: not a hole, and not covered
+    by a solid, undestroyable or thriving obstacle. A BLOCK or DOUBLEBLOCK cover
+    still holds a gem, and a wire block still lets one through.
+    """
+    return cell[0] != "0" and cell[1] not in IMPASSABLE_OBSTACLES
+
+
 def playable_ratio(grid):
-    """Fraction of cells a gem can actually occupy. '00' is a hole."""
+    """Fraction of cells a gem can occupy at the moment the board opens."""
     total = sum(len(row) for row in grid)
     if total == 0:
         return 0.0
-    playable = sum(1 for row in grid for cell in row if cell[0] != "0")
-    return playable / total
+    return sum(1 for row in grid for cell in row if is_playable(cell)) / total
+
+
+def open_ratio(grid):
+    """
+    Fraction of cells that can ever hold a gem.
+
+    This is the number that decides whether a board is worth playing. A cell
+    under a thriving or solid block is closed on turn one and open once the
+    player clears it, so counting it as dead would reject boards the kit itself
+    ships.
+    """
+    total = sum(len(row) for row in grid)
+    if total == 0:
+        return 0.0
+    return (
+        sum(
+            1
+            for row in grid
+            for cell in row
+            if cell[0] != "0" and cell[1] not in PERMANENT_OBSTACLES
+        )
+        / total
+    )
+
+
+def block_target_count(grid):
+    """
+    What LevelManager computes into TargetBlocks: one per BLOCK, two per
+    DOUBLEBLOCK. A BLOCKS-mode level whose target asset disagrees with this is
+    either unwinnable or wins early, so the target generator reads it from here.
+    """
+    total = 0
+    for row in grid:
+        for cell in row:
+            if cell[0] == "2":
+                total += 1
+            elif cell[0] == "5":
+                total += 2
+    return total
 
 
 def obstacle_density(grid):
@@ -138,7 +220,7 @@ def obstacle_density(grid):
         1
         for row in grid
         for cell in row
-        if (cell[0] not in ("0", "1")) or cell[1] != "0"
+        if cell[0] in ("2", "5") or cell[1] != "0"
     )
     return busy / total
 
@@ -178,17 +260,18 @@ def difficulty_of(level):
     return round(min(1.0, max(0.0, score)), 4)
 
 
-def load_shipped_levels():
-    """Every Levels/N.txt currently on disk, parsed and classified."""
+def load_shipped_levels(source_dir=None):
+    """Every shipped level, parsed and classified."""
+    source_dir = source_dir or SHIPPED_DIR
     templates = []
-    for entry in sorted(os.listdir(LEVELS_RES)):
+    for entry in sorted(os.listdir(source_dir)):
         if not entry.endswith(".txt") or entry.endswith(".txt.meta"):
             continue
         stem = entry[:-4]
         if not stem.isdigit():
             continue
 
-        path = os.path.join(LEVELS_RES, entry)
+        path = os.path.join(source_dir, entry)
         with open(path, encoding="utf-8") as fh:
             text = fh.read()
 
@@ -199,6 +282,8 @@ def load_shipped_levels():
         level["difficulty"] = difficulty_of(level)
         level["playableRatio"] = round(playable_ratio(level["grid"]), 4)
         level["obstacleDensity"] = round(obstacle_density(level["grid"]), 4)
+        level["openRatio"] = round(open_ratio(level["grid"]), 4)
+        level["blockTargetCount"] = block_target_count(level["grid"])
         templates.append(level)
 
     # The raw score only spans ~0.10..0.41, which is useless as a selector.
@@ -218,7 +303,7 @@ def main():
 
     # A template library is worthless if it cannot reproduce its own input.
     for level in templates:
-        path = os.path.join(LEVELS_RES, "%d.txt" % level["number"])
+        path = os.path.join(SHIPPED_DIR, "%d.txt" % level["number"])
         with open(path, encoding="utf-8") as fh:
             original = fh.read()
         if format_level(level) != original:
