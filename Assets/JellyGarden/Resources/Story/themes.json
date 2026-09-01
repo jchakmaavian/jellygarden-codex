@@ -5,7 +5,7 @@
    "title": "The Missing Queen",
    "themeKey": "castle",
    "setting": "The main castle: gates, halls, kitchens, gardens, library, private chambers.",
-   "boardBackdrop": "board_castle",
+   "boardBackdrop": "backdrop_castle",
    "kitBackdropIndex": 0,
    "squareTint": [
     0.86,
@@ -18,7 +18,7 @@
    "title": "Grimm's Trail",
    "themeKey": "village",
    "setting": "The bridge, the road and the village beyond it.",
-   "boardBackdrop": "board_village",
+   "boardBackdrop": "backdrop_village",
    "kitBackdropIndex": 1,
    "squareTint": [
     0.92,
@@ -31,7 +31,7 @@
    "title": "The Empty Treasury",
    "themeKey": "mines",
    "setting": "Mines, trade roads and the places the gold went.",
-   "boardBackdrop": "board_mines",
+   "boardBackdrop": "backdrop_mines",
    "kitBackdropIndex": 2,
    "squareTint": [
     0.72,
@@ -44,7 +44,7 @@
    "title": "The Rival Crown",
    "themeKey": "border",
    "setting": "The border, the crossing and a rival crown.",
-   "boardBackdrop": "board_border",
+   "boardBackdrop": "backdrop_border",
    "kitBackdropIndex": 3,
    "squareTint": [
     0.78,
@@ -57,7 +57,7 @@
    "title": "The Old King's Secret",
    "themeKey": "crypts",
    "setting": "Ruins, monastery and crypt — the old king's secret.",
-   "boardBackdrop": "board_crypts",
+   "boardBackdrop": "backdrop_crypts",
    "kitBackdropIndex": 4,
    "squareTint": [
     0.66,
@@ -70,7 +70,7 @@
    "title": "The Reckoning",
    "themeKey": "siege",
    "setting": "The siege: repairing under fire, room by room.",
-   "boardBackdrop": "board_siege",
+   "boardBackdrop": "backdrop_siege",
    "kitBackdropIndex": 4,
    "squareTint": [
     0.95,

@@ -392,6 +392,25 @@ namespace JellyGarden.Scripts.Story.Editor
                 "Alfred's first opening line is present");
             Expect(StoryAudio.LoadVoice("alfred_clue_001") != null,
                 "Alfred's area 1 clue line is present");
+
+            // Every arc needs a backdrop and every speaking character a face, or
+            // the game degrades to flat colour somewhere in the middle of itself.
+            foreach (string theme in new[]
+                     { "castle", "village", "mines", "border", "crypts", "siege" })
+                Expect(StoryArt.Load("backdrop_" + theme) != null,
+                    "arc theme '" + theme + "' has a backdrop");
+
+            foreach (string character in new[]
+                     { "Leo", "Freya", "Grimm", "Mimi", "Cook", "Gardener", "Alfred", "Roderick" })
+                Expect(StoryArt.Portrait(character) != null,
+                    character + " has a portrait");
+
+            // And every one of the 150 areas must resolve to something drawable.
+            int blank = 0;
+            for (int areaId = 1; areaId <= StoryDatabase.AreaCount; areaId++)
+                if (StoryArt.AreaState(areaId, 0) == null &&
+                    StoryArt.ArcBackdrop(areaId) == null) blank++;
+            Expect(blank == 0, "every area has something to draw (" + blank + " do not)");
         }
 
         private static void SabotageStartsWhereTheStorySaysItDoes()
