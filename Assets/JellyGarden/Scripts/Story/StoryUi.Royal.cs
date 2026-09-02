@@ -50,6 +50,15 @@ namespace JellyGarden.Scripts.Story
         public static readonly Color RoyalChestGold = Rgb(252, 214, 6);   // chest panels
         public static readonly Color RoyalTealInk = Rgb(4, 55, 74);       // heading outline
 
+        // The task-row icons. Royal Match paints one object per repair; these are
+        // sampled off the two it shows in 02-area-tasks.jpg — the rolled carpet
+        // and the stained glass — so a drawn glyph belongs to the same picture.
+        public static readonly Color IconGold = Rgb(252, 192, 12);      // the carpet's trim
+        public static readonly Color IconWood = Rgb(144, 66, 12);       // the glass's frame
+        public static readonly Color IconDeepRed = Rgb(108, 12, 0);     // its dark panes
+        public static readonly Color IconMagenta = Rgb(192, 24, 144);   // the carpet itself
+        public static readonly Color IconGlass = Rgb(40, 235, 234);     // its lit panes
+
         private static Color Rgb(int r, int g, int b)
         {
             return new Color(r / 255f, g / 255f, b / 255f, 1f);
@@ -783,6 +792,169 @@ namespace JellyGarden.Scripts.Story
             if (parts.Face != null) parts.Face.color = locked ? RoyalGrey : RoyalGold;
             if (parts.Icon != null)
                 parts.Icon.color = locked ? new Color(1f, 1f, 1f, 0.45f) : Color.white;
+        }
+
+        #endregion
+
+        #region Task icons
+
+        /// <summary>
+        /// The object on the left of a task row. Royal Match paints one per
+        /// repair — a rolled carpet, a stained-glass window — and this story has
+        /// 807 repairs and no art for any of them, so the icon is drawn from the
+        /// kind of work the label describes. Ten glyphs cover all 807 because
+        /// RepairWork.Classify already collapses the story's 83 verbs into ten
+        /// kinds; "Relight the gate lanterns" gets a lantern for the same reason
+        /// its cutscene gets a flame.
+        ///
+        /// Authored art always wins: pass a sprite and it is drawn instead, so
+        /// dropping task_001_1.png into Resources/Story/Art needs no code change.
+        /// </summary>
+        public static RectTransform TaskIcon(string name, Transform parent,
+            RepairWorkType work, Sprite authored = null)
+        {
+            RectTransform root = CreateRect(name, parent);
+            root.sizeDelta = new Vector2(102f, 102f);
+
+            if (authored != null)
+            {
+                Image painted = CreateImage("Art", root, authored, Color.white);
+                painted.preserveAspect = true;
+                Stretch(painted.rectTransform);
+                return root;
+            }
+
+            switch (work)
+            {
+                case RepairWorkType.Clear: DrawRubble(root); break;
+                case RepairWorkType.Water: DrawDroplet(root); break;
+                case RepairWorkType.Rebuild: DrawBrickwork(root); break;
+                case RepairWorkType.Light: DrawLantern(root); break;
+                case RepairWorkType.Hang: DrawBanner(root); break;
+                case RepairWorkType.Polish: DrawShine(root); break;
+                case RepairWorkType.Restock: DrawBarrel(root); break;
+                case RepairWorkType.Force: DrawMallet(root); break;
+                case RepairWorkType.Search: DrawMagnifier(root); break;
+                default: DrawCog(root); break;
+            }
+
+            return root;
+        }
+
+        /// <summary>The icon for a task, art-first and classified second.</summary>
+        public static RectTransform TaskIcon(string name, Transform parent, int areaId,
+            StoryTask task)
+        {
+            if (task == null) return TaskIcon(name, parent, RepairWorkType.General);
+            return TaskIcon(name, parent, RepairWork.Classify(task.Label),
+                StoryArt.TaskIcon(areaId, task.Index));
+        }
+
+        private static Image Block(Transform parent, string name, Color colour, int radius,
+            float minX, float minY, float maxX, float maxY)
+        {
+            Image image = CreateImage(name, parent, RoundedSprite(radius), colour);
+            image.type = Image.Type.Sliced;
+            FrameRect(image.rectTransform, minX, minY, maxX, maxY);
+            return image;
+        }
+
+        private static Image Disc(Transform parent, string name, Color colour,
+            float minX, float minY, float maxX, float maxY)
+        {
+            Image image = CreateImage(name, parent, CircleSprite, colour);
+            FrameRect(image.rectTransform, minX, minY, maxX, maxY);
+            return image;
+        }
+
+        // Clear — a pile of stone that is about to be carted out.
+        private static void DrawRubble(Transform root)
+        {
+            Block(root, "Stone1", RoyalGrey, 10, 0.02f, 0.04f, 0.54f, 0.36f);
+            Block(root, "Stone2", RoyalGrey, 10, 0.50f, 0.04f, 0.98f, 0.30f);
+            Block(root, "Stone3", Rgb(112, 110, 105), 10, 0.16f, 0.34f, 0.70f, 0.66f);
+            Block(root, "Chip", Rgb(112, 110, 105), 8, 0.66f, 0.32f, 0.94f, 0.54f);
+        }
+
+        // Water — the drop that is leaving, not arriving.
+        private static void DrawDroplet(Transform root)
+        {
+            Disc(root, "Bowl", RoyalBlueDeep, 0.14f, 0.02f, 0.86f, 0.70f);
+            Block(root, "Point", RoyalBlueDeep, 22, 0.37f, 0.40f, 0.63f, 0.98f);
+            Disc(root, "Shine", RoyalBlue, 0.28f, 0.16f, 0.44f, 0.34f);
+        }
+
+        // Rebuild — courses of brick, offset the way a wall is laid.
+        private static void DrawBrickwork(Transform root)
+        {
+            Block(root, "BrickA", IconWood, 8, 0.02f, 0.06f, 0.48f, 0.34f);
+            Block(root, "BrickB", IconWood, 8, 0.52f, 0.06f, 0.98f, 0.34f);
+            Block(root, "BrickC", IconDeepRed, 8, 0.02f, 0.38f, 0.26f, 0.64f);
+            Block(root, "BrickD", IconDeepRed, 8, 0.30f, 0.38f, 0.74f, 0.64f);
+            Block(root, "BrickE", IconDeepRed, 8, 0.78f, 0.38f, 0.98f, 0.64f);
+            Block(root, "BrickF", IconWood, 8, 0.02f, 0.68f, 0.48f, 0.94f);
+            Block(root, "BrickG", IconWood, 8, 0.52f, 0.68f, 0.98f, 0.94f);
+        }
+
+        // Light — a lantern with the wick already caught.
+        private static void DrawLantern(Transform root)
+        {
+            Block(root, "Ring", IconWood, 10, 0.44f, 0.90f, 0.56f, 1f);
+            Block(root, "Cap", IconWood, 10, 0.26f, 0.78f, 0.74f, 0.92f);
+            Block(root, "Body", IconWood, 14, 0.18f, 0.06f, 0.82f, 0.82f);
+            Block(root, "Glass", IconGold, 12, 0.28f, 0.18f, 0.72f, 0.72f);
+            Disc(root, "Flame", RoyalGoldDeep, 0.40f, 0.30f, 0.60f, 0.58f);
+        }
+
+        // Hang — a banner back on its rod.
+        private static void DrawBanner(Transform root)
+        {
+            Block(root, "Cloth", IconMagenta, 12, 0.16f, 0.04f, 0.84f, 0.88f);
+            Block(root, "Stripe", IconGold, 8, 0.42f, 0.04f, 0.58f, 0.88f);
+            Block(root, "Rod", IconWood, 8, 0.02f, 0.86f, 0.98f, 0.98f);
+        }
+
+        // Polish — the shine that was under the grime.
+        private static void DrawShine(Transform root)
+        {
+            Image star = CreateImage("Star", root, StarSprite, IconGold);
+            FrameRect(star.rectTransform, 0.02f, 0.16f, 0.70f, 0.92f);
+            if (star.sprite == null) star.color = RoyalGold;
+
+            Disc(root, "Spark1", IconGold, 0.70f, 0.04f, 0.92f, 0.28f);
+            Disc(root, "Spark2", IconGold, 0.80f, 0.40f, 0.94f, 0.56f);
+        }
+
+        // Restock — a barrel filled back up.
+        private static void DrawBarrel(Transform root)
+        {
+            Block(root, "Body", IconWood, 20, 0.16f, 0.04f, 0.84f, 0.96f);
+            Block(root, "HoopLow", IconGold, 6, 0.08f, 0.16f, 0.92f, 0.28f);
+            Block(root, "HoopHigh", IconGold, 6, 0.08f, 0.72f, 0.92f, 0.84f);
+        }
+
+        // Force — the mallet that makes something give.
+        private static void DrawMallet(Transform root)
+        {
+            Block(root, "Handle", IconWood, 10, 0.42f, 0.02f, 0.58f, 0.68f);
+            Block(root, "Head", RoyalGrey, 12, 0.10f, 0.62f, 0.90f, 0.96f);
+            Block(root, "Band", Rgb(112, 110, 105), 8, 0.44f, 0.62f, 0.56f, 0.96f);
+        }
+
+        // Search — quieter work: looking for what is there.
+        private static void DrawMagnifier(Transform root)
+        {
+            Block(root, "Grip", IconWood, 10, 0.06f, 0.04f, 0.24f, 0.44f);
+            Disc(root, "Ring", IconWood, 0.18f, 0.28f, 0.98f, 1f);
+            Disc(root, "Lens", IconGlass, 0.27f, 0.37f, 0.89f, 0.91f);
+        }
+
+        // General — a cog, for work the story did not name more precisely.
+        private static void DrawCog(Transform root)
+        {
+            Image cog = CreateImage("Cog", root, GearSprite, RoyalGoldDeep);
+            FrameRect(cog.rectTransform, 0.02f, 0.02f, 0.98f, 0.98f);
+            Disc(cog.rectTransform, "Hub", IconGold, 0.34f, 0.34f, 0.66f, 0.66f);
         }
 
         #endregion

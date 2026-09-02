@@ -107,6 +107,26 @@ Two seams exist only for this and should be preserved:
 - `StoryObjects.Persist` — `DontDestroyOnLoad`, no-op outside play mode
 - `StoryClock` — Unity's unscaled time, overridable by a test
 
+**Never run the screen tests while the Editor is in Play mode.** Several cases
+depend on a callback that only fires synchronously outside it — `RepairCutscene.
+Play` returns immediately when `!Application.isPlaying`, and in Play mode it
+starts a coroutine that the overridden `StoryClock` never advances. So the last
+repair of an area never reaches `StoryRepair.OnAreaFinished`, and
+`SpendingStarsCompletesTheAreaAndUnlocksTheNext` fails on *"the clue fired on
+the last repair"* alone while every other assertion in it passes. Nothing is
+wrong with the code.
+
+The tell is in the log, and it is reliable: `AreaScreen.Open` guards its
+`[Story] area screen N ...` line with `Application.isPlaying`. **A screen-test
+run whose log carries those lines was run in Play mode** — stop Play, then run
+it again before believing any failure. A correct run logs
+`[Story] Area 1 (Castle Gates) restored.` before it passes.
+
+To look at a screen in Play mode, use **JellyGarden > Story > Preview** rather
+than a temporary hook in a runtime script: it opens the area screen, grants
+stars and resets progress, and it is inert outside Play mode. The temporary
+hooks that used to serve this purpose kept riding along into commits.
+
 ## The Royal Match screen kit
 
 `StoryUi` is a **partial class**. The generic builders — canvas, rect, text,
@@ -125,6 +145,7 @@ These primitives carry every screen:
 | `CreamCard(name, parent, radius)` | the cream sub-card every section sits on |
 | `ProgressBar(name, parent)` | `ProgressBarParts` — `Root`, `Fill`, `Label`, `Fraction`; pointed at a count by `SetProgress(parts, done, total)` |
 | `ChestIcon(name, parent)` | the purple-and-gold chest that ends a progress bar |
+| `TaskIcon(name, parent, areaId, task)` | the object on the left of a task row |
 
 Rules that are easy to get wrong:
 
@@ -151,6 +172,23 @@ Rules that are easy to get wrong:
 - **Anything built before `AreaSceneView.Attach` is drawn under the artwork.**
   The view is a later sibling. `SetAsLastSibling()` the captions after every
   attach, or they vanish behind the room.
+- **Per-task art does not exist, so an icon is classified, not looked up.**
+  `StoryUi.TaskIcon` draws one of ten glyphs chosen by
+  `RepairWork.Classify(label)` — the same classifier the repair cutscene uses,
+  so a lantern task gets a lantern here and a flame there. It checks
+  `StoryArt.TaskIcon(areaId, taskIndex)` first, so dropping
+  `Resources/Story/Art/task_012_3.png` in replaces the glyph with no code
+  change. Add a glyph by adding a `RepairWorkType`, never by special-casing a
+  label. That lookup is the one in `StoryArt` that does **not** warn on a miss:
+  807 tasks with no art would be 807 lines of log.
+- **A value baked in at build time must be rebuilt when the area changes, not
+  only when the row count does.** A row's star price and icon are fixed when the
+  row is created, so `AreaScreen` keys its rebuild on `_rowsBuiltFor`; two areas
+  of equal length would otherwise wear each other's prices.
+- **A greyed button still fires `onClick.Invoke()`.** `interactable` is a UI
+  state, not a guard. Now that every unfinished row keeps its Do It button, the
+  story's repair order is enforced inside `AreaScreen.OnRepair` against
+  `StoryProgress.NextTask`, not by which buttons happen to exist.
 
 The primitives are proven by `StoryScreenTests.RoyalPrimitivesConstruct`, which
 builds each one for real and logs a `[Story] primitive ...` line per shape. With

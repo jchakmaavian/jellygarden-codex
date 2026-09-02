@@ -12,8 +12,19 @@ namespace JellyGarden.Scripts.Story
 {
     public sealed class AreaScreen : MonoBehaviour
     {
-        private const float RowHeight = 132f;
-        private const float RowGap = 12f;
+        // Measured off docs/royal-match/02-area-tasks.jpg: the cream row card is
+        // 154 reference points tall with 50 between cards. The gap is pulled in,
+        // because the reference only ever shows two rows and this story writes
+        // areas of seven.
+        private const float RowHeight = 150f;
+        private const float RowGap = 24f;
+
+        // The row's three columns, in reference points from the card's edges:
+        // the icon, then the label, then the Do It button on the right.
+        private const float RowIconSize = 102f;
+        private const float RowSidePad = 16f;
+        private const float DoItWidth = 260f;
+        private const float DoItHeight = 112f;
 
         // Measured off docs/royal-match/02-area-tasks.jpg (828x1472) and scaled to
         // the 1080 reference canvas by 1080/828 = 1.304. Every VERTICAL metric is
@@ -70,11 +81,17 @@ namespace JellyGarden.Scripts.Story
         private sealed class TaskRow
         {
             public int TaskIndex;
+            public int Cost;
+            public RectTransform Icon;
             public Text Label;
-            public Text Cost;
             public Button Repair;
             public Image Tick;
         }
+
+        // The rows are torn down and rebuilt when the area changes, not only when
+        // the task count does: two areas of the same length would otherwise keep
+        // each other's icons and star costs, which are baked in at build time.
+        private int _rowsBuiltFor = -1;
 
         public int AreaId
         {
@@ -103,6 +120,57 @@ namespace JellyGarden.Scripts.Story
         public bool HasChest
         {
             get { return _chest != null && _chest.gameObject.activeInHierarchy; }
+        }
+
+        /// <summary>How many task rows are drawn.</summary>
+        public int RowCount
+        {
+            get { return _rows.Count; }
+        }
+
+        /// <summary>The label the nth row reads, or null.</summary>
+        public string RowLabel(int i)
+        {
+            return InRange(i) && _rows[i].Label != null ? _rows[i].Label.text : null;
+        }
+
+        /// <summary>The star price baked into the nth row's Do It button.</summary>
+        public int RowCost(int i)
+        {
+            return InRange(i) ? _rows[i].Cost : 0;
+        }
+
+        /// <summary>Whether the nth row drew an icon for its repair.</summary>
+        public bool RowHasIcon(int i)
+        {
+            return InRange(i) && _rows[i].Icon != null
+                   && _rows[i].Icon.gameObject.activeInHierarchy
+                   && _rows[i].Icon.GetComponentsInChildren<Image>(true).Length > 0;
+        }
+
+        /// <summary>Whether the nth row's Do It button is on screen at all.</summary>
+        public bool RowOffersRepair(int i)
+        {
+            return InRange(i) && _rows[i].Repair != null
+                   && _rows[i].Repair.gameObject.activeInHierarchy;
+        }
+
+        /// <summary>Whether the nth row's Do It button can actually be pressed.</summary>
+        public bool RowCanRepair(int i)
+        {
+            return RowOffersRepair(i) && _rows[i].Repair.interactable;
+        }
+
+        /// <summary>Whether the nth row is drawn as a finished repair.</summary>
+        public bool RowIsDone(int i)
+        {
+            return InRange(i) && _rows[i].Tick != null
+                   && _rows[i].Tick.gameObject.activeInHierarchy;
+        }
+
+        private bool InRange(int i)
+        {
+            return i >= 0 && i < _rows.Count;
         }
 
         /// <summary>Opens the screen for an area, building it on first use.</summary>
@@ -381,7 +449,8 @@ namespace JellyGarden.Scripts.Story
 
         private void BuildRows(StoryArea area)
         {
-            if (_rows.Count == area.Tasks.Count) return;
+            if (_rowsBuiltFor == area.Id && _rows.Count == area.Tasks.Count) return;
+            _rowsBuiltFor = area.Id;
 
             foreach (TaskRow row in _rows)
                 if (row.Label != null) Destroy(row.Label.transform.parent.gameObject);
@@ -400,43 +469,57 @@ namespace JellyGarden.Scripts.Story
                 rowRect.anchoredPosition = new Vector2(0f, -i * (RowHeight + RowGap));
                 rowRect.sizeDelta = new Vector2(0f, RowHeight);
 
-                var row = new TaskRow { TaskIndex = task.Index };
+                var row = new TaskRow { TaskIndex = task.Index, Cost = task.Stars };
 
                 Image card = StoryUi.CreamCard("Card", rowRect, 26);
                 StoryUi.Stretch(card.rectTransform);
 
+                // The object being repaired, on the left of the row as in the
+                // reference. Drawn from the kind of work unless someone has
+                // painted this exact task.
+                row.Icon = StoryUi.TaskIcon("Icon", rowRect, area.Id, task);
+                row.Icon.anchorMin = new Vector2(0f, 0.5f);
+                row.Icon.anchorMax = new Vector2(0f, 0.5f);
+                row.Icon.pivot = new Vector2(0f, 0.5f);
+                row.Icon.sizeDelta = new Vector2(RowIconSize, RowIconSize);
+                row.Icon.anchoredPosition = new Vector2(RowSidePad, 0f);
+
                 row.Label = StoryUi.CreateText("Label", rowRect, task.Label, 34,
                     StoryUi.RoyalNavy);
+                row.Label.fontStyle = FontStyle.Bold;
                 row.Label.rectTransform.anchorMin = new Vector2(0f, 0f);
                 row.Label.rectTransform.anchorMax = new Vector2(1f, 1f);
-                row.Label.rectTransform.offsetMin = new Vector2(16f, 0f);
-                row.Label.rectTransform.offsetMax = new Vector2(-320f, 0f);
+                row.Label.rectTransform.offsetMin =
+                    new Vector2(RowSidePad + RowIconSize + 14f, 0f);
+                row.Label.rectTransform.offsetMax =
+                    new Vector2(-(RowSidePad + DoItWidth + 14f), 0f);
 
-                row.Cost = StoryUi.CreateText("Cost", rowRect,
-                    task.Stars == 1 ? "1★" : task.Stars + "★", 36, StoryUi.RoyalGoldDeep,
-                    TextAnchor.MiddleRight);
-                row.Cost.rectTransform.anchorMin = new Vector2(1f, 0f);
-                row.Cost.rectTransform.anchorMax = new Vector2(1f, 1f);
-                row.Cost.rectTransform.pivot = new Vector2(1f, 0.5f);
-                row.Cost.rectTransform.offsetMin = new Vector2(-300f, 0f);
-                row.Cost.rectTransform.offsetMax = new Vector2(-190f, 0f);
+                // 807 labels, and "Clear the collapsed scaffold from the nave" is
+                // as real a task as "Lay the carpet".
+                row.Label.resizeTextForBestFit = true;
+                row.Label.resizeTextMinSize = 18;
+                row.Label.resizeTextMaxSize = 34;
 
+                // The price rides on the button, the way "Do It ★1" does in
+                // docs/royal-match/02-area-tasks.jpg — there is no second place
+                // on the row where the cost is written.
                 int captured = task.Index;
-                row.Repair = StoryUi.CreateButton("Repair", rowRect, "Repair", 30,
+                row.Repair = StoryUi.DoItButton("Repair", rowRect, "Do It", task.Stars,
                     () => OnRepair(captured));
                 RectTransform repairRect = row.Repair.GetComponent<RectTransform>();
                 repairRect.anchorMin = new Vector2(1f, 0.5f);
                 repairRect.anchorMax = new Vector2(1f, 0.5f);
                 repairRect.pivot = new Vector2(1f, 0.5f);
-                repairRect.anchoredPosition = new Vector2(-16f, 0f);
-                repairRect.sizeDelta = new Vector2(170f, 96f);
+                repairRect.anchoredPosition = new Vector2(-RowSidePad, 0f);
+                repairRect.sizeDelta = new Vector2(DoItWidth, DoItHeight);
 
+                // A finished repair swaps the button for its own star back.
                 row.Tick = StoryUi.CreateImage("Done", rowRect, StoryUi.StarSprite, StoryUi.Gold);
                 row.Tick.rectTransform.anchorMin = new Vector2(1f, 0.5f);
                 row.Tick.rectTransform.anchorMax = new Vector2(1f, 0.5f);
                 row.Tick.rectTransform.pivot = new Vector2(1f, 0.5f);
-                row.Tick.rectTransform.anchoredPosition = new Vector2(-60f, 0f);
-                row.Tick.rectTransform.sizeDelta = new Vector2(64f, 64f);
+                row.Tick.rectTransform.anchoredPosition = new Vector2(-RowSidePad - 60f, 0f);
+                row.Tick.rectTransform.sizeDelta = new Vector2(72f, 72f);
 
                 _rows.Add(row);
             }
@@ -447,8 +530,11 @@ namespace JellyGarden.Scripts.Story
 
         private void RefreshRows(StoryArea area)
         {
-            // Only the next unfinished task offers its button, so the player is
-            // repairing the room in the order the story wrote it.
+            // Repairs are still bought in the order the story wrote them, but a
+            // row that is not yet the player's to buy is greyed rather than
+            // stripped of its button: the star price is the reason to go and win
+            // a level, so it has to stay on screen and stay legible. Royal Match
+            // does the same with a task it will not let you afford.
             StoryTask next = StoryProgress.NextTask(_areaId);
 
             for (int i = 0; i < _rows.Count && i < area.Tasks.Count; i++)
@@ -464,14 +550,23 @@ namespace JellyGarden.Scripts.Story
                 // screen. A completed repair is marked by its colour and its
                 // star instead.
                 row.Label.color = done ? StoryUi.Muted : StoryUi.RoyalNavy;
-                row.Label.fontStyle = done ? FontStyle.Italic : FontStyle.Normal;
+                row.Label.fontStyle = done ? FontStyle.Italic : FontStyle.Bold;
                 row.Label.text = task.Label;
 
-                row.Cost.gameObject.SetActive(!done);
+                if (row.Icon != null)
+                {
+                    var icon = row.Icon.GetComponent<CanvasGroup>();
+                    if (icon == null) icon = row.Icon.gameObject.AddComponent<CanvasGroup>();
+                    icon.alpha = done ? 0.45f : 1f;
+                }
+
                 row.Tick.gameObject.SetActive(done);
 
-                row.Repair.gameObject.SetActive(!done && isNext);
-                StoryUi.SetInteractable(row.Repair, affordable);
+                // Done is the one state with no button at all: there is nothing
+                // left to buy, and a greyed price on a finished repair reads as
+                // something still owed.
+                row.Repair.gameObject.SetActive(!done);
+                StoryUi.SetGreenInteractable(row.Repair, isNext && affordable);
             }
         }
 
@@ -516,6 +611,17 @@ namespace JellyGarden.Scripts.Story
             StoryArea area = StoryDatabase.GetArea(_areaId);
             StoryTask task = StoryProgress.FindTask(area, taskIndex);
             if (task == null) return;
+
+            // Every unfinished row now carries a button, so the story's order is
+            // enforced here rather than by which buttons exist. onClick fires
+            // whether or not a button is interactable.
+            StoryTask next = StoryProgress.NextTask(_areaId);
+            if (next == null || next.Index != taskIndex)
+            {
+                StorySfx.PlayInvalid();
+                Toast("Finish the repair above this one first.");
+                return;
+            }
 
             if (!StoryProgress.CanCompleteTask(_areaId, taskIndex))
             {

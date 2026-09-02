@@ -71,6 +71,20 @@ namespace JellyGarden.Scripts.Story
                    || AreaState(areaId, 0) != null;
         }
 
+        /// <summary>
+        /// The object drawn on a task's row, if anyone has painted one.
+        /// Resources/Story/Art/task_012_3.png is task 3 of area 12.
+        ///
+        /// A miss is silent, unlike the rest of this class: there are 807 tasks
+        /// and no art for any of them yet, so warning per key would be 807 lines
+        /// of log for a case StoryUi.TaskIcon already handles by drawing a glyph
+        /// for the kind of work the label describes.
+        /// </summary>
+        public static Sprite TaskIcon(int areaId, int taskIndex)
+        {
+            return Load(string.Format("task_{0:000}_{1}", areaId, taskIndex));
+        }
+
         /// <summary>The picture on an area's clue card.</summary>
         public static Sprite ClueImage(int areaId)
         {

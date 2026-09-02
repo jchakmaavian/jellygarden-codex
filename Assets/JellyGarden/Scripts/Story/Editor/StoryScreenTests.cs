@@ -69,6 +69,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 AreaScreenShowsTheStory();
                 AreaProgressCountsTheRepairs();
                 RepairIsOfferedOnlyForTheNextAffordableTask();
+                TaskRowsCarryTheirIconLabelAndPrice();
                 SpendingStarsCompletesTheAreaAndUnlocksTheNext();
                 ClueCardShowsTheClueVerbatimAndDismissesItself();
                 DialogueTypesOutAndAdvancesOnTap();
@@ -165,24 +166,121 @@ namespace JellyGarden.Scripts.Story.Editor
             StoryProgress.ResetAll();
         }
 
+        /// <summary>
+        /// Every unfinished repair shows its price; only the next affordable one
+        /// can be pressed. A row the player cannot buy is greyed, not stripped —
+        /// the star cost is the reason to go and win a level.
+        /// </summary>
         private static void RepairIsOfferedOnlyForTheNextAffordableTask()
         {
             StoryProgress.ResetAll();
+            StoryArea area = StoryDatabase.GetArea(1);
             AreaScreen.Open(1);
+            AreaScreen screen = AreaScreen.Instance;
 
             Button[] repairs = RepairButtons();
-            Expect(repairs.Length == 1,
-                "only the next unfinished task offers a Repair button (found " +
-                repairs.Length + ")");
-            Expect(repairs.Length == 1 && !repairs[0].interactable,
-                "with no stars the Repair button is not interactable");
+            Expect(repairs.Length == area.Tasks.Count,
+                "every unfinished task keeps its Do It button on screen (found " +
+                repairs.Length + " of " + area.Tasks.Count + ")");
+            Expect(repairs.All(b => !b.interactable),
+                "with no stars no Do It button is interactable");
 
             StoryProgress.AddStar(1);
-            AreaScreen.Instance.Refresh();
+            screen.Refresh();
 
-            repairs = RepairButtons();
-            Expect(repairs.Length == 1 && repairs[0].interactable,
-                "with a star in hand the Repair button becomes interactable");
+            Expect(screen.RowCanRepair(0),
+                "with a star in hand the first row's Do It becomes interactable");
+            for (int i = 1; i < screen.RowCount; i++)
+            {
+                Expect(screen.RowOffersRepair(i),
+                    "row " + (i + 1) + " still shows its price rather than hiding it");
+                Expect(!screen.RowCanRepair(i),
+                    "row " + (i + 1) + " is greyed until the repair above it is done");
+            }
+        }
+
+        /// <summary>
+        /// A task row is icon, the story's own label, and a green Do It carrying
+        /// that task's star price — docs/royal-match/02-area-tasks.jpg. Checked
+        /// across every area, because the icon is classified from the label and
+        /// 807 labels is where a classifier that returns nothing would show up.
+        /// </summary>
+        private static void TaskRowsCarryTheirIconLabelAndPrice()
+        {
+            StoryProgress.ResetAll();
+            StoryArea area = StoryDatabase.GetArea(1);
+
+            AreaScreen.Open(1);
+            AreaScreen screen = AreaScreen.Instance;
+
+            Expect(screen.RowCount == area.Tasks.Count,
+                "one row per task (" + screen.RowCount + " of " + area.Tasks.Count + ")");
+
+            for (int i = 0; i < area.Tasks.Count; i++)
+            {
+                StoryTask task = area.Tasks[i];
+                Expect(screen.RowHasIcon(i), "row " + (i + 1) + " drew an icon");
+                Expect(screen.RowLabel(i) == task.Label,
+                    "row " + (i + 1) + " reads the story's label (read '" +
+                    screen.RowLabel(i) + "')");
+                Expect(screen.RowCost(i) == task.Stars,
+                    "row " + (i + 1) + " costs the task's " + task.Stars + " star(s) (read " +
+                    screen.RowCost(i) + ")");
+                Expect(!screen.RowIsDone(i), "row " + (i + 1) + " is not yet done");
+            }
+
+            // The star badge is on the button, so the cost has to be readable off
+            // the button's own children rather than off a separate label.
+            Button first = RepairButtons().FirstOrDefault();
+            if (first == null)
+            {
+                Fail("the first row has no Do It button");
+                return;
+            }
+            List<string> onButton = TextsIn(first.gameObject);
+            Expect(onButton.Any(t => t == "Do It"), "the button reads 'Do It'");
+            Expect(onButton.Any(t => t == area.Tasks[0].Stars.ToString()),
+                "the star badge carries the task's cost");
+
+            // A finished repair reads as done and offers nothing to press.
+            StoryTask paid = area.Tasks[0];
+            StoryProgress.AddStar(1, paid.Stars);
+            Expect(StoryProgress.CompleteTask(1, paid.Index), "the first repair was paid for");
+            screen.Refresh();
+
+            Expect(screen.RowIsDone(0), "the paid row renders as done");
+            Expect(!screen.RowOffersRepair(0), "a done row is not clickable");
+            Expect(screen.RowLabel(0) == paid.Label, "a done row keeps its label");
+
+            Debug.Log(string.Format(
+                "[Story] task row 1 of '{0}': icon {1}, '{2}', Do It * {3}",
+                screen.TitleText, screen.RowHasIcon(0) ? "drawn" : "missing",
+                screen.RowLabel(0), screen.RowCost(0)));
+
+            // Every classification has a glyph, so no task anywhere renders an
+            // empty icon. Built off the story's own labels, not a fixed list.
+            var host = new GameObject("~TaskIconProbe");
+            var probe = host.AddComponent<RectTransform>();
+            var kinds = new HashSet<RepairWorkType>();
+            int checkedTasks = 0;
+            foreach (StoryArea a in StoryDatabase.AllAreas)
+                foreach (StoryTask t in a.Tasks)
+                {
+                    checkedTasks++;
+                    RepairWorkType work = RepairWork.Classify(t.Label);
+                    if (!kinds.Add(work)) continue;
+
+                    RectTransform icon = StoryUi.TaskIcon("Probe", probe, work);
+                    Expect(icon.GetComponentsInChildren<Image>(true).Length > 0,
+                        "work kind " + work + " draws an icon");
+                }
+            Object.DestroyImmediate(host);
+
+            Debug.Log(string.Format(
+                "[Story] task icons: {0} tasks classified into {1} drawn kinds",
+                checkedTasks, kinds.Count));
+
+            StoryProgress.ResetAll();
         }
 
         private static void SpendingStarsCompletesTheAreaAndUnlocksTheNext()
