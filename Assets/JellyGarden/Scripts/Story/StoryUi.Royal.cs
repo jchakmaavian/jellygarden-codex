@@ -44,6 +44,11 @@ namespace JellyGarden.Scripts.Story
         public static readonly Color RoyalRed = Rgb(239, 45, 53);       // close X
         public static readonly Color RoyalRedDark = Rgb(176, 26, 34);
         public static readonly Color RoyalGrey = Rgb(150, 148, 142);    // a disabled button
+        public static readonly Color RoyalPurple = Rgb(123, 41, 187);     // the area chest
+        public static readonly Color RoyalPurpleLight = Rgb(190, 130, 254);
+        public static readonly Color RoyalPurpleDark = Rgb(78, 20, 124);
+        public static readonly Color RoyalChestGold = Rgb(252, 214, 6);   // chest panels
+        public static readonly Color RoyalTealInk = Rgb(4, 55, 74);       // heading outline
 
         private static Color Rgb(int r, int g, int b)
         {
@@ -355,6 +360,157 @@ namespace JellyGarden.Scripts.Story
             fill.type = Image.Type.Sliced;
 
             return edge;
+        }
+
+        #endregion
+
+        #region Progress bar and chest
+
+        /// <summary>The parts of an area-progress bar a screen has to update.</summary>
+        public sealed class ProgressBarParts
+        {
+            /// <summary>The whole track, orange rim included.</summary>
+            public RectTransform Root;
+
+            /// <summary>The green bar inside it. Its width is driven by SetProgress.</summary>
+            public RectTransform Fill;
+
+            /// <summary>The "3/7" written across the middle of the track.</summary>
+            public Text Label;
+
+            /// <summary>What the bar is currently reading, 0..1.</summary>
+            public float Fraction;
+        }
+
+        /// <summary>
+        /// The sunken progress track from docs/royal-match/02-area-tasks.jpg: an
+        /// orange-rimmed well of RoyalBlueDeep with a green bar growing out of its
+        /// left end and the count written across the middle. The green is the same
+        /// green the home screen's area bar uses in 09-home-level-button.jpg.
+        /// </summary>
+        public static ProgressBarParts ProgressBar(string name, Transform parent)
+        {
+            var parts = new ProgressBarParts();
+
+            RectTransform root = CreateRect(name, parent);
+            parts.Root = root;
+
+            Image rim = CreateImage("Rim", root, RoundedSprite(40), RoyalGoldDeep);
+            Stretch(rim.rectTransform);
+            rim.type = Image.Type.Sliced;
+
+            Image well = CreateImage("Well", root, RoundedSprite(40), RoyalBlueDeep);
+            Stretch(well.rectTransform, 8f);
+            well.type = Image.Type.Sliced;
+
+            // The fill is anchored rather than sized: a fraction of the track's
+            // width survives whatever width the screen ends up handing the track.
+            Image fill = CreateImage("Fill", well.rectTransform, RoundedSprite(36), RoyalGreen);
+            fill.type = Image.Type.Sliced;
+            RectTransform fillRect = fill.rectTransform;
+            fillRect.anchorMin = Vector2.zero;
+            fillRect.anchorMax = new Vector2(0f, 1f);
+            fillRect.offsetMin = new Vector2(4f, 4f);
+            fillRect.offsetMax = new Vector2(-4f, -4f);
+            parts.Fill = fillRect;
+
+            Image gloss = CreateImage("Gloss", fillRect, RoundedSprite(24), RoyalGreenLight);
+            gloss.type = Image.Type.Sliced;
+            RectTransform glossRect = gloss.rectTransform;
+            glossRect.anchorMin = new Vector2(0f, 0.52f);
+            glossRect.anchorMax = new Vector2(1f, 0.9f);
+            glossRect.offsetMin = new Vector2(10f, 0f);
+            glossRect.offsetMax = new Vector2(-10f, 0f);
+
+            // Over the bar, not inside it: the count has to stay legible whether
+            // the green has reached it or not.
+            Text label = CreateText("Value", root, string.Empty, 52, RoyalTitle,
+                TextAnchor.MiddleCenter);
+            Stretch(label.rectTransform);
+            label.fontStyle = FontStyle.Bold;
+            label.resizeTextForBestFit = true;
+            label.resizeTextMinSize = 18;
+            label.resizeTextMaxSize = 52;
+            parts.Label = label;
+
+            SetProgress(parts, 0, 0);
+            return parts;
+        }
+
+        /// <summary>Points a progress bar at a count. Total 0 reads as an empty bar.</summary>
+        public static void SetProgress(ProgressBarParts parts, int done, int total)
+        {
+            if (parts == null) return;
+
+            float fraction = total > 0 ? Mathf.Clamp01((float)done / total) : 0f;
+            parts.Fraction = fraction;
+
+            if (parts.Fill != null)
+            {
+                parts.Fill.anchorMax = new Vector2(fraction, 1f);
+                // A rounded fill of zero width still draws both of its end caps,
+                // which reads as one step done that has not been done.
+                parts.Fill.gameObject.SetActive(fraction > 0.001f);
+            }
+
+            if (parts.Label != null) parts.Label.text = done + "/" + total;
+        }
+
+        /// <summary>
+        /// The area chest that sits on the end of the progress bar: a purple chest
+        /// with gold panels and a lock, composed from rounded rects. The kit ships
+        /// no chest and the reference's is a painted 3D asset, so this is the flat
+        /// reading of it — colours sampled from docs/royal-match/02-area-tasks.jpg.
+        /// </summary>
+        public static RectTransform ChestIcon(string name, Transform parent)
+        {
+            RectTransform root = CreateRect(name, parent);
+
+            Image lid = CreateImage("Lid", root, RoundedSprite(44), RoyalPurple);
+            lid.type = Image.Type.Sliced;
+            FrameRect(lid.rectTransform, 0f, 0.44f, 1f, 1f);
+
+            Image lidFace = CreateImage("LidFace", lid.rectTransform, RoundedSprite(36),
+                RoyalChestGold);
+            lidFace.type = Image.Type.Sliced;
+            FrameRect(lidFace.rectTransform, 0.14f, 0.12f, 0.86f, 0.84f);
+
+            Image shine = CreateImage("Shine", lid.rectTransform, RoundedSprite(16),
+                RoyalPurpleLight);
+            shine.type = Image.Type.Sliced;
+            FrameRect(shine.rectTransform, 0.04f, 0.62f, 0.11f, 0.9f);
+
+            Image body = CreateImage("Body", root, RoundedSprite(20), RoyalPurple);
+            body.type = Image.Type.Sliced;
+            FrameRect(body.rectTransform, 0.03f, 0f, 0.97f, 0.46f);
+
+            Image bodyFace = CreateImage("BodyFace", body.rectTransform, RoundedSprite(16),
+                RoyalChestGold);
+            bodyFace.type = Image.Type.Sliced;
+            FrameRect(bodyFace.rectTransform, 0.07f, 0.2f, 0.93f, 0.82f);
+
+            Image plate = CreateImage("Lock", root, RoundedSprite(18), RoyalPurple);
+            plate.type = Image.Type.Sliced;
+            FrameRect(plate.rectTransform, 0.37f, 0.24f, 0.63f, 0.62f);
+
+            Image keyPlate = CreateImage("Keyhole", plate.rectTransform, CircleSprite,
+                RoyalChestGold);
+            FrameRect(keyPlate.rectTransform, 0.16f, 0.16f, 0.84f, 0.84f);
+
+            Image key = CreateImage("Key", keyPlate.rectTransform, CircleSprite, RoyalPurpleDark);
+            FrameRect(key.rectTransform, 0.3f, 0.3f, 0.7f, 0.7f);
+
+            return root;
+        }
+
+        /// <summary>Anchors a rect to a fraction-box of its parent, with no offsets.</summary>
+        private static void FrameRect(RectTransform rect, float minX, float minY,
+            float maxX, float maxY)
+        {
+            rect.anchorMin = new Vector2(minX, minY);
+            rect.anchorMax = new Vector2(maxX, maxY);
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
         }
 
         #endregion

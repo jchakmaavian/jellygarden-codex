@@ -114,7 +114,7 @@ button — stay in `StoryUi.cs`; the Royal Match shapes are in
 `StoryUi.Royal.cs`. Add a new screen primitive to the Royal file, not the base
 one, so the kit-neutral half stays kit-neutral.
 
-Four primitives carry every screen:
+These primitives carry every screen:
 
 | Primitive | What it gives back |
 |---|---|
@@ -122,6 +122,9 @@ Four primitives carry every screen:
 | `GreenButton` / `DoItButton` | the one affirmative action, with an optional star price |
 | `StarBadge(name, parent, cost)` | the ★N a task costs |
 | `TopBar(parent, onSettings)` | `TopBarParts`, refreshed by `RefreshTopBar` |
+| `CreamCard(name, parent, radius)` | the cream sub-card every section sits on |
+| `ProgressBar(name, parent)` | `ProgressBarParts` — `Root`, `Fill`, `Label`, `Fraction`; pointed at a count by `SetProgress(parts, done, total)` |
+| `ChestIcon(name, parent)` | the purple-and-gold chest that ends a progress bar |
 
 Rules that are easy to get wrong:
 
@@ -140,6 +143,14 @@ Rules that are easy to get wrong:
   layers (base, face, gloss); the base-class helper only recolours one of them.
 - Lives read **"Full"** while `StoryFreeGame.Enabled`; coins are the kit's
   `InitScript.Gems`, since the kit has no coin currency at all.
+- **A progress bar's fill is anchored, not sized.** `SetProgress` moves
+  `Fill.anchorMax.x` and hides the fill entirely at zero — a rounded rect of
+  zero width still draws both end caps, which reads as one step already done.
+- **Text drawn over the room artwork needs an `Outline`.** The art behind it is
+  of any brightness, so the letters carry their own contrast.
+- **Anything built before `AreaSceneView.Attach` is drawn under the artwork.**
+  The view is a later sibling. `SetAsLastSibling()` the captions after every
+  attach, or they vanish behind the room.
 
 The primitives are proven by `StoryScreenTests.RoyalPrimitivesConstruct`, which
 builds each one for real and logs a `[Story] primitive ...` line per shape. With

@@ -67,6 +67,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 StoryProgress.ResetAll();
 
                 AreaScreenShowsTheStory();
+                AreaProgressCountsTheRepairs();
                 RepairIsOfferedOnlyForTheNextAffordableTask();
                 SpendingStarsCompletesTheAreaAndUnlocksTheNext();
                 ClueCardShowsTheClueVerbatimAndDismissesItself();
@@ -125,6 +126,43 @@ namespace JellyGarden.Scripts.Story.Editor
             foreach (StoryTask task in area.Tasks)
                 Expect(texts.Any(t => t.Contains(task.Label)),
                     "task '" + task.Label + "' is listed");
+        }
+
+        /// <summary>
+        /// The Area Progress bar is the area's own arithmetic — repairs done over
+        /// repairs the story wrote — and the chest sits on the end of it.
+        /// </summary>
+        private static void AreaProgressCountsTheRepairs()
+        {
+            StoryProgress.ResetAll();
+            StoryArea area = StoryDatabase.GetArea(1);
+
+            AreaScreen.Open(1);
+            AreaScreen screen = AreaScreen.Instance;
+
+            Expect(screen.TitleText == area.Name,
+                "the title plate reads the area's name (read '" + screen.TitleText + "')");
+            Expect(screen.ProgressText == "0/" + area.Tasks.Count,
+                "an untouched area reads 0/" + area.Tasks.Count +
+                " (read '" + screen.ProgressText + "')");
+            Expect(screen.ProgressFraction == 0f, "an untouched bar is drawn empty");
+            Expect(screen.HasChest, "the chest is on the end of the bar");
+
+            StoryTask first = area.Tasks[0];
+            StoryProgress.AddStar(1, first.Stars);
+            Expect(StoryProgress.CompleteTask(1, first.Index), "the first repair was paid for");
+            screen.Refresh();
+
+            Expect(screen.ProgressText == "1/" + area.Tasks.Count,
+                "one repair reads 1/" + area.Tasks.Count +
+                " (read '" + screen.ProgressText + "')");
+            Expect(Mathf.Abs(screen.ProgressFraction - 1f / area.Tasks.Count) < 0.001f,
+                "the bar is filled one task's worth");
+
+            Debug.Log(string.Format("[Story] area progress: '{0}' reads {1}, chest {2}",
+                screen.TitleText, screen.ProgressText, screen.HasChest ? "present" : "missing"));
+
+            StoryProgress.ResetAll();
         }
 
         private static void RepairIsOfferedOnlyForTheNextAffordableTask()

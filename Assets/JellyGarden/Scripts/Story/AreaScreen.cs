@@ -12,9 +12,29 @@ namespace JellyGarden.Scripts.Story
 {
     public sealed class AreaScreen : MonoBehaviour
     {
-        private const float PanelWidth = 940f;
         private const float RowHeight = 132f;
         private const float RowGap = 12f;
+
+        // Measured off docs/royal-match/02-area-tasks.jpg (828x1472) and scaled to
+        // the 1080 reference canvas by 1080/828 = 1.304. Every VERTICAL metric is
+        // a fraction of the panel's content height rather than a count of pixels:
+        // the reference is a 9:19.5 phone and the Editor's Game view is 4:3, and a
+        // column of fixed heights that fits one overlaps on the other while every
+        // editor test still passes. DesignHeight is what the panel's content rect
+        // measures on the reference device.
+        private const float DesignHeight = 1073f;
+        private const float CardTopFrac = 65f / DesignHeight;
+        private const float CardHeightFrac = 228f / DesignHeight;
+        private const float CardGapFrac = 34f / DesignHeight;
+        private const float PlayBottomFrac = 34f / DesignHeight;
+        private const float PlayHeightFrac = 150f / DesignHeight;
+        private const float PlayGapFrac = 30f / DesignHeight;
+
+        // Horizontal metrics stay in reference points: the canvas scaler keeps the
+        // width honest whatever the aspect.
+        private const float CardSide = 64f;
+        private const float ChestWidth = 265f;
+        private const float PlayWidth = 460f;
 
         private static AreaScreen _instance;
 
@@ -33,10 +53,12 @@ namespace JellyGarden.Scripts.Story
         private RectTransform _scene;
         private AreaSceneView _sceneView;
         private RectTransform _taskList;
-        private Text _title;
         private Text _chapter;
         private Text _goal;
-        private Text _starCount;
+        private StoryUi.RoyalPanelParts _panel;
+        private StoryUi.TopBarParts _topBar;
+        private StoryUi.ProgressBarParts _progress;
+        private RectTransform _chest;
         private Button _playButton;
         private Text _playLabel;
         private Button _replayButton;
@@ -57,6 +79,30 @@ namespace JellyGarden.Scripts.Story
         public int AreaId
         {
             get { return _areaId; }
+        }
+
+        /// <summary>What the title plate reads — the area's name.</summary>
+        public string TitleText
+        {
+            get { return _panel == null || _panel.Title == null ? null : _panel.Title.text; }
+        }
+
+        /// <summary>What the Area Progress bar reads, as "done/total".</summary>
+        public string ProgressText
+        {
+            get { return _progress == null || _progress.Label == null ? null : _progress.Label.text; }
+        }
+
+        /// <summary>How far along the Area Progress bar is drawn, 0..1.</summary>
+        public float ProgressFraction
+        {
+            get { return _progress == null ? 0f : _progress.Fraction; }
+        }
+
+        /// <summary>Whether the chest at the end of the bar is on screen.</summary>
+        public bool HasChest
+        {
+            get { return _chest != null && _chest.gameObject.activeInHierarchy; }
         }
 
         /// <summary>Opens the screen for an area, building it on first use.</summary>
@@ -80,6 +126,13 @@ namespace JellyGarden.Scripts.Story
             StoryProgress.CurrentArea = areaId;
             _instance.gameObject.SetActive(true);
             _instance.Refresh();
+
+            // One line per open rather than per refresh: Refresh runs on every
+            // repair, and the screen tests open all 150 areas in a row.
+            if (Application.isPlaying)
+                Debug.Log(string.Format("[Story] area screen {0} '{1}': progress {2}, chest {3}",
+                    areaId, _instance.TitleText, _instance.ProgressText,
+                    _instance.HasChest ? "present" : "missing"));
         }
 
         public static void Close()
@@ -112,44 +165,36 @@ namespace JellyGarden.Scripts.Story
             StoryUi.CreateFullScreenButton("Scrim", _canvas.transform,
                 new Color(0f, 0f, 0f, 0.35f), null);
 
-            // Anchored with margins rather than a fixed size: the canvas scales
-            // with the screen, and a fixed 1560px panel overflowed a short window
-            // and pushed the task rows into each other.
+            BuildCaption();
+
+            // Royal Match's own area page carries the top bar, and this screen no
+            // longer draws a star counter of its own: the stars on the bar are
+            // this area's, because Open sets StoryProgress.CurrentArea first.
+            _topBar = StoryUi.TopBar(_canvas.transform, null);
+
             // The panel sits in the lower two thirds so the room's artwork stays
             // visible above it. Watching the gate change as repairs land is the
             // whole point of the screen — a panel over the top of it would have
             // hidden the one thing the player is paying stars for.
-            RectTransform panel = StoryUi.CreateRect("Panel", _canvas.transform);
-            panel.anchorMin = new Vector2(0f, 0f);
-            panel.anchorMax = new Vector2(1f, 0.74f);
-            panel.offsetMin = new Vector2(40f, 90f);
-            panel.offsetMax = new Vector2(-40f, 0f);
+            RectTransform band = StoryUi.CreateRect("Panel", _canvas.transform);
+            band.anchorMin = new Vector2(0f, 0f);
+            band.anchorMax = new Vector2(1f, 0.74f);
+            band.offsetMin = new Vector2(0f, 70f);
+            band.offsetMax = new Vector2(0f, 0f);
 
-            var panelImage = panel.gameObject.AddComponent<Image>();
-            panelImage.sprite = StoryUi.PanelSprite;
-            panelImage.color = StoryUi.Parchment;
-            panelImage.type = Image.Type.Sliced;
+            // The red X is the way back to the map. There is no second Back
+            // button, because the reference has none.
+            _panel = StoryUi.RoyalPanel("Card", band, string.Empty, OnBack);
 
-            _chapter = StoryUi.CreateText("Chapter", panel, "", 34, StoryUi.Muted,
-                TextAnchor.UpperCenter);
-            StoryUi.TopAnchored(_chapter.rectTransform, 30f, 44f, 50f);
+            // 150 area names, and some of them are long: the plate's 76pt fits
+            // "Throne Room" and not "The Cartographer's Long Gallery".
+            _panel.Title.resizeTextForBestFit = true;
+            _panel.Title.resizeTextMinSize = 28;
+            _panel.Title.resizeTextMaxSize = 76;
 
-            _title = StoryUi.CreateText("Title", panel, "", 56, StoryUi.Ink,
-                TextAnchor.UpperCenter);
-            StoryUi.TopAnchored(_title.rectTransform, 74f, 72f, 50f);
-
-            _goal = StoryUi.CreateText("Goal", panel, "", 34, StoryUi.Ink,
-                TextAnchor.UpperCenter);
-            StoryUi.TopAnchored(_goal.rectTransform, 152f, 110f, 60f);
-
-            BuildStarCounter(panel);
-
-            Image rule = StoryUi.CreateImage("Rule", panel, null,
-                new Color(0.45f, 0.36f, 0.26f, 0.45f));
-            StoryUi.TopAnchored(rule.rectTransform, 342f, 3f, 45f);
-
-            BuildTaskList(panel);
-            BuildFooter(panel);
+            BuildProgressCard(_panel.Content);
+            BuildTaskList(_panel.Content);
+            BuildFooter(_panel.Content);
 
             _toast = StoryUi.CreateText("Toast", _canvas.transform, "", 36, Color.white,
                 TextAnchor.MiddleCenter);
@@ -157,33 +202,101 @@ namespace JellyGarden.Scripts.Story
             _toast.gameObject.SetActive(false);
         }
 
-        private void BuildStarCounter(RectTransform panel)
+        /// <summary>
+        /// The arc and the area's goal, captioned on the artwork rather than set
+        /// into the panel. Royal Match's card carries the room's name and nothing
+        /// else, and the story is the one thing this game has that Royal Match
+        /// does not — so it reads over the room instead of crowding the panel.
+        /// </summary>
+        private void BuildCaption()
         {
-            RectTransform holder = StoryUi.CreateRect("Stars", panel);
-            StoryUi.TopAnchored(holder, 268f, 66f, 60f);
+            // _scene spans the canvas from 0.66 up, and the panel's top edge is at
+            // 0.74 of the canvas — 0.235 in this rect's own fractions. A caption
+            // below that line is drawn behind the panel and reads as clipped text,
+            // which is exactly what it did at 0.20. Both captions sit clear of the
+            // panel below and of the top bar above.
+            _chapter = StoryUi.CreateText("Chapter", _scene, "", 34, StoryUi.RoyalGold,
+                TextAnchor.LowerCenter);
+            Caption(_chapter, 0.50f, 0.62f);
 
-            Image star = StoryUi.CreateImage("Star", holder, StoryUi.StarSprite,
-                StoryUi.StarSprite != null ? Color.white : StoryUi.Gold);
-            star.rectTransform.anchorMin = new Vector2(0f, 0.5f);
-            star.rectTransform.anchorMax = new Vector2(0f, 0.5f);
-            star.rectTransform.pivot = new Vector2(0f, 0.5f);
-            star.rectTransform.sizeDelta = new Vector2(64f, 64f);
-
-            _starCount = StoryUi.CreateText("Count", holder, "", 40, StoryUi.Ink);
-            _starCount.rectTransform.anchorMin = new Vector2(0f, 0.5f);
-            _starCount.rectTransform.anchorMax = new Vector2(1f, 0.5f);
-            _starCount.rectTransform.pivot = new Vector2(0f, 0.5f);
-            _starCount.rectTransform.offsetMin = new Vector2(78f, -38f);
-            _starCount.rectTransform.offsetMax = new Vector2(0f, 38f);
+            _goal = StoryUi.CreateText("Goal", _scene, "", 38, StoryUi.RoyalTitle,
+                TextAnchor.UpperCenter);
+            Caption(_goal, 0.27f, 0.49f);
         }
 
-        private void BuildTaskList(RectTransform panel)
+        private static void Caption(Text text, float minY, float maxY)
         {
-            RectTransform viewport = StoryUi.CreateRect("TaskViewport", panel);
-            viewport.anchorMin = new Vector2(0f, 0f);
-            viewport.anchorMax = new Vector2(1f, 1f);
-            viewport.offsetMin = new Vector2(45f, 210f);
-            viewport.offsetMax = new Vector2(-45f, -354f);
+            RectTransform rect = text.rectTransform;
+            rect.anchorMin = new Vector2(0.06f, minY);
+            rect.anchorMax = new Vector2(0.94f, maxY);
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            text.resizeTextForBestFit = true;
+            text.resizeTextMinSize = 16;
+            text.resizeTextMaxSize = text.fontSize;
+
+            // The artwork underneath is of any brightness, so the letters carry
+            // their own contrast rather than hoping the room is dark.
+            var outline = text.gameObject.AddComponent<Outline>();
+            outline.effectColor = new Color(0f, 0f, 0f, 0.85f);
+            outline.effectDistance = new Vector2(2.5f, -2.5f);
+        }
+
+        /// <summary>
+        /// "Area Progress": a cream card holding a sunken track that reads
+        /// completed/total repairs, with the area's chest on its right-hand end.
+        /// </summary>
+        private void BuildProgressCard(RectTransform content)
+        {
+            Image card = StoryUi.CreamCard("Progress", content, 30);
+            RectTransform rect = card.rectTransform;
+            rect.anchorMin = new Vector2(0f, 1f - CardTopFrac - CardHeightFrac);
+            rect.anchorMax = new Vector2(1f, 1f - CardTopFrac);
+            rect.offsetMin = new Vector2(CardSide, 0f);
+            rect.offsetMax = new Vector2(-CardSide, 0f);
+
+            Text heading = StoryUi.CreateText("Heading", rect, "Area Progress", 58,
+                StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
+            RectTransform headingRect = heading.rectTransform;
+            headingRect.anchorMin = new Vector2(0f, 0.62f);
+            headingRect.anchorMax = new Vector2(1f, 0.97f);
+            headingRect.offsetMin = new Vector2(24f, 0f);
+            headingRect.offsetMax = new Vector2(-24f, 0f);
+            heading.fontStyle = FontStyle.Bold;
+            heading.resizeTextForBestFit = true;
+            heading.resizeTextMinSize = 18;
+            heading.resizeTextMaxSize = 58;
+
+            var headingOutline = heading.gameObject.AddComponent<Outline>();
+            headingOutline.effectColor = StoryUi.RoyalTealInk;
+            headingOutline.effectDistance = new Vector2(2.5f, -2.5f);
+
+            _progress = StoryUi.ProgressBar("Track", rect);
+            RectTransform track = _progress.Root;
+            track.anchorMin = new Vector2(0f, 0.20f);
+            track.anchorMax = new Vector2(1f, 0.59f);
+            track.offsetMin = new Vector2(34f, 0f);
+            track.offsetMax = new Vector2(-34f, 0f);
+
+            // The chest sits on the right-hand end of the track and overhangs it,
+            // as it does in the reference. Its height is a fraction of the card,
+            // so a short screen shrinks it instead of pushing it out of the card.
+            _chest = StoryUi.ChestIcon("Chest", rect);
+            _chest.anchorMin = new Vector2(1f, 0.06f);
+            _chest.anchorMax = new Vector2(1f, 0.94f);
+            _chest.pivot = new Vector2(1f, 0.5f);
+            _chest.sizeDelta = new Vector2(ChestWidth, 0f);
+            _chest.anchoredPosition = new Vector2(-8f, 0f);
+        }
+
+        private void BuildTaskList(RectTransform content)
+        {
+            RectTransform viewport = StoryUi.CreateRect("TaskViewport", content);
+            viewport.anchorMin = new Vector2(0f, PlayBottomFrac + PlayHeightFrac + PlayGapFrac);
+            viewport.anchorMax = new Vector2(1f, 1f - CardTopFrac - CardHeightFrac - CardGapFrac);
+            viewport.offsetMin = new Vector2(CardSide, 0f);
+            viewport.offsetMax = new Vector2(-CardSide, 0f);
 
             var mask = viewport.gameObject.AddComponent<Image>();
             mask.color = new Color(0f, 0f, 0f, 0.02f);
@@ -204,27 +317,28 @@ namespace JellyGarden.Scripts.Story
             scroll.viewport = viewport;
         }
 
-        private void BuildFooter(RectTransform panel)
+        private void BuildFooter(RectTransform content)
         {
-            _playButton = StoryUi.CreateButton("Play", panel, "Play", 46, OnPlay);
-            StoryUi.BottomAnchored(_playButton.GetComponent<RectTransform>(), 70f, 150f, 200f);
+            _playButton = StoryUi.GreenButton("Play", content, "Play", 52, OnPlay);
+            RectTransform playRect = _playButton.GetComponent<RectTransform>();
+            playRect.anchorMin = new Vector2(0.5f, PlayBottomFrac);
+            playRect.anchorMax = new Vector2(0.5f, PlayBottomFrac + PlayHeightFrac);
+            playRect.pivot = new Vector2(0.5f, 0.5f);
+            playRect.sizeDelta = new Vector2(PlayWidth, 0f);
+            playRect.anchoredPosition = Vector2.zero;
+
             _playLabel = _playButton.GetComponentInChildren<Text>();
+            _playLabel.resizeTextForBestFit = true;
+            _playLabel.resizeTextMinSize = 18;
+            _playLabel.resizeTextMaxSize = 52;
 
-            _replayButton = StoryUi.CreateButton("Replay", panel, "Scene", 30, OnReplayScene);
+            _replayButton = StoryUi.CreateButton("Replay", content, "Scene", 30, OnReplayScene);
             RectTransform replayRect = _replayButton.GetComponent<RectTransform>();
-            replayRect.anchorMin = new Vector2(1f, 0f);
-            replayRect.anchorMax = new Vector2(1f, 0f);
-            replayRect.pivot = new Vector2(1f, 0f);
-            replayRect.anchoredPosition = new Vector2(-40f, 80f);
-            replayRect.sizeDelta = new Vector2(180f, 110f);
-
-            Button back = StoryUi.CreateButton("Back", panel, "Map", 34, OnBack);
-            RectTransform backRect = back.GetComponent<RectTransform>();
-            backRect.anchorMin = new Vector2(0f, 0f);
-            backRect.anchorMax = new Vector2(0f, 0f);
-            backRect.pivot = new Vector2(0f, 0f);
-            backRect.anchoredPosition = new Vector2(40f, 80f);
-            backRect.sizeDelta = new Vector2(150f, 110f);
+            replayRect.anchorMin = new Vector2(1f, PlayBottomFrac);
+            replayRect.anchorMax = new Vector2(1f, PlayBottomFrac + PlayHeightFrac);
+            replayRect.pivot = new Vector2(1f, 0.5f);
+            replayRect.sizeDelta = new Vector2(170f, 0f);
+            replayRect.anchoredPosition = new Vector2(-8f, 0f);
         }
 
         #endregion
@@ -242,15 +356,23 @@ namespace JellyGarden.Scripts.Story
             else if (_sceneView.AreaId != _areaId)
                 _sceneView.Show(_areaId);
 
+            // The artwork is attached after the captions were built, so it is a
+            // later sibling and draws over them. Push them back to the front.
+            _goal.transform.SetAsLastSibling();
+            _chapter.transform.SetAsLastSibling();
+
             StoryArcInfo arc = StoryDatabase.ArcOf(_areaId);
             _chapter.text = arc != null
-                ? string.Format("Arc {0} — {1}", arc.Arc, arc.Title)
-                : string.Empty;
-            _title.text = string.Format("Area {0:000} — {1}", area.Id, area.Name);
+                ? string.Format("Area {0:000} · Arc {1} — {2}", area.Id, arc.Arc, arc.Title)
+                : string.Format("Area {0:000}", area.Id);
             _goal.text = area.Goal;
+            _panel.Title.text = area.Name;
 
-            int stars = StoryProgress.StarsIn(_areaId);
-            _starCount.text = stars == 1 ? "1 star" : stars + " stars";
+            // Both numbers are read, never stored: a repair anywhere else in the
+            // game moves this bar the next time the screen is looked at.
+            StoryUi.SetProgress(_progress, StoryProgress.TasksCompletedIn(_areaId),
+                area.Tasks.Count);
+            StoryUi.RefreshTopBar(_topBar);
 
             BuildRows(area);
             RefreshRows(area);
@@ -280,19 +402,18 @@ namespace JellyGarden.Scripts.Story
 
                 var row = new TaskRow { TaskIndex = task.Index };
 
-                Image card = StoryUi.CreateImage("Card", rowRect, StoryUi.PanelSprite,
-                    new Color(1f, 1f, 1f, 0.35f));
-                card.type = Image.Type.Sliced;
+                Image card = StoryUi.CreamCard("Card", rowRect, 26);
                 StoryUi.Stretch(card.rectTransform);
 
-                row.Label = StoryUi.CreateText("Label", rowRect, task.Label, 34, StoryUi.Ink);
+                row.Label = StoryUi.CreateText("Label", rowRect, task.Label, 34,
+                    StoryUi.RoyalNavy);
                 row.Label.rectTransform.anchorMin = new Vector2(0f, 0f);
                 row.Label.rectTransform.anchorMax = new Vector2(1f, 1f);
                 row.Label.rectTransform.offsetMin = new Vector2(16f, 0f);
                 row.Label.rectTransform.offsetMax = new Vector2(-320f, 0f);
 
                 row.Cost = StoryUi.CreateText("Cost", rowRect,
-                    task.Stars == 1 ? "1★" : task.Stars + "★", 36, StoryUi.Gold,
+                    task.Stars == 1 ? "1★" : task.Stars + "★", 36, StoryUi.RoyalGoldDeep,
                     TextAnchor.MiddleRight);
                 row.Cost.rectTransform.anchorMin = new Vector2(1f, 0f);
                 row.Cost.rectTransform.anchorMax = new Vector2(1f, 1f);
@@ -342,7 +463,7 @@ namespace JellyGarden.Scripts.Story
                 // else — an <s> for strikethrough renders as literal "<s>" on
                 // screen. A completed repair is marked by its colour and its
                 // star instead.
-                row.Label.color = done ? StoryUi.Muted : StoryUi.Ink;
+                row.Label.color = done ? StoryUi.Muted : StoryUi.RoyalNavy;
                 row.Label.fontStyle = done ? FontStyle.Italic : FontStyle.Normal;
                 row.Label.text = task.Label;
 
@@ -359,7 +480,7 @@ namespace JellyGarden.Scripts.Story
             bool complete = StoryProgress.IsAreaComplete(_areaId);
             int next = StoryLevelPlan.NextLevelFor(_areaId);
 
-            StoryUi.SetInteractable(_playButton, !complete && next > 0);
+            StoryUi.SetGreenInteractable(_playButton, !complete && next > 0);
             if (_playLabel != null)
                 _playLabel.text = complete ? "Restored" : "Play level " + next;
 
