@@ -170,6 +170,19 @@ kit's score bar. Four things about it are not obvious:
   is authored at 720x1280 and the Royal metrics are in 1080, so every vertical
   measurement is multiplied by `referenceResolution.x / 1080`; horizontal ones
   are normalised anchors and need no scaling at all.
+- **Every level carries a `Target.SCORE` entry, and it is a real win
+  condition.** `LevelManager.CheckWinLose` requires `targetObject.All(Done)`,
+  and the score entry's `Done()` is `Score >= star1`. So a score slot is never
+  chrome to be hidden — on all 1209 levels it is a goal the player must reach,
+  and on the 176 `MODE 0` levels it is the *only* goal. The HUD draws it as a
+  target that reads `have/need` against `star1`; the strip still never uses the
+  word "score". `StoryLevelHud.ReadLevel(level, score)` builds the same model
+  from `Resources/Levels/N.txt` plus `Resources/Targets/LevelN.asset` with no
+  board in the scene — use it for any screen that has to state a level's goal.
+- **Never reorder the target slots.** `AimKitIconsAtThisHud` matches the kit's
+  `TargetIcon`s to this HUD's slots by index, so the model must keep
+  `LevelManager.targetObject` order or the collect animation flies to the wrong
+  icon. The asset order varies by level (`('0','3')` and `('3','0')` both occur).
 
 ## Two traps that have bitten more than once
 

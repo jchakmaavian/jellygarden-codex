@@ -80,6 +80,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 EveryAreaOpens();
                 RoyalPrimitivesConstruct();
                 LevelHudIsTargetAndMoves();
+                ScoreLevelsShowTheirPassMark();
             }
             finally
             {
@@ -813,6 +814,122 @@ namespace JellyGarden.Scripts.Story.Editor
             {
                 StoryLevelHud.Source = previous;
                 Object.DestroyImmediate(host);
+            }
+        }
+
+        /// <summary>
+        /// Pulling the score bar left a SCORE-mode level with nothing to read:
+        /// its only objective is a number the bar used to carry. The Target
+        /// panel now states that number and how close the player is to it.
+        ///
+        /// Driven from the shipped level data rather than a hand-built model, so
+        /// this fails if the levels and the HUD ever come apart.
+        /// </summary>
+        private static void ScoreLevelsShowTheirPassMark()
+        {
+            int scoreLevel = FirstLevelOfMode(Target.SCORE);
+            int otherLevel = FirstLevelOfMode(Target.BLOCKS);
+            Expect(scoreLevel > 0, "the shipped levels include a SCORE level");
+            Expect(otherLevel > 0, "the shipped levels include a non-SCORE level");
+            if (scoreLevel <= 0 || otherLevel <= 0) return;
+
+            var host = new GameObject("~StoryScoreHudTest");
+            global::System.Func<StoryLevelHud.HudModel> previous = StoryLevelHud.Source;
+            try
+            {
+                Canvas canvas = StoryUi.CreateOverlayCanvas("~ScoreHudCanvas");
+                canvas.transform.SetParent(host.transform, false);
+
+                StoryLevelHud.HudModel fresh = StoryLevelHud.ReadLevel(scoreLevel, 0);
+                Expect(fresh != null, "level " + scoreLevel + " has HUD data");
+                if (fresh == null) return;
+
+                StoryLevelHud.Source = () => fresh;
+                StoryLevelHud hud = StoryLevelHud.Build(canvas.transform, 1f);
+                hud.Refresh();
+
+                List<string> slots = hud.TargetTexts();
+                Expect(hud.VisibleTargetCount > 0, "a SCORE level's Target panel is not empty");
+                Expect(fresh.PassMark > 0,
+                    "a SCORE level has a pass mark (read " + fresh.PassMark + ")");
+                Expect(slots.Count > 0 && slots[0] == "0/" + fresh.PassMark,
+                    "a SCORE level reads have/need (read '" +
+                    string.Join(" ", slots.ToArray()) + "')");
+
+                Debug.Log("[Story] SCORE level " + scoreLevel + ": Target [" +
+                          string.Join(" ", slots.ToArray()) + "] " +
+                          hud.LimitTitleText + " " + hud.LimitText);
+
+                // Scoring has to move it: the bar was the only thing that did.
+                StoryLevelHud.HudModel scored = StoryLevelHud.ReadLevel(scoreLevel, 25);
+                StoryLevelHud.Source = () => scored;
+                hud.Refresh();
+                List<string> after = hud.TargetTexts();
+                Expect(after.Count > 0 && after[0] == "25/" + fresh.PassMark,
+                    "the panel states the score the player has (read '" +
+                    string.Join(" ", after.ToArray()) + "')");
+
+                // Past the mark it reads met, not overshot.
+                StoryLevelHud.HudModel passed =
+                    StoryLevelHud.ReadLevel(scoreLevel, fresh.PassMark + 500);
+                StoryLevelHud.Source = () => passed;
+                hud.Refresh();
+                Expect(hud.TargetTexts()[0] == fresh.PassMark + "/" + fresh.PassMark,
+                    "the panel stops at the pass mark (read '" + hud.TargetTexts()[0] + "')");
+                Expect(passed.Targets[0].Done, "the score target reports done at the mark");
+
+                // A non-SCORE level still lists the objectives it is really about.
+                StoryLevelHud.HudModel other = StoryLevelHud.ReadLevel(otherLevel, 0);
+                StoryLevelHud.Source = () => other;
+                hud.Refresh();
+                List<string> otherSlots = hud.TargetTexts();
+                Expect(hud.VisibleTargetCount > 0, "a non-SCORE level's Target panel is not empty");
+                Expect(otherSlots.Any(t => !t.Contains("/")),
+                    "a non-SCORE level still shows a plain collect count (read '" +
+                    string.Join(" ", otherSlots.ToArray()) + "')");
+
+                Debug.Log("[Story] non-SCORE level " + otherLevel + " (mode " +
+                          StoryLevelHud.ModeOf(otherLevel) + "): Target [" +
+                          string.Join(" ", otherSlots.ToArray()) + "] " +
+                          hud.LimitTitleText + " " + hud.LimitText);
+
+                // The strip still never names the score, on any level.
+                Expect(!TextsIn(hud.gameObject).Any(t => t.ToLowerInvariant().Contains("score")),
+                    "the strip never says 'score'");
+
+                // And no level anywhere draws an empty Target panel.
+                int empty = 0;
+                string firstEmpty = "none";
+                int levels = 0;
+                for (int level = 1; ; level++)
+                {
+                    StoryLevelHud.HudModel model = StoryLevelHud.ReadLevel(level, 0);
+                    if (model == null) break;
+                    levels++;
+                    if (model.Targets.Count > 0) continue;
+                    if (empty == 0) firstEmpty = level.ToString();
+                    empty++;
+                }
+                Expect(levels > 0, "the levels are on disk");
+                Expect(empty == 0, empty + " of " + levels +
+                                   " levels draw an empty Target panel (first: " + firstEmpty + ")");
+                Debug.Log("[Story] Target panel: " + levels +
+                          " levels checked, none empty.");
+            }
+            finally
+            {
+                StoryLevelHud.Source = previous;
+                Object.DestroyImmediate(host);
+            }
+        }
+
+        /// <summary>The lowest-numbered level whose MODE line is this one.</summary>
+        private static int FirstLevelOfMode(Target mode)
+        {
+            for (int level = 1; ; level++)
+            {
+                if (Resources.Load<TextAsset>("Levels/" + level) == null) return 0;
+                if (StoryLevelHud.ModeOf(level) == mode) return level;
             }
         }
 

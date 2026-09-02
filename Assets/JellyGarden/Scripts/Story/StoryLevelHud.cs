@@ -3,11 +3,18 @@
 // The kit's HUD is a score bar with three star markers along it, a score
 // counter and a move counter tucked underneath. Royal Match has none of that —
 // see docs/royal-match/11-level-hud.jpg. A level states what you must collect
-// and how many moves you have left, and the score is not shown at all, because
-// there is no score. Three panels across one blue strip:
+// and how many moves you have left. Three panels across one blue strip:
 //
 //     [ Target ]        (portrait)        [ Moves ]
 //       icons+counts       King Leo          35
+//
+// The kit still has a score, and every level it ships carries a Target.SCORE
+// entry that CheckWinLose insists on, so the score is a real objective and not
+// chrome. It is drawn as one more target — icon plus "have/need" against the
+// level's first star mark — rather than as the bar that used to carry it. On a
+// SCORE-mode level (176 of the 1209) that is the whole objective, which is why
+// the panel must state it: with the bar gone there is nothing else to read.
+// The strip still never uses the word "score".
 //
 // Every metric below was measured off that capture (828x1472) and scaled onto
 // the canvas the strip is built in. Horizontal positions are normalised anchors
@@ -54,6 +61,18 @@ namespace JellyGarden.Scripts.Story
             public Sprite Icon;
             public int Remaining;
             public bool Done;
+
+            /// <summary>
+            /// What the slot reads when a plain remaining count is not the whole
+            /// story. A score target sets this to "have/need"; null means "draw
+            /// <see cref="Remaining"/>", which is what a collect target wants.
+            /// </summary>
+            public string Text;
+
+            /// <summary>True for the level's score pass mark.</summary>
+            public bool IsScore;
+
+            public string Display { get { return Text ?? Remaining.ToString(); } }
         }
 
         /// <summary>
@@ -66,6 +85,13 @@ namespace JellyGarden.Scripts.Story
         {
             public string LimitTitle = "Moves";
             public string LimitValue = "0";
+
+            /// <summary>
+            /// The score the level must reach: LevelManager.star1, which
+            /// CheckWinLose tests on every level, not just the SCORE ones.
+            /// </summary>
+            public int PassMark;
+
             public readonly List<HudTarget> Targets = new List<HudTarget>();
         }
 
@@ -138,6 +164,15 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>The Moves (or Time) heading.</summary>
         public string LimitTitleText { get { return _limitTitle == null ? null : _limitTitle.text; } }
+
+        /// <summary>What each drawn target slot reads, in draw order.</summary>
+        public List<string> TargetTexts()
+        {
+            var texts = new List<string>();
+            for (int i = 0; i < _visibleSlots && i < _slots.Count; i++)
+                texts.Add(_slots[i].Count.text);
+            return texts;
+        }
 
         #endregion
 
@@ -412,22 +447,152 @@ namespace JellyGarden.Scripts.Story
                 ? string.Format("{0}:{1:00}", limit / 60, limit % 60)
                 : limit.ToString();
 
-            if (manager.targetObject != null)
+            AddTargets(model, manager.targetObject, manager.star1, LevelManager.Score);
+            return model;
+        }
+
+        /// <summary>
+        /// A score target reads as progress towards the pass mark rather than as
+        /// an amount still owed: "120/300" says both what the player has and what
+        /// the level wants, in the space one count would take. The word "score"
+        /// is deliberately not on the strip — Royal Match never names it, and the
+        /// number under the icon says everything the player has to know.
+        /// </summary>
+        public static string ScoreText(int have, int need)
+        {
+            return Mathf.Max(0, have) + "/" + Mathf.Max(0, need);
+        }
+
+        /// <summary>
+        /// Turns the kit's target list into slots, in the kit's own order — the
+        /// collect animation is aimed by index in <see cref="AimKitIconsAtThisHud"/>,
+        /// so reordering here would fly a matched piece at the wrong icon.
+        ///
+        /// Every level the kit ships carries a <see cref="Target.SCORE"/> entry,
+        /// and LevelManager.CheckWinLose requires it done like any other, so it
+        /// is a real objective on every level and is drawn as one. On a
+        /// SCORE-mode level it is the only objective there is — which is what
+        /// this is for: pulling the score bar left those levels with an icon and
+        /// a number that never moved. It now reads have/need and moves with the
+        /// score.
+        /// </summary>
+        private static void AddTargets(HudModel model, TargetObject[] targets, int star1, int score)
+        {
+            model.PassMark = Mathf.Max(0, star1);
+
+            if (targets != null)
             {
-                for (int i = 0; i < manager.targetObject.Length; i++)
+                for (int i = 0; i < targets.Length; i++)
                 {
-                    TargetObject target = manager.targetObject[i];
+                    TargetObject target = targets[i];
                     if (target == null) continue;
-                    model.Targets.Add(new HudTarget
-                    {
-                        Icon = target.icon,
-                        Remaining = Mathf.Max(0, target.GetCount()),
-                        Done = target.Done()
-                    });
+                    model.Targets.Add(Slotify(target, star1, score));
                 }
             }
 
+            // A level with no targets at all would draw an empty Target panel,
+            // which is the one thing this must never do. The pass mark is always
+            // there to fall back on: no level can be won below it.
+            if (model.Targets.Count == 0 && model.PassMark > 0)
+                model.Targets.Add(ScoreSlot(null, model.PassMark, score));
+        }
+
+        private static HudTarget Slotify(TargetObject target, int star1, int score)
+        {
+            if (target.type != Target.SCORE)
+            {
+                return new HudTarget
+                {
+                    Icon = target.icon,
+                    Remaining = Mathf.Max(0, target.GetCount()),
+                    Done = target.Done()
+                };
+            }
+
+            // The asset's own count and the level file's first star mark are the
+            // same number throughout the shipped data; star1 wins where they
+            // differ, because star1 is what CheckWinLose actually tests.
+            int need = star1 > 0 ? star1 : target.targetCount;
+            return ScoreSlot(target.icon, need, score);
+        }
+
+        private static HudTarget ScoreSlot(Sprite icon, int need, int score)
+        {
+            int have = Mathf.Clamp(score, 0, Mathf.Max(0, need));
+            return new HudTarget
+            {
+                Icon = icon != null ? icon : StoryUi.StarSprite,
+                Remaining = Mathf.Max(0, need - have),
+                Done = need > 0 && have >= need,
+                Text = ScoreText(have, need),
+                IsScore = true
+            };
+        }
+
+        /// <summary>
+        /// What a level's HUD would read, from the shipped data alone — no board
+        /// in the scene. The level file carries the mode, the limit and the star
+        /// marks; the Targets asset carries the objectives. Both are loaded the
+        /// same way LevelManager loads them, so this cannot drift from the level
+        /// the player would actually get.
+        /// </summary>
+        public static HudModel ReadLevel(int level, int score)
+        {
+            var text = Resources.Load<TextAsset>("Levels/" + level);
+            var asset = Resources.Load<TargetLevel>("Targets/Level" + level);
+            if (text == null || asset == null) return null;
+
+            int star1 = 0;
+            int limit = 0;
+            bool timed = false;
+            string[] lines = text.text.Split('\n');
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i].Trim();
+                if (line.StartsWith("STARS"))
+                {
+                    string[] marks = line.Substring("STARS".Length).Trim().Split('/');
+                    if (marks.Length > 0) int.TryParse(marks[0], out star1);
+                }
+                else if (line.StartsWith("LIMIT"))
+                {
+                    string[] parts = line.Substring("LIMIT".Length).Trim().Split('/');
+                    if (parts.Length > 1)
+                    {
+                        int type;
+                        timed = int.TryParse(parts[0], out type) && type == (int)LIMIT.TIME;
+                        int.TryParse(parts[1], out limit);
+                    }
+                }
+            }
+
+            var model = new HudModel();
+            model.LimitTitle = timed ? "Time" : "Moves";
+            model.LimitValue = timed
+                ? string.Format("{0}:{1:00}", limit / 60, limit % 60)
+                : limit.ToString();
+
+            var targets = new TargetObject[asset.targets.Count];
+            for (int i = 0; i < asset.targets.Count; i++) targets[i] = asset.targets[i].DeepCopy();
+            AddTargets(model, targets, star1, score);
             return model;
+        }
+
+        /// <summary>The level's MODE line: which objective the level is about.</summary>
+        public static Target ModeOf(int level)
+        {
+            var text = Resources.Load<TextAsset>("Levels/" + level);
+            if (text == null) return Target.SCORE;
+
+            string[] lines = text.text.Split('\n');
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string line = lines[i].Trim();
+                if (!line.StartsWith("MODE")) continue;
+                int mode;
+                if (int.TryParse(line.Substring("MODE".Length).Trim(), out mode)) return (Target)mode;
+            }
+            return Target.SCORE;
         }
 
         private void SyncTargets(List<HudTarget> targets)
@@ -455,7 +620,7 @@ namespace JellyGarden.Scripts.Story
                 // A finished target goes green rather than gaining a tick: the
                 // kit's font is not guaranteed to carry a check glyph, and a
                 // missing glyph renders as nothing at all.
-                SetText(_slots[i].Count, target.Remaining.ToString());
+                SetText(_slots[i].Count, target.Display);
                 _slots[i].Count.color = target.Done ? StoryUi.RoyalGreen : StoryUi.RoyalNavy;
             }
 
@@ -484,6 +649,13 @@ namespace JellyGarden.Scripts.Story
             count.offsetMin = Vector2.zero;
             count.offsetMax = Vector2.zero;
             slot.Count.fontStyle = FontStyle.Bold;
+
+            // A score target reads "120/300" where a collect target reads "4",
+            // and three targets share the card. Best fit lets the one number
+            // stay big and the seven-character one still fit its slot.
+            slot.Count.resizeTextForBestFit = true;
+            slot.Count.resizeTextMinSize = Mathf.Max(8, Mathf.RoundToInt(18f * _scale));
+            slot.Count.resizeTextMaxSize = Mathf.Max(9, Mathf.RoundToInt(52f * _scale));
 
             return slot;
         }

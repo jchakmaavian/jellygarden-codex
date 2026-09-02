@@ -36,7 +36,7 @@
       ],
       "priority": 2,
       "passes": true,
-      "notes": "StoryLevelHud draws the strip as a child of the kit's level canvas, so it inherits the kit's scaling, sort order and visibility. It attaches on LevelManager.OnLevelLoaded/OnStartPlay, not on scene load \u2014 LevelManager sets THIS in Start. The kit's score bar, star markers and counters are deactivated; the kit's Targets group is only faded to alpha 0, because TargetsGroup destroys its icons in OnDisable and LevelManager's collect animation flies to them. Those invisible icons are kept on the HUD's own slots so that animation still lands where the player is reading. The kit's pause button moved into the booster row's empty middle slot, which is the only place that draws above this HUD."
+      "notes": "StoryLevelHud draws the strip as a child of the kit's level canvas, so it inherits the kit's scaling, sort order and visibility. It attaches on LevelManager.OnLevelLoaded/OnStartPlay, not on scene load — LevelManager sets THIS in Start. The kit's score bar, star markers and counters are deactivated; the kit's Targets group is only faded to alpha 0, because TargetsGroup destroys its icons in OnDisable and LevelManager's collect animation flies to them. Those invisible icons are kept on the HUD's own slots so that animation still lands where the player is reading. The kit's pause button moved into the booster row's empty middle slot, which is the only place that draws above this HUD."
     },
     {
       "id": "US-003",
@@ -51,8 +51,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Every level the kit ships carries a Target.SCORE entry and LevelManager.CheckWinLose requires it done like any other, so the score is a real objective on all 1209 levels and the only one on the 176 MODE 0 levels. The HUD now draws it as a target reading have/need against star1 (clamped at the mark, green when met) instead of a static remaining count; the strip still never uses the word 'score'. StoryLevelHud.ReadLevel(level, score) builds the same model from Resources/Levels/N.txt plus Resources/Targets/LevelN.asset with no board in the scene, which is what the self-test drives and what the level popup (US-004) will reuse. Slot counts got best-fit sizing so '270/300' and '4' both fit. Proven in play mode: level 2 (SCORE) read 270/300 with 14 moves; level 1 (BLOCKS) read 100/100 plus 2. StoryScreenTests.ScoreLevelsShowTheirPassMark checks all 1209 levels for an empty Target panel and finds none."
     },
     {
       "id": "US-004",

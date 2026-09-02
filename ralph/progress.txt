@@ -90,6 +90,10 @@ against memory. The most important findings:
 - Board art: `tools/item_skin_royal.py` (installed).
 - Royal Match UI primitives: `StoryUi.Royal.cs` — `RoyalPanel`, `GreenButton`,
   `DoItButton`, `StarBadge`, `CreamCard`, `TopBar`. Build screens FROM these.
+- A level's goal WITHOUT a board in the scene:
+  `StoryLevelHud.ReadLevel(level, score)` / `StoryLevelHud.ModeOf(level)`.
+  Every level carries a `Target.SCORE` entry that `CheckWinLose` enforces, so
+  the score pass mark is a real goal on all 1209 levels — draw it, never hide it.
 
 ### Driving the open Editor (learned the hard way)
 The Editor does NOT recompile while it is in Play mode, and a menu-triggered
@@ -269,4 +273,80 @@ portrait and a Moves panel across one blue strip.
 - The Editor will not recompile while it is in Play mode, and screen tests run
   from the menu during Play mode fail for reasons that have nothing to do with
   the code. See the Codebase Patterns section.
+---
+
+## 2026-09-02 - US-003 - SCORE-mode levels get a visible target
+
+Removing the score bar in US-002 left the 176 `MODE 0` levels with an icon and a
+number that never moved. The Target panel now states the pass mark and how close
+the player is to it.
+
+### What was implemented
+- **The finding that shaped this.** Every one of the 1209 levels carries a
+  `Target.SCORE` entry in its `Targets/LevelN.asset`, with `targetCount ==
+  star1`, and `LevelManager.CheckWinLose` requires `targetObject.All(Done)` —
+  and the score entry's `Done()` is `Score >= star1`. So the score is not chrome
+  that could be hidden on non-SCORE levels: it is a real win condition on every
+  level, and the *only* one on the 176 SCORE levels.
+- `StoryLevelHud` draws a score target as `have/need` ("270/300") against
+  `LevelManager.star1`, clamped at the mark and green once met, instead of a
+  static remaining count. The strip still never uses the word "score".
+- `StoryLevelHud.ReadLevel(level, score)` — the same HudModel built from
+  `Resources/Levels/N.txt` (STARS, LIMIT) plus `Resources/Targets/LevelN.asset`,
+  with **no board in the scene**. `ModeOf(level)` reads the MODE line.
+  US-004's level popup needs exactly this to state a level's goal; it is here
+  rather than in the popup because the HUD is where the target model lives.
+- `HudModel.PassMark`, `HudTarget.Text` / `IsScore` / `Display`,
+  `StoryLevelHud.TargetTexts()` for tests.
+- Slot counts got `resizeTextForBestFit`, so "270/300" and "4" both fit whether
+  the card holds one slot or three.
+- `StoryScreenTests.ScoreLevelsShowTheirPassMark` drives the HUD from the
+  shipped data for one SCORE and one non-SCORE level, checks the number moves
+  with the score and stops at the mark, and sweeps **all 1209 levels** for an
+  empty Target panel.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryLevelHud.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs`
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md`
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> "All checks passed."
+- JellyGarden > Story > Run Screen Tests -> **"[Story] Screen tests passed."**:
+```
+[Story] SCORE level 2: Target [0/300] Moves 17
+[Story] non-SCORE level 1 (mode BLOCKS): Target [0/100 4] Moves 6
+[Story] Target panel: 1209 levels checked, none empty.
+```
+- Play mode, Game-view screenshots:
+  - level 2 (SCORE): Target = star icon over **270/300**, Moves 14.
+  - level 1 (BLOCKS): Target = **100/100** and **2**, Moves 4.
+
+### Learnings for future iterations
+- **Read the shipped data before believing the story.** "SCORE levels have no
+  target" was the premise; the assets say every level has a SCORE target and the
+  win check enforces it. One `python3` sweep over
+  `Resources/Levels/*.txt` + `Resources/Targets/*.asset` settled it in a minute
+  and changed the design. Mode counts: 176 SCORE, 276 COLLECT, 279 INGREDIENT,
+  478 BLOCKS.
+- **`Targets/*.asset` uses two field names for the same field.** The kit's
+  hand-authored assets say `count:`, the generated ones say `targetCount:`;
+  `[FormerlySerializedAs("count")]` on `TargetObject.targetCount` reconciles
+  them. A regex over the YAML must accept both or it silently finds nothing.
+- **Never reorder the HUD's target slots.** `AimKitIconsAtThisHud` matches the
+  kit's `TargetIcon`s to slots by index, so the model must keep
+  `LevelManager.targetObject` order. The asset order genuinely varies
+  (`('0','3')` on 415 levels, `('3','0')` on 63).
+- **To play a specific level in the Editor**, temporarily point
+  `StoryPowerupTest`'s `StoryFlow.LaunchLevel(1, 1)` at the level you want — it
+  is the only thing that drives the Editor to a board on its own. Cmd-P to stop,
+  patch, Cmd-R, wait ~30s for the domain reload, Cmd-P, wait ~30s, screenshot,
+  then `git checkout --` the file. There is no menu item for this.
+- **One osascript for focus + screencapture**, as the patterns section says, and
+  crop from the full-screen shot with PIL afterwards — the Game view sits at
+  roughly (1130,200)-(1510,340) in a 1920x1080 capture of this layout.
+- `resizeTextForBestFit` is the cheap answer whenever one slot has to hold both
+  a one-character and a seven-character number.
 ---
