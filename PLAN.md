@@ -133,6 +133,11 @@ The work:
 **Acceptance:** every level that can be won awards exactly one star; no screen
 shows a 2-of-3 or 3-of-3 rating; `validate_story.py` still reports 1209 stars.
 
+**Status: done** — `StoryOneStar` collapses `star2`/`star3` onto `star1`, hides
+the extra markers and caps `CheckStars`, through one marked hook. Confirmed on a
+live board: `Level 1: one star. Pass mark 100`. Phase 1.5 then removes the bar
+outright, which the captured HUD shows Royal Match has no equivalent of.
+
 #### 1.2 Universal powerups
 
 Today a special is per colour. `Item.cs` picks
@@ -155,6 +160,10 @@ Two layers, and they can land separately:
 **Acceptance:** a rocket formed by a green match is pixel-identical to one
 formed by a red match; a powerup is not consumed by an ordinary colour match.
 
+**Status: done** — the art is installed and the six slots are byte-identical;
+`Square.FindMoreMatches` now excludes powerups, and a converted piece appears in
+0 match groups on a live board.
+
 #### 1.3 Tap to fire, in place
 
 Today `Item.OnMouseDown` only begins a drag; a tap that does not become a drag
@@ -166,6 +175,9 @@ routines already do the work; this only gives them a new trigger.
 
 **Acceptance:** tapping a rocket, bomb or colour bomb fires it on its own cell,
 with the kit's existing explosion VFX; tapping a plain piece still does nothing.
+
+**Status: done** — verified on a live board, not headless: rocket across hit 8
+of 8, rocket up 4 of 4, bomb 8 of 8, each charging exactly one move.
 
 #### 1.4 Swipe to land, then fire
 
@@ -204,6 +216,49 @@ The response is to measure, not to regenerate:
 **Risk:** high, relative to everything else here. It is the only phase touching
 `Item.cs` and `LevelManager.cs`, and the only one whose result cannot be judged
 from a screenshot — it has to be played. Land the four rules as four commits.
+
+---
+
+### Phase 1.5 — The shell, as Royal Match actually does it
+
+Captured from a real device rather than remembered — eleven screens in
+[docs/royal-match/](docs/royal-match/), with the capture method written down
+because it was not obvious.
+
+Four findings change what gets built.
+
+**There is no score bar and no star rating inside a level.** The HUD is three
+panels: the target with its icon counts, the king's portrait, and a moves
+number. Nothing creeps toward three stars. This retires the rest of Phase 1.1 —
+the kit's bar is not restyled, it is removed from the story's levels. The one
+snag is the kit's SCORE-mode levels, which have no target to display and use
+`star1` as their pass mark; those need a target line of their own before the bar
+can go.
+
+**A star is a currency, not a grade.** Beat a level, get one star; spend it at
+⭐1 or ⭐2 a task. `StoryFlow.HandleWin` and `StoryProgress` already work exactly
+this way, so the economy needs no change at all.
+
+**The map is a list, not a path.** Areas is a vertical scroll of cards, each the
+room's art plus an `n/7` bar. There is no level map: the only level you can play
+is the next one, reached from a button on the home screen that names it
+("Level 16"). The kit's winding path and its 150 nodes have no counterpart, and
+`StoryMapExtender`'s work becomes optional rather than load-bearing.
+
+**Story beats are one illustration plus Play / Skip.** Not a dialogue run. That
+is a much cheaper target than the 30 authored arc-beat cutscenes assume, and it
+fits the placeholder contract in Phase 4 without changing it.
+
+Three screens to build, in this order:
+
+1. **Level page** — target icons + counts, portrait, moves. Delete the score bar.
+2. **Area page** — the room, a task list of `Do It ⭐N` rows, an `n/total` bar.
+   The story's `AreaScreen` is already this shape and mostly needs restyling.
+3. **Areas list** — a vertical scroll of 150 cards replacing the map, with the
+   map kept behind a flag until the list is proven.
+
+**Risk:** medium. It is the widest change by surface area, but none of it touches
+the board, the levels or the VFX.
 
 ---
 
