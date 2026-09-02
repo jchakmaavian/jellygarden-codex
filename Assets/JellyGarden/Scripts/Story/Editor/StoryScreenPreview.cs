@@ -25,6 +25,7 @@ namespace JellyGarden.Scripts.Story.Editor
         [MenuItem(Menu + "Open Areas List", true)]
         [MenuItem(Menu + "Open Areas List (locked area 100)", true)]
         [MenuItem(Menu + "Open Area Screen (area 1)", true)]
+        [MenuItem(Menu + "Open Area Screen (area 3)", true)]
         [MenuItem(Menu + "Open Area Screen (area 6)", true)]
         [MenuItem(Menu + "Close The Level", true)]
         [MenuItem(Menu + "Grant 3 Stars Here", true)]
@@ -73,6 +74,17 @@ namespace JellyGarden.Scripts.Story.Editor
         private static void OpenAreaOne()
         {
             Open(1);
+        }
+
+        /// <summary>
+        /// Area 3 — the first area drawn from a single restored plate rather
+        /// than a state per repair, and the only one in the shipping band whose
+        /// rows carry a Polish and a Restock glyph.
+        /// </summary>
+        [MenuItem(Menu + "Open Area Screen (area 3)")]
+        private static void OpenAreaThree()
+        {
+            Open(3);
         }
 
         /// <summary>Area 6 — seven tasks, enough rows to scroll the list.</summary>

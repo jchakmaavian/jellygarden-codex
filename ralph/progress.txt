@@ -1412,3 +1412,86 @@ no cut to a separate cutscene screen from the area page any more.
   `Preview > Buy The Next Repair`, with the screenshots taken inside the same
   osascript as the menu clicks.
 ---
+
+## 2026-09-02 - US-014 - Areas 1 to 5 content pass
+
+Areas 1-5 are today's deliverable, so they now get held to more than "the screen
+opens": every name, goal, task, price, icon and picture has to resolve, and the
+answer is a line per area in the log rather than an assertion someone has to go
+and read.
+
+### What was implemented
+- `StoryContentAudit` — a runtime audit over a band of areas. Per area it checks
+  the name, the goal line, the clue, the arc, the task list (labels, star costs,
+  and contiguous 1..n indexes, because `StoryProgress` pays by index and a gap
+  would strand the rest of the area), the icon each row will actually draw, the
+  artwork, and that the area's own levels fund its own repairs. Then it opens
+  the area screen and checks the row count. It logs:
+```
+[Story] area 1 'Castle Gates': 4 tasks, 4 stars, 4 levels, art state x5, icons Clear/Rebuild/Hang/Light. OK
+[Story] area 2 'Outer Courtyard': 5 tasks, 5 stars, 5 levels, art state x6, icons Clear/Rebuild/Hang/Water/Clear. OK
+[Story] area 3 'The Stables': 5 tasks, 6 stars, 6 levels, art restored, icons Clear/Rebuild/Rebuild/Polish/Restock. OK
+[Story] area 4 'Guard House': 5 tasks, 6 stars, 6 levels, art restored, icons Rebuild/Restock/Rebuild/Hang/Light. OK
+[Story] area 5 'Entrance Hall': 6 tasks, 8 stars, 8 levels, art restored, icons Clear/Rebuild/Hang/Polish/Rebuild/Polish. OK
+[Story] Content audit, areas 1-5: 5 areas, 25 tasks, 29 stars, 0 problem(s).
+```
+- **Missing art is now provable.** A miss warns once and falls back, so the
+  screen still draws and nothing else notices. `StoryArt.WarnedKeys` and
+  `StoryUi.WarnedSprites` expose those sets; the audit clears both first and
+  reports whatever its own run provoked as a problem.
+- **Two area-3 tasks were drawing the generic cog.** "Muck out the stalls" and
+  "Re-oil the harnesses" fell through `RepairWork.Classify`. Added the needles
+  `"muck"` (Clear) and `"re-oil"` (Polish) — story-wide that is 58 generic tasks
+  down to 56, and zero in areas 1-5. `"oil"` was rejected: it catches "Fix the
+  boiler" and "Repair the boilers".
+- Run from three places: `JellyGarden > Story > Audit Shell Areas`, inside
+  `StorySmokeTest.Check`, and as the `ShellAreasHaveEverythingTheyNeed` screen
+  test — which additionally pins the arithmetic (25 repairs, 29 stars) so a
+  regenerated `arc1.json` that quietly changes what ships fails.
+- `Preview > Open Area Screen (area 3)`: the first shipping area drawn from a
+  single restored plate rather than a state per repair, and the only one whose
+  rows carry a Polish and a Restock glyph.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryContentAudit.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/StoryArt.cs`
+- `Assets/JellyGarden/Scripts/Story/StoryUi.cs`
+- `Assets/JellyGarden/Scripts/Story/RepairWork.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StorySmokeTest.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenPreview.cs`
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md`
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/validate_story.py` -> 150 areas / 807 tasks / 1209 stars / 1209 boards
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `JellyGarden > Story > Run Screen Tests` -> **"[Story] Screen tests passed."**,
+  with `[Story] Area 1 (Castle Gates) restored.` in the run (so it was not a void
+  Play-mode run) and the six audit lines above.
+- `JellyGarden > Story > Run Full Smoke Test` -> **"[Story] Smoke test passed."**,
+  the audit lines, and the 150-area playthrough.
+- No `No art for '...'` warning anywhere in either run.
+- Play mode, `Preview > Open Area Screen (area 3)`: "The Stables" with its goal
+  line over the restored plate under the neglect wash, Area Progress 0/5, and
+  "Muck out the stalls" now carrying the rubble glyph instead of the cog.
+
+### Learnings for future iterations
+- **A fallback is the enemy of an audit.** Everything in this layer degrades
+  gracefully — art falls back to the arc backdrop, a sprite falls back to flat
+  colour, an unclassified task falls back to a cog — so a screen with nothing
+  authored for it looks fine and passes every assertion. Auditing content means
+  reading the *fallback* paths, not the render: expose the warned-key sets and
+  treat a fallback as the failure it is.
+- **The generic branch of a classifier is a content gap, not a default.**
+  `RepairWorkType.General` draws a cog and 56 of 807 tasks still take it. Inside
+  a band that ships, that has to fail; outside it, 7% is the accepted rate.
+- **Check a new classifier needle against all 807 labels before adding it.**
+  `"oil"` reads well and hijacks "Fix the boiler". The clauses are ordered too,
+  so a needle must be checked against every clause above the one it goes in.
+- **Task indexes are load-bearing.** `StoryProgress` pays for tasks by `Index`
+  and the repair order is the list order, so a non-contiguous index would strand
+  the rest of an area — cheap to check, invisible otherwise.
+- Running two editor suites back to back is fine as long as neither is in Play
+  mode; the full smoke test takes ~60s, the screen tests ~25s.
+---

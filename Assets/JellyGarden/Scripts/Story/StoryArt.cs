@@ -111,6 +111,16 @@ namespace JellyGarden.Scripts.Story
             return portrait;
         }
 
+        /// <summary>
+        /// The keys that have fallen back so far. A miss warns instead of
+        /// failing, so a screen still draws — which means the only way to prove
+        /// an area's art is complete is to read what warned.
+        /// </summary>
+        public static IEnumerable<string> WarnedKeys
+        {
+            get { return _warned; }
+        }
+
         private static void WarnOnce(string key)
         {
             if (!_warned.Add(key)) return;

@@ -92,6 +92,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 BottomNavIsFiveTabsAcrossTheShell();
                 AreasListCoversEveryArea();
                 ShellHasNoDeadEnds();
+                ShellAreasHaveEverythingTheyNeed();
             }
             finally
             {
@@ -2004,6 +2005,47 @@ namespace JellyGarden.Scripts.Story.Editor
                 GameObject go = GameObject.Find(name);
                 if (go != null) Object.DestroyImmediate(go);
             }
+        }
+
+        /// <summary>
+        /// Areas 1-5 are what ships, so they get held to more than "it opens":
+        /// every name, goal, task, price, icon and picture has to resolve, and
+        /// nothing may warn about missing art on the way past. The audit logs a
+        /// line per area whether or not it passes — the log is the deliverable
+        /// here as much as the assertion is.
+        /// </summary>
+        private static void ShellAreasHaveEverythingTheyNeed()
+        {
+            List<string> problems = StoryContentAudit.RunForTheShell();
+            for (int i = 0; i < problems.Count; i++) Fail(problems[i]);
+
+            List<StoryAreaReport> reports = StoryContentAudit.Audit(
+                StoryContentAudit.ShellFirstArea, StoryContentAudit.ShellLastArea, false);
+
+            Expect(reports.Count == 5, "the shell audits five areas (" + reports.Count + ")");
+
+            int tasks = 0, stars = 0;
+            foreach (StoryAreaReport report in reports)
+            {
+                tasks += report.TaskCount;
+                stars += report.StarCost;
+
+                // Every task's icon has to be named, or the row draws the generic
+                // cog and the audit's own line would not show it.
+                Expect(report.IconSources.Count == report.TaskCount,
+                    "area " + report.AreaId + " names an icon for each of its tasks");
+                Expect(!report.IconSources.Contains(RepairWorkType.General.ToString()),
+                    "area " + report.AreaId + " has no task falling through to a generic icon");
+                Expect(report.ArtSource != "arc backdrop",
+                    "area " + report.AreaId + " has artwork of its own");
+            }
+
+            // The story's own arithmetic, so a regenerated arc1.json that quietly
+            // changes what ships fails here.
+            Expect(tasks == 25, "areas 1-5 carry 25 repairs (" + tasks + ")");
+            Expect(stars == 29, "areas 1-5 cost 29 stars (" + stars + ")");
+
+            AreaScreen.Close();
         }
 
         private static void Expect(bool condition, string what)

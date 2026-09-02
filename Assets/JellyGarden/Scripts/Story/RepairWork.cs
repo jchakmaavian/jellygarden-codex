@@ -9,6 +9,9 @@
 //
 // The classifier reads the whole label, not just the first word, because
 // "Clear the flooded corridor" is water and "Clear the last rubble" is stone.
+// Which also means a new needle has to be checked against all 807 labels before
+// it is added: "oil" would have caught "Fix the boiler", so the needle is
+// "re-oil".
 
 using System;
 
@@ -53,7 +56,7 @@ namespace JellyGarden.Scripts.Story
                     : RepairWorkType.Light;
 
             if (ContainsAny(text, "haul", "clear", "sweep", "cut", "dig", "remove",
-                    "rubble", "debris", "weed", "ivy", "ash", "clean out"))
+                    "rubble", "debris", "weed", "ivy", "ash", "clean out", "muck"))
                 return RepairWorkType.Clear;
 
             if (ContainsAny(text, "break", "force", "fight", "smash", "batter", "ram"))
@@ -67,8 +70,10 @@ namespace JellyGarden.Scripts.Story
                     "sow", "provision"))
                 return RepairWorkType.Restock;
 
+            // "re-oil", not "oil": "Fix the boiler" is rebuilding a boiler, not
+            // dressing leather.
             if (ContainsAny(text, "polish", "restore", "clean", "recover", "scrub",
-                    "shine", "wash"))
+                    "shine", "wash", "re-oil"))
                 return RepairWorkType.Polish;
 
             if (ContainsAny(text, "repair", "rebuild", "fix", "shore", "repave",

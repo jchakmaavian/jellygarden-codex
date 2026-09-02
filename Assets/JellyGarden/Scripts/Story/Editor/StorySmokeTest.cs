@@ -18,6 +18,19 @@ namespace JellyGarden.Scripts.Story.Editor
 {
     public static class StorySmokeTest
     {
+        /// <summary>
+        /// Areas 1-5 on their own, with a line per area in the log. The full
+        /// smoke test walks all 150 and says nothing about any of them; this is
+        /// the one to run while the shell's five areas are the deliverable.
+        /// </summary>
+        [MenuItem("JellyGarden/Story/Audit Shell Areas")]
+        public static void AuditShellAreas()
+        {
+            List<string> problems = StoryContentAudit.RunForTheShell();
+            for (int i = 0; i < problems.Count; i++) Debug.LogError("[Story] " + problems[i]);
+            if (problems.Count == 0) Debug.Log("[Story] Shell content audit passed.");
+        }
+
         [MenuItem("JellyGarden/Story/Run Full Smoke Test")]
         public static void Run()
         {
@@ -67,6 +80,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 StoryProgress.ResetAll();
 
                 CheckTotals(failures);
+                CheckShellContent(failures);
                 CheckEveryArea(failures);
                 CheckWholeGameIsReachable(failures);
             }
@@ -101,6 +115,17 @@ namespace JellyGarden.Scripts.Story.Editor
                     StoryDatabase.TotalStars, StoryLevelPlan.LevelCount));
             if (StoryTheme.Count != 6)
                 failures.Add("expected 6 arc themes, loaded " + StoryTheme.Count);
+        }
+
+        /// <summary>
+        /// The areas that ship get a stricter pass than the other 145 and put a
+        /// line each in the log, so a batchmode run says what areas 1-5 contain
+        /// rather than only that nothing threw.
+        /// </summary>
+        private static void CheckShellContent(List<string> failures)
+        {
+            failures.AddRange(StoryContentAudit.RunForTheShell());
+            AreaScreen.Close();
         }
 
         private static void CheckEveryArea(List<string> failures)

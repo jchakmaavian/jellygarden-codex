@@ -147,6 +147,22 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
+        /// The sprite names that were missing and fell back to flat colour. A
+        /// fallback draws, so nothing else notices; StoryContentAudit reads this
+        /// to fail on one rather than shipping it.
+        /// </summary>
+        public static IEnumerable<string> WarnedSprites
+        {
+            get { return _warned; }
+        }
+
+        /// <summary>Test hook — forgets what has warned, so the next run reports its own.</summary>
+        public static void ClearSpriteWarnings()
+        {
+            _warned.Clear();
+        }
+
+        /// <summary>
         /// A full-screen canvas that sorts above the kit's UI. Story screens are
         /// modal, so they own their own canvas rather than fighting for a slot in
         /// the kit's hierarchy.

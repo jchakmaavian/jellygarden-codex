@@ -187,6 +187,38 @@ and the price check live behind `AreaScreen.OnRepair`, and a preview that
 reaches past them into `StoryRepair` is previewing something the player cannot
 do. Same rule as pressing the X rather than calling `Close()`.
 
+### Auditing what actually ships
+
+`StoryContentAudit` answers a question neither `validate_story.py` (the files
+agree) nor `StorySmokeTest` (all 150 open without throwing) asks: for the areas
+that ship, does *every* thing the player looks at resolve — name, goal, each
+task with a price and an icon, the room's picture, the clue's picture — and did
+anything warn about missing art on the way past.
+
+It logs **one line per area** and a summary, and it is run from three places:
+`JellyGarden > Story > Audit Shell Areas`, inside `StorySmokeTest.Check`, and as
+the `ShellAreasHaveEverythingTheyNeed` screen-test case. The band is a
+parameter; `ShellFirstArea..ShellLastArea` is only today's default.
+
+Two things it relies on, both worth keeping:
+
+- **A missing asset warns and falls back rather than failing**, so the screen
+  still draws and nobody notices the arc backdrop standing in for a room. The
+  only way to prove art is complete is to read what warned, so `StoryArt` and
+  `StoryUi` both expose their warned-key sets (`StoryArt.WarnedKeys`,
+  `StoryUi.WarnedSprites`) and the audit clears them first and reports whatever
+  the run provoked.
+- **A task with no authored art still draws** — `StoryUi.TaskIcon` falls through
+  to the glyph for `RepairWorkType.General`, a cog. That is a content gap in a
+  shipping area even though every assertion about the row passes, so the audit
+  treats General as a problem inside its band.
+
+**A new `RepairWork.Classify` needle must be checked against all 807 labels
+before it is added.** `"oil"` would have caught "Fix the boiler" and "Repair the
+boilers" and sent them to Polish; the needle that works is `"re-oil"`. The
+clauses are ordered, so a needle also has to be checked against every clause
+above the one it goes in.
+
 ## The Royal Match screen kit
 
 `StoryUi` is a **partial class**. The generic builders — canvas, rect, text,
