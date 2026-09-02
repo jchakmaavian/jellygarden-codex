@@ -69,8 +69,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "StoryLevelPopup.Open(level, areaId, onClose) builds a RoyalPanel titled 'Level N' over a cream Goal card of icon+count slots and a large green Play. The goal comes from StoryLevelHud.ReadLevel(level, 0) — at score zero every HudTarget.Remaining is the whole of what the level asks for — so the popup and the in-level HUD read the same model and cannot disagree. Play calls StoryFlow.LaunchLevel; the X calls onClose, which the area screen passes as AreaScreen.Open(areaId), so the popup has a way back. StoryLevelPopup.Launcher is the test seam, in the shape of StoryLevelHud.Source. The blue gap under the Goal card is where US-005's booster row goes. This surfaced a RoyalPanel bug: the title was inset 110px on all four sides of a 210px plate, so every panel ever built drew an invisible title; fixed, and the primitives test now asserts the title rect has positive height."
     },
     {
       "id": "US-005",

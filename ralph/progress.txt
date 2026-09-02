@@ -118,6 +118,13 @@ raise Unity and take the shot inside ONE osascript
 ### Two shell-specific rules
 - **Sample colours from `docs/royal-match/*.jpg` with PIL; never invent one.**
   The JPGs are 828x1472, the canvas reference is 1080x1920 — scale by 1.304.
+- **A screen is not verified until it has been screenshotted in play mode.**
+  Editor tests check strings; a rect of negative height passes every one of them
+  and draws nothing. `Stretch(rect, padding)` pads all four sides — a padding
+  over half the parent's height deletes the content silently.
+- **Give a new screen a static test seam** (`StoryLevelHud.Source`,
+  `StoryLevelPopup.Launcher`): a `Func`/`Action` that is null in the game and
+  swapped by a test, so the screen can be driven with no board in the scene.
 - **Run editor tests through the Unity menu, not batchmode**, while the Editor
   holds the project lock. `JellyGarden > Story > Run Screen Tests` — note there
   are two top-level menus and the story's is the one WITHOUT a space.
@@ -349,4 +356,85 @@ the player is to it.
   roughly (1130,200)-(1510,340) in a 1920x1080 capture of this layout.
 - `resizeTextForBestFit` is the cheap answer whenever one slot has to hold both
   a one-character and a seven-character number.
+---
+
+## 2026-09-02 - US-004 - Level start popup: title and goal
+
+The card Royal Match shows before a board opens: which level it is, what it
+wants, and Play.
+
+### What was implemented
+- `StoryLevelPopup.Open(level, areaId, onClose)` — a `StoryUi.RoyalPanel` titled
+  "Level N", a cream Goal card holding a sunken row of icon+count slots, and a
+  large green Play. Built on first use and reused, in the shape of `AreaScreen`.
+- **The goal comes from `StoryLevelHud.ReadLevel(level, 0)`**, the model US-003
+  already built for exactly this. At score zero each `HudTarget.Remaining` is the
+  whole of what the level asks for — the pass mark on the score target, the count
+  on a collect one — so no second reader of the shipped data exists and the popup
+  cannot drift from the HUD.
+- Play → `StoryFlow.LaunchLevel(level, areaId)`. The X → `onClose`, which the
+  area screen passes as `AreaScreen.Open(areaId)`.
+- `AreaScreen.OnPlay` now opens the popup instead of launching straight into the
+  board, which is what makes the popup reachable in play mode at all.
+- `StoryLevelPopup.Launcher` — the test seam, deliberately the same shape as
+  `StoryLevelHud.Source`.
+- No move count anywhere on it; the test asserts the popup never says "move",
+  "time" or "score".
+- **Fixed a RoyalPanel bug this surfaced.** `RoyalPanel`'s title was
+  `Stretch(rect, 110f)` inside a 210px-tall plate, i.e. a rect of height -10, so
+  every panel ever built drew an invisible title. The play-mode screenshot is
+  what caught it; the primitives test now asserts the title rect has a positive
+  height after `Canvas.ForceUpdateCanvases()`.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryLevelPopup.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/StoryUi.Royal.cs` (title rect)
+- `Assets/JellyGarden/Scripts/Story/AreaScreen.cs` (Play opens the popup)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs` (new case + guard)
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md` ("The level start popup")
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> "All checks passed."
+- JellyGarden > Story > Run Screen Tests -> **"[Story] Screen tests passed."**:
+```
+[Story] Level popup: Level 12 for area 1, goal [1000 3 1].
+[Story] Level popup: 'Level 12' goal [1000 3 1], no moves shown.
+[Story] Level popup: closed without playing level 12.
+[Story] Level popup: Level 12 for area 3, goal [1000 3 1].
+[Story] Level popup: Play pressed for level 12, area 3.
+```
+- Play mode, Game-view screenshot: the panel reads **Level 12** over a Goal card
+  of a star **1000**, a locket **3** and a ring **1**, with Play below it, the red
+  X on the plate, and no moves count.
+
+### Learnings for future iterations
+- **A stretched rect can have negative height, and a negative rect draws
+  nothing.** `Stretch(rect, padding)` pads all four sides, so a padding larger
+  than half the parent's height silently deletes the content. `Text.text` was
+  right the whole time; only the screenshot showed the title was never on
+  screen. Assert `rectTransform.rect.height > 0` after
+  `Canvas.ForceUpdateCanvases()` on anything whose only proof is that a string
+  is correct.
+- **The play-mode screenshot is not a formality.** Every editor test passed
+  against a panel with no visible title. Take the screenshot before believing a
+  screen is done.
+- **Read the model that already exists.** US-003 left `ReadLevel(level, score)`
+  behind for this story and it needed nothing added — `Remaining` at score 0 is
+  exactly "what the level asks for". Check what the previous story built before
+  writing a second reader of the same data.
+- **Give a screen a test seam for the thing it cannot do in an editor test.**
+  `StoryLevelPopup.Launcher` copies `StoryLevelHud.Source`; both let a screen be
+  driven with no board. It is now the house pattern — use it rather than
+  invoking `StoryFlow.LaunchLevel` from a test, which would write PlayerPrefs.
+- **A new screen must be wired to something, or there is nothing to screenshot.**
+  Opening the popup from `AreaScreen.OnPlay` was a one-line change and it is the
+  only reason play-mode verification was possible.
+- To drive the Editor to a screen with no board, temporarily replace
+  `StoryPowerupTest`'s `StoryFlow.LaunchLevel(1, 1)` with the `Open` call and a
+  `yield break`, then `git checkout --` the file. Same trick as US-003, and it
+  works for a screen as well as for a level.
+- The blue gap between the Goal card and Play is reference-faithful, not a
+  mistake: it is where US-005's "Select Boosters:" row goes. Do not close it.
 ---
