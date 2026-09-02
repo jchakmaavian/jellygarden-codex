@@ -129,7 +129,10 @@ namespace JellyGarden.Scripts
             if (this.item.destroying)
                 return countedSquares;
             //    if (LevelManager.THIS.countedSquares.ContainsValue(this.item) && globalCounter) return countedSquares;
-            if (this.item.color == spr_COLOR && !countedSquares.ContainsValue(this.item) && this.item.currentType != ItemsTypes.INGREDIENT && item.currentType != ItemsTypes.BOMB)
+            // Universal powerups are colour independent: they are fired by tapping or
+            // by landing, never by being matched. The kit already excluded the colour
+            // bomb here; the rocket and the bomb now join it. STORY: added.
+            if (this.item.color == spr_COLOR && !countedSquares.ContainsValue(this.item) && this.item.currentType != ItemsTypes.INGREDIENT && item.currentType != ItemsTypes.BOMB && !Item.IsUniversalPowerup(this.item))
             {  //2.0
                 if (LevelManager.THIS.onlyFalling && this.item.justCreatedItem)
                     countedSquares.Add(countedSquares.Count - 1, this.item);

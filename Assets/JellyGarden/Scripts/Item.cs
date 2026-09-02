@@ -840,6 +840,62 @@ namespace JellyGarden.Scripts
             animationFinished = true;
         }
 
+        #region Universal powerups   // STORY: added
+
+        /// <summary>
+        /// A powerup that belongs to no colour. Under the story's rules these are
+        /// fired by tapping them or by landing them, never by being matched, so
+        /// they are excluded from the colour search in Square.FindMoreMatches.
+        /// The kit already treated the colour bomb this way; the rocket and the
+        /// bomb now behave the same.
+        /// </summary>
+        public static bool IsUniversalPowerup(Item item)
+        {
+            if (item == null)
+                return false;
+            return item.currentType == ItemsTypes.HORIZONTAL_STRIPPED
+                || item.currentType == ItemsTypes.VERTICAL_STRIPPED
+                || item.currentType == ItemsTypes.PACKAGE
+                || item.currentType == ItemsTypes.BOMB;
+        }
+
+        /// <summary>Whether a tap on this item should fire it where it sits.</summary>
+        public bool CanTapActivate()
+        {
+            if (destroying || falling || square == null)
+                return false;
+            if (LevelManager.THIS == null || LevelManager.THIS.DragBlocked)
+                return false;
+            if (LevelManager.THIS.gameStatus != GameState.Playing)
+                return false;
+            // The colour bomb needs a colour to eat, which a tap cannot supply.
+            // It keeps the kit's swap-to-activate.
+            return currentType == ItemsTypes.HORIZONTAL_STRIPPED
+                || currentType == ItemsTypes.VERTICAL_STRIPPED
+                || currentType == ItemsTypes.PACKAGE;
+        }
+
+        /// <summary>
+        /// Fire this powerup on its own square. DestroyCor already routes by type
+        /// to DestroyHorizontal, DestroyVertical or DestroyPackage with the kit's
+        /// own sounds and particles, so this only has to supply the trigger and
+        /// charge a move for it.
+        /// </summary>
+        public bool TapActivate()
+        {
+            if (!CanTapActivate())
+                return false;
+
+            if (LevelManager.THIS.limitType == LIMIT.MOVES && LevelManager.THIS.Limit > 0)
+                LevelManager.THIS.Limit--;
+
+            DestroyItem(true);
+            LevelManager.THIS.FindMatches();
+            return true;
+        }
+
+        #endregion
+
         #region Destroying
 
         public void DestroyItem(bool showScore = false, string anim_name = "", bool explEffect = false)
@@ -1098,9 +1154,15 @@ namespace JellyGarden.Scripts
 
         public void OnMouseUp()
         {
+            // A mouse-up that never picked a direction is a tap, not a swipe.
+            // On a universal powerup that fires it where it sits. STORY: added.
+            bool wasTap = dragThis && switchDirection == Vector3.zero;
+
             dragThis = false;
             if (switchDirection != Vector3.zero)
                 ResetDrag();
+            else if (wasTap)
+                TapActivate();
         }
 
         public void OnMouseDrag()

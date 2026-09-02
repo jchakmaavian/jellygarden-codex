@@ -42,6 +42,7 @@ namespace JellyGarden.Scripts.Story
             StoryMusic.Install();
             StoryBoardTheme.Install();
             StoryMapLabels.Install();
+            StoryPowerupTest.Install();
         }
     }
 }
