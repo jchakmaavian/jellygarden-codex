@@ -14,6 +14,13 @@ Six checks:
                 what "universal powerup" means on disk
   distinct      every pair of the six base pieces is far enough apart when
                 shrunk to tile size; both by colour and by silhouette
+  powerups      every powerup is far enough from every base piece, and from
+                every other powerup — a bomb that reads like a cannon, or a ram
+                that reads like a key, is the same failure one level up
+  blockers      nothing on the board reads like the board's own furniture —
+                the wooden solidBlock, the jellies, the ice, the stone and the
+                spreading choco tile. A wooden battering ram next to a row of
+                wooden timbers is exactly the trap this catches
   colour        each base piece still matches the hue its explosion particles
                 are tinted with, since those are keyed to the item index
   contrast      each piece stands off the board's own dark cell texture
@@ -201,6 +208,46 @@ def main():
                 warnings.append("%s and %s are close in colour (%.0f); they are "
                                 "told apart by silhouette alone (%.2f)" % (a, b, cd, sd))
 
+    # ---- powerups against pieces, and against each other --------------
+    POWERUPS = [("item_01_stripes_horiz", "ram across"),
+                ("item_01_stripes_vert", "ram up"),
+                ("item_01_extra", "bomb"),
+                ("candy10_choco", "colour bomb"),
+                ("ingredient_01", "locket"),
+                ("ingredient_02", "ring")]
+
+    ptiles = {label: at_tile(images[name]) for name, label in POWERUPS
+              if name in images}
+
+    for label, ptile in ptiles.items():
+        for base in BASE:
+            cd = colour_distance(ptile, tiles[base])
+            sd = shape_distance(ptile, tiles[base])
+            if cd < MIN_COLOUR_DISTANCE and sd < MIN_SHAPE_DISTANCE:
+                failures.append(
+                    "the %s reads like %s at %dpx: colour %.0f, shape %.2f"
+                    % (label, base, TILE_PX, cd, sd))
+
+    pworst = []
+    for label, ptile in ptiles.items():
+        near = min((colour_distance(ptile, tiles[b]), shape_distance(ptile, tiles[b]), b)
+                   for b in BASE)
+        pworst.append((near[0], near[1], label, near[2]))
+
+    plabels = list(ptiles)
+    for i in range(len(plabels)):
+        for j in range(i + 1, len(plabels)):
+            a, b = plabels[i], plabels[j]
+            cd = colour_distance(ptiles[a], ptiles[b])
+            sd = shape_distance(ptiles[a], ptiles[b])
+            if cd < MIN_COLOUR_DISTANCE and sd < MIN_SHAPE_DISTANCE:
+                failures.append(
+                    "the %s and the %s are too alike at %dpx: colour %.0f, shape %.2f"
+                    % (a, b, TILE_PX, cd, sd))
+            elif cd < MIN_COLOUR_DISTANCE:
+                warnings.append("the %s and the %s are close in colour (%.0f); "
+                                "silhouette separates them (%.2f)" % (a, b, cd, sd))
+
     # ---- hue matches the particle tint --------------------------------
     hues = {}
     for name in BASE:
@@ -225,6 +272,28 @@ def main():
             warnings.append("%s and %s sit %.0f° apart in hue"
                             % (ordered[k][1], ordered[k + 1][1], gap))
 
+    # ---- against the board's own furniture ----------------------------
+    blocks_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..",
+                              "Assets", "JellyGarden", "Textures", "Blocks")
+    BLOCKERS = ["solidBlock", "block", "block_02", "wireBlock",
+                "undestroyable", "thriving_block"]
+    blockers = {}
+    for name in BLOCKERS:
+        path = os.path.join(blocks_dir, name + ".png")
+        if os.path.exists(path):
+            blockers[name] = at_tile(Image.open(path).convert("RGBA"))
+
+    bworst = []
+    if blockers:
+        for label, tile_data in list(ptiles.items()) + [(n, tiles[n]) for n in BASE]:
+            near = min((colour_distance(tile_data, b), shape_distance(tile_data, b), n)
+                       for n, b in blockers.items())
+            bworst.append((near[0], near[1], label, near[2]))
+            if near[0] < MIN_COLOUR_DISTANCE and near[1] < MIN_SHAPE_DISTANCE:
+                failures.append(
+                    "the %s reads like the %s blocker at %dpx: colour %.0f, shape %.2f"
+                    % (label, near[2], TILE_PX, near[0], near[1]))
+
     # ---- contrast against the board -----------------------------------
     cell_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..",
                              "Assets", "JellyGarden", "Textures", "Blocks",
@@ -243,11 +312,12 @@ def main():
                 failures.append("%s only stands %.0f off the board cell (need %.0f)"
                                 % (name, contrast, MIN_BOARD_CONTRAST))
 
-    report(failures, warnings, worst, hues)
+    report(failures, warnings, worst, hues, pworst, bworst)
     return 1 if failures else 0
 
 
-def report(failures, warnings, worst=None, hues=None):
+def report(failures, warnings, worst=None, hues=None, pworst=None,
+           bworst=None):
     if hues:
         print("hue of each piece, against the tint of its explosion particles")
         for name in BASE:
@@ -265,6 +335,22 @@ def report(failures, warnings, worst=None, hues=None):
         print("closest pairs at %dpx (colour distance, silhouette difference)" % TILE_PX)
         for cd, sd, a, b in worst[:4]:
             print("  %-8s vs %-8s  colour %5.1f   shape %.2f" % (a, b, cd, sd))
+        print()
+
+    if pworst:
+        pworst.sort()
+        print("each powerup against its nearest of the six")
+        for cd, sd, label, base in pworst:
+            print("  %-12s nearest %-8s  colour %5.1f   shape %.2f"
+                  % (label, base, cd, sd))
+        print()
+
+    if bworst:
+        bworst.sort()
+        print("closest thing on the board to each piece's own furniture")
+        for cd, sd, label, blocker in bworst[:4]:
+            print("  %-12s nearest %-14s colour %5.1f   shape %.2f"
+                  % (label, blocker, cd, sd))
         print()
 
     for line in warnings:

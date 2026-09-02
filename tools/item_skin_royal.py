@@ -13,8 +13,11 @@ That means **twelve distinct images fill twenty-seven filenames**:
                       pennant green, crown yellow — kit colour order, which is
                       load-bearing because the explosion particle textures are
                       tinted per item index
-    two rockets       item_01..06_stripes_horiz are all the same file, and so
-                      are all six _stripes_vert
+    two rams          the line clear is a battering ram, drawn twice — lying
+                      down for the row, standing up for the column. The vertical
+                      one is drawn, not rotated: a rotated ram puts its iron
+                      head where the light does not fall. item_01..06_stripes_horiz
+                      are all the same file, and so are all six _stripes_vert
     one bomb          all six _extra are the same file
     one colour bomb   candy10_choco
     two collectibles  ingredient_01, ingredient_02
@@ -55,8 +58,8 @@ PIECES = [
 
 # A powerup is one image, repeated across all six colour slots.
 UNIVERSAL = [
-    ("_stripes_horiz", "arrow_h", 116),
-    ("_stripes_vert", "arrow_v", 116),
+    ("_stripes_horiz", "ram_h", 120),
+    ("_stripes_vert", "ram_v", 120),
     ("_extra", "bomb", 112),
 ]
 
