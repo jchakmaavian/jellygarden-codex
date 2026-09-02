@@ -184,6 +184,36 @@ kit's score bar. Four things about it are not obvious:
   `LevelManager.targetObject` order or the collect animation flies to the wrong
   icon. The asset order varies by level (`('0','3')` and `('3','0')` both occur).
 
+## The level start popup
+
+`StoryLevelPopup.Open(level, areaId, onClose)` is the "Level N / Goal / Play"
+card. It is opened from the area screen's Play button, and `onClose` is what its
+red X goes back to — pass the screen that opened it, or the player lands nowhere.
+
+- **Its goal comes from `StoryLevelHud.ReadLevel(level, 0)`,** not from a second
+  reader. At score zero every `HudTarget.Remaining` is the whole of what the
+  level asks for: the pass mark on the score target, the count on a collect one.
+  The popup and the in-level HUD therefore cannot disagree about a level.
+- **No move count belongs on it.** Royal Match states the goal and nothing else
+  before the board opens; a number to fear is the board's job to reveal. The
+  editor test asserts the popup never says "move", "time" or "score".
+- **`StoryLevelPopup.Launcher` is the test seam** — the same shape as
+  `StoryLevelHud.Source`. Null means `StoryFlow.LaunchLevel`, which is the only
+  thing it ever is in the game; a test swaps it to prove Play launches the right
+  level for the right area with no board in the scene.
+- The scrim behind it eats taps but does not close. The X is the only way out,
+  so a tap that misses Play cannot lose the player their place.
+- The blue gap between the Goal card and Play is deliberate: it is the space the
+  booster row occupies in `docs/royal-match/10-level-start-popup.jpg`.
+
+**A stretched rect can have negative height, and a negative rect draws nothing.**
+`RoyalPanel`'s title was inset 110px on all four sides of a 210px-tall plate, so
+every panel ever built had an invisible title — which reads as a panel that
+forgot its own name, not as a bug. Inset a title horizontally (to clear the
+close X) and only slightly vertically, and assert
+`rectTransform.rect.height > 0` after `Canvas.ForceUpdateCanvases()` rather than
+trusting that `Text.text` being right means the text is on screen.
+
 ## Two traps that have bitten more than once
 
 **`System.*` resolves into the kit's namespace.** The kit has

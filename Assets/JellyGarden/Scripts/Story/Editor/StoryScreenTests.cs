@@ -81,6 +81,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 RoyalPrimitivesConstruct();
                 LevelHudIsTargetAndMoves();
                 ScoreLevelsShowTheirPassMark();
+                LevelPopupStatesTheGoal();
             }
             finally
             {
@@ -665,6 +666,12 @@ namespace JellyGarden.Scripts.Story.Editor
                     "RoyalPanel carries its title");
                 Expect(panel.Title != null && panel.Title.font != null,
                     "RoyalPanel's title has a font");
+                // A rect of negative height draws nothing, which looks exactly
+                // like a panel with no title rather than like a bug.
+                Canvas.ForceUpdateCanvases();
+                Expect(panel.Title != null && panel.Title.rectTransform.rect.height > 1f,
+                    "RoyalPanel's title has a rect it can be drawn in (height " +
+                    (panel.Title == null ? 0f : panel.Title.rectTransform.rect.height) + ")");
                 Expect(panel.Content != null, "RoyalPanel exposes a content rect");
                 Expect(panel.Close != null, "RoyalPanel has a close X");
 
@@ -923,6 +930,103 @@ namespace JellyGarden.Scripts.Story.Editor
             }
         }
 
+        /// <summary>
+        /// The level start popup says which level it is and what the level
+        /// wants, and nothing else. Play launches that level; the X does not.
+        /// </summary>
+        private static void LevelPopupStatesTheGoal()
+        {
+            int level = LevelWithMostGoals();
+            Expect(level > 0, "a level with a readable goal exists");
+            if (level <= 0) return;
+
+            StoryLevelHud.HudModel model = StoryLevelHud.ReadLevel(level, 0);
+            if (model == null) { Fail("level " + level + " has goal data"); return; }
+
+            var launched = new List<string>();
+            int closes = 0;
+            global::System.Action<int, int> previousLauncher = StoryLevelPopup.Launcher;
+            StoryLevelPopup.Launcher = (l, a) => launched.Add(l + "/" + a);
+
+            try
+            {
+                StoryLevelPopup.Open(level, 1, () => closes++);
+                StoryLevelPopup popup = StoryLevelPopup.Instance;
+                if (popup == null) { Fail("the level popup opens"); return; }
+
+                Expect(popup.TitleText == "Level " + level,
+                    "the popup is titled 'Level " + level + "' (read '" + popup.TitleText + "')");
+
+                List<string> goals = popup.GoalTexts();
+                var expected = model.Targets
+                    .Take(goals.Count)
+                    .Select(t => Mathf.Max(0, t.Remaining).ToString())
+                    .ToList();
+                Expect(goals.Count > 0, "the popup lists at least one goal");
+                Expect(goals.Count == Mathf.Min(model.Targets.Count, 4),
+                    "the popup lists every one of the level's targets (" + goals.Count +
+                    " of " + model.Targets.Count + ")");
+                Expect(goals.SequenceEqual(expected),
+                    "the goal counts come from the level's Target asset (read '" +
+                    string.Join(" ", goals.ToArray()) + "', expected '" +
+                    string.Join(" ", expected.ToArray()) + "')");
+
+                // Royal Match does not show a move count before the board opens.
+                List<string> texts = TextsIn(popup.gameObject);
+                Expect(!texts.Any(t => t.ToLowerInvariant().Contains("move")),
+                    "the popup never mentions moves");
+                Expect(!texts.Any(t => t.ToLowerInvariant().Contains("time")),
+                    "the popup never mentions the time limit");
+                Expect(!texts.Any(t => t.ToLowerInvariant().Contains("score")),
+                    "the popup never names the score");
+
+                Debug.Log("[Story] Level popup: 'Level " + level + "' goal [" +
+                          string.Join(" ", goals.ToArray()) + "], no moves shown.");
+
+                // The X goes back to whatever opened it, without playing.
+                Expect(popup.CloseButton != null, "the popup has a close X");
+                if (popup.CloseButton != null) popup.CloseButton.onClick.Invoke();
+                Expect(!StoryLevelPopup.IsOpen, "the X closes the popup");
+                Expect(launched.Count == 0, "the X does not start the level");
+                Expect(closes == 1, "the X returns to the screen that opened the popup");
+
+                // Play starts that level, for that area.
+                StoryLevelPopup.Open(level, 3, () => closes++);
+                popup = StoryLevelPopup.Instance;
+                Expect(popup.PlayButton != null, "the popup has a Play button");
+                if (popup.PlayButton != null) popup.PlayButton.onClick.Invoke();
+                Expect(!StoryLevelPopup.IsOpen, "Play closes the popup");
+                Expect(launched.Count == 1 && launched[0] == level + "/3",
+                    "Play launches level " + level + " for area 3 (got '" +
+                    string.Join(" ", launched.ToArray()) + "')");
+                Expect(closes == 1, "Play is not a close: the popup does not go back");
+            }
+            finally
+            {
+                StoryLevelPopup.Launcher = previousLauncher;
+                StoryLevelPopup.Close();
+            }
+        }
+
+        /// <summary>
+        /// The lowest-numbered level carrying more than one target, so the goal
+        /// row is proven with more than a single slot in it.
+        /// </summary>
+        private static int LevelWithMostGoals()
+        {
+            int best = 0;
+            int bestCount = 0;
+            for (int level = 1; level <= 40; level++)
+            {
+                StoryLevelHud.HudModel model = StoryLevelHud.ReadLevel(level, 0);
+                if (model == null) break;
+                if (model.Targets.Count <= bestCount) continue;
+                best = level;
+                bestCount = model.Targets.Count;
+            }
+            return best;
+        }
+
         /// <summary>The lowest-numbered level whose MODE line is this one.</summary>
         private static int FirstLevelOfMode(Target mode)
         {
@@ -957,7 +1061,8 @@ namespace JellyGarden.Scripts.Story.Editor
             foreach (string name in new[]
                      {
                          "StoryAreaScreen", "~StoryClueCard", "~StoryDialogue",
-                         "~StoryToast", "~StoryCutscene", StoryLevelHud.HostName
+                         "~StoryToast", "~StoryCutscene", StoryLevelHud.HostName,
+                         StoryLevelPopup.HostName
                      })
             {
                 GameObject go = GameObject.Find(name);

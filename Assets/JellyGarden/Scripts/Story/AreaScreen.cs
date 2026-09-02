@@ -382,8 +382,12 @@ namespace JellyGarden.Scripts.Story
                 return;
             }
 
+            // The popup states the level's goal before the board opens, the way
+            // Royal Match does; the X on it comes back here rather than to the
+            // map, so no screen is reachable without a way out of it.
+            int areaId = _areaId;
             Close();
-            StoryFlow.LaunchLevel(levelNumber, _areaId);
+            StoryLevelPopup.Open(levelNumber, areaId, () => Open(areaId));
         }
 
         private void OnRepair(int taskIndex)

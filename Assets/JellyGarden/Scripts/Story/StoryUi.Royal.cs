@@ -278,9 +278,17 @@ namespace JellyGarden.Scripts.Story
             Image bandBottom = CreateImage("BandBottom", plate, null, RoyalGold);
             BottomAnchored(bandBottom.rectTransform, 26f, 8f, 26f);
 
+            // Inset wide but not tall: 110 clears the close X on the right, and
+            // the plate is only PanelTitleHeight tall, so the same inset applied
+            // vertically leaves the text a rect of negative height — which draws
+            // nothing at all, and reads as a panel that forgot its own name.
             Text titleText = CreateText("Title", plate, title, 76, RoyalTitle,
                 TextAnchor.MiddleCenter);
-            Stretch(titleText.rectTransform, 110f);
+            RectTransform titleRect = titleText.rectTransform;
+            titleRect.anchorMin = Vector2.zero;
+            titleRect.anchorMax = Vector2.one;
+            titleRect.offsetMin = new Vector2(110f, 22f);
+            titleRect.offsetMax = new Vector2(-110f, -22f);
             titleText.fontStyle = FontStyle.Bold;
             var titleOutline = titleText.gameObject.AddComponent<Outline>();
             titleOutline.effectColor = RoyalBlueDark;
