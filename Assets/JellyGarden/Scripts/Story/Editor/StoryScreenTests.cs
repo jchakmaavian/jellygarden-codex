@@ -87,6 +87,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 LevelPopupStatesTheGoal();
                 LevelPopupOffersBoosters();
                 HomeScreenIsTheRoom();
+                HomeButtonsOpenTheLevelAndTheArea();
             }
             finally
             {
@@ -1344,6 +1345,93 @@ namespace JellyGarden.Scripts.Story.Editor
             }
             finally
             {
+                StoryHomeScreen.Close();
+                StoryProgress.ResetAll();
+            }
+        }
+
+        /// <summary>
+        /// Home's two buttons: the next unplayed level, and the room's own card.
+        /// Both are pressed for real — a button whose label is right and whose
+        /// handler goes nowhere passes every string check there is.
+        /// </summary>
+        private static void HomeButtonsOpenTheLevelAndTheArea()
+        {
+            StoryProgress.ResetAll();
+
+            try
+            {
+                StoryHomeScreen.Open(1);
+                StoryHomeScreen home = StoryHomeScreen.Instance;
+                if (home == null) { Fail("home opens for its buttons"); return; }
+
+                StoryArea area = StoryDatabase.GetArea(1);
+                int next = StoryLevelPlan.NextLevelFor(1);
+                Expect(next > 0, "area 1 has a next level to offer");
+
+                Expect(home.LevelButtonText == "Level " + next,
+                    "the green button reads 'Level " + next + "' (read '" +
+                    home.LevelButtonText + "')");
+                Expect(home.AreaButtonText == area.Name,
+                    "the gold card reads the area's name (read '" +
+                    home.AreaButtonText + "')");
+                Expect(home.AreaProgressText == "0/" + area.Tasks.Count,
+                    "an untouched area reads 0/" + area.Tasks.Count + " (read '" +
+                    home.AreaProgressText + "')");
+                Expect(home.HasChest, "the chest sits on the end of the card's bar");
+
+                // The counter is the area's own arithmetic, not a snapshot.
+                StoryProgress.AddStar(1, 9);
+                StoryProgress.CompleteTask(1, area.Tasks[0].Index);
+                home.Refresh();
+                Expect(home.AreaProgressText == "1/" + area.Tasks.Count,
+                    "a bought repair moves the card's counter (read '" +
+                    home.AreaProgressText + "')");
+
+                // And the level button follows the levels actually beaten.
+                StoryProgress.MarkLevelBeaten(next);
+                home.Refresh();
+                int after = StoryLevelPlan.NextLevelFor(1);
+                Expect(after != next && home.LevelButtonText == "Level " + after,
+                    "beating a level moves the button on to level " + after +
+                    " (read '" + home.LevelButtonText + "')");
+
+                // Pressing them: the popup for that level, and that area's page.
+                global::System.Action<int, int> previousLauncher = StoryLevelPopup.Launcher;
+                StoryLevelPopup.Launcher = (l, a) => { };
+                try
+                {
+                    home.LevelButton.onClick.Invoke();
+                    StoryLevelPopup popup = StoryLevelPopup.Instance;
+                    Expect(popup != null && StoryLevelPopup.IsOpen,
+                        "the green button opens the level popup");
+                    Expect(popup != null && popup.TitleText == "Level " + after,
+                        "the popup it opens is for the level on the button (read '" +
+                        (popup == null ? "none" : popup.TitleText) + "')");
+                    Expect(StoryHomeScreen.IsOpen,
+                        "home stays open underneath the popup");
+                    StoryLevelPopup.Close();
+
+                    home.AreaButton.onClick.Invoke();
+                    Expect(AreaScreen.IsOpen && AreaScreen.Instance.AreaId == 1,
+                        "the gold card opens that area's page");
+                    AreaScreen.Close();
+                }
+                finally
+                {
+                    StoryLevelPopup.Launcher = previousLauncher;
+                }
+
+                Debug.Log(string.Format(
+                    "[Story] Home buttons: '{0}' | '{1}' {2}, chest {3}, {4} repair(s) ready.",
+                    home.LevelButtonText, home.AreaButtonText, home.AreaProgressText,
+                    home.HasChest ? "present" : "missing",
+                    StoryHomeScreen.AffordableRepairs(1)));
+            }
+            finally
+            {
+                StoryLevelPopup.Close();
+                AreaScreen.Close();
                 StoryHomeScreen.Close();
                 StoryProgress.ResetAll();
             }

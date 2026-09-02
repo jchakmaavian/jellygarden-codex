@@ -473,6 +473,18 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static RectTransform ChestIcon(string name, Transform parent)
         {
+            return ChestIcon(name, parent, RoyalChestGold);
+        }
+
+        /// <summary>
+        /// The chest with its panels in a named colour. The default gold is the
+        /// reference's, and it is right on the cream card of the area page — but
+        /// on the home screen's gold card the same gold is the card's own fill,
+        /// and the chest collapses to a pair of purple rings with nothing in
+        /// them. A caller drawing it on gold passes something else.
+        /// </summary>
+        public static RectTransform ChestIcon(string name, Transform parent, Color panel)
+        {
             RectTransform root = CreateRect(name, parent);
 
             Image lid = CreateImage("Lid", root, RoundedSprite(44), RoyalPurple);
@@ -480,7 +492,7 @@ namespace JellyGarden.Scripts.Story
             FrameRect(lid.rectTransform, 0f, 0.44f, 1f, 1f);
 
             Image lidFace = CreateImage("LidFace", lid.rectTransform, RoundedSprite(36),
-                RoyalChestGold);
+                panel);
             lidFace.type = Image.Type.Sliced;
             FrameRect(lidFace.rectTransform, 0.14f, 0.12f, 0.86f, 0.84f);
 
@@ -494,7 +506,7 @@ namespace JellyGarden.Scripts.Story
             FrameRect(body.rectTransform, 0.03f, 0f, 0.97f, 0.46f);
 
             Image bodyFace = CreateImage("BodyFace", body.rectTransform, RoundedSprite(16),
-                RoyalChestGold);
+                panel);
             bodyFace.type = Image.Type.Sliced;
             FrameRect(bodyFace.rectTransform, 0.07f, 0.2f, 0.93f, 0.82f);
 
@@ -503,7 +515,7 @@ namespace JellyGarden.Scripts.Story
             FrameRect(plate.rectTransform, 0.37f, 0.24f, 0.63f, 0.62f);
 
             Image keyPlate = CreateImage("Keyhole", plate.rectTransform, CircleSprite,
-                RoyalChestGold);
+                panel);
             FrameRect(keyPlate.rectTransform, 0.16f, 0.16f, 0.84f, 0.84f);
 
             Image key = CreateImage("Key", keyPlate.rectTransform, CircleSprite, RoyalPurpleDark);
@@ -664,6 +676,108 @@ namespace JellyGarden.Scripts.Story
             badge.anchoredPosition = new Vector2(-18f, 0f);
 
             return button;
+        }
+
+        /// <summary>
+        /// The gold secondary button from docs/royal-match/09-home-level-button.jpg
+        /// — the one carrying "Area 2", its progress bar and its chest. Built like
+        /// GreenButton (dark base, brighter face inset from the bottom edge, gloss
+        /// across the top) so the two sit beside each other as one pair, and left
+        /// empty: what goes on it is the caller's, because the only thing this
+        /// shape is ever asked to hold is a small stack of other primitives.
+        /// </summary>
+        public static Button GoldButton(string name, Transform parent, UnityAction onClick)
+        {
+            RectTransform rect = CreateRect(name, parent);
+
+            var image = rect.gameObject.AddComponent<Image>();
+            image.sprite = RoundedSprite(28);
+            image.type = Image.Type.Sliced;
+            image.color = RoyalGoldDeep;
+
+            var button = rect.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.transition = Selectable.Transition.None;
+            if (onClick != null) button.onClick.AddListener(onClick);
+
+            Image face = CreateImage("Face", rect, RoundedSprite(28), RoyalChestGold);
+            face.type = Image.Type.Sliced;
+            RectTransform faceRect = face.rectTransform;
+            faceRect.anchorMin = Vector2.zero;
+            faceRect.anchorMax = Vector2.one;
+            faceRect.offsetMin = new Vector2(7f, 13f);
+            faceRect.offsetMax = new Vector2(-7f, -7f);
+
+            Image gloss = CreateImage("Gloss", rect, RoundedSprite(28), RoyalGold);
+            gloss.type = Image.Type.Sliced;
+            RectTransform glossRect = gloss.rectTransform;
+            glossRect.anchorMin = new Vector2(0f, 0.55f);
+            glossRect.anchorMax = new Vector2(1f, 1f);
+            glossRect.offsetMin = new Vector2(18f, 0f);
+            glossRect.offsetMax = new Vector2(-18f, -14f);
+
+            // Content goes in its own rect inset from the rim, so a caller laying
+            // children out in fractions is laying them out inside the face rather
+            // than over the button's edges.
+            RectTransform content = CreateRect("Content", rect);
+            Stretch(content, 0f);
+            content.offsetMin = new Vector2(16f, 20f);
+            content.offsetMax = new Vector2(-16f, -14f);
+
+            return button;
+        }
+
+        /// <summary>The content rect of a <see cref="GoldButton"/>, or its own rect.</summary>
+        public static RectTransform ContentOf(Button button)
+        {
+            if (button == null) return null;
+            Transform content = button.transform.Find("Content");
+            return content != null
+                ? (RectTransform)content
+                : (RectTransform)button.transform;
+        }
+
+        /// <summary>
+        /// The red count badge that hangs off a button's top-right corner — the
+        /// "2" on the area button in the reference. Sized square by the caller;
+        /// SetCountBadge writes the number and hides the badge at zero, because a
+        /// call-to-action badge reading nothing to do is worse than no badge.
+        /// </summary>
+        public static RectTransform CountBadge(string name, Transform parent, int count)
+        {
+            RectTransform root = CreateRect(name, parent);
+            root.sizeDelta = new Vector2(76f, 76f);
+
+            Image rim = CreateImage("Rim", root, CircleSprite, RoyalRedDark);
+            Stretch(rim.rectTransform);
+
+            Image face = CreateImage("Face", root, CircleSprite, RoyalRed);
+            Stretch(face.rectTransform, 7f);
+
+            Text label = CreateText("Count", root, count.ToString(), 46, Color.white,
+                TextAnchor.MiddleCenter);
+            Stretch(label.rectTransform, 6f);
+            label.fontStyle = FontStyle.Bold;
+            label.resizeTextForBestFit = true;
+            label.resizeTextMinSize = 18;
+            label.resizeTextMaxSize = 46;
+
+            SetCountBadge(root, count);
+            return root;
+        }
+
+        /// <summary>Writes a count badge's number; zero hides the whole badge.</summary>
+        public static void SetCountBadge(RectTransform badge, int count)
+        {
+            if (badge == null) return;
+
+            badge.gameObject.SetActive(count > 0);
+
+            Transform label = badge.Find("Count");
+            if (label == null) return;
+
+            var text = label.GetComponent<Text>();
+            if (text != null) text.text = count.ToString();
         }
 
         #endregion

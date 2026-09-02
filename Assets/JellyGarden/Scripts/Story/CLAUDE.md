@@ -156,7 +156,9 @@ These primitives carry every screen:
 | `TopBar(parent, onSettings)` | `TopBarParts`, refreshed by `RefreshTopBar` |
 | `CreamCard(name, parent, radius)` | the cream sub-card every section sits on |
 | `ProgressBar(name, parent)` | `ProgressBarParts` — `Root`, `Fill`, `Label`, `Fraction`; pointed at a count by `SetProgress(parts, done, total)` |
-| `ChestIcon(name, parent)` | the purple-and-gold chest that ends a progress bar |
+| `ChestIcon(name, parent[, panel])` | the purple chest that ends a progress bar; `panel` recolours its inner faces |
+| `GoldButton(name, parent, onClick)` | the gold secondary card; fill it via `ContentOf(button)` |
+| `CountBadge(name, parent, count)` | the red call-to-action badge, written by `SetCountBadge` |
 | `TaskIcon(name, parent, areaId, task)` | the object on the left of a task row |
 
 Rules that are easy to get wrong:
@@ -217,11 +219,47 @@ Rules that are easy to get wrong:
   state, not a guard. Now that every unfinished row keeps its Do It button, the
   story's repair order is enforced inside `AreaScreen.OnRepair` against
   `StoryProgress.NextTask`, not by which buttons happen to exist.
+- **A drawn icon needs its interior to differ from what it is drawn on.**
+  `ChestIcon` is a purple frame around gold panels, which reads on the area
+  page's cream card and collapses to two empty purple rings on the home
+  screen's gold one — the panels *were* the card. That is why it takes a
+  `panel` colour. Any primitive made of nested flat rects has this failure
+  mode, and the editor tests cannot see it: every rect is present, sized and
+  coloured exactly as asked.
+- **A best-fit `Text` wraps before it shrinks.** Narrow a label's rect and a
+  two-word name becomes two lines that overflow the top of its card rather than
+  a smaller one line. Give a variable-length label the full width it can have —
+  and remember the 150 area names run from "Castle Gates" to far longer.
 
 The primitives are proven by `StoryScreenTests.RoyalPrimitivesConstruct`, which
 builds each one for real and logs a `[Story] primitive ...` line per shape. With
 the Editor open, batchmode is locked out — run it from the menu instead:
 **JellyGarden > Story > Run Screen Tests**, then read `Logs/Editor.log`.
+
+## The home screen
+
+`StoryHomeScreen` is the room, the top bar over it, and one band of buttons over
+the floor. Its layout constants are worth understanding before moving anything:
+
+- **Vertical metrics are fractions of the canvas, horizontal ones are reference
+  points.** The band is `164f / 1472f` of the canvas height because the capture
+  is a 9:19.5 phone and the Editor's Game view is 4:3 — a canvas at match 0.5
+  hands the band ~1663 reference units of height there rather than 1920. Every
+  fixed-pixel column that fits one overlaps on the other, and every editor test
+  still passes.
+- **The two buttons are `GreenButton` + `GoldButton`, split by measured
+  fractions of the band** (`LevelRightFrac`, `AreaLeftFrac`) — the gold card is
+  the wider of the two, as in the reference.
+- **`NavBand` is laid out and empty**, waiting for US-010. Fill the rect; do not
+  re-cut the screen.
+- The Level button opens `StoryLevelPopup` and the area card opens
+  `AreaScreen`, both of which sort **above** home (600 and 400 against 300), so
+  home stays open underneath and the popup's `onClose` only has to refresh it.
+- `StoryHomeScreen.AffordableRepairs(areaId)` is the red badge's number: it
+  walks the area's tasks **in the story's order** spending one pool of stars and
+  stops at the first it cannot pay for. Counting every affordable task instead
+  would point the player at buttons that grey out when pressed, because
+  `AreaScreen` only ever offers `StoryProgress.NextTask`.
 
 ## The in-level HUD
 
