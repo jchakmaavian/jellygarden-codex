@@ -22,23 +22,33 @@ python3 tools/level_gen.py          # templates + plan     -> Resources/Levels/1
 python3 tools/target_gen.py         # plan + boards        -> Resources/Targets/Level1..1209.asset
 ```
 
-The art reskin is independent of the story data — it rewrites kit textures in
-place and can be re-run at any time:
+The art reskins are independent of the story data. **None of them is applied —
+the game currently ships the kit's own candy art**, which is what the owner
+chose. Each script rewrites kit textures in place and can be run, or undone,
+at any time:
 
 ```bash
-python3 tools/item_skin.py          # tools/art/pieces -> the 27 board sprites
-python3 tools/booster_skin.py       # tools/art/pieces -> the 14 booster icons
-python3 tools/brand_skin.py         # tools/art/brand  -> logo, title, loading, ivy blocker
+python3 tools/item_skin.py          # painted jewels  -> the 27 board sprites
+python3 tools/item_skin_flat.py     # flat minimal set -> the 27 board sprites
+python3 tools/booster_skin.py       # -> the 14 booster icons
+python3 tools/brand_skin.py         # -> logo, title, loading, map tiles, ivy blocker
 ```
 
-Each takes `--preview` and writes a contact sheet to `/tmp` instead of touching
-the project.
+`item_skin.py` and `item_skin_flat.py` write the same 27 files, so run one or
+the other, never both. Each script takes `--preview` and writes a contact sheet
+to `/tmp` instead of touching the project.
 
-## Why the reskin overwrites pixels instead of importing new assets
+To undo any of them:
 
-The kit is a candy game and the story is about a king, so the pieces the player
-swaps had to change. They are changed by rewriting each PNG **in place, at its
-original size, under its original name**. That is deliberate:
+```bash
+git checkout HEAD -- Assets/JellyGarden/Textures
+```
+
+## Why a reskin overwrites pixels instead of importing new assets
+
+The kit is a candy game and the story is about a king, so if the pieces the
+player swaps are ever changed, they are changed by rewriting each PNG **in
+place, at its original size, under its original name**. That is deliberate:
 
 - Unity references sprites by the GUID in the `.meta`, so every prefab,
   animation clip, particle material and `Target` asset keeps pointing at the
@@ -47,14 +57,16 @@ original size, under its original name**. That is deliberate:
   the file name. Renaming a file would silently break target matching.
 - `check_vfx_intact.py` fails on a deleted or renamed visual asset. Overwriting
   passes it honestly rather than by exception.
+- Reverting is `git checkout` of one directory, with nothing to re-import.
 
-The six colours are kept in their kit order (red, orange, purple, blue, green,
+The six colours must stay in their kit order (red, orange, purple, blue, green,
 yellow) because the explosion particle textures are per item index — a green
-jewel that shattered into red sparks would be the VFX regressing.
+piece that shattered into red sparks would be the VFX regressing.
 
-Masters live in `tools/art/`. Most are the story prototype's own art at
-`/Users/avian/Desktop/story/game/unity/Assets/Resources/Art`, already paid for;
-ten images were generated for this pass.
+Masters live in `tools/art/`: `pieces/` and `brand/` and `map/` for the painted
+set, `flat/` for the minimal one. Most of the painted masters are the story
+prototype's own art at
+`/Users/avian/Desktop/story/game/unity/Assets/Resources/Art`, already paid for.
 
 ## Verify
 
