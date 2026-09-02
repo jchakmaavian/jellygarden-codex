@@ -137,8 +137,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "StoryHomeScreen draws the area's artwork full-bleed with StoryUi.TopBar straight on it, and lays out the empty bands US-009 (buttons) and US-010 (nav) will fill. Full-bleed is AreaSceneView's new covering mode: an AspectRatioFitter in EnvelopeParent, cropped by a RectMask2D on the parent \u2014 the letterboxed mode the area screen and the cutscene stage use is unchanged and still the default. AreaSceneView's single static instance became a list, because home and the area screen can show the same room at once and a repair must reveal on both. The room is the same StoryArt layer stack the area screen draws, so there is no second art path. StoryHomeScreen.CurrentRoom declines to sit in a restored area and moves on to the first unlocked one still owing repairs. Two traps: the editor test's IsCovering/Aspect assertions pass over a view that letterboxes, so full-bleed was proven by measuring the painted rect in a Play-mode capture against the centre crop computed from the source jpg; and Play mode cannot be detected from AppleScript (AXMenuItemMarkChar reads 'missing value' either way) \u2014 screenshot the toolbar, a blue Play button means playing. A first test run was void for exactly that reason. Also removed a // TEMP hook that had ridden into the US-007 commit and dead-coded StoryPowerupTest."
     },
     {
       "id": "US-009",

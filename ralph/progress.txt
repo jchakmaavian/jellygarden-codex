@@ -165,7 +165,28 @@ raise Unity and take the shot inside ONE osascript
   click that menu item. A run with no `[Story] Booted` line ran the old compile.
 - **Read `git status` before starting.** A previous iteration may have left the
   current story built but uncommitted, and it may contain a `// TEMP` hook put
-  in for a screenshot. Grep for `TEMP` before committing.
+  in for a screenshot. Grep for `TEMP` before committing. This has now HAPPENED: a
+  `// TEMP` `yield break` reached commit `de36cf6` and dead-coded
+  `StoryPowerupTest` until US-008 removed it. Run the grep, every time.
+- **Play mode cannot be detected from AppleScript.** `AXMenuItemMarkChar` of
+  `Edit > Play Mode > Play` reads `missing value` in both states. Screenshot the
+  toolbar and look at the Play button — blue fill means playing:
+  `screencapture -x -o -R 1055,63,875,120 /tmp/toolbar.png`. Getting this wrong
+  costs a void screen-test run that fails as *"the clue fired on the last
+  repair"*.
+- **`JellyGarden > Story > Preview` is three menu levels, not two.** Enumerate a
+  menu before addressing it: `name of every menu item of menu 1 of menu item
+  "Story" of menu 1 of menu bar item "JellyGarden" of menu bar 1`.
+- **Prefer `Assets > Refresh` from the menu over Cmd+R** — the keystroke can be
+  swallowed entirely (zero new log bytes). Confirm by watching the log grow.
+- **`tail -c +N` cannot read `Logs/Editor.log`** ("illegal offset"); seek in
+  python from a byte mark taken before the action.
+- **An editor test that asserts a flag has not verified a layout.** `IsCovering`
+  and `Aspect` are both true of a view that letterboxes anyway. Settle any
+  "full-bleed / fills / centred / no bars" claim off the pixels: measure the
+  painted rect in a Game-view capture and compare it to the crop the layout
+  should produce, computed from the source art with PIL. Same family as the
+  negative-height rect that passes every string check and draws nothing.
 
 ---
 
@@ -741,4 +762,102 @@ the story's own label, and a green "Do It" carrying that task's star price.
 - The task viewport shows about two and a half rows on the Editor's 768x1024
   Game view now that rows are 150 tall; it scrolls, and on the reference's
   9:19.5 phone it does not. Worth revisiting if US-013 makes the list feel short.
+---
+
+## 2026-09-02 - US-008 - Home screen: room and top bar
+
+Home is now the room King Leo is restoring, drawn edge to edge with the
+counters over it — the shape of `docs/royal-match/01-home-area.jpg`.
+
+### What was implemented
+- `StoryHomeScreen` (new): an overlay canvas at sorting order 300 — below the
+  area screen (400) and the level popup (600), because home is the screen the
+  others open on top of. It holds the room, `StoryUi.TopBar`, and the two bands
+  US-009 and US-010 fill, laid out and left empty so those stories fill a rect
+  rather than re-cut the screen.
+- `StoryHomeScreen.CurrentRoom` — normally where the player last was, but a
+  restored area is not somewhere to come home to: it moves on to the first
+  unlocked area that still owes repairs, and only falls back to the furthest
+  unlocked area when all 150 are done.
+- `AreaSceneView.Attach(parent, areaId, cover)` — a second fit mode. Letterboxed
+  stays the default and the area screen and cutscene stage are untouched;
+  covering runs an `AspectRatioFitter` in `EnvelopeParent` at the painting's own
+  aspect so the stack fills the parent in both directions, and the parent's
+  `RectMask2D` crops the overflow.
+- `AreaSceneView`'s single `_instance` became a `List` of live views.
+- `JellyGarden > Story > Preview > Open Home Screen`, and the existing Grant
+  Stars / Reset Progress items now refresh home if it is open.
+- `StoryScreenTests.HomeScreenIsTheRoom`.
+- **Removed a `// TEMP` screenshot hook that reached commit `de36cf6`.** It sat
+  at the top of `StoryPowerupTest.Drive` as an unconditional `yield break` and
+  had dead-coded the entire powerup test. The progress log predicted this
+  exact failure one iteration before it happened.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryHomeScreen.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/AreaSceneView.cs` (cover mode, live list)
+- `Assets/JellyGarden/Scripts/Story/StoryPowerupTest.cs` (TEMP hook removed)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenPreview.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs`
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md`
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> "All checks passed."
+- `JellyGarden > Story > Run Screen Tests` (Play mode OFF) -> **"[Story] Screen
+  tests passed."**, carrying `[Story] Area 1 (Castle Gates) restored.` and zero
+  `[Story] area screen N` lines — the two marks of a valid run — plus
+```
+[Story] Home screen: area 1 'Castle Gates', room 5 layer(s) full-bleed at aspect 1.33, top bar 0/Full/8.
+```
+- Play mode, Game view 768x1024 portrait: the Castle Gates room fills the view
+  with no bars and the top bar (5 / Full / 3 / gear) sits on the painting's sky.
+  Log: `[Story] home screen: area 1 'Castle Gates', 1/4 repairs, room 2 layer(s)
+  of 5, top bar 5/Full/3` — showing state1, so the artwork answers to progress.
+
+### Learnings for future iterations
+- **A flag assertion is not a geometry proof, and this one nearly shipped.**
+  `HomeScreenIsTheRoom` asserts `IsCovering` and `Aspect > 0` — both of which
+  are true of a view that letterboxes anyway. The claim was only actually
+  settled by pixels: crop the Game view out of the screenshot, measure the
+  painted rect, and compare it against the centre crop the cover *should*
+  produce, computed from the source jpg with PIL:
+  ```python
+  new_w = int(src_h * (view_w / view_h)); left = (src_w - new_w) // 2
+  src.crop((left, 0, left + new_w, src_h))   # what covering must look like
+  ```
+  Area 1's painting is 1760x1328; on a 0.75 viewport covering shows the middle
+  57% of its width. The capture matched it. Do this for any "full-bleed",
+  "fills", "centred" or "no bars" claim — the editor tests cannot see it.
+- **Do not trust a low-resolution screenshot for a letterbox judgement.** The
+  first read of the capture was wrong: the pale band above the stonework looked
+  like a bar and is the painting's own sky. Measure, then conclude.
+- **Play mode cannot be read from AppleScript.** `AXMenuItemMarkChar` of
+  `Edit > Play Mode > Play` is `missing value` whether or not the Editor is
+  playing. Trusting it cost a whole void screen-test run whose single failure
+  was the familiar *"the clue fired on the last repair"*. **Screenshot the
+  toolbar instead: a blue-filled Play button means playing.**
+  ```bash
+  osascript -e 'tell application "System Events" to tell process "Unity" to set frontmost to true' \
+            -e 'delay 0.8' \
+            -e 'do shell script "screencapture -x -o -R 1055,63,875,120 /tmp/toolbar.png"'
+  ```
+  The existing log tell (`[Story] area screen N` lines present = void run) is
+  still right, but it only tells you afterwards.
+- **`JellyGarden > Story > Preview` is a sub-SUB-menu.** The AppleScript path is
+  three levels — `JellyGarden` -> `Story` -> `Preview` -> the item — each clicked
+  open with a delay. Addressing it at two levels errors `-1728`. When a menu
+  path fails, enumerate rather than guess:
+  `name of every menu item of menu 1 of menu item "Story" of ...`.
+- **The `// TEMP` hook the log warned about did ride into a commit.** It is
+  worth spending the one `grep -rn TEMP Assets/JellyGarden/Scripts/Story/` per
+  iteration; the failure is silent, because a dead test prints nothing.
+- **`Cmd+R` may not reach Unity at all.** A refresh keystroke produced zero new
+  log bytes; `Assets > Refresh` from the menu worked immediately. Prefer the
+  menu, and confirm by watching `Logs/Editor.log` grow.
+- **`tail -c +N` fails on `Logs/Editor.log`** — the offsets are past what tail
+  accepts (`illegal offset`). Seek in python instead.
+- Sorting orders now in use: home 300, area screen 400, level popup 600. A new
+  screen should pick a band with room around it.
 ---
