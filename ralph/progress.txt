@@ -122,6 +122,17 @@ raise Unity and take the shot inside ONE osascript
   Editor tests check strings; a rect of negative height passes every one of them
   and draws nothing. `Stretch(rect, padding)` pads all four sides — a padding
   over half the parent's height deletes the content silently.
+- **Vertical metrics are fractions of the parent, not pixels.** The reference
+  captures are a 9:19.5 phone; the Editor's Game view is 4:3, and a
+  `ScaleWithScreenSize` canvas at match 0.5 gives it ~1663 reference units of
+  height rather than 1920. A column of fixed pixel heights that fits the phone
+  overlaps everywhere else, and every editor test still passes. Horizontal
+  measurements stay in reference points.
+- **Domain reload is off in this Editor.** Statics survive between play
+  sessions, so on the second play `StorySceneHooks._subscribed` is still true
+  and the story layer does nothing at all — a run that logs NOTHING is this.
+  Force a real recompile between play runs by changing a character in a script;
+  `touch` does not work, Unity hashes contents.
 - **Give a new screen a static test seam** (`StoryLevelHud.Source`,
   `StoryLevelPopup.Launcher`): a `Func`/`Action` that is null in the game and
   swapped by a test, so the screen can be driven with no board in the scene.
@@ -437,4 +448,99 @@ wants, and Play.
   works for a screen as well as for a level.
 - The blue gap between the Goal card and Play is reference-faithful, not a
   mistake: it is where US-005's "Select Boosters:" row goes. Do not close it.
+---
+
+## 2026-09-02 - US-005 - Level start popup: booster row
+
+The "Select Boosters:" row from
+docs/royal-match/10-level-start-popup.jpg, and the wiring that makes a pick
+on it change the board that opens.
+
+### What was implemented
+- `StoryBoosters` — the model. `PreLevel` is **the kit's own three pre-level
+  boosts** (`Stripes`, `Packages`, `Colorful_bomb`), not an invention:
+  `LevelManager.SetPreBoosts` already reads `BoostStriped`, `BoostPackage` and
+  `BoostColorfullBomb` after the board is generated and converts that many
+  random items. `AmountOf` returns the kit's own numbers (5, 5, 1) so a booster
+  does the same thing whether it was picked here or in the kit's in-level row.
+- **How the pick reaches the board.** The popup runs in the map scene, where
+  `LevelManager.THIS` does not exist yet, so the selection is held in a static
+  and written on `LevelManager.OnLevelLoaded` — which `ReGenLevel` fires
+  *before* the `RegenMatches` coroutine reaches `SetPreBoosts`. The kit then
+  spends the booster itself through `InitScript.SpendBoost`. Nothing in
+  `LevelManager` is edited: three public fields are written from outside,
+  exactly as the kit's `BoostIcon` writes them. `Apply` clears the selection,
+  because the no-more-matches regeneration fires `OnLevelLoaded` again.
+- `StoryUi.BoosterSlot` + `SetBoosterSelected` / `SetBoosterLocked` — the gold
+  tile, the red owned-count badge on its corner, the green ring for a chosen
+  one and the kit's own `play_booster_locked` plate for one the player has
+  none of. Locked, never blank: the row is always three slots wide.
+- `StoryFreeGame` now grants all three (`Grantable`) and hands out one of each
+  once (`GrantStarterPreBoosters`, its own PlayerPrefs key so an existing save
+  gets them too). Without that, two of the three slots would be locked forever
+  — nothing in this game is for sale, so a booster the game never grants can
+  never be owned.
+- `tools/ui_sprites.py` copies the three booster-shop icons and the locked
+  plate into `Resources/Story/UI`, since a code-built screen cannot hold a
+  serialised sprite reference.
+- `StoryBoosters.OwnedSource` — the counts seam, deliberately the same shape as
+  `StoryLevelHud.Source` and `StoryLevelPopup.Launcher`.
+- `StoryScreenTests.LevelPopupOffersBoosters` — three slots, the owned count on
+  each, a locked slot that refuses selection, a toggle that goes both ways, a
+  selection that survives Play, and an X that drops it.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryBoosters.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/StoryUi.Royal.cs` (booster slot primitive)
+- `Assets/JellyGarden/Scripts/Story/StoryLevelPopup.cs` (row + fractional layout)
+- `Assets/JellyGarden/Scripts/Story/StoryFreeGame.cs` (grants)
+- `Assets/JellyGarden/Scripts/Story/StoryBoot.cs`, `StorySceneHooks.cs` (install)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs` (new case)
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md`, `tools/ui_sprites.py`
+- `Assets/JellyGarden/Resources/Story/UI/booster_*.png` (new, copied art)
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> "All checks passed."
+- JellyGarden > Story > Run Screen Tests -> **"[Story] Screen tests passed."**:
+```
+[Story] Level popup boosters: counts [4 0 2], Packages locked, chosen [Stripes Colorful_bomb].
+[Story] Level popup: Play pressed for level 12, area 1, boosters [Stripes Colorful_bomb].
+```
+- Play mode, Game-view screenshot: the cream card reads Goal (1000 / 3 / 1)
+  over **Select Boosters:** and three tiles — a green-ringed rocket at 4, a
+  padlocked TNT at 0, a colour bomb at 2 — with Play below them.
+
+### Learnings for future iterations
+- **Vertical metrics on a story screen must be fractions, not pixels.** This is
+  the big one. The reference captures are a 9:19.5 phone; the Editor's Game
+  view is 4:3. A `ScaleWithScreenSize` canvas at `matchWidthOrHeight 0.5` hands
+  a 4:3 view ~1663 reference units of height rather than 1920, so a column of
+  fixed pixel heights that fits the phone silently overlaps everywhere else.
+  The booster row drew *underneath* the Play button while every editor test
+  passed. Anchor vertical positions as fractions of the parent, keep horizontal
+  measurements in reference points, and put `resizeTextForBestFit` on any text
+  in a box that can shrink.
+- **This Editor has Enter Play Mode with domain reload off.** Statics survive
+  between play sessions, so `StorySceneHooks._subscribed` and friends stay true
+  and the whole story layer — boot logs, map labels, the powerup self-test —
+  silently does nothing on the second play. A play run that logs *nothing* is
+  this, not a bug in the code. Force a real recompile between runs: `touch` is
+  not enough, Unity hashes contents, so change a character. That, not
+  patience, is what makes the screenshot cycle work.
+- **Read the kit before inventing a mechanic.** "Three pre-level boosters" is
+  already in `LevelManager.SetPreBoosts` and `BoostIcon.ActivateBoost`, down to
+  the 5/5/1 counts and the spend. The story layer only had to carry a choice
+  across a scene load.
+- **Check that what a screen offers can ever be obtained.** The row was
+  correct and permanently locked, because `StoryFreeGame.Grantable` listed only
+  one of the three. A screen that shows a thing the game never grants is a dead
+  end, and no test catches it.
+- **`OnLevelLoaded` fires more than once per level** (`ReGenLevel` calls it
+  twice, and again on no-more-matches). Anything applied there must clear
+  itself or be idempotent.
+- The kit's booster art lives outside Resources; `tools/ui_sprites.py` is the
+  house way to copy a kit sprite in, `.meta` and all. Add to its `WANTED` map
+  rather than hand-copying a png.
 ---
