@@ -200,6 +200,29 @@ raise Unity and take the shot inside ONE osascript
   it can have; the 150 area names are long.
 - **An icon composed of stacked rects needs a near-square box.** Check the
   aspect the fractions actually produce on the target canvas, not the fractions.
+- **A scrolling list's entries are FIXED reference points, not fractions of the
+  screen.** The rule about vertical metrics inverts inside a ScrollRect: what
+  must keep its proportions is the card, whose width is fixed, so its height is
+  a fixed number of points and the viewport shows however many fit. A card sized
+  as a fraction of the viewport changes shape with the Game view's aspect.
+- **A long list must not resolve all its art at once.** `StoryArt` caches
+  forever and the room paintings are ~0.5MB each; give art to the entries near
+  the viewport on `ScrollRect.onValueChanged` and take it back from the rest.
+- **A tinted parent does not tint the child that covers it.** A rimmed shape is
+  outer image + rim + FACE, and the face is nearly all of what is seen — colour
+  the face too, or a "greyed" thing stays its original colour with a grey
+  hairline round it. Same family as the chest that rendered as two empty rings.
+- **A constant is not a feature.** `SeparatorHeight` was declared and the
+  separator was never built; every editor test passed. Only the screenshot found
+  it. Grep your own new constants for a use before calling a screen done.
+- **Changing a seam's default breaks the test that asserted the old one.**
+  Setting `StoryNavBar.AreasDestination` from `StorySceneHooks` made "the Areas
+  tab opens an area page" fail — and it failed in the AREAS test's neighbour, not
+  in the new code. A test that asserts a fallback must clear the seam first.
+- **Statics set by a play session survive into an editor test run.** Domain
+  reload is off, so `StorySceneHooks` installing something in Play mode is still
+  installed when the menu-driven tests run. Null the seam at the top of the case
+  that depends on it.
 - **An editor test that asserts a flag has not verified a layout.** `IsCovering`
   and `Aspect` are both true of a view that letterboxes anyway. Settle any
   "full-bleed / fills / centred / no bars" claim off the pixels: measure the
@@ -1047,4 +1070,87 @@ Areas, Leaderboard, Home, Team, Cards, with Home raised and centred.
 - Four Play-mode round trips were needed for this one story. The cycle that
   works: edit -> typecheck -> exit Play -> `Assets > Refresh` -> wait ~45s ->
   enter Play -> `Preview > Close The Level` -> `Preview > Open ...` -> screenshot.
+---
+
+## 2026-09-02 - US-011 - Areas list screen
+
+The Areas tab's destination: all 150 rooms as a vertical scroll of cards, which
+is what Royal Match has instead of a winding path map.
+
+### What was implemented
+- `StoryAreasList` — its own canvas at sorting order 350, between home (300) and
+  the area page (400). A dark slate ground, a blue "Areas" header, a `ScrollRect`
+  of 150 entries and the nav bar's reserved band at the foot.
+- A card is a cream "Area N" plate, a red name ribbon, the room behind a
+  gold-rimmed red frame, and `StoryUi.ProgressBar` across the picture's bottom
+  reading completed/total. Locked cards are greyed, scrimmed and padlocked; the
+  current room wears a gold halo. Built from `StoryDatabase` and `StoryProgress`
+  alone — no prefab and no code path per area.
+- Cards are built ONCE. `Refresh` only rewrites numbers and states; nothing is
+  rebuilt on a repair.
+- Artwork is loaded only for the entries near the viewport, on
+  `ScrollRect.onValueChanged`.
+- `StoryAreasList.Install()`, called once per scene by `StorySceneHooks`, points
+  `StoryNavBar.AreasDestination` at this screen. `StoryNavBar` now counts the
+  list in `ShouldShow` and in which tab is lit, and `GoHome` closes it.
+- New palette entries in `StoryUi.Royal.cs`, sampled off the reference with PIL:
+  `RoyalSlate`, `RoyalSlateLine`, `RoyalHeaderBlue`, `RoyalBanner`,
+  `RoyalBannerDeep`, `RoyalCardRed`.
+- `StoryScreenTests.AreasListCoversEveryArea`, and two new Preview menu items:
+  "Open Areas List" and "Open Areas List (locked area 100)".
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryAreasList.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/StoryUi.Royal.cs` (six colours)
+- `Assets/JellyGarden/Scripts/Story/StoryNavBar.cs`
+- `Assets/JellyGarden/Scripts/Story/StorySceneHooks.cs`
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md` (new "The areas list" section)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenPreview.cs`
+
+### Verification
+- `dotnet build Story.Typecheck.csproj` — 0 errors.
+- `python3 tools/check_vfx_intact.py` — no regressions.
+- `python3 tools/validate_story.py` — 150 / 807 / 1209 / 1209.
+- `JellyGarden > Story > Run Screen Tests` — passed, out of Play mode. Logged
+  `[Story] Areas list: 150 card(s), row 0 is area 150, row 149 is area 1
+  'Castle Gates' 1/4, 149 locked, 4 carrying a room.`
+- `JellyGarden > Story > Run Full Smoke Test` — passed.
+- Play mode, twice: the current card (Area 1, gold halo, 1/4, room drawn) and a
+  locked card (Area 100 "The Broken Treaty", grey, padlocked, 0/8).
+
+### Learnings for future iterations
+- **The vertical-metrics rule inverts inside a scroll view.** Everywhere else a
+  height is a fraction of the parent, because the reference is a 9:19.5 phone and
+  the Editor's Game view is 4:3. Inside a `ScrollRect` the thing that must not
+  distort is the CARD, and its width is fixed — so an entry is a fixed number of
+  reference points (983 here, an 888-point card in it) and the viewport shows
+  however many fit. Sizing an entry as a fraction of the viewport would make the
+  cards change shape with the aspect.
+- **Do not resolve a long list's art all at once.** 31 room paintings at ~0.5MB;
+  give art to the entries near the viewport and take it back from the rest.
+  `StoryArt`'s cache never releases, so this bounds the cost of an OPEN, not the
+  cost of scrolling the whole list — that is the honest limit of the fix.
+- **A constant is not a feature.** `SeparatorHeight` was declared and the
+  separator was never drawn; every editor test passed and only the play-mode
+  screenshot found it. Grep your own new constants for a use.
+- **Tint the face, not just the frame.** `card.Banner.color = RoyalGrey` left a
+  locked area wearing a bright red name plate, because the ribbon's rim covers
+  only its outer few points and the FACE inside it is nearly all of what is seen.
+  Same family as the chest that rendered as two empty purple rings.
+- **Changing a seam's default breaks the test that asserted the old default, in a
+  different case.** Installing `AreasDestination` from `StorySceneHooks` made the
+  NAV test fail on "the Areas tab opens an area page" while the new code was
+  fine. And because domain reload is off, a static set during a Play session is
+  still set when the menu-driven tests run — null the seam at the top of any case
+  that depends on it.
+- **AppleScript: `item` is a reserved word.** A handler parameter named `item`
+  fails with "Can't make item into type integer. (-1700)". And a menu-bar click
+  right after leaving Play mode can throw -1719 ("Can't get menu bar 1") while
+  the Editor rebuilds its menus — screenshot the toolbar to see where you are
+  rather than trusting the error.
+- The play-mode cycle that works, end to end: exit Play -> `Assets > Refresh` ->
+  wait ~40s -> `Edit > Play Mode > Play` -> wait -> `Preview > Close The Level`
+  -> `Preview > Open Areas List`.
+
 ---

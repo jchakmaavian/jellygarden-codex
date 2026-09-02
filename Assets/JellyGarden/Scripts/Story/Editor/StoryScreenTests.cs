@@ -89,6 +89,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 HomeScreenIsTheRoom();
                 HomeButtonsOpenTheLevelAndTheArea();
                 BottomNavIsFiveTabsAcrossTheShell();
+                AreasListCoversEveryArea();
             }
             finally
             {
@@ -1533,10 +1534,12 @@ namespace JellyGarden.Scripts.Story.Editor
                 Expect(Mathf.Abs((homeFace.anchorMin.x + homeFace.anchorMax.x) * 0.5f - 0.5f) < 0.01f,
                     "the Home tab is centred");
 
-                // Areas goes to the area page and the bar comes with it.
+                // With no destination installed, Areas falls back to the one area
+                // the player is restoring, and the bar comes with it.
+                StoryNavBar.AreasDestination = null;
                 nav.ButtonFor(StoryNavBar.Tab.Areas).onClick.Invoke();
                 StoryNavBar.Sync();
-                Expect(AreaScreen.IsOpen, "the Areas tab opens an area page");
+                Expect(AreaScreen.IsOpen, "the Areas tab falls back to an area page");
                 Expect(StoryNavBar.IsVisible, "the bar persists onto the area page");
                 Expect(nav.Selected == StoryNavBar.Tab.Areas,
                     "the Areas tab lights when the area page is up (lit " + nav.Selected + ")");
@@ -1548,6 +1551,24 @@ namespace JellyGarden.Scripts.Story.Editor
                 Expect(!AreaScreen.IsOpen, "the Home tab closes the area page behind it");
                 Expect(nav.Selected == StoryNavBar.Tab.Home,
                     "the Home tab lights on home (lit " + nav.Selected + ")");
+
+                // Installed — which is what the game does, once per scene — the
+                // same tab reaches the list of all 150 instead, and the bar and
+                // its lit slot follow it there.
+                StoryAreasList.Install();
+                nav.ButtonFor(StoryNavBar.Tab.Areas).onClick.Invoke();
+                StoryNavBar.Sync();
+                Expect(StoryAreasList.IsOpen, "the Areas tab opens the areas list");
+                Expect(StoryNavBar.IsVisible, "the bar persists onto the areas list");
+                Expect(nav.Selected == StoryNavBar.Tab.Areas,
+                    "the Areas tab lights on the list (lit " + nav.Selected + ")");
+
+                nav.ButtonFor(StoryNavBar.Tab.Home).onClick.Invoke();
+                StoryNavBar.Sync();
+                Expect(!StoryAreasList.IsOpen,
+                    "the Home tab closes the areas list behind it");
+                Expect(StoryHomeScreen.IsOpen, "the Home tab opens home over it");
+                StoryNavBar.AreasDestination = null;
 
                 // The three the game does not have are present and harmless: a tap
                 // must not throw and must not navigate anywhere.
@@ -1586,8 +1607,129 @@ namespace JellyGarden.Scripts.Story.Editor
             {
                 StoryNavBar.LevelIsPlayingSource = null;
                 StoryNavBar.AreasDestination = null;
+                StoryAreasList.Close();
                 AreaScreen.Close();
                 StoryHomeScreen.Close();
+                StoryProgress.ResetAll();
+            }
+        }
+
+        /// <summary>
+        /// The areas list: one card per area, all 150, built from the story data
+        /// alone. What is checked here is what the player reads off a card — its
+        /// number, its name, its repair count, whether it is locked — and that
+        /// pressing one reaches that area. The pictures are checked by counting
+        /// how many cards carry one: the list must not resolve 150 room paintings
+        /// to open a menu.
+        /// </summary>
+        private static void AreasListCoversEveryArea()
+        {
+            StoryProgress.ResetAll();
+
+            var opened = new List<int>();
+            StoryAreasList.Destination = id => opened.Add(id);
+            StoryNavBar.AreasDestination = null;
+
+            try
+            {
+                StoryAreasList.Open(1);
+                StoryAreasList list = StoryAreasList.Instance;
+                if (list == null) { Fail("the areas list opens"); return; }
+
+                Expect(StoryAreasList.IsOpen, "the areas list opens");
+                Expect(list.TitleText == "Areas",
+                    "the list is headed 'Areas' (read '" + list.TitleText + "')");
+
+                Expect(list.CardCount == StoryDatabase.AreaCount,
+                    "there is a card for every area (" + list.CardCount + " of " +
+                    StoryDatabase.AreaCount + ")");
+
+                // Every area exactly once, newest first — the reference reads
+                // downward into the past.
+                var seen = new HashSet<int>();
+                bool ordered = true;
+                for (int i = 0; i < list.CardCount; i++)
+                {
+                    int areaId = list.AreaIdAt(i);
+                    if (!seen.Add(areaId)) ordered = false;
+                    if (areaId != StoryDatabase.AreaCount - i) ordered = false;
+                }
+                Expect(ordered && seen.Count == StoryDatabase.AreaCount,
+                    "the list runs from the last area down to the first, once each");
+
+                // Every card says what it is, without a prefab per area.
+                int row1 = list.RowOf(1);
+                StoryArea first = StoryDatabase.GetArea(1);
+                Expect(list.CardHeading(row1) == "Area 1",
+                    "a card is headed 'Area N' (read '" + list.CardHeading(row1) + "')");
+                Expect(list.CardName(row1) == first.Name,
+                    "a card carries the area's name (read '" + list.CardName(row1) + "')");
+                Expect(list.CardProgressText(row1) == "0/" + first.Tasks.Count,
+                    "a card reads completed/total (read '" + list.CardProgressText(row1) + "')");
+
+                // Locked areas are drawn, not dropped, and the current one is
+                // told apart from the rest.
+                Expect(list.CardIsLocked(list.RowOf(StoryDatabase.AreaCount)),
+                    "an area the player has not reached renders locked");
+                Expect(!list.CardIsLocked(row1), "area 1 is not locked at the start");
+                Expect(list.CardIsCurrent(row1),
+                    "the area the player is in is the distinguished one");
+                Expect(list.LockedCount == StoryDatabase.AreaCount - 1,
+                    "only the unlocked areas are unlocked (found " + list.LockedCount +
+                    " locked of " + StoryDatabase.AreaCount + ")");
+
+                // A locked card goes nowhere, and its own handler is what stops
+                // it: onClick fires on a greyed button.
+                opened.Clear();
+                list.CardButton(list.RowOf(StoryDatabase.AreaCount)).onClick.Invoke();
+                Expect(opened.Count == 0,
+                    "a locked card refuses the tap (opened " + opened.Count + ")");
+
+                opened.Clear();
+                list.CardButton(row1).onClick.Invoke();
+                Expect(opened.Count == 1 && opened[0] == 1,
+                    "an unlocked card opens its own area (opened [" +
+                    string.Join(" ", opened.Select(i => i.ToString()).ToArray()) + "])");
+
+                // The pictures: near the viewport only. 150 cards, 31 paintings
+                // on disk, and a menu is not a reason to decompress all of them.
+                Expect(list.ArtCount > 0, "the cards in view carry their room");
+                Expect(list.ArtCount < list.CardCount / 2,
+                    "the cards out of view do not (" + list.ArtCount + " of " +
+                    list.CardCount + " loaded)");
+
+                // The list opens on the player's own frontier rather than at the
+                // top of 150, and scrolling brings a different set of rooms in.
+                list.ScrollTo(1);
+                int atArea1 = list.TopRow;
+                list.ScrollTo(StoryDatabase.AreaCount);
+                Expect(list.TopRow != atArea1,
+                    "the list scrolls to the area it is asked for (" + atArea1 +
+                    " -> " + list.TopRow + ")");
+                Expect(list.CardHasArt(list.TopRow),
+                    "the card scrolled to has its room");
+
+                // Progress reaches the cards without rebuilding any of them.
+                StoryProgress.AddStar(1, 9);
+                StoryProgress.CompleteTask(1, first.Tasks[0].Index);
+                list.Refresh();
+                Expect(list.CardProgressText(row1) == "1/" + first.Tasks.Count,
+                    "a bought repair shows on the card (read '" +
+                    list.CardProgressText(row1) + "')");
+                Expect(list.CardCount == StoryDatabase.AreaCount,
+                    "a refresh does not rebuild the list");
+
+                Debug.Log(string.Format(
+                    "[Story] Areas list: {0} card(s), row 0 is area {1}, row {2} is area 1 " +
+                    "'{3}' {4}, {5} locked, {6} carrying a room.",
+                    list.CardCount, list.AreaIdAt(0), row1, list.CardName(row1),
+                    list.CardProgressText(row1), list.LockedCount, list.ArtCount));
+            }
+            finally
+            {
+                StoryAreasList.Destination = null;
+                StoryAreasList.Close();
+                AreaScreen.Close();
                 StoryProgress.ResetAll();
             }
         }
@@ -1618,7 +1760,7 @@ namespace JellyGarden.Scripts.Story.Editor
                          "StoryAreaScreen", "~StoryClueCard", "~StoryDialogue",
                          "~StoryToast", "~StoryCutscene", StoryLevelHud.HostName,
                          StoryLevelPopup.HostName, StoryHomeScreen.HostName,
-                         StoryNavBar.HostName
+                         StoryNavBar.HostName, StoryAreasList.HostName
                      })
             {
                 GameObject go = GameObject.Find(name);

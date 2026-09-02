@@ -21,7 +21,9 @@ namespace JellyGarden.Scripts.Story.Editor
     {
         private const string Menu = "JellyGarden/Story/Preview/";
 
-        [MenuItem(Menu + "Open Home Screen", true)]
+    [MenuItem(Menu + "Open Home Screen", true)]
+        [MenuItem(Menu + "Open Areas List", true)]
+        [MenuItem(Menu + "Open Areas List (locked area 100)", true)]
         [MenuItem(Menu + "Open Area Screen (area 1)", true)]
         [MenuItem(Menu + "Open Area Screen (area 6)", true)]
         [MenuItem(Menu + "Close The Level", true)]
@@ -42,6 +44,27 @@ namespace JellyGarden.Scripts.Story.Editor
         {
             AreaScreen.Close();
             StoryHomeScreen.Open();
+        }
+
+        /// <summary>
+        /// The list of all 150, scrolled to the room the player is in. Closes the
+        /// area screen first, which sorts above it.
+        /// </summary>
+        [MenuItem(Menu + "Open Areas List")]
+        private static void OpenAreasList()
+        {
+            StoryAreasList.Open();
+        }
+
+        /// <summary>
+        /// The same list parked on an area the player cannot reach, which is the
+        /// only way to look at a locked card: the list opens on the player's own
+        /// frontier and 149 of the 150 cards are below it.
+        /// </summary>
+        [MenuItem(Menu + "Open Areas List (locked area 100)")]
+        private static void OpenAreasListLocked()
+        {
+            StoryAreasList.Open(100);
         }
 
         /// <summary>Area 1 — four tasks, the shortest area the story writes.</summary>

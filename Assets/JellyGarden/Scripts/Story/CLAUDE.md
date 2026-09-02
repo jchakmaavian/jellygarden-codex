@@ -307,14 +307,54 @@ taken away for a level, as in `docs/royal-match/01-home-area.jpg`.
   place and shows in the wrong one. `StoryFlow.PlayingArea` is checked first.
 - Three tabs go nowhere and say so with a toast. Hiding them would put Home off
   centre; swallowing the tap silently reads as a broken button.
-- **`StoryNavBar.AreasDestination` is the seam US-011 sets** to point Areas at the
-  list of all 150 rooms; null is the area the player is restoring. Same shape as
-  `StoryLevelHud.Source`. `LevelIsPlayingSource` is the other seam, so a test can
-  put the shell "in a level" with no board in the scene.
+- **`StoryNavBar.AreasDestination` is the seam `StoryAreasList.Install` sets** to
+  point Areas at the list of all 150 rooms; null is the area the player is
+  restoring, which is what a test that has not installed the list gets. Same shape
+  as `StoryLevelHud.Source`. `LevelIsPlayingSource` is the other seam, so a test
+  can put the shell "in a level" with no board in the scene.
 - The bar is driven by `Update`, because a level starts and ends without telling
   it. An editor test has no frame loop, so it calls `StoryNavBar.Sync()`. Hiding
   turns off the CANVAS, never the component's own object — deactivating the host
   would stop `Update` and the bar could never come back.
+
+## The areas list
+
+`StoryAreasList` is the Areas tab's destination: 150 room cards in a vertical
+scroll on a dark slate ground, per `docs/royal-match/04-areas-list.jpg`. Sorting
+order 350 — above home (300), below the area page (400), so a card opens the area
+page ON TOP of the list and `AreaScreen`'s close X drops the player back here.
+
+- **A card is built from `StoryDatabase` and `StoryProgress` alone.** No prefab
+  per area, no per-area code path: area 150 renders exactly as area 1 does, and
+  adding an area to the story adds a card.
+- **The cards are built ONCE and only refreshed.** A card's shape never changes —
+  only its numbers, whether it is locked, and whether it is the current room. 150
+  cards is the most expensive thing the shell builds; rebuilding them on every
+  repair is not affordable.
+- **Artwork is loaded only for the cards near the viewport.** There are 31 room
+  paintings on disk at roughly half a megabyte each, and resolving all 150 cards
+  at once would decompress every one of them to open a menu. `RefreshArt` runs on
+  `ScrollRect.onValueChanged` and gives one entry of slack in each direction.
+  `StoryArt`'s own cache never releases, so this bounds what a single OPEN costs,
+  not what a long scroll eventually costs.
+- **A card's proportions come out of its WIDTH.** The list scrolls, so an entry is
+  a fixed block of reference points (983 tall, an 888-point card in it) rather
+  than a fraction of the screen — which is the opposite of the rule for a
+  full-screen column, and for the same reason: the thing that must not distort is
+  the card, and the viewport simply shows however many fit.
+- **The list runs from area 150 down to area 1, and opens scrolled to the
+  player's own room.** Royal Match reads downward into the past and can put the
+  newest card at the top because it does not draw locked areas at all. This one
+  does draw them, so opening at the top would be 145 padlocks before the first
+  pressable card; `ScrollTo` puts the frontier at the top of the viewport
+  instead, which restores the reference's reading without hiding the road ahead.
+- **A locked card is drawn, greyed and padlocked, never hidden**, and `OnCard`
+  enforces that itself — `onClick` fires on a greyed button. Grey the ribbon's
+  FACE as well as the ribbon: the rim covers only its outer few points, so tinting
+  the outer image alone leaves a locked area wearing a bright red name plate.
+- `StoryAreasList.Destination` is the test seam — where a card goes — in the shape
+  of `StoryLevelPopup.Launcher`. `StoryAreasList.Install()`, called once per scene
+  by `StorySceneHooks`, is what points the nav bar's Areas tab here.
 
 ## The in-level HUD
 

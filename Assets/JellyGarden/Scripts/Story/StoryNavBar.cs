@@ -152,7 +152,7 @@ namespace JellyGarden.Scripts.Story
             get
             {
                 if (LevelIsPlaying) return false;
-                return StoryHomeScreen.IsOpen || AreaScreen.IsOpen;
+                return StoryHomeScreen.IsOpen || AreaScreen.IsOpen || StoryAreasList.IsOpen;
             }
         }
 
@@ -211,10 +211,11 @@ namespace JellyGarden.Scripts.Story
 
             if (!show) return;
 
-            // The area page is what the Areas tab reaches today, so it is what
-            // lights the Areas tab; home lights Home. Home sorts under the area
-            // page, so when both are open the area page is the one being read.
-            Tab current = AreaScreen.IsOpen ? Tab.Areas : Tab.Home;
+            // The Areas tab is lit by anything the Areas tab reaches — the list
+            // of 150 and the area page it opens. Home lights Home. Home sorts
+            // under both, so when several are open the topmost is the one being
+            // read, and that is what the tab reports.
+            Tab current = AreaScreen.IsOpen || StoryAreasList.IsOpen ? Tab.Areas : Tab.Home;
             if (current != _selected)
             {
                 _selected = current;
@@ -275,8 +276,9 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// The area the player is restoring. US-011 replaces this with the list of
-        /// all 150 by setting AreasDestination — the tab itself does not change.
+        /// Where Areas goes. In the game StoryAreasList.Install points this at the
+        /// list of all 150; the fallback is the one area the player is restoring,
+        /// which is what a test that has not installed the list gets.
         /// </summary>
         private static void GoToAreas()
         {
@@ -290,13 +292,14 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// Home, with the area page closed behind it: home sorts below the area
-        /// page, so leaving it open would put the panel the player just left back
-        /// over the screen they asked for.
+        /// Home, with the area page and the areas list closed behind it: home
+        /// sorts below both, so leaving either open would put the screen the
+        /// player just left back over the one they asked for.
         /// </summary>
         private static void GoHome()
         {
             AreaScreen.Close();
+            StoryAreasList.Close();
             StoryHomeScreen.Open();
         }
 

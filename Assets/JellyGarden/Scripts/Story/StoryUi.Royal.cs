@@ -50,6 +50,17 @@ namespace JellyGarden.Scripts.Story
         public static readonly Color RoyalChestGold = Rgb(252, 214, 6);   // chest panels
         public static readonly Color RoyalTealInk = Rgb(4, 55, 74);       // heading outline
 
+        // The areas list. Its ground is a dark slate rather than the royal blue
+        // every other screen sits on, because the cards on it are themselves red
+        // and gold and would have nothing to sit against. Sampled off
+        // docs/royal-match/04-areas-list.jpg.
+        public static readonly Color RoyalSlate = Rgb(56, 74, 96);        // the list's ground
+        public static readonly Color RoyalSlateLine = Rgb(35, 53, 73);    // between two cards
+        public static readonly Color RoyalHeaderBlue = Rgb(1, 70, 147);   // the "Areas" strip
+        public static readonly Color RoyalBanner = Rgb(184, 33, 51);      // a card's name ribbon
+        public static readonly Color RoyalBannerDeep = Rgb(124, 15, 38);  // its shadowed edge
+        public static readonly Color RoyalCardRed = Rgb(181, 13, 28);     // the card frame
+
         // The task-row icons. Royal Match paints one object per repair; these are
         // sampled off the two it shows in 02-area-tasks.jpg — the rolled carpet
         // and the stained glass — so a drawn glyph belongs to the same picture.
