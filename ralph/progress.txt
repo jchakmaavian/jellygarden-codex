@@ -1,35 +1,92 @@
 # Ralph Progress Log
-Started: Tue Sep  1 19:14:41 +06 2026
+Feature: Royal Match shell for areas 1-5
+Started: 2026-09-02
 ---
 
 ## Codebase Patterns
-- Typecheck: `/Users/avian/.dotnet/dotnet build Assembly-CSharp.csproj -v q --nologo` (0 errors expected, 34 pre-existing warnings)
-- Story source data already exists: 150 areas / 807 tasks / 1209 stars in arc1-6.json
-- Unity 6000.5.10f1 at /Applications/Unity/Hub/Editor/6000.5.10f1
-- Every generated Unity asset needs a sibling .meta with a stable GUID
----
 
-## 2026-09-01 - US-001..US-030 (all)
-Implemented the full 150-area King Leo story inside the Jelly Garden kit.
+READ THIS SECTION FIRST. It is the difference between a working iteration and a
+wasted one.
 
-- Story data: arc1-6.json + index/level_plan/cutscenes/themes into Resources/Story
-- Runtime: StoryDatabase, StoryProgress (atomic save), StoryLevelPlan, StoryFlow
-- Content: 1209 level boards + 1209 target assets generated from the shipped 100
-- Map: LevelsMap.prefab grown 100 -> 150 nodes, camera bounds raised
-- Screens: AreaScreen, ClueCard, DialogueSystem, CutsceneRunner, OpeningSequence
-- Assets: 16 imported + 11 generated (5 arc backdrops, 6 portraits)
-- Free-game rules per TECH.md: no lives, no ads, no shops, boosters earned
+### What this project is
+Unity 6000.5.10f1, macOS. A purchased match-3 kit (Jelly Garden) carrying the
+150-area King Leo story. Story layer lives in
+`Assets/JellyGarden/Scripts/Story/` and has its own CLAUDE.md — read it.
+Root CLAUDE.md and PLAN.md are also required reading.
 
-**Learnings for future iterations:**
-  - A level cell's two digits take DISJOINT SquareTypes sets; LevelMakerEditor
-    .SetType is the authority. An obstacle code in the block digit silently
-    becomes a plain cell.
-  - A BLOCKS target is not the board's block count (level 19: target 24, board
-    56). Never rewrite it; only assert it is reachable.
-  - Assembly-CSharp gets NUnit but not UnityEngine.TestTools, and an asmdef
-    cannot reference a predefined assembly. Play-mode tests are unavailable;
-    drive screens directly with a clock seam instead.
-  - `System.Random` resolves into JellyGarden.Scripts.System; use global::.
-  - Harvest templates from tools/shipped_levels, never Resources/Levels — after
-    generation the latter holds the generator's own output.
+### The two things that must never regress
+1. **Animation, particles, VFX.** Enforced:
+   `python3 tools/check_vfx_intact.py`
+   It fails on a deleted/renamed visual asset, on a prefab losing a
+   ParticleSystem/Animator/Animation/SpriteRenderer, and on a board script
+   losing a method or shrinking. Board scripts (`LevelManager.cs`, `Item.cs`,
+   `Square.cs`, `GUI/AnimationManager.cs`, `ItemAnimEvents.cs`,
+   `ParticleSorting.cs`) may only be ADDED to. Mark every hook `// STORY:`.
+2. **The 1209 tuned levels.** `Resources/Levels/*.txt` and
+   `Resources/Targets/*.asset` are finished data. NEVER re-run
+   `tools/level_gen.py` or `tools/target_gen.py`.
+
+### Typecheck (the generated csproj does NOT see new files)
+```bash
+python3 tools/make_typecheck_csproj.py
+dotnet build Story.Typecheck.csproj -v q --nologo     # expect 0 Error(s)
+```
+
+### Content validation
+```bash
+python3 tools/validate_story.py     # 150 areas / 807 tasks / 1209 stars / 1209 boards
+```
+
+### Running it (there is no browser; this is Unity)
+The Unity Editor is usually already open on this project. Batchmode takes an
+exclusive lock and will FAIL while it is open — do not kill the user's Editor.
+Drive the open Editor instead:
+```bash
+osascript -e 'tell application "System Events" to tell process "Unity" to set frontmost to true'
+osascript -e 'tell application "System Events" to keystroke "p" using command down'   # toggle Play
+grep -E "^\[Story\]" Logs/Editor.log | tail -20
+```
+Screenshot the Editor with `screencapture -x -o /tmp/u.png` and crop the Game
+view. Get the window rect with:
+```bash
+osascript -e 'tell application "System Events" to tell process "Unity" to get {position, size} of window 1'
+```
+
+### Verifying UI without clicking
+Synthetic clicks on the Unity Game view are unreliable. The established pattern
+is a self-driving component that runs once per play session and prints PASS/FAIL
+to the log — see `Assets/JellyGarden/Scripts/Story/StoryPowerupTest.cs`. Copy
+that shape for UI verification. NOTE: this project has the Input System package
+as its ONLY active input handler, so `UnityEngine.Input` THROWS on read. Never
+use `Input.GetKeyDown`.
+
+### Traps that have bitten before
+- `System.*` resolves into the kit's `JellyGarden.Scripts.System` namespace.
+  Inside `JellyGarden.Scripts.Story` write `global::System.Random`, etc.
+- `[RuntimeInitializeOnLoadMethod]` runs ONCE per domain, in the startup scene.
+  Per-scene setup belongs in `StorySceneHooks.InstallForCurrentScene()`.
+- The game opens on `main.unity` and loads `game.unity` afterwards. `main` has
+  no `LevelManager`.
+- `ItemsTypes` is a NAMESPACE-level enum, not nested in `Item`.
+- Kit UI textures have their labels PAINTED INTO the artwork
+  (`play_menu_01.png` says "Level"/"Target:"). Draw your own panels via
+  `StoryUi` instead of reusing them.
+- A ParticleSystem does NOT render inside a ScreenSpaceOverlay canvas. Use
+  pooled UI quads (see `RepairVfx.cs`).
+
+### The Royal Match reference
+`docs/royal-match/` holds 11 screenshots captured off a real device plus a
+README describing exactly what differs from the kit. Build against those, not
+against memory. The most important findings:
+- A level HUD is Target + portrait + Moves. There is NO score bar and NO star
+  rating inside a level.
+- A star is a currency, not a grade: one per level won, spent at 1-2 per task.
+- Areas is a VERTICAL LIST of room cards, not a winding path map.
+- Repairs animate on the room itself, no separate cutscene screen.
+
+### Already done, do not redo
+- One star per level: `StoryOneStar` (`StoryOneStar.Enabled`).
+- Universal powerups + tap-to-fire: `Item.IsUniversalPowerup`, `Item.TapActivate`.
+- Board art: `tools/item_skin_royal.py` (installed).
+
 ---

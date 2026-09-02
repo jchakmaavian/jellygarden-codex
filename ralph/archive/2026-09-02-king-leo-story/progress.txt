@@ -1,0 +1,35 @@
+# Ralph Progress Log
+Started: Tue Sep  1 19:14:41 +06 2026
+---
+
+## Codebase Patterns
+- Typecheck: `/Users/avian/.dotnet/dotnet build Assembly-CSharp.csproj -v q --nologo` (0 errors expected, 34 pre-existing warnings)
+- Story source data already exists: 150 areas / 807 tasks / 1209 stars in arc1-6.json
+- Unity 6000.5.10f1 at /Applications/Unity/Hub/Editor/6000.5.10f1
+- Every generated Unity asset needs a sibling .meta with a stable GUID
+---
+
+## 2026-09-01 - US-001..US-030 (all)
+Implemented the full 150-area King Leo story inside the Jelly Garden kit.
+
+- Story data: arc1-6.json + index/level_plan/cutscenes/themes into Resources/Story
+- Runtime: StoryDatabase, StoryProgress (atomic save), StoryLevelPlan, StoryFlow
+- Content: 1209 level boards + 1209 target assets generated from the shipped 100
+- Map: LevelsMap.prefab grown 100 -> 150 nodes, camera bounds raised
+- Screens: AreaScreen, ClueCard, DialogueSystem, CutsceneRunner, OpeningSequence
+- Assets: 16 imported + 11 generated (5 arc backdrops, 6 portraits)
+- Free-game rules per TECH.md: no lives, no ads, no shops, boosters earned
+
+**Learnings for future iterations:**
+  - A level cell's two digits take DISJOINT SquareTypes sets; LevelMakerEditor
+    .SetType is the authority. An obstacle code in the block digit silently
+    becomes a plain cell.
+  - A BLOCKS target is not the board's block count (level 19: target 24, board
+    56). Never rewrite it; only assert it is reachable.
+  - Assembly-CSharp gets NUnit but not UnityEngine.TestTools, and an asmdef
+    cannot reference a predefined assembly. Play-mode tests are unavailable;
+    drive screens directly with a clock seam instead.
+  - `System.Random` resolves into JellyGarden.Scripts.System; use global::.
+  - Harvest templates from tools/shipped_levels, never Resources/Levels — after
+    generation the latter holds the generator's own output.
+---
