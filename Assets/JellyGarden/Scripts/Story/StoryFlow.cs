@@ -157,6 +157,13 @@ namespace JellyGarden.Scripts.Story
         {
             if (LevelManager.THIS == null) return;
             LevelManager.THIS.LoadLevel();
+
+            // LoadLevel rewrites star1..star3 from the level file, so the single
+            // star has to be re-applied here rather than once when the scene
+            // loaded.
+            StoryOneStar.Forget();
+            StoryOneStar.Apply();
+
             LevelManager.THIS.gameStatus = GameState.PrepareGame;
         }
 

@@ -2189,6 +2189,10 @@ namespace JellyGarden.Scripts
                 stars = 3;
             }
 
+            // STORY: a level pays one star, never three. Additive — delete this
+            // line and the kit's three-star scoring is exactly as it shipped.
+            stars = Story.StoryOneStar.CapStars(stars);
+
             if (Score >= star1)
             {
                 if (!star1Anim.activeSelf)
