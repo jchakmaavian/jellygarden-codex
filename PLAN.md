@@ -1,31 +1,31 @@
 # Adapting the game to the story
 
-The kit is a candy game. The story is about a king putting his castle back
-together. This is the plan to make the second true without damaging the two
-things that make the first worth keeping.
+The kit is a candy game with candy rules. The story is about a king putting his
+castle back together. This is the plan to make the second true — in the rules as
+well as the art — without damaging the two things that make the first worth
+keeping.
 
-Two scope decisions are already made and shape everything below:
+Scope decisions already made, which shape everything below:
 
-- **Audio is left exactly as it is.** No new music, no new voice, no
-  re-recording. See *Deferred by decision*.
-- **Cutscenes get a placeholder everywhere.** Real cutscene content is
-  generated later, by you. This plan's job is to make every cutscene site
-  present, wired and countable, so dropping the real ones in needs no code
-  change. See Phase 3.
+- **The board plays like Royal Match.** One star per level. Universal powerups,
+  not per-colour ones. Tap a powerup to fire it where it sits. Swipe it and it
+  fires where it lands. See Phase 1.
+- **Audio is left exactly as it is.** No new music, no new voice. See *Deferred*.
+- **Cutscenes get a placeholder everywhere.** Real content is generated later, by
+  you. See Phase 4.
 
 ---
 
 ## The two things that must not regress
 
-These are not preferences. They are the reason this project is worth finishing
-rather than rebuilding.
+Not preferences. They are the reason this project is worth finishing rather than
+rebuilding.
 
 ### 1. The feel — animation, particles, VFX
 
 The kit's match, cascade, explosion, swap-refusal and idle animations are the
 game's whole tactile quality. **No change deletes, renames or re-authors an
-animation clip, a particle system, a material or a prefab.** Everything is
-additive, or a pixel-level texture rewrite under the same filename.
+animation clip, a particle system, a material or a prefab.**
 
 Enforced, not asserted:
 
@@ -33,14 +33,16 @@ Enforced, not asserted:
 python3 tools/check_vfx_intact.py
 ```
 
-It fails on a deleted or renamed visual asset, on a prefab that lost a
-`ParticleSystem` / `Animator` / `Animation` / `SpriteRenderer`, and on a board
-script that lost a method or shrank.
+Phase 1 is the first phase that edits the board scripts themselves, so the rule
+gets sharper there. `Item.cs`, `Square.cs`, `LevelManager.cs`,
+`GUI/AnimationManager.cs`, `ItemAnimEvents.cs` and `ParticleSorting.cs` are
+checked for **method loss and line-count shrink**. Every change to them is an
+addition: new methods, new branches, new call sites. Nothing is deleted, and a
+behaviour that is being replaced is bypassed rather than cut out.
 
 **The consequence that keeps catching people out:** the six board colours cannot
 be reordered. `Textures/effects/explosion_item_01..06` are tinted per item
-*index*. Move green to slot 1 and green pieces shatter into red sparks. Any
-reskin keeps red, orange, purple, blue, green, yellow in that order.
+*index*. Move green to slot 1 and green pieces shatter into red sparks.
 
 ### 2. The levels — 1209 boards, tuned
 
@@ -52,242 +54,282 @@ reskin keeps red, orange, purple, blue, green, yellow in that order.
 | difficulty curve | mapped area-by-area in `Resources/Story/level_plan.json` |
 | sabotaged boards | 665, from area 19 on |
 
-These are **finished data, not build output.** The generator that made them is
-deterministic — every mutation is seeded on the level number
-(`random.Random("kingleo/%d")`) — so re-running reproduces the same files
+**Finished data, not build output.** The generator is deterministic — every
+mutation is seeded on the level number — so re-running reproduces the files
 exactly. That is a safety property, not an invitation.
 
-> **Do not re-run `level_gen.py` or `target_gen.py` as part of story work.**
-> If a level ever needs to change, edit the one `.txt` by hand and say so in the
-> commit. The story bends to fit the levels. The levels do not move.
+> **Do not re-run `level_gen.py` or `target_gen.py`.** If a level ever needs to
+> change, edit the one `.txt` by hand and say so in the commit. The story bends
+> to fit the levels. The levels do not move.
 
-Phase 0 turns that from something to remember into something checked.
+Phase 1 changes the *rules* the levels are played under. It does not change a
+single board. See *Consequences to accept*.
 
 ---
 
 ## Where the game actually is
 
-Built, committed, and passing its suites:
+Built, committed, passing its suites: 150 areas, 807 repair tasks, 1209 stars,
+six arcs; area screen, repair flow, clue cards, 30 arc-beat cutscenes, opening;
+a working animated repair cutscene with 10 work types classified from each
+task's own verbs (93% specific, 7% generic); the map grown from 100 nodes to
+150 with arc banners; per-arc board backdrop and cell tint; the sabotage beat at
+area 19; free-play economy; atomic save with per-area star pools.
 
-- 150 areas, 807 repair tasks, 1209 stars, six arcs, parsed from the markdown in
-  `/Users/avian/Desktop/story` and shipped as JSON in `Resources/Story`
-- area screen, repair flow, clue cards, 30 arc-beat cutscenes, opening sequence
-- a working animated repair cutscene — 10 work types classified from each task's
-  own verbs, **93% specific, 7% (58 of 807) falling back to generic**
-- world map grown from the kit's 100 nodes to 150, with arc banners and area names
-- per-arc board backdrop and cell tint (`StoryBoardTheme`); the kit picked a
-  backdrop by `level / 20`, which across 1209 levels meant one picture for 90%
-  of the game
-- the sabotage beat at area 19, using the kit's own thriving block
-- free-play economy: no lives spent, no ads, no shop
-- save system with atomic writes and per-area star pools
-
-What is **not** true yet: the game still *looks* like a candy game with a story
-laid on top. That gap is what this plan closes.
-
----
-
-## Inventory of the gap
-
-| | have | need |
-|---|---|---|
-| board pieces | candy — jelly bean, star, choco bomb | reads as the story |
-| blockers | jelly, wire, wood, stone, choco | already fit: ivy, cages, timbers, rubble, rot |
-| boosters | lollipop, candy bomb | fit the world |
-| title / logo / loading | "Jelly Garden" | "King Leo" |
-| world map | 5 candy-land tiles | the kingdom's road |
-| area artwork | **25 of 150 areas** (all of arc 1) | placeholder for the other 125 |
-| cutscene visuals | arc 1 only | placeholder everywhere, real ones later |
-| audio | 2 music beds, 8 SFX, 5 voice lines | **nothing — left as is** |
-
-Already built and sitting unapplied in `tools/`, none of it live:
-
-- `item_skin_flat.py` — flat minimal board set, six distinct silhouettes
-- `item_skin.py` — painted jewels (rejected: three of six were rectangular gems
-  in neighbouring hues and blurred together at tile size)
-- `booster_skin.py`, `brand_skin.py` — boosters, logo, title, loading, map tiles
-
-`tools/README.md` says plainly that none is applied.
+What is not true yet: the board still plays by candy rules and looks like candy.
 
 ---
 
 ## Phases
 
-Safety net first, then visible impact per unit of risk.
-
 ### Phase 0 — Freeze and prove
 
-Nothing else starts until the two protected things are protected by a check
-rather than by care.
+Nothing else starts until the protected things are protected by a check rather
+than by care.
 
-1. **Level manifest.** Write `tools/levels.sha256`, one line per level and
-   target file. Add `tools/check_levels_frozen.py` and call it wherever
-   `check_vfx_intact.py` is called.
+1. **Level manifest.** `tools/levels.sha256`, one line per level and target
+   file, plus `tools/check_levels_frozen.py` called wherever
+   `check_vfx_intact.py` is.
 2. **Prove the win path.** `StoryFlow.HandleWin` awards the star on
-   `LevelManager.OnWin`. It is verified **headless only** — nobody has played a
-   board to a win in a real player and watched a star land. Do that by hand and
-   record it.
-3. Re-run the full verification set; put the numbers in the commit.
-
-**Acceptance:** manifest passes on a clean tree; a played win produces a star,
-the star spends on a repair, the repair cutscene fires.
+   `LevelManager.OnWin`, and it is verified **headless only** — nobody has
+   played a board to a win in a real player and watched a star land. Do it by
+   hand, record it. This matters more now: Phase 1 rewrites what winning means.
+3. **Capture a difficulty baseline.** Play a fixed sample — say levels 1, 22,
+   150, 400, 800, 1209 — and record moves used and score, so Phase 1's effect on
+   difficulty is measurable rather than argued about.
 
 **Risk:** none. This phase only adds checks.
 
 ---
 
-### Phase 1 — The board
+### Phase 1 — Royal Match rules
 
-The highest-impact single change: it is what the player looks at for the whole
-game.
+The largest change in the plan, and the only one that edits the protected board
+scripts. Four separate rules; each is independently shippable and independently
+revertable.
 
-- Apply one board skin — **the one open decision, see below**.
+#### 1.1 One star per level
+
+**This is already half true.** `StoryFlow.HandleWin` awards exactly one star,
+once, on the first win — replaying a beaten level pays nothing. The story
+economy has always been one star per level, 1209 stars across 150 areas.
+
+What contradicts it is the *kit's own* three-star score system running beside
+it: `LevelManager.CheckStars()` fills `stars` to 1/2/3 as `Score` crosses
+`star1`/`star2`/`star3`, writes `Level.NNN.StarsCount` to PlayerPrefs, and the
+HUD draws a three-star progress bar across the top of the board. Two different
+things called "star", one of which the story ignores.
+
+The work:
+
+- Collapse the HUD to a **single goal bar with one star** at its end.
+- Stop the three-star PlayerPrefs from being a parallel currency.
+- **Keep `star1`.** It is not just a display threshold — for SCORE-mode levels
+  it is the pass mark. Removing all three would leave those levels with no win
+  condition. `star2` and `star3` stop being shown and stop being stored.
+- The end-of-level panel says *one* star earned, matching what the area screen
+  then shows.
+
+**Acceptance:** every level that can be won awards exactly one star; no screen
+shows a 2-of-3 or 3-of-3 rating; `validate_story.py` still reports 1209 stars.
+
+#### 1.2 Universal powerups
+
+Today a special is per colour. `Item.cs` picks
+`stripedItems[color].horizontal`, `stripedItems[color].vertical` and
+`packageItems[color]` — six variants of each. The colour bomb is the exception
+and is already universal: `bombItems[0]`, no index.
+
+**Follow the colour bomb.** A rocket is a rocket whatever cleared it.
+
+Two layers, and they can land separately:
+
+- **Art (cheap, no code).** Fill all six entries of each array with the same
+  sprite. The board immediately reads as universal with the protected scripts
+  untouched. Do this first.
+- **Semantics (code).** A universal powerup should not still behave as a
+  coloured piece for matching — in Royal Match a rocket is not part of a
+  three-in-a-row. This is an additive branch in the match check, not a rewrite
+  of it.
+
+**Acceptance:** a rocket formed by a green match is pixel-identical to one
+formed by a red match; a powerup is not consumed by an ordinary colour match.
+
+#### 1.3 Tap to fire, in place
+
+Today `Item.OnMouseDown` only begins a drag; a tap that does not become a drag
+does nothing. Royal Match fires the powerup where it sits.
+
+Add — not replace — a tap path: on mouse-up with no drag distance travelled and
+the item being a special, activate it on its own square. The existing activation
+routines already do the work; this only gives them a new trigger.
+
+**Acceptance:** tapping a rocket, bomb or colour bomb fires it on its own cell,
+with the kit's existing explosion VFX; tapping a plain piece still does nothing.
+
+#### 1.4 Swipe to land, then fire
+
+Swiping a powerup moves it one cell and it detonates **at the destination**,
+rather than needing to complete a match there.
+
+This is the subtlest of the four, because it changes what a swap *means* when a
+special is involved. Today a special-to-special swap is special-cased
+(`CheckChocoBomb`, `SetStrippedExtra`); a special-to-plain swap is an ordinary
+swap that only pays off if it makes a match. That second case is the one that
+changes: the swap completes, the powerup arrives, and it fires there.
+
+Keep the existing special-to-special combinations — they are good, they are
+already animated, and Royal Match has them too.
+
+**Acceptance:** swiping a rocket into a neighbouring cell fires it from that
+cell; the existing two-special combinations still trigger; an illegal swap still
+plays the kit's refusal animation.
+
+#### Consequences to accept
+
+**These rules make the 1209 levels easier.** Tap-to-fire and swipe-to-land both
+remove the cost of setting a powerup up. The layouts do not change and must not;
+what changes is how much a player gets for a move.
+
+The response is to measure, not to regenerate:
+
+- Compare against the Phase 0 baseline on the same sample of levels.
+- If levels are landing far under their move limit, the lever is
+  `level_plan.json`'s difficulty curve and the move limits, tuned by hand for
+  the areas that need it — **not** `level_gen.py`.
+- Boosters are currently granted free on every win (`StoryFreeGame`). Combined
+  with tap-to-fire that may be too generous; the grant rate is a one-line
+  change and a good first dial to turn.
+
+**Risk:** high, relative to everything else here. It is the only phase touching
+`Item.cs` and `LevelManager.cs`, and the only one whose result cannot be judged
+from a screenshot — it has to be played. Land the four rules as four commits.
+
+---
+
+### Phase 2 — The board skin
+
+- Apply one board skin. **The one open decision, below.**
 - Six colours stay in kit index order.
-- Every filename, size and GUID unchanged; the rewrite is pixel-level, in place.
-- Blockers need no new art to make narrative sense. Wire is a cage, wood is a
-  rotted timber, stone is fallen masonry, the thriving block is rot spreading.
-  Renaming them in the UI is copy, not art.
+- Every filename, size and GUID unchanged; a pixel-level rewrite in place.
+- Universal powerup art (1.2) is part of this: one rocket, one bomb, one colour
+  bomb, drawn once rather than six times.
+- Blockers need no new art to make narrative sense — wire is a cage, wood a
+  rotted timber, stone fallen masonry, the thriving block rot spreading.
 
-**Acceptance:** `check_vfx_intact.py` clean, `check_levels_frozen.py` clean, and
-a board screenshot at real tile size where all six pieces are distinguishable.
+**Acceptance:** `check_vfx_intact.py` and `check_levels_frozen.py` clean; a
+screenshot at real tile size where all six pieces are distinguishable.
 
-**Risk:** low. One `git checkout Assets/JellyGarden/Textures` undoes it.
-
----
-
-### Phase 2 — The frame
-
-Title, logo, loading screen, world map tiles, the spreading blocker.
-`brand_skin.py` already does all of it. The map tiles were restyled *from the
-kit's own tiles as the reference image*, so the painted road keeps its shape and
-the level nodes still stand on it.
-
-**Acceptance:** the first screen names the game correctly; no map node stands in
-a field where the road used to be.
-
-**Risk:** low. The one real trap is already handled — the main menu draws
-`logo.png` as its own object over the banner, so the banner must **not** carry
-the wordmark or the title renders twice, offset.
+**Risk:** low. `git checkout Assets/JellyGarden/Textures` undoes it.
 
 ---
 
-### Phase 3 — Cutscene placeholders and the drop-in contract
+### Phase 3 — The frame
 
-This is the phase the cutscene decision reshapes. The goal is **not** to make
-cutscenes look good. It is to make every cutscene site exist, be obviously a
-placeholder, be counted, and accept its real replacement by dropping a file in.
+Title, logo, loading screen, world map tiles, spreading blocker. `brand_skin.py`
+already does all of it; the map tiles were restyled *from the kit's own tiles as
+the reference image*, so the painted road keeps its shape and the level nodes
+still stand on it.
 
-#### What a "cutscene site" is
+**Risk:** low. The one trap is handled: the main menu draws `logo.png` as its
+own object over the banner, so the banner must **not** carry the wordmark, or
+the title renders twice, offset.
+
+---
+
+### Phase 4 — Cutscene placeholders and the drop-in contract
+
+The goal is not to make cutscenes look good. It is to make every cutscene site
+exist, be obviously a placeholder, be counted, and accept its real replacement
+by dropping a file in.
 
 | kind | count | fires when |
 |---|---|---|
 | opening | 1 | first launch, before the map |
-| arc beat | 30 | entering a beat area — `cutscenes.json` |
+| arc beat | 30 | entering a beat area (`cutscenes.json`) |
 | clue card | 150 | last repair of an area completes |
 | repair | 807 | a repair is bought with a star |
 | **total** | **988** | |
 
-**The words already exist for all 988.** Every line is authored in the story
-markdown and shipped in `Resources/Story`. What is missing is the *visual*.
-The placeholder therefore is not an empty box — it plays the authored text on a
-neutral, clearly-marked card.
+**The words already exist for all 988** — every line is authored in the story
+markdown and shipped in `Resources/Story`. So a placeholder is not an empty box;
+it plays the real authored text on a neutral, clearly-marked card.
 
-#### The repair cutscene is not replaced
+**The animated repair cutscene is kept.** It wipes ruined art to restored art
+with per-work-type particles and is one of the better things in the build. What
+it lacks is artwork for **125 of the 150 areas** — those fall back to the arc
+backdrop plus the damage wash, so they animate but never visibly transform.
+Those 125 get the placeholder, not the animation.
 
-The animated repair cutscene already works: it wipes the ruined art to the
-restored art with per-work-type particles, and it is one of the better things in
-the build. It stays. What it is missing is **artwork for 125 of the 150 areas** —
-those fall back to the arc backdrop plus the damage wash, so they animate but
-never visibly transform. Those 125 get the placeholder, not the animation.
+> If you did mean to strip that animation back too, say so — I read it the other
+> way deliberately, because it is existing work with VFX in it.
 
-> If you actually meant to strip the repair animation back to a placeholder too,
-> say so — I read it the other way on purpose, because that animation is
-> existing work with VFX in it.
-
-#### The contract, so later is cheap
-
-Resolution is by filename convention, the way `StoryArt` already resolves area
-art — drop a correctly-named file into `Resources/Story` and it is picked up
-with no code change and no inspector wiring:
+Resolution is by filename convention, the way `StoryArt` already works: drop a
+correctly-named file into `Resources/Story` and it is picked up, no code change,
+no inspector wiring:
 
 ```
 Cutscenes/opening.<ext>
-Cutscenes/arc_beat_<areaId>.<ext>          e.g. arc_beat_005
-Cutscenes/clue_<areaId>.<ext>              e.g. clue_017
-Art/area_<areaId>_restored.<ext>           the repair cutscene's target state
-Art/area_<areaId>_state<n>.<ext>           optional, per-repair states
+Cutscenes/arc_beat_<areaId>.<ext>        e.g. arc_beat_005
+Cutscenes/clue_<areaId>.<ext>            e.g. clue_017
+Art/area_<areaId>_restored.<ext>         the repair cutscene's target state
+Art/area_<areaId>_state<n>.<ext>         optional, per-repair states
 ```
 
-Deliverables:
-
-1. **One placeholder presentation** used at every site with no real asset —
-   visibly a placeholder, carrying the site's real authored text plus its id.
-2. **`tools/cutscene_manifest.py`** → a manifest of all 988 sites: id, kind,
-   area, trigger, the text it already carries, and the exact filename its real
-   asset must have. This is the work order for generating them later.
-3. **A coverage check** that reports how many sites are still placeholder, so
-   the number is visible and a placeholder can never ship unnoticed.
-
-**Acceptance:** every one of the 988 sites plays something and none renders
-blank; the manifest lists all 988 with resolvable filenames; the coverage check
-reports the real number, and it is allowed to be high.
+Deliverables: one placeholder presentation; `tools/cutscene_manifest.py`
+producing the work order for all 988 sites with the exact filename each real
+asset needs; and a **coverage check** so shipping with placeholders is a
+decision rather than an accident.
 
 **Risk:** low. No generation spend, no art decisions, no audio.
 
 ---
 
-### Phase 4 — Per-arc board dressing
+### Phase 5 — Per-arc board dressing
 
-Cheap polish once 1–3 land. Obstacle sprites tint per arc through the existing
-`StoryBoardTheme` path — a colour on existing sprites, so every animation and
-particle stays untouched. Mines read colder, the treasury gilded, the siege
-scorched, with no new art at all.
+Obstacle sprites tinted per arc through the existing `StoryBoardTheme` path — a
+colour on existing sprites, so every animation and particle stays untouched.
+Mines read colder, the treasury gilded, the siege scorched, with no new art.
 
-**Risk:** low. Do it last; it is invisible next to Phases 1 and 3.
+Do it last; it is invisible next to Phases 1 and 4.
 
 ---
 
-### Phase 5 — Ship-readiness
+### Phase 6 — Ship-readiness
 
 - Full verification set, recorded.
-- A real playthrough of arc 1, end to end, in a release player.
-- **Licensing, and this one cannot be settled in code.** The generated art comes
-  from Magnific and the existing audio from ElevenLabs. Both services' terms turn
-  on *distribution*, not revenue — a free public release is still distribution.
-  Check both before any store listing.
-
-Shipping with placeholder cutscenes is a real option, and the coverage check
-makes it a decision rather than an accident.
+- A real playthrough of arc 1 end to end in a release player, under the new rules.
+- **Licensing, which cannot be settled in code.** Generated art comes from
+  Magnific, existing audio from ElevenLabs. Both services' terms turn on
+  *distribution*, not revenue — a free public release is still distribution.
 
 ---
 
 ## Deferred by decision
 
-Recorded so it is deliberate rather than forgotten.
-
-**Audio — untouched.** Currently 2 music beds (`theme_ruin`, `theme_level`),
-8 SFX, and 5 voice lines. The voice lines cover arc 1's opening plus one clue.
-Everything else narrates silently, which the code handles: a missing line logs
+**Audio — untouched.** 2 music beds (`theme_ruin`, `theme_level`), 8 SFX, 5
+voice lines covering arc 1's opening plus one clue. Everything else narrates
+silently, which the code handles: a missing line logs
 `[Story] No narration for '...'` once and plays nothing.
 
-One thing worth knowing before any future audio pass: **Alfred was never cast.**
-The ElevenLabs key in use lacks the `voices_read` permission, so all five
-existing lines were rendered with whatever the account default voice is. Fix the
-key before generating more, or every new line inherits a voice nobody chose.
+Before any future audio pass: **Alfred was never cast.** The ElevenLabs key in
+use lacks `voices_read`, so all five existing lines were rendered with whatever
+the account default voice is. Fix the key first, or every new line inherits a
+voice nobody chose.
 
-**Real cutscene content — yours to generate.** Phase 3 delivers the sites, the
-manifest and the naming contract; the content arrives later against that.
+**Real cutscene content — yours to generate**, against the Phase 4 manifest.
 
 ---
 
 ## The one open decision
 
-**Which board skin.** Flat minimal (shield, coin, gem, key, pennant, crown),
-the painted jewels, or stay on candy.
+**Which board skin.** Flat minimal (shield, coin, gem, key, pennant, crown), the
+painted jewels, or stay on candy.
 
-My recommendation is **flat** — it is the only one of the three where all six
-pieces stay distinguishable at the roughly 60 px a tile actually renders at.
-The painted set looked more expensive and read worse.
+Recommendation: **flat.** It is the only one of the three where all six pieces
+stay distinguishable at the roughly 60 px a tile actually renders at — and it
+suits universal powerups, which want a bold readable silhouette rather than a
+painted gem with a lance through it.
 
 ---
 
@@ -308,6 +350,11 @@ dotnet build Story.Typecheck.csproj -v q --nologo      # 0 errors
 "$UNITY" -batchmode -quit -nographics -projectPath . -logFile - \
   -executeMethod JellyGarden.Scripts.Story.Editor.StoryScreenTests.RunHeadless
 ```
+
+From Phase 1 on, **none of that is sufficient on its own.** The rule changes can
+only be judged by playing: no headless suite can tell you whether tap-to-fire
+made level 400 trivial. Every Phase 1 commit needs a played sample against the
+Phase 0 baseline.
 
 Batchmode takes an exclusive project lock. **Close the Unity Editor before
 running any `$UNITY` line** — with it open they fail, and killing the Editor to
