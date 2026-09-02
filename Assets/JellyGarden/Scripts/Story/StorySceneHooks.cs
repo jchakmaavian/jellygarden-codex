@@ -51,6 +51,9 @@ namespace JellyGarden.Scripts.Story
             // decides between have to have installed their seams first.
             StoryShell.Install();
             StoryPowerupTest.Install();
+            // Last of all: it waits for the board self-test above to have had its
+            // run before it opens a screen of its own.
+            StoryShellTest.Install();
         }
     }
 }

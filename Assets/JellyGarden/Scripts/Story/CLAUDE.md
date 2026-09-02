@@ -219,6 +219,63 @@ boilers" and sent them to Polish; the needle that works is `"re-oil"`. The
 clauses are ordered, so a needle also has to be checked against every clause
 above the one it goes in.
 
+### Walking the band in Play mode
+
+`StoryContentAudit` asks whether the content is there; `StoryShellTest` asks
+whether the band can be *played through*. It runs itself once per play session —
+no input, like `StoryPowerupTest` — and for each of areas 1-5 it opens the area
+page, grants exactly `StoryArea.StarCost`, presses every Do It button in turn,
+waits each cutscene out, and checks the area reports restored, the wallet ends
+at zero and the next area unlocks. One PASS/FAIL line per area, then a summary.
+
+Four things it has to do that no editor test does, all of them Play-mode facts:
+
+- **It waits for `StoryPowerupTest`.** That test loads the `game` scene and plays
+  level 1 on every session. An area screen opened over that measures the
+  collision, not the shell. `StoryPowerupTest.IsFinished` is the seam, and it is
+  true when nothing is installed so a build without it is not waited on.
+- **It presses buttons, it does not call the code behind them.**
+  `AreaScreen.RepairButton(i).onClick.Invoke()` — the repair-order guard and the
+  price check live in `AreaScreen.OnRepair`, and `onClick` fires whether or not
+  the button is interactable, so the row's own `RowCanRepair` is checked first.
+- **It advances the dialogue itself.** `DialogueSystem` never auto-advances: one
+  tap finishes the line, the next moves on. Every fifth area is an arc beat with
+  a scene, so a Play-mode walk of areas 1-5 hits one on area 5 and would hang
+  there forever. The walk presses the dialogue's own full-screen `Advance`
+  button while `StoryShell.StoryIsPlaying`. `ClueCard` needs none of this — it
+  dismisses itself after three seconds.
+- **It puts the save back.** The walk needs a fresh save to prove "buys every
+  repair", so it copies `StoryProgress.SavePath` aside, `ResetAll()`s, and
+  restores the copy in a `finally` — the clue and cutscene flags it set on the
+  way through go with it. `yield return` inside `try`/`finally` is legal in a C#
+  iterator; `try`/`catch` is not. Restoring the *file* is not the whole job:
+  `AreaScreen.Open` and `StoryHomeScreen.Open` both write their area back to
+  `StoryProgress.CurrentArea`, so the walk has to come home to
+  `StoryProgress.CurrentArea` rather than to `StoryHomeScreen.CurrentRoom` — the
+  first run of this moved a bookmark from area 3 to area 2 on its way out.
+
+`StoryShell.StoryIsPlaying` is the one predicate for "a beat is on screen" —
+repair cutscene, clue card, arc scene, opening sequence, dialogue. Anything
+waiting out a beat should read it rather than assembling its own list.
+
+Re-run it with **JellyGarden > Story > Preview > Run Shell Self-Test**. It takes
+around three minutes: 25 repairs at roughly four seconds of cutscene each, plus
+five payoffs. A good run ends:
+
+```
+[Story] shell test area 1 'Castle Gates': 4 rows, 4 repairs, 4 stars spent, restored, area 2 unlocked. PASS
+[Story] shell test area 2 'Outer Courtyard': 5 rows, 5 repairs, 5 stars spent, restored, area 3 unlocked. PASS
+[Story] shell test area 3 'The Stables': 5 rows, 5 repairs, 6 stars spent, restored, area 4 unlocked. PASS
+[Story] shell test area 4 'Guard House': 5 rows, 5 repairs, 6 stars spent, restored, area 5 unlocked. PASS
+[Story] shell test area 5 'Entrance Hall': 6 rows, 6 repairs, 8 stars spent, restored, area 6 unlocked. PASS
+[Story] Shell self-test, areas 1-5: 5 area(s), 25 repairs, 29 stars. 5 PASS, 0 FAIL.
+```
+
+The 25 repairs and 29 stars are the same two numbers `StoryContentAudit` reports,
+which is the point: the audit counts what the story *says* the band costs, and
+the walk counts what the screens actually charged. They disagreeing is the
+failure worth catching.
+
 ## The Royal Match screen kit
 
 `StoryUi` is a **partial class**. The generic builders — canvas, rect, text,

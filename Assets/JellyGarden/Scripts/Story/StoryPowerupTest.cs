@@ -46,6 +46,18 @@ namespace JellyGarden.Scripts.Story
         private bool _running;
         private bool _ranOnce;
 
+        /// <summary>
+        /// Whether this has had its one run and handed the level back. The shell
+        /// self-test waits on it: this one loads the game scene and plays a level
+        /// in it, and an area screen opened over that measures the collision
+        /// rather than the shell. True when nothing is installed, so a build with
+        /// no board test to wait for is not waited on.
+        /// </summary>
+        public static bool IsFinished
+        {
+            get { return _instance == null || (_instance._ranOnce && !_instance._running); }
+        }
+
         private void Start()
         {
             // Run itself once per play session. Sending a keystroke to the Game

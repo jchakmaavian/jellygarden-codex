@@ -31,6 +31,7 @@ namespace JellyGarden.Scripts.Story.Editor
         [MenuItem(Menu + "Grant 3 Stars Here", true)]
         [MenuItem(Menu + "Buy The Next Repair", true)]
         [MenuItem(Menu + "Reset Progress", true)]
+        [MenuItem(Menu + "Run Shell Self-Test", true)]
         private static bool OnlyInPlayMode()
         {
             return Application.isPlaying;
@@ -173,6 +174,21 @@ namespace JellyGarden.Scripts.Story.Editor
             }
 
             Debug.Log("[Story] preview: no row found for the next repair.");
+        }
+
+        /// <summary>
+        /// Walks areas 1-5 again — opening each page, granting its stars, buying
+        /// every repair and waiting out every cutscene — and prints a PASS/FAIL
+        /// line per area. It runs itself once a session anyway; this is for when
+        /// the session has moved on and the walk is wanted again.
+        ///
+        /// It takes a copy of the save first and puts it back at the end, so
+        /// running it does not cost the progress on screen.
+        /// </summary>
+        [MenuItem(Menu + "Run Shell Self-Test")]
+        private static void RunShellTest()
+        {
+            StoryShellTest.RunNow();
         }
 
         [MenuItem(Menu + "Reset Progress")]
