@@ -22,6 +22,40 @@ python3 tools/level_gen.py          # templates + plan     -> Resources/Levels/1
 python3 tools/target_gen.py         # plan + boards        -> Resources/Targets/Level1..1209.asset
 ```
 
+The art reskin is independent of the story data — it rewrites kit textures in
+place and can be re-run at any time:
+
+```bash
+python3 tools/item_skin.py          # tools/art/pieces -> the 27 board sprites
+python3 tools/booster_skin.py       # tools/art/pieces -> the 14 booster icons
+python3 tools/brand_skin.py         # tools/art/brand  -> logo, title, loading, ivy blocker
+```
+
+Each takes `--preview` and writes a contact sheet to `/tmp` instead of touching
+the project.
+
+## Why the reskin overwrites pixels instead of importing new assets
+
+The kit is a candy game and the story is about a king, so the pieces the player
+swaps had to change. They are changed by rewriting each PNG **in place, at its
+original size, under its original name**. That is deliberate:
+
+- Unity references sprites by the GUID in the `.meta`, so every prefab,
+  animation clip, particle material and `Target` asset keeps pointing at the
+  same sprite and nothing needs rewiring.
+- `Square.cs` and `LevelManager` match target icons by `sprite.name`, which is
+  the file name. Renaming a file would silently break target matching.
+- `check_vfx_intact.py` fails on a deleted or renamed visual asset. Overwriting
+  passes it honestly rather than by exception.
+
+The six colours are kept in their kit order (red, orange, purple, blue, green,
+yellow) because the explosion particle textures are per item index — a green
+jewel that shattered into red sparks would be the VFX regressing.
+
+Masters live in `tools/art/`. Most are the story prototype's own art at
+`/Users/avian/Desktop/story/game/unity/Assets/Resources/Art`, already paid for;
+ten images were generated for this pass.
+
 ## Verify
 
 ```bash

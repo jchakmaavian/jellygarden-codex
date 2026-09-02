@@ -115,3 +115,7 @@ InitTestScene*.unity*
 
 # Built players
 Builds/
+
+# Python bytecode from the generators in tools/
+__pycache__/
+*.pyc
