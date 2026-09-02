@@ -107,6 +107,45 @@ Two seams exist only for this and should be preserved:
 - `StoryObjects.Persist` — `DontDestroyOnLoad`, no-op outside play mode
 - `StoryClock` — Unity's unscaled time, overridable by a test
 
+## The Royal Match screen kit
+
+`StoryUi` is a **partial class**. The generic builders — canvas, rect, text,
+button — stay in `StoryUi.cs`; the Royal Match shapes are in
+`StoryUi.Royal.cs`. Add a new screen primitive to the Royal file, not the base
+one, so the kit-neutral half stays kit-neutral.
+
+Four primitives carry every screen:
+
+| Primitive | What it gives back |
+|---|---|
+| `RoyalPanel(name, parent, title, onClose)` | `RoyalPanelParts` — `Root`, `Body`, `Content`, `Title`, `Close` |
+| `GreenButton` / `DoItButton` | the one affirmative action, with an optional star price |
+| `StarBadge(name, parent, cost)` | the ★N a task costs |
+| `TopBar(parent, onSettings)` | `TopBarParts`, refreshed by `RefreshTopBar` |
+
+Rules that are easy to get wrong:
+
+- **Colours are sampled, not chosen.** Every `Royal*` colour came out of
+  `docs/royal-match/*.jpg` with PIL. Match a new one the same way rather than
+  eyeballing it, and say which file it came from.
+- **A builder hands its parts back as an object.** Nothing looks a child up by
+  name afterwards, so renaming a child cannot silently break a screen. Keep it
+  that way.
+- **A rim is two nested rects, not an `Outline`.** `Outline` offsets the whole
+  quad and leaves the corners square; a gold rim needs a rounded rect behind a
+  smaller rounded rect.
+- **A close X is two rotated bars, not a glyph.** The kit's font may not carry
+  ✕, and a missing glyph renders as nothing — which reads as a dead button.
+- **`SetGreenInteractable`, not `SetInteractable`.** The green button is three
+  layers (base, face, gloss); the base-class helper only recolours one of them.
+- Lives read **"Full"** while `StoryFreeGame.Enabled`; coins are the kit's
+  `InitScript.Gems`, since the kit has no coin currency at all.
+
+The primitives are proven by `StoryScreenTests.RoyalPrimitivesConstruct`, which
+builds each one for real and logs a `[Story] primitive ...` line per shape. With
+the Editor open, batchmode is locked out — run it from the menu instead:
+**JellyGarden > Story > Run Screen Tests**, then read `Logs/Editor.log`.
+
 ## Two traps that have bitten more than once
 
 **`System.*` resolves into the kit's namespace.** The kit has

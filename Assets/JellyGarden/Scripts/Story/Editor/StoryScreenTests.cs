@@ -78,6 +78,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 RepairsAreClassifiedByWhatTheyAre();
                 EveryArcHasATheme();
                 EveryAreaOpens();
+                RoyalPrimitivesConstruct();
             }
             finally
             {
@@ -634,6 +635,113 @@ namespace JellyGarden.Scripts.Story.Editor
 
             Expect(opened == StoryDatabase.AreaCount,
                 "all " + StoryDatabase.AreaCount + " areas open (" + opened + " did)");
+        }
+
+        /// <summary>
+        /// Builds every Royal Match primitive once and reports what it produced.
+        ///
+        /// These are shapes, not behaviour: there is nothing to assert about a
+        /// gold rim beyond that it was drawn. What can go wrong is a null sprite,
+        /// a missing font or a procedural texture that throws — so each primitive
+        /// is constructed for real and one line per primitive says what came out.
+        /// </summary>
+        private static void RoyalPrimitivesConstruct()
+        {
+            var host = new GameObject("~StoryRoyalPrimitives");
+            try
+            {
+                Canvas canvas = StoryUi.CreateOverlayCanvas("~RoyalPrimitivesCanvas");
+                canvas.transform.SetParent(host.transform, false);
+                var root = (RectTransform)canvas.transform;
+
+                bool closed = false;
+                StoryUi.RoyalPanelParts panel =
+                    StoryUi.RoyalPanel("Panel", root, "Throne Room", () => closed = true);
+
+                Expect(panel != null && panel.Root != null, "RoyalPanel builds a root");
+                Expect(panel.Title != null && panel.Title.text == "Throne Room",
+                    "RoyalPanel carries its title");
+                Expect(panel.Title != null && panel.Title.font != null,
+                    "RoyalPanel's title has a font");
+                Expect(panel.Content != null, "RoyalPanel exposes a content rect");
+                Expect(panel.Close != null, "RoyalPanel has a close X");
+
+                if (panel.Close != null) panel.Close.onClick.Invoke();
+                Expect(closed, "the close X invokes its action");
+
+                Debug.Log("[Story] primitive RoyalPanel: title '" +
+                          (panel.Title == null ? "<none>" : panel.Title.text) +
+                          "', " + panel.Root.GetComponentsInChildren<Image>(true).Length +
+                          " images, close X " + (panel.Close != null ? "present" : "absent"));
+
+                Image card = StoryUi.CreamCard("Card", panel.Content);
+                Expect(card != null && card.sprite != null, "CreamCard draws a rounded sprite");
+                Debug.Log("[Story] primitive CreamCard: " + card.color + " over " +
+                          card.rectTransform.childCount + " child layer(s)");
+
+                int greenClicks = 0;
+                Button play = StoryUi.GreenButton("Play", panel.Content, "Play", 72,
+                    () => greenClicks++);
+                Expect(play != null, "GreenButton builds");
+                play.onClick.Invoke();
+                Expect(greenClicks == 1, "GreenButton invokes its action");
+
+                StoryUi.SetGreenInteractable(play, false);
+                Expect(!play.interactable, "GreenButton greys out rather than disappearing");
+                StoryUi.SetGreenInteractable(play, true);
+
+                Text playLabel = play.GetComponentInChildren<Text>();
+                Debug.Log("[Story] primitive GreenButton: label '" +
+                          (playLabel == null ? "<none>" : playLabel.text) + "', interactable " +
+                          play.interactable);
+
+                RectTransform badge = StoryUi.StarBadge("Badge", panel.Content, 2);
+                Text badgeCount = badge.GetComponentInChildren<Text>();
+                Expect(badgeCount != null && badgeCount.text == "2",
+                    "StarBadge shows the cost it was given");
+                Debug.Log("[Story] primitive StarBadge: cost '" +
+                          (badgeCount == null ? "<none>" : badgeCount.text) + "', star sprite " +
+                          (StoryUi.StarSprite != null ? "loaded" : "missing, drawn as gold"));
+
+                Button doIt = StoryUi.DoItButton("Repair", panel.Content, "Do It", 1, null);
+                List<string> doItTexts = TextsIn(doIt.gameObject);
+                Expect(doItTexts.Contains("Do It"), "DoItButton keeps its label");
+                Expect(doItTexts.Contains("1"), "DoItButton carries the task's star cost");
+                Debug.Log("[Story] primitive DoItButton: " + string.Join(" ", doItTexts));
+
+                bool settingsOpened = false;
+                StoryUi.TopBarParts bar = StoryUi.TopBar(root, () => settingsOpened = true);
+                Expect(bar != null && bar.Root != null, "TopBar builds a root");
+                Expect(bar.Coins != null && bar.Lives != null && bar.Stars != null,
+                    "TopBar carries coins, lives and stars");
+                Expect(bar.Settings != null, "TopBar has a settings gear");
+
+                // The values must be read, not invented: stars are the current
+                // area's pool, so adding one has to show up on the next refresh.
+                int areaId = StoryProgress.CurrentArea;
+                int before = StoryProgress.StarsIn(areaId);
+                StoryProgress.AddStar(areaId);
+                StoryUi.RefreshTopBar(bar);
+                Expect(bar.Stars.text == (before + 1).ToString(),
+                    "TopBar reads the star pool live (showed '" + bar.Stars.text + "')");
+
+                if (bar.Settings != null) bar.Settings.onClick.Invoke();
+                Expect(settingsOpened, "the settings gear invokes its action");
+
+                Debug.Log("[Story] primitive TopBar: coins '" + bar.Coins.text + "', lives '" +
+                          bar.Lives.text + "', stars '" + bar.Stars.text + "', gear present");
+
+                Expect(StoryUi.GearSprite != null, "the gear sprite draws");
+                Expect(StoryUi.CircleSprite != null, "the circle sprite draws");
+                Debug.Log("[Story] primitive drawn sprites: circle " +
+                          StoryUi.CircleSprite.texture.width + "px, gear " +
+                          StoryUi.GearSprite.texture.width + "px");
+            }
+            finally
+            {
+                Object.DestroyImmediate(host);
+                StoryProgress.ResetAll();
+            }
         }
 
         #endregion

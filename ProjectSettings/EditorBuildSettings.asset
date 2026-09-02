@@ -12,5 +12,7 @@ EditorBuildSettings:
     path: Assets/JellyGarden/Scenes/game.unity
     guid: e1598a256fd12c548bf8bcbe4d821fe7
   m_configObjects:
+    com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f,
+      type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 4366d55c3ac544935910fb67eece7332,
       type: 3}

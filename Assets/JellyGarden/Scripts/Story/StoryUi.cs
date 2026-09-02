@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 namespace JellyGarden.Scripts.Story
 {
-    public static class StoryUi
+    public static partial class StoryUi
     {
         // The kit's UI sprites live outside Resources, where a built player
         // cannot reach them, so tools/ui_sprites.py copies the handful the story

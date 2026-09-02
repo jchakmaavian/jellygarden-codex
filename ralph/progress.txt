@@ -88,5 +88,98 @@ against memory. The most important findings:
 - One star per level: `StoryOneStar` (`StoryOneStar.Enabled`).
 - Universal powerups + tap-to-fire: `Item.IsUniversalPowerup`, `Item.TapActivate`.
 - Board art: `tools/item_skin_royal.py` (installed).
+- Royal Match UI primitives: `StoryUi.Royal.cs` — `RoyalPanel`, `GreenButton`,
+  `DoItButton`, `StarBadge`, `CreamCard`, `TopBar`. Build screens FROM these.
 
+### The branch
+`ralph/royal-match-shell`, cut from `ralph/king-leo-story` — NOT from `main`.
+`main` has none of the "already done" work above. Never re-cut it from `main`.
+
+### Two shell-specific rules
+- **Sample colours from `docs/royal-match/*.jpg` with PIL; never invent one.**
+  The JPGs are 828x1472, the canvas reference is 1080x1920 — scale by 1.304.
+- **Run editor tests through the Unity menu, not batchmode**, while the Editor
+  holds the project lock. `JellyGarden > Story > Run Screen Tests` — note there
+  are two top-level menus and the story's is the one WITHOUT a space.
+
+---
+
+## 2026-09-02 - US-001 - Royal Match panel and button primitives in StoryUi
+
+Built the shared shapes every later Royal Match screen is assembled from, so
+US-002..US-015 are composition rather than invention.
+
+### What was implemented
+- `StoryUi` became a **partial class**; the Royal Match shapes went into a new
+  `StoryUi.Royal.cs` so the kit-neutral half of StoryUi stays kit-neutral.
+- `RoyalPanel(name, parent, title, onClose)` — blue body, gold rim, a title
+  plate with two gold bands, and a red round close X on the plate's corner.
+  Returns `RoyalPanelParts { Root, Body, Content, Title, Close }`.
+- `GreenButton`, `SetGreenInteractable`, `StarBadge(cost)`, `DoItButton(label,
+  cost)` — the "Do It ★1" row button from the reference.
+- `CreamCard` — the cream-on-blue sub-card used by Area Progress / Goal / rows.
+- `TopBar(parent, onSettings)` -> `TopBarParts { Root, Coins, Lives, Stars,
+  Settings }`, plus `RefreshTopBar`. Coins read `InitScript.Gems`, lives read
+  "Full" while `StoryFreeGame.Enabled`, stars read
+  `StoryProgress.StarsIn(CurrentArea)`.
+- Procedural `CircleSprite`, `GearSprite` and a radius-keyed `RoundedSprite`
+  cache. The kit ships no loose gear and no circle.
+- `StoryScreenTests.RoyalPrimitivesConstruct` — builds every primitive for real
+  and logs one `[Story] primitive ...` line each.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryUi.Royal.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/StoryUi.cs` (`static class` -> `static partial class`)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs` (new case + registration)
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md` (new "Royal Match screen kit" section)
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- JellyGarden > Story > Run Screen Tests -> **"[Story] Screen tests passed."**, with:
+```
+[Story] primitive RoyalPanel: title 'Throne Room', 11 images, close X present
+[Story] primitive CreamCard: RGBA(0.925, 0.871, 0.694, 1.000) over 1 child layer(s)
+[Story] primitive GreenButton: label 'Play', interactable True
+[Story] primitive StarBadge: cost '2', star sprite loaded
+[Story] primitive DoItButton: Do It 1
+[Story] primitive TopBar: coins '0', lives 'Full', stars '1', gear present
+[Story] primitive drawn sprites: circle 128px, gear 64px
+```
+
+### Learnings for future iterations
+- **The PRD's branch did not exist.** `branchName` is `ralph/royal-match-shell`;
+  HEAD was `ralph/king-leo-story`. Branching from `main` as the generic Ralph
+  instructions suggest would have thrown away StoryOneStar, the universal
+  powerups and the Royal board skin — all listed as "already done, do not redo".
+  Branched from `ralph/king-leo-story` instead. Future iterations: stay on
+  `ralph/royal-match-shell`, it already carries everything.
+- **Sample colours, do not guess them.** `python3 -c "from PIL import Image;
+  Image.open('docs/royal-match/02-area-tasks.jpg').getpixel((x,y))"` — PIL is
+  installed. The reference JPGs are 828x1472; the canvas reference resolution is
+  1080x1920, so multiply coordinates by 1.304 when porting a measurement.
+- **The `System.*` trap fires on `System.Collections.Generic` too.** Writing
+  `System.Collections.Generic.Dictionary<,>` inline inside
+  `JellyGarden.Scripts.Story` fails with
+  `CS0234: 'Collections' does not exist in the namespace 'JellyGarden.Scripts.System'`.
+  Put a `using System.Collections.Generic;` at the top instead of qualifying.
+- **`StoryFreeGame.Enabled` is a `const bool`, so `if (Enabled) return x; return y;`
+  warns CS0162 unreachable.** Use a ternary.
+- **Batchmode is locked out while the Editor is open, but the menu is not.**
+  This is the reliable way to run an editor test against the live Editor:
+  ```bash
+  osascript -e 'tell application "System Events" to tell process "Unity" to set frontmost to true'
+  osascript -e 'tell application "System Events" to tell process "Unity" to click menu item "Run Screen Tests" of menu 1 of menu item "Story" of menu 1 of menu bar item "JellyGarden" of menu bar 1'
+  ```
+  There are TWO top-level menus, `Jelly Garden` (the kit's) and `JellyGarden`
+  (the story's) — pick the one without the space. Focus first, wait ~15s for the
+  recompile, then click; `Logs/Editor.log` is ~3M lines, so `tail -4000` before
+  filtering for `[Story]`.
+- **`grep` in this shell is proxied through `rtk` and can return "0 matches in
+  0 files" for a query that plainly matches.** When a grep looks wrong, re-run
+  it through a one-line python loop instead of trusting the empty result.
+- Nested rounded rects, not `Outline`, for a rim: `Outline` offsets the whole
+  quad and squares the corners.
+- The close X is two rotated bars, not a `✕` glyph — the kit's font may not
+  carry it, and a missing glyph renders as nothing at all.
 ---

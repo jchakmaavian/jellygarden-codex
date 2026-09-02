@@ -17,8 +17,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "StoryUi is now a partial class; the Royal Match primitives live in StoryUi.Royal.cs. Colours sampled from docs/royal-match/02-area-tasks.jpg with PIL. Proven by StoryScreenTests.RoyalPrimitivesConstruct, which logs one [Story] primitive line per shape."
     },
     {
       "id": "US-002",

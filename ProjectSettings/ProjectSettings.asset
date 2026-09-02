@@ -849,10 +849,10 @@ PlayerSettings:
   webWasm2023: 1
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: UNITY_ADS;UNITY_INAPPS
-    Standalone: UNITY_INAPPS
-    Windows Store Apps: UNITY_ADS;GOOGLE_MOBILE_ADS
-    iPhone: UNITY_ADS;GOOGLE_MOBILE_ADS
+    Android: UNITY_ADS
+    Standalone: UNITY_INAPPS;SENTIS_ANALYTICS_ENABLED
+    Windows Store Apps: UNITY_ADS
+    iPhone: UNITY_ADS
   additionalCompilerArguments: {}
   platformArchitecture:
     iPhone: 1
