@@ -9,6 +9,7 @@ arcs that connect them.
 - Story source of truth: `/Users/avian/Desktop/story` (markdown)
 - Story layer: [Assets/JellyGarden/Scripts/Story/](Assets/JellyGarden/Scripts/Story/) — see its [CLAUDE.md](Assets/JellyGarden/Scripts/Story/CLAUDE.md)
 - Generators: [tools/](tools/) — see [tools/README.md](tools/README.md)
+- Adaptation plan: [PLAN.md](PLAN.md) — what changes next, and what must not
 
 ## The one hard rule
 
