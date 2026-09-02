@@ -20,6 +20,7 @@ namespace JellyGarden.Scripts.Story.Editor
     {
         private const string Menu = "JellyGarden/Story/Preview/";
 
+        [MenuItem(Menu + "Open Home Screen", true)]
         [MenuItem(Menu + "Open Area Screen (area 1)", true)]
         [MenuItem(Menu + "Open Area Screen (area 6)", true)]
         [MenuItem(Menu + "Grant 3 Stars Here", true)]
@@ -27,6 +28,18 @@ namespace JellyGarden.Scripts.Story.Editor
         private static bool OnlyInPlayMode()
         {
             return Application.isPlaying;
+        }
+
+        /// <summary>
+        /// Home, on whichever room the player is restoring. Closes the area
+        /// screen first: home sorts below it, so leaving it open would put a
+        /// panel over the screen being looked at.
+        /// </summary>
+        [MenuItem(Menu + "Open Home Screen")]
+        private static void OpenHome()
+        {
+            AreaScreen.Close();
+            StoryHomeScreen.Open();
         }
 
         /// <summary>Area 1 — four tasks, the shortest area the story writes.</summary>
@@ -53,6 +66,7 @@ namespace JellyGarden.Scripts.Story.Editor
             int areaId = AreaScreen.IsOpen ? AreaScreen.Instance.AreaId : StoryProgress.CurrentArea;
             StoryProgress.AddStar(areaId, 3);
             if (AreaScreen.IsOpen) AreaScreen.Instance.Refresh();
+            if (StoryHomeScreen.IsOpen) StoryHomeScreen.Instance.Refresh();
             Debug.Log("[Story] preview: area " + areaId + " now holds " +
                       StoryProgress.StarsIn(areaId) + " star(s).");
         }
@@ -62,6 +76,7 @@ namespace JellyGarden.Scripts.Story.Editor
         {
             StoryProgress.ResetAll();
             if (AreaScreen.IsOpen) AreaScreen.Instance.Refresh();
+            if (StoryHomeScreen.IsOpen) StoryHomeScreen.Instance.Refresh();
             Debug.Log("[Story] preview: progress reset.");
         }
 

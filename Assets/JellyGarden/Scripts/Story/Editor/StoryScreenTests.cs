@@ -86,6 +86,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 ScoreLevelsShowTheirPassMark();
                 LevelPopupStatesTheGoal();
                 LevelPopupOffersBoosters();
+                HomeScreenIsTheRoom();
             }
             finally
             {
@@ -1274,6 +1275,80 @@ namespace JellyGarden.Scripts.Story.Editor
             }
         }
 
+        /// <summary>
+        /// Home is the room, full-bleed, with the counters over it — and the room
+        /// is the same layer stack the area screen draws, so buying a repair
+        /// changes what home shows.
+        /// </summary>
+        private static void HomeScreenIsTheRoom()
+        {
+            StoryProgress.ResetAll();
+
+            try
+            {
+                StoryHomeScreen.Open(1);
+                StoryHomeScreen home = StoryHomeScreen.Instance;
+                if (home == null) { Fail("the home screen opens"); return; }
+
+                Expect(StoryHomeScreen.IsOpen, "the home screen opens");
+                Expect(home.AreaId == 1, "home opens on the area it was asked for");
+
+                StoryArea area = StoryDatabase.GetArea(1);
+                Expect(home.Room != null && home.Room.LayerCount == area.Tasks.Count + 1,
+                    "the room carries one layer per repair plus the ruin (found " +
+                    (home.Room == null ? 0 : home.Room.LayerCount) + ")");
+
+                // Full-bleed, not letterboxed: the view covers its parent and it
+                // knows the painting's aspect to cover it by.
+                Expect(home.RoomIsFullBleed,
+                    "the room is drawn full-bleed (covering " +
+                    (home.Room != null && home.Room.IsCovering) + ", aspect " +
+                    (home.Room == null ? 0f : home.Room.Aspect) + ")");
+
+                // The parent has to crop, or a covered painting draws over the
+                // whole application window rather than the screen it belongs to.
+                Expect(home.GetComponentInChildren<RectMask2D>(true) != null,
+                    "the room's overflow is masked");
+
+                Expect(home.HasTopBar, "the top bar carries coins, lives, stars and settings");
+
+                int atStart = home.VisibleRoomLayers;
+                Expect(atStart == 1, "an untouched area shows the ruin alone (showed " +
+                                     atStart + " layer(s))");
+
+                // The artwork answers to progress, not to when it was built.
+                StoryProgress.AddStar(1, 9);
+                StoryProgress.CompleteTask(1, area.Tasks[0].Index);
+                home.Refresh();
+                int afterRepair = home.VisibleRoomLayers;
+                Expect(afterRepair == atStart + 1,
+                    "a bought repair adds a layer to the room (" + atStart + " -> " +
+                    afterRepair + ")");
+
+                Expect(home.TopBarText != null && home.TopBarText.Contains(
+                           StoryProgress.StarsIn(1).ToString()),
+                    "the top bar reads the stars the player actually holds");
+
+                // Home does not sit in a room that is finished.
+                foreach (StoryTask task in area.Tasks)
+                    StoryProgress.CompleteTask(1, task.Index);
+                Expect(StoryHomeScreen.CurrentRoom != 1,
+                    "a restored area is not where home stays (went to " +
+                    StoryHomeScreen.CurrentRoom + ")");
+
+                Debug.Log(string.Format(
+                    "[Story] Home screen: area {0} '{1}', room {2} layer(s) full-bleed at " +
+                    "aspect {3:0.00}, top bar {4}.",
+                    home.AreaId, area.Name, home.Room.LayerCount, home.Room.Aspect,
+                    home.TopBarText));
+            }
+            finally
+            {
+                StoryHomeScreen.Close();
+                StoryProgress.ResetAll();
+            }
+        }
+
         private static int IndexOfBooster(StoryLevelPopup popup, BoostType boost)
         {
             for (int i = 0; i < popup.BoosterCount; i++)
@@ -1335,7 +1410,7 @@ namespace JellyGarden.Scripts.Story.Editor
                      {
                          "StoryAreaScreen", "~StoryClueCard", "~StoryDialogue",
                          "~StoryToast", "~StoryCutscene", StoryLevelHud.HostName,
-                         StoryLevelPopup.HostName
+                         StoryLevelPopup.HostName, StoryHomeScreen.HostName
                      })
             {
                 GameObject go = GameObject.Find(name);

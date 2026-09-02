@@ -122,10 +122,22 @@ run whose log carries those lines was run in Play mode** — stop Play, then run
 it again before believing any failure. A correct run logs
 `[Story] Area 1 (Castle Gates) restored.` before it passes.
 
+**Ask the toolbar whether Play mode is on, not the menu.** The log tell above
+only helps *after* a void run. Before running the tests, screenshot the Editor
+toolbar and look at the Play button: a blue fill means the Editor is playing.
+AppleScript is no use here — `AXMenuItemMarkChar` of `Edit > Play Mode > Play`
+reads `missing value` whether or not the Editor is playing, so a script that
+trusts it will happily run the tests into a void result.
+
 To look at a screen in Play mode, use **JellyGarden > Story > Preview** rather
-than a temporary hook in a runtime script: it opens the area screen, grants
-stars and resets progress, and it is inert outside Play mode. The temporary
-hooks that used to serve this purpose kept riding along into commits.
+than a temporary hook in a runtime script: it opens a screen, grants stars and
+resets progress, and it is inert outside Play mode. The temporary hooks that
+used to serve this purpose kept riding along into commits — and one did: a
+`// TEMP` `yield break` sat at the top of `StoryPowerupTest.Drive` from the
+US-007 commit, dead-coding the whole powerup test. Grep for `TEMP` before every
+commit. Preview is a **sub-sub-menu**: the AppleScript path is
+`JellyGarden > Story > Preview > <item>`, three levels, each clicked open with a
+delay before the next.
 
 ## The Royal Match screen kit
 
@@ -172,6 +184,22 @@ Rules that are easy to get wrong:
 - **Anything built before `AreaSceneView.Attach` is drawn under the artwork.**
   The view is a later sibling. `SetAsLastSibling()` the captions after every
   attach, or they vanish behind the room.
+- **`AreaSceneView` fits its parent two ways, and more than one may be alive.**
+  `Attach(parent, areaId)` letterboxes — the whole painting, bars where it does
+  not reach, which is what the area screen and the cutscene stage want.
+  `Attach(parent, areaId, true)` covers: an `AspectRatioFitter` in
+  `EnvelopeParent` scales the stack until it fills both directions and the
+  overflow is cropped, so the room bleeds to every edge. **A covering parent
+  must carry a `RectMask2D`** or the painting draws outside the screen it
+  belongs to. Views are held in a list, not a single static, because home and
+  the area screen can show the same room at once and a repair has to reveal on
+  both.
+- **A flag is not a geometry proof.** `IsCovering` and `Aspect` being right says
+  nothing about whether anything actually filled the screen, and an editor test
+  asserting them passes over a view that letterboxes. Prove a full-bleed claim
+  off the pixels: screenshot the Game view, measure the painted rect, and
+  compare it against the centre crop the cover *should* produce (compute it from
+  the source jpg with PIL). Same trap as the negative-height rect.
 - **Per-task art does not exist, so an icon is classified, not looked up.**
   `StoryUi.TaskIcon` draws one of ten glyphs chosen by
   `RepairWork.Classify(label)` — the same classifier the repair cutscene uses,

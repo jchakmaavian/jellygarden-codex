@@ -72,13 +72,6 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private IEnumerator Drive()
         {
-            // TEMP screenshot hook — reverted immediately after capture.
-            yield return new WaitForSeconds(1f);
-            AreaScreen.Open(1);
-            Debug.Log("[Story] TEMP: area screen opened for screenshot.");
-            _running = false;
-            yield break;
-
             if (LevelManager.THIS == null ||
                 LevelManager.THIS.gameStatus != GameState.Playing)
             {
