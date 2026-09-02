@@ -181,6 +181,16 @@ raise Unity and take the shot inside ONE osascript
   swallowed entirely (zero new log bytes). Confirm by watching the log grow.
 - **`tail -c +N` cannot read `Logs/Editor.log`** ("illegal offset"); seek in
   python from a byte mark taken before the action.
+- **A flat primitive is only proven against the surface it is drawn on.** A
+  drawn icon whose interior colour matches the card behind it renders as an
+  empty outline while every editor assertion passes — each rect is present,
+  sized and coloured as asked. Same family as the negative-height rect.
+- **A best-fit `Text` wraps before it shrinks.** `resizeTextForBestFit` fits
+  *wrapped* text to the rect, so a narrow rect gives two big lines overflowing
+  the top rather than one small one. Give a variable-length label all the width
+  it can have; the 150 area names are long.
+- **An icon composed of stacked rects needs a near-square box.** Check the
+  aspect the fractions actually produce on the target canvas, not the fractions.
 - **An editor test that asserts a flag has not verified a layout.** `IsCovering`
   and `Aspect` are both true of a view that letterboxes anyway. Settle any
   "full-bleed / fills / centred / no bars" claim off the pixels: measure the
@@ -865,4 +875,89 @@ counters over it — the shape of `docs/royal-match/01-home-area.jpg`.
   accepts (`illegal offset`). Seek in python instead.
 - Sorting orders now in use: home 300, area screen 400, level popup 600. A new
   screen should pick a band with room around it.
+---
+
+## 2026-09-02 - US-009 - Home screen: Level button and Area button
+
+The home screen's two actions, over the floor of the room: a big green
+"Level N" and the gold card for the room itself.
+
+### What was implemented
+- `StoryUi.GoldButton(name, parent, onClick)` — the gold secondary card from
+  `docs/royal-match/09-home-level-button.jpg`, built exactly like `GreenButton`
+  (dark base, brighter face inset from the bottom, gloss across the top) and
+  left empty. `StoryUi.ContentOf(button)` returns its inset content rect, which
+  is where a caller lays children out.
+- `StoryUi.CountBadge` / `SetCountBadge` — the red call-to-action badge off the
+  card's top-right corner. Hidden at zero: a badge reading "nothing to do" is
+  worse than no badge.
+- `StoryUi.ChestIcon(name, parent, panel)` — a second overload. The existing
+  two-arg one is unchanged and still gold, which is right on the area page's
+  cream card.
+- `StoryHomeScreen` fills its button band: the green button reads
+  `StoryLevelPlan.NextLevelFor(area)`, the gold card the area's own name over
+  `StoryUi.ProgressBar`, a chest and the badge. All of it re-read on every
+  `Refresh`, never stored.
+- `StoryHomeScreen.AffordableRepairs(areaId)` — the badge's number.
+- Wiring: Level -> `StoryLevelPopup.Open(level, areaId, () => Open(areaId))`,
+  Area -> `AreaScreen.Open(areaId)`. Both sort above home (600 / 400 vs 300),
+  so home stays open underneath and neither is a dead end.
+- `StoryScreenTests.HomeButtonsOpenTheLevelAndTheArea`.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryHomeScreen.cs`
+- `Assets/JellyGarden/Scripts/Story/StoryUi.Royal.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs`
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md` (new "The home screen" section)
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> "All checks passed."
+- `JellyGarden > Story > Run Screen Tests` (Play mode OFF) -> **"[Story] Screen
+  tests passed."**, carrying `[Story] Area 1 (Castle Gates) restored.` and zero
+  `[Story] area screen N` lines — the two marks of a valid run — plus
+```
+[Story] Home buttons: 'Level 2' | 'Castle Gates' 1/4, chest present, 3 repair(s) ready.
+```
+- Play mode, Game view 768x1024: the Castle Gates room full-bleed, the top bar
+  on its sky, and over the floor a green "Level 2" beside a gold "Castle Gates"
+  card reading 1/4 with a chest and a red 3. Log:
+  `[Story] home screen: area 1 'Castle Gates', 1/4 repairs, room 2 layer(s) of
+  5, top bar 5/Full/15, buttons ['Level 2'] ['Castle Gates' 1/4 chest present,
+  3 ready]`
+
+### Learnings for future iterations
+- **A drawn icon can be invisible while every one of its rects is correct.**
+  `ChestIcon` is a purple frame around gold panels. Put on the gold card its
+  panels *were* the card, so it rendered as two empty purple rings — and every
+  editor assertion still passed, because each rect was present, sized and
+  coloured exactly as asked. This is the same family as the negative-height
+  rect: **a flat primitive is only proven against the surface it is drawn on.**
+  Hence the `panel` overload rather than a tweak to the shared colour.
+- **A best-fit `Text` wraps before it shrinks.** Narrowing the card's title to
+  the progress bar's width (which is what the reference does for "Area 2")
+  turned "Castle Gates" into two lines that overflowed the top of the card.
+  `resizeTextForBestFit` fits *wrapped* text to the rect, so it will happily
+  choose two big lines over one small one. Give a variable-length label all the
+  width it can have. Relevant everywhere from here on: the 150 area names run to
+  far longer than this one.
+- **Squeeze a stacked-rect icon and it stops being that icon.** The chest is a
+  lid over a body; in a box twice as wide as it is tall the two read as a pair
+  of ovals. Icons composed of nested rects need a near-square box — check the
+  aspect the fractions actually produce on the target canvas, not the fractions.
+- **Both of the above were found only by screenshotting Play mode**, and three
+  render-fix-render cycles were needed. Budget for that: the cycle is edit ->
+  exit Play -> `Assets > Refresh` -> wait ~35s -> enter Play -> Preview -> crop
+  the Game view, about three minutes each.
+- **Crop and zoom the capture before judging it.** At Game-view scale in a
+  window screenshot the whole button band is ~110x30 px; the ring-shaped chest
+  looked merely "small" until it was cropped and scaled 3x. `PIL` +
+  `Image.LANCZOS` at 3x is enough.
+- A screen that opens another screen **on top of itself** is simpler than one
+  that closes itself first (which is what `AreaScreen.OnPlay` does): home passes
+  `() => Open(areaId)` as the popup's `onClose` and gets a free counter refresh
+  out of it. Sorting orders in use: home 300, area screen 400, level popup 600.
+- The `// TEMP` grep and the post-commit `git status` both came back clean this
+  time.
 ---
