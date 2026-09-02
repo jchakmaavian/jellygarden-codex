@@ -853,6 +853,11 @@ counters over it — the shape of `docs/royal-match/01-home-area.jpg`.
 - **The `// TEMP` hook the log warned about did ride into a commit.** It is
   worth spending the one `grep -rn TEMP Assets/JellyGarden/Scripts/Story/` per
   iteration; the failure is silent, because a dead test prints nothing.
+  And it came BACK: minutes after the US-008 commit, a second `// TEMP` hook
+  (`StoryHomeScreen.Open(1)`, "home screen opened for screenshot") appeared in
+  the same method with no agent process running to explain it. So check
+  `git status` AFTER committing as well as before — a clean commit does not
+  guarantee a clean tree a minute later.
 - **`Cmd+R` may not reach Unity at all.** A refresh keystroke produced zero new
   log bytes; `Assets > Refresh` from the menu worked immediately. Prefer the
   menu, and confirm by watching `Logs/Editor.log` grow.
