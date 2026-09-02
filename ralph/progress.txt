@@ -138,7 +138,27 @@ raise Unity and take the shot inside ONE osascript
   swapped by a test, so the screen can be driven with no board in the scene.
 - **Run editor tests through the Unity menu, not batchmode**, while the Editor
   holds the project lock. `JellyGarden > Story > Run Screen Tests` — note there
-  are two top-level menus and the story's is the one WITHOUT a space.
+  are two top-level menus and the story's is the one WITHOUT a space. It is a
+  SUB-menu: AppleScript must click `JellyGarden`, then `Story`, then the item,
+  with a delay between each; addressing the leaf directly errors with -1728.
+- **NEVER run the screen tests while the Editor is in Play mode.** They pass or
+  fail on callbacks that only fire synchronously outside it, and the failure
+  looks like a real regression in whatever you just wrote: exactly one case
+  fails, *"the clue fired on the last repair"*. The tell is in the log —
+  `[Story] area screen N ...` is gated on `Application.isPlaying`, so a test run
+  carrying those lines was run in Play mode and is void. A good run logs
+  `[Story] Area 1 (Castle Gates) restored.` before `Screen tests passed.` And
+  Cmd+R DOES recompile from Play mode, so seeing your new code run proves
+  nothing about it.
+- **To look at a screen in Play mode use `JellyGarden > Story > Preview`**, which
+  opens the area screen, grants stars and resets progress. Do not add a `// TEMP`
+  early-return to a runtime script; three iterations running, one has survived
+  into the next commit.
+- **`interactable` is not a guard.** `onClick.Invoke()` fires on a greyed button,
+  and editor tests invoke it directly. A screen that greys instead of hides must
+  enforce its own rule inside the handler.
+- **`rtk` collapses `grep` output to a match count.** Use `rtk proxy grep` when
+  the matching lines themselves are what you need.
 - **Enter play mode through `Edit > Play Mode > Play`, not Cmd+P.** The
   keystroke is silently swallowed while the Editor is compiling. The cycle that
   works: edit a character -> exit play -> focus Unity -> Cmd+R -> wait ~35s ->
@@ -623,3 +643,102 @@ end, and the story captioned over the artwork rather than crowded into the panel
   step already completed. `SetProgress` deactivates the fill below 0.001.
 - `git status` at the start of an iteration is worth reading: the previous run
   had left US-006 substantially built but uncommitted and unverified.
+
+## 2026-09-02 - US-007 - Area page: Do It rows with star costs
+
+The task rows became the reference's rows: an icon for the thing being fixed,
+the story's own label, and a green "Do It" carrying that task's star price.
+
+### What was implemented
+- `StoryUi.TaskIcon(name, parent, areaId, task)` — the object on the left of a
+  row. There is no per-task art and no icon field in `StoryTask`, so the glyph
+  is chosen by `RepairWork.Classify(label)`: the ten-way classifier the repair
+  cutscene already uses. Ten drawn glyphs (rubble, droplet, brickwork, lantern,
+  banner, shine, barrel, mallet, magnifier, cog) cover all 807 tasks, and a
+  lantern task gets a lantern here and a flame in its cutscene for the same
+  reason. Composed from rounded rects and circles like `ChestIcon`.
+- `StoryArt.TaskIcon(areaId, taskIndex)` — `Resources/Story/Art/task_012_3` if
+  anyone ever paints one, checked before the glyph. The one lookup in `StoryArt`
+  that does NOT warn on a miss: 807 tasks with no art is 807 log lines.
+- Five icon colours sampled off the carpet and the stained glass in
+  `docs/royal-match/02-area-tasks.jpg` with PIL, so a drawn glyph belongs to the
+  same picture as the panel around it.
+- The separate `N★` label is gone; the price rides on the button as
+  `DoItButton(..., task.Stars, ...)`, which is the only place the reference
+  writes it.
+- **A row that cannot be bought is greyed, not stripped.** Every unfinished task
+  keeps its button; only the next affordable one is interactable. A completed
+  row keeps its label, fades its icon, shows its gold star and offers nothing.
+- Row metrics measured off the reference: card 154pt tall (used 150), the gap
+  50 (pulled to 24 — the reference only ever shows two rows and this story
+  writes areas of eight), icon 102, button 260x112.
+- `JellyGarden > Story > Preview` — a permanent Play-mode hook for opening the
+  area screen, granting stars and resetting progress.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryUi.Royal.cs` (icon palette + ten glyphs)
+- `Assets/JellyGarden/Scripts/Story/StoryArt.cs` (`TaskIcon`)
+- `Assets/JellyGarden/Scripts/Story/AreaScreen.cs` (rows rebuilt, order guard)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenPreview.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs` (new case, one rewritten)
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md`
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> "All checks passed."
+- JellyGarden > Story > Run Screen Tests -> **"[Story] Screen tests passed."**, with
+```
+[Story] task row 1 of 'Castle Gates': icon drawn, 'Cut back the ivy choking the portcullis', Do It * 1
+[Story] task icons: 807 tasks classified into 10 drawn kinds
+```
+- Play mode, Game-view screenshots. Area 1: row 1 done (faded rubble icon, muted
+  italic label, gold star, no button), row 2 "Replace the rotted gate timbers"
+  with a brick icon and a live green "Do It ★1", row 3 with a banner icon and a
+  **greyed** "Do It ★1". Area 6 "Throne Room" 0/7 with every row greyed and
+  costs reading 2, 1, 2 straight out of the story JSON.
+
+### Learnings for future iterations
+- **The screen tests are meaningless in Play mode, and they do not say so.**
+  `RepairCutscene.Play` returns immediately only when `!Application.isPlaying`;
+  in Play mode it starts a coroutine that the overridden `StoryClock` never
+  advances, so the last repair of an area never reaches
+  `StoryRepair.OnAreaFinished`. The result is exactly one failure — *"the clue
+  fired on the last repair"* — while `IsAreaComplete`, the spent stars and the
+  next area's unlock all pass, which reads like a real regression in whatever
+  you just changed. It is not. Stop Play and run again.
+  - **The tell is free and reliable:** `AreaScreen.Open` guards its
+    `[Story] area screen N ...` log with `Application.isPlaying`. A screen-test
+    run whose log carries those lines was run in Play mode. A correct run logs
+    `[Story] Area 1 (Castle Gates) restored.` before it passes; if that line is
+    missing, the run is void.
+  - Cmd+R does recompile from Play mode here (the new test's lines appeared), so
+    "my code is in the build" is NOT evidence that Play mode was off.
+- **`onClick.Invoke()` fires on a non-interactable button.** `interactable` is a
+  UI state, not a guard. The moment a screen stops hiding buttons it has to
+  enforce its own rule in the handler — `AreaScreen.OnRepair` now checks
+  `StoryProgress.NextTask` itself. Editor tests invoke `onClick` directly and
+  would otherwise walk straight through the ordering.
+- **`StoryProgress.CanCompleteTask` checks affordability only, not order.** The
+  story's repair order was never in the model; it was in which buttons the
+  screen drew.
+- **Anything baked into a row at build time needs the area id in the rebuild
+  key.** `BuildRows` returned early on a matching task count, which was harmless
+  while rows only carried a label (refreshed every frame) and became a real bug
+  the moment they carried a price and an icon.
+- **A classifier that already exists is a better icon vocabulary than a new
+  keyword table.** `RepairWork.Classify` was written for cutscene VFX; reusing
+  it means the row icon and the repair animation can never disagree, and adding
+  a glyph means adding a `RepairWorkType`, not special-casing a label.
+- **Sub-menus need clicking through, not addressing directly.** AppleScript
+  cannot `click menu item "Run Screen Tests" of menu 1 of menu bar item
+  "JellyGarden"` — the path is
+  `menu item X of menu 1 of menu item "Story" of menu 1 of menu bar item
+  "JellyGarden"`, and each ancestor must be clicked open first with a delay.
+  There are two top-level menus; the story's is `JellyGarden`, no space.
+- **`rtk` filters `grep` output down to a match count.** Use `rtk proxy grep`
+  when the actual matching lines are the point.
+- The task viewport shows about two and a half rows on the Editor's 768x1024
+  Game view now that rows are 150 tall; it scrolls, and on the reference's
+  9:19.5 phone it does not. Worth revisiting if US-013 makes the list feel short.
+---
