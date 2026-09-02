@@ -47,6 +47,9 @@ namespace JellyGarden.Scripts.Story
             StoryBoosters.Install();
             StoryNavBar.Install();
             StoryAreasList.Install();
+            // Last of the shell: it decides what is on screen, so the screens it
+            // decides between have to have installed their seams first.
+            StoryShell.Install();
             StoryPowerupTest.Install();
         }
     }

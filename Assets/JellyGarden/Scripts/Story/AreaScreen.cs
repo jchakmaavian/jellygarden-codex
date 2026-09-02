@@ -122,6 +122,15 @@ namespace JellyGarden.Scripts.Story
             get { return _chest != null && _chest.gameObject.activeInHierarchy; }
         }
 
+        /// <summary>
+        /// The panel's red X — the only way off this screen, and the one a test
+        /// checking for a dead end has to press rather than call Close() behind.
+        /// </summary>
+        public Button CloseButton
+        {
+            get { return _panel == null ? null : _panel.Close; }
+        }
+
         /// <summary>How many task rows are drawn.</summary>
         public int RowCount
         {
@@ -654,6 +663,13 @@ namespace JellyGarden.Scripts.Story
         private void OnBack()
         {
             Close();
+
+            // Normally this closes onto whatever opened it — home, or the areas
+            // list, both of which sort below. But a level ending, the preview menu
+            // and a map node can all open this screen with nothing underneath it,
+            // and a red X over an empty canvas is a dead end. EnsureFloor is a
+            // no-op when there was somewhere to go back to.
+            StoryShell.EnsureFloor();
         }
 
         public void Toast(string message)

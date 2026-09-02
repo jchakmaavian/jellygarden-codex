@@ -269,6 +269,51 @@ the floor. Its layout constants are worth understanding before moving anything:
   would point the player at buttons that grey out when pressed, because
   `AreaScreen` only ever offers `StoryProgress.NextTask`.
 
+## The shell
+
+`StoryShell` is what makes the screens a game rather than five screens: it
+decides what is on screen whenever a level is not, and it is the only thing that
+knows the kit's map exists.
+
+- **`StoryShell.UseMap` is the whole switch.** False — the default — and the game
+  opens on the room, with the map put away. True and the kit's map is the entry
+  point again, `StoryShell` stops touching anything, and a level ends on the area
+  page as it did before the shell existed. That flag is what "the map is left in
+  place" has to mean: the map is not deleted, not emptied and not edited, and one
+  field puts it back.
+- **The map is deactivated, never left running underneath.** Each of its 150
+  nodes polls `Physics2D.OverlapPoint` in `Update`, and a node tapped through a
+  gap in the shell would launch a level from a screen the player cannot see.
+- **Hiding it is a per-frame assertion, not a one-off.** `LevelManager.ShowMap`
+  turns the map back on at the end of every level, so the shell puts it away
+  again — the play log carries `kit map put away` once per level, which is right.
+- **Nothing is hidden before the kit's own `Start` has run.** `InitScript` reads a
+  sprite off the map with `FindObjectOfType`, which skips inactive objects and
+  would throw. `Install` runs at `sceneLoaded`, when `LevelManager.THIS` is still
+  null, so the first pass is deliberately a no-op and `Update` does the work.
+  `StoryMapRefresh.Request` is guarded for the same reason: `LevelsMap.Reset`
+  takes `Max()` of `FindObjectsOfType<MapLevel>()`, which is an exception rather
+  than a no-op on a map that is off.
+- **The shell comes down for a level.** Every shell canvas sorts at 300..600 and
+  the kit's level canvas does not, so a screen left open is a screen drawn over
+  the board. `StoryFlow.LaunchLevel` calls `CloseForLevel` directly rather than
+  waiting for `Update` to notice a frame later.
+- **A level ends on home.** `StoryFlow.OpenAfterLevel` asks
+  `StoryShell.ShowAfterLevel` rather than opening the area page itself. The star
+  just earned is already counted on home's red badge and the area page is one tap
+  away on the gold card.
+- **`EnsureFloor` is called on every close path, not trusted to the caller.**
+  Each screen closes onto whatever opened it, which is right while the player
+  walks forwards — but the area page can also be opened by a level ending, by the
+  preview menu and by a map node, and a red X with nothing underneath it is a
+  black screen with a nav bar. It is a no-op when anything is open, and it
+  deliberately does nothing while a cutscene is up: the beat IS the screen.
+- **`InGameSceneSource` is the test seam**, in the shape of
+  `StoryNavBar.LevelIsPlayingSource`: an editor test has neither a board nor a map
+  in the scene and has to say the shell is home. It also keeps `EnsureFloor` out
+  of the cases that are not about the shell — null it in a `finally`, because
+  domain reload is off.
+
 ## The bottom navigation bar
 
 `StoryNavBar` is the one piece of the shell that is not a screen: five tabs —

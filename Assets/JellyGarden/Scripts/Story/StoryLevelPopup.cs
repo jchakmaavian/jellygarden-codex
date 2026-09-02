@@ -546,6 +546,10 @@ namespace JellyGarden.Scripts.Story
 
             Close();
             if (back != null) back();
+
+            // A popup opened with no onClose — a preview, a test, a path added
+            // later — would otherwise close onto nothing.
+            StoryShell.EnsureFloor();
         }
 
         #endregion

@@ -121,6 +121,14 @@ namespace JellyGarden.Scripts.Story
             }
 
             yield return RunAll();
+
+            // Give the level back. This test launches level 1 on every play
+            // session, and before it handed the level back it left the shell "in
+            // a level" for the rest of the session: the nav bar stayed hidden and
+            // home never came back. HandleLevelComplete is the game's own way out
+            // of a level, so this is not a second path to keep in step.
+            StoryFlow.HandleLevelComplete();
+
             _running = false;
         }
 

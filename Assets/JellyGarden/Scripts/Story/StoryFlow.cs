@@ -135,6 +135,11 @@ namespace JellyGarden.Scripts.Story
             PlayingLevel = levelNumber;
             _returningFromLevel = false;
 
+            // Every shell canvas sorts above the kit's level canvas, so the shell
+            // comes down before the board goes up rather than a frame later when
+            // StoryShell's own Update notices.
+            StoryShell.CloseForLevel();
+
             PlayerPrefs.SetInt("OpenLevel", levelNumber);
             PlayerPrefs.Save();
             InitScript.openLevel = levelNumber;
@@ -191,12 +196,16 @@ namespace JellyGarden.Scripts.Story
         private static void OpenAfterLevel(int areaId)
         {
             // The clue and the arc beat are owed from the last repair, not from
-            // the level; if one is pending it plays before the area screen so the
-            // player is not looking at a task list during a story beat.
-            if (StoryPresentation.PlayPending(areaId, () => AreaScreen.Open(areaId)))
+            // the level; if one is pending it plays before the shell comes back so
+            // the player is not looking at a task list during a story beat.
+            //
+            // Where the level ends is the shell's decision, not this one's: with
+            // the map on it is the area page as it always was, and with the shell
+            // on it is home, which is what Royal Match comes back to.
+            if (StoryPresentation.PlayPending(areaId, () => StoryShell.ShowAfterLevel(areaId)))
                 return;
 
-            AreaScreen.Open(areaId);
+            StoryShell.ShowAfterLevel(areaId);
         }
 
         public static bool CameBackFromLevel

@@ -90,6 +90,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 HomeButtonsOpenTheLevelAndTheArea();
                 BottomNavIsFiveTabsAcrossTheShell();
                 AreasListCoversEveryArea();
+                ShellHasNoDeadEnds();
             }
             finally
             {
@@ -1734,6 +1735,161 @@ namespace JellyGarden.Scripts.Story.Editor
             }
         }
 
+        /// <summary>
+        /// The shell as a whole: the game opens on the room, every route between
+        /// the screens runs both ways, and no screen can be left with nothing
+        /// underneath it.
+        ///
+        /// The routes are walked by pressing the actual buttons — the nav tabs,
+        /// the cards, the red X — because a screen that opens correctly and
+        /// cannot be got out of passes every check made of it in isolation. The
+        /// closing half is the half worth testing: `Close()` called from a test
+        /// proves nothing about the X the player has.
+        /// </summary>
+        private static void ShellHasNoDeadEnds()
+        {
+            StoryProgress.ResetAll();
+
+            bool previousUseMap = StoryShell.UseMap;
+            global::System.Action<int, int> previousLauncher = StoryLevelPopup.Launcher;
+            var launched = new List<string>();
+
+            // Neither a board nor a map exists in an editor test, so the shell is
+            // told it is in the scene it belongs to. The same shape as
+            // StoryNavBar.LevelIsPlayingSource, and nulled in the finally: domain
+            // reload is off, and a seam left set is the next case's failure.
+            StoryShell.InGameSceneSource = () => true;
+            StoryNavBar.LevelIsPlayingSource = () => false;
+            StoryLevelPopup.Launcher = (l, a) => launched.Add("level " + l + " area " + a);
+
+            try
+            {
+                StoryShell.UseMap = false;
+                StoryShell.CloseForLevel();
+                StoryAreasList.Install();
+
+                // The entry point. Nothing is open, no level is up: the shell puts
+                // the room on screen without being asked, which is what replacing
+                // the map actually means.
+                StoryShell.Sync();
+                Expect(StoryHomeScreen.IsOpen,
+                    "the shell opens on the room rather than on the kit's map");
+                int room = StoryHomeScreen.CurrentRoom;
+
+                StoryNavBar.Sync();
+                StoryNavBar nav = StoryNavBar.Instance;
+                if (nav == null) { Fail("the nav bar is up with the shell"); return; }
+
+                // Home -> Areas -> a card -> that area's page.
+                nav.ButtonFor(StoryNavBar.Tab.Areas).onClick.Invoke();
+                Expect(StoryAreasList.IsOpen, "Areas opens the list of rooms");
+
+                StoryAreasList list = StoryAreasList.Instance;
+                if (list == null) { Fail("the areas list is there to be pressed"); return; }
+                list.CardButton(list.RowOf(room)).onClick.Invoke();
+                Expect(AreaScreen.IsOpen && AreaScreen.Instance.AreaId == room,
+                    "a card opens that area's page");
+                Expect(StoryAreasList.IsOpen,
+                    "the list stays open under the page it opened");
+
+                // ...and back out of it, by the X the player actually has.
+                Button areaClose = AreaScreen.Instance.CloseButton;
+                Expect(areaClose != null, "the area page has a close X");
+                if (areaClose != null) areaClose.onClick.Invoke();
+                Expect(!AreaScreen.IsOpen, "the X closes the area page");
+                Expect(StoryAreasList.IsOpen,
+                    "closing the area page lands back on the list that opened it");
+
+                // ...and home again from there.
+                nav.ButtonFor(StoryNavBar.Tab.Home).onClick.Invoke();
+                Expect(StoryHomeScreen.IsOpen && !StoryAreasList.IsOpen,
+                    "Home comes back from the list");
+
+                // Home -> Level button -> popup -> X -> home is still there.
+                StoryHomeScreen home = StoryHomeScreen.Instance;
+                home.LevelButton.onClick.Invoke();
+                Expect(StoryLevelPopup.IsOpen, "the Level button opens the popup");
+                StoryLevelPopup.Instance.CloseButton.onClick.Invoke();
+                Expect(!StoryLevelPopup.IsOpen && StoryHomeScreen.IsOpen,
+                    "backing out of the popup lands back on home");
+
+                // Home -> Level button -> Play -> the board. The shell has to be
+                // off screen for it: every shell canvas sorts above the kit's.
+                launched.Clear();
+                home.LevelButton.onClick.Invoke();
+                StoryLevelPopup.Instance.PlayButton.onClick.Invoke();
+                Expect(launched.Count == 1 &&
+                       launched[0] == "level " + StoryLevelPlan.NextLevelFor(room) +
+                       " area " + room,
+                    "Play launches the level on the button (launched [" +
+                    string.Join(" | ", launched.ToArray()) + "])");
+                Expect(!StoryLevelPopup.IsOpen, "Play closes the popup behind it");
+
+                StoryNavBar.LevelIsPlayingSource = () => true;
+                StoryNavBar.Sync();
+                StoryShell.Sync();
+                Expect(!StoryShell.AnyScreenOpen && !StoryNavBar.IsVisible,
+                    "nothing of the shell is drawn over the board");
+
+                // ...and the level ends on the room, with its star already counted.
+                StoryNavBar.LevelIsPlayingSource = () => false;
+                StoryShell.ShowAfterLevel(room);
+                Expect(StoryHomeScreen.IsOpen, "a level ends back on the room");
+                Expect(!AreaScreen.IsOpen && !StoryAreasList.IsOpen && !StoryLevelPopup.IsOpen,
+                    "and ends there alone, not under what was open before it");
+
+                // The dead-end sweep. Every screen, opened with nothing beneath
+                // it, still leaves the player somewhere when it is closed.
+                StoryShell.CloseForLevel();
+                AreaScreen.Open(room);
+                AreaScreen.Instance.CloseButton.onClick.Invoke();
+                Expect(StoryShell.AnyScreenOpen,
+                    "the area page opened from nowhere still closes onto something");
+
+                StoryShell.CloseForLevel();
+                StoryLevelPopup.Open(StoryLevelPlan.NextLevelFor(room), room, null);
+                StoryLevelPopup.Instance.CloseButton.onClick.Invoke();
+                Expect(StoryShell.AnyScreenOpen,
+                    "a popup opened with no way back still closes onto something");
+
+                StoryShell.CloseForLevel();
+                StoryShell.Sync();
+                Expect(StoryShell.AnyScreenOpen,
+                    "the shell never sits on an empty screen");
+
+                // And the map is still there, one flag away. With it on, the shell
+                // stops deciding anything: a level ends on the area page as it did
+                // before this screen existed, and nothing is opened unasked.
+                StoryShell.UseMap = true;
+                StoryShell.CloseForLevel();
+                StoryShell.Sync();
+                Expect(!StoryShell.AnyScreenOpen,
+                    "with the map on, the shell opens nothing of its own");
+                StoryShell.ShowAfterLevel(room);
+                Expect(AreaScreen.IsOpen && !StoryHomeScreen.IsOpen,
+                    "with the map on, a level ends on the area page as it always did");
+
+                Debug.Log(string.Format(
+                    "[Story] shell: opens on area {0} '{1}'; home <-> areas <-> area page " +
+                    "and home -> level -> home both walk; every screen closed onto " +
+                    "another; the kit's map kept behind UseMap.",
+                    room, StoryDatabase.GetArea(room).Name));
+            }
+            finally
+            {
+                StoryShell.InGameSceneSource = null;
+                StoryNavBar.LevelIsPlayingSource = null;
+                StoryNavBar.AreasDestination = null;
+                StoryLevelPopup.Launcher = previousLauncher;
+                StoryShell.UseMap = previousUseMap;
+                StoryLevelPopup.Close();
+                StoryAreasList.Close();
+                AreaScreen.Close();
+                StoryHomeScreen.Close();
+                StoryProgress.ResetAll();
+            }
+        }
+
         #endregion
 
         #region Helpers
@@ -1760,7 +1916,8 @@ namespace JellyGarden.Scripts.Story.Editor
                          "StoryAreaScreen", "~StoryClueCard", "~StoryDialogue",
                          "~StoryToast", "~StoryCutscene", StoryLevelHud.HostName,
                          StoryLevelPopup.HostName, StoryHomeScreen.HostName,
-                         StoryNavBar.HostName, StoryAreasList.HostName
+                         StoryNavBar.HostName, StoryAreasList.HostName,
+                         StoryShell.HostName
                      })
             {
                 GameObject go = GameObject.Find(name);
