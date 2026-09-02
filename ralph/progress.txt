@@ -91,6 +91,22 @@ against memory. The most important findings:
 - Royal Match UI primitives: `StoryUi.Royal.cs` — `RoyalPanel`, `GreenButton`,
   `DoItButton`, `StarBadge`, `CreamCard`, `TopBar`. Build screens FROM these.
 
+### Driving the open Editor (learned the hard way)
+The Editor does NOT recompile while it is in Play mode, and a menu-triggered
+editor test run during Play mode runs the STALE assembly against live play
+state — which shows up as unrelated screen-test failures. Before running the
+screen tests: stop Play (Cmd-P), force a refresh (Cmd-R), wait for the domain
+reload, then click the menu. Check the log for the run you expect rather than
+trusting the last [Story] lines.
+
+`Logs/Editor.log` is ~3M lines and licensing errors flood the tail, so
+`tail -4000 | grep` can miss the run you just did. Read the last few MB in
+python and filter for lines starting `[Story]`.
+
+Screenshots: `osascript` loses the foreground to whatever the user is doing, so
+raise Unity and take the shot inside ONE osascript
+(`do shell script "screencapture -x -o ..."`), not as a second Bash call.
+
 ### The branch
 `ralph/royal-match-shell`, cut from `ralph/king-leo-story` — NOT from `main`.
 `main` has none of the "already done" work above. Never re-cut it from `main`.
@@ -182,4 +198,75 @@ US-002..US-015 are composition rather than invention.
   quad and squares the corners.
 - The close X is two rotated bars, not a `✕` glyph — the kit's font may not
   carry it, and a missing glyph renders as nothing at all.
+---
+
+## 2026-09-02 - US-002 - Level HUD: Target and Moves, no score bar
+
+Replaced the kit's score bar with the Royal Match level HUD: a Target panel, a
+portrait and a Moves panel across one blue strip.
+
+### What was implemented
+- `StoryLevelHud` — the strip, built from `StoryUi.Royal` colours and shapes.
+  Target panel (icon + remaining count per target, one slot each, up to four),
+  King Leo's portrait in a gold arch in the middle, Moves on the right reading
+  `LevelManager.THIS.Limit`. Timed levels read "Time" and m:ss instead.
+- The HUD is a child of the kit's own level canvas (`Level/Canvas/Panel`), NOT
+  an overlay canvas of its own, so it inherits the kit's scaling, sort order and
+  visibility. That canvas is authored at 720x1280 and the Royal metrics are in
+  1080, so vertical measurements are scaled by `referenceResolution.x / 1080`
+  and horizontal ones are normalised anchors.
+- The kit's score bar (`BackBar`, holding the `ProgressBarScript` object), its
+  star markers, its labels, `Score`, `Limit`, `TargetBlocks`, `TargetIngr` and
+  `TargetScore` are deactivated — hidden, not deleted.
+- `StoryLevelHud.Source` is the test seam: a `Func<HudModel>` that stands in for
+  the board, so the strip can be driven with no `LevelManager` in the scene.
+- `StoryScreenTests.LevelHudIsTargetAndMoves` builds the HUD, counts down a
+  target and a move, checks no text on it contains "score", and logs one line.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryLevelHud.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/StorySceneHooks.cs` (installs it)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs` (new case)
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md` ("The in-level HUD")
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> "All checks passed."
+- JellyGarden > Story > Run Screen Tests -> **"[Story] Screen tests passed."**, with
+  `[Story] level HUD: Moves 34, 2 target slot(s) [Target 59 24 Moves 34]`
+- Play mode, level 1 of area 1, Game view screenshot: the strip reads
+  Target / portrait / Moves with no score bar and no star markers, and the log
+  carries:
+```
+[Story] Level HUD: hid BackBar, Panel, Stars, Label, Label, Label, Score, Limit,
+        TargetBlocks, TargetIngr, TargetScore; faded Targets (kept alive for the
+        collect animation).
+[Story] Level HUD installed: Target + portrait + Moves, no score bar.
+```
+  Moves read 4 after the powerup self-test had spent moves off a 6-move start,
+  so the counter is live rather than a snapshot.
+
+### Learnings for future iterations
+- **`LevelManager.THIS` is assigned in `Start`, not `Awake`.** A
+  `StorySceneHooks` pass therefore sees no board, and the level UI is inactive
+  until a level opens, so `GameObject.Find` on it returns null too. Anything
+  needing the board must attach on `LevelManager.OnLevelLoaded` /
+  `OnStartPlay` — this cost one whole play-mode cycle to find.
+- **Never `SetActive(false)` the kit's `Targets` group.**
+  `TargetsGroup.OnDisable` destroys the icons it made, and
+  `LevelManager.CheckCollectedTarget` flies each collected piece to
+  `TargetObject.guiObj` — one of those icons. Deactivating it animates to a
+  destroyed transform: a VFX regression `check_vfx_intact.py` would not catch.
+  Fade it with a `CanvasGroup` at alpha 0 and keep it alive.
+- **`Level/Canvas/BottomPanel` draws over `Level/Canvas/Panel`.** Anything built
+  under `Panel` is below the booster row no matter its sibling index, which is
+  why the kit's pause button had to move INTO that row rather than be drawn over
+  it. The row's own boosters supply the y to place it at.
+- A screen built as a child of the kit's canvas gets visibility, scale and sort
+  order for free, at the cost of one scale factor. That trade was worth it here
+  and is probably right for anything else that must live inside a level.
+- The Editor will not recompile while it is in Play mode, and screen tests run
+  from the menu during Play mode fail for reasons that have nothing to do with
+  the code. See the Codebase Patterns section.
 ---

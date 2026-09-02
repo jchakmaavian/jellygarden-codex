@@ -146,6 +146,31 @@ builds each one for real and logs a `[Story] primitive ...` line per shape. With
 the Editor open, batchmode is locked out — run it from the menu instead:
 **JellyGarden > Story > Run Screen Tests**, then read `Logs/Editor.log`.
 
+## The in-level HUD
+
+`StoryLevelHud` draws Royal Match's Target + portrait + Moves strip over the
+kit's score bar. Four things about it are not obvious:
+
+- **The board does not exist when a scene finishes loading.** `LevelManager`
+  assigns `THIS` in `Start`, and the level UI is inactive until a level opens,
+  so a `StorySceneHooks` pass finds nothing. Anything that needs the board
+  attaches on `LevelManager.OnLevelLoaded` / `OnStartPlay` instead — the HUD and
+  `StoryBoardTheme` both do.
+- **Never deactivate the kit's `Targets` group.** `TargetsGroup.OnDisable`
+  destroys the icons it made, and `LevelManager.CheckCollectedTarget` flies a
+  matched piece to `TargetObject.guiObj` — one of those icons. Deactivating it
+  animates to a destroyed transform. Hide it with a `CanvasGroup` at alpha 0
+  instead, which is also why the HUD moves those invisible icons onto its own
+  slots: the kit's collect animation then lands where the player is reading.
+- **`Level/Canvas/BottomPanel` draws over `Level/Canvas/Panel`.** A screen built
+  under `Panel` cannot put anything on top of the booster row, which is why the
+  kit's pause button is moved *into* that row rather than drawn over it.
+- The HUD is a child of the kit's canvas rather than an overlay canvas of its
+  own, so it inherits the kit's sort order and visibility for free. That canvas
+  is authored at 720x1280 and the Royal metrics are in 1080, so every vertical
+  measurement is multiplied by `referenceResolution.x / 1080`; horizontal ones
+  are normalised anchors and need no scaling at all.
+
 ## Two traps that have bitten more than once
 
 **`System.*` resolves into the kit's namespace.** The kit has

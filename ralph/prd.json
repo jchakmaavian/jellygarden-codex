@@ -35,8 +35,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "StoryLevelHud draws the strip as a child of the kit's level canvas, so it inherits the kit's scaling, sort order and visibility. It attaches on LevelManager.OnLevelLoaded/OnStartPlay, not on scene load \u2014 LevelManager sets THIS in Start. The kit's score bar, star markers and counters are deactivated; the kit's Targets group is only faded to alpha 0, because TargetsGroup destroys its icons in OnDisable and LevelManager's collect animation flies to them. Those invisible icons are kept on the HUD's own slots so that animation still lands where the player is reading. The kit's pause button moved into the booster row's empty middle slot, which is the only place that draws above this HUD."
     },
     {
       "id": "US-003",

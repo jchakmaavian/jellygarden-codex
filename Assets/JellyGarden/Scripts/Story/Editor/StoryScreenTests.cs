@@ -79,6 +79,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 EveryArcHasATheme();
                 EveryAreaOpens();
                 RoyalPrimitivesConstruct();
+                LevelHudIsTargetAndMoves();
             }
             finally
             {
@@ -744,6 +745,77 @@ namespace JellyGarden.Scripts.Story.Editor
             }
         }
 
+        /// <summary>
+        /// The level HUD reads Target and Moves and nothing else.
+        ///
+        /// There is no board in the Editor outside play mode, so the strip is
+        /// driven through StoryLevelHud.Source — the same seam the board fills in
+        /// live. What is checked is what a player would read off it: the target
+        /// icons and their counts, the moves left, and the absence of any score.
+        /// </summary>
+        private static void LevelHudIsTargetAndMoves()
+        {
+            var host = new GameObject("~StoryLevelHudTest");
+            global::System.Func<StoryLevelHud.HudModel> previous = StoryLevelHud.Source;
+            try
+            {
+                Canvas canvas = StoryUi.CreateOverlayCanvas("~LevelHudCanvas");
+                canvas.transform.SetParent(host.transform, false);
+
+                var model = new StoryLevelHud.HudModel { LimitTitle = "Moves", LimitValue = "35" };
+                model.Targets.Add(new StoryLevelHud.HudTarget { Remaining = 60 });
+                model.Targets.Add(new StoryLevelHud.HudTarget { Remaining = 24 });
+                StoryLevelHud.Source = () => model;
+
+                StoryLevelHud hud = StoryLevelHud.Build(canvas.transform, 1f);
+                hud.Refresh();
+
+                List<string> texts = TextsIn(hud.gameObject);
+
+                Expect(texts.Contains("Target"), "the HUD names its Target panel");
+                Expect(texts.Contains("Moves"), "the HUD names its Moves panel");
+                Expect(texts.Contains("35"), "the HUD shows the moves left (read '" +
+                                             hud.LimitText + "')");
+                Expect(hud.VisibleTargetCount == 2,
+                    "the HUD draws one slot per target (drew " + hud.VisibleTargetCount + ")");
+                Expect(texts.Contains("60") && texts.Contains("24"),
+                    "the HUD shows each target's remaining count");
+                Expect(!texts.Any(t => t.ToLowerInvariant().Contains("score")),
+                    "the HUD has no score anywhere on it");
+
+                // Collecting one has to move the number the player is watching.
+                model.Targets[0].Remaining = 59;
+                model.LimitValue = "34";
+                hud.Refresh();
+                texts = TextsIn(hud.gameObject);
+                Expect(texts.Contains("59"), "a collected target counts down");
+                Expect(texts.Contains("34"), "spending a move counts down");
+
+                Debug.Log("[Story] level HUD: " + hud.LimitTitleText + " " + hud.LimitText +
+                          ", " + hud.VisibleTargetCount + " target slot(s) [" +
+                          string.Join(" ", texts.ToArray()) + "]");
+
+                // A one-target level draws one slot, not two stale ones.
+                model.Targets.RemoveAt(1);
+                hud.Refresh();
+                Expect(hud.VisibleTargetCount == 1,
+                    "a level with one target draws one slot (drew " +
+                    hud.VisibleTargetCount + ")");
+
+                // The timed levels the kit ships say Time, not Moves.
+                model.LimitTitle = "Time";
+                model.LimitValue = "1:30";
+                hud.Refresh();
+                Expect(hud.LimitTitleText == "Time" && hud.LimitText == "1:30",
+                    "a timed level's panel reads Time");
+            }
+            finally
+            {
+                StoryLevelHud.Source = previous;
+                Object.DestroyImmediate(host);
+            }
+        }
+
         #endregion
 
         #region Helpers
@@ -768,7 +840,7 @@ namespace JellyGarden.Scripts.Story.Editor
             foreach (string name in new[]
                      {
                          "StoryAreaScreen", "~StoryClueCard", "~StoryDialogue",
-                         "~StoryToast", "~StoryCutscene"
+                         "~StoryToast", "~StoryCutscene", StoryLevelHud.HostName
                      })
             {
                 GameObject go = GameObject.Find(name);
