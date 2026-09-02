@@ -185,6 +185,15 @@ raise Unity and take the shot inside ONE osascript
   drawn icon whose interior colour matches the card behind it renders as an
   empty outline while every editor assertion passes — each rect is present,
   sized and coloured as asked. Same family as the negative-height rect.
+- **A glyph's height comes from its parent, its width from that height.** A box
+  sized as a fraction of a WIDE parent's width is near-square on a 9:19.5 phone
+  and a sideways smear on the Editor's 4:3 view. Stretch it vertically and let an
+  `AspectRatioFitter` in `HeightControlsWidth` set the width.
+- **Hiding a component by deactivating its own GameObject stops its `Update`.**
+  Turn off a child (the canvas) if the thing has to decide when to come back.
+- **`StoryPowerupTest` launches level 1 every play session and never finishes
+  it**, so the shell is "in a level" for the rest of the session. Use
+  `JellyGarden > Story > Preview > Close The Level` before previewing a screen.
 - **A best-fit `Text` wraps before it shrinks.** `resizeTextForBestFit` fits
   *wrapped* text to the rect, so a narrow rect gives two big lines overflowing
   the top rather than one small one. Give a variable-length label all the width
@@ -960,4 +969,82 @@ The home screen's two actions, over the floor of the room: a big green
   out of it. Sorting orders in use: home 300, area screen 400, level popup 600.
 - The `// TEMP` grep and the post-commit `git status` both came back clean this
   time.
+---
+
+## 2026-09-02 - US-010 - Bottom five-tab navigation
+
+The five-tab strip Royal Match carries across every screen outside a level:
+Areas, Leaderboard, Home, Team, Cards, with Home raised and centred.
+
+### What was implemented
+- `StoryUi.NavBar(name, parent, icons, labels, raised, onTab)` -> `NavBarParts`
+  with `NavTabParts[]`, plus `SetNavSelected`, `NavIcon`, `NavBarHeightFrac` and
+  five drawn glyphs (book+star, trophy, castle, shield, cards+crown) in the same
+  `Block`/`Disc` style as the task icons. Colours and every proportion sampled
+  off `docs/royal-match/01-home-area.jpg` with PIL: the bar is 145 of 1472, the
+  gold rim 14 of those 145, and the seams fall at a sixth, a sixth, a third, a
+  sixth.
+- `StoryNavBar` — the bar itself, on its own persistent canvas at sorting order
+  500. Areas and Home navigate; the other three toast. Hidden during a level.
+  Installed from `StorySceneHooks`, driven by `Update`, `Sync()` for tests.
+- `AreaScreen`'s panel band re-anchored to `StoryUi.NavBarHeightFrac` + its old
+  70-point gap, so the bar has somewhere to be.
+- `StoryHomeScreen.NavHeightFrac` now IS `StoryUi.NavBarHeightFrac`.
+- `JellyGarden > Story > Preview > Close The Level`.
+- `StoryScreenTests.BottomNavIsFiveTabsAcrossTheShell`.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryNavBar.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/StoryUi.Royal.cs` (nav region)
+- `Assets/JellyGarden/Scripts/Story/AreaScreen.cs` (panel band)
+- `Assets/JellyGarden/Scripts/Story/StoryHomeScreen.cs` (band height, comments)
+- `Assets/JellyGarden/Scripts/Story/StorySceneHooks.cs` (install)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs` (new case + cleanup)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenPreview.cs` (Close The Level)
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md` ("The bottom navigation bar")
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> "All checks passed."
+- JellyGarden > Story > Run Screen Tests -> **"[Story] Screen tests passed."**, with
+  `[Story] nav bar: 5 slot(s) [Areas Leaderboard Home Team Cards], raised 'Home' at 0.33..0.67, lit Home.`
+- JellyGarden > Story > Run Full Smoke Test -> **"[Story] Smoke test passed."**
+- Play mode, Game view screenshots of home and of the area page: the strip draws
+  with the castle breaking the gold rim, "Home" under it, and on the area page
+  BOTH the Areas slot (selected) and the Home slot (raised) are the bright blue
+  while the other three are not. Log:
+  `[Story] nav bar built: 5 tabs [...], 'Home' raised.` /
+  `[Story] nav bar shown: home False, area page True, in a level False.`
+
+### Learnings for future iterations
+- **A glyph's height must come from the parent and its width from that height.**
+  The bar is a tenth of the screen on any aspect, but that tenth is 145 points
+  beside an 828-wide phone and a far shallower slice of the Editor's 4:3 Game
+  view. Sizing the glyph as a fraction of the bar's WIDTH gave near-square icons
+  on the reference and sideways smears in the Editor — every editor assertion
+  passed, and only the Play-mode screenshot showed it. The fix is a vertical
+  stretch plus `AspectRatioFitter` in `HeightControlsWidth`. This is the same
+  family as the negative-height rect and the invisible chest: geometry that no
+  string check can see.
+- **Hiding a component by deactivating its own GameObject stops its `Update`.**
+  A thing that hides itself and then decides on its own when to come back must
+  turn off a CHILD — here the canvas — or it is gone for the session.
+- **`MenuManager.menuPlay` is the kit's PRE-play popup, not the board.** The
+  name reads the other way round. "Is a level up" is
+  `LevelManager.THIS.gameStatus != GameState.Map`.
+- **`StoryPowerupTest` launches level 1 every play session and never finishes
+  it**, so `StoryFlow.PlayingArea` stays set and `gameStatus` stays off Map for
+  the whole session. Anything that hides during a level is then invisible for
+  every Play-mode preview after it. `Preview > Close The Level` is the way out.
+- A screen that another screen draws over has to reserve the space itself, and
+  should anchor that reserve to the covering screen's own height constant rather
+  than a copied number. The nav's raised tab stands half a bar height PROUD of
+  the bar, so the reserve is bar height PLUS clearance, not bar height.
+- `StoryUi.CreateImage` sets `raycastTarget = false`. A strip that must eat taps
+  in its gaps has to set it back to true; a `Button`'s own `AddComponent<Image>`
+  defaults to true.
+- Four Play-mode round trips were needed for this one story. The cycle that
+  works: edit -> typecheck -> exit Play -> `Assets > Refresh` -> wait ~45s ->
+  enter Play -> `Preview > Close The Level` -> `Preview > Open ...` -> screenshot.
 ---

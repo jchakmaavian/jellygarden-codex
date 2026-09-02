@@ -88,6 +88,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 LevelPopupOffersBoosters();
                 HomeScreenIsTheRoom();
                 HomeButtonsOpenTheLevelAndTheArea();
+                BottomNavIsFiveTabsAcrossTheShell();
             }
             finally
             {
@@ -1473,6 +1474,124 @@ namespace JellyGarden.Scripts.Story.Editor
             }
         }
 
+        /// <summary>
+        /// The bottom bar: five slots with Home raised in the middle, two of them
+        /// going somewhere and three visibly inert, carried across home and the
+        /// area page and taken away for a level.
+        /// </summary>
+        private static void BottomNavIsFiveTabsAcrossTheShell()
+        {
+            StoryProgress.ResetAll();
+
+            try
+            {
+                StoryHomeScreen.Open(1);
+                StoryNavBar.Sync();
+
+                StoryNavBar nav = StoryNavBar.Instance;
+                if (nav == null) { Fail("the nav bar installs"); return; }
+
+                Expect(StoryNavBar.IsVisible, "the nav bar is on screen with home");
+
+                StoryUi.NavBarParts bar = nav.Parts;
+                Expect(bar != null && bar.Tabs != null && bar.Tabs.Length == 5,
+                    "the bar has five slots (found " +
+                    (bar == null || bar.Tabs == null ? 0 : bar.Tabs.Length) + ")");
+                if (bar == null || bar.Tabs == null || bar.Tabs.Length != 5) return;
+
+                var order = new[]
+                {
+                    StoryUi.NavIcon.Areas, StoryUi.NavIcon.Leaderboard, StoryUi.NavIcon.Home,
+                    StoryUi.NavIcon.Team, StoryUi.NavIcon.Cards
+                };
+                for (int i = 0; i < order.Length; i++)
+                    Expect(bar.Tabs[i].Icon == order[i],
+                        "slot " + i + " is " + order[i] + " (found " + bar.Tabs[i].Icon + ")");
+
+                // Raised and centred: the middle of five, wider than its
+                // neighbours, its glyph breaking above the bar's top edge, and the
+                // only slot carrying a name.
+                StoryUi.NavTabParts home = bar.Tabs[(int)StoryNavBar.Tab.Home];
+                Expect(home.Raised, "the Home tab is the raised one");
+                Expect(home.Label != null && home.Label.text == "Home",
+                    "the Home tab is named");
+
+                Canvas.ForceUpdateCanvases();
+                Expect(home.Label != null && home.Label.rectTransform.rect.height > 1f,
+                    "the Home label has a rect it can be drawn in (height " +
+                    (home.Label == null ? 0f : home.Label.rectTransform.rect.height) + ")");
+                Expect(home.Glyph != null && home.Glyph.anchorMax.y > 1f,
+                    "the Home glyph rises above the bar (top at " +
+                    (home.Glyph == null ? 0f : home.Glyph.anchorMax.y) + " of it)");
+
+                RectTransform homeFace = home.Button.GetComponent<RectTransform>();
+                RectTransform sideFace = bar.Tabs[0].Button.GetComponent<RectTransform>();
+                float homeWidth = homeFace.anchorMax.x - homeFace.anchorMin.x;
+                float sideWidth = sideFace.anchorMax.x - sideFace.anchorMin.x;
+                Expect(homeWidth > sideWidth,
+                    "the Home tab is the widest (" + homeWidth + " against " + sideWidth + ")");
+                Expect(Mathf.Abs((homeFace.anchorMin.x + homeFace.anchorMax.x) * 0.5f - 0.5f) < 0.01f,
+                    "the Home tab is centred");
+
+                // Areas goes to the area page and the bar comes with it.
+                nav.ButtonFor(StoryNavBar.Tab.Areas).onClick.Invoke();
+                StoryNavBar.Sync();
+                Expect(AreaScreen.IsOpen, "the Areas tab opens an area page");
+                Expect(StoryNavBar.IsVisible, "the bar persists onto the area page");
+                Expect(nav.Selected == StoryNavBar.Tab.Areas,
+                    "the Areas tab lights when the area page is up (lit " + nav.Selected + ")");
+
+                // Home comes back, and takes the area page away with it.
+                nav.ButtonFor(StoryNavBar.Tab.Home).onClick.Invoke();
+                StoryNavBar.Sync();
+                Expect(StoryHomeScreen.IsOpen, "the Home tab opens home");
+                Expect(!AreaScreen.IsOpen, "the Home tab closes the area page behind it");
+                Expect(nav.Selected == StoryNavBar.Tab.Home,
+                    "the Home tab lights on home (lit " + nav.Selected + ")");
+
+                // The three the game does not have are present and harmless: a tap
+                // must not throw and must not navigate anywhere.
+                foreach (StoryNavBar.Tab inert in new[]
+                         {
+                             StoryNavBar.Tab.Leaderboard, StoryNavBar.Tab.Team,
+                             StoryNavBar.Tab.Cards
+                         })
+                {
+                    Button button = nav.ButtonFor(inert);
+                    Expect(button != null && button.gameObject.activeInHierarchy,
+                        StoryNavBar.NameOf(inert) + " is on the bar");
+                    button.onClick.Invoke();
+                    StoryNavBar.Sync();
+                    Expect(!AreaScreen.IsOpen && StoryHomeScreen.IsOpen,
+                        StoryNavBar.NameOf(inert) + " goes nowhere and does not error");
+                }
+
+                // A level takes the bar away and gives it back.
+                StoryNavBar.LevelIsPlayingSource = () => true;
+                StoryNavBar.Sync();
+                Expect(!StoryNavBar.IsVisible, "the bar is hidden during a level");
+
+                StoryNavBar.LevelIsPlayingSource = null;
+                StoryNavBar.Sync();
+                Expect(StoryNavBar.IsVisible, "the bar comes back after the level");
+
+                Debug.Log(string.Format(
+                    "[Story] nav bar: {0} slot(s) [{1}], raised '{2}' at {3:0.00}..{4:0.00}, " +
+                    "lit {5}.",
+                    bar.Tabs.Length, string.Join(" ", order.Select(t => t.ToString()).ToArray()),
+                    home.Label == null ? "<none>" : home.Label.text,
+                    homeFace.anchorMin.x, homeFace.anchorMax.x, nav.Selected));
+            }
+            finally
+            {
+                StoryNavBar.LevelIsPlayingSource = null;
+                StoryNavBar.AreasDestination = null;
+                AreaScreen.Close();
+                StoryHomeScreen.Close();
+                StoryProgress.ResetAll();
+            }
+        }
+
         #endregion
 
         #region Helpers
@@ -1498,7 +1617,8 @@ namespace JellyGarden.Scripts.Story.Editor
                      {
                          "StoryAreaScreen", "~StoryClueCard", "~StoryDialogue",
                          "~StoryToast", "~StoryCutscene", StoryLevelHud.HostName,
-                         StoryLevelPopup.HostName, StoryHomeScreen.HostName
+                         StoryLevelPopup.HostName, StoryHomeScreen.HostName,
+                         StoryNavBar.HostName
                      })
             {
                 GameObject go = GameObject.Find(name);

@@ -129,6 +129,13 @@ AppleScript is no use here — `AXMenuItemMarkChar` of `Edit > Play Mode > Play`
 reads `missing value` whether or not the Editor is playing, so a script that
 trusts it will happily run the tests into a void result.
 
+`StoryPowerupTest` launches level 1 on every play session and never finishes it,
+so a session that has run it is still "in a level" as far as the story is
+concerned. Anything that hides itself during a level — the nav bar first among
+them — then stays hidden over a shell screen opened on top of it. **JellyGarden >
+Story > Preview > Close The Level** is the way out, and it goes through
+`StoryFlow.HandleLevelComplete` rather than inventing a second one.
+
 To look at a screen in Play mode, use **JellyGarden > Story > Preview** rather
 than a temporary hook in a runtime script: it opens a screen, grants stars and
 resets progress, and it is inert outside Play mode. The temporary hooks that
@@ -160,6 +167,7 @@ These primitives carry every screen:
 | `GoldButton(name, parent, onClick)` | the gold secondary card; fill it via `ContentOf(button)` |
 | `CountBadge(name, parent, count)` | the red call-to-action badge, written by `SetCountBadge` |
 | `TaskIcon(name, parent, areaId, task)` | the object on the left of a task row |
+| `NavBar(name, parent, icons, labels, raised, onTab)` | `NavBarParts` — the bottom strip and its `NavTabParts[]`; lit by `SetNavSelected` |
 
 Rules that are easy to get wrong:
 
@@ -260,6 +268,53 @@ the floor. Its layout constants are worth understanding before moving anything:
   stops at the first it cannot pay for. Counting every affordable task instead
   would point the player at buttons that grey out when pressed, because
   `AreaScreen` only ever offers `StoryProgress.NextTask`.
+
+## The bottom navigation bar
+
+`StoryNavBar` is the one piece of the shell that is not a screen: five tabs —
+Areas, Leaderboard, Home, Team, Cards — carried across home and the area page and
+taken away for a level, as in `docs/royal-match/01-home-area.jpg`.
+
+- **It is not part of the home screen.** It lives on its own persistent canvas at
+  sorting order 500 — above home (300) and the area page (400), below the level
+  popup (600) and every cutscene — because the area page shows the same strip and
+  there must not be two of them. `StoryHomeScreen.NavBand` is a RESERVATION, and
+  it takes its height from `StoryUi.NavBarHeightFrac` so the two cannot drift.
+- **Any screen the bar covers has to reserve the space itself.** `AreaScreen`'s
+  panel band is anchored to `StoryUi.NavBarHeightFrac` plus the 70 points that
+  used to be its gap to the screen edge — the raised tab's glyph stands half a
+  bar height PROUD of the bar, and a reserve that is only the bar's own height
+  puts the castle through the Play button.
+- **Only the middle tab is raised, and Home is always the middle one.** Royal
+  Match expands whichever tab is current; keeping Home permanently raised and
+  centred is what makes the bar a landmark rather than something that moves under
+  the thumb. Selection is a second, quieter cue: `SetNavSelected` brightens the
+  current tab and leaves the raised one bright either way.
+- **A glyph's height comes from the bar and its width from that height.** The bar
+  is a tenth of the screen on any aspect, but that tenth is 145 points beside an
+  828-wide phone and a much shallower slice of a 4:3 Game view — so a glyph sized
+  as a fraction of the bar's WIDTH is near-square on one and a sideways smear on
+  the other, and no editor test can see it. `NavTab` stretches the glyph
+  vertically and lets an `AspectRatioFitter` in `HeightControlsWidth` set the
+  width, at the aspect the reference's own icons measure.
+- **The glyphs are a layer above the gold rim; the tab faces are below it.** The
+  rim runs unbroken across every tab, including the raised one — only the castle
+  breaks it. The glyph layer has its raycasts off, so a tap on the castle still
+  reaches the tab underneath.
+- **`LevelIsPlaying` reads `LevelManager.THIS.gameStatus`, not
+  `MenuManager.menuPlay`.** `menuPlay` is the kit's PRE-play popup, shown from
+  the map before a level starts, so a bar that hides on it hides in the wrong
+  place and shows in the wrong one. `StoryFlow.PlayingArea` is checked first.
+- Three tabs go nowhere and say so with a toast. Hiding them would put Home off
+  centre; swallowing the tap silently reads as a broken button.
+- **`StoryNavBar.AreasDestination` is the seam US-011 sets** to point Areas at the
+  list of all 150 rooms; null is the area the player is restoring. Same shape as
+  `StoryLevelHud.Source`. `LevelIsPlayingSource` is the other seam, so a test can
+  put the shell "in a level" with no board in the scene.
+- The bar is driven by `Update`, because a level starts and ends without telling
+  it. An editor test has no frame loop, so it calls `StoryNavBar.Sync()`. Hiding
+  turns off the CANVAS, never the component's own object — deactivating the host
+  would stop `Update` and the bar could never come back.
 
 ## The in-level HUD
 

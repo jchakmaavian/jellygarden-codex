@@ -45,6 +45,7 @@ namespace JellyGarden.Scripts.Story
             StoryOneStar.Install();
             StoryLevelHud.Install();
             StoryBoosters.Install();
+            StoryNavBar.Install();
             StoryPowerupTest.Install();
         }
     }

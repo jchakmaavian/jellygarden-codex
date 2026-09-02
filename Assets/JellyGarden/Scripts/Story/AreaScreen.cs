@@ -244,8 +244,16 @@ namespace JellyGarden.Scripts.Story
             // visible above it. Watching the gate change as repairs land is the
             // whole point of the screen — a panel over the top of it would have
             // hidden the one thing the player is paying stars for.
+            // The panel stops above the bottom nav, which draws over this screen
+            // rather than inside it (StoryNavBar sorts at 500 against this canvas's
+            // 400). Anchored to the bar's own height constant, not to a guess: the
+            // Play button sits at the bottom of this panel, and the reserve being
+            // a few points short puts the nav's raised castle through it.
             RectTransform band = StoryUi.CreateRect("Panel", _canvas.transform);
-            band.anchorMin = new Vector2(0f, 0f);
+            // The 70 points that were the gap to the screen edge are kept as the
+            // gap to the bar, because the raised tab's glyph stands half a bar
+            // height PROUD of the bar and would otherwise reach the Play button.
+            band.anchorMin = new Vector2(0f, StoryUi.NavBarHeightFrac);
             band.anchorMax = new Vector2(1f, 0.74f);
             band.offsetMin = new Vector2(0f, 70f);
             band.offsetMax = new Vector2(0f, 0f);

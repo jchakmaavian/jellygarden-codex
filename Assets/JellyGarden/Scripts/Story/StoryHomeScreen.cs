@@ -37,7 +37,12 @@ namespace JellyGarden.Scripts.Story
         // reference is a 9:19.5 phone and the Editor's Game view is 4:3, and a
         // column of fixed heights that fits one overlaps on the other while
         // every editor test still passes.
-        private const float NavHeightFrac = 150f / 1472f;
+        // The nav band is a RESERVATION, not the bar. StoryNavBar draws the five
+        // tabs on its own persistent canvas, because the area page shows the same
+        // strip and there must not be two of them; this rect keeps home from
+        // laying anything out under it, and takes its height from the same
+        // constant the bar does so the two cannot drift apart.
+        private const float NavHeightFrac = StoryUi.NavBarHeightFrac;
         private const float ButtonsBottomFrac = 200f / 1472f;
         private const float ButtonsHeightFrac = 164f / 1472f;
 
@@ -145,7 +150,10 @@ namespace JellyGarden.Scripts.Story
             get { return _buttonBand; }
         }
 
-        /// <summary>The band the five-tab nav goes in (US-010), empty until then.</summary>
+        /// <summary>
+        /// The band StoryNavBar's five tabs cover. Kept empty on purpose: the bar
+        /// is its own canvas above this one, because it outlives this screen.
+        /// </summary>
         public RectTransform NavBand
         {
             get { return _navBand; }

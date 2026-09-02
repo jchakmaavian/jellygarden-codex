@@ -1203,5 +1203,356 @@ namespace JellyGarden.Scripts.Story
         }
 
         #endregion
+
+        #region Bottom navigation
+
+        // Sampled off docs/royal-match/01-home-area.jpg (828x1472) with PIL. The
+        // bar is a flat blue strip under one gold rim; the tab the player is on
+        // is a brighter blue, and the seams between tabs are the panel's own
+        // dark blue rather than a drawn line.
+        public static readonly Color RoyalNavBright = Rgb(33, 127, 225);  // the selected tab
+        public static readonly Color RoyalNavSeam = Rgb(0, 55, 133);      // between tabs
+
+        /// <summary>
+        /// How much of the screen's height the nav bar takes. Measured off
+        /// 01-home-area.jpg: the gold rim starts at y=1327 of 1472 and the bar
+        /// runs to the bottom edge, so 145 of 1472. A FRACTION, because the
+        /// reference is a 9:19.5 phone and the Editor's Game view is 4:3 — see
+        /// the note on vertical metrics in this folder's CLAUDE.md.
+        /// </summary>
+        public const float NavBarHeightFrac = 145f / 1472f;
+
+        // The rim is 14 of those 145 points, in two bands: a bright top and a
+        // deeper underside, which is what makes it read as a lip rather than a
+        // line.
+        private const float NavRimFrac = 14f / 145f;
+
+        // Five tabs over six units of width: the middle one is double. The
+        // reference's seams fall at x 135, 273, 549 and 686 of 828 — 0.163,
+        // 0.330, 0.663, 0.829 — which is a sixth, a sixth, a third, a sixth.
+        private static readonly float[] NavTabEdges = { 0f, 1f / 6f, 2f / 6f, 4f / 6f, 5f / 6f, 1f };
+
+        /// <summary>The five things the bottom bar can be.</summary>
+        public enum NavIcon
+        {
+            Areas,
+            Leaderboard,
+            Home,
+            Team,
+            Cards
+        }
+
+        /// <summary>One tab: its button, the face that carries the selection
+        /// colour, its glyph and the label under a raised one.</summary>
+        public sealed class NavTabParts
+        {
+            public NavIcon Icon;
+            public Button Button;
+            public Image Face;
+            public RectTransform Glyph;
+            public Text Label;
+            public bool Raised;
+        }
+
+        /// <summary>The bar and its five tabs, in left-to-right order.</summary>
+        public sealed class NavBarParts
+        {
+            public RectTransform Root;
+            public Image Body;
+            public RectTransform Rim;
+            public NavTabParts[] Tabs;
+        }
+
+        /// <summary>
+        /// The five-tab strip across the bottom of every shell screen, built from
+        /// docs/royal-match/01-home-area.jpg. The middle tab is double width, its
+        /// glyph breaks up through the gold rim and it alone carries a label —
+        /// that is what "raised" means here, and it is why the glyphs are drawn in
+        /// their own layer ABOVE the rim while the faces that take the taps stay
+        /// below it. The glyph layer does not block raycasts, so a tap on the
+        /// castle still reaches the tab underneath it.
+        ///
+        /// The bar owns no navigation of its own: <paramref name="onTab"/> is
+        /// called with the index that was pressed.
+        /// </summary>
+        public static NavBarParts NavBar(string name, Transform parent,
+            NavIcon[] icons, string[] labels, int raised, UnityAction<int> onTab)
+        {
+            var parts = new NavBarParts();
+
+            RectTransform root = CreateRect(name, parent);
+            root.anchorMin = Vector2.zero;
+            root.anchorMax = new Vector2(1f, NavBarHeightFrac);
+            root.offsetMin = Vector2.zero;
+            root.offsetMax = Vector2.zero;
+            parts.Root = root;
+
+            // The body is a raycast target as well as the ground colour: a tap in
+            // a seam must not fall through to the screen behind the bar.
+            parts.Body = CreateImage("Body", root, null, RoyalBlue);
+            Stretch(parts.Body.rectTransform);
+            parts.Body.raycastTarget = true;
+
+            RectTransform faces = CreateRect("Tabs", root);
+            Stretch(faces);
+
+            RectTransform glyphs = CreateRect("Glyphs", root);
+            Stretch(glyphs);
+
+            int count = icons == null ? 0 : icons.Length;
+            parts.Tabs = new NavTabParts[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                float min = NavTabEdges[Mathf.Min(i, NavTabEdges.Length - 2)];
+                float max = NavTabEdges[Mathf.Min(i + 1, NavTabEdges.Length - 1)];
+                string label = labels != null && i < labels.Length ? labels[i] : null;
+                parts.Tabs[i] = NavTab(faces, glyphs, icons[i], label, min, max,
+                    i == raised, i, onTab);
+            }
+
+            // Seams first, so the rim can be laid over them, and both under the
+            // glyph layer — which is created before them and pushed last below.
+            for (int i = 1; i + 1 < NavTabEdges.Length; i++)
+            {
+                Image seam = CreateImage("Seam" + i, root, null, RoyalNavSeam);
+                RectTransform seamRect = seam.rectTransform;
+                seamRect.anchorMin = new Vector2(NavTabEdges[i], 0f);
+                seamRect.anchorMax = new Vector2(NavTabEdges[i], 1f);
+                seamRect.pivot = new Vector2(0.5f, 0.5f);
+                seamRect.offsetMin = new Vector2(-3f, 0f);
+                seamRect.offsetMax = new Vector2(3f, 0f);
+                seam.raycastTarget = false;
+            }
+
+            // The gold lip runs the whole width, across the raised tab as well:
+            // in the reference only the castle breaks it, not the tab it sits in.
+            RectTransform rim = CreateRect("Rim", root);
+            rim.anchorMin = new Vector2(0f, 1f - NavRimFrac);
+            rim.anchorMax = Vector2.one;
+            rim.offsetMin = Vector2.zero;
+            rim.offsetMax = Vector2.zero;
+            parts.Rim = rim;
+
+            Image rimDeep = CreateImage("RimDeep", rim, null, RoyalGoldDeep);
+            Stretch(rimDeep.rectTransform);
+            rimDeep.raycastTarget = false;
+
+            Image rimTop = CreateImage("RimTop", rim, null, Rgb(255, 181, 30));
+            RectTransform rimTopRect = rimTop.rectTransform;
+            rimTopRect.anchorMin = new Vector2(0f, 0.45f);
+            rimTopRect.anchorMax = Vector2.one;
+            rimTopRect.offsetMin = Vector2.zero;
+            rimTopRect.offsetMax = Vector2.zero;
+            rimTop.raycastTarget = false;
+
+            // Above the rim, so the raised tab's glyph overhangs it.
+            glyphs.SetAsLastSibling();
+
+            return parts;
+        }
+
+        private static NavTabParts NavTab(RectTransform faces, RectTransform glyphs,
+            NavIcon icon, string label, float min, float max, bool raised, int index,
+            UnityAction<int> onTab)
+        {
+            var parts = new NavTabParts { Icon = icon, Raised = raised };
+
+            RectTransform face = CreateRect("Tab" + index, faces);
+            face.anchorMin = new Vector2(min, 0f);
+            face.anchorMax = new Vector2(max, 1f);
+            face.offsetMin = Vector2.zero;
+            face.offsetMax = Vector2.zero;
+
+            var image = face.gameObject.AddComponent<Image>();
+            image.color = raised ? RoyalNavBright : RoyalBlue;
+            parts.Face = image;
+
+            var button = face.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.transition = Selectable.Transition.None;
+            if (onTab != null)
+            {
+                int captured = index;
+                button.onClick.AddListener(() => onTab(captured));
+            }
+            parts.Button = button;
+
+            // The glyph is a sibling of the faces rather than a child of one,
+            // because a raised glyph has to draw over the gold rim while its own
+            // tab face draws under it.
+            // The glyph's HEIGHT comes from the bar and its WIDTH from that height,
+            // never the other way round. The bar is a tenth of the screen either
+            // way, but that tenth is 145 points beside an 828-wide phone and a far
+            // shallower slice of the Editor's 4:3 Game view — so a glyph whose
+            // width was a fraction of the bar is near-square on one and a sideways
+            // smear on the other, and no editor test can tell. Both boxes are the
+            // aspect the reference's own icons measure: the book 81x104 and the
+            // castle 90x166 in docs/royal-match/01-home-area.jpg.
+            RectTransform glyph = CreateRect("Glyph" + index, glyphs);
+            float mid = (min + max) * 0.5f;
+            float aspect;
+
+            if (raised)
+            {
+                // From 0.36 of the bar's height to half a bar-height above its top
+                // edge, which is where the reference's castle breaks the gold rim.
+                glyph.anchorMin = new Vector2(mid, 0.36f);
+                glyph.anchorMax = new Vector2(mid, 1.50f);
+                aspect = 90f / 166f;
+            }
+            else
+            {
+                glyph.anchorMin = new Vector2(mid, 0.07f);
+                glyph.anchorMax = new Vector2(mid, 0.82f);
+                aspect = 81f / 104f;
+            }
+
+            glyph.pivot = new Vector2(0.5f, 0.5f);
+            glyph.offsetMin = Vector2.zero;
+            glyph.offsetMax = Vector2.zero;
+
+            var fitter = glyph.gameObject.AddComponent<AspectRatioFitter>();
+            fitter.aspectMode = AspectRatioFitter.AspectMode.HeightControlsWidth;
+            fitter.aspectRatio = aspect;
+
+            DrawNavIcon(glyph, icon);
+            SetRaycastsOff(glyph);
+            parts.Glyph = glyph;
+
+            if (raised && !string.IsNullOrEmpty(label))
+            {
+                Text text = CreateText("Label" + index, glyphs, label, 46, RoyalTitle,
+                    TextAnchor.MiddleCenter);
+                RectTransform textRect = text.rectTransform;
+                textRect.anchorMin = new Vector2(min, 0.04f);
+                textRect.anchorMax = new Vector2(max, 0.32f);
+                textRect.offsetMin = Vector2.zero;
+                textRect.offsetMax = Vector2.zero;
+                text.fontStyle = FontStyle.Bold;
+                text.resizeTextForBestFit = true;
+                text.resizeTextMinSize = 18;
+                text.resizeTextMaxSize = 46;
+                text.raycastTarget = false;
+
+                var outline = text.gameObject.AddComponent<Outline>();
+                outline.effectColor = RoyalNavSeam;
+                outline.effectDistance = new Vector2(2f, -2f);
+                parts.Label = text;
+            }
+
+            return parts;
+        }
+
+        /// <summary>
+        /// Lights the tab the player is on. The raised tab keeps its bright face
+        /// whether or not it is the current one, because being raised is what it
+        /// IS on this bar — the reference's home tab is bright on the home screen
+        /// and this keeps the shape of the bar from moving as screens change.
+        /// </summary>
+        public static void SetNavSelected(NavBarParts parts, int selected)
+        {
+            if (parts == null || parts.Tabs == null) return;
+
+            for (int i = 0; i < parts.Tabs.Length; i++)
+            {
+                NavTabParts tab = parts.Tabs[i];
+                if (tab == null || tab.Face == null) continue;
+                tab.Face.color = (i == selected || tab.Raised) ? RoyalNavBright : RoyalBlue;
+            }
+        }
+
+        private static void SetRaycastsOff(Transform root)
+        {
+            Graphic[] graphics = root.GetComponentsInChildren<Graphic>(true);
+            for (int i = 0; i < graphics.Length; i++) graphics[i].raycastTarget = false;
+        }
+
+        private static void DrawNavIcon(RectTransform root, NavIcon icon)
+        {
+            switch (icon)
+            {
+                case NavIcon.Areas: DrawNavBook(root); break;
+                case NavIcon.Leaderboard: DrawNavTrophy(root); break;
+                case NavIcon.Home: DrawNavCastle(root); break;
+                case NavIcon.Team: DrawNavShield(root); break;
+                default: DrawNavCards(root); break;
+            }
+        }
+
+        // Areas — the book of rooms, with the star the game spends on them.
+        private static void DrawNavBook(Transform root)
+        {
+            Block(root, "Ribbon", RoyalRed, 4, 0.30f, 0.00f, 0.44f, 0.30f);
+            Block(root, "Cover", RoyalGoldDeep, 14, 0.06f, 0.12f, 0.94f, 0.96f);
+            Block(root, "Page", RoyalPurple, 10, 0.17f, 0.24f, 0.83f, 0.88f);
+
+            Image star = CreateImage("Star", root, StarSprite, IconGold);
+            FrameRect(star.rectTransform, 0.24f, 0.31f, 0.76f, 0.81f);
+            if (star.sprite == null) star.color = RoyalGold;
+        }
+
+        // Leaderboard — a cup with two handles and a plinth.
+        private static void DrawNavTrophy(Transform root)
+        {
+            Disc(root, "HandleLeft", RoyalGoldDeep, 0.02f, 0.54f, 0.32f, 0.92f);
+            Disc(root, "HandleRight", RoyalGoldDeep, 0.68f, 0.54f, 0.98f, 0.92f);
+            Block(root, "Stem", RoyalGoldDeep, 6, 0.42f, 0.14f, 0.58f, 0.52f);
+            Block(root, "Base", IconGold, 8, 0.22f, 0.02f, 0.78f, 0.20f);
+            Block(root, "Cup", IconGold, 26, 0.22f, 0.42f, 0.78f, 0.98f);
+            Block(root, "Shine", RoyalGold, 8, 0.31f, 0.56f, 0.41f, 0.90f);
+        }
+
+        // Home — the castle. Three towers, purple caps, a door in the middle.
+        private static void DrawNavCastle(Transform root)
+        {
+            Disc(root, "CapLeft", RoyalPurple, 0.02f, 0.52f, 0.38f, 0.80f);
+            Disc(root, "CapRight", RoyalPurple, 0.62f, 0.52f, 0.98f, 0.80f);
+            Disc(root, "CapKeep", RoyalPurple, 0.26f, 0.70f, 0.74f, 0.96f);
+            Disc(root, "Finial", RoyalChestGold, 0.45f, 0.93f, 0.55f, 1.00f);
+
+            Block(root, "TowerLeft", RoyalCream, 8, 0.06f, 0.08f, 0.34f, 0.60f);
+            Block(root, "TowerRight", RoyalCream, 8, 0.66f, 0.08f, 0.94f, 0.60f);
+            Block(root, "Keep", RoyalCream, 8, 0.30f, 0.08f, 0.70f, 0.78f);
+
+            Block(root, "WindowLeft", IconWood, 4, 0.13f, 0.32f, 0.27f, 0.48f);
+            Block(root, "WindowRight", IconWood, 4, 0.73f, 0.32f, 0.87f, 0.48f);
+            Block(root, "WindowKeep", IconWood, 4, 0.43f, 0.50f, 0.57f, 0.66f);
+
+            Block(root, "Band", IconGold, 4, 0.02f, 0.10f, 0.98f, 0.20f);
+            Block(root, "Door", IconWood, 8, 0.42f, 0.10f, 0.58f, 0.42f);
+        }
+
+        // Team — a shield with three of them behind it.
+        private static void DrawNavShield(Transform root)
+        {
+            Disc(root, "PointGold", RoyalChestGold, 0.06f, 0.02f, 0.94f, 0.64f);
+            Block(root, "BodyGold", RoyalChestGold, 22, 0.06f, 0.30f, 0.94f, 0.96f);
+            Disc(root, "PointFace", RoyalPurple, 0.17f, 0.13f, 0.83f, 0.62f);
+            Block(root, "BodyFace", RoyalPurple, 16, 0.17f, 0.36f, 0.83f, 0.86f);
+
+            Disc(root, "HeadLeft", IconGold, 0.21f, 0.50f, 0.41f, 0.70f);
+            Disc(root, "HeadRight", IconGold, 0.59f, 0.50f, 0.79f, 0.70f);
+            Block(root, "BodyLeft", IconGold, 10, 0.19f, 0.26f, 0.43f, 0.50f);
+            Block(root, "BodyRight", IconGold, 10, 0.57f, 0.26f, 0.81f, 0.50f);
+            Disc(root, "HeadMid", IconGold, 0.38f, 0.58f, 0.62f, 0.82f);
+            Block(root, "BodyMid", IconGold, 12, 0.32f, 0.28f, 0.68f, 0.60f);
+        }
+
+        // Cards — a fanned hand with a crown on the face of the front one.
+        private static void DrawNavCards(Transform root)
+        {
+            Block(root, "Back", RoyalGoldDeep, 10, 0.02f, 0.22f, 0.52f, 0.94f);
+            Block(root, "Middle", RoyalGoldDeep, 10, 0.20f, 0.14f, 0.70f, 0.90f);
+            Block(root, "Front", RoyalChestGold, 10, 0.40f, 0.06f, 0.98f, 0.86f);
+            Block(root, "Face", RoyalPurple, 8, 0.47f, 0.13f, 0.91f, 0.79f);
+
+            Block(root, "CrownBand", IconGold, 4, 0.53f, 0.30f, 0.85f, 0.42f);
+            Block(root, "CrownLeft", IconGold, 4, 0.53f, 0.38f, 0.61f, 0.54f);
+            Block(root, "CrownMid", IconGold, 4, 0.65f, 0.38f, 0.73f, 0.60f);
+            Block(root, "CrownRight", IconGold, 4, 0.77f, 0.38f, 0.85f, 0.54f);
+        }
+
+        #endregion
     }
 }

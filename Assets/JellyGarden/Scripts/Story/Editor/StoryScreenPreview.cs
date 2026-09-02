@@ -11,6 +11,7 @@
 // outside Play mode, they are Editor-only, and they call the same entry points
 // the game calls.
 
+using JellyGarden.Scripts.GUI;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,6 +24,7 @@ namespace JellyGarden.Scripts.Story.Editor
         [MenuItem(Menu + "Open Home Screen", true)]
         [MenuItem(Menu + "Open Area Screen (area 1)", true)]
         [MenuItem(Menu + "Open Area Screen (area 6)", true)]
+        [MenuItem(Menu + "Close The Level", true)]
         [MenuItem(Menu + "Grant 3 Stars Here", true)]
         [MenuItem(Menu + "Reset Progress", true)]
         private static bool OnlyInPlayMode()
@@ -54,6 +56,30 @@ namespace JellyGarden.Scripts.Story.Editor
         private static void OpenAreaSix()
         {
             Open(6);
+        }
+
+        /// <summary>
+        /// Comes back from a level, the way finishing one does. StoryPowerupTest
+        /// launches level 1 on every play session and never finishes it, so a
+        /// session that has run it is still "in a level" as far as the story is
+        /// concerned — StoryFlow.PlayingArea is set and the board's gameStatus is
+        /// not Map. Anything that hides itself during a level, the nav bar first
+        /// among them, then stays hidden over a shell screen opened on top of it.
+        ///
+        /// HandleLevelComplete is the game's own way out, so this is not a second
+        /// path to keep in step. It only falls back to the two kit calls when the
+        /// story was not the one that launched the level.
+        /// </summary>
+        [MenuItem(Menu + "Close The Level")]
+        private static void CloseLevel()
+        {
+            if (!StoryFlow.HandleLevelComplete())
+            {
+                if (LevelManager.THIS != null) LevelManager.THIS.gameStatus = GameState.Map;
+                if (MenuManager.Instance != null) MenuManager.Instance.ShowMenuPlay(false);
+            }
+
+            Debug.Log("[Story] preview: left the level.");
         }
 
         /// <summary>
