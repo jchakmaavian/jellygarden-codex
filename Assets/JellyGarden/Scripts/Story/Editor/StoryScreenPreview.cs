@@ -28,6 +28,7 @@ namespace JellyGarden.Scripts.Story.Editor
         [MenuItem(Menu + "Open Area Screen (area 6)", true)]
         [MenuItem(Menu + "Close The Level", true)]
         [MenuItem(Menu + "Grant 3 Stars Here", true)]
+        [MenuItem(Menu + "Buy The Next Repair", true)]
         [MenuItem(Menu + "Reset Progress", true)]
         private static bool OnlyInPlayMode()
         {
@@ -118,6 +119,48 @@ namespace JellyGarden.Scripts.Story.Editor
             if (StoryHomeScreen.IsOpen) StoryHomeScreen.Instance.Refresh();
             Debug.Log("[Story] preview: area " + areaId + " now holds " +
                       StoryProgress.StarsIn(areaId) + " star(s).");
+        }
+
+        /// <summary>
+        /// Presses the Do It button on the next repair of the area on screen, so
+        /// the repair — the panel closing, the room taking the screen, the work
+        /// playing on it — can be watched in the Game view. The BUTTON is pressed
+        /// rather than StoryRepair called: the order guard and the price check
+        /// live behind it, and a preview that reaches past them is previewing
+        /// something the player cannot do.
+        /// </summary>
+        [MenuItem(Menu + "Buy The Next Repair")]
+        private static void BuyNextRepair()
+        {
+            if (!AreaScreen.IsOpen)
+            {
+                Debug.Log("[Story] preview: no area screen open to repair on.");
+                return;
+            }
+
+            AreaScreen screen = AreaScreen.Instance;
+            StoryTask next = StoryProgress.NextTask(screen.AreaId);
+            if (next == null)
+            {
+                Debug.Log("[Story] preview: area " + screen.AreaId + " is fully restored.");
+                return;
+            }
+
+            for (int i = 0; i < screen.RowCount; i++)
+            {
+                if (screen.RowTaskIndex(i) != next.Index) continue;
+
+                UnityEngine.UI.Button button = screen.RepairButton(i);
+                if (button == null) break;
+
+                Debug.Log(string.Format(
+                    "[Story] preview: pressing Do It on '{0}' ({1} star(s), {2} held).",
+                    next.Label, next.Stars, StoryProgress.StarsIn(screen.AreaId)));
+                button.onClick.Invoke();
+                return;
+            }
+
+            Debug.Log("[Story] preview: no row found for the next repair.");
         }
 
         [MenuItem(Menu + "Reset Progress")]

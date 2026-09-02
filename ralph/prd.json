@@ -222,8 +222,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "A repair bought on the area page plays ON the area page: HideForRepair takes down the panel, the captions and the top bar (the cutscene's title lands exactly on the coin and star counters), clears the scrim and releases the room from its 0.66..1 band to the whole canvas, and RepairCutscene.Play takes that room rect. In that mode the cutscene disables its own Before/Damage/After copies and its black backdrop and stages itself over the live AreaSceneView through world corners - what animates is the room the star was spent on, not a picture of it. That moved the reveal: AreaSceneView.NotifyTaskCompleted is now fired by the cutscene at its reveal beat (and on a skip, and on the no-frame-loop early return) rather than by StoryRepair at purchase time, which with the room visible changed it before the cutscene had said anything. It also surfaced a real bug: the neglect wash was only recomputed when the view rebuilt - an area change and nothing else - so a repair watched on screen left the room exactly as grimy as it found it. Reveal now lifts it and SyncDamage re-reads it on refresh. Home is refreshed after a repair (its art reveals itself, its numbers do not), the nav bar hides while the cutscene plays, and the clue still fires only on the last repair. Preview > Buy The Next Repair presses the row's real Do It button so this can be watched in Play mode without a synthetic click."
     },
     {
       "id": "US-014",

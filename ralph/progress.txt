@@ -245,6 +245,28 @@ raise Unity and take the shot inside ONE osascript
   The same screen is reachable from several places, so the guard against a dead
   end belongs in the close path (`StoryShell.EnsureFloor`) and must be a no-op
   when anything is open — and must not fire while a cutscene is playing.
+- **A value derived from progress at BUILD time goes stale silently.** The room
+  view's neglect wash was only recomputed when the view rebuilt (an area change
+  and nothing else), so every repair left the room as dirty as it found it while
+  every test passed. Give anything derived from progress a re-read on refresh —
+  `AreaSceneView.SyncDamage`.
+- **Do not draw your own copy of something the player can already see.** A
+  cutscene staging its own before/after images over the live room is a separate
+  screen however well it is aligned. Disable the copies and animate the live
+  view; two copies of one room can only disagree.
+- **Match a rect across canvases with `GetWorldCorners` +
+  `RectTransformUtility.ScreenPointToLocalPointInRectangle`.** Copied anchors
+  mean nothing outside their own canvas and its scaler.
+- **Taking a backdrop away uncovers everything it was hiding.** The repair
+  cutscene's title had always sat at the top of the screen; without its black it
+  landed on the area page's coin and star counters. Re-check what was behind.
+- **Anything hidden for the length of an animation needs a second way back.**
+  `AreaScreen.ShowAfterRepair` is called from the cutscene's callback and from
+  `AreaScreen.Open`, because finishing an area closes the screen mid-repair.
+- **Drive a Play-mode action through the button, not the API behind it.**
+  `Preview > Buy The Next Repair` invokes the row's real Do It; the order guard
+  and the price check live in the handler, and a preview that skips them is
+  previewing something the player cannot do.
 - Sorting orders in use: home 300, areas list 350, area page 400, nav bar 500,
   level popup 600, cutscenes 780.
 
@@ -1280,4 +1302,113 @@ ends back on it, and nothing can be closed onto an empty canvas.
   with the shell.
 - Sorting orders now in use: home 300, areas list 350, area page 400, nav bar
   500, level popup 600, cutscenes 780.
+---
+
+## 2026-09-02 - US-013 - Repairs from the new area page
+
+Do It now does what Royal Match's does: the card gets out of the way, the room
+takes the screen, and the work plays on the room the star was spent on. There is
+no cut to a separate cutscene screen from the area page any more.
+
+### What was implemented
+- `RepairCutscene.Play(areaId, task, stateAfter, room, onDone)` — a new overload
+  that plays OVER a room already on screen. Its own Before/Damage/After images
+  are disabled and its black backdrop cleared; the stage is matched to the room
+  through world corners (the room is on another canvas with its own scaler), so
+  the VFX land on the picture rather than near it, and the push-in is applied to
+  the room itself. The old four-argument call is unchanged and still gets the
+  black screen — the map and the kit's scenes have no room to play over.
+- **The reveal moved from the purchase to the cutscene.** `StoryRepair` no
+  longer calls `AreaSceneView.NotifyTaskCompleted`; `RepairCutscene` fires it at
+  the reveal beat, on a skip, and on the no-frame-loop early return. Fired at
+  the purchase, the room changed while the player was still looking at the
+  "before".
+- `AreaScreen.HideForRepair()` / `ShowAfterRepair()`: panel band, captions and
+  top bar off, scrim cleared, a black backdrop behind, and the room's anchors
+  released from its 0.66..1 band to the whole canvas. `StoryRepair` calls both,
+  so a repair looks the same however it was bought. `AreaScreen.Open` also calls
+  `ShowAfterRepair`, because the last repair of an area closes the screen while
+  it is still hidden.
+- `AreaSceneView`: the neglect wash now lifts on a repair (`LiftDamage`,
+  animated over the same 0.55s as a layer reveal) and can be re-read by a screen
+  that missed the change (`SyncDamage`, called from `AreaScreen.Refresh`). It was
+  previously only computed when the view rebuilt — which happens on an area
+  change and on nothing else.
+- `StoryRepair` refreshes `StoryHomeScreen` after a repair: its art reveals
+  itself (every live `AreaSceneView` does), but the numbers on its area card are
+  read, not watched.
+- `StoryNavBar.ShouldShow` returns false while `RepairCutscene.IsPlaying`.
+- `JellyGarden > Story > Preview > Buy The Next Repair` — presses the row's real
+  Do It button in Play mode. `AreaScreen.RowTaskIndex(i)` and
+  `AreaScreen.RepairButton(i)` are the seam it uses.
+- `StoryScreenTests.RepairPlaysOverTheRoomAndPaysForItself` — exactly the price
+  spent, the panel closing and coming back, the area bar, the home bar and the
+  neglect all checked.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/RepairCutscene.cs`
+- `Assets/JellyGarden/Scripts/Story/AreaScreen.cs`
+- `Assets/JellyGarden/Scripts/Story/AreaSceneView.cs`
+- `Assets/JellyGarden/Scripts/Story/StoryRepair.cs`
+- `Assets/JellyGarden/Scripts/Story/StoryNavBar.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenPreview.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs`
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md`
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `JellyGarden > Story > Run Screen Tests` -> **"[Story] Screen tests passed."**,
+  with `[Story] Area 1 (Castle Gates) restored.` in the run and:
+```
+[Story] repair on the room: 1 star(s) spent, area bar 1/4, home bar 1/4, neglect 0.55 -> 0.41
+```
+- Play mode, area 1, `Preview > Buy The Next Repair`:
+```
+[Story] preview: pressing Do It on 'Rehang the royal banner' (1 star(s), 14 held).
+[Story] nav bar hidden: home True, area page True, in a level False.
+[Story] nav bar shown: home True, area page True, in a level False.
+[Story] preview: pressing Do It on 'Relight the gate lanterns' (1 star(s), 13 held).
+[Story] Area 1 (Castle Gates) restored. Area 2 unlocks.
+```
+  Game-view screenshots, four of them: the panel gone with the room holding the
+  screen and the task's name above it; the banner arriving ON that room with the
+  story's line and the star rising; the task list back with 3/4 and 13 stars;
+  and after the last repair, the clue card over home and then home showing the
+  restored gate at 4/4.
+
+### Learnings for future iterations
+- **A cutscene that draws its own copy of the room is a separate screen, however
+  it is staged.** The fix was not to align the copy better but to stop drawing
+  it: disable the cutscene's images and let the live `AreaSceneView` be what
+  animates. Fewer pixels, and the two can no longer disagree.
+- **Whoever spends the star must not also reveal the room.** The reveal is a
+  beat in the animation, not a consequence of the purchase — with the room
+  visible under a transparent cutscene, revealing at purchase time showed the
+  change before the cutscene had started saying anything about it.
+- **Match a rect across canvases with `GetWorldCorners` + `ScreenPointToLocal
+  PointInRectangle`, never by copying anchors.** The other canvas has its own
+  scaler and its own parent chain; anchors mean nothing outside it.
+- **A wash or tint computed at build time goes stale silently.** The neglect
+  layer was only recomputed when `AreaSceneView` rebuilt, which happens on an
+  area change and nothing else, so every repair watched on screen left the room
+  as dirty as it found it — and no test noticed, because the layer that reveals
+  is the part a test looks at. Anything derived from progress needs a re-read on
+  refresh as well as a rebuild.
+- **Uncovering a screen uncovers what was drawn over it.** The cutscene's title
+  had always been at the top of the screen; with the black backdrop gone it
+  landed on the area page's coin and star counters. Taking a backdrop away means
+  re-checking everything that was hidden behind it.
+- **A test that reads a value it did not set will read the LAST case's value.**
+  `DamageTarget` came back 0 because the previous case had completed area 1 and
+  the view was never rebuilt. The test was right and the code was stale; the fix
+  belonged in `SyncDamage`, not in the assertion.
+- **Anything hidden for the length of an animation needs a second way back.**
+  `ShowAfterRepair` is called from the cutscene's callback AND from
+  `AreaScreen.Open`, because finishing an area closes the screen mid-repair.
+- Play-mode drill that worked, start to finish: exit Play -> `Assets > Refresh`
+  -> wait ~40s -> `Run Screen Tests` -> `Edit > Play Mode > Play` -> wait ~25s
+  -> `Preview > Close The Level` -> `Preview > Open Area Screen (area 1)` ->
+  `Preview > Buy The Next Repair`, with the screenshots taken inside the same
+  osascript as the menu clicks.
 ---

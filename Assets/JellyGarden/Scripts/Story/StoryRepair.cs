@@ -27,17 +27,44 @@ namespace JellyGarden.Scripts.Story
                 return false;
 
             // How many repairs the room has had once this one lands — the state
-            // the cutscene reveals.
+            // the cutscene reveals. The reveal itself belongs to the cutscene, on
+            // its own beat: firing it here changed the room while the player was
+            // still looking at the "before".
             int stateAfter = StoryProgress.TasksCompletedIn(areaId);
 
-            AreaSceneView.NotifyTaskCompleted(areaId, taskIndex);
+            // A repair bought on the area page plays on that page's own room: the
+            // task list goes away, the room takes the screen, and the work happens
+            // on the picture the star was spent on. Bought anywhere else — the
+            // map, a test — there is no room to play over and the cutscene brings
+            // its own screen.
+            AreaScreen screen = AreaScreen.IsOpen && AreaScreen.Instance != null
+                                && AreaScreen.Instance.AreaId == areaId
+                ? AreaScreen.Instance
+                : null;
+
+            RectTransform room = null;
+            if (screen != null)
+            {
+                room = screen.RoomRect;
+                screen.HideForRepair();
+            }
 
             // The repair plays out before anything else happens. Everything that
             // follows — the refreshed screen, the clue, the next area — waits for
             // it, so the player is never reading a task list over a cutscene.
-            RepairCutscene.Play(areaId, task, stateAfter, () =>
+            RepairCutscene.Play(areaId, task, stateAfter, room, () =>
             {
+                // The panel comes back before anything else can close it: a screen
+                // left hidden is a screen with no X on it.
+                if (screen != null) screen.ShowAfterRepair();
+
                 if (onChanged != null) onChanged();
+
+                // The home screen is showing the same room and the same counts.
+                // Its art reveals itself (every live AreaSceneView does), but the
+                // numbers on its area card are read, not watched.
+                if (StoryHomeScreen.IsOpen && StoryHomeScreen.Instance != null)
+                    StoryHomeScreen.Instance.Refresh();
 
                 if (StoryProgress.IsAreaComplete(areaId))
                     OnAreaFinished(areaId);

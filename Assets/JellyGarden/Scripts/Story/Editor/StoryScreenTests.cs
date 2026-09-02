@@ -71,6 +71,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 RepairIsOfferedOnlyForTheNextAffordableTask();
                 TaskRowsCarryTheirIconLabelAndPrice();
                 SpendingStarsCompletesTheAreaAndUnlocksTheNext();
+                RepairPlaysOverTheRoomAndPaysForItself();
                 ClueCardShowsTheClueVerbatimAndDismissesItself();
                 DialogueTypesOutAndAdvancesOnTap();
                 ArcBeatsHaveScenesAndPlayThemOnce();
@@ -319,6 +320,86 @@ namespace JellyGarden.Scripts.Story.Editor
             Expect(StoryProgress.StarsIn(1) == 0, "the stars were spent, not kept");
             Expect(StoryProgress.IsAreaUnlocked(2), "area 2 is unlocked");
             Expect(StoryProgress.IsClueSeen(1), "the clue fired on the last repair");
+        }
+
+        /// <summary>
+        /// What Do It actually does. Exactly the task's price leaves the star
+        /// pool; the task list gets out of the way so the repair plays on the room
+        /// the player was already looking at rather than on a screen of its own;
+        /// the room's neglect lifts; and the panel, the area bar and the home
+        /// screen's own numbers are all back and correct afterwards.
+        /// </summary>
+        private static void RepairPlaysOverTheRoomAndPaysForItself()
+        {
+            StoryProgress.ResetAll();
+            StoryArea area = StoryDatabase.GetArea(1);
+            StoryTask first = area.Tasks[0];
+
+            // Deliberately more stars than the price: "the stars were spent" is a
+            // weaker claim than "exactly the price was spent".
+            StoryProgress.AddStar(1, first.Stars + 3);
+
+            StoryHomeScreen.Open(1);
+            AreaScreen.Open(1);
+            AreaScreen screen = AreaScreen.Instance;
+
+            Expect(screen.PanelVisible, "the task list is up before a repair");
+            Expect(!screen.RoomIsFullScreen,
+                "the room shares the screen with the task list");
+
+            AreaSceneView room = screen.RoomView;
+            float dirtBefore = room == null ? 0f : room.DamageTarget;
+
+            screen.HideForRepair();
+            Expect(!screen.PanelVisible, "the panel closes for the repair");
+            Expect(screen.RoomIsFullScreen, "the room takes the screen the panel left");
+            screen.ShowAfterRepair();
+            Expect(screen.PanelVisible, "the panel comes back when the repair is over");
+            Expect(!screen.RoomIsFullScreen, "and the room goes back to its band");
+
+            int starsBefore = StoryProgress.StarsIn(1);
+            Button repair = RepairButtons().FirstOrDefault();
+            if (repair == null)
+            {
+                Fail("no Do It button to press");
+                return;
+            }
+            repair.onClick.Invoke();
+            int starsAfter = StoryProgress.StarsIn(1);
+
+            Expect(starsAfter == starsBefore - first.Stars,
+                "exactly the task's " + first.Stars + " star(s) were spent (" +
+                starsBefore + " -> " + starsAfter + ")");
+            Expect(StoryProgress.IsTaskComplete(1, first.Index), "the repair landed");
+            Expect(screen.PanelVisible, "the task list is back once the repair is over");
+            Expect(!screen.RoomIsFullScreen, "and so is the room");
+
+            screen.Refresh();
+            Expect(screen.ProgressText == "1/" + area.Tasks.Count,
+                "the area progress bar counts the repair (read '" +
+                screen.ProgressText + "')");
+
+            // Most areas ship one painting rather than one per repair, so the
+            // wash lifting is the whole of what those rooms can show for a star.
+            Expect(room != null && room.DamageTarget < dirtBefore,
+                "the room's neglect lifts with the repair (" + dirtBefore + " -> " +
+                (room == null ? -1f : room.DamageTarget) + ")");
+
+            string homeBar = StoryHomeScreen.Instance == null
+                ? null
+                : StoryHomeScreen.Instance.AreaProgressText;
+            Expect(homeBar == "1/" + area.Tasks.Count,
+                "the home screen's area card counts it too (read '" + homeBar + "')");
+
+            Debug.Log(string.Format(
+                "[Story] repair on the room: {0} star(s) spent, area bar {1}, home bar {2}, " +
+                "neglect {3:0.00} -> {4:0.00}",
+                first.Stars, screen.ProgressText, homeBar, dirtBefore,
+                room == null ? -1f : room.DamageTarget));
+
+            StoryHomeScreen.Close();
+            AreaScreen.Close();
+            StoryProgress.ResetAll();
         }
 
         private static void ClueCardShowsTheClueVerbatimAndDismissesItself()

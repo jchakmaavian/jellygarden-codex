@@ -39,6 +39,12 @@ namespace JellyGarden.Scripts.Story
 
         private const float FadeTime = 0.35f;
 
+        // Where the stage sits when this plays on its own black screen — the map
+        // and the kit's own scenes have no room of theirs to play over.
+        private const float StageBottomFrac = 0.28f;
+        private const float StageTopFrac = 0.94f;
+        private const float StageSidePad = 30f;
+
         private static RepairCutscene _instance;
 
         public static bool IsPlaying
@@ -57,11 +63,14 @@ namespace JellyGarden.Scripts.Story
         private Text _line;
         private Image _star;
         private Text _skipHint;
+        private Image _backdrop;
         private RepairVfx _vfx;
 
         private bool _playing;
         private bool _skipped;
         private bool _sameImage;
+        private bool _revealed;
+        private RectTransform _room;
         private Action _onDone;
 
         /// <summary>
@@ -70,6 +79,23 @@ namespace JellyGarden.Scripts.Story
         /// bought, it does not decide it.
         /// </summary>
         public static void Play(int areaId, StoryTask task, int stateAfter, Action onDone)
+        {
+            Play(areaId, task, stateAfter, null, onDone);
+        }
+
+        /// <summary>
+        /// As above, played OVER a room that is already on screen: the stage is
+        /// matched to <paramref name="room"/>, the black backdrop comes off and
+        /// the reveal is the live room's own, so nothing cuts away from the screen
+        /// the player pressed Do It on. A null room falls back to the black screen,
+        /// which is what the map and the kit's own scenes get.
+        ///
+        /// Either way this owns the reveal: the room changes on the beat the
+        /// repair lands, not when the star was spent, so the wipe has something to
+        /// wipe to.
+        /// </summary>
+        public static void Play(int areaId, StoryTask task, int stateAfter,
+            RectTransform room, Action onDone)
         {
             if (task == null)
             {
@@ -84,12 +110,13 @@ namespace JellyGarden.Scripts.Story
             // the built player.
             if (!Application.isPlaying)
             {
+                AreaSceneView.NotifyTaskCompleted(areaId, task.Index);
                 if (onDone != null) onDone();
                 return;
             }
 
             Ensure();
-            _instance.Begin(areaId, task, stateAfter, onDone);
+            _instance.Begin(areaId, task, stateAfter, room, onDone);
         }
 
         private static void Ensure()
@@ -113,16 +140,17 @@ namespace JellyGarden.Scripts.Story
             _group = root.gameObject.AddComponent<CanvasGroup>();
             _group.alpha = 0f;
 
-            // Tap anywhere to skip. No failure state, no waiting on the 807th repair.
-            StoryUi.CreateFullScreenButton("Skip", root, Color.black, Skip);
+            // Tap anywhere to skip. No failure state, no waiting on the 807th
+            // repair. It is also the backdrop: opaque black on its own screen,
+            // cleared to nothing when this plays over a room, and blocking taps
+            // either way so the screen underneath cannot be pressed mid-repair.
+            _backdrop = StoryUi.CreateFullScreenButton("Skip", root, Color.black, Skip)
+                .targetGraphic as Image;
 
             // The room. Two copies stacked: the state before this repair, and the
             // state after it, revealed by growing the top one's fill.
             _stage = StoryUi.CreateRect("Stage", root);
-            _stage.anchorMin = new Vector2(0f, 0.28f);
-            _stage.anchorMax = new Vector2(1f, 0.94f);
-            _stage.offsetMin = new Vector2(30f, 0f);
-            _stage.offsetMax = new Vector2(-30f, 0f);
+            StageOnItsOwnScreen();
 
             // Three layers, and the order is the whole trick:
             //
@@ -182,11 +210,14 @@ namespace JellyGarden.Scripts.Story
 
         #region Playback
 
-        private void Begin(int areaId, StoryTask task, int stateAfter, Action onDone)
+        private void Begin(int areaId, StoryTask task, int stateAfter, RectTransform room,
+            Action onDone)
         {
             _onDone = onDone;
             _playing = true;
             _skipped = false;
+            _revealed = false;
+            _room = room;
 
             RepairWorkType work = RepairWork.Classify(task.Label);
 
@@ -207,6 +238,21 @@ namespace JellyGarden.Scripts.Story
             _after.sprite = after;
             _after.color = after != null ? Color.white : new Color(0.22f, 0.25f, 0.22f);
             _after.fillAmount = 0f;
+
+            // Over a room, the stage carries no picture of its own: the room on
+            // screen IS the "before", and the live view's own reveal is the
+            // "after". A second copy laid on top of it would only be a chance for
+            // the two to disagree by a pixel, and the black behind it is exactly
+            // the separate screen this is not supposed to be.
+            bool overRoom = _room != null;
+            _before.enabled = !overRoom;
+            _damage.enabled = !overRoom;
+            _after.enabled = !overRoom;
+            if (_backdrop != null)
+                _backdrop.color = overRoom ? new Color(0f, 0f, 0f, 0f) : Color.black;
+
+            if (overRoom) StageOverRoom(_room);
+            else StageOnItsOwnScreen();
 
             _title.text = task.Label;
             _line.text = string.Empty;
@@ -242,9 +288,12 @@ namespace JellyGarden.Scripts.Story
                 _group.alpha = Mathf.Clamp01(t / FadeTime);
 
                 // A slow push in. Small — 4% — because a big zoom on a still
-                // image reads as a mistake rather than a camera move.
+                // image reads as a mistake rather than a camera move. Over a room
+                // the stage draws nothing, so it is the room itself that is pushed
+                // — the same camera move, on the picture the player can see.
                 float push = 1f + 0.04f * Mathf.Clamp01(t / EndAt);
                 _stage.localScale = new Vector3(push, push, 1f);
+                if (_room != null) _room.localScale = new Vector3(push, push, 1f);
 
                 if (t >= TitleIn)
                 {
@@ -275,6 +324,10 @@ namespace JellyGarden.Scripts.Story
                 {
                     flashed = true;
                     StorySfx.PlayRepair(false);
+
+                    // The room changes here, on the beat, whether the change is
+                    // this cutscene's own wipe or the live view's reveal under it.
+                    Reveal(areaId, task.Index);
                 }
 
                 if (flashed)
@@ -322,7 +375,23 @@ namespace JellyGarden.Scripts.Story
                 yield return null;
             }
 
+            // A skip taken before the reveal beat still bought the repair, so the
+            // room still has to change.
+            Reveal(areaId, task.Index);
+
             yield return Finish();
+        }
+
+        /// <summary>
+        /// Lets every live view of the room in on the repair, once. The reveal is
+        /// the cutscene's to fire rather than the purchase's: the room the player
+        /// is watching must not change while the "before" is still on screen.
+        /// </summary>
+        private void Reveal(int areaId, int taskIndex)
+        {
+            if (_revealed) return;
+            _revealed = true;
+            AreaSceneView.NotifyTaskCompleted(areaId, taskIndex);
         }
 
         private IEnumerator Finish()
@@ -341,6 +410,15 @@ namespace JellyGarden.Scripts.Story
             _group.blocksRaycasts = false;
             _playing = false;
             _stage.localScale = Vector3.one;
+
+            // The room is not this object's to leave pushed in: it belongs to the
+            // screen underneath, which is about to draw its panel over it again.
+            if (_room != null)
+            {
+                _room.localScale = Vector3.one;
+                _room = null;
+            }
+
             gameObject.SetActive(false);
 
             Action done = _onDone;
@@ -352,6 +430,56 @@ namespace JellyGarden.Scripts.Story
         {
             if (!_playing) return;
             _skipped = true;
+        }
+
+        #endregion
+
+        #region Staging
+
+        /// <summary>The stage as it sits when this plays on a black screen of its own.</summary>
+        private void StageOnItsOwnScreen()
+        {
+            _stage.anchorMin = new Vector2(0f, StageBottomFrac);
+            _stage.anchorMax = new Vector2(1f, StageTopFrac);
+            _stage.pivot = new Vector2(0.5f, 0.5f);
+            _stage.offsetMin = new Vector2(StageSidePad, 0f);
+            _stage.offsetMax = new Vector2(-StageSidePad, 0f);
+        }
+
+        /// <summary>
+        /// Lays the stage exactly over a rect that belongs to another canvas, so
+        /// the effects land on the room rather than near it. Measured through
+        /// world corners rather than copied anchors: the room's parent is not this
+        /// one, and the two canvases scale independently.
+        /// </summary>
+        private void StageOverRoom(RectTransform room)
+        {
+            var parent = _stage.parent as RectTransform;
+            if (parent == null) return;
+
+            var corners = new Vector3[4];
+            room.GetWorldCorners(corners);
+
+            Camera camera = null;
+            Canvas canvas = room.GetComponentInParent<Canvas>();
+            if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+                camera = canvas.worldCamera;
+
+            Vector2 min, max;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(parent,
+                    RectTransformUtility.WorldToScreenPoint(camera, corners[0]), null, out min)
+                || !RectTransformUtility.ScreenPointToLocalPointInRectangle(parent,
+                    RectTransformUtility.WorldToScreenPoint(camera, corners[2]), null, out max))
+            {
+                StageOnItsOwnScreen();
+                return;
+            }
+
+            _stage.anchorMin = new Vector2(0.5f, 0.5f);
+            _stage.anchorMax = new Vector2(0.5f, 0.5f);
+            _stage.pivot = new Vector2(0.5f, 0.5f);
+            _stage.sizeDelta = new Vector2(Mathf.Abs(max.x - min.x), Mathf.Abs(max.y - min.y));
+            _stage.anchoredPosition = (min + max) * 0.5f;
         }
 
         #endregion

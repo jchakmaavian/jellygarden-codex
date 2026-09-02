@@ -152,6 +152,12 @@ namespace JellyGarden.Scripts.Story
             get
             {
                 if (LevelIsPlaying) return false;
+
+                // A repair takes the whole screen for four seconds, and the tabs
+                // standing on top of it would be the one thing on screen that is
+                // not the room. Nothing navigates during a cutscene anyway.
+                if (RepairCutscene.IsPlaying) return false;
+
                 return StoryHomeScreen.IsOpen || AreaScreen.IsOpen || StoryAreasList.IsOpen;
             }
         }

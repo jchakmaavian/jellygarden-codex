@@ -47,6 +47,13 @@ namespace JellyGarden.Scripts.Story
         private const float ChestWidth = 265f;
         private const float PlayWidth = 460f;
 
+        // The room's band while the task list is up, and how far the panel dims
+        // it. Both are released for the length of a repair: the room takes the
+        // whole screen and the dimming comes off, which is the closest this
+        // screen gets to Royal Match's camera staying on the room.
+        private const float SceneBottomFrac = 0.66f;
+        private const float ScrimAlpha = 0.35f;
+
         private static AreaScreen _instance;
 
         public static AreaScreen Instance
@@ -62,6 +69,10 @@ namespace JellyGarden.Scripts.Story
         private int _areaId;
         private Canvas _canvas;
         private RectTransform _scene;
+        private RectTransform _band;
+        private Image _scrim;
+        private Image _backdrop;
+        private bool _repairing;
         private AreaSceneView _sceneView;
         private RectTransform _taskList;
         private Text _chapter;
@@ -131,6 +142,34 @@ namespace JellyGarden.Scripts.Story
             get { return _panel == null ? null : _panel.Close; }
         }
 
+        /// <summary>
+        /// The rect the room is painted in. A repair plays over THIS — the room
+        /// the player has been looking at while deciding to buy it — rather than
+        /// on a second screen of its own.
+        /// </summary>
+        public RectTransform RoomRect
+        {
+            get { return _scene; }
+        }
+
+        /// <summary>The live view of the room, or null before the screen is opened.</summary>
+        public AreaSceneView RoomView
+        {
+            get { return _sceneView; }
+        }
+
+        /// <summary>Whether the task list is up. False for the length of a repair.</summary>
+        public bool PanelVisible
+        {
+            get { return _band != null && _band.gameObject.activeSelf; }
+        }
+
+        /// <summary>Whether the room currently has the whole screen.</summary>
+        public bool RoomIsFullScreen
+        {
+            get { return _scene != null && _scene.anchorMin.y <= 0.001f; }
+        }
+
         /// <summary>How many task rows are drawn.</summary>
         public int RowCount
         {
@@ -170,6 +209,22 @@ namespace JellyGarden.Scripts.Story
             return RowOffersRepair(i) && _rows[i].Repair.interactable;
         }
 
+        /// <summary>Which task the nth row is for, in the story's own numbering.</summary>
+        public int RowTaskIndex(int i)
+        {
+            return InRange(i) ? _rows[i].TaskIndex : -1;
+        }
+
+        /// <summary>
+        /// The nth row's Do It button. Anything driving a repair from outside
+        /// presses this rather than calling the repair directly — pressing it is
+        /// the path the player has, and the guards live behind it.
+        /// </summary>
+        public Button RepairButton(int i)
+        {
+            return InRange(i) ? _rows[i].Repair : null;
+        }
+
         /// <summary>Whether the nth row is drawn as a finished repair.</summary>
         public bool RowIsDone(int i)
         {
@@ -202,6 +257,11 @@ namespace JellyGarden.Scripts.Story
             _instance._areaId = areaId;
             StoryProgress.CurrentArea = areaId;
             _instance.gameObject.SetActive(true);
+
+            // A repair that finished an area closes this screen with the panel
+            // still put away. Opening it again has to find the task list, not the
+            // bare room it was hidden behind.
+            _instance.ShowAfterRepair();
             _instance.Refresh();
 
             // One line per open rather than per refresh: Refresh runs on every
@@ -229,18 +289,27 @@ namespace JellyGarden.Scripts.Story
             _canvas = StoryUi.CreateOverlayCanvas("AreaCanvas", 400);
             _canvas.transform.SetParent(transform, false);
 
+            // Behind everything, and invisible until a repair plays. When the
+            // panel goes away the room grows into the space it left, and a 4:3
+            // painting in a tall screen leaves bars — this is what is in them,
+            // instead of whichever screen happens to be open underneath.
+            _backdrop = StoryUi.CreateImage("Backdrop", _canvas.transform, null,
+                new Color(0f, 0f, 0f, 0f));
+            StoryUi.Stretch(_backdrop.rectTransform);
+            _backdrop.raycastTarget = false;
+
             // The room itself, in the band above the panel. Not stretched to the
             // whole canvas: the paintings are 4:3 and preserveAspect letterboxes
             // them into a tall screen, which put the room entirely behind the
             // panel and left the map showing through the top.
             _scene = StoryUi.CreateRect("Scene", _canvas.transform);
-            _scene.anchorMin = new Vector2(0f, 0.66f);
+            _scene.anchorMin = new Vector2(0f, SceneBottomFrac);
             _scene.anchorMax = new Vector2(1f, 1f);
             _scene.offsetMin = new Vector2(0f, 0f);
             _scene.offsetMax = new Vector2(0f, 0f);
 
-            StoryUi.CreateFullScreenButton("Scrim", _canvas.transform,
-                new Color(0f, 0f, 0f, 0.35f), null);
+            _scrim = StoryUi.CreateFullScreenButton("Scrim", _canvas.transform,
+                new Color(0f, 0f, 0f, ScrimAlpha), null).targetGraphic as Image;
 
             BuildCaption();
 
@@ -259,6 +328,7 @@ namespace JellyGarden.Scripts.Story
             // Play button sits at the bottom of this panel, and the reserve being
             // a few points short puts the nav's raised castle through it.
             RectTransform band = StoryUi.CreateRect("Panel", _canvas.transform);
+            _band = band;
             // The 70 points that were the gap to the screen edge are kept as the
             // gap to the bar, because the raised tab's glyph stands half a bar
             // height PROUD of the bar and would otherwise reach the Play button.
@@ -440,6 +510,11 @@ namespace JellyGarden.Scripts.Story
                 _sceneView = AreaSceneView.Attach(_scene, _areaId);
             else if (_sceneView.AreaId != _areaId)
                 _sceneView.Show(_areaId);
+            else
+                // Same room, but the repair count may have moved while this
+                // screen was not looking: the view rebuilds on an area change and
+                // on nothing else, so its neglect wash has to be re-read here.
+                _sceneView.SyncDamage();
 
             // The artwork is attached after the captions were built, so it is a
             // later sibling and draws over them. Push them back to the front.
@@ -621,6 +696,67 @@ namespace JellyGarden.Scripts.Story
             int areaId = _areaId;
             Close();
             StoryLevelPopup.Open(levelNumber, areaId, () => Open(areaId));
+        }
+
+        /// <summary>
+        /// Puts the task list away for the length of a repair and gives the whole
+        /// screen to the room: the card goes, the dimming comes off and the
+        /// painting grows out of its band. Royal Match never cuts to a second
+        /// screen for a repair, and neither does this — what animates is the room
+        /// that was already on screen.
+        ///
+        /// Called by StoryRepair rather than by the button, because a repair can
+        /// be bought from more than one place and all of them should look the same.
+        /// </summary>
+        public void HideForRepair()
+        {
+            if (_repairing) return;
+            _repairing = true;
+
+            if (_band != null) _band.gameObject.SetActive(false);
+
+            // The top bar goes with it. The cutscene writes the task's name
+            // across the top of the screen, which lands exactly on the coin and
+            // star counters — and a repair is not a moment for reading either.
+            if (_topBar != null && _topBar.Root != null)
+                _topBar.Root.gameObject.SetActive(false);
+
+            if (_chapter != null) _chapter.gameObject.SetActive(false);
+            if (_goal != null) _goal.gameObject.SetActive(false);
+            if (_toast != null) _toast.gameObject.SetActive(false);
+            if (_scrim != null) _scrim.color = new Color(0f, 0f, 0f, 0f);
+            if (_backdrop != null) _backdrop.color = Color.black;
+
+            if (_scene != null)
+            {
+                _scene.anchorMin = new Vector2(0f, 0f);
+                _scene.anchorMax = new Vector2(1f, 1f);
+            }
+        }
+
+        /// <summary>
+        /// Brings the task list back once the repair is over. Always paired with
+        /// <see cref="HideForRepair"/> by the caller that hid it: a screen left
+        /// hidden is a dead end with no X on it.
+        /// </summary>
+        public void ShowAfterRepair()
+        {
+            if (!_repairing) return;
+            _repairing = false;
+
+            if (_scene != null)
+            {
+                _scene.anchorMin = new Vector2(0f, SceneBottomFrac);
+                _scene.anchorMax = new Vector2(1f, 1f);
+            }
+
+            if (_backdrop != null) _backdrop.color = new Color(0f, 0f, 0f, 0f);
+            if (_scrim != null) _scrim.color = new Color(0f, 0f, 0f, ScrimAlpha);
+            if (_chapter != null) _chapter.gameObject.SetActive(true);
+            if (_goal != null) _goal.gameObject.SetActive(true);
+            if (_topBar != null && _topBar.Root != null)
+                _topBar.Root.gameObject.SetActive(true);
+            if (_band != null) _band.gameObject.SetActive(true);
         }
 
         private void OnRepair(int taskIndex)

@@ -82,6 +82,41 @@ loop for its coroutine, so it would otherwise hang. Editor tests cover the
 economy and the classifier; the cutscene itself is verified by running the
 built player with `-storydemo`.
 
+### Playing it OVER the room
+
+`RepairCutscene.Play(areaId, task, stateAfter, room, onDone)` plays on a room
+that is already on screen instead of on a black screen of its own — which is
+what Royal Match does and what a repair bought from the area page gets.
+`StoryRepair` decides: the area page is open on this area, so it passes
+`AreaScreen.RoomRect` and calls `AreaScreen.HideForRepair()` first. A repair
+bought anywhere else passes null and gets the black screen.
+
+Three things that mode changes, all of them for the same reason — the room the
+player is looking at is the real one, not a copy:
+
+- The cutscene's own Before/Damage/After images are **disabled**, and its
+  backdrop cleared. What animates is the live `AreaSceneView` underneath.
+- **The reveal belongs to the cutscene, not to the purchase.**
+  `AreaSceneView.NotifyTaskCompleted` is fired at the reveal beat (and on a
+  skip, and on the no-frame-loop early return) rather than by `StoryRepair`
+  before the cutscene starts. Fired at the purchase, the room changed while the
+  player was still looking at the "before".
+- The stage is matched to the room through **world corners**, not by copying
+  anchors: the room lives on another canvas with its own scaler.
+
+`AreaScreen.HideForRepair()` also takes down the top bar and the captions: the
+cutscene writes the task's name across the top of the screen and it lands
+exactly on the coin and star counters. Whatever hides has to come back —
+`ShowAfterRepair` is called from the cutscene's callback, and again from
+`AreaScreen.Open`, because a repair that finishes an area closes the screen
+while it is still hidden.
+
+The neglect wash on a live view was only ever computed when the view rebuilt,
+which happens on an area change and on nothing else — so a repair watched on
+screen left the room exactly as grimy as it found it. `AreaSceneView.Reveal`
+now animates it (`LiftDamage`) and `SyncDamage()` re-reads it for a screen
+refreshing after a change it did not watch. `AreaScreen.Refresh` calls it.
+
 ## The economy
 
 A level win pays **one star into that area's pool**. Repairs are bought with
@@ -145,6 +180,12 @@ US-007 commit, dead-coding the whole powerup test. Grep for `TEMP` before every
 commit. Preview is a **sub-sub-menu**: the AppleScript path is
 `JellyGarden > Story > Preview > <item>`, three levels, each clicked open with a
 delay before the next.
+
+**Preview > Buy The Next Repair** drives a repair in Play mode without a
+synthetic click. It presses the row's actual Do It `Button` — the order guard
+and the price check live behind `AreaScreen.OnRepair`, and a preview that
+reaches past them into `StoryRepair` is previewing something the player cannot
+do. Same rule as pressing the X rather than calling `Close()`.
 
 ## The Royal Match screen kit
 

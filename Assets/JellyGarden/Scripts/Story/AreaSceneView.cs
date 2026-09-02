@@ -28,6 +28,12 @@ namespace JellyGarden.Scripts.Story
     {
         private const float RevealSeconds = 0.55f;
 
+        // The neglect wash: full on an untouched room, gone once every repair in
+        // the area is paid for. One constant, because the wash is both rebuilt
+        // (Rebuild) and animated (LiftDamage) and the two must agree.
+        private const float MaxDamage = 0.55f;
+        private static readonly Color DamageTint = new Color(0.05f, 0.07f, 0.05f, 1f);
+
         // Every scene view alive right now, not just the last one attached. The
         // home screen and the area screen can both be showing the same room, and
         // a repair has to land on both of them — a single static instance meant
@@ -43,9 +49,41 @@ namespace JellyGarden.Scripts.Story
         private bool _cover;
         private AspectRatioFitter _fitter;
 
+        // The wash animates rather than jumping: a repair lifting the grime is
+        // half of what a repair looks like in the 148 areas that ship one
+        // painting instead of one per state.
+        private float _damageFrom;
+        private float _damageTo;
+        private float _damageStartedAt;
+
         public int AreaId
         {
             get { return _areaId; }
+        }
+
+        /// <summary>
+        /// The rect the painting is drawn in. A cutscene that plays over the room
+        /// rather than over a black screen stages itself on this.
+        /// </summary>
+        public RectTransform Root
+        {
+            get { return _root; }
+        }
+
+        /// <summary>How heavy the neglect wash is being drawn right now, 0..0.55.</summary>
+        public float DamageAlpha
+        {
+            get { return _damage == null ? 0f : _damage.color.a; }
+        }
+
+        /// <summary>
+        /// What the wash is heading for. Where <see cref="DamageAlpha"/> is
+        /// mid-animation and needs a frame loop to arrive, this lands the moment a
+        /// repair does — which is what an editor test can read.
+        /// </summary>
+        public float DamageTarget
+        {
+            get { return _damageTo; }
         }
 
         /// <summary>Whether this view fills its parent and crops, or letterboxes.</summary>
@@ -155,8 +193,11 @@ namespace JellyGarden.Scripts.Story
                 ? 1f
                 : Mathf.Clamp01((float)done / area.Tasks.Count);
 
-            _damage = StoryUi.CreateImage("Damage", _root, null,
-                new Color(0.05f, 0.07f, 0.05f, Mathf.Lerp(0.55f, 0f, progress)));
+            _damageTo = Mathf.Lerp(MaxDamage, 0f, progress);
+            _damageFrom = _damageTo;
+            _damageStartedAt = 0f;
+
+            _damage = StoryUi.CreateImage("Damage", _root, null, Wash(_damageTo));
             StoryUi.Stretch(_damage.rectTransform);
 
             ApplyCover();
@@ -205,6 +246,13 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public void Reveal(int taskIndex)
         {
+            // The wash lifts on every repair, before anything is said about
+            // layers: most areas have no painting for the state just reached, and
+            // the grime leaving is the whole of what those rooms can show. It was
+            // previously only recomputed by a full Rebuild, so a repair watched on
+            // this screen left the room exactly as dirty as it found it.
+            LiftDamage();
+
             int state = Mathf.Clamp(taskIndex, 0, _layers.Count - 1);
             if (state < 0 || state >= _layers.Count) return;
 
@@ -215,8 +263,73 @@ namespace JellyGarden.Scripts.Story
             _revealStartedAt[state] = StoryClock.Now;
         }
 
+        /// <summary>
+        /// Starts the wash moving to whatever the area's current repair count
+        /// deserves. Read from progress rather than counted here, so it is right
+        /// however the repair was bought.
+        /// </summary>
+        private void LiftDamage()
+        {
+            if (_damage == null) return;
+
+            StoryArea area = StoryDatabase.GetArea(_areaId);
+            if (area == null || area.Tasks.Count == 0) return;
+
+            float progress = Mathf.Clamp01(
+                (float)StoryProgress.TasksCompletedIn(_areaId) / area.Tasks.Count);
+
+            _damageFrom = _damage.color.a;
+            _damageTo = Mathf.Lerp(MaxDamage, 0f, progress);
+            _damageStartedAt = StoryClock.Now;
+        }
+
+        /// <summary>
+        /// Brings the wash into line with the area's repair count without
+        /// animating it. A screen refreshing after a change it did not watch — a
+        /// repair bought on another screen, progress reset under it — would
+        /// otherwise keep drawing the grime it was built with, because the wash is
+        /// only otherwise recomputed when the view changes area. A lift already in
+        /// flight is retargeted rather than interrupted.
+        /// </summary>
+        public void SyncDamage()
+        {
+            if (_damage == null) return;
+
+            StoryArea area = StoryDatabase.GetArea(_areaId);
+            if (area == null || area.Tasks.Count == 0) return;
+
+            float progress = Mathf.Clamp01(
+                (float)StoryProgress.TasksCompletedIn(_areaId) / area.Tasks.Count);
+            _damageTo = Mathf.Lerp(MaxDamage, 0f, progress);
+
+            if (_damageStartedAt > 0f) return;
+
+            _damageFrom = _damageTo;
+            _damage.color = Wash(_damageTo);
+        }
+
+        private static Color Wash(float alpha)
+        {
+            return new Color(DamageTint.r, DamageTint.g, DamageTint.b, alpha);
+        }
+
         private void Update()
         {
+            if (_damageStartedAt > 0f && _damage != null)
+            {
+                float t = (StoryClock.Now - _damageStartedAt) / RevealSeconds;
+                if (t >= 1f)
+                {
+                    _damage.color = Wash(_damageTo);
+                    _damageStartedAt = 0f;
+                }
+                else
+                {
+                    float eased = 1f - (1f - t) * (1f - t);
+                    _damage.color = Wash(Mathf.Lerp(_damageFrom, _damageTo, eased));
+                }
+            }
+
             for (int i = 0; i < _layers.Count; i++)
             {
                 if (_layers[i] == null || _revealStartedAt[i] <= 0f) continue;
