@@ -503,6 +503,134 @@ namespace JellyGarden.Scripts.Story
 
         #endregion
 
+        #region Booster slots
+
+        /// <summary>
+        /// The parts of a booster tile a screen has to change after it is built:
+        /// the icon, the owned count, the locked plate and the selected ring.
+        /// </summary>
+        public sealed class BoosterSlotParts
+        {
+            public RectTransform Root;
+            public Button Button;
+            public Image Tile;
+            public Image Face;
+            public Image Icon;
+            public Image Locked;
+            public Image Ring;
+            public Text Count;
+        }
+
+        /// <summary>
+        /// One tile of the "Select Boosters:" row: a gold plate with the
+        /// booster's icon on it and a red count badge on its lower-right corner,
+        /// as in docs/royal-match/10-level-start-popup.jpg. The caller sizes the
+        /// root; everything inside is anchored to it.
+        /// </summary>
+        public static BoosterSlotParts BoosterSlot(string name, Transform parent,
+            UnityAction onClick)
+        {
+            var parts = new BoosterSlotParts();
+
+            parts.Root = CreateRect(name, parent);
+            parts.Root.sizeDelta = new Vector2(150f, 150f);
+
+            // The rim is the base image so the whole tile is one hit target.
+            parts.Tile = CreateImage("Tile", parts.Root, RoundedSprite(28), RoyalGoldDeep);
+            parts.Tile.type = Image.Type.Sliced;
+            Stretch(parts.Tile.rectTransform);
+
+            parts.Button = parts.Tile.gameObject.AddComponent<Button>();
+            parts.Button.targetGraphic = parts.Tile;
+            parts.Button.transition = Selectable.Transition.None;
+            if (onClick != null) parts.Button.onClick.AddListener(onClick);
+
+            parts.Face = CreateImage("Face", parts.Tile.rectTransform, RoundedSprite(24), RoyalGold);
+            parts.Face.type = Image.Type.Sliced;
+            parts.Face.raycastTarget = false;
+            Stretch(parts.Face.rectTransform, 9f);
+
+            parts.Icon = CreateImage("Icon", parts.Face.rectTransform, null, Color.white);
+            parts.Icon.preserveAspect = true;
+            parts.Icon.raycastTarget = false;
+            Stretch(parts.Icon.rectTransform, 12f);
+
+            // The locked plate covers the tile rather than replacing it, so a
+            // locked slot still reads as the same booster the player will own.
+            parts.Locked = CreateImage("Locked", parts.Tile.rectTransform, LoadSprite("booster_locked"),
+                Color.white);
+            parts.Locked.preserveAspect = true;
+            parts.Locked.raycastTarget = false;
+            Stretch(parts.Locked.rectTransform);
+            if (parts.Locked.sprite == null) parts.Locked.color = new Color(0f, 0f, 0f, 0.55f);
+            parts.Locked.gameObject.SetActive(false);
+
+            // The selected ring sits outside the tile: it must not cover the
+            // icon, because the icon is how the player knows what they picked.
+            parts.Ring = CreateImage("Ring", parts.Root, RoundedSprite(32), RoyalGreenLight);
+            parts.Ring.type = Image.Type.Sliced;
+            parts.Ring.raycastTarget = false;
+            RectTransform ring = parts.Ring.rectTransform;
+            ring.anchorMin = Vector2.zero;
+            ring.anchorMax = Vector2.one;
+            ring.offsetMin = new Vector2(-10f, -10f);
+            ring.offsetMax = new Vector2(10f, 10f);
+            ring.SetAsFirstSibling();
+            parts.Ring.gameObject.SetActive(false);
+
+            // The count badge: a red disc on the lower-right corner.
+            Image badge = CreateImage("Badge", parts.Root, CircleSprite, RoyalRed);
+            badge.raycastTarget = false;
+            RectTransform badgeRect = badge.rectTransform;
+            badgeRect.anchorMin = new Vector2(1f, 0f);
+            badgeRect.anchorMax = new Vector2(1f, 0f);
+            badgeRect.pivot = new Vector2(0.5f, 0.5f);
+            badgeRect.sizeDelta = new Vector2(62f, 62f);
+            badgeRect.anchoredPosition = new Vector2(-4f, 6f);
+
+            Image badgeFace = CreateImage("Face", badgeRect, CircleSprite, RoyalRed);
+            badgeFace.raycastTarget = false;
+            Stretch(badgeFace.rectTransform, 5f);
+            badge.color = RoyalRedDark;
+
+            parts.Count = CreateText("Count", badgeRect, "0", 40, Color.white,
+                TextAnchor.MiddleCenter);
+            Stretch(parts.Count.rectTransform, 4f);
+            parts.Count.fontStyle = FontStyle.Bold;
+            parts.Count.resizeTextForBestFit = true;
+            parts.Count.resizeTextMinSize = 18;
+            parts.Count.resizeTextMaxSize = 40;
+            parts.Count.raycastTarget = false;
+
+            return parts;
+        }
+
+        /// <summary>Rings a chosen booster, and un-rings it when it is unchosen.</summary>
+        public static void SetBoosterSelected(BoosterSlotParts parts, bool selected)
+        {
+            if (parts == null) return;
+            if (parts.Ring != null) parts.Ring.gameObject.SetActive(selected);
+            if (parts.Tile != null) parts.Tile.color = selected ? RoyalGreenDark : RoyalGoldDeep;
+        }
+
+        /// <summary>
+        /// A booster the player has none of: the kit's locked plate over a dulled
+        /// tile, and the tile stops taking taps. Locked rather than blank, so the
+        /// row is always three slots wide and the player can see what they are
+        /// missing.
+        /// </summary>
+        public static void SetBoosterLocked(BoosterSlotParts parts, bool locked)
+        {
+            if (parts == null) return;
+            if (parts.Locked != null) parts.Locked.gameObject.SetActive(locked);
+            if (parts.Button != null) parts.Button.interactable = !locked;
+            if (parts.Face != null) parts.Face.color = locked ? RoyalGrey : RoyalGold;
+            if (parts.Icon != null)
+                parts.Icon.color = locked ? new Color(1f, 1f, 1f, 0.45f) : Color.white;
+        }
+
+        #endregion
+
         #region Top bar
 
         /// <summary>

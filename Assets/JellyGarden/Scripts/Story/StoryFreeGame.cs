@@ -32,11 +32,20 @@ namespace JellyGarden.Scripts.Story
             BoostType.Hand,          // Hammer: removes one tile
             BoostType.Stripes,       // Rocket: clears a line
             BoostType.Bomb,          // Bomb: clears 3x3
-            BoostType.Random_color   // Shuffle's nearest equivalent in the kit
+            BoostType.Random_color,  // Shuffle's nearest equivalent in the kit
+            BoostType.Packages,      // TNT: a pre-level booster on the level popup
+            BoostType.Colorful_bomb  // The ball of colour, likewise
         };
 
         /// <summary>Two hammers and a shuffle on first run, so the mechanic is discoverable.</summary>
         private const string StarterGrantKey = "Story.StarterBoostersGranted";
+
+        /// <summary>
+        /// The three pre-level boosters the level popup offers, granted once so
+        /// the row is not three locked slots on a fresh save. Its own key, so a
+        /// save made before the popup existed still receives them.
+        /// </summary>
+        private const string StarterPreBoostKey = "Story.StarterPreBoostersGranted";
 
         /// <summary>
         /// One random booster per level won. The player already paid for it by
@@ -63,6 +72,23 @@ namespace JellyGarden.Scripts.Story
             PlayerPrefs.SetInt(StarterGrantKey, 1);
             Grant(BoostType.Hand, 2);
             Grant(BoostType.Random_color, 1);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>
+        /// One of each pre-level booster, once. Without this the popup's row
+        /// would open locked on every slot and the player would never learn what
+        /// it is for — and, since nothing is for sale, a locked slot has no way
+        /// to become unlocked except by winning.
+        /// </summary>
+        public static void GrantStarterPreBoosters()
+        {
+            if (!Enabled) return;
+            if (PlayerPrefs.GetInt(StarterPreBoostKey, 0) != 0) return;
+
+            PlayerPrefs.SetInt(StarterPreBoostKey, 1);
+            for (int i = 0; i < StoryBoosters.PreLevel.Length; i++)
+                Grant(StoryBoosters.PreLevel[i], 1);
             PlayerPrefs.Save();
         }
 

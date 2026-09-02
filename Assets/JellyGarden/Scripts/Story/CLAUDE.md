@@ -203,8 +203,43 @@ red X goes back to — pass the screen that opened it, or the player lands nowhe
   level for the right area with no board in the scene.
 - The scrim behind it eats taps but does not close. The X is the only way out,
   so a tap that misses Play cannot lose the player their place.
-- The blue gap between the Goal card and Play is deliberate: it is the space the
-  booster row occupies in `docs/royal-match/10-level-start-popup.jpg`.
+
+### The booster row
+
+`StoryBoosters` owns the three boosters a player may take into a level and the
+choice they made on the popup.
+
+- **The three are the kit's own pre-level boosts**, not an invention:
+  `LevelManager.SetPreBoosts` reads `BoostStriped`, `BoostPackage` and
+  `BoostColorfullBomb` after the board is generated and converts that many random
+  items. `StoryBoosters.AmountOf` matches the kit's own `BoostIcon` (5, 5, 1) so
+  a booster does the same thing wherever it was picked.
+- **The popup runs in the map scene, where `LevelManager.THIS` does not exist.**
+  The choice is therefore held in a static and written on
+  `LevelManager.OnLevelLoaded`, which `ReGenLevel` fires before the
+  `RegenMatches` coroutine reaches `SetPreBoosts`. The kit then spends the
+  booster itself through `InitScript.SpendBoost` — nothing in `LevelManager` is
+  edited, three public fields are written from outside.
+- `Apply` clears the selection, because the "no more matches" regeneration fires
+  `OnLevelLoaded` again and would otherwise hand out a second set.
+- **Anything the popup offers must be earnable.** `StoryFreeGame.Grantable`
+  carries all three, and `GrantStarterPreBoosters` gives one of each once —
+  without that, two of the three slots would be locked forever, since nothing in
+  this game is for sale.
+- `StoryBoosters.OwnedSource` is the counts seam, in the shape of
+  `StoryLevelHud.Source`: null is PlayerPrefs, and a test swaps it rather than
+  writing the player's save.
+
+**Vertical metrics on a story screen are fractions, not pixels.** The reference
+captures are a 9:19.5 phone; the Editor's Game view is 4:3. A `ScaleWithScreenSize`
+canvas at `matchWidthOrHeight 0.5` hands a 4:3 view far fewer reference units of
+height than of width — 1663 rather than 1920 at 768x1024 — so a column of fixed
+pixel heights that fits the phone silently overlaps everywhere else. That is how
+the booster row first landed underneath the Play button while every editor test
+passed. Anchor vertical positions as fractions of the parent (see
+`StoryLevelPopup`'s `DesignHeight` block), keep horizontal measurements in
+reference points, and give any text in a box that can shrink
+`resizeTextForBestFit`.
 
 **A stretched rect can have negative height, and a negative rect draws nothing.**
 `RoyalPanel`'s title was inset 110px on all four sides of a 210px-tall plate, so

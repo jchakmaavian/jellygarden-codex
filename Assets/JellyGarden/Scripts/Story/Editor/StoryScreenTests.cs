@@ -14,6 +14,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JellyGarden.Scripts.GUI;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -82,6 +83,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 LevelHudIsTargetAndMoves();
                 ScoreLevelsShowTheirPassMark();
                 LevelPopupStatesTheGoal();
+                LevelPopupOffersBoosters();
             }
             finally
             {
@@ -486,17 +488,20 @@ namespace JellyGarden.Scripts.Story.Editor
             }
 
             // Boosters are earned. The same level always grants the same one, so
-            // a replay cannot farm them.
-            foreach (string key in new[] { "Hand", "Stripes", "Bomb", "Random_color" })
-                PlayerPrefs.DeleteKey(key);
+            // a replay cannot farm them. Every booster the game can grant is
+            // counted, in-level and pre-level alike.
+            string[] boosterKeys =
+            {
+                "Hand", "Stripes", "Bomb", "Random_color", "Packages", "Colorful_bomb"
+            };
+
+            foreach (string key in boosterKeys) PlayerPrefs.DeleteKey(key);
 
             StoryFreeGame.GrantBoosterForWin(1);
-            int granted = PlayerPrefs.GetInt("Hand", 0) + PlayerPrefs.GetInt("Stripes", 0) +
-                          PlayerPrefs.GetInt("Bomb", 0) + PlayerPrefs.GetInt("Random_color", 0);
+            int granted = boosterKeys.Sum(k => PlayerPrefs.GetInt(k, 0));
             Expect(granted == 1, "winning a level grants exactly one booster");
 
-            foreach (string key in new[] { "Hand", "Stripes", "Bomb", "Random_color" })
-                PlayerPrefs.DeleteKey(key);
+            foreach (string key in boosterKeys) PlayerPrefs.DeleteKey(key);
             PlayerPrefs.DeleteKey("Story.StarterBoostersGranted");
             StoryFreeGame.GrantStarterBoosters();
             Expect(PlayerPrefs.GetInt("Hand", 0) == 2 && PlayerPrefs.GetInt("Random_color", 0) == 1,
@@ -505,6 +510,18 @@ namespace JellyGarden.Scripts.Story.Editor
             StoryFreeGame.GrantStarterBoosters();
             Expect(PlayerPrefs.GetInt("Hand", 0) == 2,
                 "the starter grant happens once, not every boot");
+
+            // ...and one of each booster the level popup offers, so its row is
+            // never three locked slots on a save that has never seen one.
+            foreach (string key in boosterKeys) PlayerPrefs.DeleteKey(key);
+            PlayerPrefs.DeleteKey("Story.StarterPreBoostersGranted");
+            StoryFreeGame.GrantStarterPreBoosters();
+            Expect(StoryBoosters.PreLevel.All(b => PlayerPrefs.GetInt("" + b, 0) == 1),
+                "first run grants one of each pre-level booster");
+
+            StoryFreeGame.GrantStarterPreBoosters();
+            Expect(StoryBoosters.PreLevel.All(b => PlayerPrefs.GetInt("" + b, 0) == 1),
+                "the pre-level starter grant happens once, not every boot");
         }
 
         private static void RepairsAreClassifiedByWhatTheyAre()
@@ -1006,6 +1023,126 @@ namespace JellyGarden.Scripts.Story.Editor
                 StoryLevelPopup.Launcher = previousLauncher;
                 StoryLevelPopup.Close();
             }
+        }
+
+        /// <summary>
+        /// The "Select Boosters:" row: three slots, the owned count on each, a
+        /// locked slot where the player owns none, and a choice that reaches the
+        /// board rather than stopping at the popup.
+        /// </summary>
+        private static void LevelPopupOffersBoosters()
+        {
+            int level = LevelWithMostGoals();
+            if (level <= 0) { Fail("a level with a readable goal exists"); return; }
+
+            // Owned counts are read through a seam so the row can be driven at
+            // chosen counts without writing the player's own PlayerPrefs.
+            var owned = new Dictionary<BoostType, int>
+            {
+                { BoostType.Stripes, 4 },
+                { BoostType.Packages, 0 },
+                { BoostType.Colorful_bomb, 2 }
+            };
+
+            global::System.Func<BoostType, int> previousOwned = StoryBoosters.OwnedSource;
+            global::System.Action<int, int> previousLauncher = StoryLevelPopup.Launcher;
+            StoryBoosters.OwnedSource = b => owned.ContainsKey(b) ? owned[b] : 0;
+            StoryLevelPopup.Launcher = (l, a) => { };
+
+            try
+            {
+                StoryLevelPopup.Open(level, 1, () => { });
+                StoryLevelPopup popup = StoryLevelPopup.Instance;
+                if (popup == null) { Fail("the level popup opens"); return; }
+
+                Expect(popup.BoosterCount == 3,
+                    "the popup offers three booster slots (found " + popup.BoosterCount + ")");
+                if (popup.BoosterCount != 3) return;
+
+                List<string> texts = TextsIn(popup.gameObject);
+                Expect(texts.Any(t => t.Contains("Select Boosters")),
+                    "the row is headed 'Select Boosters:'");
+
+                List<string> counts = popup.BoosterCounts();
+                var expected = StoryBoosters.PreLevel.Select(b => owned[b].ToString()).ToList();
+                Expect(counts.SequenceEqual(expected),
+                    "each slot shows its owned count (read '" +
+                    string.Join(" ", counts.ToArray()) + "', expected '" +
+                    string.Join(" ", expected.ToArray()) + "')");
+
+                for (int i = 0; i < 3; i++)
+                {
+                    BoostType boost = popup.BoosterAt(i);
+                    bool shouldLock = owned[boost] <= 0;
+                    Expect(popup.BoosterIsLocked(i) == shouldLock,
+                        boost + " renders " + (shouldLock ? "locked" : "unlocked"));
+                    Expect(popup.BoosterButton(i).gameObject.activeInHierarchy,
+                        boost + " is present rather than hidden");
+                }
+
+                // A slot the player owns none of cannot be chosen.
+                int lockedIndex = IndexOfBooster(popup, BoostType.Packages);
+                popup.BoosterButton(lockedIndex).onClick.Invoke();
+                Expect(!popup.BoosterIsSelected(lockedIndex),
+                    "a locked slot cannot be selected");
+                Expect(!StoryBoosters.IsSelected(BoostType.Packages),
+                    "a locked booster never enters the selection");
+
+                // A slot the player owns toggles on, and off again.
+                int stripes = IndexOfBooster(popup, BoostType.Stripes);
+                popup.BoosterButton(stripes).onClick.Invoke();
+                Expect(popup.BoosterIsSelected(stripes), "tapping a slot selects it");
+                Expect(StoryBoosters.IsSelected(BoostType.Stripes),
+                    "the selection holds the chosen booster");
+
+                popup.BoosterButton(stripes).onClick.Invoke();
+                Expect(!popup.BoosterIsSelected(stripes), "tapping it again clears it");
+                Expect(!StoryBoosters.IsSelected(BoostType.Stripes),
+                    "clearing a slot removes it from the selection");
+
+                // Two chosen boosters survive Play, which is how they reach the
+                // board: LevelManager.OnLevelLoaded reads them there.
+                popup.BoosterButton(stripes).onClick.Invoke();
+                popup.BoosterButton(IndexOfBooster(popup, BoostType.Colorful_bomb)).onClick.Invoke();
+                popup.PlayButton.onClick.Invoke();
+
+                List<BoostType> chosen = StoryBoosters.Selection();
+                Expect(chosen.Count == 2 &&
+                       chosen.Contains(BoostType.Stripes) &&
+                       chosen.Contains(BoostType.Colorful_bomb),
+                    "Play carries the selection into the level (" + chosen.Count + " chosen)");
+                Expect(StoryBoosters.AmountOf(BoostType.Stripes) == 5 &&
+                       StoryBoosters.AmountOf(BoostType.Colorful_bomb) == 1,
+                    "each booster converts the same number of items as the kit's own row");
+
+                Debug.Log("[Story] Level popup boosters: counts [" +
+                          string.Join(" ", counts.ToArray()) + "], " +
+                          BoostType.Packages + " locked, chosen [" +
+                          string.Join(" ", chosen.Select(b => b.ToString()).ToArray()) + "].");
+
+                // Backing out of the popup chooses nothing.
+                StoryLevelPopup.Open(level, 1, () => { });
+                Expect(StoryBoosters.Selection().Count == 0,
+                    "opening the popup starts from an empty selection");
+                popup.BoosterButton(stripes).onClick.Invoke();
+                popup.CloseButton.onClick.Invoke();
+                Expect(StoryBoosters.Selection().Count == 0,
+                    "the X drops the boosters the player had picked");
+            }
+            finally
+            {
+                StoryBoosters.OwnedSource = previousOwned;
+                StoryBoosters.ClearSelection();
+                StoryLevelPopup.Launcher = previousLauncher;
+                StoryLevelPopup.Close();
+            }
+        }
+
+        private static int IndexOfBooster(StoryLevelPopup popup, BoostType boost)
+        {
+            for (int i = 0; i < popup.BoosterCount; i++)
+                if (popup.BoosterAt(i) == boost) return i;
+            return 0;
         }
 
         /// <summary>

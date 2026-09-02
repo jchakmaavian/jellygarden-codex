@@ -40,6 +40,14 @@ WANTED = {
     "next": "Textures/menu/complete_menu/next_button.png",
     "cloud": "Textures/menu/play_menu/cloud.png",
     "lock": "Textures/map/map_overlay_02.png",
+
+    # The three pre-level boosters the level popup offers, plus the kit's own
+    # locked-slot plate. These are the kit's booster-shop icons, which are the
+    # only art it ships for a booster outside a board.
+    "booster_stripes": "Textures/menu/booster_shop/booster_5_stripes_jelly.png",
+    "booster_packages": "Textures/menu/booster_shop/booster_5_pakages.png",
+    "booster_colorbomb": "Textures/menu/booster_shop/booster_colorful_bomb.png",
+    "booster_locked": "Textures/menu/play_menu/play_booster_locked.png",
 }
 
 
