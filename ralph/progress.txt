@@ -229,6 +229,24 @@ raise Unity and take the shot inside ONE osascript
   painted rect in a Game-view capture and compare it to the crop the layout
   should produce, computed from the source art with PIL. Same family as the
   negative-height rect that passes every string check and draws nothing.
+- **Before hiding anything the kit owns, find who looks it up.** The kit finds
+  objects with `FindObjectOfType`, which skips inactive ones — so deactivating
+  the map turns `InitScript`'s sprite lookup into a NullReferenceException and
+  `LevelsMap.Reset`'s `.Max()` into an empty-sequence throw. Hide from `Update`
+  (after the kit's own `Start`), and guard every story call into the thing you
+  hid.
+- **The kit turns its own things back on.** `LevelManager.ShowMap(true)` runs at
+  the end of every level, so anything the story takes away has to be taken away
+  every frame, not once.
+- **Press the X, do not call `Close()`.** A test that opens a screen and closes
+  it from code has not tested the way out that the player has. Expose the close
+  button rather than reaching past it — `AreaScreen.CloseButton`.
+- **Screens close onto whatever opened them, which is not always something.**
+  The same screen is reachable from several places, so the guard against a dead
+  end belongs in the close path (`StoryShell.EnsureFloor`) and must be a no-op
+  when anything is open — and must not fire while a cutscene is playing.
+- Sorting orders in use: home 300, areas list 350, area page 400, nav bar 500,
+  level popup 600, cutscenes 780.
 
 ---
 
@@ -1153,4 +1171,113 @@ is what Royal Match has instead of a winding path map.
   wait ~40s -> `Edit > Play Mode > Play` -> wait -> `Preview > Close The Level`
   -> `Preview > Open Areas List`.
 
+---
+
+## 2026-09-02 - US-012 - Wire the shell together
+
+The five screens became a game: the room is what the game opens on, a level
+ends back on it, and nothing can be closed onto an empty canvas.
+
+### What was implemented
+- `StoryShell` — the one thing that knows the kit's map exists. Its own
+  persistent host, driven by `Update`, `Sync()` for tests, installed last by
+  `StorySceneHooks` because it decides between the screens the others install.
+  - `UseMap` is the whole switch. False: the game opens on the room and the map
+    is deactivated. True: the map is the entry point again, `StoryShell` stops
+    touching anything, and a level ends on the area page as it always did.
+  - `CloseForLevel` / `ShowAfterLevel` / `GoHome` / `EnsureFloor` are the four
+    moves; `InGameSceneSource` is the test seam.
+- `StoryFlow.LaunchLevel` takes the shell down before the board goes up, and
+  `OpenAfterLevel` asks `StoryShell.ShowAfterLevel` where a level ends instead
+  of opening the area page itself.
+- `AreaScreen.OnBack` and `StoryLevelPopup.OnClose` call `EnsureFloor`;
+  `AreaScreen.CloseButton` exposes the red X so a test can press it.
+- `StoryMapRefresh.Request` skips a map that is off.
+- `StoryPowerupTest` hands its level back when it finishes.
+- `StoryScreenTests.ShellHasNoDeadEnds`.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryShell.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/StoryFlow.cs`
+- `Assets/JellyGarden/Scripts/Story/AreaScreen.cs`
+- `Assets/JellyGarden/Scripts/Story/StoryLevelPopup.cs`
+- `Assets/JellyGarden/Scripts/Story/StoryMapRefresh.cs`
+- `Assets/JellyGarden/Scripts/Story/StoryPowerupTest.cs`
+- `Assets/JellyGarden/Scripts/Story/StorySceneHooks.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs`
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md` (new "The shell" section)
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> 150 / 807 / 1209 / 1209.
+- `JellyGarden > Story > Run Screen Tests` (Play mode OFF) -> **"[Story] Screen
+  tests passed."**, carrying `[Story] Area 1 (Castle Gates) restored.` and no
+  `[Story] area screen N` lines — the two marks of a valid run — plus
+  `[Story] shell: opens on area 1 'Castle Gates'; home <-> areas <-> area page
+  and home -> level -> home both walk; every screen closed onto another; the
+  kit's map kept behind UseMap.`
+- `JellyGarden > Story > Run Full Smoke Test` -> **"[Story] Smoke test passed."**
+- Play mode, one uninterrupted session, which walked the whole story of this
+  user story on its own because `StoryPowerupTest` plays a level every session:
+```
+[Story] shell: kit map put away; the room is the entry point.
+[Story] home screen: area 1 'Castle Gates', 1/4 repairs, ... buttons ['Level 2'] ...
+[Story] nav bar shown: home True, area page False, in a level False.
+[Story] Powerup test: launching level 1 of area 1.
+[Story] nav bar hidden: home False, area page False, in a level True.
+[Story] ---- self-test done ----
+[Story] home screen: area 1 'Castle Gates', 1/4 repairs, ...
+[Story] nav bar shown: home True, area page False, in a level False.
+[Story] shell: kit map put away; the room is the entry point.
+```
+  Game-view screenshots: the Castle Gates room full-bleed with the top bar,
+  "Level 2", the gold "Castle Gates 1/4" card with its red 3 and the nav bar —
+  no map anywhere — and the areas list opened on top of it with Areas lit.
+
+### Learnings for future iterations
+- **Deactivating the kit's map is not free, and the cost is in two places.**
+  `InitScript` reads a sprite off it with `FindObjectOfType`, which skips
+  inactive objects, so hiding the map at `sceneLoaded` — before the kit's own
+  `Start` — is a NullReferenceException. And `LevelsMap.Reset` calls
+  `FindObjectsOfType<MapLevel>()` and then `.Max()` on the result, so
+  `StoryMapRefresh.Request` on a map that is off throws rather than doing
+  nothing. Hide it from `Update`, and guard the refresh. Every "hide the kit's
+  X" has this shape: look for what finds X with `FindObjectOfType` first.
+- **`LevelManager.ShowMap(true)` turns the map back on at the end of every
+  level**, so hiding it is a per-frame assertion, not a one-off. One log line
+  per change means one per level, which is right — a level end IS a change.
+- **A shell screen is drawn over the board unless something closes it.** Every
+  story canvas sorts at 300..600 and the kit's level canvas does not. Close the
+  shell in `LaunchLevel` rather than waiting for an `Update` to notice, or the
+  board opens under home for a frame.
+- **`EnsureFloor` belongs on the close path, not in the caller.** Each screen
+  closes onto whatever opened it, which is right while the player walks
+  forwards — but the area page is also opened by a level ending, by the preview
+  menu and by a map node, and a red X with nothing underneath is a black screen
+  with a nav bar. Make the guard a no-op when anything is open and call it
+  everywhere.
+- **A "floor" that runs every frame must know about cutscenes.**
+  `StoryPresentation.IsBusy` covers the clue card and the arc beat but not
+  `RepairCutscene`, `OpeningSequence` or `DialogueSystem` — check all four, or
+  home opens behind a story beat.
+- **Guard a per-frame helper on the scene it belongs to.** `EnsureFloor` is
+  called from `AreaScreen`'s X, which other editor test cases press; without
+  `if (!InGameScene) return;` it would open home in the middle of a case that
+  has nothing to do with the shell.
+- **Press the X, do not call `Close()`.** A screen whose `Open` is tested and
+  whose close path is not passes every check while being a dead end. That is
+  why `AreaScreen.CloseButton` had to be exposed.
+- **`StoryPowerupTest` was leaving every play session in a level** and three
+  stories worked around it. It now calls `StoryFlow.HandleLevelComplete()` when
+  it finishes, which is the game's own way out, so a play session ends on home
+  by itself — and that is the cheapest possible end-to-end demonstration of
+  "level end -> home". `Preview > Close The Level` is still there for a session
+  that ends some other way.
+- The `MissingReferenceException` from `StoryPowerupTest` line 194 in the play
+  log is pre-existing (13 occurrences before this branch's session) — a
+  destroyed `Item` read after a cascade inside the test itself, nothing to do
+  with the shell.
+- Sorting orders now in use: home 300, areas list 350, area page 400, nav bar
+  500, level popup 600, cutscenes 780.
 ---
