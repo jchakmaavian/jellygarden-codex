@@ -139,6 +139,13 @@ raise Unity and take the shot inside ONE osascript
 - **Run editor tests through the Unity menu, not batchmode**, while the Editor
   holds the project lock. `JellyGarden > Story > Run Screen Tests` — note there
   are two top-level menus and the story's is the one WITHOUT a space.
+- **Enter play mode through `Edit > Play Mode > Play`, not Cmd+P.** The
+  keystroke is silently swallowed while the Editor is compiling. The cycle that
+  works: edit a character -> exit play -> focus Unity -> Cmd+R -> wait ~35s ->
+  click that menu item. A run with no `[Story] Booted` line ran the old compile.
+- **Read `git status` before starting.** A previous iteration may have left the
+  current story built but uncommitted, and it may contain a `// TEMP` hook put
+  in for a screenshot. Grep for `TEMP` before committing.
 
 ---
 
@@ -544,3 +551,75 @@ on it change the board that opens.
   house way to copy a kit sprite in, `.meta` and all. Add to its `WANTED` map
   rather than hand-copying a png.
 ---
+
+## 2026-09-02 - US-006 - Area page: progress bar and chest
+
+The area screen stopped being a parchment list and became the Royal Match area
+card: the room's name on the plate, an Area Progress bar with the chest on its
+end, and the story captioned over the artwork rather than crowded into the panel.
+
+### What was implemented
+- `StoryUi.ProgressBar(name, parent)` -> `ProgressBarParts { Root, Fill, Label,
+  Fraction }`, driven by `SetProgress(parts, done, total)`. An orange-rimmed well
+  of `RoyalBlueDeep` with a green bar and "3/7" written across the middle.
+- `StoryUi.ChestIcon(name, parent)` — the purple-and-gold chest, composed from
+  rounded rects. The kit ships no chest and the reference's is a painted 3D
+  asset, so this is the flat reading of it; colours sampled off
+  `docs/royal-match/02-area-tasks.jpg`.
+- `AreaScreen` rebuilt on `StoryUi.RoyalPanel`: title plate reads `area.Name`
+  (best-fit 28..76pt — 150 area names, some far longer than "Throne Room"), an
+  "Area Progress" `CreamCard` holding the bar with the chest overhanging its
+  right end, the task rows, and a `GreenButton` Play. The panel's red X is the
+  way back; the old separate Back and star-counter widgets are gone, because the
+  top bar now carries the stars.
+- The arc line and the area goal became outlined captions on the artwork above
+  the panel.
+- Four read-only properties (`TitleText`, `ProgressText`, `ProgressFraction`,
+  `HasChest`) so the screen can be asserted without reaching into its children.
+- `StoryScreenTests.AreaProgressCountsTheRepairs` — an untouched area reads
+  `0/N` with an empty bar and a chest, and one paid repair moves it to `1/N` and
+  fills exactly one task's worth.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryUi.Royal.cs` (progress bar, chest, colours)
+- `Assets/JellyGarden/Scripts/Story/AreaScreen.cs` (rebuilt on the Royal panel)
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs` (new case)
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md` (primitives table + three rules)
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> "All checks passed."
+- JellyGarden > Story > Run Screen Tests -> **"[Story] Screen tests passed."** with
+  `[Story] area progress: 'Castle Gates' reads 1/4, chest present`
+- Play mode, Game-view screenshot: "Castle Gates" on the plate, Area Progress
+  reading 1/4 with a quarter-filled green bar and the chest on its end, the arc
+  line and "Get the gates open. Nobody has cleared this road in months." legible
+  over the room above it, and `[Story] area screen 1 'Castle Gates': progress
+  1/4, chest present` in the log.
+
+### Learnings for future iterations
+- **The panel hides what is anchored under it, and the artwork hides what was
+  built before it.** Both bit here, in the same two captions. `_scene` spans the
+  canvas from 0.66 up and the panel's top edge is 0.74 of the canvas — 0.235 in
+  `_scene`'s own fractions — so a caption at 0.20 drew behind the panel and read
+  as clipped text. And `AreaSceneView.Attach` runs in `Refresh`, after
+  `BuildCaption`, so the room art is a later sibling and covered them anyway.
+  Anchor above the panel AND `SetAsLastSibling()` after every attach. Neither
+  failure is visible to an editor test: both texts had the right string.
+- **Cmd+P is not a reliable way to enter play mode from a script.** It silently
+  does nothing while the Editor is compiling, and there is no error. Use the
+  menu — `Edit > Play Mode > Play` — which the accessibility API can click, and
+  confirm from a screenshot rather than from the absence of a complaint.
+- **The recompile cycle that actually works**, given domain reload is off and
+  statics survive: edit a character in a script -> exit play mode -> focus Unity
+  -> Cmd+R (Refresh) -> wait ~35s -> `Edit > Play Mode > Play`. A play run whose
+  log carries no `[Story] Booted` line ran the previous compile.
+- **A temporary hook for a screenshot is a commit hazard.** This iteration
+  inherited an uncommitted `// TEMP US-006:` early-return at the top of
+  `StoryPowerupTest.Drive` that disabled the whole powerup self-test. Grep for
+  `TEMP` before committing.
+- **A rounded fill of zero width still draws both end caps**, which reads as one
+  step already completed. `SetProgress` deactivates the fill below 0.001.
+- `git status` at the start of an iteration is worth reading: the previous run
+  had left US-006 substantially built but uncommitted and unverified.
