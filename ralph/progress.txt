@@ -267,6 +267,25 @@ raise Unity and take the shot inside ONE osascript
   `Preview > Buy The Next Repair` invokes the row's real Do It; the order guard
   and the price check live in the handler, and a preview that skips them is
   previewing something the player cannot do.
+- **Two numbers agreeing is only evidence when they were produced by different
+  means.** `StoryContentAudit` reads what the story says areas 1-5 cost;
+  `StoryShellTest` sums what the screens actually charged for them. 25 repairs
+  and 29 stars from both is the assertion. One source counted twice is not.
+- **A Play-mode walk must be able to dismiss every beat it provokes.**
+  `ClueCard` times itself out; `DialogueSystem` never advances itself, so an arc
+  scene hangs a walk forever. Press the screen's own handler
+  (`Advance`) — that keeps the "no synthetic input" rule and tests the way out
+  the player has.
+- **Restoring a save file is not the whole of restoring a save.** Screens write
+  their area back to `StoryProgress.CurrentArea` as they open, so anything that
+  restores the file must also come home to `StoryProgress.CurrentArea` — not to
+  `StoryHomeScreen.CurrentRoom`, which moves the bookmark it just put back.
+- **`yield return` inside `try`/`finally` is legal in a C# iterator;
+  `try`/`catch` is not.** That is how a coroutine guarantees it puts state back.
+- **Two self-tests in one session need an explicit ordering.** Expose a
+  finished-flag on the earlier one (`StoryPowerupTest.IsFinished`) and wait on
+  it — and make it true when that test is not installed, so the wait is not a
+  hang in a build that ships without it.
 - Sorting orders in use: home 300, areas list 350, area page 400, nav bar 500,
   level popup 600, cutscenes 780.
 
@@ -1494,4 +1513,88 @@ and read.
   the rest of an area — cheap to check, invisible otherwise.
 - Running two editor suites back to back is fine as long as neither is in Play
   mode; the full smoke test takes ~60s, the screen tests ~25s.
+---
+
+## 2026-09-02 - US-015 - End-to-end self-test for areas 1 to 5
+
+The band that ships had been proven by editor tests, which build the screens
+outside Play mode where every timed beat is a clock the test steps itself.
+Nothing had ever played areas 1-5 with the real clock running. This does.
+
+### What was implemented
+- `StoryShellTest` — a `MonoBehaviour` in the shape of `StoryPowerupTest`,
+  installed from `StorySceneHooks`, running itself once per play session,
+  editor and development builds only. For each of areas 1-5 it opens the area
+  page, counts the rows against `StoryArea.Tasks`, grants exactly
+  `StoryArea.StarCost`, presses every Do It button in turn, waits each repair
+  cutscene out, and then checks the area reports restored, all its repairs are
+  recorded, the wallet ends at **zero** and the next area unlocks.
+- `StoryShellAreaResult` carries the per-area finding and renders its own log
+  line, so a FAIL says which area, how far it got and what disagreed.
+- `StoryPowerupTest.IsFinished` — a new seam. The board self-test loads the
+  `game` scene and plays level 1 every session; an area screen opened over that
+  measures the collision rather than the shell. True when nothing is installed,
+  so a build with no board test is not waited on.
+- `Preview > Run Shell Self-Test` re-runs the walk in a session that has moved
+  on. It takes about three minutes.
+
+### Files changed
+- `Assets/JellyGarden/Scripts/Story/StoryShellTest.cs` (new)
+- `Assets/JellyGarden/Scripts/Story/StoryPowerupTest.cs`
+- `Assets/JellyGarden/Scripts/Story/StorySceneHooks.cs`
+- `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenPreview.cs`
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md`
+
+### Verification
+- `dotnet build Story.Typecheck.csproj -v q --nologo` -> **0 Error(s)**
+- `python3 tools/check_vfx_intact.py` -> "No animation, particle or VFX regressions."
+- `python3 tools/validate_story.py` -> 150 areas / 807 tasks / 1209 stars / 1209 boards
+- `JellyGarden > Story > Run Screen Tests` -> **"[Story] Screen tests passed."**
+  (with `[Story] Area 1 (Castle Gates) restored.` in the run, so not a void
+  Play-mode run)
+- Play mode, the walk's own run:
+```
+[Story] shell test area 1 'Castle Gates': 4 rows, 4 repairs, 4 stars spent, restored, area 2 unlocked. PASS
+[Story] shell test area 2 'Outer Courtyard': 5 rows, 5 repairs, 5 stars spent, restored, area 3 unlocked. PASS
+[Story] shell test area 3 'The Stables': 5 rows, 5 repairs, 6 stars spent, restored, area 4 unlocked. PASS
+[Story] shell test area 4 'Guard House': 5 rows, 5 repairs, 6 stars spent, restored, area 5 unlocked. PASS
+[Story] shell test area 5 'Entrance Hall': 6 rows, 6 repairs, 8 stars spent, restored, area 6 unlocked. PASS
+[Story] Shell self-test, areas 1-5: 5 area(s), 25 repairs, 29 stars. 5 PASS, 0 FAIL.
+```
+  Zero problem lines. The save on disk after the run is byte-for-byte the state
+  before it (area 5 at 4/6 with 3 stars, `currentArea` 1), and no
+  `.shelltestbackup` was left behind.
+
+### Learnings for future iterations
+- **The two counts have to be produced by different means to be worth
+  anything.** `StoryContentAudit` reads what the story *says* areas 1-5 cost
+  (25 repairs, 29 stars); the walk sums what the screens actually charged. They
+  matching is the assertion. A single source counted twice proves nothing.
+- **Ending the wallet at zero is the sharpest check in the walk.** Granting
+  exactly `StarCost` and then requiring `StarsIn(area) == 0` catches a screen
+  charging a price the story did not write, in either direction, without
+  needing to know the prices.
+- **A Play-mode walk has to be able to dismiss every beat it provokes.**
+  `ClueCard` times out after three seconds and needs nothing; `DialogueSystem`
+  never advances itself, so the arc scene on area 5 would hang the walk
+  forever. Pressing the dialogue's own `Advance` button — the handler a tap
+  reaches — keeps the "no synthetic input" rule intact.
+- **Restoring the save file is not the whole of restoring the save.**
+  `AreaScreen.Open` and `StoryHomeScreen.Open` both write their area back to
+  `StoryProgress.CurrentArea`, so coming home to `StoryHomeScreen.CurrentRoom`
+  moves the bookmark the `finally` block just put back. Come home to
+  `StoryProgress.CurrentArea`.
+- **`yield return` inside `try`/`finally` is legal in a C# iterator;
+  `try`/`catch` is not.** That is what makes a coroutine able to guarantee it
+  puts the player's save back.
+- **Two self-tests in one session need an ordering, not a prayer.** Expose a
+  finished-flag on the earlier one and wait on it, and make the flag true when
+  the earlier one is not installed at all, so the wait is not a hang in a build
+  that ships without it.
+- Play-mode drill that worked here, start to finish: exit Play -> edit one
+  character in a script (domain reload is off; `touch` does not work) ->
+  `Assets > Refresh` -> wait ~55s and confirm `domain reloads=1` in the log ->
+  `Run Screen Tests` -> `Edit > Play Mode > Play` -> poll the log for the
+  summary line. Budget ~5 minutes for the walk: it waits out the board
+  self-test's level 1 first.
 ---
