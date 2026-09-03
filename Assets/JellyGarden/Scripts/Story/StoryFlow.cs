@@ -230,6 +230,7 @@ namespace JellyGarden.Scripts.Story
             {
                 Debug.Log(string.Format(
                     "[Story] Level {0} replayed; no star awarded.", levelNumber));
+                ShowWinPanel(levelNumber, false);
                 return;
             }
 
@@ -242,6 +243,27 @@ namespace JellyGarden.Scripts.Story
 
             Debug.Log(string.Format("[Story] Level {0} won: area {1} now holds {2} star(s).",
                 levelNumber, PlayingArea, StoryProgress.StarsIn(PlayingArea)));
+
+            ShowWinPanel(levelNumber, true);
+        }
+
+        /// <summary>
+        /// Puts the story's own level-complete panel up in place of the kit's.
+        ///
+        /// It is opened from here rather than from LevelManager's OnMenuComplete
+        /// because of the order the kit raises those two: OnMenuComplete fires at
+        /// the top of the Win branch and OnWin — which is what called this —
+        /// twenty lines below it, so a panel opened on OnMenuComplete would read
+        /// the area's totals from before this method added to them.
+        ///
+        /// Continue goes through HandleLevelComplete, the same door the kit's own
+        /// panel used, so nothing about where a level ends changes here.
+        /// </summary>
+        private static void ShowWinPanel(int levelNumber, bool paidStar)
+        {
+            int areaId = PlayingArea;
+            StoryWinPopup.Open(levelNumber, areaId, paidStar,
+                () => HandleLevelComplete());
         }
 
         #endregion
