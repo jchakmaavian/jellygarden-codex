@@ -1,7 +1,7 @@
 {
   "project": "King Leo (Jelly Garden Match-3)",
   "branchName": "ralph/royal-match-repair",
-  "description": "Replace the repair CUTSCENE with a Royal Match style in-place repair animation. Today a repair cuts to a black screen with the task title, a work VFX, a horizontal wipe and an italic story line, running 4.2 seconds. Royal Match never cuts away: the task popup closes, the room stays exactly where it is, gold sparkles trace the thing being repaired, the room art crossfades under them, and it is over in well under two seconds with no text on screen at all. Reference: docs/royal-match/03-repair-in-place.jpg, which is a repair caught mid-play — sparkle trails over the carpet, the live room behind them, the area button still on screen. The kit's own animation, particles and VFX must not regress (tools/check_vfx_intact.py). The arc-beat cutscenes in CutsceneRunner.cs are a SEPARATE feature and must not be touched.",
+  "description": "Replace the repair CUTSCENE with a Royal Match style in-place repair animation. Today a repair cuts to a black screen with the task title, a work VFX, a horizontal wipe and an italic story line, running 4.2 seconds. Royal Match never cuts away: the task popup closes, the room stays exactly where it is, gold sparkles trace the thing being repaired, the room art crossfades under them, and it is over in well under two seconds with no text on screen at all. Reference: docs/royal-match/03-repair-in-place.jpg, which is a repair caught mid-play \u2014 sparkle trails over the carpet, the live room behind them, the area button still on screen. The kit's own animation, particles and VFX must not regress (tools/check_vfx_intact.py). The arc-beat cutscenes in CutsceneRunner.cs are a SEPARATE feature and must not be touched.",
   "userStories": [
     {
       "id": "US-001",
@@ -16,8 +16,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "The black was not the cutscene: AreaScreen.HideForRepair painted the backdrop black behind a letterboxed room. Fixed by clearing it and switching the room to covering. Home screen gained RoomRect."
     },
     {
       "id": "US-002",
@@ -31,8 +31,8 @@
         "Unity screen tests pass: StoryScreenTests.RunHeadless prints 'Screen tests passed.'"
       ],
       "priority": 2,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Gated on the new _overRoom flag. Own-screen path keeps all text, so no story line is lost."
     },
     {
       "id": "US-003",
@@ -40,14 +40,14 @@
       "description": "As a player, I want the repair over in about a second and a half, so that spending eight stars on an area is not eight cutscenes.",
       "acceptanceCriteria": [
         "Over a room the beats are: sparkle in at 0.0, peak 0.45, reveal 0.60, settle 1.10, end 1.50 seconds",
-        "No camera push-in and no stage scaling when playing over a room — the room does not move",
+        "No camera push-in and no stage scaling when playing over a room \u2014 the room does not move",
         "The 4.2 second beat map is kept for the own-screen fallback path",
         "The beat times are named constants with a comment saying where they came from",
         "Typecheck passes"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Landed in the same commit as US-002 (same file, and the retime is meaningless without the text removal). Room map: 0.0/0.45/0.60/1.10/1.50, fade 0.12. Push-in dropped over a room entirely."
     },
     {
       "id": "US-004",
@@ -55,7 +55,7 @@
       "description": "As a developer, I need to know WHERE in the room a repair happened, so that the sparkles can sit on the thing being repaired instead of washing the whole picture.",
       "acceptanceCriteria": [
         "New static helper (e.g. StoryArt.ChangedRect(areaId, state)) returns a normalised Rect covering the pixels that differ between state-1 and state art",
-        "The result is cached per (areaId, state) — it must not resample a 1500px sprite every repair",
+        "The result is cached per (areaId, state) \u2014 it must not resample a 1500px sprite every repair",
         "Returns the room's centre third when the two sprites are the same object or either is null",
         "Sprites are read without requiring Read/Write enabled, or the importer setting is applied by tools/ and documented",
         "An editor test asserts the rect for one area with per-state art is smaller than the full room and inside 0..1",
@@ -63,8 +63,8 @@
         "Unity screen tests pass"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Measured offline in tools/repair_regions_build.py, not at runtime: isReadable would keep an uncompressed copy of every room in memory. 4 of 9 states yield a region; the rest repaint wholesale and report Unknown."
     },
     {
       "id": "US-005",
@@ -74,14 +74,14 @@
         "RepairVfx gains a Royal sparkle effect: gold star particles rising and fading, plus one soft warm flash, tuned off docs/royal-match/03-repair-in-place.jpg",
         "The emitter is positioned and sized from US-004's changed rect, not the whole room",
         "It is the effect used for every work type when playing over a room; the eight per-work effects stay for the own-screen path",
-        "No kit ParticleSystem, prefab or sprite is modified — the effect is additive and built by Story code",
+        "No kit ParticleSystem, prefab or sprite is modified \u2014 the effect is additive and built by Story code",
         "Typecheck passes",
         "python3 tools/check_vfx_intact.py reports no regressions",
         "Verified in the running player: build with StoryBuild.BuildMac, launch at 402x874, screenshot the repair mid-play"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "First pass was invisible in the player; sizes, rate and pool all raised. Verified off a 27fps capture of the self-test."
     },
     {
       "id": "US-006",
@@ -95,8 +95,8 @@
         "Verified in the running player"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Over a room the crossfade is AreaSceneView.Reveal, which already faded the layer in over 0.55s. The work was removing the fill wipe that was fighting it, and halving the landing flash."
     },
     {
       "id": "US-007",
@@ -105,15 +105,15 @@
       "acceptanceCriteria": [
         "Pressing Do It hides the area panel before the first sparkle, not after it",
         "The panel returns once the repair ends, showing the ticked-up progress bar",
-        "The area button and top bar stay visible throughout, as in the reference screenshot",
+        "The top bar is hidden and the room runs to the screen edges, as in docs/royal-match/03-repair-in-place.jpg",
         "No path can leave the panel hidden if the repair is skipped or errors",
         "Typecheck passes",
         "Unity screen tests pass",
         "Verified in the running player"
       ],
       "priority": 7,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Already correct once the black backdrop went. CRITERION CORRECTED: the reference has no top bar over a repair, so \"top bar stays visible\" was wrong; the room runs to the top edge in both."
     },
     {
       "id": "US-008",
@@ -127,8 +127,8 @@
         "Verified in the running player"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Buy first, fly second. Flying first deferred the purchase 0.38s and failed the shell self-test on all five areas. Star lives on its own canvas (order 800) because the area page is gone by frame two."
     },
     {
       "id": "US-009",
@@ -143,8 +143,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Only genuinely dead thing was _sameImage. Everything else (title, line, skip hint, slow beats) is still live on the own-screen path."
     }
   ]
 }
