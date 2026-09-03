@@ -229,6 +229,48 @@ namespace JellyGarden.Scripts.Story
             hud.Refresh();
 
             Debug.Log("[Story] Level HUD installed: Target + portrait + Moves, no score bar.");
+            hud.ReportPlacement(parent);
+        }
+
+        /// <summary>
+        /// Where the strip actually landed, in screen pixels.
+        ///
+        /// The strip is anchored to the top of the rect it is built in, so "is
+        /// there a band of bare backdrop above the HUD" is a question about that
+        /// rect and not about the strip. Answering it by eye off a screenshot
+        /// costs a build; this answers it from the log.
+        /// </summary>
+        private void ReportPlacement(Transform parent)
+        {
+            var parentRect = parent as RectTransform;
+            if (parentRect == null || _root == null) return;
+
+            Canvas.ForceUpdateCanvases();
+
+            var corners = new Vector3[4];
+            parentRect.GetWorldCorners(corners);
+            Camera camera = CameraFor(parentRect);
+            float parentTop = RectTransformUtility.WorldToScreenPoint(camera, corners[1]).y;
+
+            _root.GetWorldCorners(corners);
+            float rootTop = RectTransformUtility.WorldToScreenPoint(camera, corners[1]).y;
+
+            Rect safe = Screen.safeArea;
+
+            Debug.Log(string.Format(
+                "[Story] HUD placement: screen {0}x{1}, safe area {2}, host '{3}' top at y={4:0}, " +
+                "strip root top at y={5:0} — {6:0}px of screen above the strip.",
+                Screen.width, Screen.height, safe, parent.name,
+                parentTop, rootTop, Screen.height - rootTop));
+
+        }
+
+        private static Camera CameraFor(RectTransform rect)
+        {
+            Canvas canvas = rect.GetComponentInParent<Canvas>();
+            if (canvas == null) return null;
+            canvas = canvas.rootCanvas;
+            return canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
         }
 
         /// <summary>
@@ -371,13 +413,12 @@ namespace JellyGarden.Scripts.Story
             window.type = Image.Type.Sliced;
             window.gameObject.AddComponent<Mask>().showMaskGraphic = true;
 
-            _portrait = StoryUi.CreateImage("Face", window.rectTransform,
-                StoryArt.Portrait(PortraitCharacter), Color.white);
-            StoryUi.Stretch(_portrait.rectTransform);
-            _portrait.preserveAspect = true;
-            // No portrait art is not a reason to draw a blue hole with nothing
-            // in it, so the slot simply stays empty and the frame still reads.
-            _portrait.enabled = _portrait.sprite != null;
+            // Head and shoulders, not the whole standing figure: at this size a
+            // full-body portrait is a brown smudge with a face two pixels wide.
+            // StoryAvatar animates it where frames are authored and crops the
+            // portrait where they are not, and the mask above is what makes the
+            // crop possible — see the note in that file.
+            _portrait = StoryAvatar.Build(PortraitCharacter, window.rectTransform);
         }
 
         /// <summary>

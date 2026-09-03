@@ -112,6 +112,53 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
+        /// A character's avatar animation, in frame order, or an empty array
+        /// when none is authored.
+        ///
+        /// Frames are `avatar_{name}_00`, `_01`, … and are read until the first
+        /// gap, so adding frames to Resources/Story/Art lengthens the loop with
+        /// no code change — the same convention the rest of this file uses. Like
+        /// <see cref="TaskIcon"/> it does NOT warn on a miss: a character with
+        /// no avatar frames is the normal case, and the caller falls back to a
+        /// crop of the full-body portrait.
+        /// </summary>
+        public static Sprite[] AvatarFrames(string character)
+        {
+            if (string.IsNullOrEmpty(character)) return EmptyFrames;
+
+            string name = character.Trim().ToLowerInvariant();
+            var frames = new List<Sprite>();
+
+            for (int i = 0; i < MaxAvatarFrames; i++)
+            {
+                Sprite frame = Load(string.Format("avatar_{0}_{1:00}", name, i));
+                if (frame == null) break;
+                frames.Add(frame);
+            }
+
+            return frames.Count == 0 ? EmptyFrames : frames.ToArray();
+        }
+
+        /// <summary>A ceiling, so a naming slip cannot turn into an unbounded loop.</summary>
+        private const int MaxAvatarFrames = 64;
+
+        private static readonly Sprite[] EmptyFrames = new Sprite[0];
+
+        /// <summary>
+        /// The head-and-shoulders window onto a full-body portrait, in texture
+        /// coordinates (origin bottom-left), used when a character has no avatar
+        /// frames of their own.
+        ///
+        /// Measured off Resources/Story/Art/portrait_leo.jpg, which is 1536x1536
+        /// with the figure standing centred: the crown clears the top of the box
+        /// at y=25, the chin sits near its middle and the cloak enters at the
+        /// bottom — pixels (585,25)-(965,405). The other seven portraits are
+        /// framed the same way, so one window serves them all.
+        /// </summary>
+        public static readonly Rect AvatarCrop =
+            new Rect(585f / 1536f, 1f - 405f / 1536f, 380f / 1536f, 380f / 1536f);
+
+        /// <summary>
         /// The keys that have fallen back so far. A miss warns instead of
         /// failing, so a screen still draws — which means the only way to prove
         /// an area's art is complete is to read what warned.
