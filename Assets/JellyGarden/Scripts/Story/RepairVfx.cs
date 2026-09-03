@@ -19,7 +19,11 @@ namespace JellyGarden.Scripts.Story
 {
     public sealed class RepairVfx : MonoBehaviour
     {
-        private const int PoolSize = 90;
+        // Big enough for the Royal sparkle at full rate: 260 a second living
+        // two thirds of one is about 170 alive at the peak, and a pool that runs
+        // dry does not look sparser, it looks like the effect stuttering. They
+        // are Images on one sprite, so they batch into a single draw call.
+        private const int PoolSize = 220;
 
         private sealed class Mote
         {
@@ -46,6 +50,19 @@ namespace JellyGarden.Scripts.Story
         private float _height;
 
         private static Sprite _dot;
+        private static Sprite _spark;
+
+        // The Royal mode: one gold sparkle effect, thrown over the part of the
+        // room a repair actually changed rather than over the whole picture.
+        //
+        // It exists beside the eight per-work effects rather than replacing
+        // them because the two are answering different questions. Dust, sparks
+        // and embers say what KIND of work this is, which is what a cutscene on
+        // its own screen has to carry — there is nothing else on it. On the room
+        // the player is already looking at, the room says that; the effect only
+        // has to say WHERE, and Royal Match answers it the same way every time.
+        private bool _royal;
+        private Rect _region;
 
         public static RepairVfx Attach(RectTransform parent)
         {
@@ -83,11 +100,38 @@ namespace JellyGarden.Scripts.Story
         public void Play(RepairWorkType work, float width, float height)
         {
             _work = work;
+            _royal = false;
             _width = Mathf.Max(1f, width);
             _height = Mathf.Max(1f, height);
             _emitting = true;
             _emitAccumulator = 0f;
             _rate = RateFor(work);
+        }
+
+        /// <summary>
+        /// Starts the gold sparkle, confined to <paramref name="region"/> — the
+        /// part of the room this repair changed, in the room's own space
+        /// (origin bottom-left, 0..1 on both axes). Pass
+        /// <see cref="StoryRepairRegions.Unknown"/> for a repair nobody has
+        /// measured and it falls over the whole room, which is honest rather
+        /// than pretty: guessing a corner would put the sparkles somewhere
+        /// nothing happened.
+        /// </summary>
+        public void PlayRoyal(Rect region, float width, float height)
+        {
+            _royal = true;
+            _region = region;
+            _width = Mathf.Max(1f, width);
+            _height = Mathf.Max(1f, height);
+            _emitting = true;
+            _emitAccumulator = 0f;
+
+            // Denser than any of the work effects, and denser still on a small
+            // region: what reads as a shower over a doorway reads as a drizzle
+            // over a whole courtyard. Clamped so a hairline region does not try
+            // to outrun the pool.
+            float area = Mathf.Clamp(region.width * region.height, 0.02f, 1f);
+            _rate = Mathf.Lerp(260f, 150f, area);
         }
 
         public void Stop()
@@ -163,6 +207,13 @@ namespace JellyGarden.Scripts.Story
             if (mote == null) return;
 
             float w = _width, h = _height;
+
+            if (_royal)
+            {
+                EmitRoyal(mote, w, h);
+                return;
+            }
+
             Vector2 spawn;
             Vector2 velocity;
             Vector2 gravity = Vector2.zero;
@@ -273,6 +324,7 @@ namespace JellyGarden.Scripts.Story
                     break;
             }
 
+            mote.Image.sprite = Dot();
             mote.Rect.anchoredPosition = spawn;
             mote.Rect.localRotation = Quaternion.identity;
             mote.Rect.sizeDelta = Vector2.one * size;
@@ -282,6 +334,60 @@ namespace JellyGarden.Scripts.Story
             mote.Age = 0f;
             mote.Size = size;
             mote.Spin = spin;
+            mote.Colour = colour;
+            mote.Image.color = new Color(colour.r, colour.g, colour.b, 0f);
+            mote.Alive = true;
+            mote.Rect.gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// One gold sparkle, somewhere in the changed region.
+        ///
+        /// Tuned off docs/royal-match/03-repair-in-place.jpg: four-point glints
+        /// in gold and white, most of them small with a few large ones through
+        /// them, drifting up and out from where the work is rather than falling.
+        /// They rise because the repair is something arriving; dust and debris
+        /// are the effects that fall, and those belong to the work types.
+        /// </summary>
+        private void EmitRoyal(Mote mote, float w, float h)
+        {
+            // The region is in the room's space, origin bottom-left. Anchored
+            // positions are measured from the middle of the room, so a spawn is
+            // the point inside the region, less half the room.
+            float x = (_region.x + Random.value * _region.width - 0.5f) * w;
+            float y = (_region.y + Random.value * _region.height - 0.5f) * h;
+
+            // Big glints are rare, and they are what makes the shower read as
+            // gold rather than as a haze. A flat size range gives an even fog.
+            // Large glints are what make this read as gold rather than as
+            // dust caught in the light. The first pass ran them at 18% and a
+            // twentieth of the room across, and on a bright room — which most
+            // of ours are once repaired — the whole effect disappeared into the
+            // wallpaper. They are nearly a third of the shower now, and the big
+            // ones are a seventh of the room across.
+            bool big = Random.value < 0.30f;
+            float size = big
+                ? Random.Range(w * 0.085f, w * 0.150f)
+                : Random.Range(w * 0.028f, w * 0.060f);
+
+            // Warm gold at the small end, near-white at the large end: the
+            // brightest glints in the reference have burnt out to white.
+            Color colour = big
+                ? Color.Lerp(new Color(1f, 0.94f, 0.76f), Color.white, Random.value)
+                : Color.Lerp(new Color(1f, 0.80f, 0.30f), new Color(1f, 0.93f, 0.62f),
+                    Random.value);
+
+            mote.Image.sprite = Spark();
+            mote.Rect.anchoredPosition = new Vector2(x, y);
+            mote.Rect.localRotation = Quaternion.Euler(0f, 0f, Random.Range(0f, 90f));
+            mote.Rect.sizeDelta = Vector2.one * size;
+            mote.Velocity = new Vector2(Random.Range(-w * 0.05f, w * 0.05f),
+                Random.Range(h * 0.02f, h * 0.14f));
+            mote.Gravity = Vector2.zero;
+            mote.Life = Random.Range(0.45f, 0.95f);
+            mote.Age = 0f;
+            mote.Size = size;
+            mote.Spin = Random.Range(-40f, 40f);
             mote.Colour = colour;
             mote.Image.color = new Color(colour.r, colour.g, colour.b, 0f);
             mote.Alive = true;
@@ -347,6 +453,63 @@ namespace JellyGarden.Scripts.Story
                 new Vector2(0.5f, 0.5f), 100f);
             _dot.hideFlags = HideFlags.HideAndDontSave;
             return _dot;
+        }
+
+        /// <summary>
+        /// A four-point glint: a bright core with a thin cross of light out of
+        /// it. Drawn rather than imported so it costs no asset and no atlas.
+        ///
+        /// The shape is what separates a sparkle from a haze. The same effect
+        /// with round dots reads as smoke lit gold; the cross is the whole
+        /// reason it reads as something catching the light.
+        /// </summary>
+        private static Sprite Spark()
+        {
+            if (_spark != null) return _spark;
+
+            const int size = 64;
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                hideFlags = HideFlags.HideAndDontSave,
+                wrapMode = TextureWrapMode.Clamp
+            };
+
+            var pixels = new Color32[size * size];
+            float centre = (size - 1) * 0.5f;
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = (x - centre) / centre;
+                    float dy = (y - centre) / centre;
+                    float ax = Mathf.Abs(dx);
+                    float ay = Mathf.Abs(dy);
+
+                    // The core: a small, hard-falling dot.
+                    float core = Mathf.Clamp01(1f - Mathf.Sqrt(dx * dx + dy * dy) * 3.4f);
+                    core *= core;
+
+                    // The arms: bright along an axis, pinching to nothing at the
+                    // tips. Each arm is the length along it times how close the
+                    // pixel is to that axis, raised so the edge is not a band.
+                    float horizontal = Mathf.Clamp01(1f - ax) * Mathf.Clamp01(1f - ay * 9f);
+                    float vertical = Mathf.Clamp01(1f - ay) * Mathf.Clamp01(1f - ax * 9f);
+                    float arms = Mathf.Max(horizontal, vertical);
+                    arms *= arms * arms;
+
+                    float a = Mathf.Clamp01(core + arms * 0.85f);
+                    pixels[y * size + x] = new Color(1f, 1f, 1f, a);
+                }
+            }
+
+            texture.SetPixels32(pixels);
+            texture.Apply();
+
+            _spark = Sprite.Create(texture, new Rect(0f, 0f, size, size),
+                new Vector2(0.5f, 0.5f), 100f);
+            _spark.hideFlags = HideFlags.HideAndDontSave;
+            return _spark;
         }
     }
 }

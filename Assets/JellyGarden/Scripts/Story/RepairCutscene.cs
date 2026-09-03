@@ -50,10 +50,10 @@ namespace JellyGarden.Scripts.Story
         private const float FadeTime = 0.35f;
 
         private const float RoomWorkStart = 0.0f;
-        private const float RoomWorkEnd = 0.45f;
-        private const float RoomRevealAt = 0.60f;
-        private const float RoomStarAt = 1.10f;
-        private const float RoomEndAt = 1.50f;
+        private const float RoomWorkEnd = 0.70f;
+        private const float RoomRevealAt = 0.80f;
+        private const float RoomStarAt = 1.35f;
+        private const float RoomEndAt = 1.85f;
         private const float RoomFadeTime = 0.12f;
 
         // The chosen map, so Run does not branch on _overRoom eight times.
@@ -361,9 +361,20 @@ namespace JellyGarden.Scripts.Story
                 {
                     workStarted = true;
                     Rect stage = _stage.rect;
-                    _vfx.Play(work, stage.width, stage.height);
-                    if (!_overRoom)
+
+                    if (_overRoom)
                     {
+                        // Gold sparkles on the thing being repaired. Which part
+                        // of the room that is comes off a pixel diff of the
+                        // room's own artwork, taken offline; where nobody has
+                        // measured it, the region is the whole room and the
+                        // sparkles fall over all of it rather than guess.
+                        _vfx.PlayRoyal(StoryRepairRegions.For(areaId, stateAfter),
+                            stage.width, stage.height);
+                    }
+                    else
+                    {
+                        _vfx.Play(work, stage.width, stage.height);
                         _line.text = RepairWork.WorkingLine(work);
                         _line.color = new Color(1f, 0.93f, 0.78f, 0.75f);
                     }
@@ -391,14 +402,25 @@ namespace JellyGarden.Scripts.Story
 
                 if (flashed)
                 {
-                    // A quick bloom, then the repaired state wipes across. The
-                    // clean layer is drawn above the neglect wash, so the wipe
-                    // reads as grime leaving even when both layers are the same
-                    // picture.
                     float since = t - _revealAt;
+
+                    // A bloom as it lands. Half as bright and half as long over a
+                    // room, because there it is a flash across a screen the
+                    // player is standing on rather than a cut in a film: at 0.55
+                    // the whole home screen blinks white, which reads as a bug.
+                    float peak = _overRoom ? 0.24f : 0.55f;
+                    float span = _overRoom ? 0.22f : 0.45f;
                     _flash.color = new Color(1f, 0.96f, 0.86f,
-                        Mathf.Clamp01(1f - since / 0.45f) * 0.55f);
-                    _after.fillAmount = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(since / 0.55f));
+                        Mathf.Clamp01(1f - since / span) * peak);
+
+                    // Then the repaired state wipes across — on the OWN-SCREEN
+                    // path only. Over a room the room's own view crossfades the
+                    // new layer in under the sparkles, which is what Royal Match
+                    // does and what a wipe across a picture the player is
+                    // standing in front of would fight.
+                    if (!_overRoom)
+                        _after.fillAmount =
+                            Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(since / 0.55f));
                 }
 
                 if (!lineShown && !_overRoom && t >= LineAt)
