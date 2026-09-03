@@ -553,6 +553,20 @@ namespace JellyGarden.Scripts.Story
         {
             RectTransform root = CreateRect(name, parent);
 
+            // A painted chest where one exists. The drawn one below is six
+            // rounded rectangles and a dot, which was fine when everything
+            // around it was drawn too and is not fine sitting next to a painted
+            // nav bar — it is kept so that deleting the art gives it back, and
+            // so `panel` still means something on a build with no art in it.
+            Sprite art = StoryArt.Load("icon_chest");
+            if (art != null)
+            {
+                Image painted = CreateImage("Art", root, art, Color.white);
+                painted.preserveAspect = true;
+                Stretch(painted.rectTransform);
+                return root;
+            }
+
             Image lid = CreateImage("Lid", root, RoundedSprite(44), RoyalPurple);
             lid.type = Image.Type.Sliced;
             FrameRect(lid.rectTransform, 0f, 0.44f, 1f, 1f);
@@ -1169,9 +1183,16 @@ namespace JellyGarden.Scripts.Story
             TopAnchored(root, 42f, 140f, 30f);
             parts.Root = root;
 
-            parts.Coins = Pill(root, "Coins", 0f, 0.34f, RoyalGold, CoinsText());
-            parts.Lives = Pill(root, "Lives", 0.355f, 0.685f, RoyalRed, LivesText());
-            parts.Stars = Pill(root, "Stars", 0.70f, 0.885f, RoyalGold, StarsText());
+            // The gaps between the pills are wider than the reference's, because
+            // the icon overhangs its pill's left end and has to clear the pill
+            // before it — an overhang landing on the neighbour's cream reads as
+            // one broken bar rather than three stats.
+            parts.Coins = Pill(root, "Coins", 0f, 0.33f, RoyalGold, CoinsText(),
+                "icon_coin");
+            parts.Lives = Pill(root, "Lives", 0.36f, 0.68f, RoyalRed, LivesText(),
+                "icon_heart");
+            parts.Stars = Pill(root, "Stars", 0.71f, 0.885f, RoyalGold, StarsText(),
+                "icon_star");
 
             RectTransform gear = CreateRect("Settings", root);
             gear.anchorMin = new Vector2(0.905f, 0f);
@@ -1188,15 +1209,30 @@ namespace JellyGarden.Scripts.Story
             if (onSettings != null) settings.onClick.AddListener(onSettings);
             parts.Settings = settings;
 
-            Image gearFace = CreateImage("Gear", gear, GearSprite, RoyalCream);
-            Stretch(gearFace.rectTransform, 26f);
+            // The painted gear is a lit gold object and carries its own colour;
+            // the drawn one is a flat silhouette that has to be tinted. The disc
+            // stays under both, so the button keeps its hit shape either way.
+            Sprite gearArt = StoryArt.Load("icon_gear");
+            Image gearFace = CreateImage("Gear", gear,
+                gearArt != null ? gearArt : GearSprite,
+                gearArt != null ? Color.white : RoyalCream);
+            gearFace.preserveAspect = gearArt != null;
+            Stretch(gearFace.rectTransform, gearArt != null ? 14f : 26f);
 
             return parts;
         }
 
-        /// <summary>One rounded cream pill with an icon disc on its left end.</summary>
+        /// <summary>
+        /// One rounded cream pill with an icon on its left end.
+        ///
+        /// The icon is a painted object where one has been made for that key,
+        /// and a flat coloured disc where one has not — which is what the coin
+        /// and the heart were until now, and is why the bar read as placeholder
+        /// UI next to the reference. The fallback is kept rather than removed so
+        /// that a missing file is a plainer bar, never an empty one.
+        /// </summary>
         private static Text Pill(RectTransform parent, string name, float minX, float maxX,
-            Color iconColour, string value)
+            Color iconColour, string value, string iconKey)
         {
             RectTransform rect = CreateRect(name, parent);
             rect.anchorMin = new Vector2(minX, 0.06f);
@@ -1216,24 +1252,26 @@ namespace JellyGarden.Scripts.Story
             RectTransform textRect = text.rectTransform;
             textRect.anchorMin = Vector2.zero;
             textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = new Vector2(96f, 0f);
+            textRect.offsetMin = new Vector2(104f, 0f);
             textRect.offsetMax = new Vector2(-14f, 0f);
             text.fontStyle = FontStyle.Bold;
 
             // The icon overhangs the pill's left end, as in the reference.
-            Image icon = CreateImage("Icon", rect, CircleSprite, iconColour);
+            Sprite art = StoryArt.Load(iconKey);
+            Image icon = CreateImage("Icon", rect,
+                art != null ? art : CircleSprite,
+                art != null ? Color.white : iconColour);
+            icon.preserveAspect = art != null;
             RectTransform iconRect = icon.rectTransform;
             iconRect.anchorMin = new Vector2(0f, 0.5f);
             iconRect.anchorMax = new Vector2(0f, 0.5f);
             iconRect.pivot = new Vector2(0.5f, 0.5f);
-            iconRect.sizeDelta = new Vector2(118f, 118f);
-            iconRect.anchoredPosition = new Vector2(6f, 0f);
-
-            if (name == "Stars")
-            {
-                icon.sprite = StarSprite != null ? StarSprite : CircleSprite;
-                if (StarSprite != null) icon.color = Color.white;
-            }
+            // 112 across, sat 34 in from the pill's left edge, so it overhangs by
+            // 22. The bar is inset 30 from the screen, and the first pill's icon
+            // is the one that would fall off the left edge — at the old 118 and 6
+            // it went 23 points past it and the coin came back with a flat side.
+            iconRect.sizeDelta = new Vector2(112f, 112f);
+            iconRect.anchoredPosition = new Vector2(34f, 0f);
 
             return text;
         }
@@ -1459,19 +1497,26 @@ namespace JellyGarden.Scripts.Story
             float mid = (min + max) * 0.5f;
             float aspect;
 
+            // A painted icon is square and carries its own proportions inside
+            // that square, so it gets an aspect of 1 and a little less height —
+            // the drawn glyphs are built to fill their box exactly and would
+            // look shrunken at the same numbers, and the painted ones would
+            // look stretched at theirs.
+            Sprite art = NavArt(icon);
+
             if (raised)
             {
                 // From 0.36 of the bar's height to half a bar-height above its top
                 // edge, which is where the reference's castle breaks the gold rim.
-                glyph.anchorMin = new Vector2(mid, 0.36f);
-                glyph.anchorMax = new Vector2(mid, 1.50f);
-                aspect = 90f / 166f;
+                glyph.anchorMin = new Vector2(mid, art != null ? 0.42f : 0.36f);
+                glyph.anchorMax = new Vector2(mid, art != null ? 1.44f : 1.50f);
+                aspect = art != null ? 1f : 90f / 166f;
             }
             else
             {
-                glyph.anchorMin = new Vector2(mid, 0.07f);
-                glyph.anchorMax = new Vector2(mid, 0.82f);
-                aspect = 81f / 104f;
+                glyph.anchorMin = new Vector2(mid, art != null ? 0.12f : 0.07f);
+                glyph.anchorMax = new Vector2(mid, art != null ? 0.78f : 0.82f);
+                aspect = art != null ? 1f : 81f / 104f;
             }
 
             glyph.pivot = new Vector2(0.5f, 0.5f);
@@ -1534,8 +1579,36 @@ namespace JellyGarden.Scripts.Story
             for (int i = 0; i < graphics.Length; i++) graphics[i].raycastTarget = false;
         }
 
+        /// <summary>
+        /// The painted icon for a tab, or null where nobody has painted one.
+        ///
+        /// Resolved by name from Resources/Story/Art like the rest of the story's
+        /// art, so a tab is re-skinned by dropping a file in — and deleting the
+        /// files gives the drawn glyphs straight back.
+        /// </summary>
+        private static Sprite NavArt(NavIcon icon)
+        {
+            switch (icon)
+            {
+                case NavIcon.Areas: return StoryArt.Load("nav_areas");
+                case NavIcon.Leaderboard: return StoryArt.Load("nav_leaderboard");
+                case NavIcon.Home: return StoryArt.Load("nav_home");
+                case NavIcon.Team: return StoryArt.Load("nav_team");
+                default: return StoryArt.Load("nav_cards");
+            }
+        }
+
         private static void DrawNavIcon(RectTransform root, NavIcon icon)
         {
+            Sprite art = NavArt(icon);
+            if (art != null)
+            {
+                Image painted = CreateImage("Art", root, art, Color.white);
+                painted.preserveAspect = true;
+                Stretch(painted.rectTransform);
+                return;
+            }
+
             switch (icon)
             {
                 case NavIcon.Areas: DrawNavBook(root); break;

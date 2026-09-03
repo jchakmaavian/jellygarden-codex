@@ -32,7 +32,14 @@ python3 tools/item_skin.py          # painted jewels  -> the 27 board sprites
 python3 tools/item_skin_flat.py     # flat minimal set -> the 27 board sprites
 python3 tools/booster_skin.py       # -> the 14 booster icons
 python3 tools/brand_skin.py         # -> logo, title, loading, map tiles, ivy blocker
+python3 tools/splash_build.py       # -> the King Leo wordmark, splash art, display face
+python3 tools/icons_build.py        # -> the 11 HUD, nav and chest icons
 ```
+
+`splash_build.py` and `icons_build.py` are additions rather than reskins: they
+import into `Resources/Story/Art`, where `StoryArt.Load` finds them by name and
+the drawn fallbacks in `StoryUi` step aside. Deleting what they wrote gives the
+drawn primitives straight back.
 
 `item_skin.py` and `item_skin_flat.py` write the same 27 files, so run one or
 the other, never both. Each script takes `--preview` and writes a contact sheet
@@ -64,7 +71,7 @@ yellow) because the explosion particle textures are per item index — a green
 piece that shattered into red sparks would be the VFX regressing.
 
 Masters live in `tools/art/`: `pieces/` and `brand/` and `map/` for the painted
-set, `flat/` for the minimal one. Most of the painted masters are the story
+set, `flat/` for the minimal one, `icons/` for the HUD and nav sheets. Most of the painted masters are the story
 prototype's own art at
 `/Users/avian/Desktop/story/game/unity/Assets/Resources/Art`, already paid for.
 

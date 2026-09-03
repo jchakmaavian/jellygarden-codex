@@ -293,7 +293,7 @@ These primitives carry every screen:
 | `TopBar(parent, onSettings)` | `TopBarParts`, refreshed by `RefreshTopBar` |
 | `CreamCard(name, parent, radius)` | the cream sub-card every section sits on |
 | `ProgressBar(name, parent)` | `ProgressBarParts` — `Root`, `Fill`, `Label`, `Fraction`; pointed at a count by `SetProgress(parts, done, total)` |
-| `ChestIcon(name, parent[, panel])` | the purple chest that ends a progress bar; `panel` recolours its inner faces |
+| `ChestIcon(name, parent[, panel])` | the chest that ends a progress bar — the painted `icon_chest` where it is on disk, else a drawn purple one whose inner faces `panel` recolours |
 | `GoldButton(name, parent, onClick)` | the gold secondary card; fill it via `ContentOf(button)` |
 | `CountBadge(name, parent, count)` | the red call-to-action badge, written by `SetCountBadge` |
 | `TaskIcon(name, parent, areaId, task)` | the object on the left of a task row |
@@ -358,7 +358,8 @@ Rules that are easy to get wrong:
   story's repair order is enforced inside `AreaScreen.OnRepair` against
   `StoryProgress.NextTask`, not by which buttons happen to exist.
 - **A drawn icon needs its interior to differ from what it is drawn on.**
-  `ChestIcon` is a purple frame around gold panels, which reads on the area
+  (Historical: `ChestIcon` now prefers painted art, and this bit it before.)
+  The drawn chest is a purple frame around gold panels, which reads on the area
   page's cream card and collapses to two empty purple rings on the home
   screen's gold one — the panels *were* the card. That is why it takes a
   `panel` colour. Any primitive made of nested flat rects has this failure
