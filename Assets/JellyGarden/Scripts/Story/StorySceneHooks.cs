@@ -40,6 +40,7 @@ namespace JellyGarden.Scripts.Story
             // Each of these is a no-op when the thing it needs is not in the
             // scene, so this is safe to run on the menu as well as the game.
             StoryMusic.Install();
+            StoryLevelFullBleed.Install();
             StoryBoardTheme.Install();
             StoryMapLabels.Install();
             StoryOneStar.Install();

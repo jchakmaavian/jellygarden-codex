@@ -25,6 +25,21 @@ namespace JellyGarden.Scripts.Story
         public string BoardBackdrop = string.Empty;
         public int KitBackdropIndex;
         public Color SquareTint = Color.white;
+
+        /// <summary>
+        /// The colour the board is drawn on. The kit's cell sprite is flat black
+        /// at half alpha, so the board has never had a ground of its own — it
+        /// showed the backdrop through a dark checker. This is that ground, laid
+        /// under the cells, and the checker still reads on top of it.
+        ///
+        /// Because the cells sit over it at alpha 0.50 and 0.65, roughly half of
+        /// this reaches the eye. The values in themes.json are therefore lighter
+        /// than the board looks.
+        /// </summary>
+        public Color BoardFill = Color.clear;
+
+        /// <summary>False when the arc names no fill, which leaves the kit's look.</summary>
+        public bool HasBoardFill { get { return BoardFill.a > 0f; } }
     }
 
     public static class StoryTheme
@@ -48,6 +63,7 @@ namespace JellyGarden.Scripts.Story
             foreach (JsonValue node in root["themes"].Items)
             {
                 JsonValue tint = node["squareTint"];
+                JsonValue fill = node["boardFill"];
                 var theme = new ArcTheme
                 {
                     Arc = node["arc"].AsInt(),
@@ -56,7 +72,13 @@ namespace JellyGarden.Scripts.Story
                     BoardBackdrop = node["boardBackdrop"].AsString(),
                     KitBackdropIndex = node["kitBackdropIndex"].AsInt(),
                     SquareTint = new Color(
-                        tint[0].AsFloat(1f), tint[1].AsFloat(1f), tint[2].AsFloat(1f), 1f)
+                        tint[0].AsFloat(1f), tint[1].AsFloat(1f), tint[2].AsFloat(1f), 1f),
+                    // An arc with no boardFill keeps Color.clear, and the board
+                    // is drawn the way the kit draws it.
+                    BoardFill = fill.Count < 3
+                        ? Color.clear
+                        : new Color(
+                            fill[0].AsFloat(0f), fill[1].AsFloat(0f), fill[2].AsFloat(0f), 1f)
                 };
                 if (theme.Arc > 0) _byArc[theme.Arc] = theme;
             }
