@@ -77,6 +77,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 ArcBeatsHaveScenesAndPlayThemOnce();
                 OpeningPlaysAfterTheFirstWinAndOnlyOnce();
                 GeneratedArtIsWiredUp();
+                RepairRegionsPointAtTheThingRepaired();
                 SabotageStartsWhereTheStorySaysItDoes();
                 TheGameIsFree();
                 RepairsAreClassifiedByWhatTheyAre();
@@ -600,6 +601,44 @@ namespace JellyGarden.Scripts.Story.Editor
             Expect(StoryProgress.OpeningSeen, "the opening is marked seen");
             Expect(!OpeningSequence.PlayIfDue(1, null),
                 "the opening never plays a second time");
+        }
+
+        /// <summary>
+        /// The repair sparkles sit on the thing being repaired, and the table
+        /// that says where that is comes off a pixel diff of the room's own
+        /// artwork (tools/repair_regions_build.py). Two things can break it
+        /// silently: the table failing to ship, and a rect that has drifted
+        /// outside the room — an emitter placed off-screen is a repair with no
+        /// effect at all, which looks exactly like a repair that did not fire.
+        /// </summary>
+        private static void RepairRegionsPointAtTheThingRepaired()
+        {
+            StoryRepairRegions.Forget();
+
+            Expect(StoryRepairRegions.Count > 0,
+                "the repair region table shipped and parsed");
+
+            // Area 1's third repair is the banner over the gate: a tall, narrow
+            // thing in the middle of a wide picture. If the diff ever starts
+            // returning the whole room this is the one that notices.
+            Expect(StoryRepairRegions.IsKnown(1, 3),
+                "area 1's third repair has a measured region");
+
+            Rect banner = StoryRepairRegions.For(1, 3);
+            Expect(banner.width < 0.9f && banner.height < 0.98f,
+                "area 1 repair 3 is a region, not the whole room");
+            Expect(banner.xMin >= 0f && banner.yMin >= 0f
+                   && banner.xMax <= 1f && banner.yMax <= 1f,
+                "area 1 repair 3 stays inside the room");
+
+            // An area nobody has measured must say so rather than invent a
+            // corner: the caller spreads the effect over the whole room there.
+            Expect(StoryRepairRegions.For(140, 1) == StoryRepairRegions.Unknown,
+                "an unmeasured repair reports Unknown, not a guess");
+
+            Debug.Log(string.Format(
+                "[Story] repair regions: {0} measured, area 1 repair 3 at {1}.",
+                StoryRepairRegions.Count, banner));
         }
 
         private static void GeneratedArtIsWiredUp()
