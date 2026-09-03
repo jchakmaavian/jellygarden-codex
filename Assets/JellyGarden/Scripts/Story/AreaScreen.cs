@@ -797,7 +797,56 @@ namespace JellyGarden.Scripts.Story
                 return;
             }
 
+            // The star flies to the counter, and the repair starts anyway.
+            //
+            // It was the other way round for one build — fly first, buy on
+            // arrival — and it broke the shell self-test outright: that test
+            // presses Do It and immediately asks whether the repair was bought,
+            // and for 0.38 seconds it had not been. A press that does not do the
+            // thing until an animation finishes is a press with lag in it, which
+            // is the same complaint from the player's side. The flight is
+            // feedback about a purchase that already happened.
+            FlySpentStar(taskIndex);
             StoryRepair.Perform(_areaId, taskIndex, Refresh);
+        }
+
+        // How long the star takes to reach the counter, and how high it arcs on
+        // the way as a fraction of the distance it covers. A straight line reads
+        // as a sprite being dragged; the arc is what makes it read as thrown.
+        private const float StarFlightSeconds = 0.38f;
+        private const float StarFlightArc = 0.22f;
+
+        /// <summary>
+        /// Sends the spent star from the row that was pressed up to the counter
+        /// it came out of. Purely feedback: the repair is bought by the caller
+        /// whether or not this draws anything.
+        ///
+        /// It flies on a canvas of its own rather than on this screen's, because
+        /// the repair takes this screen down — counter included — within the
+        /// same frame. A star parented here would vanish on the first frame of
+        /// its own flight, and one aimed at the counter's rect would be aiming
+        /// at something already deactivated. Both ends are read as screen
+        /// positions BEFORE any of that happens.
+        /// </summary>
+        private void FlySpentStar(int taskIndex)
+        {
+            if (!Application.isPlaying) return;
+
+            RectTransform from = null;
+            for (int i = 0; i < _rows.Count && from == null; i++)
+                if (_rows[i].TaskIndex == taskIndex && _rows[i].Repair != null)
+                    from = _rows[i].Repair.GetComponent<RectTransform>();
+
+            RectTransform to = _topBar != null && _topBar.Stars != null
+                ? _topBar.Stars.rectTransform.parent as RectTransform
+                : null;
+
+            if (from == null || to == null) return;
+
+            StoryStarFlight.Play(
+                RectTransformUtility.WorldToScreenPoint(null, from.position),
+                RectTransformUtility.WorldToScreenPoint(null, to.position),
+                StarFlightSeconds, StarFlightArc);
         }
 
         private void OnReplayScene()
