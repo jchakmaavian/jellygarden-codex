@@ -27,8 +27,19 @@ namespace JellyGarden.Scripts.Story
 {
     public sealed class RepairCutscene : MonoBehaviour
     {
-        // Beat times, in seconds from the start.
-        private const float PushIn = 0.0f;
+        // Two beat maps, because this plays two different things.
+        //
+        // ON A ROOM it is an animation and it is short. Royal Match's own repair
+        // is over in well under two seconds — the sparkles are already falling
+        // as the task list leaves, the room has changed before they land, and
+        // the player is back on the button. An area costs eight stars, so the
+        // repair is watched eight times; four seconds of it is four seconds the
+        // eighth time too.
+        //
+        // ON ITS OWN SCREEN it is still a cutscene, and keeps the slower map it
+        // was written with: there is nothing else on screen to look at, the
+        // title and the story's line have to be read, and it is not a beat in a
+        // screen the player is already standing on.
         private const float TitleIn = 0.3f;
         private const float WorkStart = 0.7f;
         private const float WorkEnd = 2.4f;
@@ -36,8 +47,22 @@ namespace JellyGarden.Scripts.Story
         private const float LineAt = 2.9f;
         private const float StarAt = 3.6f;
         private const float EndAt = 4.2f;
-
         private const float FadeTime = 0.35f;
+
+        private const float RoomWorkStart = 0.0f;
+        private const float RoomWorkEnd = 0.45f;
+        private const float RoomRevealAt = 0.60f;
+        private const float RoomStarAt = 1.10f;
+        private const float RoomEndAt = 1.50f;
+        private const float RoomFadeTime = 0.12f;
+
+        // The chosen map, so Run does not branch on _overRoom eight times.
+        private float _workStart;
+        private float _workEnd;
+        private float _revealAt;
+        private float _starAt;
+        private float _endAt;
+        private float _fadeTime;
 
         // Where the stage sits when this plays on its own black screen — the map
         // and the kit's own scenes have no room of theirs to play over.
@@ -70,6 +95,17 @@ namespace JellyGarden.Scripts.Story
         private bool _skipped;
         private bool _sameImage;
         private bool _revealed;
+
+        /// <summary>
+        /// Whether this repair is playing on a room the player can already see.
+        ///
+        /// It is the difference between the two things this class does. Over a
+        /// room it is an ANIMATION: no words, no black, over in a moment, and
+        /// the room never moves. On its own screen it is still a cutscene,
+        /// because there is nothing else on screen to carry it — the map and the
+        /// kit's own scenes have no room of theirs to play over.
+        /// </summary>
+        private bool _overRoom;
         private RectTransform _room;
         private Action _onDone;
 
@@ -245,6 +281,14 @@ namespace JellyGarden.Scripts.Story
             // the two to disagree by a pixel, and the black behind it is exactly
             // the separate screen this is not supposed to be.
             bool overRoom = _room != null;
+            _overRoom = overRoom;
+
+            _workStart = overRoom ? RoomWorkStart : WorkStart;
+            _workEnd = overRoom ? RoomWorkEnd : WorkEnd;
+            _revealAt = overRoom ? RoomRevealAt : RevealAt;
+            _starAt = overRoom ? RoomStarAt : StarAt;
+            _endAt = overRoom ? RoomEndAt : EndAt;
+            _fadeTime = overRoom ? RoomFadeTime : FadeTime;
             _before.enabled = !overRoom;
             _damage.enabled = !overRoom;
             _after.enabled = !overRoom;
@@ -254,8 +298,14 @@ namespace JellyGarden.Scripts.Story
             if (overRoom) StageOverRoom(_room);
             else StageOnItsOwnScreen();
 
-            _title.text = task.Label;
+            // Royal Match writes nothing over a repair. The reference capture of
+            // one mid-play has the room, the sparkles and the buttons, and not a
+            // word anywhere — the player watches it, they do not read it. The
+            // task's name was already read on the row they pressed.
+            _title.text = _overRoom ? string.Empty : task.Label;
+            _title.color = new Color(1f, 1f, 1f, 0f);
             _line.text = string.Empty;
+            _skipHint.enabled = !_overRoom;
             _star.gameObject.SetActive(false);
             _flash.color = new Color(1f, 0.96f, 0.86f, 0f);
 
@@ -285,42 +335,51 @@ namespace JellyGarden.Scripts.Story
                 float t = StoryClock.Now - started;
 
                 // Fade the whole thing in, then hold.
-                _group.alpha = Mathf.Clamp01(t / FadeTime);
+                _group.alpha = Mathf.Clamp01(t / _fadeTime);
 
-                // A slow push in. Small — 4% — because a big zoom on a still
-                // image reads as a mistake rather than a camera move. Over a room
-                // the stage draws nothing, so it is the room itself that is pushed
-                // — the same camera move, on the picture the player can see.
-                float push = 1f + 0.04f * Mathf.Clamp01(t / EndAt);
-                _stage.localScale = new Vector3(push, push, 1f);
-                if (_room != null) _room.localScale = new Vector3(push, push, 1f);
+                // A slow push in on the own-screen path. Small — 4% — because a
+                // big zoom on a still image reads as a mistake rather than a
+                // camera move.
+                //
+                // Over a room there is no push at all. The room is the screen the
+                // player is standing on, not a shot; moving it is the cut this
+                // whole change exists to remove, and at a second and a half the
+                // move would read as a jolt rather than a camera.
+                if (!_overRoom)
+                {
+                    float push = 1f + 0.04f * Mathf.Clamp01(t / _endAt);
+                    _stage.localScale = new Vector3(push, push, 1f);
+                }
 
-                if (t >= TitleIn)
+                if (!_overRoom && t >= TitleIn)
                 {
                     float fade = Mathf.Clamp01((t - TitleIn) / 0.35f);
                     _title.color = new Color(1f, 1f, 1f, fade);
                 }
 
-                if (!workStarted && t >= WorkStart)
+                if (!workStarted && t >= _workStart)
                 {
                     workStarted = true;
                     Rect stage = _stage.rect;
                     _vfx.Play(work, stage.width, stage.height);
-                    _line.text = RepairWork.WorkingLine(work);
-                    _line.color = new Color(1f, 0.93f, 0.78f, 0.75f);
+                    if (!_overRoom)
+                    {
+                        _line.text = RepairWork.WorkingLine(work);
+                        _line.color = new Color(1f, 0.93f, 0.78f, 0.75f);
+                    }
                 }
 
                 // The neglect lifts while the work happens.
-                if (t >= WorkStart)
+                if (t >= _workStart)
                 {
-                    float p = Mathf.Clamp01((t - WorkStart) / (WorkEnd - WorkStart));
+                    float p = Mathf.Clamp01((t - _workStart) / (_workEnd - _workStart));
                     float damage = Mathf.Lerp(damageBefore, damageAfter, p);
                     _damage.color = new Color(0.05f, 0.07f, 0.05f, damage);
                 }
 
-                if (t >= WorkEnd && workStarted) _vfx.Stop();
+                if (t >= _workEnd && workStarted) _vfx.Stop();
 
-                if (!flashed && t >= RevealAt)
+                if (!flashed && t >= _revealAt)
                 {
                     flashed = true;
                     StorySfx.PlayRepair(false);
@@ -336,13 +395,13 @@ namespace JellyGarden.Scripts.Story
                     // clean layer is drawn above the neglect wash, so the wipe
                     // reads as grime leaving even when both layers are the same
                     // picture.
-                    float since = t - RevealAt;
+                    float since = t - _revealAt;
                     _flash.color = new Color(1f, 0.96f, 0.86f,
                         Mathf.Clamp01(1f - since / 0.45f) * 0.55f);
                     _after.fillAmount = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(since / 0.55f));
                 }
 
-                if (!lineShown && t >= LineAt)
+                if (!lineShown && !_overRoom && t >= LineAt)
                 {
                     lineShown = true;
 
@@ -354,7 +413,7 @@ namespace JellyGarden.Scripts.Story
                     _line.color = new Color(1f, 0.93f, 0.78f, 1f);
                 }
 
-                if (!starShown && t >= StarAt)
+                if (!starShown && t >= _starAt)
                 {
                     starShown = true;
                     _star.gameObject.SetActive(true);
@@ -363,7 +422,7 @@ namespace JellyGarden.Scripts.Story
                 if (starShown)
                 {
                     // The star rises and fades — the thing the player spent.
-                    float since = Mathf.Clamp01((t - StarAt) / (EndAt - StarAt));
+                    float since = Mathf.Clamp01((t - _starAt) / (_endAt - _starAt));
                     _star.rectTransform.anchoredPosition =
                         new Vector2(0f, 120f + 160f * since);
                     _star.color = new Color(StoryUi.Gold.r, StoryUi.Gold.g, StoryUi.Gold.b,
@@ -371,7 +430,7 @@ namespace JellyGarden.Scripts.Story
                     _star.rectTransform.localScale = Vector3.one * (1f + 0.4f * since);
                 }
 
-                if (t >= EndAt) break;
+                if (t >= _endAt) break;
                 yield return null;
             }
 
@@ -400,9 +459,9 @@ namespace JellyGarden.Scripts.Story
             if (_skipped) _vfx.Clear();
 
             float started = StoryClock.Now;
-            while (StoryClock.Now - started < FadeTime)
+            while (StoryClock.Now - started < _fadeTime)
             {
-                _group.alpha = 1f - (StoryClock.Now - started) / FadeTime;
+                _group.alpha = 1f - (StoryClock.Now - started) / _fadeTime;
                 yield return null;
             }
 
