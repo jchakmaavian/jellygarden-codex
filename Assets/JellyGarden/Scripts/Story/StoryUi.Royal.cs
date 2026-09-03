@@ -98,6 +98,61 @@ namespace JellyGarden.Scripts.Story
 
         private static Sprite _circleSprite;
         private static Sprite _gearSprite;
+        private static Sprite _sheenSprite;
+
+        /// <summary>
+        /// A vertical ramp: white and part-opaque at the top, gone by the middle.
+        ///
+        /// uGUI cannot fill a rect with a gradient, so the way a flat button
+        /// stops looking flat has been to lay a second, lighter rect over its top
+        /// half — and that second rect has a hard bottom edge, which is the
+        /// two-tone banding this replaces. A ramp fades out instead of stopping,
+        /// so there is no edge anywhere on it.
+        ///
+        /// Laid over a rounded shape it needs that shape to clip it, or its own
+        /// square top corners show; the caller puts a Mask on the field beneath.
+        /// </summary>
+        public static Sprite SheenSprite
+        {
+            get
+            {
+                if (_sheenSprite == null) _sheenSprite = DrawSheen(64);
+                return _sheenSprite;
+            }
+        }
+
+        /// <summary>
+        /// The ramp itself. Four pixels wide because nothing varies across it;
+        /// the height is what carries the falloff, and it is squared so the
+        /// brightest part stays near the top edge rather than washing the middle.
+        /// </summary>
+        private static Sprite DrawSheen(int height)
+        {
+            const int width = 4;
+            var texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            texture.wrapMode = TextureWrapMode.Clamp;
+            texture.hideFlags = HideFlags.HideAndDontSave;
+
+            var pixels = new Color32[width * height];
+            for (int y = 0; y < height; y++)
+            {
+                // Texture rows run bottom-up; the sheen belongs at the top.
+                float down = 1f - (float)y / (height - 1);
+                float fall = Mathf.Clamp01(1f - down * 2.2f);
+                byte alpha = (byte)Mathf.RoundToInt(fall * fall * 255f);
+                for (int x = 0; x < width; x++)
+                    pixels[y * width + x] = new Color32(255, 255, 255, alpha);
+            }
+
+            texture.SetPixels32(pixels);
+            texture.Apply();
+
+            Sprite sprite = Sprite.Create(texture, new Rect(0f, 0f, width, height),
+                new Vector2(0.5f, 0.5f), 100f);
+            sprite.name = "StorySheen";
+            sprite.hideFlags = HideFlags.HideAndDontSave;
+            return sprite;
+        }
 
         /// <summary>A white filled circle, tinted by the caller.</summary>
         public static Sprite CircleSprite

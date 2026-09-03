@@ -34,7 +34,11 @@ namespace JellyGarden.Scripts.Story
             new Dictionary<string, string>
             {
                 { "logo", "splash_logo" },
-                { "main_menu_banner", "backdrop_castle" },
+                // The splash has a picture of its own rather than borrowing the
+                // arc's board backdrop, which was only ever standing in: that one
+                // is the ground a board is played on and is painted dark to suit
+                // it, which is the opposite of what a title screen wants.
+                { "main_menu_banner", "splash_background" },
             };
 
         private static bool _reported;
@@ -84,6 +88,15 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The marker child, so a second Install does not stack a second face.</summary>
         private const string DressedMarker = "StoryFace";
 
+        // The inlay, in reference points, outside in: a dark edge, the gold
+        // sitting inside it, then a bronze line where the gold meets the field.
+        private const float EdgeThickness = 3f;
+        private const float InlayThickness = 5f;
+        private const float BronzeThickness = 3f;
+
+        /// <summary>Where the button's centre sits, as a fraction up the screen.</summary>
+        private const float PlayHeightFrac = 0.245f;
+
         /// <summary>
         /// Turns the kit's blue candy Play button into the story's green one.
         ///
@@ -105,44 +118,85 @@ namespace JellyGarden.Scripts.Story
 
                 var rect = image.rectTransform;
 
-                // Base, face and gloss, the three layers that make GreenButton
-                // read as pressable. Built here rather than by calling
-                // GreenButton, which would make a whole new button.
-                image.sprite = StoryUi.RoundedSprite(28);
+                // Down onto the path.
+                //
+                // The kit put this button half way up a flat candy banner, where
+                // there was nothing behind it to collide with. The splash now has
+                // a castle, and that is exactly where its gate and towers are —
+                // the one part of the painting with detail in it. A quarter of the
+                // way up puts the button on the open lawn instead.
+                //
+                // A fraction of the canvas rather than a pixel offset, because the
+                // reference is a 9:19.5 phone and a 4:3 view hands this canvas far
+                // less height; a fixed offset that clears the castle on one lands
+                // back on it on the other.
+                rect.anchorMin = new Vector2(0.5f, PlayHeightFrac);
+                rect.anchorMax = new Vector2(0.5f, PlayHeightFrac);
+                rect.pivot = new Vector2(0.5f, 0.5f);
+                rect.anchoredPosition = Vector2.zero;
+
+                // The gold inlay, outside in.
+                //
+                // The button this replaces was three flat fills stacked on each
+                // other — dark base, lighter face, lighter gloss across the top
+                // half — and every boundary between them was a hard edge between
+                // two solid colours, so it read as three rectangles rather than
+                // one lit object. The gloss stopped dead across the middle,
+                // exactly where the eye lands to read the word.
+                //
+                // Here the gold runs INSIDE a dark edge rather than wrapping the
+                // button, so it reads as inlaid into the green instead of as a
+                // second rectangle around it, and the only light on the field is
+                // a ramp that fades out rather than stopping. No hard edge
+                // anywhere on the face.
+                image.sprite = StoryUi.RoundedSprite(30);
                 image.type = Image.Type.Sliced;
-                image.color = StoryUi.RoyalGreenDark;
+                image.color = StoryUi.RoyalTealInk;
 
-                Image face = StoryUi.CreateImage(DressedMarker, rect,
-                    StoryUi.RoundedSprite(28), StoryUi.RoyalGreen);
-                face.type = Image.Type.Sliced;
-                face.raycastTarget = false;
-                RectTransform faceRect = face.rectTransform;
-                faceRect.anchorMin = Vector2.zero;
-                faceRect.anchorMax = Vector2.one;
-                faceRect.offsetMin = new Vector2(5f, 9f);
-                faceRect.offsetMax = new Vector2(-5f, -5f);
+                Image goldRing = StoryUi.CreateImage("StoryInlayGold", rect,
+                    StoryUi.RoundedSprite(28), StoryUi.RoyalGold);
+                StoryUi.Stretch(goldRing.rectTransform, EdgeThickness);
+                goldRing.type = Image.Type.Sliced;
+                goldRing.raycastTarget = false;
 
-                Image gloss = StoryUi.CreateImage("StoryGloss", rect,
-                    StoryUi.RoundedSprite(28), StoryUi.RoyalGreenLight);
-                gloss.type = Image.Type.Sliced;
-                gloss.raycastTarget = false;
-                RectTransform glossRect = gloss.rectTransform;
-                glossRect.anchorMin = new Vector2(0f, 0.55f);
-                glossRect.anchorMax = new Vector2(1f, 1f);
-                glossRect.offsetMin = new Vector2(13f, 0f);
-                glossRect.offsetMax = new Vector2(-13f, -10f);
+                Image bronzeRing = StoryUi.CreateImage("StoryInlayBronze", rect,
+                    StoryUi.RoundedSprite(26), StoryUi.RoyalGoldDeep);
+                StoryUi.Stretch(bronzeRing.rectTransform, EdgeThickness + InlayThickness);
+                bronzeRing.type = Image.Type.Sliced;
+                bronzeRing.raycastTarget = false;
 
-                Text label = StoryUi.CreateText("StoryLabel", rect, "Play", 44,
+                Image field = StoryUi.CreateImage(DressedMarker, rect,
+                    StoryUi.RoundedSprite(24), StoryUi.RoyalGreen);
+                StoryUi.Stretch(field.rectTransform,
+                    EdgeThickness + InlayThickness + BronzeThickness);
+                field.type = Image.Type.Sliced;
+                field.raycastTarget = false;
+
+                // The ramp is a rectangle and the field is rounded, so the field
+                // clips it — otherwise its square top corners show past the
+                // curve. showMaskGraphic keeps the green itself drawn.
+                field.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+
+                Image sheen = StoryUi.CreateImage("StorySheen", field.rectTransform,
+                    StoryUi.SheenSprite, new Color(1f, 1f, 1f, 0.30f));
+                StoryUi.Stretch(sheen.rectTransform);
+                sheen.raycastTarget = false;
+
+                // The kit's word "Play" is painted into the sprite that was just
+                // replaced, so the label is a real Text — in the display face,
+                // because Arial under a painted gold wordmark is what made this
+                // button read as placeholder UI.
+                Text label = StoryUi.CreateText("StoryLabel", rect, "Play", 52,
                     StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
-                StoryUi.Stretch(label.rectTransform, 8f);
-                label.fontStyle = FontStyle.Bold;
+                label.font = StoryUi.DisplayFont;
+                StoryUi.Stretch(label.rectTransform, 10f);
                 label.raycastTarget = false;
                 label.resizeTextForBestFit = true;
-                label.resizeTextMinSize = 16;
-                label.resizeTextMaxSize = 44;
+                label.resizeTextMinSize = 18;
+                label.resizeTextMaxSize = 52;
                 var outline = label.gameObject.AddComponent<Outline>();
                 outline.effectColor = StoryUi.RoyalGreenDark;
-                outline.effectDistance = new Vector2(2f, -2f);
+                outline.effectDistance = new Vector2(3f, -3f);
 
                 return true;
             }

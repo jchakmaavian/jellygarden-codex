@@ -58,6 +58,37 @@ namespace JellyGarden.Scripts.Story
             }
         }
 
+        private static Font _displayFont;
+        private static bool _displayFontLooked;
+
+        /// <summary>
+        /// The chunky face a headline wears: the kit's BorisBlackBloxx, copied
+        /// into Resources by tools/splash_build.py so a build carries it.
+        ///
+        /// <see cref="Font"/> above takes whichever Text happens to be in the
+        /// scene, which is right for body copy and wrong for a hero button —
+        /// on the splash the only Texts are the kit's loading and privacy
+        /// labels, both wearing Unity's default, so a Play button built there
+        /// came out in Arial next to a painted gold wordmark.
+        ///
+        /// Falls back to <see cref="Font"/>, so a build without the copy draws
+        /// a plainer button rather than an invisible one.
+        /// </summary>
+        public static Font DisplayFont
+        {
+            get
+            {
+                if (_displayFontLooked) return _displayFont ?? Font;
+
+                _displayFontLooked = true;
+                _displayFont = Resources.Load<Font>("Story/Fonts/story_display");
+                if (_displayFont == null)
+                    Debug.LogWarning("[Story] No Story/Fonts/story_display; " +
+                                     "headlines fall back to the kit's UI font.");
+                return _displayFont ?? Font;
+            }
+        }
+
         // Unlabelled kit art is still fair game — a star is a star.
         public static Sprite StarSprite { get { return LoadSprite("star"); } }
         public static Sprite LockSprite { get { return LoadSprite("lock"); } }
