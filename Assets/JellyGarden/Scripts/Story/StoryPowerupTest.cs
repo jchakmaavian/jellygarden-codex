@@ -157,25 +157,16 @@ namespace JellyGarden.Scripts.Story
         /// <summary>A powerup must never be counted into a colour match.</summary>
         private IEnumerator ColourIndependence()
         {
-            Item subject = PickPlainItem();
-            if (subject == null)
+            Made made = new Made();
+            yield return Make(ItemsTypes.HORIZONTAL_STRIPPED, made);
+            if (made.item == null)
             {
-                Debug.LogWarning("[Story] Powerup test: no plain item to convert.");
+                Debug.LogWarning("[Story] Powerup test: conversion did not take (" + made.why + ").");
                 yield break;
             }
 
-            int colour = subject.color;
-            Square square = subject.square;
-
-            subject.debugType = ItemsTypes.HORIZONTAL_STRIPPED;
-            yield return new WaitForSeconds(0.6f);
-
-            Item now = square.item;
-            if (now == null || !Item.IsUniversalPowerup(now))
-            {
-                Debug.LogWarning("[Story] Powerup test: conversion did not take.");
-                yield break;
-            }
+            Item now = made.item;
+            int colour = made.colour;
 
             // Ask the board for every match it can see, and check the powerup is
             // in none of them — including runs of its own former colour.
@@ -195,25 +186,16 @@ namespace JellyGarden.Scripts.Story
         /// <summary>A tap must fire the powerup and charge one move.</summary>
         private IEnumerator TapFires(ItemsTypes type, string label)
         {
-            yield return WaitForIdleBoard();
-
-            Item subject = PickPlainItem();
-            if (subject == null)
+            Made made = new Made();
+            yield return Make(type, made);
+            if (made.item == null)
             {
-                Debug.LogWarning("[Story] Powerup test: no plain item for " + label + ".");
+                Debug.LogWarning("[Story] Powerup test: could not make a " + label +
+                                 " (" + made.why + ").");
                 yield break;
             }
 
-            Square square = subject.square;
-            subject.debugType = type;
-            yield return new WaitForSeconds(0.8f);
-
-            Item powerup = square.item;
-            if (powerup == null || powerup.currentType != type)
-            {
-                Debug.LogWarning("[Story] Powerup test: could not make a " + label + ".");
-                yield break;
-            }
+            Item powerup = made.item;
 
             // Snapshot exactly what this powerup should hit, so the measurement
             // is of the powerup's effect and not of how fast the board refills.
@@ -224,6 +206,7 @@ namespace JellyGarden.Scripts.Story
             int aimedAt = targets.Count;
             int movesBefore = LevelManager.THIS.Limit;
             bool canTap = powerup.CanTapActivate();
+            string blockedBy = WhyNotTappable(powerup);
 
             bool fired = powerup.TapActivate();
             yield return new WaitForSeconds(0.25f);
@@ -236,10 +219,30 @@ namespace JellyGarden.Scripts.Story
             bool pass = fired && hit > 0 && movesAfter == movesBefore - 1;
 
             Debug.Log(string.Format(
-                "[Story] tap {0}: canTap={1} fired={2} hit {3} of the {4} it aimed at, " +
-                "moves {5}->{6}. {7}",
-                label, canTap, fired, hit, aimedAt, movesBefore, movesAfter,
+                "[Story] tap {0}: canTap={1}{2} fired={3} hit {4} of the {5} it aimed at, " +
+                "moves {6}->{7}. {8}",
+                label, canTap, canTap ? "" : " (blocked by " + blockedBy + ")",
+                fired, hit, aimedAt, movesBefore, movesAfter,
                 pass ? "PASS" : "FAIL"));
+        }
+
+        /// <summary>
+        /// Which guard in CanTapActivate said no. A bare "canTap=False" cannot
+        /// tell a real rule failure apart from a board that had not finished
+        /// settling when the test reached for it, and those want opposite fixes.
+        /// </summary>
+        private static string WhyNotTappable(Item item)
+        {
+            if (item == null) return "the item is gone";
+            if (item.destroying) return "it is already destroying";
+            if (item.falling) return "it is still falling";
+            if (item.square == null) return "it has no square";
+            if (LevelManager.THIS == null) return "there is no LevelManager";
+            if (LevelManager.THIS.DragBlocked) return "the board is busy (DragBlocked)";
+            if (LevelManager.THIS.gameStatus != GameState.Playing)
+                return "gameStatus is " + LevelManager.THIS.gameStatus;
+            if (!Item.IsUniversalPowerup(item)) return "it is not a powerup: " + item.currentType;
+            return "the type is not tap-activated: " + item.currentType;
         }
 
         /// <summary>The items this powerup is supposed to take out.</summary>
@@ -255,6 +258,71 @@ namespace JellyGarden.Scripts.Story
 
             targets.RemoveAll(item => item == null || item == powerup);
             return targets;
+        }
+
+        /// <summary>What Make produced, and why it gave up if it did not.</summary>
+        private sealed class Made
+        {
+            public Item item;
+            public int colour;
+            public string why = "no attempt was made";
+        }
+
+        /// <summary>
+        /// Turn a plain item into a powerup and hand it back only once the board
+        /// has actually settled on it.
+        ///
+        /// Setting debugType is a request, not a result: the board applies it on
+        /// its own schedule, and an item picked while a cascade is still running
+        /// can be matched away or refilled over before the conversion lands. A
+        /// fixed WaitForSeconds after the assignment therefore passed or failed
+        /// by luck — across three consecutive runs of this test each of the four
+        /// checks failed at least once and passed at least once, always with the
+        /// board busy rather than the rule broken.
+        ///
+        /// So: wait for an idle board, convert, then poll for the conversion,
+        /// and if the item was taken from under us, pick another and try again.
+        /// </summary>
+        private IEnumerator Make(ItemsTypes type, Made made)
+        {
+            for (int attempt = 1; attempt <= 4; attempt++)
+            {
+                yield return WaitForIdleBoard();
+
+                Item subject = PickPlainItem();
+                if (subject == null)
+                {
+                    made.why = "no plain item on the board";
+                    yield return new WaitForSeconds(0.4f);
+                    continue;
+                }
+
+                Square square = subject.square;
+                int colour = subject.color;
+                subject.debugType = type;
+
+                // Poll rather than sleep a fixed time: the conversion normally
+                // lands within a frame or two, and waiting the full second when
+                // it already has is what let the next cascade catch up with us.
+                float waited = 0f;
+                while (waited < 2f)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    waited += 0.1f;
+
+                    Item now = square.item;
+                    if (now == null || now.destroying || now.falling) continue;
+                    if (now.currentType != type) continue;
+                    if (LevelManager.THIS.DragBlocked) continue;
+
+                    made.item = now;
+                    made.colour = colour;
+                    made.why = "";
+                    yield break;
+                }
+
+                made.why = "the conversion did not land in 2s (attempt " + attempt + " of 4)";
+            }
         }
 
         /// <summary>

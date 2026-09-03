@@ -27,6 +27,7 @@ namespace JellyGarden.Scripts.Story.Editor
         [MenuItem(Menu + "Open Area Screen (area 1)", true)]
         [MenuItem(Menu + "Open Area Screen (area 3)", true)]
         [MenuItem(Menu + "Open Area Screen (area 6)", true)]
+        [MenuItem(Menu + "Open Level Popup", true)]
         [MenuItem(Menu + "Close The Level", true)]
         [MenuItem(Menu + "Grant 3 Stars Here", true)]
         [MenuItem(Menu + "Buy The Next Repair", true)]
@@ -107,6 +108,26 @@ namespace JellyGarden.Scripts.Story.Editor
         /// path to keep in step. It only falls back to the two kit calls when the
         /// story was not the one that launched the level.
         /// </summary>
+        /// <summary>
+        /// The level start popup, on the level the player is actually up to.
+        /// Pressing the home screen's Level button is the only way into it in
+        /// the game, and a synthetic click on the Game view does not reliably
+        /// land, so this calls the same entry point that button calls.
+        /// </summary>
+        [MenuItem(Menu + "Open Level Popup")]
+        private static void OpenLevelPopup()
+        {
+            int areaId = AreaScreen.IsOpen ? AreaScreen.Instance.AreaId : StoryProgress.CurrentArea;
+            int levelNumber = StoryLevelPlan.NextLevelFor(areaId);
+            if (levelNumber <= 0)
+            {
+                Debug.LogWarning("[Story] preview: no level to play in area " + areaId + ".");
+                return;
+            }
+
+            StoryLevelPopup.Open(levelNumber, areaId, null);
+        }
+
         [MenuItem(Menu + "Close The Level")]
         private static void CloseLevel()
         {
