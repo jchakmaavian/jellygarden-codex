@@ -51,11 +51,78 @@ Art is resolved **by convention**, not by inspector reference:
 wires it up with no code change. A miss warns **once per key** and falls back to
 the arc backdrop — never per frame, never blank.
 
-## The repair cutscene
+## The repair animation
 
-Pressing Repair plays a four-second, skippable sequence: the room fills the
-screen, the task's own words appear, the work happens, and the repaired state
-wipes across with the story's line for it.
+Pressing Do It plays one of two things, and which one depends on whether a room
+is already on screen.
+
+**On a room** — every repair bought from the area page or from home. Gold
+sparkles fall over the part of the room this repair changes, the room's own view
+crossfades to the repaired state under them, and the spent star flies to the
+counter. No black screen, no words, no camera move, and it is over in 1.85
+seconds. This is Royal Match's own shape; see
+`docs/royal-match/03-repair-in-place.jpg`, which is one caught mid-play with the
+room, the sparkles and the buttons all still on screen.
+
+**On its own screen** — the map, the kit's own scenes, anywhere with no room to
+play over. Still the four-second cutscene: the room fills a black screen, the
+task's own words appear, the work happens, and the repaired state wipes across
+with the story's line for it. It is kept because there is nothing else on those
+screens to carry the beat, and the story's line for that repair has nowhere else
+to be said.
+
+The class is still called `RepairCutscene`. Half wrong, kept: renaming it would
+churn every call site to describe one of its two paths.
+
+Three things the room path does differently, and each one had to be found by
+running it rather than by reading it:
+
+- **The black was not the cutscene's.** `AreaScreen.HideForRepair` painted its
+  own backdrop black, and the room on that page is letterboxed — so the black
+  showed as bars top and bottom and the repair read as a cut to another screen.
+  The backdrop stays clear now and the room is switched to enveloping
+  (`AreaSceneView.SetCovering`) for the length of the repair.
+- **The sparkles were invisible at first.** Small glints at a twentieth of the
+  room across, 18% of them large, vanish entirely into a bright room. They are
+  30% large, up to a seventh of the room across, at 260 a second, and the pool
+  had to go from 90 to 220 — a pool that runs dry does not look sparser, it
+  looks like the effect stuttering.
+- **The landing flash is halved over a room** (0.24 against 0.55, 0.22s against
+  0.45s). At the cutscene's value the whole home screen blinks white, which
+  reads as a bug rather than as a repair.
+
+### Where the sparkles go
+
+`StoryRepairRegions.For(areaId, state)` is the rect a repair changed, in the
+room's own space. It comes from a **pixel diff of the room's own artwork**,
+taken offline by `tools/repair_regions_build.py` and shipped as
+`Resources/Story/repair_regions.json`.
+
+Offline, not at runtime: reading a sprite's pixels needs `isReadable` on the
+importer, which keeps an uncompressed second copy of every room in memory, and
+150 areas of 1500px artwork is not a price worth paying to learn four
+rectangles.
+
+**Most repairs are not in the table and that is the design.** An area with one
+restored picture has no diff to take, and a state that repaints the room
+wholesale has a "region" that is the whole picture with extra steps — the build
+refuses anything over 55% of the room. Those report `Unknown`, and the sparkles
+fall over the whole room. Guessing a corner would put them where nothing
+happened.
+
+### The spent star
+
+`StoryStarFlight` throws it from the pressed row to the counter. Two rules, both
+learned the hard way:
+
+- **Buy first, fly second.** The first version bought the repair when the star
+  landed, and the shell self-test failed on all five areas at once — it presses
+  Do It and immediately asks whether the repair was bought, and for 0.38 seconds
+  it had not been. That is the same complaint from the player's side.
+- **It cannot live on the screen that spent it.** The repair takes the area page
+  down, counter included, in the same frame. It flies on its own canvas at
+  sorting order 800 and takes both ends as SCREEN POINTS read before anything is
+  hidden.
 
 Nothing about it is authored per task. The 807 tasks use 83 verbs but describe
 ten kinds of work, so `RepairWork.Classify` reads the label and
@@ -87,9 +154,11 @@ built player with `-storydemo`.
 `RepairCutscene.Play(areaId, task, stateAfter, room, onDone)` plays on a room
 that is already on screen instead of on a black screen of its own — which is
 what Royal Match does and what a repair bought from the area page gets.
-`StoryRepair` decides: the area page is open on this area, so it passes
-`AreaScreen.RoomRect` and calls `AreaScreen.HideForRepair()` first. A repair
-bought anywhere else passes null and gets the black screen.
+`StoryRepair` decides, and it looks in two places: the area page when it is open
+on this area (passing `AreaScreen.RoomRect` and calling
+`AreaScreen.HideForRepair()` first), and the home screen's
+`StoryHomeScreen.RoomRect` when it is not. Only a caller with NEITHER — the map,
+the kit's own scenes, a test — passes null and gets the black screen.
 
 Three things that mode changes, all of them for the same reason — the room the
 player is looking at is the real one, not a copy:
@@ -104,9 +173,9 @@ player is looking at is the real one, not a copy:
 - The stage is matched to the room through **world corners**, not by copying
   anchors: the room lives on another canvas with its own scaler.
 
-`AreaScreen.HideForRepair()` also takes down the top bar and the captions: the
-cutscene writes the task's name across the top of the screen and it lands
-exactly on the coin and star counters. Whatever hides has to come back —
+`AreaScreen.HideForRepair()` also takes down the top bar and the captions, which
+is what the reference does: `03-repair-in-place.jpg` has the room running to the
+top edge with no counters over it. Whatever hides has to come back —
 `ShowAfterRepair` is called from the cutscene's callback, and again from
 `AreaScreen.Open`, because a repair that finishes an area closes the screen
 while it is still hidden.

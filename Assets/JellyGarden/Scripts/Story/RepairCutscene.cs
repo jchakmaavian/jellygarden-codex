@@ -1,22 +1,36 @@
-// The repair cutscene: what pressing Repair actually looks like.
+// What pressing Do It actually looks like.
 //
-// Before this, a repair spent a star, played a sound and printed a line. The
-// room did not change and nothing happened on screen, which made the whole meta
-// layer read as a checklist rather than a game.
+// The name is now half wrong and kept anyway, because the class still IS a
+// cutscene on one of its two paths. What it plays depends on whether there is a
+// room already on screen to play it over.
 //
-// Now it plays, roughly four seconds, skippable at any point:
+// ON A ROOM — every repair bought from the area page or from home. An
+// animation, not a cutscene: nothing cuts, nothing is written, the room does
+// not move, and it is done in under two seconds.
 //
-//   0.0  the room fills the screen and the camera pushes in
+//   0.00  gold sparkles fall over the part of the room this repair changes
+//   0.70  they stop
+//   0.80  a soft flash, and the room's own view crossfades to the repaired
+//         state with its neglect wash lifting under it
+//   1.35  the star rises away
+//   1.85  over
+//
+// ON ITS OWN SCREEN — the map, the kit's own scenes, anywhere with no room of
+// its own. Still a cutscene, and still four seconds, because there is nothing
+// else on screen to carry it and the story's line for that repair has nowhere
+// else to be said:
+//
+//   0.0  the room fills a black screen and the camera pushes in
 //   0.3  the task's own words appear: "Repave the cracked stones"
-//   0.7  the work happens — dust, sparks or embers chosen by what the task IS,
-//        with the room's damage visibly lifting as it goes
+//   0.7  the work happens — dust, sparks or embers chosen by what the task IS
 //   2.4  a flash as it lands, and the repaired state wipes across
 //   2.9  the story's own line for that repair
-//   3.8  the star is spent and it fades back to the area
+//   3.6  the star is spent and it fades back to the area
 //
 // Nothing here is authored per task. The work type comes from the story's own
-// verb (RepairWork), the effect from that (RepairVfx), and the lines from the
-// story data where it has them.
+// verb (RepairWork), the effect from that (RepairVfx), where in the room it
+// lands from a pixel diff of the artwork (StoryRepairRegions), and the lines
+// from the story data where it has them.
 
 using System;
 using System.Collections;
@@ -93,7 +107,6 @@ namespace JellyGarden.Scripts.Story
 
         private bool _playing;
         private bool _skipped;
-        private bool _sameImage;
         private bool _revealed;
 
         /// <summary>
@@ -267,8 +280,6 @@ namespace JellyGarden.Scripts.Story
             // repair, both resolve to the same image — and a wipe between two
             // identical images shows nothing. The neglect wash is what carries
             // the change there, so it wipes in cleanly over the grimed copy.
-            _sameImage = before == after;
-
             _before.sprite = before;
             _before.color = before != null ? Color.white : new Color(0.18f, 0.20f, 0.18f);
             _after.sprite = after;

@@ -34,7 +34,13 @@ python3 tools/booster_skin.py       # -> the 14 booster icons
 python3 tools/brand_skin.py         # -> logo, title, loading, map tiles, ivy blocker
 python3 tools/splash_build.py       # -> the King Leo wordmark, splash art, display face
 python3 tools/icons_build.py        # -> the 11 HUD, nav and chest icons
+python3 tools/repair_regions_build.py   # -> where in each room a repair happens
 ```
+
+`repair_regions_build.py` is not a reskin at all: it reads the room artwork and
+writes a table of rectangles, so the repair sparkles land on the thing being
+repaired rather than over the whole picture. Re-run it whenever per-state room
+art changes.
 
 `splash_build.py` and `icons_build.py` are additions rather than reskins: they
 import into `Resources/Story/Art`, where `StoryArt.Load` finds them by name and
