@@ -32,11 +32,17 @@ namespace JellyGarden.Scripts.Story
             // still looking at the "before".
             int stateAfter = StoryProgress.TasksCompletedIn(areaId);
 
-            // A repair bought on the area page plays on that page's own room: the
-            // task list goes away, the room takes the screen, and the work happens
-            // on the picture the star was spent on. Bought anywhere else — the
-            // map, a test — there is no room to play over and the cutscene brings
-            // its own screen.
+            // A repair plays on the room that is already on screen. Royal Match
+            // never cuts away for one: the task list goes, the room stays exactly
+            // where it was, and the work happens on the picture the star was
+            // spent on — see docs/royal-match/03-repair-in-place.jpg, where the
+            // area button and the top bar are still there behind the sparkles.
+            //
+            // Two rooms can be the one on screen. The area page's, when the task
+            // list was opened over it, and the home screen's, which is the same
+            // area's room drawn full bleed. Either is a room; only a caller with
+            // NEITHER — the map, the kit's own scenes, a test — falls back to the
+            // cutscene's own black screen.
             AreaScreen screen = AreaScreen.IsOpen && AreaScreen.Instance != null
                                 && AreaScreen.Instance.AreaId == areaId
                 ? AreaScreen.Instance
@@ -47,6 +53,11 @@ namespace JellyGarden.Scripts.Story
             {
                 room = screen.RoomRect;
                 screen.HideForRepair();
+            }
+            else if (StoryHomeScreen.IsOpen && StoryHomeScreen.Instance != null
+                     && StoryHomeScreen.Instance.AreaId == areaId)
+            {
+                room = StoryHomeScreen.Instance.RoomRect;
             }
 
             // The repair plays out before anything else happens. Everything that

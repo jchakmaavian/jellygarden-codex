@@ -112,6 +112,16 @@ namespace JellyGarden.Scripts.Story
             get { return _roomView; }
         }
 
+        /// <summary>
+        /// The rect the room is painted in, so a repair bought while the home
+        /// screen is up plays on THAT room rather than on a screen of its own.
+        /// The area page has the same property for the same reason.
+        /// </summary>
+        public RectTransform RoomRect
+        {
+            get { return _room; }
+        }
+
         /// <summary>Whether the room is drawn edge to edge rather than letterboxed.</summary>
         public bool RoomIsFullBleed
         {

@@ -715,9 +715,9 @@ namespace JellyGarden.Scripts.Story
 
             if (_band != null) _band.gameObject.SetActive(false);
 
-            // The top bar goes with it. The cutscene writes the task's name
-            // across the top of the screen, which lands exactly on the coin and
-            // star counters — and a repair is not a moment for reading either.
+            // The top bar goes with it, as it does in Royal Match: the reference
+            // capture of a repair mid-play has the room running to the top edge
+            // of the screen with no counters over it.
             if (_topBar != null && _topBar.Root != null)
                 _topBar.Root.gameObject.SetActive(false);
 
@@ -725,13 +725,22 @@ namespace JellyGarden.Scripts.Story
             if (_goal != null) _goal.gameObject.SetActive(false);
             if (_toast != null) _toast.gameObject.SetActive(false);
             if (_scrim != null) _scrim.color = new Color(0f, 0f, 0f, 0f);
-            if (_backdrop != null) _backdrop.color = Color.black;
+
+            // The backdrop stays clear. It used to go black here, and that black
+            // was the whole problem: the room is letterboxed on this page, so a
+            // black backdrop behind it put bars top and bottom and the repair
+            // read as a cutscene on its own screen. The room is switched to
+            // enveloping instead, so it fills what the task list gave back and
+            // there is nothing behind it left to see.
+            if (_backdrop != null) _backdrop.color = new Color(0f, 0f, 0f, 0f);
 
             if (_scene != null)
             {
                 _scene.anchorMin = new Vector2(0f, 0f);
                 _scene.anchorMax = new Vector2(1f, 1f);
             }
+
+            if (_sceneView != null) _sceneView.SetCovering(true);
         }
 
         /// <summary>
@@ -743,6 +752,8 @@ namespace JellyGarden.Scripts.Story
         {
             if (!_repairing) return;
             _repairing = false;
+
+            if (_sceneView != null) _sceneView.SetCovering(false);
 
             if (_scene != null)
             {

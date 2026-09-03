@@ -211,6 +211,30 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
+        /// Turns enveloping on or off after the view has been built.
+        ///
+        /// The area page draws its room letterboxed, because the task list needs
+        /// the bottom of the screen and a room cropped to a third of its height
+        /// is a room nobody can read. A repair wants the opposite: the list is
+        /// gone, the room has the whole screen, and letterbox bars would be the
+        /// black cutscene backdrop this replaces, arrived at by accident.
+        /// </summary>
+        public void SetCovering(bool cover)
+        {
+            if (_cover == cover) return;
+            _cover = cover;
+
+            if (!cover)
+            {
+                if (_fitter != null) _fitter.enabled = false;
+                StoryUi.Stretch(_root);
+                return;
+            }
+
+            ApplyCover();
+        }
+
+        /// <summary>
         /// Sizes the whole stack to envelope its parent at the painting's own
         /// aspect. Done with an AspectRatioFitter rather than arithmetic so it
         /// re-solves on a rotation or a resized Game view, neither of which this
