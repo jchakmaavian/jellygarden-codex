@@ -65,6 +65,9 @@ namespace JellyGarden.Scripts.Story
         // The chest is nearly square on purpose. It is a stack of rounded rects
         // — a lid over a body — and squeezed into a box half as tall as it is
         // wide those two read as a pair of purple ovals rather than as a chest.
+        /// <summary>How much gold shows around the Level button, in reference points.</summary>
+        private const float LevelRimThickness = 9f;
+
         private const float ChestLeftFrac = 0.70f;
         private const float ChestRightFrac = 0.98f;
         private const float ChestBottomFrac = 0f;
@@ -355,12 +358,36 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private void BuildButtons()
         {
-            _levelButton = StoryUi.GreenButton("Level", _buttonBand, "Level", 66, OnLevel);
+            // The gold rim around the green button.
+            //
+            // In docs/royal-match/01-home-area.jpg the Level button carries the
+            // same thick orange rim the area card does — the two read as a
+            // matched pair of plates. Ours had only GreenButton's own dark green
+            // edge, which is nothing to separate it from a dark room behind.
+            //
+            // It is a wrapper rather than a change to GreenButton, because the
+            // rim belongs to THIS button and not to the primitive: the green
+            // button on the win panel and the Do It rows have no gold rim in the
+            // reference either, and giving one to all of them would be wrong.
+            Image levelRim = StoryUi.CreateImage("LevelRim", _buttonBand,
+                StoryUi.RoundedSprite(28), StoryUi.RoyalGoldDeep);
+            levelRim.type = Image.Type.Sliced;
+            RectTransform rimRect = levelRim.rectTransform;
+            rimRect.anchorMin = new Vector2(0f, 0f);
+            rimRect.anchorMax = new Vector2(LevelRightFrac, 1f);
+            rimRect.offsetMin = Vector2.zero;
+            rimRect.offsetMax = Vector2.zero;
+
+            // The lit inner edge, as on every other rimmed shape in this kit: a
+            // rounded rect inside a rounded rect, never an Outline component.
+            Image levelRimLit = StoryUi.CreateImage("LevelRimLit", rimRect,
+                StoryUi.RoundedSprite(28), StoryUi.RoyalGold);
+            StoryUi.Stretch(levelRimLit.rectTransform, LevelRimThickness * 0.45f);
+            levelRimLit.type = Image.Type.Sliced;
+
+            _levelButton = StoryUi.GreenButton("Level", rimRect, "Level", 66, OnLevel);
             RectTransform levelRect = _levelButton.GetComponent<RectTransform>();
-            levelRect.anchorMin = new Vector2(0f, 0f);
-            levelRect.anchorMax = new Vector2(LevelRightFrac, 1f);
-            levelRect.offsetMin = Vector2.zero;
-            levelRect.offsetMax = Vector2.zero;
+            StoryUi.Stretch(levelRect, LevelRimThickness);
 
             // Level numbers reach four digits by area 150, so the label fits
             // itself to the button rather than running off the end of it.
@@ -402,10 +429,30 @@ namespace JellyGarden.Scripts.Story
             _areaBar.Root.offsetMax = Vector2.zero;
 
             // The chest sits at the end of the bar: the reward the bar is filling
-            // towards. Its panels are cream rather than the reference's gold,
-            // because this card is already gold and a gold-panelled chest on it
-            // is two purple rings with the card showing through them.
-            _areaChest = StoryUi.ChestIcon("Chest", content, StoryUi.RoyalCream);
+            // towards. It needs something to sit ON.
+            //
+            // Cream panels were the first attempt at the problem the ChestIcon
+            // note describes — a gold-panelled chest on a gold card is two purple
+            // rings with the card showing through them. Cream did not fix it: at
+            // this size cream and the card are near enough the same value that
+            // the chest still read as a purple ring round a pale blob, which is
+            // what the home screen actually shipped.
+            //
+            // The fix is a recess rather than another panel colour. The chest is
+            // laid on a sunken plate in the same blue as the progress bar's own
+            // track — the bar and the chest at the end of it now share a ground —
+            // and its panels go back to the reference's saturated gold, which has
+            // something dark to be bright against.
+            Image chestPlate = StoryUi.CreateImage("ChestPlate", content,
+                StoryUi.RoundedSprite(30), StoryUi.RoyalBlueDeep);
+            chestPlate.type = Image.Type.Sliced;
+            RectTransform plateRect = chestPlate.rectTransform;
+            plateRect.anchorMin = new Vector2(ChestLeftFrac - 0.03f, ChestBottomFrac + 0.04f);
+            plateRect.anchorMax = new Vector2(ChestRightFrac + 0.02f, ChestTopFrac + 0.05f);
+            plateRect.offsetMin = Vector2.zero;
+            plateRect.offsetMax = Vector2.zero;
+
+            _areaChest = StoryUi.ChestIcon("Chest", content, StoryUi.RoyalChestGold);
             _areaChest.anchorMin = new Vector2(ChestLeftFrac, ChestBottomFrac);
             _areaChest.anchorMax = new Vector2(ChestRightFrac, ChestTopFrac);
             _areaChest.offsetMin = Vector2.zero;

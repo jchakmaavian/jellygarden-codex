@@ -31,7 +31,14 @@ namespace JellyGarden.Scripts.Story
         // The neglect wash: full on an untouched room, gone once every repair in
         // the area is paid for. One constant, because the wash is both rebuilt
         // (Rebuild) and animated (LiftDamage) and the two must agree.
-        private const float MaxDamage = 0.55f;
+        // Royal Match shows a room it has barely started on — Area 2 at 1/7 —
+        // and it is still bright: the ruin is carried by what is broken and
+        // missing in the picture, never by dimming it. At 0.55 this wash was
+        // laying a 41% black sheet over an already dark painting at one repair
+        // in four, and the home screen measured 57/255 against the reference's
+        // 149. The wash still says "unrestored", it just no longer does it by
+        // putting the lights out.
+        private const float MaxDamage = 0.22f;
         private static readonly Color DamageTint = new Color(0.05f, 0.07f, 0.05f, 1f);
 
         // Every scene view alive right now, not just the last one attached. The
