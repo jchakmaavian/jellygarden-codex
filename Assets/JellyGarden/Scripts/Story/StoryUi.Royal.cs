@@ -253,7 +253,7 @@ namespace JellyGarden.Scripts.Story
         // is the obvious reading of "curved banner" and what this was first
         // written as, gives a lens — a shape with no thickness at its ends that
         // looks like a rugby ball, not like a ribbon draped over a card.
-        private const float BannerArc = 0.24f;
+        public const float BannerArc = 0.24f;
 
         // The corner rounding at the banner's ends, in texture pixels.
         private const float BannerCorner = 22f;

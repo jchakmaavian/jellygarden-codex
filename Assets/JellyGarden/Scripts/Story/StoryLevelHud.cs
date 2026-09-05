@@ -367,26 +367,49 @@ namespace JellyGarden.Scripts.Story
             _limitValue.fontStyle = FontStyle.Bold;
         }
 
-        /// <summary>A title plate: gold rim, dark blue slab, cream text.</summary>
+        /// <summary>
+        /// A title plate: the same curved banner the popups wear, in the same
+        /// three layers — blue shell, gold, dark blue field — so the word over
+        /// the board and the word over a panel are the same object at different
+        /// sizes. They were flat rounded rects, which was the one place left in
+        /// the game still wearing the old shape.
+        /// </summary>
         private Text Plate(string name, float xMin, float xMax, string label)
         {
             RectTransform plate = StoryUi.CreateRect(name, _root);
             Slab(plate, xMin, xMax, PlateTop, PlateHeight);
 
-            Image rim = StoryUi.CreateImage("Rim", plate, StoryUi.RoundedSprite(30),
-                StoryUi.RoyalGoldDeep);
-            StoryUi.Stretch(rim.rectTransform);
-            rim.type = Image.Type.Sliced;
+            Image shell = StoryUi.CreateImage("Shell", plate, StoryUi.BannerSprite,
+                StoryUi.RoyalBlue);
+            StoryUi.Stretch(shell.rectTransform);
 
-            Image fill = StoryUi.CreateImage("Fill", plate, StoryUi.RoundedSprite(30),
+            Image rim = StoryUi.CreateImage("Rim", plate, StoryUi.BannerSprite,
+                StoryUi.RoyalGoldDeep);
+            StoryUi.Stretch(rim.rectTransform, 5f * _scale);
+
+            Image gold = StoryUi.CreateImage("Gold", plate, StoryUi.BannerSprite,
+                StoryUi.RoyalGold);
+            StoryUi.Stretch(gold.rectTransform, 8f * _scale);
+
+            Image fill = StoryUi.CreateImage("Fill", plate, StoryUi.BannerSprite,
                 StoryUi.RoyalBlueDark);
-            StoryUi.Stretch(fill.rectTransform, 7f * _scale);
-            fill.type = Image.Type.Sliced;
+            StoryUi.Stretch(fill.rectTransform, 14f * _scale);
 
             Text text = StoryUi.CreateText("Label", plate, label,
                 Mathf.RoundToInt(56f * _scale), StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
-            StoryUi.Stretch(text.rectTransform, 10f * _scale);
+
+            // The banner's field sits in the TOP of its rect — the band slides
+            // down the arc — so text centred in the whole plate sits under the
+            // gold. Same correction the panel title needed.
+            RectTransform textRect = text.rectTransform;
+            textRect.anchorMin = new Vector2(0f, StoryUi.BannerArc);
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(14f * _scale, 2f * _scale);
+            textRect.offsetMax = new Vector2(-14f * _scale, -6f * _scale);
             text.fontStyle = FontStyle.Bold;
+            text.resizeTextForBestFit = true;
+            text.resizeTextMinSize = 12;
+            text.resizeTextMaxSize = Mathf.RoundToInt(56f * _scale);
             return text;
         }
 
