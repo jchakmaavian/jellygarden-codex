@@ -45,6 +45,17 @@ namespace JellyGarden.Scripts.Story
         // width honest whatever the aspect.
         private const float CardSide = 64f;
         private const float ChestWidth = 265f;
+
+        // How much of the card's right end the chest owns. Both the heading and
+        // the track stop here rather than running the full width.
+        //
+        // Measured off docs/royal-match/02-area-tasks.jpg: their card runs x=85
+        // to x=730 and the track stops at x=530, where the chest starts — so the
+        // chest owns the right 31% of the card and "Area Progress" is centred
+        // over the TRACK, not over the card. Centred over the card, which is
+        // what this did, the heading runs straight under the chest and the two
+        // read as one smudge.
+        private const float ChestClearance = ChestWidth * 0.80f;
         private const float PlayWidth = 460f;
 
         // The room's band while the task list is up, and how far the panel dims
@@ -417,7 +428,7 @@ namespace JellyGarden.Scripts.Story
             headingRect.anchorMin = new Vector2(0f, 0.62f);
             headingRect.anchorMax = new Vector2(1f, 0.97f);
             headingRect.offsetMin = new Vector2(24f, 0f);
-            headingRect.offsetMax = new Vector2(-24f, 0f);
+            headingRect.offsetMax = new Vector2(-ChestClearance, 0f);
             heading.fontStyle = FontStyle.Bold;
             heading.resizeTextForBestFit = true;
             heading.resizeTextMinSize = 18;
@@ -432,7 +443,7 @@ namespace JellyGarden.Scripts.Story
             track.anchorMin = new Vector2(0f, 0.20f);
             track.anchorMax = new Vector2(1f, 0.59f);
             track.offsetMin = new Vector2(34f, 0f);
-            track.offsetMax = new Vector2(-34f, 0f);
+            track.offsetMax = new Vector2(-ChestClearance, 0f);
 
             // The chest sits on the right-hand end of the track and overhangs it,
             // as it does in the reference. Its height is a fraction of the card,

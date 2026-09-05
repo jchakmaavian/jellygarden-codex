@@ -216,6 +216,110 @@ namespace JellyGarden.Scripts.Story
             return Finish(texture, size);
         }
 
+        private static Sprite _bannerSprite;
+
+        /// <summary>
+        /// The curved title banner every Royal panel wears.
+        ///
+        /// Measured off docs/royal-match/05-earn-stars.jpg (828x1472): the
+        /// plate's top edge sits at y=252 at the left end and rises to y=195 in
+        /// the middle — a 57px lift over a 390px half-width, on a plate 170px
+        /// tall. That is a third of the plate's height, and it is the single
+        /// thing that most makes their popups read as theirs rather than as a
+        /// generic blue card. A flat slab with two gold stripes across it, which
+        /// is what this replaces, gets every colour right and still looks like a
+        /// different game.
+        ///
+        /// It is one alpha shape, stacked three times at decreasing insets to
+        /// make the blue shell, the gold band and the dark field — so the
+        /// colours stay named in code rather than baked into a texture, and the
+        /// gold reads as a band top AND bottom without drawing either.
+        /// </summary>
+        public static Sprite BannerSprite
+        {
+            get
+            {
+                if (_bannerSprite == null) _bannerSprite = DrawBanner(256, 128);
+                return _bannerSprite;
+            }
+        }
+
+        // How far the banner's ends hang below its middle, as a fraction of its
+        // height. Off the reference: the top edge runs 195 at the centre to 252
+        // at the end and the BOTTOM edge runs 360 to 405 — both bow the same
+        // way, by about 50 on a plate 210 tall.
+        //
+        // Both edges bowing the same way is the whole shape. Bowed apart, which
+        // is the obvious reading of "curved banner" and what this was first
+        // written as, gives a lens — a shape with no thickness at its ends that
+        // looks like a rugby ball, not like a ribbon draped over a card.
+        private const float BannerArc = 0.24f;
+
+        // The corner rounding at the banner's ends, in texture pixels.
+        private const float BannerCorner = 22f;
+
+        private static Sprite DrawBanner(int width, int height)
+        {
+            var texture = new Texture2D(width, height, TextureFormat.RGBA32, false)
+            {
+                hideFlags = HideFlags.HideAndDontSave,
+                wrapMode = TextureWrapMode.Clamp
+            };
+
+            var pixels = new Color32[width * height];
+            float arc = height * BannerArc;
+
+            // Constant thickness: the band is the rect's height less the travel,
+            // and the whole band slides DOWN the parabola rather than opening up
+            // around it.
+            float thickness = height - arc;
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    // A parabola that is 0 in the middle and `arc` at either end.
+                    float u = (x + 0.5f) / width * 2f - 1f;
+                    float drop = u * u * arc;
+
+                    float top = height - drop;
+                    float bottom = top - thickness;
+
+                    // Distance inside the shape on each axis, in pixels. The
+                    // corners are rounded by treating the two distances as a
+                    // radius once both are inside the corner box — the same
+                    // trick RoundedSprite uses, on curved edges.
+                    float dy = Mathf.Min(top - y, y - bottom);
+                    float dx = Mathf.Min(x + 0.5f, width - x - 0.5f);
+
+                    float a;
+                    if (dx >= BannerCorner || dy >= BannerCorner)
+                    {
+                        a = Mathf.Clamp01(Mathf.Min(dx, dy));
+                    }
+                    else
+                    {
+                        float cx = BannerCorner - dx;
+                        float cy = BannerCorner - dy;
+                        a = Mathf.Clamp01(BannerCorner - Mathf.Sqrt(cx * cx + cy * cy));
+                    }
+
+                    pixels[y * width + x] = new Color(1f, 1f, 1f, a);
+                }
+            }
+
+            texture.SetPixels32(pixels);
+            texture.Apply();
+
+            // No border: the arc cannot be sliced, so the sprite is stretched
+            // whole. Every panel is the same width, so the curve never distorts
+            // between one screen and the next.
+            var sprite = Sprite.Create(texture, new Rect(0f, 0f, width, height),
+                new Vector2(0.5f, 0.5f), 100f);
+            sprite.hideFlags = HideFlags.HideAndDontSave;
+            return sprite;
+        }
+
         /// <summary>
         /// A gear: a disc with <paramref name="teeth"/> square teeth around it and
         /// a hole through the middle. Drawn in polar coordinates so the tooth
@@ -286,6 +390,12 @@ namespace JellyGarden.Scripts.Story
         private const float PanelSideMargin = 26f;
         private const float PanelTitleHeight = 210f;
         private const float PanelRim = 14f;
+
+        // The blue shell outside the gold, and the dark hairline inside it.
+        // Both measured off docs/royal-match/05-earn-stars.jpg and scaled from
+        // its 828 to this canvas's 1080.
+        private const float PanelShell = 21f;
+        private const float PanelHairline = 8f;
         private const float PanelContentPad = 26f;
 
         /// <summary>
@@ -314,19 +424,36 @@ namespace JellyGarden.Scripts.Story
             body.offsetMax = new Vector2(0f, -PanelTitleHeight * 0.55f);
             parts.Body = body;
 
-            // Gold rim, then blue fill inset inside it: two rects rather than an
-            // outline component, because Outline offsets the whole quad and
-            // leaves the corners square.
-            Image bodyRim = CreateImage("BodyRim", body, RoundedSprite(48), RoyalGoldDeep);
-            Stretch(bodyRim.rectTransform);
+            // Four rects, outside in, and the order came off a pixel scan across
+            // docs/royal-match/05-earn-stars.jpg at y=800: blue shell for 16px,
+            // gold for 24, a dark blue hairline for 6, then the body's own blue.
+            // Scaled by 1080/828 that is 21, 31 and 8 reference points.
+            //
+            // The outer BLUE is the part that was missing. A gold rim running
+            // straight to the edge of the card reads as a picture frame; the
+            // blue outside it is what makes the gold read as inlaid into a blue
+            // shell, which is the same move the splash's Play button makes.
+            //
+            // Nested rects rather than an Outline component, because Outline
+            // offsets the whole quad and leaves the corners square.
+            Image bodyShell = CreateImage("BodyShell", body, RoundedSprite(48), RoyalBlue);
+            Stretch(bodyShell.rectTransform);
+            bodyShell.type = Image.Type.Sliced;
+
+            Image bodyRim = CreateImage("BodyRim", body, RoundedSprite(44), RoyalGoldDeep);
+            Stretch(bodyRim.rectTransform, PanelShell);
             bodyRim.type = Image.Type.Sliced;
 
-            Image bodyHighlight = CreateImage("BodyRimHighlight", body, RoundedSprite(48), RoyalGold);
-            Stretch(bodyHighlight.rectTransform, PanelRim * 0.45f);
+            Image bodyHighlight = CreateImage("BodyRimHighlight", body, RoundedSprite(42), RoyalGold);
+            Stretch(bodyHighlight.rectTransform, PanelShell + PanelRim * 0.35f);
             bodyHighlight.type = Image.Type.Sliced;
 
-            Image bodyFill = CreateImage("BodyFill", body, RoundedSprite(48), RoyalBlue);
-            Stretch(bodyFill.rectTransform, PanelRim);
+            Image bodyInk = CreateImage("BodyInk", body, RoundedSprite(40), RoyalBlueDark);
+            Stretch(bodyInk.rectTransform, PanelShell + PanelRim);
+            bodyInk.type = Image.Type.Sliced;
+
+            Image bodyFill = CreateImage("BodyFill", body, RoundedSprite(38), RoyalBlue);
+            Stretch(bodyFill.rectTransform, PanelShell + PanelRim + PanelHairline);
             bodyFill.type = Image.Type.Sliced;
             // The panel eats taps so a click that misses a row does not fall
             // through to whatever screen is behind it.
@@ -340,23 +467,28 @@ namespace JellyGarden.Scripts.Story
                 -(PanelTitleHeight * 0.45f + PanelContentPad));
             parts.Content = content;
 
-            // The title plate: a rounded blue slab with two gold bands across it.
+            // The title plate: a curved banner, not a slab.
+            //
+            // The same three layers as the body, on the arced shape — blue
+            // shell, gold, dark blue field — so the gold reads as a band along
+            // the top AND the bottom of the banner without either being drawn.
+            // Two straight gold stripes across a rounded rect is what this
+            // replaces, and it had every colour right and the wrong silhouette.
             RectTransform plate = CreateRect("TitlePlate", root);
             TopAnchored(plate, 0f, PanelTitleHeight, -18f);
 
-            Image plateRim = CreateImage("PlateRim", plate, RoundedSprite(48), RoyalGoldDeep);
-            Stretch(plateRim.rectTransform);
-            plateRim.type = Image.Type.Sliced;
+            Image plateShell = CreateImage("PlateShell", plate, BannerSprite, RoyalBlue);
+            Stretch(plateShell.rectTransform);
 
-            Image plateFill = CreateImage("PlateFill", plate, RoundedSprite(48), RoyalBlueDark);
-            Stretch(plateFill.rectTransform, PanelRim);
-            plateFill.type = Image.Type.Sliced;
+            Image plateRim = CreateImage("PlateRim", plate, BannerSprite, RoyalGoldDeep);
+            Stretch(plateRim.rectTransform, PanelShell);
+
+            Image plateGold = CreateImage("PlateGold", plate, BannerSprite, RoyalGold);
+            Stretch(plateGold.rectTransform, PanelShell + PanelRim * 0.35f);
+
+            Image plateFill = CreateImage("PlateFill", plate, BannerSprite, RoyalBlueDark);
+            Stretch(plateFill.rectTransform, PanelShell + PanelRim + PanelHairline);
             plateFill.raycastTarget = true;
-
-            Image bandTop = CreateImage("BandTop", plate, null, RoyalGold);
-            TopAnchored(bandTop.rectTransform, 26f, 8f, 26f);
-            Image bandBottom = CreateImage("BandBottom", plate, null, RoyalGold);
-            BottomAnchored(bandBottom.rectTransform, 26f, 8f, 26f);
 
             // Inset wide but not tall: 110 clears the close X on the right, and
             // the plate is only PanelTitleHeight tall, so the same inset applied
@@ -365,17 +497,38 @@ namespace JellyGarden.Scripts.Story
             Text titleText = CreateText("Title", plate, title, 76, RoyalTitle,
                 TextAnchor.MiddleCenter);
             RectTransform titleRect = titleText.rectTransform;
-            titleRect.anchorMin = Vector2.zero;
-            titleRect.anchorMax = Vector2.one;
-            titleRect.offsetMin = new Vector2(110f, 22f);
-            titleRect.offsetMax = new Vector2(-110f, -22f);
+
+            // The banner's field sits in the TOP of the plate rect — the band
+            // slides down the arc, so the bottom BannerArc of the rect is empty
+            // at the middle and only filled towards the ends. Text centred in
+            // the whole rect sits below the gold.
+            titleRect.anchorMin = new Vector2(0f, BannerArc);
+            titleRect.anchorMax = new Vector2(1f, 1f);
+            titleRect.offsetMin = new Vector2(110f, 20f);
+            titleRect.offsetMax = new Vector2(-110f, -24f);
             titleText.fontStyle = FontStyle.Bold;
+
+            // The 150 area names run from "Castle Gates" to considerably longer,
+            // and the arc has taken height out of the box they sit in.
+            titleText.resizeTextForBestFit = true;
+            titleText.resizeTextMinSize = 34;
+            titleText.resizeTextMaxSize = 76;
             var titleOutline = titleText.gameObject.AddComponent<Outline>();
             titleOutline.effectColor = RoyalBlueDark;
             titleOutline.effectDistance = new Vector2(3f, -3f);
             parts.Title = titleText;
 
-            if (onClose != null) parts.Close = CloseButton(plate, onClose);
+            if (onClose != null)
+            {
+                parts.Close = CloseButton(plate, onClose);
+
+                // Down onto the banner's right end, which the arc has dropped.
+                // Anchored to the plate's corner the X floated above the gold
+                // with nothing under it.
+                RectTransform closeRect = parts.Close.GetComponent<RectTransform>();
+                closeRect.anchoredPosition = new Vector2(-6f,
+                    34f - PanelTitleHeight * BannerArc);
+            }
 
             return parts;
         }
