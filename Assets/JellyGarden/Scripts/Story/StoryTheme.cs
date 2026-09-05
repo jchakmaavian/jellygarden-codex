@@ -40,6 +40,25 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>False when the arc names no fill, which leaves the kit's look.</summary>
         public bool HasBoardFill { get { return BoardFill.a > 0f; } }
+
+        /// <summary>
+        /// The darker half of the board's checker.
+        ///
+        /// The kit makes its checker out of two identical black tiles at
+        /// different alphas, which is a difference that cannot survive the
+        /// cells being given a real ground colour. Derived rather than authored
+        /// because a checker whose two squares are separately chosen is a
+        /// checker somebody will eventually get wrong; 7% is the step the kit's
+        /// own two alphas work out to against a lit board.
+        /// </summary>
+        public Color BoardFillDark
+        {
+            get
+            {
+                return new Color(BoardFill.r * 0.93f, BoardFill.g * 0.93f,
+                    BoardFill.b * 0.93f, BoardFill.a);
+            }
+        }
     }
 
     public static class StoryTheme

@@ -58,7 +58,6 @@ namespace JellyGarden.Scripts.Story
 
             ApplyBackdrop(theme);
             ApplyCellFill(theme);
-            ApplySquareTint(theme);
             _themedLevel = levelNumber;
         }
 
@@ -93,11 +92,27 @@ namespace JellyGarden.Scripts.Story
         private const string FillName = "~StoryCellFill";
 
         /// <summary>
-        /// Drawn behind the cell, so it must be further from the camera than the
-        /// cell (z 0) and nearer than the backdrop, which is UI on a screen-space
-        /// camera canvas a hundred units out. A tenth of a unit does both.
+        /// Drawn in FRONT of the cell — nearer the camera than its z of 0.
+        ///
+        /// It was behind, and that was the whole reason the board ground never
+        /// looked like anything. Textures/Blocks/square.png is pure black at
+        /// 50% alpha (square_2.png at 65%): the kit's cell is a dark scrim, not
+        /// a tile. A colour laid behind a half-opaque black square comes back
+        /// halved — the castle's sand at 216,188,140 arrives as 108,94,70 — so
+        /// no value put there can ever be a light ground, which is what Royal
+        /// Match's boards have.
+        ///
+        /// In front, the fill IS the ground and the scrim under it contributes
+        /// nothing. Everything the kit draws over a cell still draws over both:
+        /// the outline is sorting order 1 against this one's 0, and blockers sit
+        /// at z -0.5 against this one's -0.05.
+        ///
+        /// The same fact is why the old ApplySquareTint never did anything
+        /// visible, and why it is gone: multiplying a pure black sprite by a
+        /// colour leaves it black. Its job is now this one's — the swapped
+        /// sprite is white, so the colour on the renderer IS the ground.
         /// </summary>
-        private const float FillDepth = 0.1f;
+        private const float FillDepth = -0.05f;
 
         private static Sprite _fillSprite;
 
@@ -136,7 +151,7 @@ namespace JellyGarden.Scripts.Story
         /// material, its sorting order and its Animation component are all
         /// untouched; the fill is a child that draws behind it.
         ///
-        /// Note for anyone reading ApplySquareTint below and wondering why the
+        /// Note for anyone wondering why the
         /// board never changed colour with the arc: multiplying a black sprite
         /// by a tint leaves it black. The tint is kept — it is correct the day
         /// the cell art stops being black — but this is what carries the colour.
@@ -144,76 +159,51 @@ namespace JellyGarden.Scripts.Story
         private static void ApplyCellFill(ArcTheme theme)
         {
             if (LevelManager.THIS == null || LevelManager.THIS.squaresArray == null) return;
+            if (!theme.HasBoardFill) return;
+
+            int made = 0;
 
             foreach (Square square in LevelManager.THIS.squaresArray)
             {
                 if (square == null) continue;
 
                 var cell = square.GetComponent<SpriteRenderer>();
-                Transform existing = square.transform.Find(FillName);
 
                 // A hole in the board is a square like any other with its
                 // renderer switched off — CreateSquare does that for
                 // SquareTypes.NONE, and the level's silhouette is exactly the
-                // set of cells left drawing. So the fill follows the cell's own
-                // renderer rather than the array, which is every cell in the
-                // bounding box including the corners no one plays on.
-                bool wanted = theme.HasBoardFill && cell != null && cell.enabled;
+                // set of cells left drawing. Following the renderer rather than
+                // the array is what keeps the ground out of the bounding-box
+                // corners nobody plays on.
+                if (cell == null || !cell.enabled || cell.sprite == null) continue;
 
-                if (!wanted)
+                if (cell.sprite != FillSprite())
                 {
-                    if (existing != null) existing.gameObject.SetActive(false);
-                    continue;
+                    cell.sprite = FillSprite();
+                    made++;
                 }
 
-                SpriteRenderer fill;
-                if (existing != null)
-                {
-                    existing.gameObject.SetActive(true);
-                    fill = existing.GetComponent<SpriteRenderer>();
-                    if (fill == null) continue;
-                }
-                else
-                {
-                    var go = new GameObject(FillName);
-                    go.transform.SetParent(square.transform, false);
-                    go.transform.localPosition = new Vector3(0f, 0f, FillDepth);
-                    fill = go.AddComponent<SpriteRenderer>();
-                    fill.sprite = FillSprite();
-
-                    // The cell's own layer and order, so the fill lands in the
-                    // same sorting group and is separated from it by depth
-                    // alone. Anything the kit draws over the cell — outline at
-                    // order 1, blockers at z -0.5 — still draws over both.
-                    fill.sortingLayerID = cell.sortingLayerID;
-                    fill.sortingOrder = cell.sortingOrder;
-                }
-
-                fill.color = theme.BoardFill;
+                // The kit alternates square.png and square_2.png to make its
+                // checker — identical black tiles at 50% and 65% alpha — and
+                // that difference cannot survive the sprite being replaced. The
+                // checker is rebuilt from the cell's own place on the grid
+                // instead of remembered from the sprite it used to wear, which
+                // is what a checker actually is and needs nothing kept between
+                // one board and the next.
+                bool dark = ((square.row + square.col) & 1) == 1;
+                cell.color = dark ? theme.BoardFillDark : theme.BoardFill;
             }
-        }
 
-        /// <summary>
-        /// Tints the board's cells. A tint only — the sprite, the material, the
-        /// sorting and every animation on the square are untouched, and the gems
-        /// sitting on top keep their own colour.
-        /// </summary>
-        private static void ApplySquareTint(ArcTheme theme)
-        {
-            if (LevelManager.THIS == null || LevelManager.THIS.squaresArray == null) return;
-
-            foreach (Square square in LevelManager.THIS.squaresArray)
+            if (made > 0 && !_reportedFill)
             {
-                if (square == null) continue;
-
-                var renderer = square.GetComponent<SpriteRenderer>();
-                if (renderer == null) continue;
-
-                // Only the cell itself. A blocker sitting on it is a story object
-                // in its own right and keeps its authored colour.
-                renderer.color = theme.SquareTint;
+                _reportedFill = true;
+                Debug.Log(string.Format(
+                    "[Story] board ground: {0} cell(s) now {1}.",
+                    made, theme.BoardFill));
             }
         }
+
+        private static bool _reportedFill;
 
         private void LateUpdate()
         {
