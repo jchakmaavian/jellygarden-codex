@@ -799,14 +799,24 @@ namespace JellyGarden.Scripts.Story
             faceRect.offsetMin = new Vector2(7f, 13f);
             faceRect.offsetMax = new Vector2(-7f, -7f);
 
-            // The glossy top third.
-            Image gloss = CreateImage("Gloss", rect, RoundedSprite(28), RoyalGreenLight);
-            gloss.type = Image.Type.Sliced;
-            RectTransform glossRect = gloss.rectTransform;
-            glossRect.anchorMin = new Vector2(0f, 0.55f);
-            glossRect.anchorMax = new Vector2(1f, 1f);
-            glossRect.offsetMin = new Vector2(18f, 0f);
-            glossRect.offsetMax = new Vector2(-18f, -14f);
+            // The light on the face is a ramp that fades out, not a lighter
+            // rectangle laid over the top half.
+            //
+            // It was the rectangle, and it stopped dead across the middle of the
+            // button — exactly where the eye lands to read the word on it — so
+            // the button read as two slabs stacked rather than as one lit
+            // object. Same fault, same fix as the splash's Play button, which is
+            // where SheenSprite came from.
+            //
+            // The ramp is a rectangle and the face is rounded, so the face clips
+            // it: without the mask its square top corners show past the curve.
+            // showMaskGraphic keeps the green itself drawn.
+            face.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+
+            Image sheen = CreateImage("Sheen", faceRect, SheenSprite,
+                new Color(1f, 1f, 1f, 0.30f));
+            Stretch(sheen.rectTransform);
+            sheen.raycastTarget = false;
 
             // The label sits in its own rect so a star badge can be laid beside it.
             Text text = CreateText("Label", rect, label, fontSize, RoyalTitle,
@@ -840,13 +850,10 @@ namespace JellyGarden.Scripts.Story
                 if (faceImage != null) faceImage.color = interactable ? RoyalGreen : RoyalGrey;
             }
 
-            Transform gloss = button.transform.Find("Gloss");
-            if (gloss != null)
-            {
-                var glossImage = gloss.GetComponent<Image>();
-                if (glossImage != null)
-                    glossImage.color = interactable ? RoyalGreenLight : Rgb(178, 176, 170);
-            }
+            // The old "Gloss" child was a lighter GREEN rectangle and had to be
+            // recoloured with the rest of the button. The sheen that replaced it
+            // is white at a fixed alpha, so it lights a grey face exactly as
+            // well as a green one and is deliberately left alone here.
         }
 
         /// <summary>
@@ -941,13 +948,16 @@ namespace JellyGarden.Scripts.Story
             faceRect.offsetMin = new Vector2(7f, 13f);
             faceRect.offsetMax = new Vector2(-7f, -7f);
 
-            Image gloss = CreateImage("Gloss", rect, RoundedSprite(28), RoyalGold);
-            gloss.type = Image.Type.Sliced;
-            RectTransform glossRect = gloss.rectTransform;
-            glossRect.anchorMin = new Vector2(0f, 0.55f);
-            glossRect.anchorMax = new Vector2(1f, 1f);
-            glossRect.offsetMin = new Vector2(18f, 0f);
-            glossRect.offsetMax = new Vector2(-18f, -14f);
+            // A fading ramp, not a lighter rectangle over the top half — the
+            // same fault and the same fix as GreenButton above. The area card on
+            // the home screen is this button, so the seam was running across the
+            // widest thing on that screen.
+            face.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+
+            Image sheen = CreateImage("Sheen", faceRect, SheenSprite,
+                new Color(1f, 1f, 1f, 0.26f));
+            Stretch(sheen.rectTransform);
+            sheen.raycastTarget = false;
 
             // Content goes in its own rect inset from the rim, so a caller laying
             // children out in fractions is laying them out inside the face rather
