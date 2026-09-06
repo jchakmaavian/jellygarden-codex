@@ -1472,31 +1472,55 @@ namespace JellyGarden.Scripts.Story
 
         #region Bottom navigation
 
-        // Sampled off docs/royal-match/01-home-area.jpg (828x1472) with PIL. The
-        // bar is a flat blue strip under one gold rim; the tab the player is on
-        // is a brighter blue, and the seams between tabs are the panel's own
-        // dark blue rather than a drawn line.
-        public static readonly Color RoyalNavBright = Rgb(33, 127, 225);  // the selected tab
-        public static readonly Color RoyalNavSeam = Rgb(0, 55, 133);      // between tabs
+        // Kept for anything still asking, and for the flat fallback: these were
+        // the blue bar's own two blues, sampled off
+        // docs/royal-match/01-home-area.jpg.
+        public static readonly Color RoyalNavBright = Rgb(33, 127, 225);
+        public static readonly Color RoyalNavSeam = Rgb(0, 55, 133);
+
+        // The signs. Wood at rest, gold when it is the screen you are on — the
+        // same gold as every other affirmative thing in the game, so selection
+        // is said in a colour the player has already learned.
+        public static readonly Color PlankFace = Rgb(139, 98, 55);
+        public static readonly Color PlankDeep = Rgb(94, 63, 32);
+        public static readonly Color PlankEdge = Rgb(62, 41, 19);
+        public static readonly Color RopeLight = Rgb(138, 107, 62);
+        public static readonly Color RopeShadow = Rgb(78, 58, 30);
 
         /// <summary>
-        /// How much of the screen's height the nav bar takes. Measured off
-        /// 01-home-area.jpg: the gold rim starts at y=1327 of 1472 and the bar
-        /// runs to the bottom edge, so 145 of 1472. A FRACTION, because the
-        /// reference is a 9:19.5 phone and the Editor's Game view is 4:3 — see
-        /// the note on vertical metrics in this folder's CLAUDE.md.
+        /// How much of the screen's height the navigation takes.
+        ///
+        /// Half again as much as the blue bar it replaces. The bar was one flat
+        /// strip and 145 of 1472 was enough for it; a rope with boards hung off
+        /// it is four things stacked — rope, hook, board, word — and at the old
+        /// height the rope came out three pixels tall and vanished into the
+        /// room. Every screen reserves this band by reading this constant, so
+        /// they all give way together.
+        ///
+        /// It costs less than it looks: the boards do not fill the band and the
+        /// room is drawn behind them, so the artwork is still visible where the
+        /// bar used to be opaque.
         /// </summary>
-        public const float NavBarHeightFrac = 145f / 1472f;
+        public const float NavBarHeightFrac = 218f / 1472f;
 
-        // The rim is 14 of those 145 points, in two bands: a bright top and a
-        // deeper underside, which is what makes it read as a lip rather than a
-        // line.
-        private const float NavRimFrac = 14f / 145f;
+        // Where the rope is strung, as a fraction up that band, and how thick it
+        // is in reference points. The signs hang from it, so it sits near the top
+        // and everything else is measured down from there.
+        private const float RopeHeightFrac = 0.88f;
+        private const float RopeThickness = 13f;
 
-        // Five tabs over six units of width: the middle one is double. The
-        // reference's seams fall at x 135, 273, 549 and 686 of 828 — 0.163,
-        // 0.330, 0.663, 0.829 — which is a sixth, a sixth, a third, a sixth.
-        private static readonly float[] NavTabEdges = { 0f, 1f / 6f, 2f / 6f, 4f / 6f, 5f / 6f, 1f };
+        // The hook between the rope and the board, and how far the chosen board
+        // swings up. Both in fractions of the band.
+        private const float HookHeightFrac = 0.12f;
+        private const float SignRiseFrac = 0.11f;
+
+        // How much of its slot a board fills. Under one so the boards read as
+        // separate objects hung side by side rather than as a fence.
+        private const float SignWidthFrac = 0.72f;
+
+        // How tall a board is, as a fraction of the band. What is left under it
+        // is the gap to the bottom of the screen, which the room fills.
+        private const float SignHeightFrac = 0.60f;
 
         /// <summary>The five things the bottom bar can be.</summary>
         public enum NavIcon
@@ -1518,19 +1542,18 @@ namespace JellyGarden.Scripts.Story
             public RectTransform Glyph;
             public Text Label;
 
-            /// <summary>Whether this tab is the lifted one RIGHT NOW.</summary>
+            /// <summary>Whether this sign is the one hanging high RIGHT NOW.</summary>
             public bool Raised;
 
-            // Both states, so SetNavSelected can move the lift between tabs
-            // rather than each tab being born one or the other. The width of a
-            // tab is still fixed — the middle slot is double — so only the
-            // glyph rises and only the label follows.
-            public Vector2 RaisedMin;
-            public Vector2 RaisedMax;
-            public Vector2 FlatMin;
-            public Vector2 FlatMax;
-            public float RaisedAspect;
-            public float FlatAspect;
+            /// <summary>The board itself — the thing that rises and turns gold.</summary>
+            public RectTransform Board;
+
+            /// <summary>The line from the rope down to the board.</summary>
+            public RectTransform Hook;
+
+            /// <summary>The darker band across the board's foot.</summary>
+            public Image Grain;
+
             public AspectRatioFitter Fitter;
         }
 
@@ -1567,89 +1590,115 @@ namespace JellyGarden.Scripts.Story
             root.offsetMax = Vector2.zero;
             parts.Root = root;
 
-            // The body is a raycast target as well as the ground colour: a tap in
-            // a seam must not fall through to the screen behind the bar.
-            parts.Body = CreateImage("Body", root, null, RoyalBlue);
-            Stretch(parts.Body.rectTransform);
-            parts.Body.raycastTarget = true;
+            // No body. There is no bar any more — the room runs all the way to
+            // the bottom of the screen and the signs hang on it. That is the
+            // point of the shape: a bar paints over a tenth of the artwork on
+            // every frame, and this paints over three small planks of it.
+            //
+            // It also means a tap between two signs falls through to the screen
+            // behind, which is correct: there is nothing there to press.
+            parts.Body = null;
 
-            RectTransform faces = CreateRect("Tabs", root);
+            RectTransform faces = CreateRect("Signs", root);
             Stretch(faces);
 
             RectTransform glyphs = CreateRect("Glyphs", root);
             Stretch(glyphs);
 
+            // The rope, strung across the whole width at the height the hooks
+            // reach. Two bands, light over dark, which is the least a rope needs
+            // to stop reading as a drawn line.
+            RectTransform rope = CreateRect("Rope", root);
+            rope.anchorMin = new Vector2(0f, RopeHeightFrac);
+            rope.anchorMax = new Vector2(1f, RopeHeightFrac);
+            rope.pivot = new Vector2(0.5f, 0.5f);
+            rope.offsetMin = new Vector2(0f, -RopeThickness * 0.5f);
+            rope.offsetMax = new Vector2(0f, RopeThickness * 0.5f);
+            parts.Rim = rope;
+
+            // Three bands: an outline, the rope, and a highlight along its top.
+            // The outline is what lets it survive a bright room — the first pass
+            // had none and the rope disappeared into a dark one instead, which
+            // is the same failure from the other end.
+            Image ropeEdge = CreateImage("RopeEdge", rope, null, PlankEdge);
+            Stretch(ropeEdge.rectTransform);
+            ropeEdge.raycastTarget = false;
+
+            Image ropeDark = CreateImage("RopeDark", rope, null, RopeShadow);
+            Stretch(ropeDark.rectTransform, 2f);
+            ropeDark.raycastTarget = false;
+
+            Image ropeLit = CreateImage("RopeLit", rope, null, RopeLight);
+            RectTransform ropeLitRect = ropeLit.rectTransform;
+            ropeLitRect.anchorMin = new Vector2(0f, 0.46f);
+            ropeLitRect.anchorMax = Vector2.one;
+            ropeLitRect.offsetMin = new Vector2(0f, 0f);
+            ropeLitRect.offsetMax = new Vector2(0f, -2f);
+            ropeLit.raycastTarget = false;
+
             int count = icons == null ? 0 : icons.Length;
             parts.Tabs = new NavTabParts[count];
 
+            // Signs share the width evenly. There is no double-width slot any
+            // more: every destination is a board of the same size, and which one
+            // the player is on is said by the board hanging higher and turning
+            // gold, not by it being bigger than its neighbours.
             for (int i = 0; i < count; i++)
             {
-                float min = NavTabEdges[Mathf.Min(i, NavTabEdges.Length - 2)];
-                float max = NavTabEdges[Mathf.Min(i + 1, NavTabEdges.Length - 1)];
+                float min = count == 0 ? 0f : (float)i / count;
+                float max = count == 0 ? 1f : (float)(i + 1) / count;
                 string label = labels != null && i < labels.Length ? labels[i] : null;
                 parts.Tabs[i] = NavTab(faces, glyphs, icons[i], label, min, max,
                     i == raised, i, onTab);
             }
 
-            // Seams first, so the rim can be laid over them, and both under the
-            // glyph layer — which is created before them and pushed last below.
-            for (int i = 1; i + 1 < NavTabEdges.Length; i++)
-            {
-                Image seam = CreateImage("Seam" + i, root, null, RoyalNavSeam);
-                RectTransform seamRect = seam.rectTransform;
-                seamRect.anchorMin = new Vector2(NavTabEdges[i], 0f);
-                seamRect.anchorMax = new Vector2(NavTabEdges[i], 1f);
-                seamRect.pivot = new Vector2(0.5f, 0.5f);
-                seamRect.offsetMin = new Vector2(-3f, 0f);
-                seamRect.offsetMax = new Vector2(3f, 0f);
-                seam.raycastTarget = false;
-            }
-
-            // The gold lip runs the whole width, across the raised tab as well:
-            // in the reference only the castle breaks it, not the tab it sits in.
-            RectTransform rim = CreateRect("Rim", root);
-            rim.anchorMin = new Vector2(0f, 1f - NavRimFrac);
-            rim.anchorMax = Vector2.one;
-            rim.offsetMin = Vector2.zero;
-            rim.offsetMax = Vector2.zero;
-            parts.Rim = rim;
-
-            Image rimDeep = CreateImage("RimDeep", rim, null, RoyalGoldDeep);
-            Stretch(rimDeep.rectTransform);
-            rimDeep.raycastTarget = false;
-
-            Image rimTop = CreateImage("RimTop", rim, null, Rgb(255, 181, 30));
-            RectTransform rimTopRect = rimTop.rectTransform;
-            rimTopRect.anchorMin = new Vector2(0f, 0.45f);
-            rimTopRect.anchorMax = Vector2.one;
-            rimTopRect.offsetMin = Vector2.zero;
-            rimTopRect.offsetMax = Vector2.zero;
-            rimTop.raycastTarget = false;
-
-            // Above the rim, so the raised tab's glyph overhangs it.
-            glyphs.SetAsLastSibling();
-
             return parts;
         }
 
+        /// <summary>
+        /// One hanging sign: a hook down from the rope, a wooden board on the
+        /// end of it, and the icon and word on the board.
+        ///
+        /// The board is the tab's own hit target, so a tap has to land on wood.
+        /// The gap between two boards is not a button, which is why the bar has
+        /// no body behind them any more.
+        /// </summary>
         private static NavTabParts NavTab(RectTransform faces, RectTransform glyphs,
             NavIcon icon, string label, float min, float max, bool raised, int index,
             UnityAction<int> onTab)
         {
-            var parts = new NavTabParts { Icon = icon, Raised = raised };
+            var parts = new NavTabParts { Icon = icon };
 
-            RectTransform face = CreateRect("Tab" + index, faces);
-            face.anchorMin = new Vector2(min, 0f);
-            face.anchorMax = new Vector2(max, 1f);
-            face.offsetMin = Vector2.zero;
-            face.offsetMax = Vector2.zero;
+            float mid = (min + max) * 0.5f;
+            float half = (max - min) * 0.5f * SignWidthFrac;
 
-            var image = face.gameObject.AddComponent<Image>();
-            image.color = raised ? RoyalNavBright : RoyalBlue;
-            parts.Face = image;
+            // The hook. Drawn first so the board hangs over the bottom of it.
+            Image hook = CreateImage("Hook" + index, faces, null, RopeShadow);
+            RectTransform hookRect = hook.rectTransform;
+            hookRect.anchorMin = new Vector2(mid, SignTopFrac(false));
+            hookRect.anchorMax = new Vector2(mid, RopeHeightFrac);
+            hookRect.pivot = new Vector2(0.5f, 0.5f);
+            hookRect.offsetMin = new Vector2(-4f, 0f);
+            hookRect.offsetMax = new Vector2(4f, 0f);
+            hook.raycastTarget = false;
+            parts.Hook = hookRect;
 
-            var button = face.gameObject.AddComponent<Button>();
-            button.targetGraphic = image;
+            // The board: a dark edge with the face inset inside it, the same two
+            // nested rounded rects every other button in this game is made of.
+            RectTransform board = CreateRect("Sign" + index, faces);
+            board.anchorMin = new Vector2(mid - half, 0f);
+            board.anchorMax = new Vector2(mid + half, 0f);
+            board.pivot = new Vector2(0.5f, 0.5f);
+            parts.Board = board;
+
+            var edge = board.gameObject.AddComponent<Image>();
+            edge.sprite = RoundedSprite(18);
+            edge.type = Image.Type.Sliced;
+            edge.color = PlankEdge;
+            edge.raycastTarget = true;
+
+            var button = board.gameObject.AddComponent<Button>();
+            button.targetGraphic = edge;
             button.transition = Selectable.Transition.None;
             if (onTab != null)
             {
@@ -1658,118 +1707,63 @@ namespace JellyGarden.Scripts.Story
             }
             parts.Button = button;
 
-            // The glyph is a sibling of the faces rather than a child of one,
-            // because a raised glyph has to draw over the gold rim while its own
-            // tab face draws under it.
-            // The glyph's HEIGHT comes from the bar and its WIDTH from that height,
-            // never the other way round. The bar is a tenth of the screen either
-            // way, but that tenth is 145 points beside an 828-wide phone and a far
-            // shallower slice of the Editor's 4:3 Game view — so a glyph whose
-            // width was a fraction of the bar is near-square on one and a sideways
-            // smear on the other, and no editor test can tell. Both boxes are the
-            // aspect the reference's own icons measure: the book 81x104 and the
-            // castle 90x166 in docs/royal-match/01-home-area.jpg.
-            RectTransform glyph = CreateRect("Glyph" + index, glyphs);
-            float mid = (min + max) * 0.5f;
-            float aspect;
+            Image face = CreateImage("Face", board, RoundedSprite(16), PlankFace);
+            face.type = Image.Type.Sliced;
+            Stretch(face.rectTransform, 4f);
+            face.raycastTarget = false;
+            parts.Face = face;
 
-            // A painted icon is square and carries its own proportions inside
-            // that square, so it gets an aspect of 1 and a little less height —
-            // the drawn glyphs are built to fill their box exactly and would
-            // look shrunken at the same numbers, and the painted ones would
-            // look stretched at theirs.
-            Sprite art = NavArt(icon);
+            // Grain: one darker band across the lower half, so the board reads as
+            // sawn wood rather than as a brown rectangle.
+            Image grain = CreateImage("Grain", board, RoundedSprite(12), PlankDeep);
+            RectTransform grainRect = grain.rectTransform;
+            grainRect.anchorMin = new Vector2(0f, 0f);
+            grainRect.anchorMax = new Vector2(1f, 0.34f);
+            grainRect.offsetMin = new Vector2(7f, 5f);
+            grainRect.offsetMax = new Vector2(-7f, 0f);
+            grain.type = Image.Type.Sliced;
+            grain.raycastTarget = false;
+            parts.Grain = grain;
 
-            // Both states are worked out here and neither is baked in. The lift
-            // belongs to whichever tab the player is on, so it has to be able to
-            // move; a tab born flat with no raised geometry can never receive it.
-            //
-            // Raised runs from 0.36 of the bar's height to half a bar-height
-            // above its top edge, which is where the reference's castle breaks
-            // the gold rim.
-            //
-            // But only the MIDDLE tab is that wide. The glyph's width comes from
-            // its height through the aspect fitter, and a lift sized for the
-            // double-width middle slot is wider than a sixth-width side tab — so
-            // a lifted Areas ran off the left edge of the screen entirely. A
-            // narrow tab gets a shorter lift, which is the same shape at the
-            // size its slot can hold.
-            //
-            // Royal Match widens the selected tab instead. That is the better
-            // answer and a much larger change: every tab's face, seam and glyph
-            // centre would have to move together on every selection.
-            // Only the MIDDLE tab is double width. The glyph's width comes from
-            // its height through the aspect fitter, so a lift sized for that slot
-            // is wider than a sixth-width side tab — a lifted Areas ran clean off
-            // the left edge of the screen. A narrow tab takes a shorter lift,
-            // which is the same shape at the size its slot can hold.
-            //
-            // Anchoring the raised glyph across the tab's own width and turning
-            // the fitter off looks like the tidier answer and is not: a disabled
-            // AspectRatioFitter leaves the sizeDelta it last wrote, so the rect
-            // stays the size it was and clips exactly as before. Shortening the
-            // lift keeps the fitter in charge, which is the only thing that
-            // actually bounds the width.
-            //
-            // Royal Match widens the selected tab instead. That is the better
-            // answer and a much larger change: every tab's face, seam and glyph
-            // centre would have to move together on every selection.
-            bool wide = (max - min) > 0.25f;
-
-            float raisedBottom = art != null ? 0.42f : 0.36f;
-            float raisedTop = art != null ? 1.44f : 1.50f;
-            if (!wide)
-            {
-                float span = (raisedTop - raisedBottom) * 0.73f;
-                raisedBottom += (raisedTop - raisedBottom - span) * 0.35f;
-                raisedTop = raisedBottom + span;
-            }
-
-            parts.RaisedMin = new Vector2(mid, raisedBottom);
-            parts.RaisedMax = new Vector2(mid, raisedTop);
-            parts.RaisedAspect = art != null ? 1f : 90f / 166f;
-
-            parts.FlatMin = new Vector2(mid, art != null ? 0.12f : 0.07f);
-            parts.FlatMax = new Vector2(mid, art != null ? 0.78f : 0.82f);
-            parts.FlatAspect = art != null ? 1f : 81f / 104f;
-
+            RectTransform glyph = CreateRect("Glyph" + index, board);
+            glyph.anchorMin = new Vector2(0.5f, 0.36f);
+            glyph.anchorMax = new Vector2(0.5f, 0.94f);
             glyph.pivot = new Vector2(0.5f, 0.5f);
             glyph.offsetMin = Vector2.zero;
             glyph.offsetMax = Vector2.zero;
 
             var fitter = glyph.gameObject.AddComponent<AspectRatioFitter>();
             fitter.aspectMode = AspectRatioFitter.AspectMode.HeightControlsWidth;
+            fitter.aspectRatio = 1f;
             parts.Fitter = fitter;
 
             DrawNavIcon(glyph, icon);
             SetRaycastsOff(glyph);
             parts.Glyph = glyph;
 
-            // Every tab gets its word, and SetNavSelected shows one of them.
             if (!string.IsNullOrEmpty(label))
             {
-                Text text = CreateText("Label" + index, glyphs, label, 46, RoyalTitle,
+                Text text = CreateText("Label" + index, board, label, 34, RoyalCream,
                     TextAnchor.MiddleCenter);
                 RectTransform textRect = text.rectTransform;
-                textRect.anchorMin = new Vector2(min, 0.04f);
-                textRect.anchorMax = new Vector2(max, 0.32f);
-                textRect.offsetMin = Vector2.zero;
-                textRect.offsetMax = Vector2.zero;
+                textRect.anchorMin = new Vector2(0f, 0.02f);
+                textRect.anchorMax = new Vector2(1f, 0.34f);
+                textRect.offsetMin = new Vector2(6f, 0f);
+                textRect.offsetMax = new Vector2(-6f, 0f);
                 text.fontStyle = FontStyle.Bold;
                 text.raycastTarget = false;
-
-                // A side tab is a sixth of the bar and "Leaderboard" has to fit
-                // in it when it is the one lifted.
-                FitOneLine(text, 14, 46);
-
-                var outline = text.gameObject.AddComponent<Outline>();
-                outline.effectColor = RoyalNavSeam;
-                outline.effectDistance = new Vector2(2f, -2f);
+                FitOneLine(text, 12, 34);
                 parts.Label = text;
             }
 
             SetNavTabRaised(parts, raised);
             return parts;
+        }
+
+        /// <summary>Where a board's top edge sits, as a fraction of the band.</summary>
+        private static float SignTopFrac(bool raised)
+        {
+            return RopeHeightFrac - HookHeightFrac + (raised ? SignRiseFrac : 0f);
         }
 
         /// <summary>
@@ -1795,11 +1789,9 @@ namespace JellyGarden.Scripts.Story
             for (int i = 0; i < parts.Tabs.Length; i++)
             {
                 NavTabParts tab = parts.Tabs[i];
-                if (tab == null || tab.Face == null) continue;
+                if (tab == null) continue;
 
-                bool on = i == selected;
-                tab.Face.color = on ? RoyalNavBright : RoyalBlue;
-                SetNavTabRaised(tab, on);
+                SetNavTabRaised(tab, i == selected);
             }
         }
 
@@ -1815,18 +1807,31 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private static void SetNavTabRaised(NavTabParts tab, bool raised)
         {
-            if (tab == null || tab.Glyph == null) return;
+            if (tab == null || tab.Board == null) return;
 
             tab.Raised = raised;
-            tab.Glyph.anchorMin = raised ? tab.RaisedMin : tab.FlatMin;
-            tab.Glyph.anchorMax = raised ? tab.RaisedMax : tab.FlatMax;
-            tab.Glyph.offsetMin = Vector2.zero;
-            tab.Glyph.offsetMax = Vector2.zero;
 
-            if (tab.Fitter != null)
-                tab.Fitter.aspectRatio = raised ? tab.RaisedAspect : tab.FlatAspect;
+            // The board swings up and the hook shortens by the same amount, so
+            // the rope stays where it is and only the sign moves on it.
+            float top = SignTopFrac(raised);
+            tab.Board.anchorMin = new Vector2(tab.Board.anchorMin.x, top - SignHeightFrac);
+            tab.Board.anchorMax = new Vector2(tab.Board.anchorMax.x, top);
+            tab.Board.offsetMin = Vector2.zero;
+            tab.Board.offsetMax = Vector2.zero;
 
-            if (tab.Label != null) tab.Label.enabled = raised;
+            if (tab.Hook != null)
+            {
+                tab.Hook.anchorMin = new Vector2(tab.Hook.anchorMin.x, top);
+                tab.Hook.anchorMax = new Vector2(tab.Hook.anchorMax.x, RopeHeightFrac);
+            }
+
+            var edge = tab.Button == null ? null : tab.Button.targetGraphic as Image;
+            if (edge != null) edge.color = raised ? RoyalGoldDeep : PlankEdge;
+            if (tab.Face != null) tab.Face.color = raised ? RoyalGold : PlankFace;
+            if (tab.Grain != null)
+                tab.Grain.color = raised ? RoyalGoldDeep : PlankDeep;
+            if (tab.Label != null)
+                tab.Label.color = raised ? RoyalTealInk : RoyalCream;
         }
 
         private static void SetRaycastsOff(Transform root)

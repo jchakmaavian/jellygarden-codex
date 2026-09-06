@@ -32,25 +32,32 @@ namespace JellyGarden.Scripts.Story
 
         private const int SortingOrder = 500;
 
-        /// <summary>The five slots, in the order they are drawn.</summary>
+        /// <summary>
+        /// The signs on the rope, in the order they hang.
+        ///
+        /// TWO, because two screens exist. The bar this replaces had five slots
+        /// and three of them answered a tap with an apology — Team is not in the
+        /// game at all, and Leaderboard and Cards are not built. A board hanging
+        /// there is a promise the game cannot keep, and it made the two real
+        /// destinations harder to find, not easier.
+        ///
+        /// Adding a third is adding a line to each of these arrays. The signs
+        /// share the width evenly, so nothing else moves.
+        /// </summary>
         public enum Tab
         {
             Areas = 0,
-            Leaderboard = 1,
-            Home = 2,
-            Team = 3,
-            Cards = 4
+            Home = 1
         }
 
         private static readonly StoryUi.NavIcon[] Icons =
         {
-            StoryUi.NavIcon.Areas, StoryUi.NavIcon.Leaderboard, StoryUi.NavIcon.Home,
-            StoryUi.NavIcon.Team, StoryUi.NavIcon.Cards
+            StoryUi.NavIcon.Areas, StoryUi.NavIcon.Home
         };
 
         private static readonly string[] Labels =
         {
-            "Areas", "Leaderboard", "Home", "Team", "Cards"
+            "Areas", "Home"
         };
 
         private static StoryNavBar _instance;
@@ -274,8 +281,9 @@ namespace JellyGarden.Scripts.Story
                     break;
 
                 default:
-                    // Present, inert and honest about it. Nothing here can throw:
-                    // the toast builds its own canvas and needs no scene.
+                    // Nothing reaches here while the rope carries two signs and
+                    // both of them go somewhere. Kept as the landing for a sign
+                    // added before the screen behind it is written.
                     StoryToast.Show(NameOf(tab) + " is not in this game yet.");
                     break;
             }

@@ -90,7 +90,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 LevelPopupOffersBoosters();
                 HomeScreenIsTheRoom();
                 HomeButtonsOpenTheLevelAndTheArea();
-                BottomNavIsFiveTabsAcrossTheShell();
+                BottomNavHangsItsSignsAcrossTheShell();
                 AreasListCoversEveryArea();
                 ShellHasNoDeadEnds();
                 ShellAreasHaveEverythingTheyNeed();
@@ -1602,7 +1602,7 @@ namespace JellyGarden.Scripts.Story.Editor
         /// going somewhere and three visibly inert, carried across home and the
         /// area page and taken away for a level.
         /// </summary>
-        private static void BottomNavIsFiveTabsAcrossTheShell()
+        private static void BottomNavHangsItsSignsAcrossTheShell()
         {
             StoryProgress.ResetAll();
 
@@ -1617,44 +1617,47 @@ namespace JellyGarden.Scripts.Story.Editor
                 Expect(StoryNavBar.IsVisible, "the nav bar is on screen with home");
 
                 StoryUi.NavBarParts bar = nav.Parts;
-                Expect(bar != null && bar.Tabs != null && bar.Tabs.Length == 5,
-                    "the bar has five slots (found " +
+                Expect(bar != null && bar.Tabs != null && bar.Tabs.Length == 2,
+                    "the rope carries two signs (found " +
                     (bar == null || bar.Tabs == null ? 0 : bar.Tabs.Length) + ")");
-                if (bar == null || bar.Tabs == null || bar.Tabs.Length != 5) return;
+                if (bar == null || bar.Tabs == null || bar.Tabs.Length != 2) return;
 
-                var order = new[]
-                {
-                    StoryUi.NavIcon.Areas, StoryUi.NavIcon.Leaderboard, StoryUi.NavIcon.Home,
-                    StoryUi.NavIcon.Team, StoryUi.NavIcon.Cards
-                };
+                var order = new[] { StoryUi.NavIcon.Areas, StoryUi.NavIcon.Home };
                 for (int i = 0; i < order.Length; i++)
                     Expect(bar.Tabs[i].Icon == order[i],
-                        "slot " + i + " is " + order[i] + " (found " + bar.Tabs[i].Icon + ")");
+                        "sign " + i + " is " + order[i] + " (found " + bar.Tabs[i].Icon + ")");
 
-                // Raised and centred: the middle of five, wider than its
-                // neighbours, its glyph breaking above the bar's top edge, and the
-                // only slot carrying a name.
+                // Every sign is named, and the one you are on hangs higher.
                 StoryUi.NavTabParts home = bar.Tabs[(int)StoryNavBar.Tab.Home];
-                Expect(home.Raised, "the Home tab is the raised one");
+                StoryUi.NavTabParts areas = bar.Tabs[(int)StoryNavBar.Tab.Areas];
+
+                Expect(home.Raised, "the Home sign hangs high on the home screen");
+                Expect(!areas.Raised, "the Areas sign hangs low there");
                 Expect(home.Label != null && home.Label.text == "Home",
-                    "the Home tab is named");
+                    "the Home sign is named");
+                Expect(areas.Label != null && areas.Label.text == "Areas",
+                    "the Areas sign is named too");
 
                 Canvas.ForceUpdateCanvases();
                 Expect(home.Label != null && home.Label.rectTransform.rect.height > 1f,
                     "the Home label has a rect it can be drawn in (height " +
                     (home.Label == null ? 0f : home.Label.rectTransform.rect.height) + ")");
-                Expect(home.Glyph != null && home.Glyph.anchorMax.y > 1f,
-                    "the Home glyph rises above the bar (top at " +
-                    (home.Glyph == null ? 0f : home.Glyph.anchorMax.y) + " of it)");
+
+                // The raised board's top edge is above the flat one's. This is
+                // the whole of what "selected" looks like now, so it is the thing
+                // worth asserting.
+                Expect(home.Board != null && areas.Board != null
+                       && home.Board.anchorMax.y > areas.Board.anchorMax.y,
+                    "the chosen sign hangs higher than the other ("
+                    + (home.Board == null ? 0f : home.Board.anchorMax.y) + " against "
+                    + (areas.Board == null ? 0f : areas.Board.anchorMax.y) + ")");
 
                 RectTransform homeFace = home.Button.GetComponent<RectTransform>();
-                RectTransform sideFace = bar.Tabs[0].Button.GetComponent<RectTransform>();
+                RectTransform sideFace = areas.Button.GetComponent<RectTransform>();
                 float homeWidth = homeFace.anchorMax.x - homeFace.anchorMin.x;
                 float sideWidth = sideFace.anchorMax.x - sideFace.anchorMin.x;
-                Expect(homeWidth > sideWidth,
-                    "the Home tab is the widest (" + homeWidth + " against " + sideWidth + ")");
-                Expect(Mathf.Abs((homeFace.anchorMin.x + homeFace.anchorMax.x) * 0.5f - 0.5f) < 0.01f,
-                    "the Home tab is centred");
+                Expect(Mathf.Abs(homeWidth - sideWidth) < 0.001f,
+                    "the boards are the same size (" + homeWidth + " against " + sideWidth + ")");
 
                 // With no destination installed, Areas falls back to the one area
                 // the player is restoring, and the bar comes with it.
@@ -1692,22 +1695,14 @@ namespace JellyGarden.Scripts.Story.Editor
                 Expect(StoryHomeScreen.IsOpen, "the Home tab opens home over it");
                 StoryNavBar.AreasDestination = null;
 
-                // The three the game does not have are present and harmless: a tap
-                // must not throw and must not navigate anywhere.
-                foreach (StoryNavBar.Tab inert in new[]
-                         {
-                             StoryNavBar.Tab.Leaderboard, StoryNavBar.Tab.Team,
-                             StoryNavBar.Tab.Cards
-                         })
-                {
-                    Button button = nav.ButtonFor(inert);
-                    Expect(button != null && button.gameObject.activeInHierarchy,
-                        StoryNavBar.NameOf(inert) + " is on the bar");
-                    button.onClick.Invoke();
-                    StoryNavBar.Sync();
-                    Expect(!AreaScreen.IsOpen && StoryHomeScreen.IsOpen,
-                        StoryNavBar.NameOf(inert) + " goes nowhere and does not error");
-                }
+                // Every sign on the rope goes somewhere. That is the rule the
+                // two-sign rope exists to keep, so it is asserted rather than
+                // assumed: a board that leads nowhere is a promise the game
+                // cannot keep, and there used to be three of them.
+                foreach (StoryUi.NavTabParts t in bar.Tabs)
+                    Expect(t.Icon == StoryUi.NavIcon.Areas
+                           || t.Icon == StoryUi.NavIcon.Home,
+                        "every sign is a destination that exists (found " + t.Icon + ")");
 
                 // A level takes the bar away and gives it back.
                 StoryNavBar.LevelIsPlayingSource = () => true;

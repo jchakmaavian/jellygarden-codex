@@ -514,57 +514,52 @@ knows the kit's map exists.
   of the cases that are not about the shell — null it in a `finally`, because
   domain reload is off.
 
-## The bottom navigation bar
+## The signs on the rope
 
-`StoryNavBar` is the one piece of the shell that is not a screen: five tabs —
-Areas, Leaderboard, Home, Team, Cards — carried across home and the area page and
-taken away for a level, as in `docs/royal-match/01-home-area.jpg`.
+`StoryNavBar` is the one piece of the shell that is not a screen. It used to be
+Royal Match's five-tab blue bar; it is now a rope strung across the bottom of
+the screen with a wooden board hung from it per destination.
 
-- **It is not part of the home screen.** It lives on its own persistent canvas at
-  sorting order 500 — above home (300) and the area page (400), below the level
-  popup (600) and every cutscene — because the area page shows the same strip and
-  there must not be two of them. `StoryHomeScreen.NavBand` is a RESERVATION, and
-  it takes its height from `StoryUi.NavBarHeightFrac` so the two cannot drift.
-- **Any screen the bar covers has to reserve the space itself.** `AreaScreen`'s
-  panel band is anchored to `StoryUi.NavBarHeightFrac` plus the 70 points that
-  used to be its gap to the screen edge — the raised tab's glyph stands half a
-  bar height PROUD of the bar, and a reserve that is only the bar's own height
-  puts the castle through the Play button.
-- **Only the middle tab is raised, and Home is always the middle one.** Royal
-  Match expands whichever tab is current; keeping Home permanently raised and
-  centred is what makes the bar a landmark rather than something that moves under
-  the thumb. **Raised and selected are separate.** `SetNavSelected`
-  brightens the current tab and ONLY that one. It used to leave the raised tab
-  bright as well, which meant Home was lit on every screen — and Home is the
-  biggest, brightest tab with a word under it, so the bar reported the wrong
-  screen everywhere except home. Raised stays permanent; the colour follows the
-  player.
-- **A glyph's height comes from the bar and its width from that height.** The bar
-  is a tenth of the screen on any aspect, but that tenth is 145 points beside an
-  828-wide phone and a much shallower slice of a 4:3 Game view — so a glyph sized
-  as a fraction of the bar's WIDTH is near-square on one and a sideways smear on
-  the other, and no editor test can see it. `NavTab` stretches the glyph
-  vertically and lets an `AspectRatioFitter` in `HeightControlsWidth` set the
-  width, at the aspect the reference's own icons measure.
-- **The glyphs are a layer above the gold rim; the tab faces are below it.** The
-  rim runs unbroken across every tab, including the raised one — only the castle
-  breaks it. The glyph layer has its raycasts off, so a tap on the castle still
-  reaches the tab underneath.
+**There are two boards: Areas and Home.** That is the whole of what the game
+has. The bar it replaced had five slots and three of them answered a tap with an
+apology — Team is not in this game at all, Leaderboard and Cards are not built —
+and three dead buttons made the two real ones harder to find, not easier.
+Adding a third is adding a line to `Icons` and `Labels`; the boards share the
+width evenly, so nothing else moves.
+
+- **There is no bar body any more.** The room runs to the bottom of the screen
+  and the boards hang on it. A tap between two boards falls through, which is
+  correct — there is nothing there to press. It also means the artwork is
+  visible where the bar used to be opaque.
+- **Selection is height and colour, not size.** The chosen board hangs higher
+  (its hook shortens by the same amount, so the rope does not move) and turns
+  gold; the others are wood. Every board is the same size. `SetNavSelected`
+  drives all of it through `SetNavTabRaised`.
+- **The band is 218 of 1472, not 145.** A flat strip needed 145; a rope with
+  hook, board and word stacked on it does not. At the old height the rope came
+  out three pixels tall and vanished into a dark room. Every screen reserves the
+  band by reading `StoryUi.NavBarHeightFrac`, so they all gave way together.
+- **The rope carries its own outline.** Without one it disappears into a dark
+  room; with only an outline it would disappear into a bright one. Three bands:
+  edge, rope, highlight.
+- It still lives on its own persistent canvas at sorting order 500 — above home
+  (300) and the area page (400), below the level popup (600) — because the area
+  page shows the same rope and there must not be two of them.
+  `StoryHomeScreen.NavBand` is a RESERVATION and takes its height from the same
+  constant.
 - **`LevelIsPlaying` reads `LevelManager.THIS.gameStatus`, not
   `MenuManager.menuPlay`.** `menuPlay` is the kit's PRE-play popup, shown from
   the map before a level starts, so a bar that hides on it hides in the wrong
   place and shows in the wrong one. `StoryFlow.PlayingArea` is checked first.
-- Three tabs go nowhere and say so with a toast. Hiding them would put Home off
-  centre; swallowing the tap silently reads as a broken button.
 - **`StoryNavBar.AreasDestination` is the seam `StoryAreasList.Install` sets** to
   point Areas at the list of all 150 rooms; null is the area the player is
-  restoring, which is what a test that has not installed the list gets. Same shape
-  as `StoryLevelHud.Source`. `LevelIsPlayingSource` is the other seam, so a test
-  can put the shell "in a level" with no board in the scene.
-- The bar is driven by `Update`, because a level starts and ends without telling
-  it. An editor test has no frame loop, so it calls `StoryNavBar.Sync()`. Hiding
-  turns off the CANVAS, never the component's own object — deactivating the host
-  would stop `Update` and the bar could never come back.
+  restoring, which is what a test that has not installed the list gets.
+  `LevelIsPlayingSource` is the other seam, so a test can put the shell "in a
+  level" with no board in the scene.
+- The rope is driven by `Update`, because a level starts and ends without
+  telling it. An editor test has no frame loop, so it calls `StoryNavBar.Sync()`.
+  Hiding turns off the CANVAS, never the component's own object — deactivating
+  the host would stop `Update` and it could never come back.
 
 ## The areas list
 
