@@ -425,9 +425,11 @@ namespace JellyGarden.Scripts.Story
             labelRect.offsetMin = Vector2.zero;
             labelRect.offsetMax = Vector2.zero;
             _areaLabel.fontStyle = FontStyle.Bold;
-            _areaLabel.resizeTextForBestFit = true;
-            _areaLabel.resizeTextMinSize = 18;
-            _areaLabel.resizeTextMaxSize = 52;
+
+            // One line, shrunk to fit. "Outer Courtyard" wrapped onto two and
+            // the second line ran under the progress bar; the names get longer
+            // than that from area 3 onward.
+            StoryUi.FitOneLine(_areaLabel, 18, 52);
             var nameOutline = _areaLabel.gameObject.AddComponent<Outline>();
             nameOutline.effectColor = StoryUi.RoyalGoldDeep;
             nameOutline.effectDistance = new Vector2(2f, -2f);

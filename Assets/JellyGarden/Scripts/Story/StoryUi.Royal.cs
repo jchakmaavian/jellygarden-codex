@@ -508,11 +508,10 @@ namespace JellyGarden.Scripts.Story
             titleRect.offsetMax = new Vector2(-110f, -24f);
             titleText.fontStyle = FontStyle.Bold;
 
-            // The 150 area names run from "Castle Gates" to considerably longer,
-            // and the arc has taken height out of the box they sit in.
-            titleText.resizeTextForBestFit = true;
-            titleText.resizeTextMinSize = 34;
-            titleText.resizeTextMaxSize = 76;
+            // The 150 area names run from "The Mint" to "Grimm's Childhood
+            // Room", and the arc has taken height out of the box they sit in.
+            // One line, shrunk to fit: best-fit on its own wraps first.
+            FitOneLine(titleText, 34, 76);
             var titleOutline = titleText.gameObject.AddComponent<Outline>();
             titleOutline.effectColor = RoyalBlueDark;
             titleOutline.effectDistance = new Vector2(3f, -3f);

@@ -521,9 +521,10 @@ namespace JellyGarden.Scripts.Story
                 62, StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
             StoryUi.Stretch(card.Name.rectTransform, 26f);
             card.Name.fontStyle = FontStyle.Bold;
-            card.Name.resizeTextForBestFit = true;
-            card.Name.resizeTextMinSize = 20;
-            card.Name.resizeTextMaxSize = 62;
+
+            // One line, shrunk to fit. Best-fit on its own wraps first, and the
+            // ribbon these sit on is one line tall.
+            StoryUi.FitOneLine(card.Name, 20, 62);
             var nameOutline = card.Name.gameObject.AddComponent<Outline>();
             nameOutline.effectColor = StoryUi.RoyalBannerDeep;
             nameOutline.effectDistance = new Vector2(2.5f, -2.5f);

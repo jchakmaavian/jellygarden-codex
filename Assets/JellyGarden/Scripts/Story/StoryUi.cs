@@ -96,6 +96,30 @@ namespace JellyGarden.Scripts.Story
         private static Sprite _panelSprite;
         private static Sprite _buttonSprite;
 
+        /// <summary>
+        /// Makes a Text shrink to fit on ONE line instead of wrapping onto two.
+        ///
+        /// Unity's best-fit wraps before it shrinks. Given a rect too narrow for
+        /// the words, it breaks the line first and only then reduces the size to
+        /// fit the height — so a long name in a short box becomes two lines at
+        /// the minimum size, overflowing the box, rather than one smaller line
+        /// inside it.
+        ///
+        /// Turning horizontal wrapping off is what makes best-fit solve for
+        /// WIDTH. It matters here because the 150 area names run from "The Mint"
+        /// to "Grimm's Childhood Room", nearly double the length, and every one
+        /// of them is drawn in a box sized for the short ones.
+        /// </summary>
+        public static void FitOneLine(Text text, int min, int max)
+        {
+            if (text == null) return;
+            text.horizontalOverflow = HorizontalWrapMode.Overflow;
+            text.verticalOverflow = VerticalWrapMode.Truncate;
+            text.resizeTextForBestFit = true;
+            text.resizeTextMinSize = min;
+            text.resizeTextMaxSize = max;
+        }
+
         /// <summary>A plain rounded card, drawn rather than borrowed.</summary>
         public static Sprite PanelSprite
         {
