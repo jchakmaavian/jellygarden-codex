@@ -533,8 +533,12 @@ taken away for a level, as in `docs/royal-match/01-home-area.jpg`.
 - **Only the middle tab is raised, and Home is always the middle one.** Royal
   Match expands whichever tab is current; keeping Home permanently raised and
   centred is what makes the bar a landmark rather than something that moves under
-  the thumb. Selection is a second, quieter cue: `SetNavSelected` brightens the
-  current tab and leaves the raised one bright either way.
+  the thumb. **Raised and selected are separate.** `SetNavSelected`
+  brightens the current tab and ONLY that one. It used to leave the raised tab
+  bright as well, which meant Home was lit on every screen — and Home is the
+  biggest, brightest tab with a word under it, so the bar reported the wrong
+  screen everywhere except home. Raised stays permanent; the colour follows the
+  player.
 - **A glyph's height comes from the bar and its width from that height.** The bar
   is a tenth of the screen on any aspect, but that tenth is 145 points beside an
   828-wide phone and a much shallower slice of a 4:3 Game view — so a glyph sized

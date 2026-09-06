@@ -1718,10 +1718,20 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// Lights the tab the player is on. The raised tab keeps its bright face
-        /// whether or not it is the current one, because being raised is what it
-        /// IS on this bar — the reference's home tab is bright on the home screen
-        /// and this keeps the shape of the bar from moving as screens change.
+        /// Lights the tab the player is on, and only that one.
+        ///
+        /// RAISED AND SELECTED ARE NOT THE SAME THING. This used to light the
+        /// raised tab as well as the current one, on the reasoning that being
+        /// raised is what that tab IS. The side effect was that every screen
+        /// looked like Home: Home is raised, so Home was always lit, and it is
+        /// the biggest, brightest thing on the bar with a word under it — so on
+        /// the areas list, which correctly lit its own tab too, the eye still
+        /// read Home. The bar was reporting the wrong screen on every screen
+        /// except one.
+        ///
+        /// Raised is still permanent — it is the landmark, and the shape of the
+        /// bar does not move as screens change. Only the face colour follows the
+        /// player now.
         /// </summary>
         public static void SetNavSelected(NavBarParts parts, int selected)
         {
@@ -1731,7 +1741,7 @@ namespace JellyGarden.Scripts.Story
             {
                 NavTabParts tab = parts.Tabs[i];
                 if (tab == null || tab.Face == null) continue;
-                tab.Face.color = (i == selected || tab.Raised) ? RoyalNavBright : RoyalBlue;
+                tab.Face.color = i == selected ? RoyalNavBright : RoyalBlue;
             }
         }
 
