@@ -1517,7 +1517,21 @@ namespace JellyGarden.Scripts.Story
             public Image Face;
             public RectTransform Glyph;
             public Text Label;
+
+            /// <summary>Whether this tab is the lifted one RIGHT NOW.</summary>
             public bool Raised;
+
+            // Both states, so SetNavSelected can move the lift between tabs
+            // rather than each tab being born one or the other. The width of a
+            // tab is still fixed — the middle slot is double — so only the
+            // glyph rises and only the label follows.
+            public Vector2 RaisedMin;
+            public Vector2 RaisedMax;
+            public Vector2 FlatMin;
+            public Vector2 FlatMax;
+            public float RaisedAspect;
+            public float FlatAspect;
+            public AspectRatioFitter Fitter;
         }
 
         /// <summary>The bar and its five tabs, in left-to-right order.</summary>
@@ -1666,20 +1680,58 @@ namespace JellyGarden.Scripts.Story
             // look stretched at theirs.
             Sprite art = NavArt(icon);
 
-            if (raised)
+            // Both states are worked out here and neither is baked in. The lift
+            // belongs to whichever tab the player is on, so it has to be able to
+            // move; a tab born flat with no raised geometry can never receive it.
+            //
+            // Raised runs from 0.36 of the bar's height to half a bar-height
+            // above its top edge, which is where the reference's castle breaks
+            // the gold rim.
+            //
+            // But only the MIDDLE tab is that wide. The glyph's width comes from
+            // its height through the aspect fitter, and a lift sized for the
+            // double-width middle slot is wider than a sixth-width side tab — so
+            // a lifted Areas ran off the left edge of the screen entirely. A
+            // narrow tab gets a shorter lift, which is the same shape at the
+            // size its slot can hold.
+            //
+            // Royal Match widens the selected tab instead. That is the better
+            // answer and a much larger change: every tab's face, seam and glyph
+            // centre would have to move together on every selection.
+            // Only the MIDDLE tab is double width. The glyph's width comes from
+            // its height through the aspect fitter, so a lift sized for that slot
+            // is wider than a sixth-width side tab — a lifted Areas ran clean off
+            // the left edge of the screen. A narrow tab takes a shorter lift,
+            // which is the same shape at the size its slot can hold.
+            //
+            // Anchoring the raised glyph across the tab's own width and turning
+            // the fitter off looks like the tidier answer and is not: a disabled
+            // AspectRatioFitter leaves the sizeDelta it last wrote, so the rect
+            // stays the size it was and clips exactly as before. Shortening the
+            // lift keeps the fitter in charge, which is the only thing that
+            // actually bounds the width.
+            //
+            // Royal Match widens the selected tab instead. That is the better
+            // answer and a much larger change: every tab's face, seam and glyph
+            // centre would have to move together on every selection.
+            bool wide = (max - min) > 0.25f;
+
+            float raisedBottom = art != null ? 0.42f : 0.36f;
+            float raisedTop = art != null ? 1.44f : 1.50f;
+            if (!wide)
             {
-                // From 0.36 of the bar's height to half a bar-height above its top
-                // edge, which is where the reference's castle breaks the gold rim.
-                glyph.anchorMin = new Vector2(mid, art != null ? 0.42f : 0.36f);
-                glyph.anchorMax = new Vector2(mid, art != null ? 1.44f : 1.50f);
-                aspect = art != null ? 1f : 90f / 166f;
+                float span = (raisedTop - raisedBottom) * 0.73f;
+                raisedBottom += (raisedTop - raisedBottom - span) * 0.35f;
+                raisedTop = raisedBottom + span;
             }
-            else
-            {
-                glyph.anchorMin = new Vector2(mid, art != null ? 0.12f : 0.07f);
-                glyph.anchorMax = new Vector2(mid, art != null ? 0.78f : 0.82f);
-                aspect = art != null ? 1f : 81f / 104f;
-            }
+
+            parts.RaisedMin = new Vector2(mid, raisedBottom);
+            parts.RaisedMax = new Vector2(mid, raisedTop);
+            parts.RaisedAspect = art != null ? 1f : 90f / 166f;
+
+            parts.FlatMin = new Vector2(mid, art != null ? 0.12f : 0.07f);
+            parts.FlatMax = new Vector2(mid, art != null ? 0.78f : 0.82f);
+            parts.FlatAspect = art != null ? 1f : 81f / 104f;
 
             glyph.pivot = new Vector2(0.5f, 0.5f);
             glyph.offsetMin = Vector2.zero;
@@ -1687,13 +1739,14 @@ namespace JellyGarden.Scripts.Story
 
             var fitter = glyph.gameObject.AddComponent<AspectRatioFitter>();
             fitter.aspectMode = AspectRatioFitter.AspectMode.HeightControlsWidth;
-            fitter.aspectRatio = aspect;
+            parts.Fitter = fitter;
 
             DrawNavIcon(glyph, icon);
             SetRaycastsOff(glyph);
             parts.Glyph = glyph;
 
-            if (raised && !string.IsNullOrEmpty(label))
+            // Every tab gets its word, and SetNavSelected shows one of them.
+            if (!string.IsNullOrEmpty(label))
             {
                 Text text = CreateText("Label" + index, glyphs, label, 46, RoyalTitle,
                     TextAnchor.MiddleCenter);
@@ -1703,10 +1756,11 @@ namespace JellyGarden.Scripts.Story
                 textRect.offsetMin = Vector2.zero;
                 textRect.offsetMax = Vector2.zero;
                 text.fontStyle = FontStyle.Bold;
-                text.resizeTextForBestFit = true;
-                text.resizeTextMinSize = 18;
-                text.resizeTextMaxSize = 46;
                 text.raycastTarget = false;
+
+                // A side tab is a sixth of the bar and "Leaderboard" has to fit
+                // in it when it is the one lifted.
+                FitOneLine(text, 14, 46);
 
                 var outline = text.gameObject.AddComponent<Outline>();
                 outline.effectColor = RoyalNavSeam;
@@ -1714,6 +1768,7 @@ namespace JellyGarden.Scripts.Story
                 parts.Label = text;
             }
 
+            SetNavTabRaised(parts, raised);
             return parts;
         }
 
@@ -1741,8 +1796,37 @@ namespace JellyGarden.Scripts.Story
             {
                 NavTabParts tab = parts.Tabs[i];
                 if (tab == null || tab.Face == null) continue;
-                tab.Face.color = i == selected ? RoyalNavBright : RoyalBlue;
+
+                bool on = i == selected;
+                tab.Face.color = on ? RoyalNavBright : RoyalBlue;
+                SetNavTabRaised(tab, on);
             }
+        }
+
+        /// <summary>
+        /// Lifts one tab's glyph out of the bar, or drops it back in, and shows
+        /// or hides its word.
+        ///
+        /// The lift is the loudest thing on the bar — it is the one glyph that
+        /// breaks the gold rim — so it has to mean the screen the player is on.
+        /// It used to be nailed to Home, which is why the bar read as Home
+        /// everywhere. The tab WIDTHS do not move: the middle slot stays double,
+        /// so the bar keeps its shape and only the glyph and the word travel.
+        /// </summary>
+        private static void SetNavTabRaised(NavTabParts tab, bool raised)
+        {
+            if (tab == null || tab.Glyph == null) return;
+
+            tab.Raised = raised;
+            tab.Glyph.anchorMin = raised ? tab.RaisedMin : tab.FlatMin;
+            tab.Glyph.anchorMax = raised ? tab.RaisedMax : tab.FlatMax;
+            tab.Glyph.offsetMin = Vector2.zero;
+            tab.Glyph.offsetMax = Vector2.zero;
+
+            if (tab.Fitter != null)
+                tab.Fitter.aspectRatio = raised ? tab.RaisedAspect : tab.FlatAspect;
+
+            if (tab.Label != null) tab.Label.enabled = raised;
         }
 
         private static void SetRaycastsOff(Transform root)
