@@ -100,6 +100,7 @@ namespace JellyGarden.Scripts.Story
         public static void Install()
         {
             if (!Application.isEditor && !Debug.isDebugBuild) return;
+            if (!StorySelfTests.Requested) return;
             if (_instance != null) return;
 
             // Installed from whichever scene is up, like the board self-test: this

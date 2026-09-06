@@ -32,6 +32,7 @@ namespace JellyGarden.Scripts.Story
         public static void Install()
         {
             if (!Application.isEditor && !Debug.isDebugBuild) return;
+            if (!StorySelfTests.Requested) return;
             if (_instance != null) return;
             // No LevelManager check: this host survives scene loads and only acts
             // on F9, so it must install from the menu scene too — that is where
