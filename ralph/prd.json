@@ -237,8 +237,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 14,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Swept in four foreground batches of 4, before and after: 0 findings, 0 errors each time. All 32 after-shots opened. F-017 found by measuring them: the two ingredient icons on levels 81, 82, 85, 87, 92 and 95 sat 3 pixels apart against 16 between their numbers, and the icon's own shadow closed most of that. SizeIconBox now holds an IconGutter of one IconShadowStep clear on each side of every icon on a multi-chip plate; gaps went 3-5 -> 7-19 for 2-4 points of icon. CountGutter was tried here first, built and photographed, and rejected: it shrinks every shared-plate icon from 24 points to 14."
     },
     {
       "id": "US-015",

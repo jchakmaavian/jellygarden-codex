@@ -509,3 +509,73 @@ Across all sixteen after-shots every multi-chip plate now separates its chips by
 - The two Unity batchmode gates (`StorySmokeTest.RunAll`,
   `StoryScreenTests.RunHeadless`) are still RED on the stale 807-task /
   1209-star constants US-011 proved pre-existing. Unchanged by this iteration.
+
+
+---
+
+## Iteration note — US-014 (levels 81-96), 2026-09-08
+
+All four batches swept `0 finding(s), 0 error(s)` twice — before and after the
+fix. The one fault came out of opening the 32 pictures and then measuring them.
+Evidence: `sweeps/20260908-030115`, `-030723`, `-031713`, `-032350` (before);
+`-034022`, `-034641`, `-035202`, `-035726` (after).
+
+All sixteen carry the kit's shipped target asset byte for byte, and thirteen
+carry the kit's shipped board. The other three (85, 89, 94) differ in exactly
+one way and nowhere else: every changed cell is a `17` that `CreateSquare` does
+not understand, replaced with `10` by US-007's linter fix.
+
+## F-017 — two target icons touched, and the shadow closed what was left  [FIXED in US-014]
+Level 81 asks for two ingredients and a score, and its two ingredient icons —
+both gold-rimmed jewels — sat **3 pixels apart** on its own 393-point
+screenshot, against **16 between the numbers under them**. The pair read as one
+clump. Levels 82, 85, 87, 90, 92, 94 and 95 showed the same 3, and level 84
+(book, shield, star) 5.
+
+The cause is the third of the same family. `SlotWeight` (F-010) sized the slot,
+`SizeIconBox` (F-015) made every icon on a plate one size, `SizeCountBox`
+(F-016) owned the boundary between two NUMBERS — and nothing owned the boundary
+between two ICONS. `SizeIconBox` anchored the icon box to the whole slot, so all
+that separated two icons was whatever transparent margin each sprite carries.
+
+Worse, the icon casts its own silhouette one step down and **right** (F-012's
+`IconShadowStep`, 6 design units = 2.2 points), so on a full-slot box that
+shadow falls into the 3-point gap and closes most of it.
+
+`StoryLevelHud.SizeIconBox` now also holds an `IconGutter` clear on each side of
+the icon, its shadow and its backing, on every slot of a multi-chip plate.
+`IconGutter` is **one shadow step** — the least an icon can be inset by and
+still keep its own shadow inside its own slot. It is deliberately NOT
+`CountGutter`: that one is measured against a digit's advance because two
+numbers butt-joined read as one number, and applying it to the icon was built
+and photographed first — it shrank every icon on a shared plate from 24 points
+to 14, about the height of the digit under it, and left the card visibly empty
+above the numbers (`sweeps/20260908-033201` is that version).
+
+Measured, before → after, in pixels off the levels' own screenshots:
+
+| level | chips | icon gaps | icon widths |
+|---|---|---|---|
+| 81, 82, 85, 87, 92, 95 | ingredient, ingredient, score | 3, 13 → **7, 17** | 25, 22, 26 → 16, 18, 22 |
+| 84, 90, 94 | count, count, score | 5, 14 → **8, 17** | 24, 20, 26 → 15, 18, 22 |
+| 86, 88, 89, 93 | score, blocks | 15 → **19** | 34, 31 → 30, 23 |
+| 83, 91, 96 | score | — (single chip, untouched) | 50 → 50 |
+
+Every multi-chip plate in the band now separates its icons by 7 to 19 pixels
+where the widest was 5, at a cost of 2 to 4 pixels of icon.
+
+## Standing, after US-014
+- **F-003 (dark backdrops) is still the only OPEN visual one, and only new art
+  closes it.** `check_themes.py` prints the same ten NOTE lines. Levels 89, 91,
+  92 and 95 draw their `00` holes as black rectangles cut out of the board for
+  that reason and no other — level 89's is a single cell in the middle of a full
+  region and reads as a hole punched in the board.
+- F-005 stands. Eight batches printed `0 finding(s)` over the pictures that
+  carried F-017.
+- **The ingredient shortfall did NOT repeat.** Level 92 collected 1 of 2 and 1
+  of 1 under random play, the first band since US-010 where any ingredient
+  reached its exit. The five other ingredient levels here (81, 82, 85, 87, 95)
+  still ended at 0, and all five wall their lower rows the way US-012 described.
+- The two Unity batchmode gates (`StorySmokeTest.RunAll`,
+  `StoryScreenTests.RunHeadless`) are still RED on the stale 807-task /
+  1209-star constants US-011 proved pre-existing. Unchanged by this iteration.

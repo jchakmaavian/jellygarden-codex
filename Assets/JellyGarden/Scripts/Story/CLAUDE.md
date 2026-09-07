@@ -691,6 +691,21 @@ kit's score bar. Four things about it are not obvious:
   best-fit then drew `25` larger than the `15` beside it, which is the same
   fault `SizeIconBox` exists to prevent. A single-chip plate keeps its full
   width. Levels 65, 68, 69, 75 and 78 are where it was measured.
+- **The icon needs its own gap, and it is a different measurement.**
+  `SizeCountBox` answered the boundary for the NUMBER; the icon above it still
+  filled its whole slot, so two icons sat only their own transparent margins
+  apart — 3 points on level 81 against 16 between the numbers under them, and
+  its two gold-rimmed jewels read as one clump. `SizeIconBox` now also holds an
+  `IconGutter` clear on each side. That gutter is **one `IconShadowStep`**, not
+  a `CountGutter`: the icon casts its silhouette one step down and RIGHT, so
+  with a full-slot box the shadow lands in the only space separating the chips,
+  and a gutter of one step is exactly what keeps an icon's shadow inside its own
+  slot. `CountGutter` is measured against a digit's advance because two numbers
+  butt-joined read as one NUMBER — a different question, and using it here
+  shrinks every icon on a shared plate to about the height of the digit under
+  it (measured: 24 points to 14). Both sides or neither, as ever. Levels 81, 82,
+  85, 87, 90, 92, 94 and 95 are where it was measured; icon gaps went from 3-5
+  points to 7-19 with icons only 2-3 points narrower.
 - **Never reorder the target slots.** `AimKitIconsAtThisHud` matches the kit's
   `TargetIcon`s to this HUD's slots by index, so the model must keep
   `LevelManager.targetObject` order or the collect animation flies to the wrong

@@ -165,6 +165,29 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private const float CountGutter = 13f;
 
+        /// <summary>
+        /// How much of a slot a target's ICON gives up on each side when it
+        /// shares the plate, in the same 1080-wide design units.
+        ///
+        /// One shadow step, and that is the whole reason: the icon casts its own
+        /// silhouette one step down and RIGHT (see <see cref="IconShadowStep"/>),
+        /// and with the icon box the full width of its slot that silhouette
+        /// lands in the only space separating it from the next chip. Measured on
+        /// level 81's own screenshot at 393 points wide, its two ingredient
+        /// icons sat 3 pixels apart against a shadow step of 2.2 — so the shadow
+        /// closed most of the gap and the pair, both gold-rimmed jewels, read as
+        /// one clump. A gutter of one step keeps an icon's shadow inside its own
+        /// slot, which is the least an icon can be inset by and still be a
+        /// separate object.
+        ///
+        /// It is deliberately NOT <see cref="CountGutter"/>. That one answers a
+        /// different question — two numbers butt-joined read as one NUMBER, so
+        /// it is measured against a digit's advance — and applying it here
+        /// shrinks every icon on a shared plate to about the height of the digit
+        /// under it.
+        /// </summary>
+        private const float IconGutter = IconShadowStep;
+
         /// <summary>The portrait in the middle of the strip. King Leo's game.</summary>
         public const string PortraitCharacter = "leo";
 
@@ -200,6 +223,13 @@ namespace JellyGarden.Scripts.Story
             /// See <see cref="SizeCountBox"/>.
             /// </summary>
             public float Gutter = float.NaN;
+
+            /// <summary>
+            /// The gutter currently held clear on each side of this slot's ICON,
+            /// in canvas units. NaN means "not applied yet".
+            /// See <see cref="SizeIconBox"/>.
+            /// </summary>
+            public float IconGutter = float.NaN;
         }
 
         private readonly List<Slot> _slots = new List<Slot>();
@@ -808,7 +838,16 @@ namespace JellyGarden.Scripts.Story
                 PlaceSlot(_slots[i].Root, placed, placed + share);
                 placed += share;
 
-                SizeIconBox(_slots[i], narrowest / Mathf.Max(0.0001f, weight));
+                // An icon box the full width of its slot puts two icons only
+                // their own transparent margins apart, and the icon's shadow
+                // then falls into that. Measured on level 81's own screenshot
+                // at 393 points wide: 3 pixels between two gold-rimmed jewels
+                // with 16 between the numbers under them, and the pair read as
+                // one clump. 82, 85, 87, 90, 92, 94 and 95 are the rest of this
+                // band that showed it. `IconGutter` is one shadow step, so an
+                // icon's silhouette can no longer cross into the next slot.
+                SizeIconBox(_slots[i], narrowest / Mathf.Max(0.0001f, weight),
+                    count > 1 ? IconGutter * _scale : 0f);
 
                 // Both sides or neither, never one. Gutting only the sides that
                 // face a neighbour left the first chip a wider box than the
@@ -941,24 +980,40 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>
         /// Centres the icon, its shadow and its backing in a box <paramref
-        /// name="frac"/> of the slot wide, leaving the slot itself — and so the
-        /// number under it — the width <see cref="SlotWeight"/> gave it.
+        /// name="frac"/> of the slot wide, less a <paramref name="gutter"/> on
+        /// each side, leaving the slot itself — and so the number under it — the
+        /// width <see cref="SlotWeight"/> gave it.
         ///
         /// `preserveAspect` fits a sprite into whichever of the box's two sides
         /// binds first. Every icon on the plate gets the same box width here, so
         /// the widest slot can no longer draw the biggest icon.
+        ///
+        /// The gutter is <see cref="IconGutter"/> — one shadow step, so that an
+        /// icon's silhouette stays inside its own slot instead of closing the
+        /// gap to the chip beside it. Both sides or neither, on every slot: an
+        /// icon inset only where it faces a neighbour would draw at two sizes
+        /// across one plate, which is the fault this method exists to prevent.
         /// </summary>
-        private static void SizeIconBox(Slot slot, float frac)
+        private void SizeIconBox(Slot slot, float frac, float gutter)
         {
             frac = Mathf.Clamp(frac, 0.05f, 1f);
-            if (Mathf.Approximately(slot.IconFrac, frac)) return;
+            bool sameFrac = Mathf.Approximately(slot.IconFrac, frac);
+            bool sameGutter = Mathf.Approximately(slot.IconGutter, gutter);
+            if (sameFrac && sameGutter) return;
             slot.IconFrac = frac;
+            slot.IconGutter = gutter;
 
             float min = 0.5f - frac * 0.5f;
             float max = 0.5f + frac * 0.5f;
             AnchorHorizontally(slot.Icon, min, max);
             AnchorHorizontally(slot.Shadow, min, max);
             AnchorHorizontally(slot.Backing, min, max);
+
+            // The shadow carries its own step; the gutter is added to it rather
+            // than replacing it, or the silhouette snaps back under the icon.
+            InsetHorizontally(slot.Icon, 0f, gutter);
+            InsetHorizontally(slot.Backing, 0f, gutter);
+            InsetHorizontally(slot.Shadow, IconShadowStep * _scale, gutter);
         }
 
         /// <summary>
@@ -981,6 +1036,17 @@ namespace JellyGarden.Scripts.Story
             RectTransform rect = slot.Count.rectTransform;
             rect.offsetMin = new Vector2(gutter, rect.offsetMin.y);
             rect.offsetMax = new Vector2(-gutter, rect.offsetMax.y);
+        }
+
+        /// <summary>Holds <paramref name="gutter"/> clear on each side of an icon
+        /// layer's box, on top of whatever horizontal offset it already wants —
+        /// <paramref name="baseX"/>, which is the shadow's step.</summary>
+        private static void InsetHorizontally(Image image, float baseX, float gutter)
+        {
+            if (image == null) return;
+            RectTransform rect = image.rectTransform;
+            rect.offsetMin = new Vector2(baseX + gutter, rect.offsetMin.y);
+            rect.offsetMax = new Vector2(baseX - gutter, rect.offsetMax.y);
         }
 
         /// <summary>Narrows an icon layer to a horizontal band of its slot, keeping

@@ -1438,3 +1438,55 @@ ralph/findings.md as a linter rule waiting for a decision about the 22.
     and 50 of it (`SlotWeight` 1:1:2). Any HUD number question is answered
     against those numbers, not against the design units.
 ---
+
+## 2026-09-08 - US-014 - Play levels 81-96 and fix what they show
+- Swept 81-96 in four foreground batches of 4 against a player built from the
+  scratchpad clone: `0 finding(s), 0 error(s)` in all four, twice (before and
+  after the fix). Opened all 32 before-starts and all 32 after-shots.
+- All sixteen carry the kit's shipped target asset byte for byte; thirteen carry
+  the kit's shipped board, and 85, 89 and 94 differ only where US-007's linter
+  replaced cell digit `17` with `10`.
+- Found and fixed F-017: **two target ICONS touched.** Level 81's two
+  ingredient icons — both gold-rimmed jewels — sat 3 pixels apart on its own
+  393-point screenshot against 16 between the numbers under them, and read as
+  one clump. 82, 85, 87, 90, 92, 94 and 95 were the same 3; 84 was 5.
+- Third of the same family: `SlotWeight` sized the slot (F-010), `SizeIconBox`
+  made every icon on a plate one size (F-015), `SizeCountBox` owned the boundary
+  between two NUMBERS (F-016) — and nothing owned the boundary between two
+  ICONS. The icon box was anchored to the whole slot, so only each sprite's own
+  transparent margin separated two icons, and the icon's silhouette (one
+  `IconShadowStep` down and RIGHT) fell into that gap and closed most of it.
+- `SizeIconBox` now also holds an `IconGutter` clear on each side of the icon,
+  its shadow and its backing, on every slot of a multi-chip plate. `IconGutter`
+  is **one shadow step**: the least an icon can be inset by and still keep its
+  own shadow inside its own slot.
+- **`CountGutter` was tried here first and rejected on the picture, not on
+  taste.** Built, swept and measured (`sweeps/20260908-033201`): it separates
+  the icons but shrinks every icon on a shared plate from 24 points to 14 —
+  about the height of the digit under it — and leaves the card visibly empty
+  above the numbers. One shadow step gives gaps of 7-19 against 3-5, at a cost
+  of 2-4 points of icon.
+- Files changed: `Assets/JellyGarden/Scripts/Story/StoryLevelHud.cs`,
+  `Assets/JellyGarden/Scripts/Story/CLAUDE.md`, `ralph/findings.md`,
+  `ralph/prd.json`, `ralph/progress.txt`.
+- Gates: typecheck 0 errors, `check_vfx_intact.py` clean,
+  `check_launch_args.py` clean, `lint_levels.py` 0 problems in 1208 levels,
+  `check_themes.py` 0 problems / 10 notes (F-003, the backdrops).
+- **Learnings for future iterations:**
+  - **One boundary, two measurements.** The number's gutter and the icon's
+    gutter answer different questions and must not share a constant: numbers
+    butt-joined read as one NUMBER, so their gutter is a digit's advance; icons
+    are different shapes, so theirs only has to keep an icon's own shadow out of
+    its neighbour's slot. Sharing the constant is what made the icons 14 points.
+  - **Build the version you are unsure about and photograph it.** The full-
+    `CountGutter` icon was a defensible rule on paper and obviously wrong in the
+    picture. Two builds and two four-level sweeps is ~12 minutes and settles it.
+  - **A PIL mock off an existing screenshot picks the value before the build.**
+    Blanking the icon band, rescaling each slot's icons about their centres and
+    pasting them back is fifteen lines, and it ranked three candidate gutters
+    correctly against what the real builds later showed.
+  - **Ingredients CAN be delivered under random play.** Level 92 collected 1/2
+    and 1/1 — the first since US-010. The zero-collect levels are the ones that
+    wall their lower rows, which is what US-012 concluded; this is the positive
+    control that conclusion was missing.
+---
