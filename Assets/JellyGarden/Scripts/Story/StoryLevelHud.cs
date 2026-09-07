@@ -168,6 +168,13 @@ namespace JellyGarden.Scripts.Story
             public Image Backing;
             public Image Icon;
             public Text Count;
+
+            /// <summary>
+            /// How much of this slot's width the icon box is allowed to use, so
+            /// that every chip on the plate draws its icon at one size. -1 means
+            /// "not applied yet". See <see cref="SizeIconBox"/>.
+            /// </summary>
+            public float IconFrac = -1f;
         }
 
         private readonly List<Slot> _slots = new List<Slot>();
@@ -750,6 +757,20 @@ namespace JellyGarden.Scripts.Story
             for (int i = 0; i < count; i++) total += SlotWeight(targets[i]);
             float placed = 0f;
 
+            // Widening the score slot widened its ICON too, because the icon box
+            // is the whole slot and `preserveAspect` fits the sprite into it.
+            // The star came out at the icon band's full height on every plate
+            // while a count chip was capped by its own narrower slot: 2.3x the
+            // book and shield on a three-chip plate, 1.5x the blocks chip on a
+            // two-chip one. Levels 49..64 are where it was measured, and it is
+            // on every plate in the game that carries a score chip beside a
+            // count. The plate still shares its WIDTH out by number shape; the
+            // icon box no longer follows, and is the narrowest slot's width on
+            // every chip, so one plate draws one icon size.
+            float narrowest = float.MaxValue;
+            for (int i = 0; i < count; i++)
+                narrowest = Mathf.Min(narrowest, SlotWeight(targets[i]));
+
             for (int i = 0; i < _slots.Count; i++)
             {
                 bool used = i < count;
@@ -757,9 +778,12 @@ namespace JellyGarden.Scripts.Story
                     _slots[i].Root.gameObject.SetActive(used);
                 if (!used) continue;
 
-                float share = SlotWeight(targets[i]) / Mathf.Max(0.0001f, total);
+                float weight = SlotWeight(targets[i]);
+                float share = weight / Mathf.Max(0.0001f, total);
                 PlaceSlot(_slots[i].Root, placed, placed + share);
                 placed += share;
+
+                SizeIconBox(_slots[i], narrowest / Mathf.Max(0.0001f, weight));
 
                 HudTarget target = targets[i];
                 if (_slots[i].Icon.sprite != target.Icon)
@@ -880,6 +904,38 @@ namespace JellyGarden.Scripts.Story
         private static float SlotWeight(HudTarget target)
         {
             return target != null && target.IsScore ? 2f : 1f;
+        }
+
+        /// <summary>
+        /// Centres the icon, its shadow and its backing in a box <paramref
+        /// name="frac"/> of the slot wide, leaving the slot itself — and so the
+        /// number under it — the width <see cref="SlotWeight"/> gave it.
+        ///
+        /// `preserveAspect` fits a sprite into whichever of the box's two sides
+        /// binds first. Every icon on the plate gets the same box width here, so
+        /// the widest slot can no longer draw the biggest icon.
+        /// </summary>
+        private static void SizeIconBox(Slot slot, float frac)
+        {
+            frac = Mathf.Clamp(frac, 0.05f, 1f);
+            if (Mathf.Approximately(slot.IconFrac, frac)) return;
+            slot.IconFrac = frac;
+
+            float min = 0.5f - frac * 0.5f;
+            float max = 0.5f + frac * 0.5f;
+            AnchorHorizontally(slot.Icon, min, max);
+            AnchorHorizontally(slot.Shadow, min, max);
+            AnchorHorizontally(slot.Backing, min, max);
+        }
+
+        /// <summary>Narrows an icon layer to a horizontal band of its slot, keeping
+        /// whatever offsets it carries — the shadow's step, for one.</summary>
+        private static void AnchorHorizontally(Image image, float min, float max)
+        {
+            if (image == null) return;
+            RectTransform rect = image.rectTransform;
+            rect.anchorMin = new Vector2(min, rect.anchorMin.y);
+            rect.anchorMax = new Vector2(max, rect.anchorMax.y);
         }
 
         /// <summary>Puts a slot in the band from one fraction of the plate to another.</summary>

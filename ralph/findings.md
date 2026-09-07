@@ -365,3 +365,76 @@ file to fix it** — `tools/level_gen.py` would undo it on the next run.
   `validate_story.py` both say 806 tasks / 1208 stars is the truth, so it is the
   gates that are stale. Left alone — changing an assertion to match reality is
   not a thing to do in passing.
+
+
+---
+
+## Iteration note — US-012 (levels 49-64), 2026-09-08
+
+All four batches swept `0 finding(s), 0 error(s)` twice — before and after the
+fix. Everything below came out of opening the 32 pictures.
+Evidence: `sweeps/20260908-005720`, `-010237`, `-010905`, `-011324` (before);
+`-013206`, `-013737`, `-014312`, `-014837` (after).
+
+**Every one of levels 49-64 is the kit's shipped data, byte for byte** — board
+and target asset both (`diff` against `tools/shipped_levels/` and
+`tools/shipped_targets/`). So nothing about their difficulty, their pass marks
+or their shapes is this project's to answer; only what the game draws over them
+is.
+
+## F-015 — the star chip was drawn twice the size of every other chip  [FIXED in US-012]
+`SlotWeight` (F-010) gives a score target twice the plate width of a count,
+because "0/5000" is nine characters and "25" is two. The icon box was the whole
+slot and `preserveAspect` fits a sprite into whichever side binds first — so the
+widened slot widened the STAR too. The star came out at the icon band's full
+height on every plate; a count chip stayed capped by its own narrower slot.
+Measured in design units: **133 against 58 on a three-chip plate (2.3x), 133
+against 88 on a two-chip one (1.5x)**.
+
+What that says on screen is the opposite of the truth. On level 53 the level
+asks for 25 books and 30 shields and the score is the incidental third goal, and
+the star was the biggest thing on the plate with the two real goals half its
+size beside it. Levels 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 60, 61 and 63 all
+showed it — every plate in the band with more than one chip.
+
+`StoryLevelHud.SizeIconBox` centres the icon, its shadow and its backing in a
+box the NARROWEST slot's width, on every chip. The plate still shares its width
+out by number shape, so the numbers are unchanged; the icons are now one size
+per plate. A single-chip plate is unaffected — there is nothing for it to be
+uniform with. Before/after on level 49 and 50:
+`sweeps/20260908-005720` vs `sweeps/20260908-013206`.
+
+## Not acted on — measured, and the kit's own
+- **Ingredients again collected zero.** Levels 49 (1+1 in 36 moves), 57 (2+2 in
+  21) and 60 (2+2 in 35) ended with every ingredient chip untouched, which is
+  the fourth band in a row to show it (22, 23, 24, 26 in US-010; 39, 42 in
+  US-011). The spawn rule is `Random.Range(0, LevelManager.Limit) == 0` per
+  generated gem, gated by `GetIngredientsCount(icon.name) < GetCount()` — which
+  counts SpriteRenderers in the scene, i.e. ingredients already on the board. So
+  a level needing one spawns one and then stops until it is collected, and the
+  bot's problem is not spawning but DELIVERY: an ingredient is collected only by
+  reaching `GetBottomRow()`, and these boards wall the lower rows with
+  SOLIDBLOCK. Level 60's row 8 is `14 14 14 14 14 14 14 14 14` — a full-width
+  wooden wall with a two-row pocket under it that nothing can refill. All three
+  boards are the kit's own and all three are winnable (wood goes when a match
+  lands beside it, and a vertical stripped clears a whole column through the
+  wall). **This is a bot that does not aim, not a broken level** — proving
+  otherwise needs a playtest that plays for the goal rather than for any legal
+  swap, which is a harness story, not a level one.
+- **Level 55's bottom half cannot be swapped in at all.** Row 5 is `00` across
+  all nine columns and rows 6-10 are a `23`/`10` checkerboard, so every free
+  cell's four neighbours are ice and no two free items are ever adjacent. Its
+  whole goal — 23 blocks — lives down there and is reachable only by a vertical
+  stripped or a colour bomb fired from the top half. Kit level, kit design, and
+  it is why the bot broke 0 of 23 in 28 moves.
+
+## Standing, after US-012
+- **F-003 (dark backdrops) is still the only OPEN visual one, and only new art
+  closes it.** `check_themes.py` prints the same ten NOTE lines. Levels 50, 53,
+  54, 55, 60, 61 and 63 all draw their `00` holes as black rectangles cut out of
+  the board for that reason and no other.
+- F-005 stands. Eight batches printed `0 finding(s)` over the pictures that
+  carried F-015.
+- The two Unity batchmode gates (`StorySmokeTest.RunAll`,
+  `StoryScreenTests.RunHeadless`) are still RED on the stale 807-task / 1209-star
+  constants US-011 proved pre-existing. Unchanged by this iteration.

@@ -668,6 +668,17 @@ kit's score bar. Four things about it are not obvious:
   the score an eighth of the width it needed and `resizeTextForBestFit` shrank it
   to its floor — a chip nobody can read at 393 points wide, sitting beside two
   single digits at full size. Levels 12, 13 and 14 are where it showed.
+- **A slot's WIDTH is not a slot's icon size.** The icon box was the whole slot
+  and `preserveAspect` fits a sprite into whichever side binds first, so
+  doubling the score slot doubled its star: the star came out at the icon band's
+  full height on every plate while a count chip stayed capped by its own
+  narrower slot — 2.3x the book and shield on a three-chip plate, 1.5x the
+  blocks chip on a two-chip one. `SizeIconBox` centres every chip's icon,
+  shadow and backing in a box the NARROWEST slot's width, so one plate draws
+  one icon size and the number under each chip keeps the room `SlotWeight` gave
+  it. Levels 49..64 are where it was measured; it is on every plate carrying a
+  score chip beside a count. Anything else added to a slot has the same trap:
+  size it from the plate, not from the slot it happens to sit in.
 - **Never reorder the target slots.** `AimKitIconsAtThisHud` matches the kit's
   `TargetIcon`s to this HUD's slots by index, so the model must keep
   `LevelManager.targetObject` order or the collect animation flies to the wrong

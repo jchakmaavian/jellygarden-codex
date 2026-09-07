@@ -5,6 +5,26 @@ Started: 2026-09-07
 
 ## Codebase Patterns
 
+- **A layout weight widens everything anchored to that slot, not just the thing
+  the weight was for.** `SlotWeight` doubled the score slot for its
+  nine-character NUMBER and silently doubled its ICON with it, on every plate in
+  the game, for three iterations. `preserveAspect` makes a sprite's drawn size
+  the MIN of its box's two sides, so a narrow box is width-limited and a wide one
+  height-limited and two chips that both "fit" come out different sizes. When a
+  weight is added, ask what else in that slot is anchored 0..1.
+- **Diff a band against `tools/shipped_levels/` and `tools/shipped_targets/`
+  before arguing about its difficulty.** Levels 1-100 are the kit's own data;
+  a pass mark or a board shape in that range is the asset that was bought, not
+  something a generator got wrong.
+- **The random-move bot is a weak oracle for a goal that needs aiming.**
+  Ingredient levels have collected ~0 across four bands. Reading the spawn rule
+  (`Item.cs`, `Random.Range(0, LevelManager.Limit) == 0`) and the collect rule
+  (`LevelManager.CheckIngredient` over `GetBottomRow`) settles in five minutes
+  what a sweep cannot. Before calling a level unwinnable, find the path.
+- **Reuse a previous iteration's scratchpad clone.** `rsync -a --delete Assets/`
+  into it and rebuild in ~40s; re-cloning `Library` is the slow part and it does
+  not need doing twice.
+
 - **Fixing the game can make the harness report a fault.** The dead-board
   watchdog's first successful reshuffle came back as a FINDING, because
   `StoryPlaytest` had never seen `RegenLevel` and treated every state but
@@ -172,9 +192,10 @@ Started: 2026-09-07
   2160x3840, the right superSize and the WRONG aspect — measure a layout off a
   player run, never off an Editor one.
 
-- **Rewrite `ralph/prd.json` with `ensure_ascii=False`.** Python's default
-  escapes every em dash to `\u2014` and turns a two-line story update into an
-  80-line diff.
+- **`ralph/prd.json` is stored with em dashes ESCAPED, so keep `json.dump`'s
+  DEFAULT `ensure_ascii`.** (This bullet used to say the opposite; writing it
+  with `ensure_ascii=False` unescapes all 85 of them and turns a two-line story
+  update into an 85-line diff. Checked against the file on 2026-09-08.)
 - **A band of levels is one command: `python3 tools/playtest_sweep.py --levels
   1-16`.** It runs the built player in batches of 8, kills a batch that writes
   no report inside its timeout and lists it as hung, moves each batch's PNGs
@@ -1310,4 +1331,45 @@ ralph/findings.md as a linter rule waiting for a decision about the 22.
   region fenced by wooden blocks opens up as soon as a match lands beside them.
   Any reachability claim about a board has to use that rule or it will find 114
   false positives where there are 24 real questions.
+---
+
+## 2026-09-08 - US-012 - Play levels 49-64 and fix what they show
+- Swept 49-64 in four foreground batches of 4 against a player built from a
+  scratchpad clone: `0 finding(s), 0 error(s)` in all four, twice (before and
+  after the fix). Opened all 32 screenshots.
+- Levels 49-64 are the kit's shipped data byte for byte — board AND target asset
+  — so their pass marks, shapes and difficulty are not this project's to answer.
+- Found and fixed F-015: the star chip was drawn 1.5-2.3x every other chip's
+  icon. `SlotWeight` gives a score target twice the plate width (F-010, for its
+  nine-character number); the icon box was the WHOLE slot, and `preserveAspect`
+  fits a sprite into whichever side binds first, so the widened slot widened the
+  star too. On level 53 — a level that asks for 25 books and 30 shields — the
+  star was the biggest thing on the plate and the two real goals were half its
+  size. `StoryLevelHud.SizeIconBox` now centres icon, shadow and backing in a box
+  the narrowest slot's width, on every chip. Numbers unchanged; icons uniform.
+- Files changed: `Assets/JellyGarden/Scripts/Story/StoryLevelHud.cs`,
+  `Assets/JellyGarden/Scripts/Story/CLAUDE.md`, `ralph/findings.md`,
+  `ralph/prd.json`, `ralph/progress.txt`.
+- Gates: typecheck 0 errors, `check_vfx_intact.py` clean, `check_launch_args.py`
+  clean, `lint_levels.py --levels 49-64` 0 problems.
+- **Learnings for future iterations:**
+  - A layout weight that widens a slot widens everything anchored to that slot,
+    not just the thing the weight was for. `SlotWeight` was added for the score
+    NUMBER and silently resized the score ICON with it, for three iterations,
+    across every plate in the game. When a weight is added, ask what else is
+    anchored 0..1 in the thing being weighted.
+  - `preserveAspect` makes a sprite's drawn size the MIN of the box's two sides.
+    A narrow box is width-limited and a wide one height-limited, so two chips in
+    boxes of different width come out different sizes even though both "fit".
+  - Diff a band against `tools/shipped_levels/` and `tools/shipped_targets/`
+    before reasoning about its difficulty. Levels 1-100 are the kit's own and
+    generated levels start above that; arguing about a kit level's pass mark is
+    arguing with the asset that was bought.
+  - The random-move bot is a weak oracle for a goal that needs aiming.
+    Ingredient levels have now collected ~0 across four bands, and the cause is
+    delivery through walled lower rows, not spawning. Reading the spawn rule
+    (`Item.cs` ~line 220) and the collect rule (`LevelManager.CheckIngredient` /
+    `GetBottomRow`) settles in five minutes what a sweep cannot.
+  - Reuse a previous iteration's scratchpad clone: `rsync -a --delete Assets/`
+    into it and rebuild in ~40s, instead of re-cloning Library.
 ---

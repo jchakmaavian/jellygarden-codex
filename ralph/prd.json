@@ -201,8 +201,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Swept in four batches of 4, 0 findings / 0 errors before and after. All 32 shots opened. Levels 49-64 are the kit's shipped board and target data byte for byte. One fault found and fixed: F-015, the score chip's double-width slot was also doubling its ICON, so the star drew 1.5-2.3x every other chip. StoryLevelHud.SizeIconBox sizes every icon from the narrowest slot. F-003 (dark backdrops) still open and still needs art."
     },
     {
       "id": "US-013",
