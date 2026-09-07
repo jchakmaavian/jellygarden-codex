@@ -770,3 +770,44 @@ error and ends no level, so a text-only sweep finds only the faults that throw.
 under `-nographics`, so a capture there hangs the whole sweep. `OpenShotDir`
 turns screenshots off when `SystemInfo.graphicsDeviceType` is `Null`, and the
 report says so on its `screenshots` line.
+
+## The window (StoryWindow)
+
+**The player is always windowed at 393x852 — an iPhone 15/16 in portrait — and
+never full screen.** A full-screen sweep takes over the display for as long as
+it runs, and its screenshots come out the shape of this desktop rather than the
+shape of the phone the game ships on, which is the wrong aspect to judge any
+layout in.
+
+`tools/run_player.sh` is the only thing that launches the game. It holds the
+window flags — not full screen, 393 wide, 852 tall — and passes anything else
+through, so `tools/run_player.sh -storyplaytest` is a playtest and
+`tools/run_player.sh -storydemo` is the demo walk. Never paste the flags into a
+new script.
+
+`StoryWindow.Apply()`, called from `StoryBoot`, is the braces to that belt: a
+desktop player opened by double-clicking it takes whatever Unity last saved in
+the player prefs, so Apply puts it back into a window. It is a no-op in the
+Editor and on a phone, where full screen is all there is.
+
+**Every screenshot goes through `StoryWindow.Capture`**, which captures at
+`ShotSuperSize` (2). A 393-point-wide PNG is too small to read a target chip or
+a tile's sprite in, and reading them is the whole point of taking it — the
+player's shots come out 786x1704. The Editor's Game view is not 393x852, so
+Editor-run shots are the right superSize and the wrong aspect; measure a layout
+off a player run.
+
+```bash
+python3 tools/check_launch_args.py
+```
+
+fails if `run_player.sh` and `StoryWindow.cs` disagree about the size, if any
+other file spells the flags out or opens the `.app` itself, or if a screenshot
+is taken by anything but `StoryWindow.Capture`.
+
+**`StoryBuild`'s menu items no longer quit the Editor.** Every method there is
+both a `-executeMethod` entry point and a `[MenuItem]`; `EditorApplication.Exit`
+now runs through `Finish()`, which returns instead when
+`Application.isBatchMode` is false. Clicking `JellyGarden > Story > Build macOS
+Player` closed the Editor the moment the build succeeded. Anything else that is
+both a menu item and a batchmode entry point needs the same guard.

@@ -14,7 +14,7 @@
 //
 // Launch a development player, or enter play mode, with:
 //
-//     open -a KingLeo.app --args -screen-fullscreen 0 -screen-width 393 -screen-height 852 -storyplaytest
+//     tools/run_player.sh -storyplaytest
 //
 // The report is written to Application.persistentDataPath/playtest.txt and
 // echoed to the log, so a batchmode run can be read from either. Two PNGs per
@@ -158,6 +158,13 @@ namespace JellyGarden.Scripts.Story
             Say(_shotDir.Length > 0
                 ? "screenshots in " + _shotDir
                 : "screenshots: none (headless, or the directory could not be made).");
+
+            // The shape a fault will be judged in. A sweep run full screen is
+            // looking at the wrong aspect and its pictures cannot be trusted.
+            Say(string.Format("window {0}x{1}{2}; shots at {3}x.",
+                Screen.width, Screen.height,
+                Screen.fullScreen ? " FULL SCREEN" : " windowed",
+                StoryWindow.ShotSuperSize));
             yield return new WaitForSecondsRealtime(2f);
 
             for (int i = 0; i < levels.Count; i++)
@@ -542,7 +549,7 @@ namespace JellyGarden.Scripts.Story
             yield return new WaitForEndOfFrame();
 
             string name = string.Format("{0:0000}_level_{1}_{2}.png", ++_shot, level, moment);
-            ScreenCapture.CaptureScreenshot(Path.Combine(_shotDir, name));
+            StoryWindow.Capture(Path.Combine(_shotDir, name));
 
             // CaptureScreenshot is asynchronous; give it a moment to land.
             yield return new WaitForSecondsRealtime(0.6f);

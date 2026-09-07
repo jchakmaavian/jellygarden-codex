@@ -86,6 +86,7 @@ prototype's own art at
 ```bash
 python3 tools/validate_story.py      # the files: 150 areas, 807 tasks, 1209 stars, 1209 boards
 python3 tools/check_vfx_intact.py    # no animation, particle or VFX regression since the branch point
+python3 tools/check_launch_args.py   # nothing can launch the game full screen
 
 python3 tools/make_typecheck_csproj.py
 dotnet build Story.Typecheck.csproj -v q --nologo    # 0 errors
@@ -142,14 +143,33 @@ UNITY=/Applications/Unity/Hub/Editor/6000.5.10f1/Unity.app/Contents/MacOS/Unity
 "$UNITY" -batchmode -quit -nographics -projectPath . -logFile - \
   -executeMethod JellyGarden.Scripts.Story.Editor.StoryBuild.BuildMac
 
-# Play it
-open -a Builds/Mac/KingLeo.app
+# Play it. run_player.sh is the only thing that launches the game: it holds the
+# window flags, so a new script cannot get them wrong.
+tools/run_player.sh
 
-# Or have it drive itself through the story loop, screenshotting each beat
-open -a Builds/Mac/KingLeo.app --args -storydemo
-tail -f ~/Library/Logs/DefaultCompany/"Match3 Games"/Player.log | grep StoryDemo
-open ~/Library/Application\ Support/DefaultCompany/Match3\ Games/demo
+# Anything extra is passed through to the player
+tools/run_player.sh -storydemo         # walk the story loop, shot at each beat
+tools/run_player.sh -storyplaytest     # play levels by itself and report
+tools/run_player.sh -storyselftest     # the powerup and shell self-tests
+# The product name is "King Leo"; the old "Match3 Games" paths are the kit's.
+tail -f ~/Library/Logs/DefaultCompany/"King Leo"/Player.log | grep StoryDemo
+open ~/Library/Application\ Support/DefaultCompany/King\ Leo/demo
 ```
+
+**The player is always windowed at 393x852 — an iPhone 15/16 in portrait — and
+never full screen.** Full screen takes over the display for as long as a sweep
+runs, and its screenshots come out the shape of this desktop rather than the
+shape of the phone the game ships on, which is the wrong aspect to judge a
+layout in. `tools/run_player.sh` passes the flags; `StoryWindow.Apply()` puts a
+player that was opened some other way back into a window; and
+
+```bash
+python3 tools/check_launch_args.py
+```
+
+fails if those two ever disagree, if any other file spells the flags out for
+itself, or if a screenshot is taken by anything but `StoryWindow.Capture`
+(which renders at superSize 2, so a 393-point-wide shot is readable).
 
 `-storydemo` exists because driving the player with synthetic mouse clicks does
 not work here: the window cascades to a new position on every launch and Unity

@@ -77,7 +77,28 @@ namespace JellyGarden.Scripts.Story.Editor
                 summary.result, summary.totalErrors, summary.totalWarnings,
                 summary.totalTime.TotalSeconds, IosPath));
 
-            EditorApplication.Exit(summary.result == BuildResult.Succeeded ? 0 : 1);
+            Finish(summary.result == BuildResult.Succeeded ? 0 : 1);
+        }
+
+        /// <summary>
+        /// Quits, but only a batchmode Editor.
+        ///
+        /// Every method here is both a -executeMethod entry point and a
+        /// [MenuItem]. A batchmode run has to exit with a status or the build
+        /// never returns; an Editor someone is sitting in front of must not,
+        /// and did not survive learning that — clicking `Build macOS Player`
+        /// closed the Editor the moment the build succeeded, unsaved scene and
+        /// all.
+        /// </summary>
+        private static void Finish(int code)
+        {
+            if (!Application.isBatchMode)
+            {
+                Debug.Log("[Story] build finished (" + code + "); Editor left open.");
+                return;
+            }
+
+            EditorApplication.Exit(code);
         }
 
         /// <summary>The scenes the build settings actually ship, or null after logging why not.</summary>
@@ -91,7 +112,7 @@ namespace JellyGarden.Scripts.Story.Editor
             if (scenes.Length != 0) return scenes;
 
             Debug.LogError("[Story] No enabled scenes in build settings.");
-            EditorApplication.Exit(1);
+            Finish(1);
             return null;
         }
 
@@ -105,7 +126,7 @@ namespace JellyGarden.Scripts.Story.Editor
             if (scenes.Length == 0)
             {
                 Debug.LogError("[Story] No enabled scenes in build settings.");
-                EditorApplication.Exit(1);
+                Finish(1);
                 return;
             }
 
@@ -133,7 +154,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 summary.totalSize / 1024f / 1024f, summary.totalTime.TotalSeconds,
                 OutputPath));
 
-            EditorApplication.Exit(summary.result == BuildResult.Succeeded ? 0 : 1);
+            Finish(summary.result == BuildResult.Succeeded ? 0 : 1);
         }
     }
 }

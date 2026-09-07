@@ -25,6 +25,10 @@ namespace JellyGarden.Scripts.Story
             if (_booted) return;
             _booted = true;
 
+            // Before anything draws: a desktop player that was opened without
+            // the launch flags is put back into a 393x852 window.
+            StoryWindow.Apply();
+
             StoryDatabase.Load();
             StoryProgress.Load();
             StoryLevelPlan.Load();

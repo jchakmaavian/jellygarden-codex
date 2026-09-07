@@ -10,7 +10,7 @@
 // stale. Driving the game through its own API is both reliable and closer to
 // what is actually being checked.
 //
-//   open -a KingLeo.app --args -storydemo
+//   tools/run_player.sh -storydemo
 //
 // Screenshots land next to the log, in the player's persistent data path.
 
@@ -188,7 +188,7 @@ namespace JellyGarden.Scripts.Story
             yield return new WaitForEndOfFrame();
 
             string path = Path.Combine(_shotDir, string.Format("{0:00}_{1}.png", ++_shot, name));
-            ScreenCapture.CaptureScreenshot(path);
+            StoryWindow.Capture(path);
 
             // CaptureScreenshot is asynchronous; give it a frame to land.
             yield return new WaitForSecondsRealtime(0.6f);

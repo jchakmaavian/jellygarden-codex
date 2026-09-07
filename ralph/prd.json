@@ -64,8 +64,8 @@
         "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "tools/run_player.sh holds the flags; StoryWindow.cs holds the size and the superSize; tools/check_launch_args.py fails on a third copy. Verified in a fresh player: window 393x852 windowed, shots 786x1704."
     },
     {
       "id": "US-005",

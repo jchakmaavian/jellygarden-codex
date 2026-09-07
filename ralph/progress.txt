@@ -33,10 +33,23 @@ Started: 2026-09-07
   `WaitForEndOfFrame` never returns under `-nographics`, so any new capture
   must be gated on `SystemInfo.graphicsDeviceType != Null`.
 
-- NEVER launch the player full screen. Every launch — by hand, from a script,
-  from a sweep — passes `-screen-fullscreen 0 -screen-width 393 -screen-height 852`,
-  which is iPhone 15/16 portrait. Full screen takes over the display and the
-  screenshots come out the wrong shape. See US-004.
+- NEVER launch the player full screen, and never write the flags out yourself.
+  `tools/run_player.sh` is the only thing that launches the game; it holds them
+  (393x852, iPhone 15/16 portrait) and passes anything else through, so
+  `tools/run_player.sh -storyplaytest`. `python3 tools/check_launch_args.py`
+  fails on a second copy of the flags, on a file that opens the .app itself, and
+  on a `ScreenCapture.CaptureScreenshot` that is not `StoryWindow.Capture`.
+  Player shots are 786x1704 (393x852 at superSize 2); Editor shots are
+  2160x3840, the right superSize and the WRONG aspect — measure a layout off a
+  player run, never off an Editor one.
+
+- **A `[MenuItem]` that is also a `-executeMethod` entry point must not call
+  `EditorApplication.Exit`.** `JellyGarden > Story > Build macOS Player` did,
+  and closed the user's Editor the moment the build succeeded. `StoryBuild` now
+  routes every exit through `Finish()`, which returns unless
+  `Application.isBatchMode`. Check any new menu item against this before
+  clicking it — the same trap is why `StoryPlaytestRunner.RunHeadless` must
+  never be wired to a menu.
 
 READ THIS SECTION FIRST. It is the difference between a working iteration and a
 wasted one.
@@ -438,4 +451,80 @@ Implemented in `Assets/JellyGarden/Scripts/Story/StoryPlaytest.cs`.
 - `osascript -e` with a nested `do shell script "...'$VAR'..."` fights zsh
   quoting. Use a double-quoted heredoc-free `osascript -e "..."` and escape the
   inner quotes, or take the screenshot in a separate call.
+---
+
+## 2026-09-07 - US-004 - The game runs in a window at iPhone size, never full screen
+
+One helper each side of the boundary, and a linter holding them together.
+
+- `tools/run_player.sh` is now the only thing that launches the game. It holds
+  `WIDTH=393 HEIGHT=852` and `-screen-fullscreen 0`, passes everything else
+  through (`-storyplaytest`, `-storydemo`, `-storyselftest`), takes
+  `--print-args` for a script that must build its own command line, honours
+  `KINGLEO_APP`, and says how to build a player when there is none.
+- `Assets/JellyGarden/Scripts/Story/StoryWindow.cs` is the runtime half.
+  `Width`/`Height`/`ShotSuperSize` live there; `Apply()` (called from
+  `StoryBoot`, before anything draws) puts a desktop player that was opened
+  without the flags back into a 393x852 window, and is a no-op in the Editor and
+  on a phone; `Capture(path)` is the one screenshot call, at superSize 2.
+- `StoryPlaytest.Shot` and `StoryDemoDriver.Shot` now call `StoryWindow.Capture`
+  rather than `ScreenCapture.CaptureScreenshot`, so neither can miss the
+  superSize. The playtest report gained a line naming the shape a fault will be
+  judged in: `window 393x852 windowed; shots at 2x.`
+- The comment headers in `StoryPlaytest.cs`, `StoryDemoDriver.cs` and
+  `StorySelfTests.cs`, and `tools/README.md`, now say `tools/run_player.sh -flag`
+  instead of pasting the flags. README's stale `Match3 Games` log paths were
+  corrected to `King Leo` while in there.
+- `tools/check_launch_args.py` is the gate: the launcher and `StoryWindow.cs`
+  must agree on the size, the launcher must actually pass
+  `-screen-fullscreen 0`, `ShotSuperSize` must be 2, `FullScreenMode.Windowed`
+  must still be enforced, and no other file under `tools/`,
+  `Assets/JellyGarden/Scripts/` or `docs/` may spell the flags out, open the
+  `.app` itself, or capture a screenshot directly. It caught two of my own doc
+  paragraphs while I wrote them.
+- `StoryBuild` no longer quits an interactive Editor (see below).
+
+**Verified by running it, not by reading:**
+- `tools/run_player.sh` on the built player: window measured at
+  `763, 50, 393, 884` — 393 wide, 852 of content under a 32pt title bar — and
+  screenshotted portrait. Not full screen.
+- Editor band playtest (level 1): shots went from 1080x1920 to **2160x3840**,
+  exactly the Game view at superSize 2, and the report's new line read
+  `window 1080x1920 windowed; shots at 2x.`
+- Fresh macOS build, then `tools/run_player.sh -storyplaytest`: report line
+  `window 393x852 windowed; shots at 2x.`, shots **786x1704**, level 1 won,
+  `SUMMARY: 1 level(s) played, 1 won, 0 lost, 0 finding(s), 0 error(s).` The
+  start shot was opened and looked at: portrait, board centred, tutorial hand.
+- `dotnet build Story.Typecheck.csproj` 0 errors; `check_vfx_intact.py` clean;
+  `validate_story.py` 1208 boards, all checks passed; `check_launch_args.py`
+  passes.
+
+**Learnings for future iterations:**
+- **Clicking `JellyGarden > Story > Build macOS Player` closed the Editor.**
+  Every method in `StoryBuild` is both a `-executeMethod` entry point and a
+  `[MenuItem]`, and it called `EditorApplication.Exit` unconditionally. Fixed:
+  every exit goes through `Finish()`, which logs and returns unless
+  `Application.isBatchMode`. The Editor was relaunched afterwards. Check a new
+  menu item for this before clicking it.
+- **The build itself is fast** — 40s, 496MB, 0 errors, from the open Editor on
+  an iOS build target — so a sweep can afford a fresh player per band. The old
+  `Builds/Mac/KingLeo.app` was three commits stale and silently ran the
+  pre-US-001 playtest ("levels [1] of area 1", no screenshots); a player run
+  that behaves like an older commit is a stale build, not a regression. Rebuild
+  before trusting a player run.
+- **The player build raised 0 errors where the Editor raised 2.** The
+  `placementId cannot be nil or empty` ads errors that US-002 expected to drown
+  the sweep are an Editor-only artefact — another reason the band sweep should
+  run the player rather than the Editor.
+- The Editor's Game view is 1080x1920 and the player is 393x852. Both capture at
+  superSize 2, so an Editor shot is 2160x3840 and a player shot is 786x1704: the
+  aspects differ (1.78 vs 2.17), and any measurement of a layout has to come
+  from a player run.
+- The band runner leaves the Editor **in Play mode** when it finishes. Exit it
+  (`Edit > Play Mode > Play`) before doing anything else, or the next menu-driven
+  test run is void.
+- `strings -el` does not find C# user strings in `Assembly-CSharp.dll`; the
+  member names are ASCII but the string blob is not plainly UTF-16. To prove a
+  recompile landed, compare `Library/ScriptAssemblies/Assembly-CSharp.dll`'s
+  mtime against every source file you edited.
 ---

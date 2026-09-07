@@ -10,7 +10,7 @@
 // So they are opt-in now. A plain launch opens the game; a launch that asks
 // for them gets them:
 //
-//     open -a KingLeo.app --args -storyselftest
+//     tools/run_player.sh -storyselftest
 //
 // The Editor's Preview menu calls RunNow() directly and is unaffected, which
 // is the normal way to run either of them while working.

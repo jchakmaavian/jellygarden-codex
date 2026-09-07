@@ -42,11 +42,24 @@ UNITY=/Applications/Unity/Hub/Editor/6000.5.10f1/Unity.app/Contents/MacOS/Unity
 
 python3 tools/validate_story.py       # content: 150 areas / 807 tasks / 1209 stars / 1209 boards
 python3 tools/check_vfx_intact.py     # no visual regression since the branch point
+python3 tools/check_launch_args.py    # nothing can launch the game full screen
 
 "$UNITY" -batchmode -quit -nographics -projectPath . -logFile - \
   -executeMethod JellyGarden.Scripts.Story.Editor.StorySmokeTest.RunAll
 "$UNITY" -batchmode -quit -nographics -projectPath . -logFile - \
   -executeMethod JellyGarden.Scripts.Story.Editor.StoryScreenTests.RunHeadless
+```
+
+## Running the game
+
+`tools/run_player.sh` is the only thing that launches the player. It holds the
+window flags — 393x852, an iPhone 15/16 in portrait, never full screen — and
+passes anything else through:
+
+```bash
+tools/run_player.sh                 # play it
+tools/run_player.sh -storyplaytest  # play levels by itself and report
+tools/run_player.sh -storydemo      # walk the story loop, shot at each beat
 ```
 
 ## Regenerating the story
