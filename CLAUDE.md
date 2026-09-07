@@ -165,6 +165,22 @@ unchanged.
 python3 tools/level_templates.py && python3 tools/level_gen.py && python3 tools/target_gen.py
 ```
 
+Check idempotence on the CONTENT, not on `git status` — that lists names, and a
+generator that rewrites a file with different bytes shows nothing new:
+
+```bash
+/usr/bin/find Assets/JellyGarden/Resources/Levels Assets/JellyGarden/Resources/Targets \
+  tools/out -type f | sort | xargs shasum | shasum
+```
+
+**Levels 1-100 are the kit's, 101-1208 are the generator's.** Nothing under 101
+moves when a generator changes, so a generator fix costs nothing to the bands
+already swept — and a fault found from level 101 on is as likely to live in
+`tools/` as in `Assets/`. The lint is not the only thing to check after a
+generator change; two levels can each be legal and still be the same level.
+`level_gen.RECENT_TEMPLATES` is what stops that, and its value is set by a
+measured table in the comment above it, not by taste.
+
 ## Regenerating the story
 
 The markdown is the source of truth. After editing it, re-run the pipeline in

@@ -33,6 +33,28 @@ from story_common import LEVELS_RES, OUT, ensure_dir, write_text_meta  # noqa: E
 
 PRESERVED_THROUGH = 100
 
+# How many levels back a template stays off the table.
+#
+# The number is the guarantee: no board comes back inside RECENT_TEMPLATES + 1
+# levels, measured over the finished grids and not just the template numbers.
+# A wider ban list needs a wider rank window to draw from, and that is the
+# trade. Measured over all 1208 levels, window half-width against ban length:
+#
+#     window  recent  fell back  fewest candidates  closest repeat  rank offset
+#     +-3     4       0          2                  5 levels        3
+#     +-4     6       0          1                  7               4
+#     +-5     8       15         1                  9               5
+#     +-6     10      28         1                  10              6
+#
+# "fell back" is the count of levels where the ban list emptied the window and
+# `or window` had to hand back a banned template — where the guarantee is not a
+# guarantee. +-3 with four is the only row that holds everywhere AND still
+# leaves every level a choice between two boards; every wider setting buys a
+# bigger number by breaking the rule at fifteen levels or more, and pulls the
+# board further from the difficulty the plan asked for. So the window stays as
+# it was and this is four.
+RECENT_TEMPLATES = 4
+
 # The two digits of a cell take disjoint sets of SquareTypes; see the note in
 # level_templates.py. Getting this wrong does not make a harder board, it makes
 # a cell LevelManager silently treats as empty.
@@ -49,15 +71,33 @@ def load(path):
         return json.load(fh)
 
 
-def pick_template(templates_by_rank, difficulty, rng):
+def pick_template(templates_by_rank, difficulty, rng, recent=()):
     """
     The template whose difficulty rank is closest to the target, chosen from a
     small window so consecutive levels do not all land on the same board.
+
+    The window on its own did not achieve that. Each level drew from it
+    independently, so the same template came up twice in a row 107 times over
+    the 1108 generated levels — four times in a row at 240-243, 356-359,
+    945-948 and 1145-1148 — and 16 of those pairs came out BYTE-IDENTICAL,
+    because the mutations are a coin flip each (mirror at 1/2, flip at 1/4) and
+    can land the same way twice. Levels 111 and 112 are one such pair: same
+    board, same mode, same colour limit, one more move and a pass mark eight
+    points higher. A player reads that as the game repeating itself.
+
+    `recent` is the templates the levels immediately before this one used. They
+    are dropped from the window, so a board cannot come back until
+    RECENT_TEMPLATES levels have gone by. The window is seven wide, so at least
+    two candidates are left and the pick stays inside the same difficulty band;
+    `or window` is the guard for the truncated windows at either end.
     """
     index = int(round(difficulty * (len(templates_by_rank) - 1)))
     low = max(0, index - 3)
     high = min(len(templates_by_rank) - 1, index + 3)
-    return templates_by_rank[rng.randint(low, high)]
+    window = templates_by_rank[low:high + 1]
+    banned = set(recent)
+    candidates = [t for t in window if t["number"] not in banned] or window
+    return candidates[rng.randrange(len(candidates))]
 
 
 def mirror_grid(grid):
@@ -261,6 +301,13 @@ def main():
     provenance = {}
     failures = []
 
+    # The templates the last RECENT_TEMPLATES levels used, oldest first. The
+    # plan is in level order, so this is a plain sliding window. A preserved
+    # level goes in it too: level 100's board IS template 100's board, so
+    # letting level 101 draw template 100 would hand the player the same shape
+    # twice across the boundary between the kit's levels and the generated ones.
+    recent = []
+
     for entry in plan["levels"]:
         number = entry["levelNumber"]
         path = os.path.join(LEVELS_RES, "%d.txt" % number)
@@ -282,9 +329,10 @@ def main():
                 "blockTargetCount": block_target_count(level["grid"]),
             }
             preserved += 1
+            used = number
         else:
             rng = random.Random("kingleo/pick/%d" % number)
-            template = pick_template(by_rank, entry["difficulty"], rng)
+            template = pick_template(by_rank, entry["difficulty"], rng, recent)
             level = generate(template, entry, min_open)
             text = format_level(level)
             provenance[str(number)] = {
@@ -301,6 +349,10 @@ def main():
                 "moves": level["limit"],
             }
             written += 1
+            used = template["number"]
+
+        recent.append(used)
+        del recent[:-RECENT_TEMPLATES]
 
         # Every emitted file must survive the same parser the game's own reader
         # mirrors, and must leave enough board to play on.

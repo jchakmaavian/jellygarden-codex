@@ -93,6 +93,24 @@ Started: 2026-09-07
   near-instant and near-free, `rsync -a --delete Assets/` re-syncs it per
   iteration, and `-projectPath <clone>` builds while the user's Editor stays
   open. Point the sweep at it with `KINGLEO_APP`.
+- **A docstring can describe a rule the code does not implement.**
+  `pick_template`'s window was introduced with the words "so consecutive levels
+  do not all land on the same board" and never enforced it — 107 adjacent
+  duplicate picks, 16 of them byte-identical boards. Treat a stated invariant as
+  a claim to measure, not as evidence.
+- **The honest metric for a "do not repeat" rule is how often it falls back.**
+  Every wider ban list scored a better closest-repeat number and bought it by
+  quietly handing back a banned candidate at 15 to 28 levels. Count the
+  fallbacks or the guarantee is decoration.
+- **Simulate a generator change in memory before regenerating the tree.**
+  `sys.path.insert(0,'tools')`, import the generator, re-run its pick loop over
+  `level_plan.json` and score the outcome. A minute per candidate setting, and
+  it ranks them before a single file is written.
+- **Hash file CONTENT for an idempotence check, not `git status`.**
+  `git status --porcelain` lists names; a generator that rewrites a file with
+  different bytes shows nothing new. `find ... | sort | xargs shasum | shasum`
+  is the check that actually holds.
+
 - **Do not background a sweep.** A backgrounded `playtest_sweep.py` was killed
   twice mid-run, silently, and once raced a later foreground run so that it read
   the other run's report. Run one batch of 8 in the foreground (~6 min, inside
@@ -1489,4 +1507,81 @@ ralph/findings.md as a linter rule waiting for a decision about the 22.
     and 1/1 — the first since US-010. The zero-collect levels are the ones that
     wall their lower rows, which is what US-012 concluded; this is the positive
     control that conclusion was missing.
+---
+
+## 2026-09-08 - US-015 - Play levels 97-112 and fix what they show
+- Swept 97-112 in foreground batches of 4 against a player built from the
+  scratchpad clone: `0 finding(s), 0 error(s)` in every batch, three times over
+  (once before the fix, twice after). Opened all 32 screenshots.
+- This band straddles the seam. 97-100 are the last of the kit's own hundred and
+  carry its shipped board AND target byte for byte — level 100 differs only where
+  US-007's linter replaced cell digit `17` with `10`. 101-112 are the FIRST
+  generated levels anyone has played.
+- Found and fixed F-018: **levels 111 and 112 were the same level.** Byte-
+  identical boards, same MODE 0, same 9x11, same COLOR LIMIT 4, 27 moves against
+  28, pass marks 1495 against 1503. 108/109 were the same board with its 2x2
+  block region mirrored.
+- `level_gen.pick_template` picked from a seven-wide window of templates around
+  the level's difficulty rank, and its own docstring said the window existed "so
+  consecutive levels do not all land on the same board". It never did that: each
+  level drew independently with its own seeded RNG. Over the 1108 generated
+  levels the same template came up back to back **107 times** — four in a row at
+  240-243, 356-359, 945-948 and 1145-1148 — and **16 pairs came out byte-
+  identical**, because mirror (1/2) and flip (1/4) can land the same way twice.
+- `pick_template` now takes `recent` and drops it from the window. A preserved
+  level goes in too: level 100's board IS template 100's board, so level 101 must
+  not draw it.
+- `RECENT_TEMPLATES = 4` is measured. Simulated the whole game at four window/ban
+  pairs before writing any file:
+
+      window  recent  fell back  fewest candidates  closest repeat  rank offset
+      +-3     4       0          2                  5 levels        3
+      +-4     6       0          1                  7               4
+      +-5     8       15         1                  9               5
+      +-6     10      28         1                  10              6
+
+  "Fell back" is where the ban list emptied the window and the guard handed back
+  a banned template — where the guarantee is not a guarantee. `+-3` with four is
+  the only row that holds everywhere AND leaves every level a choice.
+- Result over all 1208 finished grids: same template in a row 107 -> 0, at
+  distance 2, 3 and 4 also 0, byte-identical boards in a row 16 -> 0, closest
+  identical pair anywhere 1 level -> 5 levels.
+- 646 level files and 643 target files rewritten, **every one above level 100**,
+  so bands US-009..US-014 are untouched. Generators still idempotent byte for
+  byte.
+- Files changed: `tools/level_gen.py`, `Assets/JellyGarden/Resources/Levels/*`
+  (101+), `Assets/JellyGarden/Resources/Targets/*` (101+),
+  `tools/out/level_provenance.json`, `ralph/findings.md`, `ralph/prd.json`,
+  `ralph/progress.txt`.
+- Gates: typecheck 0 errors, `check_vfx_intact.py` clean, `check_launch_args.py`
+  clean, `lint_levels.py` 0 problems in 1208 levels, `check_themes.py` 0 problems
+  / 10 notes (F-003), `validate_story.py` 150/806/1208/1208. The two Unity
+  batchmode gates are still RED on the stale `expected 807 tasks, loaded 806` /
+  `expected 1209 stars, loaded 1208` constants US-011 proved pre-existing.
+- Left OPEN in `ralph/findings.md`: 101/111 and 102/112 are still identical
+  grids ten levels apart, which the table above prices rather than hides; and a
+  NOTE that the numbers on one target card are drawn at up to 1.75x different
+  heights (level 103: `0/1018` at h8 beside `3` at h14).
+- **Learnings for future iterations:**
+  - **A docstring can describe a rule the code does not implement.** The window
+    in `pick_template` was introduced with the words "so consecutive levels do
+    not all land on the same board" and never enforced it. When a comment states
+    an invariant, measure the invariant — do not read it as evidence.
+  - **Simulate a generator change before writing 1289 files.** Importing
+    `level_gen` and re-running `pick_template`'s loop in memory ranked four
+    window/ban settings in about a minute each and produced the table that
+    picked the constant. Regenerating to find that out would have been four
+    full runs and four diffs of the tree.
+  - **The honest metric for a "do not repeat" rule is how often it FALLS BACK.**
+    Every wider setting had a better closest-repeat number and got it by
+    silently handing back a banned template at 15 to 28 levels. Count the
+    fallback, or the guarantee is decoration.
+  - **Level 101 is the first level a generator wrote.** Bands 1-96 were entirely
+    the kit's own data, so a generator fault could not have shown up before now,
+    and changing a generator today costs nothing retroactively. Faults from here
+    on are as likely to be in `tools/` as in `Assets/`.
+  - **Check a suspicion with a meter before writing it down.** The lose panel's
+    star looked gold in the screenshot and reads as a 0.63x value multiply of the
+    win star at the same hue — F-009 was right and a second finding was avoided
+    by measuring instead of trusting the eye.
 ---

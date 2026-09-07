@@ -579,3 +579,136 @@ where the widest was 5, at a cost of 2 to 4 pixels of icon.
 - The two Unity batchmode gates (`StorySmokeTest.RunAll`,
   `StoryScreenTests.RunHeadless`) are still RED on the stale 807-task /
   1209-star constants US-011 proved pre-existing. Unchanged by this iteration.
+
+
+---
+
+## Iteration note — US-015 (levels 97-112), 2026-09-08
+
+**This band straddles the seam.** 97-100 are the last of the kit's own hundred;
+101-112 are the first generated levels anyone has played. Levels 97-100 carry
+the kit's shipped target asset AND its shipped board byte for byte, except
+level 100, which differs in exactly one way: two cells that were the digit `17`
+`CreateSquare` does not understand, replaced with `10` by US-007's linter fix.
+Nothing in 97-100 needed changing, and nothing in them was changed.
+
+Everything below is about the generated twelve.
+
+## F-018 — the same board twice in a row  [FIXED in US-015]
+**Levels 111 and 112 were the same level.** Byte-identical boards, same MODE 0,
+same 9x11, same COLOR LIMIT 4, one more move (27 against 28) and a pass mark
+eight points apart (1495 against 1503). Both drew template 97. Levels 108 and
+109 were the same board with its 2x2 block region mirrored: same size 9/5, same
+LIMIT 0/8, same mode, stars 98 and 99. A player reads that as the game
+repeating itself, and the sweep reported `0 finding(s)` over both pairs.
+
+`level_gen.pick_template` chose from a seven-wide window of templates around the
+level's difficulty rank, and its own docstring said the window was there "so
+consecutive levels do not all land on the same board". **The window never did
+that.** Each level drew from it independently with its own seeded RNG, so
+nothing stopped two levels in a row drawing the same number. Over the 1108
+generated levels that happened **107 times** — four in a row at 240-243,
+356-359, 945-948 and 1145-1148 — and **16 of those pairs came out
+byte-identical**, because the mutations are coin flips (mirror at 1/2, flip at
+1/4) and can land the same way twice.
+
+The fix is the rule the docstring already claimed: `pick_template` now takes
+`recent`, the templates the last `RECENT_TEMPLATES` levels used, and drops them
+from the window. A preserved level goes into that window too — level 100's
+board IS template 100's board, so level 101 must not draw it.
+
+`RECENT_TEMPLATES = 4` is measured, not chosen. A longer ban list needs a wider
+rank window to draw from, and that is the whole trade:
+
+| window | recent | fell back | fewest candidates | closest repeat | rank offset |
+|---|---|---|---|---|---|
+| ±3 | 4 | **0** | **2** | 5 levels | 3 |
+| ±4 | 6 | 0 | 1 | 7 | 4 |
+| ±5 | 8 | 15 | 1 | 9 | 5 |
+| ±6 | 10 | 28 | 1 | 10 | 6 |
+
+"Fell back" counts the levels where the ban list emptied the window and the
+guard had to hand back a banned template — where the guarantee is not a
+guarantee. ±3 with four is the only row that holds at every level *and* still
+leaves every level a choice between two boards. Every wider setting buys a
+bigger headline number by breaking the rule at fifteen levels or more, and
+pulls the board further from the difficulty the plan asked for.
+
+Measured over the finished grids of all 1208 levels, before → after:
+
+| | before | after |
+|---|---|---|
+| same template back to back | 107 | **0** |
+| same template two apart | (unmeasured) | **0** |
+| same template three or four apart | — | **0** |
+| byte-identical boards back to back | 16 | **0** |
+| closest byte-identical pair anywhere | 1 level | **5 levels** |
+
+646 level files and 643 target files were rewritten, **all of them above 100**.
+Levels 1-100 are untouched, so every band US-009 through US-014 swept is
+unaffected by this change. The three generators are still idempotent: running
+`level_templates.py && level_gen.py && target_gen.py` twice leaves the tree
+byte-for-byte identical (checked by hashing every file under `Resources/Levels`,
+`Resources/Targets` and `tools/out`, not just the file list).
+
+### Still open after the fix, and honestly
+**Two identical-grid pairs remain inside this one band: 101/111 and 102/112,
+ten levels apart each.** Same board, same collect goals, pass marks 101/100 and
+506/501, one move apart. That is the residual the table above prices: closing it
+means either breaking the guarantee at fifteen other levels or drawing the board
+from further off its planned difficulty. With 100 templates and 1108 generated
+levels each template is used about eleven times, so repeats at *some* distance
+are arithmetic, not a bug. Recorded here rather than fixed, because the fix has
+a cost that has to be decided rather than assumed.
+
+## Measured but NOT a fault — checked and cleared
+Three things looked wrong in the shots and are not. Written down so the next
+iteration does not re-open them:
+
+- **The lose panel's star is gold to the eye and bronze to the meter.** Same hue
+  as the win star (38° against 39°), same saturation (0.90), but value 0.54
+  against 0.85 — a 0.63x multiply. F-009's claim holds; the panels differ by
+  that, by the win's pale blue socket disc behind the star, and by the caption.
+- **"Already beaten" on levels 101 and 110 is correct.** Both were won (the
+  report says so: level 101 "RESULT: won. Score 2000, stars 1"), and both had
+  been beaten in an earlier sweep of the same install, so no new star is
+  awarded and the star is drawn dull. It is the win panel's replay caption, not
+  a congratulation on a loss.
+- **A count chip shows what is LEFT, a score chip shows progress.** Level 111's
+  end HUD reads ring `1` and `100/100`: the score was made, the ingredient was
+  not, and the panel correctly says "Out of moves".
+
+## NOTE — one plate, two number sizes  [OPEN, not fixed in US-015]
+Measured off the band's own 393-point screenshots, by glyph run over the number
+band of the target card. The numbers on ONE card are drawn at heights that
+differ by up to 1.75x, and the direction is not consistent:
+
+| level | chips | number heights | score is |
+|---|---|---|---|
+| 103 | 0/1018, 3, 1 | **8**, 14, 13 | smaller |
+| 107 | 0/975, 3, 1 | **10**, 14, 13 | smaller |
+| 106 | 1, 1, 0/485 | 13, 13, 11 | smaller |
+| 110 | 25, 35, 0/991 | 9, 9, **11** | bigger |
+| 98 | 30, 30, 0/2600 | 9, 9, 8 | matched |
+
+Each chip's number is its own best-fit Text, so the size is whatever fits that
+string in that box: a six-character score is width-limited to h8 while a
+one-character count beside it stays h14. This is the fourth member of the
+`SlotWeight` / `SizeIconBox` / `SizeCountBox` family — nothing owns the
+relationship between the SIZES of two numbers on one plate — but the obvious
+rule (one plate, one size, the smallest that fits) would drag every count down
+to h8, which is worse than the fault. It wants a real answer, and it did not get
+one this iteration.
+
+## Standing, after US-015
+- **F-003 (dark backdrops) is still the only OPEN visual finding that new art
+  alone can close.** `check_themes.py` prints the same 10 NOTE lines. Levels
+  102, 103, 104, 110 and 112 draw their `00` holes as black rectangles cut out
+  of the board for that reason and no other.
+- F-005 stands. Seven batches across three sweeps printed `0 finding(s),
+  0 error(s)` over the pictures that carried F-018.
+- The two Unity batchmode gates (`StorySmokeTest.RunAll`,
+  `StoryScreenTests.RunHeadless`) are still RED on the stale constants US-011
+  proved pre-existing, and this iteration re-confirmed the exact wording:
+  `[Story] expected 807 tasks, loaded 806` and `[Story] expected 1209 stars,
+  loaded 1208`. `tools/validate_story.py` passes on 150 / 806 / 1208 / 1208.
