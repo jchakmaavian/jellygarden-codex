@@ -237,15 +237,19 @@ namespace JellyGarden.Scripts.Story
                 image.sprite = art;
 
                 Text word = StoryUi.CreateText(LoadingMarker, image.rectTransform,
-                    "Loading...", 40, StoryUi.RoyalTitle, TextAnchor.LowerCenter);
+                    "Loading...", 40, StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
                 word.font = StoryUi.DisplayFont;
                 word.raycastTarget = false;
+
+                // Centred, not sat on the bottom edge. On a phone the word was
+                // down by the home indicator, far from the castle it belongs to;
+                // the middle is where the eye already is while the wait passes.
                 RectTransform rect = word.rectTransform;
-                rect.anchorMin = new Vector2(0f, 0f);
-                rect.anchorMax = new Vector2(1f, 0f);
-                rect.pivot = new Vector2(0.5f, 0f);
+                rect.anchorMin = new Vector2(0f, 0.5f);
+                rect.anchorMax = new Vector2(1f, 0.5f);
+                rect.pivot = new Vector2(0.5f, 0.5f);
                 rect.sizeDelta = new Vector2(0f, 120f);
-                rect.anchoredPosition = new Vector2(0f, 60f);
+                rect.anchoredPosition = Vector2.zero;
                 var outline = word.gameObject.AddComponent<Outline>();
                 outline.effectColor = StoryUi.IconWood;
                 outline.effectDistance = new Vector2(3f, -3f);
