@@ -1,9 +1,35 @@
 # Ralph Progress Log
-Feature: Royal Match in-place repair animation
-Started: 2026-09-03
+Feature: Play every level, find inconsistencies / bugs / visual issues, fix them
+Started: 2026-09-07
 ---
 
 ## Codebase Patterns
+
+- The playtest is driven from the OPEN Editor, never batchmode: batchmode wants
+  the project lock the user's Editor already holds. `King Leo > Preview >
+  Playtest the band file` plays whatever level list is in
+  `ralph/playtest_band.txt` and LEAVES THE EDITOR OPEN. The batchmode entry
+  point (`RunHeadless`) is the one that quits the Editor when the report lands —
+  never click a menu item wired to it.
+- A `/` in a `[MenuItem]` path opens a SUBMENU. A menu item cannot be named
+  after a file path.
+- The playtest report is at
+  `~/Library/Application Support/DefaultCompany/King Leo/playtest.txt`
+  (`Application.persistentDataPath`; the Editor writes to the same place a
+  player does). Poll for the file rather than reading the log.
+- `osascript ... set frontmost to true` alone does NOT raise Unity when another
+  app owns the screen. Add `perform action "AXRaise" of window 1`.
+- Play mode is read off the toolbar: a BLUE button with a square is playing, a
+  grey triangle is not. Capture `-R 116,30,875,90` (the Unity window rect from
+  `get {position, size} of window 1`) and crop with PIL.
+- Unity queues script compilation while it is in Play mode. Exit Play, then
+  `Assets > Refresh`, and confirm the recompile landed by asking the menu bar
+  for a name you just changed — do not trust a byte count.
+
+- NEVER launch the player full screen. Every launch — by hand, from a script,
+  from a sweep — passes `-screen-fullscreen 0 -screen-width 393 -screen-height 852`,
+  which is iPhone 15/16 portrait. Full screen takes over the display and the
+  screenshots come out the wrong shape. See US-004.
 
 READ THIS SECTION FIRST. It is the difference between a working iteration and a
 wasted one.
@@ -292,47 +318,62 @@ raise Unity and take the shot inside ONE osascript
 ---
 
 
-## 2026-09-03 - US-001..US-009 - Royal Match in-place repair animation
 
-Run completed in one session rather than nine ralph iterations; the PRD is
-the same and every story was committed and verified separately.
+## 2026-09-07 - US-002 - Playtest survives a level it cannot beat
 
-- US-001 the repair plays on the room already on screen (AreaScreen's or
-  home's). US-002/003 no text over a room, and a 1.85s beat map beside the
-  4.2s one. US-004 the changed region, diffed offline. US-005/006/007 gold
-  sparkles on that region, crossfade instead of wipe, panel timing.
-  US-008 the spent star flies to the counter. US-009 docs and dead code.
+Implemented in `Assets/JellyGarden/Scripts/Story/StoryPlaytest.cs` and
+`Assets/JellyGarden/Scripts/Story/Editor/StoryPlaytestRunner.cs`.
 
-- Files: StoryRepair, StoryHomeScreen, AreaScreen, AreaSceneView,
-  RepairCutscene, RepairVfx, StoryRepairRegions (new), StoryStarFlight (new),
-  StoryScreenTests, tools/repair_regions_build.py (new),
-  Resources/Story/repair_regions.json (new).
+- Every finding now carries the level it came from. `_level` is set once per
+  level in `Drive`, and `Finding` prefixes `"level N: "` itself, so no call site
+  can forget. The messages that used to spell the number out were shortened
+  rather than left to say it twice.
+- The two giveups say more than that they gave up: the four-checks-no-reshuffle
+  one reports how many moves it had made, the 200-move one reports the limit
+  type and what is left of it. Both are level-named through the prefix.
+- `_played` / `_won` / `_lost` counters, and a last line in the report:
+  `SUMMARY: N level(s) played, W won, L lost, F finding(s), E error(s).`
+  A level with no owning area is not counted as played.
+- Added `King Leo > Preview > Playtest the band file`, which plays the level
+  list in `ralph/playtest_band.txt` in the Editor already open and does NOT
+  quit it. `RunLevel1` was wired to the batchmode path and would have closed
+  the user's Editor; it now uses the same non-exiting path.
+- `StoryPlaytest.Requested()` clears the PlayerPref that armed it. It used to
+  survive the run, so every later press of Play started another playtest.
 
-- **Learnings for future iterations:**
-  - **The black screen was not the cutscene's.** `AreaScreen.HideForRepair`
-    painted its OWN backdrop black behind a letterboxed room. Before blaming
-    a component for what is on screen, check what the screen under it is
-    painting — the over-room path had been correct for four commits and
-    looked exactly like the path it replaced.
-  - **A UI particle effect that reads well in a screenshot of the code reads
-    as nothing in the player.** The first sparkle pass was 18% large glints
-    at a twentieth of the room across, and it disappeared into a bright room
-    entirely. Build it, capture it, look at it — 3x size and 2x rate later it
-    reads. `screencapture -o -x -l<windowid>` with 6 processes in flight
-    gets ~27fps, which is enough to read a 1.5s animation frame by frame.
-  - **Never defer a purchase behind an animation.** Flying the star first and
-    buying on arrival failed the shell self-test on all five areas at once:
-    that test presses Do It and asks immediately. The same 0.38s is lag from
-    the player's side too. Do the thing, then animate about it.
-  - **An overlay that outlives the screen that spawned it needs its own
-    canvas and screen-space coordinates.** The area page is deactivated in
-    the same frame a repair starts, so anything parented to it dies mid-flight
-    and anything aimed at one of its rects is aiming at a corpse.
-  - **Measure art offline, not at runtime.** Reading sprite pixels in Unity
-    needs `isReadable`, which doubles the memory of every texture involved.
-    A python tool in `tools/` writing a table into `Resources/Story` is this
-    repo's established shape and costs nothing on device.
-  - The shell self-test in a development build is free animation coverage: it
-    buys 25 repairs across five areas with no input, so a capture loop over it
-    catches every beat without driving the UI.
+**Verified by playing, not by reading:**
+- `1,1029` back to back. Level 1029 (area 131, 11 moves, pass mark 25818) is
+  unwinnable for the bot: it played all 11 moves, logged `RESULT: lost`, and
+  the run finished normally. Level 1 also lost (BLOCKS 3/4) and the run moved
+  on to 1029 — the loss path is exercised twice.
+- `9999,1`: `FINDING: level 9999: belongs to no area ...` in both the log and
+  the findings list, and `SUMMARY: 1 level(s) played, 0 won, 1 lost,
+  1 finding(s), 2 error(s)`.
+- Second press of Play after a run: no `[Playtest]` line, no report. One-shot
+  confirmed.
+- `dotnet build Story.Typecheck.csproj` 0 errors; `check_vfx_intact.py` clean;
+  `validate_story.py` 1208 boards, all checks passed.
+
+**Learnings for future iterations:**
+- The 1208-level sweep will need the whole Editor-driving recipe now in
+  Codebase Patterns above. Budget ~90s per level of wall clock: level 1029 took
+  11 moves and about two minutes including the scene load.
+- Two things a sweep will trip over, seen already in this two-level run:
+  - Every level raises `Error: placementId cannot be nil or empty` from
+    `UnityEngine.Advertisements` twice. That is 2416 errors across the sweep
+    drowning the real ones. Filter it, or turn ads off for a playtest run.
+  - Level 1029 declares a `BLOCKS 0/0` target — a target with a count of zero.
+    That is exactly the self-contradiction US-006's linter is for; look for it
+    across all 1208 rather than fixing this one.
+- The bot lost level 1 in both runs, on the BLOCKS target rather than the
+  score. Level 1 is the tutorial. Whether a random legal-move bot ought to beat
+  it is a US-009 question, but the data is already here.
+- `StoryPowerupTest` did not install in these runs (`StorySelfTests.Requested`
+  was false), so it did not fight the playtest for level 1. If a sweep ever
+  runs with self-tests armed, `StoryPlaytest` must wait on
+  `StoryPowerupTest.IsFinished` the way `StoryShellTest` does.
+- The working tree carries a large body of uncommitted work from before this
+  PRD (every `Resources/Levels/*.txt`, art deletions, kit script edits). This
+  commit is scoped to the five files US-002 touches; the rest was left exactly
+  as found.
 ---

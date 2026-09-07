@@ -1,150 +1,1521 @@
 {
   "project": "King Leo (Jelly Garden Match-3)",
-  "branchName": "ralph/royal-match-repair",
-  "description": "Replace the repair CUTSCENE with a Royal Match style in-place repair animation. Today a repair cuts to a black screen with the task title, a work VFX, a horizontal wipe and an italic story line, running 4.2 seconds. Royal Match never cuts away: the task popup closes, the room stays exactly where it is, gold sparkles trace the thing being repaired, the room art crossfades under them, and it is over in well under two seconds with no text on screen at all. Reference: docs/royal-match/03-repair-in-place.jpg, which is a repair caught mid-play \u2014 sparkle trails over the carpet, the live room behind them, the area button still on screen. The kit's own animation, particles and VFX must not regress (tools/check_vfx_intact.py). The arc-beat cutscenes in CutsceneRunner.cs are a SEPARATE feature and must not be touched.",
+  "branchName": "ralph/level-sweep",
+  "description": "Play every one of the 1208 levels the way a player would, find every inconsistency, bug and visual fault, and fix them. The harness already exists: StoryPlaytest opens a level, finds a legal move, makes it, waits for the cascade to settle and repeats until the level ends, recording every Unity error and every place the board stopped answering (a black screen, a cascade that stopped halfway, a win that never showed its popup). This PRD widens it from one area to all 1208 levels, gives it screenshots so visual faults can be seen rather than inferred, adds a static linter for levels that contradict themselves, and then sweeps the whole game in bands of 16. The player always runs windowed at iPhone portrait size (393x852), never full screen. The kit's animation, particle effects and VFX must not regress: every change is additive and tools/check_vfx_intact.py is the gate. Fix causes, not symptoms — a fault found in a band is fixed in the shared code or the generator, never special-cased to one level number.",
   "userStories": [
     {
       "id": "US-001",
-      "title": "A repair always plays on the room that is already on screen",
-      "description": "As a player, I want a repair to happen on the room I am looking at, so that the game never cuts to a black screen for it.",
+      "title": "Playtest can be pointed at any level, in its own area",
+      "description": "As a tester, I want the playtest harness to launch a level in the area that level actually belongs to, so that a sweep over all 1208 levels is testing the real thing and not level 900 wearing area 1's theme.",
       "acceptanceCriteria": [
-        "StoryRepair.Perform resolves a room RectTransform from AreaScreen.Instance.RoomRect when the area page is open, and from the home screen's room when it is not",
-        "RepairCutscene.Play is called with that room rect, so the over-room path runs instead of the own-screen path",
-        "The black backdrop stays fully transparent whenever a room rect was supplied",
-        "The own-screen path is still reachable and unchanged when no room exists (kit scenes, map, tests)",
+        "StoryPlaytest.Reach no longer hardcodes area 1: it resolves the owning area for each level from the story database (StoryDatabase / Resources/Story/arc*.json) and passes that to StoryFlow.LaunchLevel",
+        "The 'starting; levels [...] of area 1' log line reports the real area per level instead of the constant 'area 1'",
+        "A level number with no owning area is reported as FINDING, not silently played in area 1",
+        "Playing level 1 still behaves exactly as before (area 1)",
         "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 1,
       "passes": true,
-      "notes": "The black was not the cutscene: AreaScreen.HideForRepair painted the backdrop black behind a letterboxed room. Fixed by clearing it and switching the room to covering. Home screen gained RoomRect."
+      "notes": "StoryPlaytest.AreaOf resolves the owning area from StoryLevelPlan (level_plan.json) and requires StoryDatabase to carry that area; 0 is a FINDING and the level is skipped, not played in area 1. Verified over the data: all 1208 levels resolve, level 1 -> area 1 unchanged, 1205 levels were previously launched in the wrong area. A live playtest run is deferred to US-005, which builds the runner."
     },
     {
       "id": "US-002",
-      "title": "No text on screen while a repair plays",
-      "description": "As a player, I want the repair to be something I watch, not something I read, so that it feels like Royal Match rather than a slideshow.",
+      "title": "Playtest survives a level it cannot beat",
+      "description": "As a tester, I want a level the bot loses to count as played, not as a hang, so that a 1208 level sweep is not 1208 false alarms.",
       "acceptanceCriteria": [
-        "While playing over a room, RepairCutscene shows no task title, no story line and no 'tap to skip' hint",
-        "The own-screen fallback path keeps its title and line, so nothing is lost where there is no room to play on",
-        "Tapping still skips the repair to its end state",
-        "Typecheck passes",
-        "Unity screen tests pass: StoryScreenTests.RunHeadless prints 'Screen tests passed.'"
+        "A level that ends in GameOver/PreFailed is logged as 'RESULT: lost' and the run moves to the next level, which it already does — confirm it by playing a hard level end to end",
+        "The 200-move giveup and the four-checks-no-reshuffle giveup each emit a FINDING that names the level number",
+        "Every FINDING line in playtest.txt names the level it came from, so a batch report can be triaged without reading the whole log",
+        "The report ends with a one-line summary: levels played, won, lost, findings",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo"
       ],
       "priority": 2,
       "passes": true,
-      "notes": "Gated on the new _overRoom flag. Own-screen path keeps all text, so no story line is lost."
+      "notes": "Verified in the open Editor: levels 1,1029 back to back (1029 is 11 moves against a 25818 pass mark, unwinnable for the bot) both logged RESULT: lost and the run carried on; 9999,1 produced FINDING: level 9999: ... and SUMMARY: 1 level(s) played, 0 won, 1 lost, 1 finding(s), 2 error(s). Typecheck 0 errors."
     },
     {
       "id": "US-003",
-      "title": "Retime the repair to Royal Match's beat map",
-      "description": "As a player, I want the repair over in about a second and a half, so that spending eight stars on an area is not eight cutscenes.",
+      "title": "Playtest screenshots every level it plays",
+      "description": "As a tester, I want a PNG of each board so that visual faults — a board off centre, a HUD overlapping the board, an unreadable target chip, a missing tile sprite — can be seen rather than guessed at.",
       "acceptanceCriteria": [
-        "Over a room the beats are: sparkle in at 0.0, peak 0.45, reveal 0.60, settle 1.10, end 1.50 seconds",
-        "No camera push-in and no stage scaling when playing over a room \u2014 the room does not move",
-        "The 4.2 second beat map is kept for the own-screen fallback path",
-        "The beat times are named constants with a comment saying where they came from",
-        "Typecheck passes"
+        "StoryPlaytest captures a screenshot right after the board becomes playable, named NNNN_level_<n>_start.png",
+        "It captures a second screenshot at the level's end state, named NNNN_level_<n>_end.png",
+        "Screenshots land in Application.persistentDataPath/playtest/ and the report prints that absolute directory once so a caller can find them",
+        "Capture uses WaitForEndOfFrame before ScreenCapture.CaptureScreenshot, the same way StoryDemoDriver.Shot does",
+        "Screenshots are only captured when the playtest is running, and cost nothing in a normal player",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 3,
-      "passes": true,
-      "notes": "Landed in the same commit as US-002 (same file, and the retime is meaningless without the text removal). Room map: 0.0/0.45/0.60/1.10/1.50, fade 0.12. Push-in dropped over a room entirely."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-004",
-      "title": "Find the repaired region by diffing the before and after room art",
-      "description": "As a developer, I need to know WHERE in the room a repair happened, so that the sparkles can sit on the thing being repaired instead of washing the whole picture.",
+      "title": "The game runs in a window at iPhone size, never full screen",
+      "description": "As a tester, I want the player to open in a portrait iPhone-sized window so that a sweep does not take over the display, and so that every screenshot is the shape the game actually ships in.",
       "acceptanceCriteria": [
-        "New static helper (e.g. StoryArt.ChangedRect(areaId, state)) returns a normalised Rect covering the pixels that differ between state-1 and state art",
-        "The result is cached per (areaId, state) \u2014 it must not resample a 1500px sprite every repair",
-        "Returns the room's centre third when the two sprites are the same object or either is null",
-        "Sprites are read without requiring Read/Write enabled, or the importer setting is applied by tools/ and documented",
-        "An editor test asserts the rect for one area with per-state art is smaller than the full room and inside 0..1",
-        "Typecheck passes",
-        "Unity screen tests pass"
+        "The player is always launched with -screen-fullscreen 0 -screen-width 393 -screen-height 852, which is iPhone 15/16 portrait",
+        "No launch path anywhere — tools/, docs, tools/README.md, the comment headers in StoryPlaytest.cs, StoryDemoDriver.cs and StorySelfTests.cs — starts the app full screen",
+        "A single shared helper holds the launch arguments so a new script cannot get them wrong; scripts call that helper rather than repeating the flags",
+        "Screenshots come out 393x852 in aspect; ScreenCapture is called with a superSize of 2 so the PNGs are readable when reviewed",
+        "Launching the app by hand from tools/README.md opens a portrait window, not a full screen",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo"
       ],
       "priority": 4,
-      "passes": true,
-      "notes": "Measured offline in tools/repair_regions_build.py, not at runtime: isReadable would keep an uncompressed copy of every room in memory. 4 of 9 states yield a region; the rest repaint wholesale and report Unknown."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-005",
-      "title": "Gold sparkle burst localised on the repaired region",
-      "description": "As a player, I want gold sparkles over the thing being fixed, so that I can see what my star bought.",
+      "title": "One command sweeps a band of levels and prints the findings",
+      "description": "As a tester, I want tools/playtest_sweep.py so that a band of levels is one command, not a hand-built Unity invocation each time.",
       "acceptanceCriteria": [
-        "RepairVfx gains a Royal sparkle effect: gold star particles rising and fading, plus one soft warm flash, tuned off docs/royal-match/03-repair-in-place.jpg",
-        "The emitter is positioned and sized from US-004's changed rect, not the whole room",
-        "It is the effect used for every work type when playing over a room; the eight per-work effects stay for the own-screen path",
-        "No kit ParticleSystem, prefab or sprite is modified \u2014 the effect is additive and built by Story code",
-        "Typecheck passes",
-        "python3 tools/check_vfx_intact.py reports no regressions",
-        "Verified in the running player: build with StoryBuild.BuildMac, launch at 402x874, screenshot the repair mid-play"
+        "tools/playtest_sweep.py takes a level range (e.g. --levels 1-16) and a batch size (default 8)",
+        "It runs the built Mac player from Builds/Mac/KingLeo.app with -storyplaytest -playtestLevels=... when that build exists, and falls back to Unity batchmode StoryPlaytestRunner.RunHeadless otherwise",
+        "It launches windowed at iPhone size (-screen-fullscreen 0 -screen-width 393 -screen-height 852) and never full screen",
+        "It kills a batch that exceeds a timeout and reports that batch as hung rather than blocking forever",
+        "It prints every FINDING line, grouped by level, and exits non-zero if there were any",
+        "It prints the screenshot directory for the run",
+        "Running it on --levels 1-4 completes and prints a report",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo"
       ],
       "priority": 5,
-      "passes": true,
-      "notes": "First pass was invisible in the player; sizes, rate and pool all raised. Verified off a 27fps capture of the self-test."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-006",
-      "title": "The room crossfades to its repaired state instead of wiping across",
-      "description": "As a player, I want the new room to appear under the sparkles, so that the change reads as the repair landing rather than a curtain being drawn.",
+      "title": "A static linter catches level files that contradict themselves",
+      "description": "As a designer, I want tools/lint_levels.py so that a level whose targets cannot be met, or whose star thresholds are out of order, is caught without playing it.",
       "acceptanceCriteria": [
-        "Over a room, the after state fades in over the before state across the reveal beat rather than using Image.FillMethod.Horizontal",
-        "The neglect wash lifts over the same beat, so an area with a single restored picture still reads as a change",
-        "The horizontal wipe is kept for the own-screen fallback path",
-        "Typecheck passes",
-        "Verified in the running player"
+        "tools/lint_levels.py reads every file in Resources/Levels and its matching Resources/Targets/Level<n>.asset",
+        "It flags: STARS thresholds not strictly ascending; LIMIT of 0 for both moves and time; COLOR LIMIT outside the range the kit supports; a collect target for an item that does not appear on the board and cannot spawn; a board with fewer open cells than the target needs; MODE that does not match the target kind",
+        "It flags any level whose declared SIZE does not match the number of rows/columns actually written",
+        "It prints one line per problem as <level>: <problem> and exits non-zero when there is at least one",
+        "It runs over all 1208 levels in under a minute",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo"
       ],
       "priority": 6,
-      "passes": true,
-      "notes": "Over a room the crossfade is AreaSceneView.Reveal, which already faded the layer in over 0.55s. The work was removing the fill wipe that was fighting it, and halving the landing flash."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-007",
-      "title": "The task popup closes for the repair and comes back when it lands",
-      "description": "As a player, I want the task list out of the way while the repair plays, so that I am watching the room and not a panel.",
+      "title": "Every problem the level linter finds is fixed",
+      "description": "As a designer, I want the level files themselves consistent, so that no level is unwinnable or mislabelled before anyone plays it.",
       "acceptanceCriteria": [
-        "Pressing Do It hides the area panel before the first sparkle, not after it",
-        "The panel returns once the repair ends, showing the ticked-up progress bar",
-        "The top bar is hidden and the room runs to the screen edges, as in docs/royal-match/03-repair-in-place.jpg",
-        "No path can leave the panel hidden if the repair is skipped or errors",
-        "Typecheck passes",
-        "Unity screen tests pass",
-        "Verified in the running player"
+        "tools/lint_levels.py exits zero over all 1208 levels",
+        "Fixes are made in the level generator under tools/ where the fault is systematic, and the affected levels are regenerated, so the fix survives the next regeneration",
+        "python3 tools/validate_story.py still reports 150 areas / 806 tasks / 1208 stars / 1208 levels and 'All checks passed.'",
+        "Fixes that changed a level's difficulty are listed in notes",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo"
       ],
       "priority": 7,
-      "passes": true,
-      "notes": "Already correct once the black backdrop went. CRITERION CORRECTED: the reference has no top bar over a repair, so \"top bar stays visible\" was wrong; the room runs to the top edge in both."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-008",
-      "title": "The spent star flies from the pressed row to the top bar",
-      "description": "As a player, I want to see the star leave my pile, so that the cost of a repair is legible without reading a number.",
+      "title": "The board theme is right in all six arcs",
+      "description": "As a player, I want the board to look like the arc I am in, so that arc 6 does not show arc 1's tiles or an untinted default.",
       "acceptanceCriteria": [
-        "On Do It, a star sprite tweens from the pressed row to the top bar's star pill and fades out there",
-        "The top bar's star count updates when the flying star arrives, not before",
-        "It uses StoryClock so the editor tests can drive it, per the Codebase Patterns section",
-        "Typecheck passes",
-        "Verified in the running player"
+        "StoryBoardTheme is exercised once per arc with a level from that arc, and a screenshot of each is captured",
+        "Each arc's board uses its own palette and background; none falls back to the kit default",
+        "Tile sprites, target chips and the move counter are readable against every arc background",
+        "Any arc missing art is reported as a FINDING with the missing asset path, not silently defaulted",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 8,
-      "passes": true,
-      "notes": "Buy first, fly second. Flying first deferred the purchase 0.38s and failed the shell self-test on all five areas. Star lives on its own canvas (order 800) because the area page is gone by frame two."
+      "passes": false,
+      "notes": ""
     },
     {
       "id": "US-009",
-      "title": "Document the repair animation and delete what the cutscene left behind",
-      "description": "As a developer, I need the Story layer's CLAUDE.md to describe the animation that now exists, so that the next change is made against the truth.",
+      "title": "Play levels 1-16 and fix what they show",
+      "description": "As a player, I want levels 1 to 16 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
       "acceptanceCriteria": [
-        "Assets/JellyGarden/Scripts/Story/CLAUDE.md describes the in-place repair, its beat map and the two paths (over-room and own-screen)",
-        "Any field, constant or helper in RepairCutscene left unused by US-001 to US-008 is removed, not left dead",
-        "The header comment at the top of RepairCutscene.cs matches what the file now does",
-        "Typecheck passes",
-        "Unity screen tests pass",
+        "python3 tools/playtest_sweep.py --levels 1-16 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 9,
-      "passes": true,
-      "notes": "Only genuinely dead thing was _sameImage. Everything else (title, line, skip hint, slow beats) is still live on the own-screen path."
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Play levels 17-32 and fix what they show",
+      "description": "As a player, I want levels 17 to 32 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 17-32 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Play levels 33-48 and fix what they show",
+      "description": "As a player, I want levels 33 to 48 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 33-48 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Play levels 49-64 and fix what they show",
+      "description": "As a player, I want levels 49 to 64 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 49-64 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Play levels 65-80 and fix what they show",
+      "description": "As a player, I want levels 65 to 80 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 65-80 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Play levels 81-96 and fix what they show",
+      "description": "As a player, I want levels 81 to 96 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 81-96 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Play levels 97-112 and fix what they show",
+      "description": "As a player, I want levels 97 to 112 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 97-112 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "Play levels 113-128 and fix what they show",
+      "description": "As a player, I want levels 113 to 128 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 113-128 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Play levels 129-144 and fix what they show",
+      "description": "As a player, I want levels 129 to 144 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 129-144 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Play levels 145-160 and fix what they show",
+      "description": "As a player, I want levels 145 to 160 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 145-160 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Play levels 161-176 and fix what they show",
+      "description": "As a player, I want levels 161 to 176 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 161-176 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-020",
+      "title": "Play levels 177-192 and fix what they show",
+      "description": "As a player, I want levels 177 to 192 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 177-192 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-021",
+      "title": "Play levels 193-208 and fix what they show",
+      "description": "As a player, I want levels 193 to 208 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 193-208 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-022",
+      "title": "Play levels 209-224 and fix what they show",
+      "description": "As a player, I want levels 209 to 224 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 209-224 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-023",
+      "title": "Play levels 225-240 and fix what they show",
+      "description": "As a player, I want levels 225 to 240 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 225-240 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-024",
+      "title": "Play levels 241-256 and fix what they show",
+      "description": "As a player, I want levels 241 to 256 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 1 - The Missing Queen holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 241-256 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-025",
+      "title": "Play levels 257-272 and fix what they show",
+      "description": "As a player, I want levels 257 to 272 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 257-272 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-026",
+      "title": "Play levels 273-288 and fix what they show",
+      "description": "As a player, I want levels 273 to 288 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 273-288 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-027",
+      "title": "Play levels 289-304 and fix what they show",
+      "description": "As a player, I want levels 289 to 304 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 289-304 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 27,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-028",
+      "title": "Play levels 305-320 and fix what they show",
+      "description": "As a player, I want levels 305 to 320 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 305-320 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 28,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-029",
+      "title": "Play levels 321-336 and fix what they show",
+      "description": "As a player, I want levels 321 to 336 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 321-336 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 29,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-030",
+      "title": "Play levels 337-352 and fix what they show",
+      "description": "As a player, I want levels 337 to 352 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 337-352 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 30,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-031",
+      "title": "Play levels 353-368 and fix what they show",
+      "description": "As a player, I want levels 353 to 368 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 353-368 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 31,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-032",
+      "title": "Play levels 369-384 and fix what they show",
+      "description": "As a player, I want levels 369 to 384 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 369-384 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 32,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-033",
+      "title": "Play levels 385-400 and fix what they show",
+      "description": "As a player, I want levels 385 to 400 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 385-400 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 33,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-034",
+      "title": "Play levels 401-416 and fix what they show",
+      "description": "As a player, I want levels 401 to 416 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 401-416 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 34,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-035",
+      "title": "Play levels 417-432 and fix what they show",
+      "description": "As a player, I want levels 417 to 432 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 417-432 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 35,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-036",
+      "title": "Play levels 433-448 and fix what they show",
+      "description": "As a player, I want levels 433 to 448 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 2 - Grimm's Trail holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 433-448 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 36,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-037",
+      "title": "Play levels 449-464 and fix what they show",
+      "description": "As a player, I want levels 449 to 464 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 449-464 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 37,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-038",
+      "title": "Play levels 465-480 and fix what they show",
+      "description": "As a player, I want levels 465 to 480 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 465-480 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 38,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-039",
+      "title": "Play levels 481-496 and fix what they show",
+      "description": "As a player, I want levels 481 to 496 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 481-496 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 39,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-040",
+      "title": "Play levels 497-512 and fix what they show",
+      "description": "As a player, I want levels 497 to 512 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 497-512 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 40,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-041",
+      "title": "Play levels 513-528 and fix what they show",
+      "description": "As a player, I want levels 513 to 528 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 513-528 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 41,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-042",
+      "title": "Play levels 529-544 and fix what they show",
+      "description": "As a player, I want levels 529 to 544 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 529-544 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 42,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-043",
+      "title": "Play levels 545-560 and fix what they show",
+      "description": "As a player, I want levels 545 to 560 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 545-560 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 43,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-044",
+      "title": "Play levels 561-576 and fix what they show",
+      "description": "As a player, I want levels 561 to 576 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 561-576 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 44,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-045",
+      "title": "Play levels 577-592 and fix what they show",
+      "description": "As a player, I want levels 577 to 592 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 577-592 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 45,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-046",
+      "title": "Play levels 593-608 and fix what they show",
+      "description": "As a player, I want levels 593 to 608 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 593-608 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 46,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-047",
+      "title": "Play levels 609-624 and fix what they show",
+      "description": "As a player, I want levels 609 to 624 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 3 - The Empty Treasury holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 609-624 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 47,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-048",
+      "title": "Play levels 625-640 and fix what they show",
+      "description": "As a player, I want levels 625 to 640 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 625-640 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 48,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-049",
+      "title": "Play levels 641-656 and fix what they show",
+      "description": "As a player, I want levels 641 to 656 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 641-656 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 49,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-050",
+      "title": "Play levels 657-672 and fix what they show",
+      "description": "As a player, I want levels 657 to 672 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 657-672 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 50,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-051",
+      "title": "Play levels 673-688 and fix what they show",
+      "description": "As a player, I want levels 673 to 688 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 673-688 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 51,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-052",
+      "title": "Play levels 689-704 and fix what they show",
+      "description": "As a player, I want levels 689 to 704 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 689-704 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 52,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-053",
+      "title": "Play levels 705-720 and fix what they show",
+      "description": "As a player, I want levels 705 to 720 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 705-720 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 53,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-054",
+      "title": "Play levels 721-736 and fix what they show",
+      "description": "As a player, I want levels 721 to 736 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 721-736 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 54,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-055",
+      "title": "Play levels 737-752 and fix what they show",
+      "description": "As a player, I want levels 737 to 752 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 737-752 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 55,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-056",
+      "title": "Play levels 753-768 and fix what they show",
+      "description": "As a player, I want levels 753 to 768 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 753-768 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 56,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-057",
+      "title": "Play levels 769-784 and fix what they show",
+      "description": "As a player, I want levels 769 to 784 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 769-784 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 57,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-058",
+      "title": "Play levels 785-800 and fix what they show",
+      "description": "As a player, I want levels 785 to 800 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 4 - The Rival Crown holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 785-800 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 58,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-059",
+      "title": "Play levels 801-816 and fix what they show",
+      "description": "As a player, I want levels 801 to 816 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 801-816 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 59,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-060",
+      "title": "Play levels 817-832 and fix what they show",
+      "description": "As a player, I want levels 817 to 832 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 817-832 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 60,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-061",
+      "title": "Play levels 833-848 and fix what they show",
+      "description": "As a player, I want levels 833 to 848 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 833-848 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 61,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-062",
+      "title": "Play levels 849-864 and fix what they show",
+      "description": "As a player, I want levels 849 to 864 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 849-864 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 62,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-063",
+      "title": "Play levels 865-880 and fix what they show",
+      "description": "As a player, I want levels 865 to 880 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 865-880 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 63,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-064",
+      "title": "Play levels 881-896 and fix what they show",
+      "description": "As a player, I want levels 881 to 896 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 881-896 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 64,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-065",
+      "title": "Play levels 897-912 and fix what they show",
+      "description": "As a player, I want levels 897 to 912 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 897-912 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 65,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-066",
+      "title": "Play levels 913-928 and fix what they show",
+      "description": "As a player, I want levels 913 to 928 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 913-928 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 66,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-067",
+      "title": "Play levels 929-944 and fix what they show",
+      "description": "As a player, I want levels 929 to 944 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 929-944 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 67,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-068",
+      "title": "Play levels 945-960 and fix what they show",
+      "description": "As a player, I want levels 945 to 960 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 945-960 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 68,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-069",
+      "title": "Play levels 961-976 and fix what they show",
+      "description": "As a player, I want levels 961 to 976 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 961-976 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 69,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-070",
+      "title": "Play levels 977-992 and fix what they show",
+      "description": "As a player, I want levels 977 to 992 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 5 - The Old King's Secret holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 977-992 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 70,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-071",
+      "title": "Play levels 993-1008 and fix what they show",
+      "description": "As a player, I want levels 993 to 1008 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 993-1008 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 71,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-072",
+      "title": "Play levels 1009-1024 and fix what they show",
+      "description": "As a player, I want levels 1009 to 1024 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1009-1024 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 72,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-073",
+      "title": "Play levels 1025-1040 and fix what they show",
+      "description": "As a player, I want levels 1025 to 1040 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1025-1040 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 73,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-074",
+      "title": "Play levels 1041-1056 and fix what they show",
+      "description": "As a player, I want levels 1041 to 1056 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1041-1056 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 74,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-075",
+      "title": "Play levels 1057-1072 and fix what they show",
+      "description": "As a player, I want levels 1057 to 1072 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1057-1072 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 75,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-076",
+      "title": "Play levels 1073-1088 and fix what they show",
+      "description": "As a player, I want levels 1073 to 1088 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1073-1088 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 76,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-077",
+      "title": "Play levels 1089-1104 and fix what they show",
+      "description": "As a player, I want levels 1089 to 1104 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1089-1104 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 77,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-078",
+      "title": "Play levels 1105-1120 and fix what they show",
+      "description": "As a player, I want levels 1105 to 1120 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1105-1120 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 78,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-079",
+      "title": "Play levels 1121-1136 and fix what they show",
+      "description": "As a player, I want levels 1121 to 1136 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1121-1136 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 79,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-080",
+      "title": "Play levels 1137-1152 and fix what they show",
+      "description": "As a player, I want levels 1137 to 1152 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1137-1152 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 80,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-081",
+      "title": "Play levels 1153-1168 and fix what they show",
+      "description": "As a player, I want levels 1153 to 1168 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1153-1168 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 81,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-082",
+      "title": "Play levels 1169-1184 and fix what they show",
+      "description": "As a player, I want levels 1169 to 1184 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1169-1184 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 82,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-083",
+      "title": "Play levels 1185-1200 and fix what they show",
+      "description": "As a player, I want levels 1185 to 1200 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1185-1200 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 83,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-084",
+      "title": "Play levels 1201-1208 and fix what they show",
+      "description": "As a player, I want levels 1201 to 1208 to be playable end to end with nothing broken or ugly, so that this stretch of Arc 6 - The Reckoning holds up.",
+      "acceptanceCriteria": [
+        "python3 tools/playtest_sweep.py --levels 1201-1208 completes with every level reaching a won or lost end state",
+        "playtest_sweep.py reports zero FINDINGs for this band",
+        "The band was played in a portrait iPhone-sized window, so the screenshots are the shape the game ships in",
+        "Every start and end screenshot for this band is opened and looked at; anything a player would notice — board clipped or off centre, HUD over the board, overlapping or truncated text, a missing or wrong-arc sprite, an unreadable target chip, a popup behind the board — is recorded and fixed",
+        "Fixes are made in the shared code or the generator where the fault is systematic, never by special-casing a single level number",
+        "If a fix is found but not finished this iteration, the finding is written into this story's notes and passes stays false",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "python3 tools/check_vfx_intact.py reports no regressions"
+      ],
+      "priority": 84,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-085",
+      "title": "Full verification over the whole sweep",
+      "description": "As the owner of this project, I want the whole suite green after 1208 levels of fixes, so that nothing was traded away to make a band pass.",
+      "acceptanceCriteria": [
+        "python3 tools/validate_story.py prints 'All checks passed.'",
+        "python3 tools/lint_levels.py exits zero",
+        "python3 tools/check_vfx_intact.py reports no regressions",
+        "Unity StorySmokeTest.RunAll passes in batchmode",
+        "Unity StoryScreenTests.RunHeadless prints 'Screen tests passed.'",
+        "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo",
+        "progress.txt carries a final summary: how many levels were played, how many findings were raised, and what was fixed"
+      ],
+      "priority": 85,
+      "passes": false,
+      "notes": ""
     }
   ]
 }

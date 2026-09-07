@@ -51,6 +51,14 @@ Art is resolved **by convention**, not by inspector reference:
 wires it up with no code change. A miss warns **once per key** and falls back to
 the arc backdrop — never per frame, never blank.
 
+`StoryFlow.LaunchLevel(levelNumber, areaId)` takes the area because the theme,
+the obstacle set and the repair the level pays for all come off the area, not
+off the level number. **Never pass a literal.** `StoryLevelPlan.AreaOf(level)`
+is the map; it returns 0 for a level nothing owns, and 0 is a fault to report,
+not a reason to fall back to area 1. `StoryPlaytest` passed `1` for four
+commits, which meant 1205 of the 1208 levels were being played wearing area 1's
+theme and reported as fine.
+
 ## The repair animation
 
 Pressing Do It plays one of two things, and which one depends on whether a room
@@ -725,3 +733,28 @@ Unity writes an explicit `<Compile Include>` per file, so a newly added script i
 python3 tools/make_typecheck_csproj.py
 dotnet build Story.Typecheck.csproj -v q --nologo
 ```
+
+## Playing levels (StoryPlaytest)
+
+`StoryPlaytest` opens a level, finds a legal swap, makes it, waits for the
+cascade and repeats until the level ends. It is the only thing here that finds a
+coroutine truncated mid-cascade, because that fault leaves the board looking
+fine.
+
+**Run it from the Editor already open**, never batchmode — batchmode wants the
+project lock the Editor holds. `King Leo > Preview > Playtest the band file`
+plays the comma-separated level list in `ralph/playtest_band.txt` and leaves the
+Editor open. `StoryPlaytestRunner.RunHeadless` is the batchmode path and **quits
+the Editor** as soon as the report lands; never wire a menu item to it.
+
+The report is written to `Application.persistentDataPath/playtest.txt` —
+`~/Library/Application Support/DefaultCompany/King Leo/` on this machine — and
+ends with one `SUMMARY:` line. Poll for the file; do not read it out of the log.
+
+**Every `FINDING:` names its level.** `Finding()` prefixes `"level N: "` from
+`_level`, which `Drive` sets per level, so a call site writes only what went
+wrong. Do not spell the level number out again in the message.
+
+**A level the bot cannot beat is a result, not a fault.** GameOver/PreFailed is
+`RESULT: lost`, counted, and the run goes on. Only a state that is neither won
+nor lost is a finding.
