@@ -19,10 +19,15 @@
 //     the player prefs — which is full screen once anyone has ever made it so.
 //     Apply puts a desktop player back, and does nothing at all on a phone,
 //     where full screen is the only thing there is.
-//   * `Capture()` is the one screenshot call. superSize 2 renders the shot at
-//     twice the window — 786x1704 — because a 393-point-wide PNG is too small
-//     to read a target chip or a tile's sprite in, and reading them is the
-//     whole point of taking it.
+//   * `Capture()` is the one screenshot call, and it reads the back buffer at
+//     the window's own size — 393x852. It used to render the frame again at
+//     twice that, for the good reason that 393 points is small to read a target
+//     chip in. It cost more than it bought: the re-render drops the Screen
+//     Space - Camera canvas, so every shot the project had ever taken was
+//     missing the whole level HUD and showed the room behind the board as a
+//     blur. A small honest picture beats a large one with the HUD cut out of
+//     it. `CaptureSuperSized` is still there for anything that wants the 2x
+//     render knowing what it loses.
 
 using UnityEngine;
 
@@ -36,8 +41,10 @@ namespace JellyGarden.Scripts.Story
         public const int Height = 852;
 
         /// <summary>
-        /// Screenshots render at this multiple of the window. 1 is unreadable at
-        /// 393 points wide; 2 is 786x1704 and shows a tile's sprite.
+        /// The multiple <see cref="CaptureSuperSized"/> renders at. The default
+        /// capture no longer uses it — see the note on that method — but the
+        /// number is still the one thing that decides how big a 2x shot is, and
+        /// tools/check_launch_args.py reads it.
         /// </summary>
         public const int ShotSuperSize = 2;
 
@@ -94,7 +101,64 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static void Capture(string path)
         {
+            CaptureNative(path);
+        }
+
+        /// <summary>
+        /// The old capture: Unity renders the frame AGAIN at
+        /// <see cref="ShotSuperSize"/> times the window and writes that.
+        ///
+        /// Kept, and not used, because it does not photograph this game. The
+        /// re-render loses the Screen Space - Camera canvas the level's HUD and
+        /// the arc's backdrop both live on: the board comes back sharp, the
+        /// Target plate and the Moves counter are simply absent, and the room
+        /// behind the board comes back as a smear. Two entries in
+        /// ralph/findings.md — "no HUD is drawn over the board" and "the room
+        /// behind the board is a dark blur" — were this, not the game. The two
+        /// shots were taken of the same frame, a millisecond apart, and only one
+        /// of them has a HUD in it.
+        ///
+        /// Anything that genuinely wants a 2x render can call this; nothing
+        /// that is looking for a visual fault should.
+        /// </summary>
+        public static void CaptureSuperSized(string path)
+        {
             ScreenCapture.CaptureScreenshot(path, ShotSuperSize);
+        }
+
+        /// <summary>
+        /// The same frame, read straight off the back buffer at the window's own
+        /// size — no superSize, no re-render.
+        ///
+        /// It exists because the two do not agree. `Capture` at superSize 2 asks
+        /// Unity to render the frame again at twice the size, and a Screen Space
+        /// Camera canvas does not survive that intact: the board comes back
+        /// sharp and the backdrop behind it comes back as a smear, which is what
+        /// "the room behind the board is a dark blur" turned out to be. The
+        /// picture itself is a 1152x2048 texture drawn into 967x1548 — a
+        /// downscale, and sharp on screen.
+        ///
+        /// So a shot that a layout is judged from can be taken at either size,
+        /// but a shot that ARTWORK is judged from has to be this one. Must be
+        /// called after WaitForEndOfFrame, like any back-buffer read.
+        /// </summary>
+        public static void CaptureNative(string path)
+        {
+            var frame = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
+            frame.ReadPixels(new Rect(0f, 0f, Screen.width, Screen.height), 0, 0);
+            frame.Apply();
+
+            byte[] png = frame.EncodeToPNG();
+            Object.Destroy(frame);
+
+            try
+            {
+                global::System.IO.File.WriteAllBytes(path, png);
+            }
+            catch (global::System.Exception e)
+            {
+                Debug.LogWarning("[Story] could not write " + path + ": " + e.Message);
+            }
         }
     }
 }

@@ -124,5 +124,23 @@ namespace JellyGarden.Scripts.Story
         {
             get { return !Enabled; }
         }
+
+        /// <summary>
+        /// Whether the kit's "rate this game" panel may open. Never.
+        ///
+        /// Two reasons, and the second is a bug rather than a preference.
+        /// LevelManager asks for it on entering GameState.Map, every
+        /// ShowRateEvery levels — and this game has no map: StoryShell puts it
+        /// away and the room is the entry point. So the panel opens onto a
+        /// screen it was not designed for, and what the player gets is its
+        /// scrim: a black Image at alpha 0.87 over the whole screen, with
+        /// nothing on it to dismiss. It was found by photographing the sixth
+        /// level of a session and measuring the frame — every check about the
+        /// board passed, and the picture was black.
+        /// </summary>
+        public static bool RatePromptAllowed
+        {
+            get { return !Enabled; }
+        }
     }
 }

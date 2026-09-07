@@ -28,6 +28,7 @@ original behaviour:
 | `InitScript.SpendLife` | `StoryFreeGame.ShouldSpendLife` | never takes a life |
 | `InitScript.CheckAdsEvents` | `StoryFreeGame.AdsAllowed` | never requests an ad |
 | `MenuManager.ShowGemsShop` / `ShowLiveShop` | `StoryFreeGame.ShopsAllowed` | never opens a shop |
+| `MenuManager.ShowRate` | `StoryFreeGame.RatePromptAllowed` | never asks for a rating |
 
 Star awarding rides on `LevelManager.OnWin`, an event the kit already raises, so
 nothing in the board is touched at all.
@@ -734,6 +735,36 @@ python3 tools/make_typecheck_csproj.py
 dotnet build Story.Typecheck.csproj -v q --nologo
 ```
 
+## Dressing the board (StoryBoardTheme, StoryThemeTest)
+
+`StoryBoardTheme` puts the arc's picture behind the board and the arc's colour
+under its cells. `StoryThemeTest` (`-storythemetest`, run by
+`tools/theme_sweep.py`) opens the first level of each of the six arcs in its own
+area and photographs it. Four things it learned the hard way, all of which cost
+a run each:
+
+- **The fallback is silent by design, so it has to be reported.**
+  `ApplyBackdrop` falls back to a kit picture when the story art is missing —
+  correct, a level must never fail to open — but that makes "arc 6 is wearing
+  the kit's default" invisible in a screenshot of a board that looks fine.
+  `StoryBoardTheme.LastBackdrop` / `LastBackdropWasKitDefault` / `LastFill` /
+  `LastFilledCells` exist for a test to read, and the fallback now warns once
+  per theme key naming `Story/Art/<key>`.
+- **A board can be live, themed and completely hidden.** The first run of the
+  theme test reported six correct themes and photographed one board and five
+  copies of the opening cutscene: leaving a level drops the player on home, home
+  is where the story's beats fire, and a beat waits for a tap forever. Anything
+  that photographs a board must `WaitForCalm` — poll `StoryShell.StoryIsPlaying`
+  and press the dialogue's own `Advance` button, the same shape as
+  `StoryShellTest.PressOnThroughDialogue`.
+- **Ask the screen, not the scene graph.** Every check about arc 6 passed —
+  right theme, right backdrop sprite, 84 cells carrying 236,157,108 — over a
+  frame that was 87% black. Only reading the pixels caught it. The cause was the
+  kit's rate-us prompt (see `StoryFreeGame.RatePromptAllowed`).
+- **Hide the kit tutorial before shooting level 1.** `TutorialManager` dims the
+  screen and draws a hand over the board on `currentLevel == 1`, which is arc
+  1's first level.
+
 ## Playing levels (StoryPlaytest)
 
 `StoryPlaytest` opens a level, finds a legal swap, makes it, waits for the
@@ -790,12 +821,25 @@ desktop player opened by double-clicking it takes whatever Unity last saved in
 the player prefs, so Apply puts it back into a window. It is a no-op in the
 Editor and on a phone, where full screen is all there is.
 
-**Every screenshot goes through `StoryWindow.Capture`**, which captures at
-`ShotSuperSize` (2). A 393-point-wide PNG is too small to read a target chip or
-a tile's sprite in, and reading them is the whole point of taking it — the
-player's shots come out 786x1704. The Editor's Game view is not 393x852, so
-Editor-run shots are the right superSize and the wrong aspect; measure a layout
-off a player run.
+**Every screenshot goes through `StoryWindow.Capture`, and it reads the back
+buffer at the window's own size — 393x852.** It used to render the frame again
+at superSize 2, for the good reason that 393 points is small to read a target
+chip in. That cost far more than it bought: the re-render drops the Screen Space
+- Camera canvas, and in this game that canvas carries **the whole level HUD and
+the arc's backdrop**. Every shot the project took before 2026-09-07 has no
+Target plate, no Moves counter, no target chips, and a smear where the room
+should be — and two entries in `ralph/findings.md` ("no HUD is drawn over the
+board", "the room behind the board is a dark blur") were written from one.
+`StoryWindow.CaptureSuperSized` is the old behaviour, kept and unused.
+
+The lesson generalises past this one call: **a screenshot is a measurement, and
+this one was wrong for four commits while every check about the HUD passed.**
+When a picture and a check disagree, suspect the picture too. `StoryThemeTest`
+now reads the frame with `ReadPixels` and reports its mean luminance against the
+ground the theme asked for, which is the check that finally caught a board drawn
+under a black scrim.
+
+The Editor's Game view is not 393x852, so measure a layout off a player run.
 
 ```bash
 python3 tools/check_launch_args.py

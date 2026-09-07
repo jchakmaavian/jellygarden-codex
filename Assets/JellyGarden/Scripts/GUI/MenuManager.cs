@@ -213,6 +213,16 @@ namespace JellyGarden.Scripts.GUI
 
         public void ShowRate(bool show = true)
         {
+            // --- King Leo story layer -------------------------------------
+            // The rate prompt is the kit's, and it is asked for from
+            // GameState.Map — a screen this game never shows. Its panel lays a
+            // black scrim at 87% over the whole screen and then has nothing on
+            // it the player can press, so every level after the sixth is played
+            // in the dark. Additive: delete these two lines and it is back.
+            if (show && !JellyGarden.Scripts.Story.StoryFreeGame.RatePromptAllowed)
+                return;
+            // --------------------------------------------------------------
+
             if (!show)
             {
                 Close(rate);

@@ -12,9 +12,9 @@ either fail loudly or read a stale file.
 ```bash
 python3 tools/story_sync.py         # story markdown JSON  -> Resources/Story/arc1..6, index.json
 python3 tools/cutscene_build.py     # arc markdown         -> Resources/Story/cutscenes.json
-python3 tools/themes_build.py        # (static spec)        -> Resources/Story/themes.json
 python3 tools/ui_sprites.py         # kit UI sprites       -> Resources/Story/UI
 python3 tools/asset_import.py       # generated art/audio  -> Resources/Story/Art, Audio
+python3 tools/themes_build.py       # spec + the backdrops -> Resources/Story/themes.json
 
 python3 tools/level_templates.py    # tools/shipped_levels -> tools/out/level_templates.json
 python3 tools/level_plan.py         # story JSON           -> level_plan.json (1208 levels)
@@ -80,6 +80,26 @@ Masters live in `tools/art/`: `pieces/` and `brand/` and `map/` for the painted
 set, `flat/` for the minimal one, `icons/` for the HUD and nav sheets. Most of the painted masters are the story
 prototype's own art at
 `/Users/avian/Desktop/story/game/unity/Assets/Resources/Art`, already paid for.
+
+## Checking the board themes
+
+```bash
+python3 tools/check_themes.py       # the six arc themes, as data
+python3 tools/theme_sweep.py        # one board per arc, in the built player
+```
+
+`check_themes.py` is to a theme what `lint_levels.py` is to a level. Every rule
+is anchored to a line of the story layer, and both of its thresholds are
+computed rather than written down — the gem-separation floor from the kit's own
+five shipped boards, the brightness bar from `area_001_state0..3`. `NOTE` lines
+are the ones only new art answers; `--strict` makes them fail.
+
+`themes_build.py` reads the same helpers: each arc's board ground is its own
+colour moved toward `STONE` (StoryUi.RoyalCream) by the least amount that keeps
+all six of the kit's gems readable on it, over that arc's own backdrop. So it
+must run AFTER `asset_import.py`, which is what puts the backdrops on disk. Arcs
+1, 2 and 6 keep their authored colour untouched; 3, 4 and 5 need to move,
+because a lavender or pale-blue ground sits where the purple and blue gems are.
 
 ## Verify
 

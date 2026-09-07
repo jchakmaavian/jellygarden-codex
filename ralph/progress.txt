@@ -31,6 +31,45 @@ Started: 2026-09-07
   moves, level 75) and uses it as the ceiling when a missing count has to be
   filled in. Written down as a constant it would quietly go stale; computed, it
   stays true.
+- **A screenshot is a measurement, and this project's was wrong.**
+  `StoryWindow.Capture` rendered the frame AGAIN at superSize 2. That re-render
+  drops the Screen Space - Camera canvas, and in this game that canvas carries
+  the level HUD and the arc's backdrop — so every PNG taken before 2026-09-07
+  has no Target plate, no Moves counter and a smear where the room should be.
+  `Capture` now reads the back buffer at 393x852; `CaptureSuperSized` is the old
+  behaviour, kept and unused. **Re-run any sweep whose shots you are about to
+  judge, and never trust a shot older than this.**
+- **When a check and a picture disagree, suspect the picture too.** Two entries
+  in `ralph/findings.md` were faults in the camera, not the game.
+- **Ask the screen, not the scene graph.** Arc 6 passed every check about its
+  theme — right sprite, 84 cells carrying the right colour — over a frame that
+  was 87% black. Only `ReadPixels` and a mean-luminance comparison caught it.
+  Any test that photographs a board should measure the frame it just took.
+- **A board can be live, themed and completely hidden.** Leaving a level drops
+  the player on home, home is where the story's beats fire, and a beat waits for
+  a tap forever. Poll `StoryShell.StoryIsPlaying` and press the dialogue's own
+  `Advance` button before shooting — `StoryShellTest.PressOnThroughDialogue` is
+  the shape to copy.
+- **The kit asks for things this game has no screen for.** The rate-us prompt is
+  requested from `GameState.Map`, which this game never shows, and its scrim
+  blacked out every level after the sixth in a session. The fix is the shape the
+  four existing hooks already use: an early return on a `StoryFreeGame` flag.
+  Anything else the kit triggers from `GameState.Map` deserves the same look.
+- **Six gems cover the whole hue wheel, so a board ground cannot separate from
+  them by hue.** It separates by being light and low-chroma. `themes_build.py`
+  therefore computes each arc's ground rather than authoring it: the arc's own
+  colour moved toward `StoryUi.RoyalCream` by the least step that clears the
+  worst gem separation the kit's own five shipped boards already accept. Arcs 1,
+  2 and 6 need no step; the lavender and pale-blue arcs (3, 4, 5) do.
+- **Anchor a threshold to the shipped set, in the checker AND in the generator.**
+  `check_themes.py` exports `kit_gem_separation_floor`, `composite` and
+  `worst_gem_separation`, and `themes_build.py` imports them. One definition, so
+  the generator cannot drift from the gate.
+- **Split a linter's output into faults and notes when part of it needs art.** A
+  check that can never pass is a check nobody runs. `check_themes.py` exits on
+  the wiring faults only; the ten "this backdrop is not bright cartoon colour"
+  lines print as NOTE and `--strict` makes them count.
+
 - **Keep repairs idempotent by keying them on pristine input.** A repair that
   reads its own previous output converges to a different answer on run 2. If a
   cap depends on the level being repaired, it must be applied to the pristine
@@ -814,4 +853,119 @@ what a screenshot shows; US-007 never renders a frame.
   - The kit's assets serialize no `blockSprites` field at all, and the generated
     ones write `blockSprites: array: []`. Both deserialize to an empty list, and
     `SetOff` falls through to its else branch either way. Not a difference.
+---
+
+
+## 2026-09-07 20:45 - US-008 - The board theme is right in all six arcs
+
+**What was implemented**
+
+Two halves, because half the question is data and half is what reaches a screen.
+
+*The data.* `tools/check_themes.py` is to a theme what `lint_levels.py` is to a
+level: it reads `themes.json` and the art beside it and reports the arcs that
+cannot look the way they claim to — a missing backdrop named by path, an arc
+falling back to a kit picture, two arcs that are the same board, a ground one of
+the kit's six gems merges into. Both of its thresholds are computed, not chosen:
+the gem-separation floor is the worst dE the kit's own five shipped boards
+already accept (39.2), and the brightness bar is the dimmest of
+`area_001_state0..3`, the project's own bright cartoon room art (luminance 152,
+saturation 0.46). It reports **0 problems and 10 notes**.
+
+*The generator.* `tools/themes_build.py` now computes each arc's board ground
+instead of carrying six authored colours: the arc's own colour moved toward
+`STONE` (`StoryUi.RoyalCream`) in 0.05 steps until the ground — composited over
+that arc's own backdrop at the new alpha — clears the kit's gem floor. Arcs 1, 2
+and 6 keep their authored colour exactly; 3 (0.65), 4 (0.80) and 5 (0.60) move,
+because a lavender or pale-blue ground sits where the purple and blue gems are.
+`BOARD_ALPHA` went 0.55 -> 0.85: the old value was written for bright backdrops
+and the six the game ships are not, so the darkness came straight through and
+dragged every ground to a muddy 41-68.
+
+*The screen.* `StoryThemeTest` (`-storythemetest`) opens the first level of each
+arc in the area it belongs to, waits out any story beat, hides the kit tutorial,
+verifies the backdrop off the `Image` and the ground off the cells, measures the
+frame it is about to photograph, and writes one 393x852 PNG per arc.
+`tools/theme_sweep.py` runs it and keeps everything under
+`.../King Leo/themes/<timestamp>/`. **0 findings, and the six were opened and
+looked at** — six real boards, each on its own room, HUD present, gems legible.
+
+**Two faults found on the way, both fixed**
+
+1. **Every screenshot this project has ever taken was wrong.**
+   `StoryWindow.Capture` used `ScreenCapture.CaptureScreenshot(path, 2)`, and
+   that re-render drops the Screen Space - Camera canvas — which in this game
+   carries the whole level HUD *and* the arc's backdrop. The same frame, a
+   millisecond apart, came out with no Target plate, no Moves counter and a
+   smear where the room is; read off the back buffer it has all of them and a
+   sharp room. `Capture` now reads the back buffer at the window's own size.
+   This is what `ralph/findings.md` F-002 ("no HUD is drawn over the board") and
+   the "blur" half of F-003 actually were.
+
+2. **The kit's rate-us prompt blacks out the game from the sixth level of a
+   session.** `LevelManager` asks for it on entering `GameState.Map`, every
+   `ShowRateEvery` levels; this game has no map, so the panel opened onto a
+   screen it was not built for and all the player got was its scrim — a black
+   Image at alpha 0.87 over everything, with nothing on it to dismiss.
+   `MenuManager.ShowRate` now early-returns on
+   `StoryFreeGame.RatePromptAllowed`, the same two-line shape as the four hooks
+   already there. **This is the fault that will turn a long band sweep black
+   partway through, so it matters most to US-009 onwards.**
+
+**Still open, and it needs art rather than code**
+
+The six backdrops are dark, near-photographic paintings: luminance 50-97 and
+saturation 0.13-0.29, against 152 / 0.46 for the project's own bright cartoon
+room art. That contradicts CLAUDE.md's one visual rule. Filtering the existing
+paintings was tried (shadow lift, saturation, posterise, cel bands) and produces
+a posterised photograph, not cartoon art — so it was not shipped. Six new
+backdrops in the style of `area_001_state*` are what fixes it.
+`python3 tools/check_themes.py --strict` fails on it; the plain run does not.
+
+**Files changed**
+- `tools/check_themes.py` — NEW. The static per-arc audit, and the colour
+  helpers `themes_build.py` imports.
+- `tools/theme_sweep.py` — NEW. Runs the player once and keeps the six shots.
+- `tools/themes_build.py` — the ground is computed; BOARD_ALPHA 0.55 -> 0.85.
+- `Assets/JellyGarden/Scripts/Story/StoryThemeTest.cs` — NEW.
+- `StoryBoardTheme.cs` — records what the backdrop resolved to and warns once
+  per key when it falls back; exposes `LastFill` / `LastFilledCells`.
+- `StoryWindow.cs` — `Capture` reads the back buffer; `CaptureSuperSized` keeps
+  the old behaviour.
+- `StoryFreeGame.cs` — `RatePromptAllowed`.
+- `GUI/MenuManager.cs` — the fifth kit hook, in the shape of the other four.
+- `Resources/Story/themes.json` — regenerated.
+- `CLAUDE.md`, `tools/README.md`, `Scripts/Story/CLAUDE.md`,
+  `ralph/findings.md`, `ralph/prd.json`, `ralph/progress.txt`.
+
+**Checks**
+- `check_themes.py` 0 problems, 10 notes; `--strict` 1 (the art).
+- `theme_sweep.py` 0 findings across 6 arcs; six PNGs opened and looked at.
+- `lint_levels.py` 0 problems in 1208 levels.
+- `validate_story.py` all checks passed (150 / 806 / 1208 / 1208).
+- `check_vfx_intact.py` clean. `check_launch_args.py` clean.
+- `dotnet build Story.Typecheck.csproj` 0 errors.
+- `themes_build.py` idempotent — run twice, byte-for-byte identical.
+- **Not run:** the two Unity batchmode smoke tests. The user's Editor holds the
+  project lock and must not be killed; the player was built from that Editor's
+  own menu instead, and everything above was verified in the built player.
+
+**Learnings for future iterations**
+- The whole reason this story took six player builds is that the first three
+  runs reported `0 findings` over pictures that were wrong. Zero findings from a
+  harness is worth exactly as much as the last thing that harness learned to
+  look at.
+- `JellyGarden > Story > Build macOS Player` from the open Editor takes ~15s
+  once warm. `Assets > Refresh` first, and wait for the import — the build will
+  happily ship the previous compile otherwise.
+- `RectTransformUtility.WorldToScreenPoint` off `GetWorldCorners` is the only
+  coverage measurement that works across Overlay and Screen Space Camera
+  canvases alike. The first version divided a lossy-scaled size by the canvas
+  scale factor and found nothing at all over a screen that was 87% black.
+- `Path` in a story script collides with `System.IO.Path`. Name a helper
+  `PathOf`.
+- A level that looks broken in a sweep may be fine on its own. Level 987 was
+  black as the sixth level of a session and perfect as the first — running the
+  single level through `playtest_sweep.py --levels 987` is what separated the
+  level from the session.
 ---

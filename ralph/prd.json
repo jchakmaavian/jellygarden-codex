@@ -129,8 +129,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Two halves: tools/check_themes.py for the data (0 problems, 10 NOTE lines that only new artwork answers) and tools/theme_sweep.py + StoryThemeTest for the screen (one board per arc, 0 findings, six PNGs opened and looked at). All six arcs wear their own backdrop and their own ground; none falls back to a kit picture. Board grounds are now computed rather than authored — each arc's colour moved toward StoryUi.RoyalCream by the least step that keeps all six of the kit's gems readable on it, against that arc's own backdrop, with the floor taken from the kit's own five shipped boards. Arcs 1, 2 and 6 kept their authored colour; 3, 4 and 5 had to move. TWO FAULTS FOUND ON THE WAY, both fixed: (1) StoryWindow.Capture rendered every screenshot again at superSize 2, which drops the Screen Space - Camera canvas carrying the level HUD and the arc backdrop — so every shot the project had ever taken was missing the HUD and showed the room as a smear. Capture now reads the back buffer at 393x852. This closes findings.md F-002 and half of F-003. (2) The kit's rate-us prompt is asked for from GameState.Map, a screen this game does not have, and left a black scrim at 87% over everything from the sixth level of a session onward. MenuManager.ShowRate now early-returns on StoryFreeGame.RatePromptAllowed. STILL OPEN and needing art, not code: the six backdrops are dark, near-photographic paintings (luminance 50-97, saturation 0.13-0.29) where the brief asks for bright cartoon colour and the project's own reference art sits at 152 / 0.46. check_themes.py --strict fails on it."
     },
     {
       "id": "US-009",

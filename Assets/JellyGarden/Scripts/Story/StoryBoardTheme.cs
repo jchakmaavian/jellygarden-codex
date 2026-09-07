@@ -11,6 +11,7 @@
 //
 // The gems are deliberately left alone; see the note in StoryTheme.
 
+using System.Collections.Generic;
 using JellyGarden.Scripts.GUI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -62,30 +63,89 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
+        /// What the last <see cref="Apply"/> managed to put behind the board, as
+        /// one line. Empty until a board has been themed.
+        ///
+        /// This exists because the fallback below is silent by design — a missing
+        /// picture must never stop a level opening — and silence is exactly what
+        /// makes "arc 6 is wearing the kit's default" impossible to see in a
+        /// screenshot of a board that looks fine. A test reads this and says so.
+        /// </summary>
+        public static string LastBackdrop { get; private set; }
+
+        /// <summary>
+        /// True when the last board fell back to one of the kit's own pictures
+        /// because the arc's story backdrop was not in Resources.
+        /// </summary>
+        public static bool LastBackdropWasKitDefault { get; private set; }
+
+        /// <summary>The arc whose theme <see cref="LastBackdrop"/> describes.</summary>
+        public static int LastBackdropArc { get; private set; }
+
+        /// <summary>The keys already warned about, so a sweep logs each one once.</summary>
+        private static readonly HashSet<string> _warnedBackdrops = new HashSet<string>();
+
+        /// <summary>
         /// Overrides Background's level-bucket choice with the arc's. A story
         /// backdrop is used when one exists; otherwise the kit's own picture that
         /// suits the arc's setting.
         /// </summary>
         private static void ApplyBackdrop(ArcTheme theme)
         {
+            LastBackdropArc = theme.Arc;
+
             var background = Object.FindFirstObjectByType<Background>(FindObjectsInactive.Include);
-            if (background == null) return;
+            if (background == null)
+            {
+                Record(theme, "no Background object in the scene", true);
+                return;
+            }
 
             var image = background.GetComponent<Image>();
-            if (image == null) return;
+            if (image == null)
+            {
+                Record(theme, "the Background object has no Image", true);
+                return;
+            }
 
             Sprite story = StoryArt.Load(theme.BoardBackdrop);
             if (story != null)
             {
                 image.sprite = story;
+                Record(theme, "Story/Art/" + theme.BoardBackdrop, false);
                 return;
             }
 
             Sprite[] pictures = background.pictures;
-            if (pictures == null || pictures.Length == 0) return;
+            if (pictures == null || pictures.Length == 0)
+            {
+                Record(theme, "no story art and the kit has no pictures either", true);
+                return;
+            }
 
             int index = Mathf.Clamp(theme.KitBackdropIndex, 0, pictures.Length - 1);
             image.sprite = pictures[index];
+            Record(theme, "the kit's own picture " + index + " — " +
+                          "Resources/Story/Art/" + theme.BoardBackdrop + " is missing", true);
+        }
+
+        /// <summary>
+        /// Remembers what the backdrop resolved to, and says so once per key when
+        /// it was not the arc's own picture. Once, because a sweep of 1208 levels
+        /// re-themes on every one of them and a per-level warning would bury the
+        /// report it belongs in.
+        /// </summary>
+        private static void Record(ArcTheme theme, string what, bool kitDefault)
+        {
+            LastBackdrop = what;
+            LastBackdropWasKitDefault = kitDefault;
+
+            if (!kitDefault) return;
+            if (!_warnedBackdrops.Add(theme.ThemeKey)) return;
+
+            Debug.LogWarning(string.Format(
+                "[Story] arc {0} ({1}) board backdrop fell back to {2}.",
+                theme.Arc, theme.ThemeKey, what));
         }
 
         /// <summary>The name of the fill object, so it is found again rather than doubled.</summary>
@@ -162,6 +222,7 @@ namespace JellyGarden.Scripts.Story
             if (!theme.HasBoardFill) return;
 
             int made = 0;
+            int filled = 0;
 
             foreach (Square square in LevelManager.THIS.squaresArray)
             {
@@ -192,7 +253,11 @@ namespace JellyGarden.Scripts.Story
                 // one board and the next.
                 bool dark = ((square.row + square.col) & 1) == 1;
                 cell.color = dark ? theme.BoardFillDark : theme.BoardFill;
+                filled++;
             }
+
+            LastFill = theme.HasBoardFill ? theme.BoardFill : Color.clear;
+            LastFilledCells = filled;
 
             if (made > 0 && !_reportedFill)
             {
@@ -204,6 +269,15 @@ namespace JellyGarden.Scripts.Story
         }
 
         private static bool _reportedFill;
+
+        /// <summary>
+        /// The ground the last board was drawn on, and how many cells carry it.
+        /// Read by StoryThemeTest, which is checking that the arc's colour
+        /// actually reached the board rather than that a theme was found.
+        /// </summary>
+        public static Color LastFill { get; private set; }
+
+        public static int LastFilledCells { get; private set; }
 
         private void LateUpdate()
         {

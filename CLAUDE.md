@@ -76,6 +76,44 @@ python3 tools/playtest_sweep.py --levels 1-16 --batch 4
 Zero findings does not mean the band is good — nothing automated here can see a
 layout. Open the run's `shots/` and look.
 
+## Checking the board themes
+
+Two halves, because half the question is data and half of it is what reaches a
+screen.
+
+```bash
+python3 tools/check_themes.py            # the data: fast, no Unity
+python3 tools/check_themes.py --strict   # count the NOTE lines too
+python3 tools/theme_sweep.py             # the screen: one board per arc, photographed
+```
+
+`check_themes.py` reads `Resources/Story/themes.json` and the art beside it and
+reports the arcs that cannot look the way they claim to — a missing backdrop
+(named by path), an arc that falls back to a kit picture, two arcs that are the
+same board, a ground one of the kit's six gems merges into. Its thresholds are
+measured rather than chosen: the gem floor is the worst separation the kit's own
+five shipped boards already accept, and the brightness bar is the dimmest of
+`area_001_state0..3`, the project's own bright cartoon room art.
+
+`NOTE` lines are the ones only new artwork can answer. There are ten today: all
+six backdrops are dark, near-photographic paintings where the brief asks for
+bright cartoon colour. They do not fail the run unless you pass `--strict`.
+
+`theme_sweep.py` runs the built player once with `-storythemetest`, opens the
+first level of each of the six arcs in its own area, and writes a 393x852 PNG
+per arc plus a report. Zero findings is not a verdict — open the six and look.
+
+## Screenshots are the back buffer, not a re-render
+
+**`StoryWindow.Capture` reads the frame at the window's own size.** It used to
+render the frame again at superSize 2, and that re-render drops the Screen Space
+- Camera canvas — which in this game carries the level HUD *and* the arc's
+backdrop. Every screenshot taken before 2026-09-07 is missing the whole HUD and
+shows the room behind the board as a smear, and two entries in
+`ralph/findings.md` were written from one. `StoryWindow.CaptureSuperSized` is
+the old behaviour, kept and unused. **Re-run any sweep whose shots you are about
+to judge.**
+
 ## Linting levels
 
 `tools/lint_levels.py` reads every board and its goal asset and reports the
