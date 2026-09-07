@@ -43,8 +43,12 @@ namespace JellyGarden.Scripts.Story
         // laying anything out under it, and takes its height from the same
         // constant the bar does so the two cannot drift apart.
         private const float NavHeightFrac = StoryUi.NavBarHeightFrac;
-        private const float ButtonsBottomFrac = 200f / 1472f;
-        private const float ButtonsHeightFrac = 164f / 1472f;
+        // Measured off the reference at 164 of 1472, and shorter than that on
+        // purpose: both cards there carry a name that can run long, and ours
+        // carry "Level 1" and "Area 1". Two short words do not need the height,
+        // and every point given back is a point more of the room behind them.
+        private const float ButtonsBottomFrac = 206f / 1472f;
+        private const float ButtonsHeightFrac = 128f / 1472f;
 
         // The two buttons across that band, as fractions of its width. In the
         // reference they run x 31..370 and 446..797 of a 31..797 band, so the
@@ -52,26 +56,32 @@ namespace JellyGarden.Scripts.Story
         private const float LevelRightFrac = 339f / 766f;
         private const float AreaLeftFrac = 415f / 766f;
 
-        // Inside the gold card: the name across the whole top, the bar and the
-        // chest sharing the bottom. Fractions of the card's content rect. The
-        // reference centres its name over the bar alone and gives the chest the
-        // full height of the card, which works for "Area 2" and does not work
-        // for "The Hall of Broken Mirrors" — a name narrowed to the bar's width
-        // wraps to two lines and spills out through the top of the card.
-        private const float AreaBarTopFrac = 0.62f;
-        private const float AreaBarBottomFrac = 0.16f;
-        private const float AreaBarRightFrac = 0.66f;
+        // Inside the card, as fractions of the card itself. Every number is
+        // (pixel - cardOrigin) / cardSize measured on
+        // docs/royal-match/09-home-level-button.jpg, where the card is 348x157
+        // at x446,y1110. Unity counts y up and the screenshot counts it down,
+        // so the vertical pairs are 1 minus the reading.
+        //
+        // The name and the bar share a left and right edge — in the reference
+        // they are one stacked block, and the chest owns everything right of it.
+        private const float AreaBarLeftFrac = 0.115f;     // x 486
+        private const float AreaBarRightFrac = 0.557f;    // x 640
+        private const float AreaBarBottomFrac = 0.261f;   // y 1226
+        private const float AreaBarTopFrac = 0.484f;      // y 1191
 
-        // The chest is nearly square on purpose. It is a stack of rounded rects
-        // — a lid over a body — and squeezed into a box half as tall as it is
-        // wide those two read as a pair of purple ovals rather than as a chest.
+        private const float AreaTextLeftFrac = AreaBarLeftFrac;
+        private const float AreaTextRightFrac = AreaBarRightFrac;
+        private const float AreaTextBottomFrac = 0.50f;   // y 1189, on the bar
+        private const float AreaTextTopFrac = 0.80f;      // y 1141
+
         /// <summary>How much gold shows around the Level button, in reference points.</summary>
         private const float LevelRimThickness = 9f;
 
-        private const float ChestLeftFrac = 0.70f;
-        private const float ChestRightFrac = 0.98f;
-        private const float ChestBottomFrac = 0f;
-        private const float ChestTopFrac = 0.66f;
+        // The chest: x 655..790, y 1140..1250 of the same card.
+        private const float ChestLeftFrac = 0.60f;
+        private const float ChestRightFrac = 0.99f;
+        private const float ChestBottomFrac = 0.11f;
+        private const float ChestTopFrac = 0.81f;
 
         private static StoryHomeScreen _instance;
 
@@ -141,19 +151,19 @@ namespace JellyGarden.Scripts.Story
             {
                 return _topBar != null && _topBar.Root != null
                        && _topBar.Root.gameObject.activeInHierarchy
-                       && _topBar.Coins != null && _topBar.Lives != null
+                       && _topBar.Coins != null
                        && _topBar.Stars != null && _topBar.Settings != null;
             }
         }
 
-        /// <summary>What the top bar reads right now, as "coins/lives/stars".</summary>
+        /// <summary>What the top bar reads right now, as "coins/stars".</summary>
         public string TopBarText
         {
             get
             {
                 if (_topBar == null) return null;
-                return string.Format("{0}/{1}/{2}",
-                    _topBar.Coins.text, _topBar.Lives.text, _topBar.Stars.text);
+                return string.Format("{0}/{1}",
+                    _topBar.Coins.text, _topBar.Stars.text);
             }
         }
 
@@ -368,36 +378,49 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private void BuildButtons()
         {
-            // The gold rim around the green button.
+            // The Level button is the splash's PLAY button with another word on
+            // it.
             //
-            // In docs/royal-match/01-home-area.jpg the Level button carries the
-            // same thick orange rim the area card does — the two read as a
-            // matched pair of plates. Ours had only GreenButton's own dark green
-            // edge, which is nothing to separate it from a dark room behind.
-            //
-            // It is a wrapper rather than a change to GreenButton, because the
-            // rim belongs to THIS button and not to the primitive: the green
-            // button on the win panel and the Do It rows have no gold rim in the
-            // reference either, and giving one to all of them would be wrong.
-            Image levelRim = StoryUi.CreateImage("LevelRim", _buttonBand,
-                StoryUi.RoundedSprite(28), StoryUi.RoyalGoldDeep);
-            levelRim.type = Image.Type.Sliced;
-            RectTransform rimRect = levelRim.rectTransform;
-            rimRect.anchorMin = new Vector2(0f, 0f);
-            rimRect.anchorMax = new Vector2(LevelRightFrac, 1f);
-            rimRect.offsetMin = Vector2.zero;
-            rimRect.offsetMax = Vector2.zero;
+            // It was a green plate inside a gold rim, assembled out of
+            // primitives, and it was the last screen element still built that
+            // way — beside a painted castle, painted ribbons and a painted PLAY
+            // it read as the one piece of UI in the room. The same sprite for
+            // both also says something true: this is the button that starts a
+            // game, and it is the same button on both screens.
+            _levelButton = StoryUi.PaintedButton("Level", _buttonBand, "Level", 66, OnLevel);
 
-            // The lit inner edge, as on every other rimmed shape in this kit: a
-            // rounded rect inside a rounded rect, never an Outline component.
-            Image levelRimLit = StoryUi.CreateImage("LevelRimLit", rimRect,
-                StoryUi.RoundedSprite(28), StoryUi.RoyalGold);
-            StoryUi.Stretch(levelRimLit.rectTransform, LevelRimThickness * 0.45f);
-            levelRimLit.type = Image.Type.Sliced;
+            if (_levelButton != null)
+            {
+                RectTransform paintedRect = _levelButton.GetComponent<RectTransform>();
+                paintedRect.anchorMin = new Vector2(0f, 0f);
+                paintedRect.anchorMax = new Vector2(LevelRightFrac, 1f);
+                paintedRect.offsetMin = Vector2.zero;
+                paintedRect.offsetMax = Vector2.zero;
+            }
+            else
+            {
+                // No painted button on disk. The drawn one it replaces, rim and
+                // all: a gold plate with the green button inset in it, which is
+                // how docs/royal-match/01-home-area.jpg pairs it with the area
+                // card beside it. StoryUi has already warned about the sprite.
+                Image levelRim = StoryUi.CreateImage("LevelRim", _buttonBand,
+                    StoryUi.RoundedSprite(28), StoryUi.RoyalGoldDeep);
+                levelRim.type = Image.Type.Sliced;
+                RectTransform rimRect = levelRim.rectTransform;
+                rimRect.anchorMin = new Vector2(0f, 0f);
+                rimRect.anchorMax = new Vector2(LevelRightFrac, 1f);
+                rimRect.offsetMin = Vector2.zero;
+                rimRect.offsetMax = Vector2.zero;
 
-            _levelButton = StoryUi.GreenButton("Level", rimRect, "Level", 66, OnLevel);
-            RectTransform levelRect = _levelButton.GetComponent<RectTransform>();
-            StoryUi.Stretch(levelRect, LevelRimThickness);
+                Image levelRimLit = StoryUi.CreateImage("LevelRimLit", rimRect,
+                    StoryUi.RoundedSprite(28), StoryUi.RoyalGold);
+                StoryUi.Stretch(levelRimLit.rectTransform, LevelRimThickness * 0.45f);
+                levelRimLit.type = Image.Type.Sliced;
+
+                _levelButton = StoryUi.GreenButton("Level", rimRect, "Level", 66, OnLevel);
+                RectTransform levelRect = _levelButton.GetComponent<RectTransform>();
+                StoryUi.Stretch(levelRect, LevelRimThickness);
+            }
 
             // Level numbers reach four digits by area 150, so the label fits
             // itself to the button rather than running off the end of it.
@@ -406,64 +429,61 @@ namespace JellyGarden.Scripts.Story
             _levelLabel.resizeTextMinSize = 24;
             _levelLabel.resizeTextMaxSize = 66;
 
-            _areaButton = StoryUi.GoldButton("Area", _buttonBand, OnArea);
+            // The card, rebuilt off the reference pixel by pixel.
+            //
+            // docs/royal-match/09-home-level-button.jpg is this exact screen.
+            // The card there is 348x157 at x446,y1110 of an 828x1472 shot, and
+            // everything below — three bands, their colours, and the fractions
+            // the name, the bar and the chest sit at — is measured off it rather
+            // than judged by eye. Drawn rather than painted, because a generated
+            // plate can be close to the reference but cannot be the reference.
+            _areaButton = StoryUi.CardPlate("Area", _buttonBand, OnArea);
+
             RectTransform areaRect = _areaButton.GetComponent<RectTransform>();
             areaRect.anchorMin = new Vector2(AreaLeftFrac, 0f);
             areaRect.anchorMax = new Vector2(1f, 1f);
             areaRect.offsetMin = Vector2.zero;
             areaRect.offsetMax = Vector2.zero;
 
-            RectTransform content = StoryUi.ContentOf(_areaButton);
+            // The parts sit on the card itself, at fractions measured off the
+            // reference — no content rect, because every rect below is already
+            // expressed as a fraction of the whole card.
+            RectTransform content = areaRect;
 
-            // 150 area names, and they are not "Area 2" — best fit, or "The
-            // Hall of Broken Mirrors" runs out through the chest.
+            // "Area 1", not "Castle Gates" — the word the reference card uses.
+            //
+            // It also holds one type size for all 150 areas: the names had to
+            // shrink to 18pt for the longer ones, so the card's type changed
+            // from area to area. The name still has the whole area screen to be
+            // said on. Centred over the bar, as in the reference, not over the
+            // whole card — the chest owns the right-hand third.
             _areaLabel = StoryUi.CreateText("Name", content, string.Empty, 52,
-                StoryUi.RoyalCream, TextAnchor.MiddleCenter);
+                StoryUi.CardInk, TextAnchor.MiddleCenter);
             RectTransform labelRect = _areaLabel.rectTransform;
-            labelRect.anchorMin = new Vector2(0f, AreaBarTopFrac);
-            labelRect.anchorMax = Vector2.one;
+            labelRect.anchorMin = new Vector2(AreaTextLeftFrac, AreaTextBottomFrac);
+            labelRect.anchorMax = new Vector2(AreaTextRightFrac, AreaTextTopFrac);
             labelRect.offsetMin = Vector2.zero;
             labelRect.offsetMax = Vector2.zero;
             _areaLabel.fontStyle = FontStyle.Bold;
 
-            // One line, shrunk to fit. "Outer Courtyard" wrapped onto two and
-            // the second line ran under the progress bar; the names get longer
-            // than that from area 3 onward.
-            StoryUi.FitOneLine(_areaLabel, 18, 52);
+            StoryUi.FitOneLine(_areaLabel, 20, 52);
             var nameOutline = _areaLabel.gameObject.AddComponent<Outline>();
-            nameOutline.effectColor = StoryUi.RoyalGoldDeep;
+            nameOutline.effectColor = StoryUi.CardInkEdge;
             nameOutline.effectDistance = new Vector2(2f, -2f);
 
             _areaBar = StoryUi.ProgressBar("Progress", content);
-            _areaBar.Root.anchorMin = new Vector2(0f, AreaBarBottomFrac);
+            _areaBar.Root.anchorMin = new Vector2(AreaBarLeftFrac, AreaBarBottomFrac);
             _areaBar.Root.anchorMax = new Vector2(AreaBarRightFrac, AreaBarTopFrac);
             _areaBar.Root.offsetMin = Vector2.zero;
             _areaBar.Root.offsetMax = Vector2.zero;
 
-            // The chest sits at the end of the bar: the reward the bar is filling
-            // towards. It needs something to sit ON.
+            // The chest sits at the end of the bar: the reward the bar is
+            // filling towards, straight on the gold.
             //
-            // Cream panels were the first attempt at the problem the ChestIcon
-            // note describes — a gold-panelled chest on a gold card is two purple
-            // rings with the card showing through them. Cream did not fix it: at
-            // this size cream and the card are near enough the same value that
-            // the chest still read as a purple ring round a pale blob, which is
-            // what the home screen actually shipped.
-            //
-            // The fix is a recess rather than another panel colour. The chest is
-            // laid on a sunken plate in the same blue as the progress bar's own
-            // track — the bar and the chest at the end of it now share a ground —
-            // and its panels go back to the reference's saturated gold, which has
-            // something dark to be bright against.
-            Image chestPlate = StoryUi.CreateImage("ChestPlate", content,
-                StoryUi.RoundedSprite(30), StoryUi.RoyalBlueDeep);
-            chestPlate.type = Image.Type.Sliced;
-            RectTransform plateRect = chestPlate.rectTransform;
-            plateRect.anchorMin = new Vector2(ChestLeftFrac - 0.03f, ChestBottomFrac + 0.04f);
-            plateRect.anchorMax = new Vector2(ChestRightFrac + 0.02f, ChestTopFrac + 0.05f);
-            plateRect.offsetMin = Vector2.zero;
-            plateRect.offsetMax = Vector2.zero;
-
+            // It had a sunken blue plate under it, added when the chest was six
+            // drawn rectangles and vanished into the card. The painted chest
+            // does not need one, and the reference has no plate: the chest sits
+            // on the gold face with nothing behind it.
             _areaChest = StoryUi.ChestIcon("Chest", content, StoryUi.RoyalChestGold);
             _areaChest.anchorMin = new Vector2(ChestLeftFrac, ChestBottomFrac);
             _areaChest.anchorMax = new Vector2(ChestRightFrac, ChestTopFrac);
@@ -559,7 +579,7 @@ namespace JellyGarden.Scripts.Story
             // non-interactable button still fires onClick when invoked directly.
             StoryUi.SetGreenInteractable(_levelButton, next > 0);
 
-            if (_areaLabel != null) _areaLabel.text = area.Name;
+            if (_areaLabel != null) _areaLabel.text = "Area " + _areaId;
             StoryUi.SetProgress(_areaBar,
                 StoryProgress.TasksCompletedIn(_areaId), area.Tasks.Count);
             StoryUi.SetCountBadge(_areaBadge, AffordableRepairs(_areaId));

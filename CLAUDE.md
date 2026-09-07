@@ -1,3 +1,5 @@
+**Always use bright, cartoon-like colour for the castle and everything else.**
+
 # Match3-Games — Jelly Garden kit + the King Leo story
 
 A purchased Unity match-3 kit (Jelly Garden 2.5.2) carrying the full 150-area

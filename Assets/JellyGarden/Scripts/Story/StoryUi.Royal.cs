@@ -50,6 +50,19 @@ namespace JellyGarden.Scripts.Story
         public static readonly Color RoyalChestGold = Rgb(252, 214, 6);   // chest panels
         public static readonly Color RoyalTealInk = Rgb(4, 55, 74);       // heading outline
 
+        // The area card, sampled pixel by pixel out of
+        // docs/royal-match/09-home-level-button.jpg. The card there is 348x157
+        // at x446,y1110 of an 828x1472 screenshot, and every colour below is a
+        // reading off that image rather than a choice.
+        public static readonly Color CardRim = Rgb(240, 120, 10);      // the outer band
+        public static readonly Color CardRimDeep = Rgb(200, 69, 0);    // its thickness, below
+        public static readonly Color CardRimLit = Rgb(255, 178, 45);   // its lit inner edge
+        public static readonly Color CardFace = Rgb(255, 190, 10);     // the face, mid height
+        public static readonly Color CardTrack = Rgb(0, 70, 115);      // the bar's well
+        public static readonly Color CardFill = Rgb(62, 136, 0);       // the bar's green
+        public static readonly Color CardInk = Rgb(253, 247, 225);     // "Area 2" and "1/7"
+        public static readonly Color CardInkEdge = Rgb(146, 58, 0);    // the outline under it
+
         // The areas list. Its ground is a dark slate rather than the royal blue
         // every other screen sits on, because the cards on it are themselves red
         // and gold and would have nothing to sit against. Sampled off
@@ -610,10 +623,14 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// The sunken progress track from docs/royal-match/02-area-tasks.jpg: an
-        /// orange-rimmed well of RoyalBlueDeep with a green bar growing out of its
-        /// left end and the count written across the middle. The green is the same
-        /// green the home screen's area bar uses in 09-home-level-button.jpg.
+        /// A plain progress track: a dark well, a green bar growing out of its
+        /// left end, and the count across the middle.
+        ///
+        /// It had an orange rim around the well and a lighter green gloss inside
+        /// the fill — four nested rounded rects for a bar 20 points tall. At that
+        /// size none of it read as depth; it read as a fussy edge round a small
+        /// object, and it fought the card it sits on. The green is still the
+        /// reference's green.
         /// </summary>
         public static ProgressBarParts ProgressBar(string name, Transform parent)
         {
@@ -622,17 +639,17 @@ namespace JellyGarden.Scripts.Story
             RectTransform root = CreateRect(name, parent);
             parts.Root = root;
 
-            Image rim = CreateImage("Rim", root, RoundedSprite(40), RoyalGoldDeep);
-            Stretch(rim.rectTransform);
-            rim.type = Image.Type.Sliced;
-
-            Image well = CreateImage("Well", root, RoundedSprite(40), RoyalBlueDeep);
-            Stretch(well.rectTransform, 8f);
+            // A small radius, not a capsule. At 40 the corners were half the
+            // track's own height, so a thin bar came out a lozenge; the fill
+            // inside it keeps a slightly tighter one so it sits in the well
+            // rather than tracing it.
+            Image well = CreateImage("Well", root, RoundedSprite(14), CardTrack);
+            Stretch(well.rectTransform);
             well.type = Image.Type.Sliced;
 
             // The fill is anchored rather than sized: a fraction of the track's
             // width survives whatever width the screen ends up handing the track.
-            Image fill = CreateImage("Fill", well.rectTransform, RoundedSprite(36), RoyalGreen);
+            Image fill = CreateImage("Fill", well.rectTransform, RoundedSprite(10), CardFill);
             fill.type = Image.Type.Sliced;
             RectTransform fillRect = fill.rectTransform;
             fillRect.anchorMin = Vector2.zero;
@@ -641,23 +658,31 @@ namespace JellyGarden.Scripts.Story
             fillRect.offsetMax = new Vector2(-4f, -4f);
             parts.Fill = fillRect;
 
-            Image gloss = CreateImage("Gloss", fillRect, RoundedSprite(24), RoyalGreenLight);
-            gloss.type = Image.Type.Sliced;
-            RectTransform glossRect = gloss.rectTransform;
-            glossRect.anchorMin = new Vector2(0f, 0.52f);
-            glossRect.anchorMax = new Vector2(1f, 0.9f);
-            glossRect.offsetMin = new Vector2(10f, 0f);
-            glossRect.offsetMax = new Vector2(-10f, 0f);
+            // The green in the reference is lit across its top third. One
+            // rectangle, clipped by the fill so its square corners stay inside
+            // the rounded end.
+            fill.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            Image lit = CreateImage("Lit", fillRect, RoundedSprite(8), RoyalGreenLight);
+            lit.type = Image.Type.Sliced;
+            RectTransform litRect = lit.rectTransform;
+            litRect.anchorMin = new Vector2(0f, 0.52f);
+            litRect.anchorMax = new Vector2(1f, 0.94f);
+            litRect.offsetMin = new Vector2(3f, 0f);
+            litRect.offsetMax = new Vector2(-3f, 0f);
+            lit.raycastTarget = false;
 
             // Over the bar, not inside it: the count has to stay legible whether
             // the green has reached it or not.
-            Text label = CreateText("Value", root, string.Empty, 52, RoyalTitle,
+            // Best fit, but capped below the track's own height: left at 52 the
+            // count grew until it touched the well's top and bottom edges and
+            // the bar read as a label with a bar behind it.
+            Text label = CreateText("Value", root, string.Empty, 40, CardInk,
                 TextAnchor.MiddleCenter);
-            Stretch(label.rectTransform);
+            Stretch(label.rectTransform, 4f);
             label.fontStyle = FontStyle.Bold;
             label.resizeTextForBestFit = true;
-            label.resizeTextMinSize = 18;
-            label.resizeTextMaxSize = 52;
+            label.resizeTextMinSize = 16;
+            label.resizeTextMaxSize = 40;
             parts.Label = label;
 
             SetProgress(parts, 0, 0);
@@ -839,15 +864,26 @@ namespace JellyGarden.Scripts.Story
             button.interactable = interactable;
 
             var baseImage = button.targetGraphic as Image;
+            Transform face = button.transform.Find("Face");
+
+            // A PAINTED button has no Face child: it is one sprite, and its
+            // colours are in the drawing. Repainting its graphic green — which
+            // is what this did to every button it was handed — turned the gold
+            // Level button into a green blob the moment the screen refreshed.
+            // A painted button greys by tint instead, which keeps its own light
+            // and shade.
+            if (face == null)
+            {
+                if (baseImage != null)
+                    baseImage.color = interactable ? Color.white : RoyalGrey;
+                return;
+            }
+
             if (baseImage != null)
                 baseImage.color = interactable ? RoyalGreenDark : Rgb(90, 88, 84);
 
-            Transform face = button.transform.Find("Face");
-            if (face != null)
-            {
-                var faceImage = face.GetComponent<Image>();
-                if (faceImage != null) faceImage.color = interactable ? RoyalGreen : RoyalGrey;
-            }
+            var faceImage = face.GetComponent<Image>();
+            if (faceImage != null) faceImage.color = interactable ? RoyalGreen : RoyalGrey;
 
             // The old "Gloss" child was a lighter GREEN rectangle and had to be
             // recoloured with the rest of the button. The sheen that replaced it
@@ -916,6 +952,139 @@ namespace JellyGarden.Scripts.Story
 
             return button;
         }
+
+        /// <summary>
+        /// The area card's plate, built to docs/royal-match/09-home-level-button.jpg.
+        ///
+        /// Three bands, outside in, each one a colour read off that screenshot:
+        /// a deep-orange rim, a lit edge inside it, and the golden face. The
+        /// face carries the same fading sheen every other lit thing on this
+        /// screen wears, which is what the reference's paler top is — the card
+        /// is one gold that catches more light at the top, not two golds.
+        ///
+        /// Its own builder rather than GoldButton, because GoldButton is the
+        /// generic shape a caller stacks things on and this is one specific
+        /// card whose every measurement comes from one image.
+        /// </summary>
+        /// <summary>How much of the card's dark side shows below it, in points.</summary>
+        private const float RimThickness = 7f;
+
+        public static Button CardPlate(string name, Transform parent, UnityAction onClick)
+        {
+            RectTransform rect = CreateRect(name, parent);
+
+            // The card is a slab seen slightly from above, and this is the side
+            // of it: the deepest orange, showing only along the bottom because
+            // that is the only side of a slab you can see from up here. It is
+            // the whole of what lifts the card off the screen — the reference's
+            // bottom edge is a full 7 points darker than its rim.
+            var image = rect.gameObject.AddComponent<Image>();
+            image.sprite = RoundedSprite(30);
+            image.type = Image.Type.Sliced;
+            image.color = CardRimDeep;
+
+            var button = rect.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.transition = Selectable.Transition.None;
+            if (onClick != null) button.onClick.AddListener(onClick);
+
+            // The top face of the slab, sitting on that side.
+            Image rim = CreateImage("Rim", rect, RoundedSprite(30), CardRim);
+            rim.type = Image.Type.Sliced;
+            rim.raycastTarget = false;
+            RectTransform rimRect = rim.rectTransform;
+            rimRect.anchorMin = Vector2.zero;
+            rimRect.anchorMax = Vector2.one;
+            rimRect.offsetMin = new Vector2(0f, RimThickness);
+            rimRect.offsetMax = Vector2.zero;
+
+            Image lit = CreateImage("RimLit", rimRect, RoundedSprite(28), CardRimLit);
+            lit.type = Image.Type.Sliced;
+            Stretch(lit.rectTransform, 5f);
+            lit.raycastTarget = false;
+
+            Image face = CreateImage("Face", rimRect, RoundedSprite(26), CardFace);
+            face.type = Image.Type.Sliced;
+            Stretch(face.rectTransform, 11f);
+            face.raycastTarget = false;
+
+            // The ramp is a rectangle and the face is rounded, so the face clips
+            // it; showMaskGraphic keeps the gold itself drawn.
+            face.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+
+            Image sheen = CreateImage("Sheen", face.rectTransform, SheenSprite,
+                new Color(1f, 1f, 1f, 0.30f));
+            Stretch(sheen.rectTransform);
+            sheen.raycastTarget = false;
+
+            return button;
+        }
+
+        /// <summary>
+        /// A button that is one painted sprite, with a word laid on it.
+        ///
+        /// GreenButton and GoldButton below assemble a button out of primitives,
+        /// which is right where no art exists for it. This one is the splash's
+        /// PLAY button with the word taken out — the same gold face, gloss and
+        /// bottom band — sliced so the ends keep their curve and only the flat
+        /// middle stretches to the width the caller gives it.
+        ///
+        /// Returns null where the sprite is not on disk, so a caller can fall
+        /// back to the drawn button rather than shipping an invisible one.
+        /// </summary>
+        public static Button PaintedButton(string name, Transform parent, string label,
+            int fontSize, UnityAction onClick)
+        {
+            return PaintedButton(name, parent, label, fontSize, onClick, PaintedButtonSprite);
+        }
+
+        /// <summary>
+        /// The same button on a named plate: <c>button_gold</c> is the splash's
+        /// PLAY pill, <c>card_gold</c> the amber card the area slot wears.
+        /// </summary>
+        public static Button PaintedButton(string name, Transform parent, string label,
+            int fontSize, UnityAction onClick, string spriteKey)
+        {
+            Sprite art = LoadSprite(spriteKey);
+            if (art == null) return null;
+
+            RectTransform rect = CreateRect(name, parent);
+
+            var image = rect.gameObject.AddComponent<Image>();
+            image.sprite = art;
+            image.type = Image.Type.Sliced;
+            image.color = Color.white;
+
+            var button = rect.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.transition = Selectable.Transition.None;
+            if (onClick != null) button.onClick.AddListener(onClick);
+
+            // Cream in the display face with a brown edge under it — the same
+            // treatment the word PLAY wears on the button this was cut from, so
+            // the two read as the same object with different words on it.
+            Text text = CreateText("Label", rect, label, fontSize, RoyalTitle,
+                TextAnchor.MiddleCenter);
+            text.font = DisplayFont;
+            text.raycastTarget = false;
+            RectTransform textRect = text.rectTransform;
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            // Clear of the rounded ends, and off the bottom band.
+            textRect.offsetMin = new Vector2(28f, 16f);
+            textRect.offsetMax = new Vector2(-28f, -6f);
+            var outline = text.gameObject.AddComponent<Outline>();
+            outline.effectColor = IconWood;
+            outline.effectDistance = new Vector2(3f, -3f);
+
+            return button;
+        }
+
+        /// <summary>The painted button's art in Resources/Story/UI.</summary>
+        private const string PaintedButtonSprite = "button_gold";
+
+        /// <summary>The amber card plate the area slot wears.</summary>
+        public const string PaintedCardSprite = "card_gold";
 
         /// <summary>
         /// The gold secondary button from docs/royal-match/09-home-level-button.jpg
@@ -1317,6 +1486,27 @@ namespace JellyGarden.Scripts.Story
 
         #region Top bar
 
+        /// <summary>How tall the whole strip is, in reference points.</summary>
+        private const float BarHeight = 140f;
+
+        /// <summary>A ribbon's height. The gear is a disc of the same size.</summary>
+        private const float PillHeight = 84f;
+
+        /// <summary>
+        /// A ribbon's width: its own drawing is 861 by 260, and this is that
+        /// ratio at PillHeight. Measured rather than chosen, because the whole
+        /// point of the change is that the art is never stretched — so this
+        /// constant moves whenever the drawing does.
+        /// </summary>
+        private const float RibbonWidth = PillHeight * (861f / 260f);
+
+        /// <summary>
+        /// The gap between the two ribbons. Wide, because the ribbons carry
+        /// their own gold outline: two of them close together read as one bar
+        /// broken in half, and the air between is what makes them two counters.
+        /// </summary>
+        private const float PillGap = 64f;
+
         /// <summary>
         /// The parts of the top bar that carry a number, so a screen can refresh
         /// them without rebuilding the strip.
@@ -1325,7 +1515,6 @@ namespace JellyGarden.Scripts.Story
         {
             public RectTransform Root;
             public Text Coins;
-            public Text Lives;
             public Text Stars;
             public Button Settings;
         }
@@ -1342,38 +1531,45 @@ namespace JellyGarden.Scripts.Story
             var parts = new TopBarParts();
 
             RectTransform root = CreateRect("TopBar", parent);
-            TopAnchored(root, 42f, 140f, 30f);
+            TopAnchored(root, 42f, BarHeight, 30f);
             parts.Root = root;
 
-            // The gaps between the pills are wider than the reference's, because
-            // the icon overhangs its pill's left end and has to clear the pill
-            // before it — an overhang landing on the neighbour's cream reads as
-            // one broken bar rather than three stats.
-            parts.Coins = Pill(root, "Coins", 0f, 0.33f, RoyalGold, CoinsText(),
-                "icon_coin");
-            parts.Lives = Pill(root, "Lives", 0.36f, 0.68f, RoyalRed, LivesText(),
-                "icon_heart");
-            parts.Stars = Pill(root, "Stars", 0.71f, 0.885f, RoyalGold, StarsText(),
-                "icon_star");
+            // Two ribbons, not three.
+            //
+            // Lives is gone: StoryFreeGame never spends one, so the heart read
+            // "Full" on every screen for the whole game — a counter that cannot
+            // count. Coins and stars both move, so both are worth the width, and
+            // dropping the third gives them room to sit at their true size.
+            float x = 0f;
+            parts.Coins = Pill(root, "Coins", x, RoyalGold, CoinsText(),
+                "icon_coin", "ribbon_coins");
+            x += RibbonWidth + PillGap;
+            parts.Stars = Pill(root, "Stars", x, RoyalGold, StarsText(),
+                "icon_star", "ribbon_stars");
 
             RectTransform gear = CreateRect("Settings", root);
-            gear.anchorMin = new Vector2(0.905f, 0f);
-            gear.anchorMax = new Vector2(1f, 1f);
-            gear.offsetMin = Vector2.zero;
-            gear.offsetMax = Vector2.zero;
+            gear.anchorMin = new Vector2(1f, 0.5f);
+            gear.anchorMax = new Vector2(1f, 0.5f);
+            gear.pivot = new Vector2(1f, 0.5f);
+            gear.sizeDelta = new Vector2(PillHeight, PillHeight);
+            gear.anchoredPosition = Vector2.zero;
 
+            // Brown rim, gold face — the gear is a coin-sized object in the same
+            // metal as the wordmark, not a navy blob. The face is a second disc
+            // rather than a tint on this one, so the rim stays a rim.
             var gearRim = gear.gameObject.AddComponent<Image>();
             gearRim.sprite = CircleSprite;
-            gearRim.color = RoyalBlueDark;
+            gearRim.color = RoyalGoldDeep;
 
             var settings = gear.gameObject.AddComponent<Button>();
             settings.targetGraphic = gearRim;
             if (onSettings != null) settings.onClick.AddListener(onSettings);
             parts.Settings = settings;
 
-            // The painted gear is a lit gold object and carries its own colour;
-            // the drawn one is a flat silhouette that has to be tinted. The disc
-            // stays under both, so the button keeps its hit shape either way.
+            Image gearWell = CreateImage("Face", gear, CircleSprite, RoyalGold);
+            Stretch(gearWell.rectTransform, 7f);
+            gearWell.raycastTarget = false;
+
             Sprite gearArt = StoryArt.Load("icon_gear");
             Image gearFace = CreateImage("Gear", gear,
                 gearArt != null ? gearArt : GearSprite,
@@ -1393,47 +1589,84 @@ namespace JellyGarden.Scripts.Story
         /// UI next to the reference. The fallback is kept rather than removed so
         /// that a missing file is a plainer bar, never an empty one.
         /// </summary>
-        private static Text Pill(RectTransform parent, string name, float minX, float maxX,
-            Color iconColour, string value, string iconKey)
+        private static Text Pill(RectTransform parent, string name, float left,
+            Color iconColour, string value, string iconKey, string ribbonKey)
         {
             RectTransform rect = CreateRect(name, parent);
-            rect.anchorMin = new Vector2(minX, 0.06f);
-            rect.anchorMax = new Vector2(maxX, 0.94f);
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
+            // Placed at its own size from the bar's left edge, rather than
+            // anchored to a slice of the bar's width. Anchoring stretched the
+            // ribbon to whatever slice it was given: the rounded end went oval
+            // and the notch flattened, which is exactly the distortion the
+            // painted shape exists to avoid.
+            rect.anchorMin = new Vector2(0f, 0.5f);
+            rect.anchorMax = new Vector2(0f, 0.5f);
+            rect.pivot = new Vector2(0f, 0.5f);
+            rect.sizeDelta = new Vector2(RibbonWidth, PillHeight);
+            rect.anchoredPosition = new Vector2(left, 0f);
 
-            Image rim = CreateImage("Rim", rect, RoundedSprite(28), RoyalBlueDark);
-            Stretch(rim.rectTransform);
-            rim.type = Image.Type.Sliced;
+            // A painted ribbon, not two rounded rectangles: gold outline, flat
+            // saturated field, a notch cut out of the tail. Drawn Simple at the
+            // rect it was measured for, so every proportion in the drawing
+            // survives.
+            Sprite ribbon = LoadSprite(ribbonKey);
+            if (ribbon != null)
+            {
+                Image art = CreateImage("Ribbon", rect, ribbon, Color.white);
+                art.type = Image.Type.Simple;
+                art.preserveAspect = true;
+                Stretch(art.rectTransform);
+                art.raycastTarget = false;
+            }
+            else
+            {
+                // No ribbon on disk: a plain cream pill, so a missing file is a
+                // duller bar rather than two numbers floating on the sky.
+                // LoadSprite has already warned.
+                Image rim = CreateImage("Rim", rect, RoundedSprite(28), IconWood);
+                Stretch(rim.rectTransform);
+                rim.type = Image.Type.Sliced;
 
-            Image fill = CreateImage("Fill", rect, RoundedSprite(28), RoyalCream);
-            Stretch(fill.rectTransform, 6f);
-            fill.type = Image.Type.Sliced;
+                Image fill = CreateImage("Fill", rect, RoundedSprite(28), RoyalCream);
+                Stretch(fill.rectTransform, 6f);
+                fill.type = Image.Type.Sliced;
+            }
 
-            Text text = CreateText("Value", rect, value, 46, RoyalNavy, TextAnchor.MiddleCenter);
+            // Cream on a saturated field, with a dark edge under it: the ribbons
+            // are different colours and one text colour has to read on all.
+            Text text = CreateText("Value", rect, value, 46,
+                ribbon != null ? RoyalTitle : IconWood, TextAnchor.MiddleCenter);
+            // The display face, not the kit's UI font. CreateText takes whatever
+            // Text happens to be in the scene, which is body copy; these are two
+            // numbers on painted ribbons and they belong in the same chunky face
+            // as the wordmark and the PLAY button.
+            text.font = DisplayFont;
             RectTransform textRect = text.rectTransform;
             textRect.anchorMin = Vector2.zero;
             textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = new Vector2(104f, 0f);
-            textRect.offsetMax = new Vector2(-14f, 0f);
+            // Clear of the coin on the left and of the notch on the right.
+            textRect.offsetMin = new Vector2(PillHeight * 0.95f, 0f);
+            textRect.offsetMax = new Vector2(ribbon != null ? -PillHeight * 0.5f : -14f, 0f);
             text.fontStyle = FontStyle.Bold;
+            if (ribbon != null)
+            {
+                var edge = text.gameObject.AddComponent<Outline>();
+                edge.effectColor = new Color(0f, 0f, 0f, 0.55f);
+                edge.effectDistance = new Vector2(2f, -2f);
+            }
 
-            // The icon overhangs the pill's left end, as in the reference.
-            Sprite art = StoryArt.Load(iconKey);
+            // The icon overhangs the ribbon's left end, as in the reference, and
+            // is measured off the pill so it cannot outgrow it.
+            Sprite iconArt = StoryArt.Load(iconKey);
             Image icon = CreateImage("Icon", rect,
-                art != null ? art : CircleSprite,
-                art != null ? Color.white : iconColour);
-            icon.preserveAspect = art != null;
+                iconArt != null ? iconArt : CircleSprite,
+                iconArt != null ? Color.white : iconColour);
+            icon.preserveAspect = iconArt != null;
             RectTransform iconRect = icon.rectTransform;
             iconRect.anchorMin = new Vector2(0f, 0.5f);
             iconRect.anchorMax = new Vector2(0f, 0.5f);
             iconRect.pivot = new Vector2(0.5f, 0.5f);
-            // 112 across, sat 34 in from the pill's left edge, so it overhangs by
-            // 22. The bar is inset 30 from the screen, and the first pill's icon
-            // is the one that would fall off the left edge — at the old 118 and 6
-            // it went 23 points past it and the coin came back with a flat side.
-            iconRect.sizeDelta = new Vector2(112f, 112f);
-            iconRect.anchoredPosition = new Vector2(34f, 0f);
+            iconRect.sizeDelta = new Vector2(PillHeight, PillHeight);
+            iconRect.anchoredPosition = new Vector2(PillHeight * 0.30f, 0f);
 
             return text;
         }
@@ -1464,7 +1697,6 @@ namespace JellyGarden.Scripts.Story
         {
             if (parts == null) return;
             if (parts.Coins != null) parts.Coins.text = CoinsText();
-            if (parts.Lives != null) parts.Lives.text = LivesText();
             if (parts.Stars != null) parts.Stars.text = StarsText();
         }
 
@@ -1553,6 +1785,13 @@ namespace JellyGarden.Scripts.Story
 
             /// <summary>The darker band across the board's foot.</summary>
             public Image Grain;
+
+            /// <summary>
+            /// The angle this sign hangs at while it is not the current screen,
+            /// in degrees. Fixed per slot rather than random, so the bar looks
+            /// the same every time it is built.
+            /// </summary>
+            public float Tilt;
 
             public AspectRatioFitter Fitter;
         }
@@ -1688,8 +1927,11 @@ namespace JellyGarden.Scripts.Story
             RectTransform board = CreateRect("Sign" + index, faces);
             board.anchorMin = new Vector2(mid - half, 0f);
             board.anchorMax = new Vector2(mid + half, 0f);
-            board.pivot = new Vector2(0.5f, 0.5f);
+            // The pivot is the top edge, where the hook holds it: a hanging sign
+            // swings from its rope, not around its own middle.
+            board.pivot = new Vector2(0.5f, 1f);
             parts.Board = board;
+            parts.Tilt = TiltFor(index);
 
             var edge = board.gameObject.AddComponent<Image>();
             edge.sprite = RoundedSprite(18);
@@ -1760,6 +2002,25 @@ namespace JellyGarden.Scripts.Story
             return parts;
         }
 
+        /// <summary>
+        /// How far off true a sign hangs, by slot.
+        ///
+        /// Four fixed angles rather than one, because four boards at the same
+        /// angle read as a deliberate slant on the whole bar; four at different
+        /// ones read as four signs hung by hand. None is more than three
+        /// degrees — enough to see, not enough to make the words hard to read.
+        /// </summary>
+        private static float TiltFor(int index)
+        {
+            switch (index % 4)
+            {
+                case 0: return -2.5f;
+                case 1: return 1.8f;
+                case 2: return -1.2f;
+                default: return 2.6f;
+            }
+        }
+
         /// <summary>Where a board's top edge sits, as a fraction of the band.</summary>
         private static float SignTopFrac(bool raised)
         {
@@ -1824,6 +2085,11 @@ namespace JellyGarden.Scripts.Story
                 tab.Hook.anchorMin = new Vector2(tab.Hook.anchorMin.x, top);
                 tab.Hook.anchorMax = new Vector2(tab.Hook.anchorMax.x, RopeHeightFrac);
             }
+
+            // The current screen's sign is the one hanging straight. The others
+            // stay as they were hung, which is what makes straightening read as
+            // somebody having just touched this one.
+            tab.Board.localRotation = Quaternion.Euler(0f, 0f, raised ? 0f : tab.Tilt);
 
             var edge = tab.Button == null ? null : tab.Button.targetGraphic as Image;
             if (edge != null) edge.color = raised ? RoyalGoldDeep : PlankEdge;

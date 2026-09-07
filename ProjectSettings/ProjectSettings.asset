@@ -8,7 +8,7 @@ PlayerSettings:
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 0
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
@@ -173,14 +173,14 @@ PlayerSettings:
     Android: com.DefaultCompany.JellyGarden
     Standalone: com.DefaultCompany.Jelly-Garden
     Tizen: com.best2dgamesstudio.jellygarden
-    iPhone: com.best2dgamesstudio.jellygarden
+    iPhone: com.vmp.kingleo
     tvOS: com.best2dgamesstudio.jellygarden
   buildNumber:
     Standalone: 0
     VisionOS: 0
     iPhone: 1
     tvOS: 0
-  overrideDefaultApplicationIdentifier: 0
+  overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 26
   AndroidTargetSdkVersion: 0
@@ -251,14 +251,14 @@ PlayerSettings:
   metalCompileShaderBinary: 0
   iOSRenderExtraFrameOnPause: 1
   iosCopyPluginsCodeInsteadOfSymlink: 0
-  appleDeveloperTeamID: 
+  appleDeveloperTeamID: Z62T7FR68P
   iOSManualSigningProvisioningProfileID: 
   tvOSManualSigningProvisioningProfileID: 
   VisionOSManualSigningProvisioningProfileID: 
   iOSManualSigningProvisioningProfileType: 0
   tvOSManualSigningProvisioningProfileType: 0
   VisionOSManualSigningProvisioningProfileType: 0
-  appleEnableAutomaticSigning: 0
+  appleEnableAutomaticSigning: 1
   iOSRequireARKit: 0
   iOSAutomaticallyDetectAndAddCapabilities: 1
   appleEnableProMotion: 0
@@ -852,7 +852,7 @@ PlayerSettings:
     Android: UNITY_ADS
     Standalone: UNITY_INAPPS;SENTIS_ANALYTICS_ENABLED
     Windows Store Apps: UNITY_ADS
-    iPhone: UNITY_ADS
+    iPhone: SENTIS_ANALYTICS_ENABLED;UNITY_ADS
   additionalCompilerArguments: {}
   platformArchitecture:
     iPhone: 1

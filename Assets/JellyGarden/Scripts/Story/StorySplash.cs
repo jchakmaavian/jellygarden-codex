@@ -73,6 +73,7 @@ namespace JellyGarden.Scripts.Story
             }
 
             if (DressPlayButton()) swapped.Add("play button");
+            if (DressLoadingScreen()) swapped.Add("loading screen");
 
             if (swapped.Count > 0 && !_reported)
             {
@@ -85,27 +86,34 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The kit sprite the splash's Play button wears.</summary>
         private const string KitPlaySprite = "play_main_menu_button";
 
-        /// <summary>The marker child, so a second Install does not stack a second face.</summary>
-        private const string DressedMarker = "StoryFace";
-
-        // The inlay, in reference points, outside in: a dark edge, the gold
-        // sitting inside it, then a bronze line where the gold meets the field.
-        private const float EdgeThickness = 3f;
-        private const float InlayThickness = 5f;
-        private const float BronzeThickness = 3f;
+        /// <summary>The marker child, so a second Install does not stack a second mark.</summary>
+        private const string DressedMarker = "StoryPlayMark";
 
         /// <summary>Where the button's centre sits, as a fraction up the screen.</summary>
         private const float PlayHeightFrac = 0.245f;
 
+        /// <summary>The painted button in Resources/Story/UI, drawn in place of the kit's.</summary>
+        private const string PlayButtonSprite = "play_button";
+
+        /// <summary>Its height, as a fraction of the height the kit gave its own button.</summary>
+        private const float ButtonHeightFrac = 1.15f;
+
+        /// <summary>The bare gold mark, drawn only if the painted button is missing.</summary>
+        private const string PlayMarkSprite = "play_icon";
+
+        /// <summary>The mark's side, as a fraction of the button's height.</summary>
+        private const float MarkHeightFrac = 1.15f;
+
+
         /// <summary>
-        /// Turns the kit's blue candy Play button into the story's green one.
+        /// Replaces the kit's blue candy Play button with the story's gold mark.
         ///
         /// It is redressed in place rather than replaced, because the button's
         /// own onClick is what starts the game and rebuilding it would mean
         /// re-wiring that. The kit's word "Play" is painted INTO
-        /// play_main_menu_button.png, so swapping the sprite loses the label —
-        /// which is why a real Text is added on top. Both are additions; the
-        /// sprite is the only thing overwritten, and only on the instance.
+        /// play_main_menu_button.png, so the sprite is made transparent and the
+        /// mark laid on top. Both are additions; the sprite is the only thing
+        /// overwritten, and only on the instance.
         /// </summary>
         private static bool DressPlayButton()
         {
@@ -135,67 +143,111 @@ namespace JellyGarden.Scripts.Story
                 rect.pivot = new Vector2(0.5f, 0.5f);
                 rect.anchoredPosition = Vector2.zero;
 
-                // The gold inlay, outside in.
+                // The button is one painted sprite now.
                 //
-                // The button this replaces was three flat fills stacked on each
-                // other — dark base, lighter face, lighter gloss across the top
-                // half — and every boundary between them was a hard edge between
-                // two solid colours, so it read as three rectangles rather than
-                // one lit object. The gloss stopped dead across the middle,
-                // exactly where the eye lands to read the word.
+                // Every version before this was assembled out of primitives —
+                // fills, bevels, a border of four bars — and each one read as UI
+                // drawn over a painting rather than as something painted. This
+                // is one piece of art in the same hand as the castle behind it:
+                // cream rim, orange gloss, the word cut into it in white.
                 //
-                // Here the gold runs INSIDE a dark edge rather than wrapping the
-                // button, so it reads as inlaid into the green instead of as a
-                // second rectangle around it, and the only light on the field is
-                // a ramp that fades out rather than stopping. No hard edge
-                // anywhere on the face.
-                image.sprite = StoryUi.RoundedSprite(30);
-                image.type = Image.Type.Sliced;
-                image.color = StoryUi.RoyalTealInk;
+                // preserveAspect, because the kit's rect is not this sprite's
+                // shape and a stretched button is the one thing that would give
+                // the whole screen away. The rect is scaled off its own height so
+                // the sprite lands at a thumb's size whatever the kit set.
+                Sprite art = StoryUi.LoadSprite(PlayButtonSprite);
+                if (art != null)
+                {
+                    image.sprite = art;
+                    image.type = Image.Type.Simple;
+                    image.color = Color.white;
+                    image.preserveAspect = true;
+                    image.raycastTarget = true;
 
-                Image goldRing = StoryUi.CreateImage("StoryInlayGold", rect,
-                    StoryUi.RoundedSprite(28), StoryUi.RoyalGold);
-                StoryUi.Stretch(goldRing.rectTransform, EdgeThickness);
-                goldRing.type = Image.Type.Sliced;
-                goldRing.raycastTarget = false;
+                    float height = rect.sizeDelta.y * ButtonHeightFrac;
+                    rect.sizeDelta = new Vector2(
+                        height * art.rect.width / art.rect.height, height);
+                }
+                else
+                {
+                    // The sprite is missing, so the kit's own candy button is
+                    // still there and would ship. Hide it and fall back to the
+                    // gold mark, which is a second file and may well be present.
+                    // LoadSprite has already warned.
+                    image.sprite = StoryUi.RoundedSprite(30);
+                    image.type = Image.Type.Sliced;
+                    image.color = new Color(0f, 0f, 0f, 0f);
+                    image.raycastTarget = true;
 
-                Image bronzeRing = StoryUi.CreateImage("StoryInlayBronze", rect,
-                    StoryUi.RoundedSprite(26), StoryUi.RoyalGoldDeep);
-                StoryUi.Stretch(bronzeRing.rectTransform, EdgeThickness + InlayThickness);
-                bronzeRing.type = Image.Type.Sliced;
-                bronzeRing.raycastTarget = false;
+                    Sprite mark = StoryUi.LoadSprite(PlayMarkSprite);
+                    if (mark != null)
+                    {
+                        Image icon = StoryUi.CreateImage(DressedMarker, rect, mark, Color.white);
+                        icon.preserveAspect = true;
+                        icon.raycastTarget = false;
+                        RectTransform iconRect = icon.rectTransform;
+                        iconRect.anchorMin = new Vector2(0.5f, 0.5f);
+                        iconRect.anchorMax = new Vector2(0.5f, 0.5f);
+                        iconRect.pivot = new Vector2(0.5f, 0.5f);
+                        float side = rect.sizeDelta.y * MarkHeightFrac;
+                        iconRect.sizeDelta = new Vector2(side, side);
+                        iconRect.anchoredPosition = new Vector2(2f, 0f);
+                    }
+                }
 
-                Image field = StoryUi.CreateImage(DressedMarker, rect,
-                    StoryUi.RoundedSprite(24), StoryUi.RoyalGreen);
-                StoryUi.Stretch(field.rectTransform,
-                    EdgeThickness + InlayThickness + BronzeThickness);
-                field.type = Image.Type.Sliced;
-                field.raycastTarget = false;
+                return true;
+            }
 
-                // The ramp is a rectangle and the field is rounded, so the field
-                // clips it — otherwise its square top corners show past the
-                // curve. showMaskGraphic keeps the green itself drawn.
-                field.gameObject.AddComponent<Mask>().showMaskGraphic = true;
+            return false;
+        }
 
-                Image sheen = StoryUi.CreateImage("StorySheen", field.rectTransform,
-                    StoryUi.SheenSprite, new Color(1f, 1f, 1f, 0.30f));
-                StoryUi.Stretch(sheen.rectTransform);
-                sheen.raycastTarget = false;
 
-                // The kit's word "Play" is painted into the sprite that was just
-                // replaced, so the label is a real Text — in the display face,
-                // because Arial under a painted gold wordmark is what made this
-                // button read as placeholder UI.
-                Text label = StoryUi.CreateText("StoryLabel", rect, "Play", 52,
-                    StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
-                label.font = StoryUi.DisplayFont;
-                StoryUi.Stretch(label.rectTransform, 10f);
-                label.raycastTarget = false;
-                label.resizeTextForBestFit = true;
-                label.resizeTextMinSize = 18;
-                label.resizeTextMaxSize = 52;
-                var outline = label.gameObject.AddComponent<Outline>();
-                outline.effectColor = StoryUi.RoyalGreenDark;
+
+        /// <summary>The kit sprite its loading screen wears.</summary>
+        private const string KitLoadingSprite = "loading";
+
+        /// <summary>The marker child, so a second Install does not stack a second word.</summary>
+        private const string LoadingMarker = "StoryLoadingLabel";
+
+        /// <summary>
+        /// The wait between the splash and the map was still the kit's game.
+        ///
+        /// Pressing Play unloads `main` and loads `game`, and for about half a
+        /// second the kit's loading art covers the screen: a cyan field with the
+        /// Jelly Garden wordmark on it and "Loading..." in a cloud. It is a
+        /// single baked texture, so the wordmark cannot be swapped out of it —
+        /// the whole picture has to go.
+        ///
+        /// It is replaced by the splash's own castle, which makes the wait read
+        /// as the title screen holding rather than as a second game's screen
+        /// interrupting. The word is a real Text because it was painted into the
+        /// texture that just went.
+        /// </summary>
+        private static bool DressLoadingScreen()
+        {
+            foreach (Image image in
+                     Object.FindObjectsByType<Image>(FindObjectsInactive.Include))
+            {
+                if (image == null || image.sprite == null) continue;
+                if (image.sprite.name != KitLoadingSprite) continue;
+                if (image.transform.Find(LoadingMarker) != null) return false;
+
+                Sprite art = StoryArt.Load("splash_background");
+                if (art == null) return false;
+                image.sprite = art;
+
+                Text word = StoryUi.CreateText(LoadingMarker, image.rectTransform,
+                    "Loading...", 40, StoryUi.RoyalTitle, TextAnchor.LowerCenter);
+                word.font = StoryUi.DisplayFont;
+                word.raycastTarget = false;
+                RectTransform rect = word.rectTransform;
+                rect.anchorMin = new Vector2(0f, 0f);
+                rect.anchorMax = new Vector2(1f, 0f);
+                rect.pivot = new Vector2(0.5f, 0f);
+                rect.sizeDelta = new Vector2(0f, 120f);
+                rect.anchoredPosition = new Vector2(0f, 60f);
+                var outline = word.gameObject.AddComponent<Outline>();
+                outline.effectColor = StoryUi.IconWood;
                 outline.effectDistance = new Vector2(3f, -3f);
 
                 return true;

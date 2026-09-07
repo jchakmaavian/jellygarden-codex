@@ -1000,8 +1000,8 @@ namespace JellyGarden.Scripts.Story.Editor
                 bool settingsOpened = false;
                 StoryUi.TopBarParts bar = StoryUi.TopBar(root, () => settingsOpened = true);
                 Expect(bar != null && bar.Root != null, "TopBar builds a root");
-                Expect(bar.Coins != null && bar.Lives != null && bar.Stars != null,
-                    "TopBar carries coins, lives and stars");
+                Expect(bar.Coins != null && bar.Stars != null,
+                    "TopBar carries coins and stars");
                 Expect(bar.Settings != null, "TopBar has a settings gear");
 
                 // The values must be read, not invented: stars are the current
@@ -1016,8 +1016,8 @@ namespace JellyGarden.Scripts.Story.Editor
                 if (bar.Settings != null) bar.Settings.onClick.Invoke();
                 Expect(settingsOpened, "the settings gear invokes its action");
 
-                Debug.Log("[Story] primitive TopBar: coins '" + bar.Coins.text + "', lives '" +
-                          bar.Lives.text + "', stars '" + bar.Stars.text + "', gear present");
+                Debug.Log("[Story] primitive TopBar: coins '" + bar.Coins.text +
+                          "', stars '" + bar.Stars.text + "', gear present");
 
                 Expect(StoryUi.GearSprite != null, "the gear sprite draws");
                 Expect(StoryUi.CircleSprite != null, "the circle sprite draws");
@@ -1496,8 +1496,8 @@ namespace JellyGarden.Scripts.Story.Editor
                 Expect(home.LevelButtonText == "Level " + next,
                     "the green button reads 'Level " + next + "' (read '" +
                     home.LevelButtonText + "')");
-                Expect(home.AreaButtonText == area.Name,
-                    "the gold card reads the area's name (read '" +
+                Expect(home.AreaButtonText == "Area " + home.AreaId,
+                    "the gold card reads 'Area " + home.AreaId + "' (read '" +
                     home.AreaButtonText + "')");
                 Expect(home.AreaProgressText == "0/" + area.Tasks.Count,
                     "an untouched area reads 0/" + area.Tasks.Count + " (read '" +

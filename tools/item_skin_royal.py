@@ -9,8 +9,8 @@ set rather than inventing one.
 
 That means **twelve distinct images fill twenty-seven filenames**:
 
-    six pieces        shield red, coin orange, gem purple, key blue,
-                      pennant green, crown yellow — kit colour order, which is
+    six pieces        book red, coin orange, gem purple, shield blue,
+                      leaf green, crown yellow — kit colour order, which is
                       load-bearing because the explosion particle textures are
                       tinted per item index
     two rams          the line clear is a battering ram, drawn twice — lying
@@ -48,11 +48,11 @@ SIZE = 128
 # Kit index, master, the colour its explosion particles are tinted with. The
 # order is the kit's and must not move.
 PIECES = [
-    ("item_01", "shield", (214, 48, 49)),
+    ("item_01", "book", (214, 48, 49)),
     ("item_02", "coin", (243, 156, 26)),
     ("item_03", "gem", (162, 47, 199)),
-    ("item_04", "key", (32, 132, 220)),
-    ("item_05", "flag", (38, 178, 62)),
+    ("item_04", "shield", (32, 132, 220)),
+    ("item_05", "leaf", (38, 178, 62)),
     ("item_06", "crown", (243, 196, 26)),
 ]
 

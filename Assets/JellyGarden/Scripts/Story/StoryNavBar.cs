@@ -35,29 +35,34 @@ namespace JellyGarden.Scripts.Story
         /// <summary>
         /// The signs on the rope, in the order they hang.
         ///
-        /// TWO, because two screens exist. The bar this replaces had five slots
-        /// and three of them answered a tap with an apology — Team is not in the
-        /// game at all, and Leaderboard and Cards are not built. A board hanging
-        /// there is a promise the game cannot keep, and it made the two real
-        /// destinations harder to find, not easier.
+        /// FOUR, with Home the raised one in the middle, which is the shape the
+        /// bar was asked for. Two of them go somewhere today: Areas opens the
+        /// list of 150 and Home opens the room. Leaderboard and Card are screens
+        /// that are not written yet and answer a tap by saying so — a board that
+        /// is honest about being early, rather than one that is missing and
+        /// leaves Home off centre.
         ///
-        /// Adding a third is adding a line to each of these arrays. The signs
-        /// share the width evenly, so nothing else moves.
+        /// Adding another is adding a line to each of these arrays and moving
+        /// the raised index. The signs share the width evenly, so nothing else
+        /// moves.
         /// </summary>
         public enum Tab
         {
             Areas = 0,
-            Home = 1
+            Leaderboard = 1,
+            Home = 2,
+            Card = 3
         }
 
         private static readonly StoryUi.NavIcon[] Icons =
         {
-            StoryUi.NavIcon.Areas, StoryUi.NavIcon.Home
+            StoryUi.NavIcon.Areas, StoryUi.NavIcon.Leaderboard,
+            StoryUi.NavIcon.Home, StoryUi.NavIcon.Cards
         };
 
         private static readonly string[] Labels =
         {
-            "Areas", "Home"
+            "Areas", "Leaderboard", "Home", "Card"
         };
 
         private static StoryNavBar _instance;
@@ -281,10 +286,10 @@ namespace JellyGarden.Scripts.Story
                     break;
 
                 default:
-                    // Nothing reaches here while the rope carries two signs and
-                    // both of them go somewhere. Kept as the landing for a sign
-                    // added before the screen behind it is written.
-                    StoryToast.Show(NameOf(tab) + " is not in this game yet.");
+                    // Leaderboard and Card. The screens behind them are not
+                    // written, and the sign says that rather than opening
+                    // something empty.
+                    StoryToast.Show(NameOf(tab) + " is not open yet.");
                     break;
             }
         }

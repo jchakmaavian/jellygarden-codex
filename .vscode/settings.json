@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Match3-Games.slnx"
+    "dotnet.defaultSolution": "king-leo.slnx"
 }
