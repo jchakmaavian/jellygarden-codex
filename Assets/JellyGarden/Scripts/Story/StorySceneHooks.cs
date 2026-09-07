@@ -46,6 +46,7 @@ namespace JellyGarden.Scripts.Story
             StoryMapLabels.Install();
             StoryOneStar.Install();
             StoryLevelHud.Install();
+            StoryDeadBoard.Install();
             StoryBoosters.Install();
             StoryNavBar.Install();
             StoryAreasList.Install();

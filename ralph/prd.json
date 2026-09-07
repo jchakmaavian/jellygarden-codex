@@ -165,8 +165,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Swept 17-24 and 25-32 (--batch 4 --timeout 550): 16 levels, 0 findings, 0 errors, all reaching a won or lost end state. All 32 screenshots opened. Fixed: the Time plate wrapping to two lines on every timed level (StoryUi.FitOneLine on the limit value); the BLOCKS target chip reading as an empty box (every chip icon now casts a silhouette of its own sprite, so the kit's pale ice tile separates from the cream card); and a dead board the kit never reshuffled on level 31 (new StoryDeadBoard asks the kit's own matcher whether any swap can score and calls the kit's own NoMatches when none can). StoryPlaytest learned to wait out RegenLevel. Still open and not this band's: F-003, the six dark backdrops, which only new art closes; and level 23's 20-ingredient goal in 19 moves, recorded in ralph/findings.md for the linter."
     },
     {
       "id": "US-011",

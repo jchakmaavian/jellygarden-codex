@@ -336,8 +336,19 @@ namespace JellyGarden.Scripts.Story
             int move = 0;
             int noMoveRuns = 0;
 
-            while (manager.gameStatus == GameState.Playing)
+            while (manager.gameStatus == GameState.Playing
+                   || manager.gameStatus == GameState.RegenLevel)
             {
+                // A reshuffle is not the end of a level, it is the middle of
+                // one. `LevelManager.NoMatchesCor` puts the board into
+                // RegenLevel, shows "no more matches", rebuilds the items and
+                // comes back to Playing — so a run that treated any state but
+                // Playing as an ending reported a reshuffled level as "ended in
+                // state Playing, which is neither won nor lost" and stopped
+                // playing it. Wait it out instead; a reshuffle that never ends
+                // is what a finding is for.
+                yield return WaitOutReshuffle();
+
                 bool settled = false;
                 yield return Settle(r => settled = r);
                 if (!settled)
@@ -349,13 +360,15 @@ namespace JellyGarden.Scripts.Story
                     yield break;
                 }
 
+                if (manager.gameStatus == GameState.RegenLevel) continue;
                 if (manager.gameStatus != GameState.Playing) break;
 
                 Move found = FindMove();
                 if (found == null)
                 {
                     noMoveRuns++;
-                    Say("no legal move on the board; waiting for a reshuffle (" + noMoveRuns + ").");
+                    Say("no legal move on the board; waiting for a reshuffle (" + noMoveRuns
+                        + "); watchdog reshuffles so far " + StoryDeadBoard.Reshuffles + ".");
                     yield return new WaitForSecondsRealtime(3f);
                     if (noMoveRuns >= 4)
                     {
@@ -489,6 +502,39 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>True when the board is idle: nothing blocked, nothing falling, nothing matched.</summary>
+        /// <summary>
+        /// Waits out a reshuffle, and reports one that never ends.
+        ///
+        /// `LevelManager.NoMatchesCor` sets RegenLevel, waits a second, destroys
+        /// the items and generates new ones, and `RegenMatches` returns the board
+        /// to Playing. Two and a half seconds is the whole of it when it works,
+        /// so a board still in RegenLevel after thirty is stuck in the one state
+        /// the player has no button for.
+        /// </summary>
+        private IEnumerator WaitOutReshuffle()
+        {
+            LevelManager manager = LevelManager.THIS;
+            if (manager.gameStatus != GameState.RegenLevel) yield break;
+
+            Say("the board is reshuffling.");
+
+            float wait = 0f;
+            while (wait < 30f && manager.gameStatus == GameState.RegenLevel)
+            {
+                yield return new WaitForSecondsRealtime(0.25f);
+                wait += 0.25f;
+            }
+
+            if (manager.gameStatus == GameState.RegenLevel)
+            {
+                Finding("the board went into a reshuffle and never came out of it: " +
+                        "30s in RegenLevel. The level cannot be played on from here.");
+                yield break;
+            }
+
+            Say("reshuffled after " + wait + "s; state " + manager.gameStatus + ".");
+        }
+
         private IEnumerator Settle(global::System.Action<bool> report)
         {
             LevelManager manager = LevelManager.THIS;

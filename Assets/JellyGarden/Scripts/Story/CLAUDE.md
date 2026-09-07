@@ -672,6 +672,52 @@ kit's score bar. Four things about it are not obvious:
   `TargetIcon`s to this HUD's slots by index, so the model must keep
   `LevelManager.targetObject` order or the collect animation flies to the wrong
   icon. The asset order varies by level (`('0','3')` and `('3','0')` both occur).
+- **Wrapping off in a wide box, on in a narrow one.** `StoryUi.FitOneLine` is
+  what makes best-fit solve for WIDTH, and the Moves/Time card needed it: sized
+  for "19", a TIME level's "0:59" wrapped to "0:5" over "9". The same call on a
+  target chip made it worse — a chip is a third of a 393-point plate, and with
+  wrapping off best-fit stops shrinking and the number runs into its neighbour
+  (`25 350/1000` where `25 35 0/1000` belongs). Both are in `StoryLevelHud` and
+  both say why.
+- **A target icon is the kit's artwork and some of it is nearly white.**
+  `Textures/Blocks/block.png`, the icon on every BLOCKS level, is a pale ice tile
+  at 0.77 luminance on a `RoyalCream` card at 0.92 — a blank box with a number
+  beside it. Every chip icon therefore casts a silhouette of its own sprite one
+  step down and right (`IconShadowStep`, navy at 0.55), which gives a pale icon
+  an edge and a dark one depth, without editing a single kit texture. Any new
+  chip artwork gets this for free; do not solve it per icon.
+
+## The board can run out of moves and the kit can miss it
+
+`StoryDeadBoard` is the last resort behind the kit's reshuffle, and it is worth
+knowing why it has to exist.
+
+`AI.CheckPossibleCombines` is the kit's own answer: it scans for a hint and, if
+it finds none, calls `LevelManager.NoMatches()`, which shows "no more matches"
+and regenerates. That scan is a heuristic — a fixed list of L, T and line shapes,
+one colour at a time — and the coroutine running it is **started from six places,
+never stopped, gates both its work and its own re-arming on `DragBlocked`, and
+shares one `gotTip` field between however many copies are in flight.** When it
+loses that race nothing else asks the question, and the player is left with a
+board that has no move on it and no way to end the level. Level 31 sat like that
+for twelve seconds with its score goal already met.
+
+- **Ask the question with the kit's own matcher.** `Square.FindMatchesAround` is
+  what decides whether a real swap scores, so the watchdog swaps two items, asks
+  it, and swaps them back — the same shape `StoryPlaytest.TryDirection` uses.
+  Anything that invents its own definition of a legal move can disagree with the
+  game about whether the board is dead.
+- **Answer it three times before acting.** A board mid-cascade has falling items,
+  and a falling item is not a legal swap partner, so a settling board reads as a
+  dead one for a frame or two.
+- **Recover through the kit, not around it.** It calls `NoMatches()` — the kit's
+  own path, with the kit's own banner and regeneration. The AI still runs, still
+  hints, and still reshuffles whenever it gets there first.
+- **A reshuffle is the middle of a level, not the end of one.** `RegenLevel` is a
+  legitimate state and anything watching a level has to know the word:
+  `StoryPlaytest` treated every state but Playing as an ending and reported the
+  first reshuffle it ever saw as "ended in state Playing, which is neither won
+  nor lost", stopping the level dead.
 
 ## The two end panels
 

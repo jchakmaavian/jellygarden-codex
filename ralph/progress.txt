@@ -5,6 +5,25 @@ Started: 2026-09-07
 
 ## Codebase Patterns
 
+- **Fixing the game can make the harness report a fault.** The dead-board
+  watchdog's first successful reshuffle came back as a FINDING, because
+  `StoryPlaytest` had never seen `RegenLevel` and treated every state but
+  Playing as an ending. When a fix produces a new finding, ask whether the
+  finding is about the game or about the thing watching it.
+- **Wrapping off in a wide box, on in a narrow one.** `StoryUi.FitOneLine` is
+  what makes Unity's best-fit solve for WIDTH — right for a Moves/Time card
+  where "0:59" was wrapping to two lines, wrong for a target chip a third of a
+  plate wide, where best-fit then stops shrinking and the number runs into its
+  neighbour. Box shape decides, not the file.
+- **Measure an icon against what it is drawn ON.** The kit's blocks icon is a
+  perfectly legible ice tile in isolation and invisible on the HUD's cream card
+  (0.77 luminance against 0.92). PIL over the PNG plus the card's own `Color` is
+  a ten-line answer; the fix that generalises is a silhouette behind every icon,
+  never a per-icon special case.
+- **A band of 8 sits at the edge of the sweep's batch cap.** 675s against a 690s
+  default, and it hung outright when a TIME level ran long — level 32's `+5`
+  time gems can outpace its own clock under random play. `--batch 4 --timeout
+  550` is the shape that fits inside the tool's 10-minute cap.
 - **A screenshot of a level is only worth reading if the level's own end panel
   has closed.** The end panels live on a persistent canvas and outlast the
   board; anything that ends a level by a door other than the panel's own button
@@ -1101,4 +1120,91 @@ sockets, and `HideKitPanel` switches it off before this one opens.
   moves. That is not a difficulty signal and it is not a finding — but it does
   mean the FAIL path is what a sweep photographs most, so it is worth having it
   be the panel you want a player to see.
+---
+
+## 2026-09-08 - US-010 - Play levels 17-32 and fix what they show
+
+Swept levels 17-32 in the 393x852 player and opened all 32 screenshots. The
+report said `0 finding(s), 0 error(s)` on both halves of the first pass; two of
+the three faults below were in those pictures, and the third only appeared once
+the harness stopped agreeing with the game about what "ended" means.
+
+**Three faults, all fixed in shared code**
+
+1. **The Time plate wrapped, on every timed level.** The Moves card is sized for
+   "19"; a TIME level puts "0:59" in it, so Unity broke the line and drew "0:5"
+   over "9". Levels 20, 27 and 32 in this band, and arc 6 back in US-008, which
+   noted it and left it. `StoryUi.FitOneLine` already existed for exactly this
+   and the plate had never called it.
+
+   The same call applied to the target chips made them WORSE and was reverted
+   with the reason written down: a chip is a third of a 393-point plate, and
+   with wrapping off best-fit stops shrinking and the number runs into its
+   neighbour — level 20 read `25 350/1000` instead of `25 35 0/1000`.
+
+2. **The blocks target chip looked like an empty box.**
+   `Textures/Blocks/block.png` is a pale ice tile at 0.77 mean luminance on a
+   `RoyalCream` card at 0.92 — 0.15 of separation, on the icon that names the
+   goal of every BLOCKS level. Levels 18, 19, 25, 28, 29 and 31 showed it. Every
+   chip icon now casts a silhouette of its own sprite one step down and right,
+   navy at 0.55: a pale icon gains an edge, a dark one gains depth, and no kit
+   texture is touched.
+
+3. **A dead board the kit never reshuffled.** Level 31 reached a state where no
+   swap could match, with three moves left and 21 ice tiles still owed, and the
+   kit sat there — no "no more matches", no regeneration, nothing for the player
+   to press. New `StoryDeadBoard` asks once a second, on an idle board, whether
+   ANY neighbouring swap would score (using the kit's own
+   `Square.FindMatchesAround`), and after three consecutive noes calls the kit's
+   own `NoMatches()`. The kit's AI is untouched and still gets there first
+   whenever it works.
+
+**Harness**
+
+- `StoryPlaytest` now knows what `RegenLevel` is. It treated every state but
+  Playing as an ending, so the very first reshuffle the watchdog caused came
+  back as "ended in state Playing, which is neither won nor lost" — the harness
+  reporting the fix as a fault. `WaitOutReshuffle` waits it out and makes a
+  reshuffle that never ends a finding of its own.
+- The no-move line reports `StoryDeadBoard.Reshuffles`, so a future stall says
+  whether the watchdog had already been called on.
+
+**Files changed**
+- `Story/StoryDeadBoard.cs` — NEW.
+- `Story/StorySceneHooks.cs` — installs it.
+- `Story/StoryLevelHud.cs` — `FitOneLine` on the limit value, the icon shadow
+  (`IconShadowStep`), and the target chips' wrapping left on deliberately.
+- `Story/StoryPlaytest.cs` — `WaitOutReshuffle`, the widened play loop, the
+  watchdog count in the no-move line.
+- `Story/CLAUDE.md`, `ralph/findings.md`, `ralph/prd.json`, `ralph/progress.txt`.
+
+**Checks**
+- `playtest_sweep.py --levels 17-24` → 8 played, 0 findings, 0 errors.
+- `playtest_sweep.py --levels 25-32 --batch 4` → 8 played, 0 findings, 0 errors.
+- 32/32 screenshots opened and read.
+- `lint_levels.py` 0 problems in 1208 levels.
+- `check_vfx_intact.py` clean. `check_launch_args.py` clean.
+- `check_themes.py` 0 problems, 10 notes (F-003, the backdrops).
+- `dotnet build Story.Typecheck.csproj` 0 errors.
+- **Not run:** the two Unity batchmode smoke tests — the user's Editor holds the
+  project lock.
+
+**Learnings for future iterations**
+- **A band of 8 is at the edge of the batch cap.** 25-32 took 675s against a
+  690s default and then hung outright when a TIME level ran long — level 32's
+  `+5` time gems can outpace the clock under random play, so the level simply
+  does not end. `--batch 4 --timeout 550` is the shape that fits; the tool cap
+  is what forces the split, not the game.
+- **Fixing the game can make the harness report a fault.** The watchdog's first
+  successful reshuffle came back as a FINDING, because the harness had never
+  seen `RegenLevel`. When a fix produces a new finding, check whether the
+  finding is about the game or about the thing watching it.
+- **Wrapping is not a setting you apply everywhere.** `FitOneLine` fixed a wide
+  box and broke three narrow ones in the same file. Box shape decides.
+- **Measure an icon against the thing it is drawn on, not on its own.** The
+  blocks chip is perfectly legible in isolation and invisible on cream. PIL over
+  the PNG plus the card's own `Color` is a ten-line answer.
+- The kit's `AI.CheckPossibleCombines` is worth reading before trusting anything
+  it drives: six unsynchronised start sites, one shared `gotTip`, and both its
+  work and its re-arm behind `DragBlocked`.
 ---

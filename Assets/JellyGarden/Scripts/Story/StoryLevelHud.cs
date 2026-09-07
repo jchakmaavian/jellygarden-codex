@@ -130,6 +130,10 @@ namespace JellyGarden.Scripts.Story
 
         private const int MaxTargets = 4;
 
+        /// <summary>How far a target icon's shadow sits below and right of it,
+        /// in the same 1080-wide design units as everything else on the strip.</summary>
+        private const float IconShadowStep = 6f;
+
         /// <summary>The portrait in the middle of the strip. King Leo's game.</summary>
         public const string PortraitCharacter = "leo";
 
@@ -147,6 +151,7 @@ namespace JellyGarden.Scripts.Story
         private sealed class Slot
         {
             public RectTransform Root;
+            public Image Shadow;
             public Image Icon;
             public Text Count;
         }
@@ -370,6 +375,16 @@ namespace JellyGarden.Scripts.Story
                 Mathf.RoundToInt(150f * _scale), StoryUi.RoyalNavy, TextAnchor.MiddleCenter);
             StoryUi.Stretch(_limitValue.rectTransform, 8f * _scale);
             _limitValue.fontStyle = FontStyle.Bold;
+
+            // A moves value is one or two characters and a TIME value is four —
+            // "0:59" — and the card is sized for the short one. Left wrapping,
+            // Unity broke the line rather than shrinking it, so every timed
+            // level read "0:5" over "9": two lines of a four-character clock,
+            // which is not a number a player can read at a glance. FitOneLine
+            // turns wrapping off, which is what makes best-fit solve for WIDTH.
+            StoryUi.FitOneLine(_limitValue,
+                Mathf.Max(8, Mathf.RoundToInt(60f * _scale)),
+                Mathf.Max(9, Mathf.RoundToInt(150f * _scale)));
         }
 
         /// <summary>
@@ -697,6 +712,8 @@ namespace JellyGarden.Scripts.Story
                 {
                     _slots[i].Icon.sprite = target.Icon;
                     _slots[i].Icon.enabled = target.Icon != null;
+                    _slots[i].Shadow.sprite = target.Icon;
+                    _slots[i].Shadow.enabled = target.Icon != null;
                 }
 
                 // A finished target goes green rather than gaining a tick: the
@@ -714,6 +731,28 @@ namespace JellyGarden.Scripts.Story
             RectTransform root = StoryUi.CreateRect("Target" + index, _targetRow);
 
             var slot = new Slot { Root = root };
+
+            // The icon casts its own shape as a shadow, one step down and right.
+            //
+            // Not decoration: a target icon is the kit's own artwork and some of
+            // it is nearly white. `Textures/Blocks/block.png` — the icon on all
+            // 40 shipped BLOCKS levels and every generated one — is a pale ice
+            // tile at 0.77 luminance, and it is drawn on RoyalCream at 0.92. On
+            // the board it reads because it frames a coloured gem; alone in a
+            // chip it separated from the card by 0.15 and looked like an empty
+            // box next to a number. Levels 18, 19, 29 and 31 are where it
+            // showed. A silhouette of the icon's own sprite gives any pale icon
+            // an edge without touching the kit's art, and sits under the darker
+            // ones where it reads as the depth the reference panel has.
+            slot.Shadow = StoryUi.CreateImage("IconShadow", root, null,
+                new Color(StoryUi.RoyalNavy.r, StoryUi.RoyalNavy.g, StoryUi.RoyalNavy.b, 0.55f));
+            slot.Shadow.preserveAspect = true;
+            slot.Shadow.raycastTarget = false;
+            RectTransform shadow = slot.Shadow.rectTransform;
+            shadow.anchorMin = new Vector2(0f, 0.34f);
+            shadow.anchorMax = new Vector2(1f, 1f);
+            shadow.offsetMin = new Vector2(IconShadowStep * _scale, -IconShadowStep * _scale);
+            shadow.offsetMax = new Vector2(IconShadowStep * _scale, -IconShadowStep * _scale);
 
             slot.Icon = StoryUi.CreateImage("Icon", root, null, Color.white);
             slot.Icon.preserveAspect = true;
@@ -735,6 +774,15 @@ namespace JellyGarden.Scripts.Story
             // A score target reads "120/300" where a collect target reads "4",
             // and three targets share the card. Best fit lets the one number
             // stay big and the seven-character one still fit its slot.
+            //
+            // This one keeps WRAPPING ON, unlike the Moves value. A slot is one
+            // third of a plate 393 points wide, so with wrapping off best-fit
+            // stops shrinking and the number simply runs into its neighbour:
+            // level 20's three chips read "25 350/1000" instead of
+            // "25 35 0/1000". Wrapping on, the same rect shrinks the number
+            // until it fits between the chips either side of it. The slot is
+            // wide enough that a wrap has not been reached — `SlotWeight` is
+            // what keeps it that way.
             slot.Count.resizeTextForBestFit = true;
             slot.Count.resizeTextMinSize = Mathf.Max(8, Mathf.RoundToInt(18f * _scale));
             slot.Count.resizeTextMaxSize = Mathf.Max(9, Mathf.RoundToInt(52f * _scale));

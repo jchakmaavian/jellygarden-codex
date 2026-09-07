@@ -211,3 +211,82 @@ ones stayed at full size — a chip a player cannot read at 393 points wide.
 - F-005 stands as a rule, and this iteration is its best evidence yet: the sweep
   printed `0 finding(s)` over a band whose pictures showed a shop screen, a
   stale popup and an unreadable HUD.
+
+
+---
+
+## Iteration note — US-010 (levels 17-32), 2026-09-07
+
+Three faults, all found by opening the pictures or by the harness disagreeing
+with the game. Evidence: `sweeps/20260907-223332` and `20260907-224051` (before),
+`20260907-230313` and `20260907-233909` (after).
+
+## F-011 — the Time plate wrapped, on every timed level  [FIXED in US-010]
+The Moves card is sized for "19" and a TIME level puts "0:59" in it, so Unity
+broke the line and drew "0:5" over "9" — two lines of a four-character clock, in
+the one number a timed level is played against. US-008 had already seen it on
+arc 6 and left it as "a HUD fault, not a theme one"; levels 20, 27 and 32 are
+where it showed here. `StoryUi.FitOneLine` already existed for exactly this and
+the plate simply never called it.
+
+**The target chips keep wrapping ON, and that is not an oversight.** The same
+change applied to a target slot made it worse, not better: a slot is a third of
+a plate 393 points wide, and with wrapping off best-fit stops shrinking and the
+number runs into its neighbour — level 20's chips read `25 350/1000` instead of
+`25 35 0/1000`. Wide box: turn wrapping off. Narrow box beside other boxes:
+leave it on. Both are in `StoryLevelHud` with the reason written down.
+
+## F-012 — the blocks target chip looked like an empty box  [FIXED in US-010]
+`Textures/Blocks/block.png` is the icon on all 40 shipped BLOCKS levels and every
+generated one. It is a pale ice tile — 0.77 mean luminance — drawn on
+`RoyalCream` at 0.92, so it separated from the card it sits on by 0.15 and read
+as a blank square with a number beside it. On the board it works because it
+frames a coloured gem; alone in a chip it does not. Levels 18, 19, 25, 28, 29
+and 31 all showed it.
+
+Fixed without touching the kit's art: every chip icon now casts a silhouette of
+its own sprite one step down and right, in navy at 0.55. A pale icon gains an
+edge; the dark ones gain the depth the reference panel has.
+
+## F-013 — a dead board that the kit never reshuffled  [FIXED in US-010]
+Level 31, with three moves left and twenty-one ice tiles still to break, reached
+a state where no swap on the board could match — and the kit sat there. Twelve
+seconds, no "no more matches", no regeneration. A player who reaches that has no
+button to press: the level cannot be won and cannot be lost.
+
+The kit's recovery is `AI.CheckPossibleCombines` → `LevelManager.NoMatches()`.
+That scan is a heuristic list of L, T and line shapes, one colour at a time; the
+coroutine that runs it is started from six places, never stopped, gates both its
+work AND its own re-arming on `DragBlocked`, and shares one `gotTip` field
+between however many copies are in flight. Pinning which of those lost the race
+would have cost more than covering all of them.
+
+`StoryDeadBoard` is the cover. Once a second, on an idle board, it asks whether
+ANY neighbouring swap would score — using the kit's own `Square.FindMatchesAround`,
+which is what judges a real swap — and after three such answers in a row it calls
+the kit's own `NoMatches()`. Nothing is replaced: the kit's AI still runs, still
+hints, and still reshuffles whenever it gets there first.
+
+The harness had to learn the same word. `StoryPlaytest` treated any state but
+Playing as an ending, so the first reshuffle it ever saw came back as "ended in
+state Playing, which is neither won nor lost". It waits `RegenLevel` out now, and
+a reshuffle that never ends is its own finding.
+
+## Standing, after US-010
+- **F-003 (dark backdrops) is still the only OPEN visual one, and only new art
+  closes it.** `check_themes.py` still prints ten NOTE lines. Level 24's two
+  `00` holes read as black rectangles cut out of the board for the same reason:
+  an empty cell shows the backdrop, and the backdrop is nearly black.
+- F-005 stands. Both batches of this band printed `0 finding(s)` over the
+  pictures that carried F-011 and F-012.
+- **New, OPEN, and not a US-010 fault:** level 23 asks for 20 ingredients in 19
+  moves. Ingredients spawn at `Random.Range(0, Limit) == 0` per generated gem
+  (`Item.GenItem`), so at Limit 19 a move's three-to-six new gems yield about a
+  fifth of an ingredient — call it five in a level, against a goal of twenty —
+  and the bottom rows are wooden blocks the ingredient has to fall through to
+  reach its exit. Across every sweep on record, levels 22, 23, 24 and 26
+  collected zero ingredients between them; only levels 14 and 15 ever collected
+  any. Level 23 is a SHIPPED kit level, so this is the kit's own number, and
+  proving it needs the spawn instrumented rather than argued. It belongs in the
+  linter (`tools/lint_levels.py`), which is where a goal that cannot be reached
+  is supposed to be caught.
