@@ -4,7 +4,7 @@
 
 A purchased Unity match-3 kit (Jelly Garden 2.5.2) carrying the full 150-area
 King Leo story. The kit supplies the board, its animation and its particle
-effects; the story supplies 150 areas, 807 repair tasks, 1209 levels and the six
+effects; the story supplies 150 areas, 806 repair tasks, 1208 levels and the six
 arcs that connect them.
 
 - Unity **6000.5.10f1**
@@ -40,7 +40,7 @@ generator is what is committed.
 ```bash
 UNITY=/Applications/Unity/Hub/Editor/6000.5.10f1/Unity.app/Contents/MacOS/Unity
 
-python3 tools/validate_story.py       # content: 150 areas / 807 tasks / 1209 stars / 1209 boards
+python3 tools/validate_story.py       # content: 150 areas / 806 tasks / 1208 stars / 1208 boards
 python3 tools/check_vfx_intact.py     # no visual regression since the branch point
 python3 tools/check_launch_args.py    # nothing can launch the game full screen
 
@@ -93,6 +93,17 @@ python3 tools/lint_levels.py --levels 1-16   # one band
 One line per problem as `<level>: <problem>`; non-zero exit when there is at
 least one. Run it before a band sweep — it catches unwinnable goals in a
 fraction of a second that a playtest would take an hour to reach.
+
+It currently reports zero over all 1208 levels, and a level is only ever fixed
+by fixing the generator that wrote it (`tools/level_gen.py`,
+`tools/target_gen.py`) and regenerating — never by hand-editing one file, which
+the next regeneration would undo. The generators are deterministic and
+idempotent: running the three of them back to back leaves the tree byte-for-byte
+unchanged.
+
+```bash
+python3 tools/level_templates.py && python3 tools/level_gen.py && python3 tools/target_gen.py
+```
 
 ## Regenerating the story
 

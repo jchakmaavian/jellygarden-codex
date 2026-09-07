@@ -9,6 +9,7 @@ GUID moves, so GUIDs are derived from the asset path rather than randomised.
 import hashlib
 import json
 import os
+import re
 
 # tools/ lives at the Unity project root.
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,6 +22,50 @@ STORY_RES = os.path.join(RESOURCES, "Story")
 LEVELS_RES = os.path.join(RESOURCES, "Levels")
 TARGETS_RES = os.path.join(RESOURCES, "Targets")
 OUT = os.path.join(PROJECT_ROOT, "tools", "out")
+
+# Pristine copies of the kit's own 100 levels and their 100 target assets. The
+# generators read templates from HERE and never from Resources, because after
+# level_gen.py and target_gen.py have run those folders hold 1209 of each and
+# re-reading them would feed generated output back into the library that
+# generated it — and, worse, make a second run produce different files from the
+# first.
+SHIPPED_LEVELS = os.path.join(PROJECT_ROOT, "tools", "shipped_levels")
+SHIPPED_TARGETS = os.path.join(PROJECT_ROOT, "tools", "shipped_targets")
+
+# Mirrors JellyGarden.Scripts.InitScript.Target.
+TARGET_SCORE = 0
+TARGET_COLLECT = 1
+TARGET_INGREDIENT = 2
+TARGET_BLOCKS = 3
+
+# `count` was renamed to `targetCount` and kept alive by [FormerlySerializedAs],
+# so BOTH spellings are live in the shipped assets (2569 of one, 221 of the
+# other). A parser that knows only one silently reads a level as having no goal.
+TARGET_ENTRY_RE = re.compile(
+    r"- type: (?P<type>\d+)\s*\n"
+    r"\s+icon: \{fileID: (?P<iconFile>-?\d+), guid: (?P<iconGuid>[a-f0-9]+), type: (?P<iconType>\d+)\}\s*\n"
+    r"\s+color: (?P<color>-?\d+)\s*\n"
+    r"\s+(?:targetCount|count): (?P<count>-?\d+)"
+)
+
+
+def read_target_entries(path):
+    """Parse a TargetLevel .asset into a list of target entries, or None."""
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as fh:
+        text = fh.read()
+    return [
+        {
+            "type": int(m.group("type")),
+            "iconFile": m.group("iconFile"),
+            "iconGuid": m.group("iconGuid"),
+            "iconType": m.group("iconType"),
+            "color": int(m.group("color")),
+            "count": int(m.group("count")),
+        }
+        for m in TARGET_ENTRY_RE.finditer(text)
+    ]
 
 ARC_TITLES = {
     1: "The Missing Queen",

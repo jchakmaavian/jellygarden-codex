@@ -15,13 +15,21 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from story_common import LEVELS_RES, OUT, PROJECT_ROOT, dump_json, ensure_dir  # noqa: E402
+from story_common import (  # noqa: E402
+    OUT,
+    SHIPPED_LEVELS,
+    SHIPPED_TARGETS,
+    TARGET_COLLECT,
+    dump_json,
+    ensure_dir,
+    read_target_entries,
+)
 
 # A pristine copy of the kit's original 100 levels. The harvester reads from
 # here rather than from Resources/Levels, because after level_gen.py has run
 # that folder holds 1209 files and re-harvesting it would feed generated levels
 # back into the library that generated them.
-SHIPPED_DIR = os.path.join(PROJECT_ROOT, "tools", "shipped_levels")
+SHIPPED_DIR = SHIPPED_LEVELS
 
 # Mirrors JellyGarden.Scripts.InitScript.Target
 MODE_NAMES = {0: "SCORE", 1: "COLLECT", 2: "INGREDIENT", 3: "BLOCKS"}
@@ -260,6 +268,23 @@ def difficulty_of(level):
     return round(min(1.0, max(0.0, score)), 4)
 
 
+def collect_target_colours(number, targets_dir=None):
+    """
+    The item colours a template's COLLECT targets name.
+
+    TargetObject.SetOff matches a COLLECT target by `item.color == target.color`
+    and Item.GenItem only ever rolls `Random.Range(0, colorLimit)`, so a level
+    that inherits these targets must keep a COLOR LIMIT above every one of them
+    or the target names an item that can never spawn.
+    """
+    entries = read_target_entries(
+        os.path.join(targets_dir or SHIPPED_TARGETS, "Level%d.asset" % number)
+    )
+    if not entries:
+        return []
+    return sorted({e["color"] for e in entries if e["type"] == TARGET_COLLECT})
+
+
 def load_shipped_levels(source_dir=None):
     """Every shipped level, parsed and classified."""
     source_dir = source_dir or SHIPPED_DIR
@@ -284,6 +309,7 @@ def load_shipped_levels(source_dir=None):
         level["obstacleDensity"] = round(obstacle_density(level["grid"]), 4)
         level["openRatio"] = round(open_ratio(level["grid"]), 4)
         level["blockTargetCount"] = block_target_count(level["grid"])
+        level["collectTargetColors"] = collect_target_colours(level["number"])
         templates.append(level)
 
     # The raw score only spans ~0.10..0.41, which is useless as a selector.

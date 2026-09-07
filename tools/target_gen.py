@@ -13,14 +13,20 @@ Generated assets are the source template's asset with one count rewritten:
   type 2 (INGREDIENT)    COLLECT COUNT and COLLECT ITEMS lines verbatim
   type 3 (BLOCKS)     -> unchanged
 
-A BLOCKS target is deliberately left alone. It is not the board's block count —
-level 19 ships a target of 24 against a board of 56, and levels 28 and 35 ship a
-target of 0 because their real objective is the score. It is how many blocks the
-player must destroy, and the shipped assets set it well below what the board
-offers. Since the only structural mutation is promoting single blocks to double
-ones, a generated board always offers at least as many destroy events as its
-template did, so the inherited target stays reachable — which is exactly what
-the check below asserts.
+A non-zero BLOCKS target is deliberately left alone. It is not the board's block
+count — level 19 ships a target of 24 against a board of 56. It is how many
+blocks the player must destroy, and the shipped assets set it at or below what
+the board offers. Since the only structural mutation is promoting single blocks
+to double ones, a generated board always offers at least as many destroy events
+as its template did, so the inherited target stays reachable — which is exactly
+what the check below asserts.
+
+A target of COUNT ZERO is a different thing entirely, and is repaired. Done() is
+`targetCount - countCollected <= 0`, so a zero target is met before the first
+move: it draws a permanently ticked chip in the HUD and contributes nothing to
+CheckWinLose. Two kit assets carry one (Level28 and Level35 ship BLOCKS 0;
+Level15 ships a second INGREDIENT entry at 0), and every level generated from
+those templates inherited it. See repair_dead_targets.
 
 Icon GUIDs are carried over untouched, so generated levels show the same target
 icons the kit ships.
@@ -30,7 +36,6 @@ icons the kit ships.
 
 import json
 import os
-import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -39,26 +44,24 @@ from level_templates import block_target_count, parse_level  # noqa: E402
 from story_common import (  # noqa: E402
     LEVELS_RES,
     OUT,
+    SHIPPED_LEVELS,
+    SHIPPED_TARGETS,
+    TARGET_BLOCKS,
+    TARGET_COLLECT,
+    TARGET_INGREDIENT,
+    TARGET_SCORE,
     TARGETS_RES,
     ensure_dir,
+    read_target_entries,
     write_native_meta,
 )
 
 PRESERVED_THROUGH = 100
 
-TARGET_SCORE = 0
-TARGET_COLLECT = 1
-TARGET_INGREDIENT = 2
-TARGET_BLOCKS = 3
-
 TARGET_LEVEL_SCRIPT_GUID = "64dfa6917005141638ae80ab5e1a157a"
 
-ENTRY_RE = re.compile(
-    r"- type: (?P<type>\d+)\s*\n"
-    r"\s+icon: \{fileID: (?P<iconFile>-?\d+), guid: (?P<iconGuid>[a-f0-9]+), type: (?P<iconType>\d+)\}\s*\n"
-    r"\s+color: (?P<color>-?\d+)\s*\n"
-    r"\s+(?:targetCount|count): (?P<count>-?\d+)"
-)
+# LIMIT's first field: 0 counts moves, 1 counts seconds.
+LIMIT_MOVES = 0
 
 HEADER = """%YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
@@ -89,28 +92,11 @@ ENTRY = """    - type: %(type)d
 """
 
 
-def read_target_asset(number):
-    """Parse an existing LevelN.asset into a list of target entries."""
-    path = os.path.join(TARGETS_RES, "Level%d.asset" % number)
-    if not os.path.exists(path):
-        return None
-
-    with open(path, encoding="utf-8") as fh:
-        text = fh.read()
-
-    entries = []
-    for match in ENTRY_RE.finditer(text):
-        entries.append(
-            {
-                "type": int(match.group("type")),
-                "iconFile": match.group("iconFile"),
-                "iconGuid": match.group("iconGuid"),
-                "iconType": match.group("iconType"),
-                "color": int(match.group("color")),
-                "count": int(match.group("count")),
-            }
-        )
-    return entries
+def read_target_asset(number, directory=None):
+    """Parse a LevelN.asset into a list of target entries."""
+    return read_target_entries(
+        os.path.join(directory or TARGETS_RES, "Level%d.asset" % number)
+    )
 
 
 def write_target_asset(number, entries):
@@ -123,7 +109,77 @@ def write_target_asset(number, entries):
     write_native_meta(path)
 
 
-def retarget(entries, level):
+def steepest_shipped_blocks_objective():
+    """
+    The hardest BLOCKS objective the kit itself ships, as (blocks, moves).
+
+    Used as the ceiling when a missing BLOCKS count has to be filled in: no
+    repaired level may ask for more blocks per move than a level a designer
+    signed off on. Derived from the shipped set rather than written down, so it
+    stays true if that set ever changes. Today it is level 75 — 112 blocks in 37
+    moves. Timed levels are excluded: their LIMIT counts seconds, not moves.
+    """
+    best = None
+    for number in range(1, PRESERVED_THROUGH + 1):
+        path = os.path.join(SHIPPED_LEVELS, "%d.txt" % number)
+        if not os.path.exists(path):
+            continue
+        level = parse_level(open(path, encoding="utf-8").read(), name="%d.txt" % number)
+        if level["limitType"] != LIMIT_MOVES or level["limit"] <= 0:
+            continue
+        for entry in read_target_asset(number, SHIPPED_TARGETS) or []:
+            if entry["type"] != TARGET_BLOCKS or entry["count"] <= 0:
+                continue
+            if best is None or entry["count"] * best[1] > best[0] * level["limit"]:
+                best = (entry["count"], level["limit"])
+    return best
+
+
+def repair_dead_targets(entries, level, steepest):
+    """
+    Drop or fill any target that is already met before the first move.
+
+    TargetObject.Done() is `targetCount - countCollected <= 0`, so an entry with
+    a count of 0 is satisfied on load. CheckWinLose asks every entry whether it
+    is Done, so such an entry adds nothing to the win condition — but TargetIcon
+    still builds a chip for it and Update() ticks it immediately, so the player
+    is shown a goal that was never a goal. Worse for INGREDIENT: Item.GenItem
+    iterates every ingredient target when it rolls a new item, so a dead second
+    entry starts a second FallingCor for every gem the board spawns.
+
+      SCORE       never dead (its count is the level's first star threshold)
+      COLLECT     dropped; the colour it named is simply not part of the goal
+      INGREDIENT  dropped; Item.GenItem never spawns it (it gates on !Done())
+      BLOCKS      filled from the board, since LevelMakerEditor writes the board's
+                  own block count and 0 means the field was never set — 32 of the
+                  38 shipped BLOCKS levels ask for exactly what their board holds.
+                  Capped at the steepest blocks-per-move the kit ships, so a wall
+                  of double blocks under a short move limit does not become
+                  unclearable. Dropped if the board holds no blocks at all.
+    """
+    out = []
+    for entry in entries:
+        entry = dict(entry)
+        if entry["type"] == TARGET_SCORE or entry["count"] > 0:
+            out.append(entry)
+            continue
+
+        if entry["type"] != TARGET_BLOCKS:
+            continue
+
+        available = block_target_count(level["grid"])
+        if available <= 0:
+            continue
+        if steepest and level["limitType"] == LIMIT_MOVES and level["limit"] > 0:
+            available = min(available, steepest[0] * level["limit"] // steepest[1])
+        if available <= 0:
+            continue
+        entry["count"] = available
+        out.append(entry)
+    return out
+
+
+def retarget(entries, level, steepest=None):
     """Rewrite only the count that has to track the generated board."""
     out = []
     for entry in entries:
@@ -131,7 +187,7 @@ def retarget(entries, level):
         if entry["type"] == TARGET_SCORE:
             entry["count"] = level["stars"][0]
         out.append(entry)
-    return out
+    return repair_dead_targets(out, level, steepest)
 
 
 def main():
@@ -142,31 +198,47 @@ def main():
 
     ensure_dir(TARGETS_RES)
 
+    steepest = steepest_shipped_blocks_objective()
+
     written = 0
     preserved = 0
+    repaired = []
     failures = []
 
     for entry in plan["levels"]:
         number = entry["levelNumber"]
 
-        if number <= PRESERVED_THROUGH and read_target_asset(number) is not None:
-            preserved += 1
-            continue
-
-        source_number = provenance[str(number)]["template"]
-        source = read_target_asset(source_number)
-        if not source:
-            failures.append(
-                "level %d: template %d has no target asset to copy"
-                % (number, source_number)
+        # Every template's asset is read from tools/shipped_targets, never from
+        # Resources/Targets. Resources holds this script's own output, so
+        # sourcing from it would make the second run differ from the first.
+        if number <= PRESERVED_THROUGH:
+            source = read_target_asset(number, SHIPPED_TARGETS)
+        else:
+            source = read_target_asset(
+                provenance[str(number)]["template"], SHIPPED_TARGETS
             )
+        if not source:
+            failures.append("level %d has no template target asset to copy" % number)
             continue
 
         level = parse_level(
             open(os.path.join(LEVELS_RES, "%d.txt" % number), encoding="utf-8").read(),
             name="%d.txt" % number,
         )
-        write_target_asset(number, retarget(source, level))
+
+        if number <= PRESERVED_THROUGH:
+            # The kit's own assets are kept as they are, with one exception:
+            # a target that is already met on load is not a goal. Only the three
+            # that carry one are rewritten; the other 97 files are left untouched
+            # on disk so the kit's formatting survives.
+            fixed = repair_dead_targets(source, level, steepest)
+            if fixed != source:
+                write_target_asset(number, fixed)
+                repaired.append(number)
+            preserved += 1
+            continue
+
+        write_target_asset(number, retarget(source, level, steepest))
         written += 1
 
     # Nothing may reach the game without both halves present, and a BLOCKS level
@@ -230,6 +302,16 @@ def main():
         return 1
 
     print("targets written=%d (%d preserved)" % (written + preserved, preserved))
+    if steepest:
+        print(
+            "steepest shipped BLOCKS objective: %d blocks in %d moves"
+            % (steepest[0], steepest[1])
+        )
+    if repaired:
+        print(
+            "%d shipped assets had a target that was already met on load: %s"
+            % (len(repaired), ", ".join("Level%d" % n for n in repaired))
+        )
     print("every planned level has a board, a target asset and a .meta")
     return 0
 

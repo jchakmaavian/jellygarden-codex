@@ -92,15 +92,26 @@ def scale_stars(stars, difficulty):
     return scaled
 
 
-def scale_colours(colour_limit, difficulty, rng):
+def scale_colours(colour_limit, difficulty, rng, collect_colours=()):
     """
     More colours is harder. Stay inside 4..6: the kit ships 4-6 and a 7th colour
     would need art that does not exist.
+
+    The floor is not 4 unconditionally. A level inherits its template's COLLECT
+    targets verbatim, and TargetObject.SetOff matches one by `item.color ==
+    target.color` while Item.GenItem only ever rolls `Random.Range(0,
+    colorLimit)`. Dropping the colour limit to 4 under a target for colour 4
+    therefore names an item that can never spawn: the goal cannot be met and the
+    playtest can only report "ran out of moves". So the limit never falls below
+    one past the highest colour any inherited COLLECT target asks for.
     """
+    floor = 4
+    if collect_colours:
+        floor = max(floor, max(collect_colours) + 1)
     target = 4 + int(round(difficulty * 2))
     if rng.random() < 0.25:
         target += rng.choice((-1, 1))
-    return max(4, min(6, max(target, colour_limit - 1)))
+    return max(floor, min(6, max(target, colour_limit - 1)))
 
 
 def thicken_blockers(grid, difficulty, rng):
@@ -212,7 +223,12 @@ def generate(template, entry, min_open=0.0):
         "rows": template["rows"],
         "limitType": template["limitType"],
         "limit": scale_moves(template["limit"], difficulty, rng),
-        "colorLimit": scale_colours(template["colorLimit"], difficulty, rng),
+        "colorLimit": scale_colours(
+            template["colorLimit"],
+            difficulty,
+            rng,
+            template.get("collectTargetColors", ()),
+        ),
         "stars": scale_stars(template["stars"], difficulty),
         "collectCount": list(template["collectCount"]) or [0, 0],
         "collectItems": list(template["collectItems"]) or [0, 0],

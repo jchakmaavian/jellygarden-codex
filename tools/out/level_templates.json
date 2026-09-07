@@ -101,6 +101,7 @@
    "obstacleDensity": 0.0889,
    "openRatio": 1.0,
    "blockTargetCount": 4,
+   "collectTargetColors": [],
    "difficultyRank": 0.0606
   },
   {
@@ -254,6 +255,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.8788,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.0808
   },
   {
@@ -356,6 +358,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.9286,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.0
   },
   {
@@ -509,6 +512,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.9293,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.0707
   },
   {
@@ -629,6 +633,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.8485,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.0202
   },
   {
@@ -749,6 +754,7 @@
    "obstacleDensity": 0.2424,
    "openRatio": 1.0,
    "blockTargetCount": 16,
+   "collectTargetColors": [],
    "difficultyRank": 0.303
   },
   {
@@ -902,6 +908,7 @@
    "obstacleDensity": 0.4545,
    "openRatio": 0.9596,
    "blockTargetCount": 45,
+   "collectTargetColors": [],
    "difficultyRank": 0.9394
   },
   {
@@ -1044,6 +1051,7 @@
    "obstacleDensity": 0.3182,
    "openRatio": 0.8864,
    "blockTargetCount": 28,
+   "collectTargetColors": [],
    "difficultyRank": 0.7273
   },
   {
@@ -1197,6 +1205,7 @@
    "obstacleDensity": 0.3333,
    "openRatio": 0.9596,
    "blockTargetCount": 33,
+   "collectTargetColors": [],
    "difficultyRank": 0.7071
   },
   {
@@ -1350,6 +1359,7 @@
    "obstacleDensity": 0.9899,
    "openRatio": 0.9899,
    "blockTargetCount": 98,
+   "collectTargetColors": [],
    "difficultyRank": 0.6667
   },
   {
@@ -1452,6 +1462,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.101
   },
   {
@@ -1584,6 +1595,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.875,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.0404
   },
   {
@@ -1737,6 +1749,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.8788,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.3535
   },
   {
@@ -1890,6 +1903,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.9596,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.1414
   },
   {
@@ -1988,6 +2002,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.8889,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.0101
   },
   {
@@ -2141,6 +2156,7 @@
    "obstacleDensity": 0.9091,
    "openRatio": 0.9091,
    "blockTargetCount": 90,
+   "collectTargetColors": [],
    "difficultyRank": 0.4646
   },
   {
@@ -2294,6 +2310,10 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.8788,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    1
+   ],
    "difficultyRank": 0.1616
   },
   {
@@ -2425,6 +2445,7 @@
    "obstacleDensity": 0.2346,
    "openRatio": 0.8519,
    "blockTargetCount": 19,
+   "collectTargetColors": [],
    "difficultyRank": 0.3636
   },
   {
@@ -2556,6 +2577,7 @@
    "obstacleDensity": 0.4938,
    "openRatio": 0.7901,
    "blockTargetCount": 56,
+   "collectTargetColors": [],
    "difficultyRank": 0.5152
   },
   {
@@ -2687,6 +2709,10 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.8272,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    1
+   ],
    "difficultyRank": 0.1212
   },
   {
@@ -2840,6 +2866,10 @@
    "obstacleDensity": 0.3939,
    "openRatio": 0.9697,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    1,
+    4
+   ],
    "difficultyRank": 1.0
   },
   {
@@ -2993,6 +3023,7 @@
    "obstacleDensity": 0.2525,
    "openRatio": 0.7576,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.4949
   },
   {
@@ -3146,6 +3177,9 @@
    "obstacleDensity": 0.303,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0
+   ],
    "difficultyRank": 0.9596
   },
   {
@@ -3255,6 +3289,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.9273,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.0505
   },
   {
@@ -3408,6 +3443,7 @@
    "obstacleDensity": 0.2727,
    "openRatio": 0.899,
    "blockTargetCount": 18,
+   "collectTargetColors": [],
    "difficultyRank": 0.4444
   },
   {
@@ -3539,6 +3575,7 @@
    "obstacleDensity": 0.3333,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.8182
   },
   {
@@ -3692,6 +3729,10 @@
    "obstacleDensity": 0.3636,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    3,
+    4
+   ],
    "difficultyRank": 0.7677
   },
   {
@@ -3834,6 +3875,7 @@
    "obstacleDensity": 0.3889,
    "openRatio": 0.9778,
    "blockTargetCount": 18,
+   "collectTargetColors": [],
    "difficultyRank": 0.7576
   },
   {
@@ -3987,6 +4029,7 @@
    "obstacleDensity": 0.6869,
    "openRatio": 1.0,
    "blockTargetCount": 76,
+   "collectTargetColors": [],
    "difficultyRank": 0.9697
   },
   {
@@ -4140,6 +4183,10 @@
    "obstacleDensity": 0.3535,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    3,
+    4
+   ],
    "difficultyRank": 0.9899
   },
   {
@@ -4293,6 +4340,7 @@
    "obstacleDensity": 0.2727,
    "openRatio": 0.5455,
    "blockTargetCount": 27,
+   "collectTargetColors": [],
    "difficultyRank": 0.6061
   },
   {
@@ -4446,6 +4494,10 @@
    "obstacleDensity": 0.2929,
    "openRatio": 0.7677,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    4
+   ],
    "difficultyRank": 0.7374
   },
   {
@@ -4599,6 +4651,7 @@
    "obstacleDensity": 0.2424,
    "openRatio": 0.8081,
    "blockTargetCount": 24,
+   "collectTargetColors": [],
    "difficultyRank": 0.404
   },
   {
@@ -4752,6 +4805,10 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.8384,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    3
+   ],
    "difficultyRank": 0.1111
   },
   {
@@ -4905,6 +4962,7 @@
    "obstacleDensity": 0.8889,
    "openRatio": 0.8889,
    "blockTargetCount": 176,
+   "collectTargetColors": [],
    "difficultyRank": 0.899
   },
   {
@@ -5058,6 +5116,7 @@
    "obstacleDensity": 0.1818,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.3434
   },
   {
@@ -5211,6 +5270,7 @@
    "obstacleDensity": 0.3939,
    "openRatio": 1.0,
    "blockTargetCount": 33,
+   "collectTargetColors": [],
    "difficultyRank": 0.7172
   },
   {
@@ -5364,6 +5424,7 @@
    "obstacleDensity": 0.4545,
    "openRatio": 0.9394,
    "blockTargetCount": 22,
+   "collectTargetColors": [],
    "difficultyRank": 0.798
   },
   {
@@ -5495,6 +5556,7 @@
    "obstacleDensity": 0.1111,
    "openRatio": 0.9753,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.2525
   },
   {
@@ -5648,6 +5710,7 @@
    "obstacleDensity": 0.4848,
    "openRatio": 0.8182,
    "blockTargetCount": 54,
+   "collectTargetColors": [],
    "difficultyRank": 0.9798
   },
   {
@@ -5801,6 +5864,7 @@
    "obstacleDensity": 0.4242,
    "openRatio": 0.9394,
    "blockTargetCount": 56,
+   "collectTargetColors": [],
    "difficultyRank": 0.8485
   },
   {
@@ -5932,6 +5996,7 @@
    "obstacleDensity": 0.2099,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.5657
   },
   {
@@ -6074,6 +6139,10 @@
    "obstacleDensity": 0.2667,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    2,
+    4
+   ],
    "difficultyRank": 0.4545
   },
   {
@@ -6216,6 +6285,7 @@
    "obstacleDensity": 0.1,
    "openRatio": 0.9222,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.2828
   },
   {
@@ -6358,6 +6428,7 @@
    "obstacleDensity": 0.9111,
    "openRatio": 0.9111,
    "blockTargetCount": 62,
+   "collectTargetColors": [],
    "difficultyRank": 0.4848
   },
   {
@@ -6500,6 +6571,7 @@
    "obstacleDensity": 0.2778,
    "openRatio": 0.8667,
    "blockTargetCount": 9,
+   "collectTargetColors": [],
    "difficultyRank": 0.5051
   },
   {
@@ -6642,6 +6714,10 @@
    "obstacleDensity": 0.2889,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    3
+   ],
    "difficultyRank": 0.7879
   },
   {
@@ -6795,6 +6871,7 @@
    "obstacleDensity": 0.202,
    "openRatio": 0.8586,
    "blockTargetCount": 20,
+   "collectTargetColors": [],
    "difficultyRank": 0.5859
   },
   {
@@ -6948,6 +7025,7 @@
    "obstacleDensity": 0.2727,
    "openRatio": 0.9192,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.9495
   },
   {
@@ -7101,6 +7179,7 @@
    "obstacleDensity": 0.3535,
    "openRatio": 0.9394,
    "blockTargetCount": 54,
+   "collectTargetColors": [],
    "difficultyRank": 0.4141
   },
   {
@@ -7254,6 +7333,7 @@
    "obstacleDensity": 0.4646,
    "openRatio": 1.0,
    "blockTargetCount": 10,
+   "collectTargetColors": [],
    "difficultyRank": 0.9192
   },
   {
@@ -7407,6 +7487,7 @@
    "obstacleDensity": 0.3636,
    "openRatio": 0.9596,
    "blockTargetCount": 9,
+   "collectTargetColors": [],
    "difficultyRank": 0.6869
   },
   {
@@ -7560,6 +7641,10 @@
    "obstacleDensity": 0.2323,
    "openRatio": 0.8182,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    3
+   ],
    "difficultyRank": 0.9091
   },
   {
@@ -7713,6 +7798,10 @@
    "obstacleDensity": 0.2626,
    "openRatio": 0.9596,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    3
+   ],
    "difficultyRank": 0.8384
   },
   {
@@ -7866,6 +7955,7 @@
    "obstacleDensity": 0.2727,
    "openRatio": 0.9091,
    "blockTargetCount": 23,
+   "collectTargetColors": [],
    "difficultyRank": 0.1818
   },
   {
@@ -7997,6 +8087,10 @@
    "obstacleDensity": 0.3457,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    2,
+    4
+   ],
    "difficultyRank": 0.8687
   },
   {
@@ -8128,6 +8222,7 @@
    "obstacleDensity": 0.1481,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.3838
   },
   {
@@ -8281,6 +8376,7 @@
    "obstacleDensity": 0.3131,
    "openRatio": 0.899,
    "blockTargetCount": 24,
+   "collectTargetColors": [],
    "difficultyRank": 0.5556
   },
   {
@@ -8434,6 +8530,7 @@
    "obstacleDensity": 0.5051,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.8586
   },
   {
@@ -8587,6 +8684,7 @@
    "obstacleDensity": 0.1616,
    "openRatio": 0.899,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.4343
   },
   {
@@ -8740,6 +8838,10 @@
    "obstacleDensity": 0.2626,
    "openRatio": 0.7879,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    1
+   ],
    "difficultyRank": 0.9293
   },
   {
@@ -8882,6 +8984,7 @@
    "obstacleDensity": 0.5,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.7778
   },
   {
@@ -9024,6 +9127,7 @@
    "obstacleDensity": 0.2222,
    "openRatio": 0.9111,
    "blockTargetCount": 8,
+   "collectTargetColors": [],
    "difficultyRank": 0.3737
   },
   {
@@ -9166,6 +9270,7 @@
    "obstacleDensity": 0.2,
    "openRatio": 0.9333,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.2626
   },
   {
@@ -9319,6 +9424,10 @@
    "obstacleDensity": 0.0202,
    "openRatio": 0.7879,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    2,
+    3
+   ],
    "difficultyRank": 0.0303
   },
   {
@@ -9472,6 +9581,7 @@
    "obstacleDensity": 0.1616,
    "openRatio": 0.8889,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.2222
   },
   {
@@ -9625,6 +9735,7 @@
    "obstacleDensity": 0.2222,
    "openRatio": 0.899,
    "blockTargetCount": 17,
+   "collectTargetColors": [],
    "difficultyRank": 0.596
   },
   {
@@ -9778,6 +9889,7 @@
    "obstacleDensity": 0.7172,
    "openRatio": 0.899,
    "blockTargetCount": 119,
+   "collectTargetColors": [],
    "difficultyRank": 0.7475
   },
   {
@@ -9931,6 +10043,10 @@
    "obstacleDensity": 0.1111,
    "openRatio": 0.8788,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    4
+   ],
    "difficultyRank": 0.1919
   },
   {
@@ -10084,6 +10200,7 @@
    "obstacleDensity": 0.4848,
    "openRatio": 0.8081,
    "blockTargetCount": 56,
+   "collectTargetColors": [],
    "difficultyRank": 0.5354
   },
   {
@@ -10237,6 +10354,7 @@
    "obstacleDensity": 0.4444,
    "openRatio": 0.8081,
    "blockTargetCount": 44,
+   "collectTargetColors": [],
    "difficultyRank": 0.6768
   },
   {
@@ -10390,6 +10508,7 @@
    "obstacleDensity": 0.2525,
    "openRatio": 0.8687,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.6566
   },
   {
@@ -10543,6 +10662,7 @@
    "obstacleDensity": 0.2626,
    "openRatio": 0.8889,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.202
   },
   {
@@ -10696,6 +10816,7 @@
    "obstacleDensity": 0.0909,
    "openRatio": 0.7374,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.2121
   },
   {
@@ -10849,6 +10970,7 @@
    "obstacleDensity": 0.6364,
    "openRatio": 0.6768,
    "blockTargetCount": 112,
+   "collectTargetColors": [],
    "difficultyRank": 0.5758
   },
   {
@@ -11002,6 +11124,7 @@
    "obstacleDensity": 0.0404,
    "openRatio": 0.8485,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.2323
   },
   {
@@ -11133,6 +11256,7 @@
    "obstacleDensity": 0.2099,
    "openRatio": 0.7778,
    "blockTargetCount": 18,
+   "collectTargetColors": [],
    "difficultyRank": 0.1717
   },
   {
@@ -11264,6 +11388,10 @@
    "obstacleDensity": 0.0988,
    "openRatio": 0.8642,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    1
+   ],
    "difficultyRank": 0.2424
   },
   {
@@ -11395,6 +11523,7 @@
    "obstacleDensity": 0.4568,
    "openRatio": 0.9506,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.697
   },
   {
@@ -11548,6 +11677,7 @@
    "obstacleDensity": 0.3333,
    "openRatio": 0.9394,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.3232
   },
   {
@@ -11690,6 +11820,7 @@
    "obstacleDensity": 0.1778,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.6162
   },
   {
@@ -11843,6 +11974,7 @@
    "obstacleDensity": 0.4646,
    "openRatio": 0.899,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.8889
   },
   {
@@ -11996,6 +12128,7 @@
    "obstacleDensity": 0.3131,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.6263
   },
   {
@@ -12149,6 +12282,10 @@
    "obstacleDensity": 0.3434,
    "openRatio": 0.8485,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    3
+   ],
    "difficultyRank": 0.8283
   },
   {
@@ -12302,6 +12439,7 @@
    "obstacleDensity": 0.3838,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.8788
   },
   {
@@ -12455,6 +12593,7 @@
    "obstacleDensity": 0.3535,
    "openRatio": 0.9697,
    "blockTargetCount": 18,
+   "collectTargetColors": [],
    "difficultyRank": 0.5455
   },
   {
@@ -12608,6 +12747,7 @@
    "obstacleDensity": 0.3131,
    "openRatio": 0.9091,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.4747
   },
   {
@@ -12761,6 +12901,7 @@
    "obstacleDensity": 0.1818,
    "openRatio": 0.7778,
    "blockTargetCount": 18,
+   "collectTargetColors": [],
    "difficultyRank": 0.1515
   },
   {
@@ -12914,6 +13055,7 @@
    "obstacleDensity": 0.2828,
    "openRatio": 0.8687,
    "blockTargetCount": 38,
+   "collectTargetColors": [],
    "difficultyRank": 0.2929
   },
   {
@@ -13067,6 +13209,10 @@
    "obstacleDensity": 0.1212,
    "openRatio": 0.8182,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    3
+   ],
    "difficultyRank": 0.1313
   },
   {
@@ -13220,6 +13366,7 @@
    "obstacleDensity": 0.3939,
    "openRatio": 0.899,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.3131
   },
   {
@@ -13362,6 +13509,7 @@
    "obstacleDensity": 0.1111,
    "openRatio": 0.9556,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.2727
   },
   {
@@ -13504,6 +13652,7 @@
    "obstacleDensity": 0.8,
    "openRatio": 0.9667,
    "blockTargetCount": 114,
+   "collectTargetColors": [],
    "difficultyRank": 0.8081
   },
   {
@@ -13646,6 +13795,10 @@
    "obstacleDensity": 0.2444,
    "openRatio": 0.9556,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    1,
+    4
+   ],
    "difficultyRank": 0.4242
   },
   {
@@ -13799,6 +13952,7 @@
    "obstacleDensity": 0.1212,
    "openRatio": 0.8889,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.3333
   },
   {
@@ -13952,6 +14106,7 @@
    "obstacleDensity": 0.4545,
    "openRatio": 0.9394,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.6465
   },
   {
@@ -14105,6 +14260,7 @@
    "obstacleDensity": 0.0,
    "openRatio": 0.6869,
    "blockTargetCount": 0,
+   "collectTargetColors": [],
    "difficultyRank": 0.0909
   },
   {
@@ -14258,6 +14414,10 @@
    "obstacleDensity": 0.2828,
    "openRatio": 1.0,
    "blockTargetCount": 0,
+   "collectTargetColors": [
+    0,
+    3
+   ],
    "difficultyRank": 0.3939
   },
   {
@@ -14411,6 +14571,7 @@
    "obstacleDensity": 0.3131,
    "openRatio": 0.9596,
    "blockTargetCount": 10,
+   "collectTargetColors": [],
    "difficultyRank": 0.5253
   },
   {
@@ -14564,6 +14725,7 @@
    "obstacleDensity": 0.3939,
    "openRatio": 0.9394,
    "blockTargetCount": 38,
+   "collectTargetColors": [],
    "difficultyRank": 0.6364
   }
  ]

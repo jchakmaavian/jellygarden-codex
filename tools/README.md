@@ -17,9 +17,9 @@ python3 tools/ui_sprites.py         # kit UI sprites       -> Resources/Story/UI
 python3 tools/asset_import.py       # generated art/audio  -> Resources/Story/Art, Audio
 
 python3 tools/level_templates.py    # tools/shipped_levels -> tools/out/level_templates.json
-python3 tools/level_plan.py         # story JSON           -> level_plan.json (1209 levels)
-python3 tools/level_gen.py          # templates + plan     -> Resources/Levels/1..1209.txt
-python3 tools/target_gen.py         # plan + boards        -> Resources/Targets/Level1..1209.asset
+python3 tools/level_plan.py         # story JSON           -> level_plan.json (1208 levels)
+python3 tools/level_gen.py          # templates + plan     -> Resources/Levels/1..1208.txt
+python3 tools/target_gen.py         # plan + boards        -> Resources/Targets/Level1..1208.asset
 ```
 
 The art reskins are independent of the story data. **None of them is applied —
@@ -84,7 +84,7 @@ prototype's own art at
 ## Verify
 
 ```bash
-python3 tools/validate_story.py      # the files: 150 areas, 807 tasks, 1209 stars, 1209 boards
+python3 tools/validate_story.py      # the files: 150 areas, 806 tasks, 1208 stars, 1208 boards
 python3 tools/check_vfx_intact.py    # no animation, particle or VFX regression since the branch point
 python3 tools/check_launch_args.py   # nothing can launch the game full screen
 
@@ -114,9 +114,12 @@ are reachable. Running it twice does nothing.
 
 ## Gotchas worth knowing
 
-**`tools/shipped_levels/` is the template source, not `Resources/Levels`.** After
-`level_gen.py` runs, `Resources/Levels` holds 1209 files; re-harvesting it would
-feed generated levels back into the library that generated them.
+**`tools/shipped_levels/` and `tools/shipped_targets/` are the template source,
+not `Resources/`.** They hold pristine copies of the kit's own 100 boards and
+their 100 target assets. After `level_gen.py` and `target_gen.py` have run,
+`Resources/Levels` and `Resources/Targets` hold 1208 of each; re-harvesting them
+would feed generated output back into the library that generated it, and would
+make a second run of the generators produce different files from the first.
 
 **A level cell's two digits take disjoint sets of `SquareTypes`.**
 `LevelMakerEditor.SetType` is the authority: the block digit is only
@@ -125,10 +128,25 @@ NONE/WIRE/SOLID/UNDESTROYABLE/THRIVING. Writing an obstacle code into the block
 digit does not make a tougher blocker — `LevelManager`'s switch has no branch for
 it, so the cell silently becomes plain. `parse_level` rejects it.
 
-**A BLOCKS target is not the board's block count.** Level 19 ships a target of 24
-against a board of 56, and levels 28 and 35 ship 0 because their real objective is
-the score. It is how many blocks the player must destroy. Never rewrite it; only
-assert it is reachable.
+**A non-zero BLOCKS target is not the board's block count.** Level 19 ships a
+target of 24 against a board of 56. It is how many blocks the player must
+destroy. Never rewrite it; only assert it is reachable.
+
+**A target of count 0 is not a goal, and is repaired.** `TargetObject.Done()` is
+`targetCount - countCollected <= 0`, so a zero target is met before the first
+move: `CheckWinLose` gets nothing from it and `TargetIcon` still draws a chip
+that ticks itself on frame one. `target_gen.repair_dead_targets` drops a dead
+COLLECT or INGREDIENT entry and fills a dead BLOCKS one from the board, capped at
+the steepest blocks-per-move the kit itself ships (level 75: 112 blocks in 37
+moves). Three kit assets carry one — Level15, Level28, Level35 — and every level
+generated from those templates inherited it.
+
+**A generated level's COLOR LIMIT has a floor, not just a range.** A level
+inherits its template's COLLECT targets verbatim, `TargetObject.SetOff` matches
+one by `item.color == target.color`, and `Item.GenItem` only ever rolls
+`Random.Range(0, colorLimit)`. So `level_gen.scale_colours` never drops the limit
+below one past the highest colour any inherited COLLECT target names — otherwise
+the target asks for an item that can never spawn and the level is unwinnable.
 
 **Every generated Unity asset needs a sibling `.meta`.** GUIDs are derived from
 the asset path (`story_common.guid_for`) so a regeneration does not move them and

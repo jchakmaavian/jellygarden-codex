@@ -5,6 +5,37 @@ Started: 2026-09-07
 
 ## Codebase Patterns
 
+- **The template source is `tools/shipped_levels/` and `tools/shipped_targets/`,
+  never `Resources/`.** `Resources/Levels` and `Resources/Targets` hold the
+  generators' OWN output. A generator that reads a template from there is not
+  just re-harvesting generated data — it makes the second run differ from the
+  first, because run 1's repairs become run 2's input. `shipped_targets/` was
+  added in US-007 for exactly this reason; `shipped_levels/` already existed.
+- **A target with `targetCount: 0` is met before the first move.**
+  `TargetObject.Done()` is `targetCount - countCollected <= 0`, so a zero entry
+  contributes nothing to `CheckWinLose` while `TargetIcon.Update` still draws a
+  chip and ticks it on frame one. Worse for INGREDIENT: `Item.GenItem` loops
+  over EVERY ingredient target when it rolls a gem and calls
+  `StartCoroutine(FallingCor(...))` inside the loop, so a dead second entry
+  starts two falling coroutines per gem. `target_gen.repair_dead_targets` is the
+  one place that decides what to do with one.
+- **Anything that changes a shipped level's MODE reshuffles the whole game.**
+  `level_templates.difficulty_of` weights `mode`, difficulty feeds
+  `difficultyRank`, and `level_gen.pick_template` indexes the rank-sorted list.
+  Changing MODE on one of the 100 templates moves its rank, which moves every
+  rank after it, which re-picks templates for hundreds of generated levels. If a
+  fault looks like it wants a MODE change, fix it in the target asset instead.
+- **Anchor an invented number to the shipped set, and compute it rather than
+  writing it down.** `target_gen.steepest_shipped_blocks_objective()` scans the
+  kit's own 100 levels for the steepest BLOCKS objective (112 blocks in 37
+  moves, level 75) and uses it as the ceiling when a missing count has to be
+  filled in. Written down as a constant it would quietly go stale; computed, it
+  stays true.
+- **Keep repairs idempotent by keying them on pristine input.** A repair that
+  reads its own previous output converges to a different answer on run 2. If a
+  cap depends on the level being repaired, it must be applied to the pristine
+  template every time, not to whatever is on disk.
+
 - The playtest is driven from the OPEN Editor, never batchmode: batchmode wants
   the project lock the user's Editor already holds. `King Leo > Preview >
   Playtest the band file` plays whatever level list is in
@@ -105,9 +136,15 @@ Root CLAUDE.md and PLAN.md are also required reading.
    losing a method or shrinking. Board scripts (`LevelManager.cs`, `Item.cs`,
    `Square.cs`, `GUI/AnimationManager.cs`, `ItemAnimEvents.cs`,
    `ParticleSorting.cs`) may only be ADDED to. Mark every hook `// STORY:`.
-2. **The 1209 tuned levels.** `Resources/Levels/*.txt` and
-   `Resources/Targets/*.asset` are finished data. NEVER re-run
-   `tools/level_gen.py` or `tools/target_gen.py`.
+2. **The 1208 tuned levels.** `Resources/Levels/*.txt` and
+   `Resources/Targets/*.asset` are finished data — but they are GENERATED data,
+   and as of US-007 regenerating them is safe and is the only correct way to fix
+   one. `python3 tools/level_templates.py && python3 tools/level_gen.py &&
+   python3 tools/target_gen.py` is deterministic AND idempotent: run it on a
+   clean tree and nothing changes. Fix the generator, re-run all three, then
+   `git diff --stat` — the diff should be exactly the levels you meant to
+   change and nothing else. Never hand-edit a level file; the next regeneration
+   throws it away.
 
 ### Typecheck (the generated csproj does NOT see new files)
 ```bash
@@ -684,3 +721,97 @@ One helper each side of the boundary, and a linter holding them together.
     for the PrePlay display and the id-to-colour mapping is a guess. Left out.
 ---
 
+
+## 2026-09-07 - US-007 - Every problem the level linter finds is fixed
+
+`tools/lint_levels.py` went from 37 problems in 37 levels to 0 in 1208, and it
+is a generator fix in every case, so the next regeneration keeps it.
+
+**Three faults, four kit templates.**
+
+1. **COLLECT colour 4 under COLOR LIMIT 4 — 12 levels, unwinnable.**
+   `TargetObject.SetOff` matches a COLLECT target by `item.color ==
+   target.color`; `Item.GenItem` only ever rolls `Random.Range(0, colorLimit)`.
+   Templates 69 and 94 ship COLOR LIMIT 5 with a colour-4 collect target, and
+   `level_gen.scale_colours` was free to drop a derived level to 4. The target
+   then named an item that could never spawn and the playtest could only ever
+   report "ran out of moves". `scale_colours` now takes the template's collect
+   colours and floors the limit at `max(colours) + 1`;
+   `level_templates.collect_target_colours` harvests them from the template's
+   target asset. Affected: 136, 155, 201, 206, 237, 315, 323, 337, 344, 350,
+   523, 524 — all now COLOR LIMIT 5.
+
+2. **MODE 3 with a BLOCKS target of 0 — 23 levels, won without playing.**
+   Kit assets Level28 and Level35 ship it and 21 generated levels inherited it.
+   `target_gen.repair_dead_targets` fills the count from the board's own block
+   count (`block_target_count`, which is what `LevelManager` computes into
+   `TargetBlocks`: one per BLOCK, two per DOUBLEBLOCK), capped at the steepest
+   blocks-per-move the kit ships. 32 of the kit's 38 non-zero BLOCKS levels ask
+   for exactly what their board holds, so "0" is the LevelMaker field never
+   having been set, not a design choice.
+
+3. **A second INGREDIENT target at 0 — 2 levels, a dead chip and a doubled
+   coroutine.** Level15 ships one and Level105 inherited it. Dropped.
+
+**The MODE trap I did not fall into.** The obvious fix for fault 2 is MODE 3 ->
+MODE 0, since the real objective already was the score. It would have been
+wrong: `difficulty_of` weights `mode`, so changing it on templates 28 and 35
+moves their `difficultyRank`, which shifts every rank past them, which re-picks
+templates in `pick_template` for hundreds of generated levels. Measured before
+committing to the other route.
+
+**Files changed**
+- `tools/story_common.py` — `SHIPPED_LEVELS`, `SHIPPED_TARGETS`, the `Target`
+  enum constants, and `read_target_entries()` (the asset parser that accepts
+  both `targetCount` and `count`), now shared instead of living in target_gen.
+- `tools/shipped_targets/` — NEW. Pristine copies of the kit's 100 target
+  assets, the sibling of `tools/shipped_levels/`.
+- `tools/level_templates.py` — records `collectTargetColors` per template.
+- `tools/level_gen.py` — `scale_colours` gained a floor.
+- `tools/target_gen.py` — `repair_dead_targets`,
+  `steepest_shipped_blocks_objective`, templates read from
+  `tools/shipped_targets/`, and the preserved branch now repairs the three kit
+  assets that carry a dead target instead of skipping every level <= 100.
+- 12 level boards, 25 target assets (regenerated, not hand-edited).
+- `CLAUDE.md`, `tools/README.md`, `ralph/prd.json`, `ralph/findings.md`,
+  `ralph/progress.txt`.
+
+**Checks**
+- `lint_levels.py` 0 problems in 1208 levels, exit 0.
+- Idempotency proved: backed the tree up, ran all three generators, diffed
+  (clean), ran them again, diffed against run 1 (clean).
+- Blast radius measured against the backup: exactly 12 boards and 25 target
+  assets differ. Nothing else moved.
+- `validate_story.py` "All checks passed." (150 / 806 / 1208 / 1208);
+  `check_vfx_intact.py` clean; `check_launch_args.py` clean;
+  `dotnet build Story.Typecheck.csproj` 0 errors.
+- **Not run:** the two Unity batchmode smoke tests. The user's Editor holds the
+  project lock and must not be killed. No C# changed in this story.
+
+**`ralph/findings.md`:** F-001..F-005 all stay OPEN. Every one of them is about
+what a screenshot shows; US-007 never renders a frame.
+
+- **Learnings for future iterations:**
+  - Doc drift is real: `CLAUDE.md` and `tools/README.md` both claimed 807 tasks
+    and 1209 levels while `validate_story.py` has been printing 806 and 1208.
+    Corrected. Trust the tool's output over the prose.
+  - Measure the blast radius before believing a generator fix. Copy
+    `Resources/Levels` and `Resources/Targets` to the scratchpad, regenerate,
+    `diff -rq`. The first thing that diff proved was that the generators
+    reproduce the working tree exactly — which is what made regenerating safe at
+    all, and which the old progress note ("NEVER re-run level_gen.py") had
+    ruled out without checking.
+  - `Item.GenItem` calls `StartCoroutine(FallingCor(...))` inside its
+    `foreach (var targetObject in ingredients)` loop. Two ingredient targets
+    means two falling coroutines per gem. Worth remembering if a two-ingredient
+    level ever animates oddly.
+  - `TargetIcon` for a BLOCKS target displays `LevelManager.TargetBlocks` —
+    blocks still on the board — not the target count. So the chip and the goal
+    are different numbers, and a level can show "18" while asking for nothing.
+  - `COLLECT COUNT 0/4` in a .txt is NOT a fault. `PrePlay` explicitly handles
+    `ingrCountTarget[0] == 0 && ingrCountTarget[1] > 0`. Only the ASSET entry
+    was dead; the .txt line is kit convention and was left alone.
+  - The kit's assets serialize no `blockSprites` field at all, and the generated
+    ones write `blockSprites: array: []`. Both deserialize to an empty list, and
+    `SetOff` falls through to its else branch either way. Not a difference.
+---
