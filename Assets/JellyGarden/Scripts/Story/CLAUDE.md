@@ -11,14 +11,24 @@ deleted, renamed or restructured.** `tools/check_vfx_intact.py` enforces this
 against the branch point and fails the build if it is broken.
 
 The board simulation (`LevelManager`, `Item`, `Square`) is off limits beyond
-additive hooks. In particular, do not swap gem sprites: `Item` derives its own
+additive hooks — with one exception already taken, and it is worth knowing about
+because the same shape will recur: `LevelManager.FallingDown` enumerated the
+`combinedItems` FIELD across its own `yield`s, so a second pass through the
+coroutine reached that field's `Clear()` mid-enumeration and .NET threw
+`InvalidOperationException: Collection was modified` straight out of the
+`foreach`. That kills the coroutine where it stands and leaves the cascade half
+finished on a board that looks like it is thinking. It is walked over a snapshot
+now — same lists, same items, same order, so every destroy, popup and particle
+still fires identically. The playtest caught it on level 9.
+
+In particular, do not swap gem sprites: `Item` derives its own
 colour by looking its sprite up in its array (`color = Array.IndexOf(items,
 sprite)`), and items spawned mid-cascade come from the prefab, so a themed gem
 can end up a colour that does not match how it looks.
 
 ## How the kit and the story meet
 
-Four marked hooks, all early-returns, all a two-line deletion from the kit's
+Marked hooks, all early-returns, all a two-line deletion from the kit's
 original behaviour:
 
 | File | Hook | What the story does instead |
@@ -29,9 +39,19 @@ original behaviour:
 | `InitScript.CheckAdsEvents` | `StoryFreeGame.AdsAllowed` | never requests an ad |
 | `MenuManager.ShowGemsShop` / `ShowLiveShop` | `StoryFreeGame.ShopsAllowed` | never opens a shop |
 | `MenuManager.ShowRate` | `StoryFreeGame.RatePromptAllowed` | never asks for a rating |
+| `MenuManager.ShowPreFailed` | `StoryFreeGame.PreFailOfferAllowed` | never offers five more moves for gems |
 
-Star awarding rides on `LevelManager.OnWin`, an event the kit already raises, so
-nothing in the board is touched at all.
+Star awarding rides on `LevelManager.OnWin`, and the fail panel on
+`LevelManager.OnLose` — both events the kit already raises, so nothing in the
+board is touched at all.
+
+**`ShowPreFailed` is the one hook that cannot just return.** That banner's own
+animation event is what sets `GameState.GameOver`, and GameOver is what raises
+`OnLose` and puts the end panel up, so skipping the banner without moving the
+state leaves a lost level with no way to end. The hook starts a one-frame
+coroutine that does what the animation event would have done. Any future kit
+hook sitting on a screen the kit uses as a state machine needs the same care:
+check what the thing you are hiding is *driving* before you hide it.
 
 ## The data contract
 
@@ -642,10 +662,46 @@ kit's score bar. Four things about it are not obvious:
   word "score". `StoryLevelHud.ReadLevel(level, score)` builds the same model
   from `Resources/Levels/N.txt` plus `Resources/Targets/LevelN.asset` with no
   board in the scene — use it for any screen that has to state a level's goal.
+- **The target plate is shared out by weight, not evenly.** `SlotWeight` gives a
+  score target 2 and everything else 1, because a score target reads
+  `940/1000` and a collect one reads `3`. Split evenly, a three-target level gave
+  the score an eighth of the width it needed and `resizeTextForBestFit` shrank it
+  to its floor — a chip nobody can read at 393 points wide, sitting beside two
+  single digits at full size. Levels 12, 13 and 14 are where it showed.
 - **Never reorder the target slots.** `AimKitIconsAtThisHud` matches the kit's
   `TargetIcon`s to this HUD's slots by index, so the model must keep
   `LevelManager.targetObject` order or the collect animation flies to the wrong
   icon. The asset order varies by level (`('0','3')` and `('3','0')` both occur).
+
+## The two end panels
+
+`StoryWinPopup` and `StoryLosePopup` are one design in two states, and they are
+deliberately the same file twice: the same band, the same star slot, the same
+cream area card, the same green button, the same fractions. A win and a loss are
+the same moment in the game's shape, and reading them as two screens is how one
+ends up feeling borrowed.
+
+What differs is what the game differs in. The win panel's star is white (gold
+artwork undimmed) and captioned `+1 Star`, or `RoyalGrey` and `Already beaten`
+on a replay. The lose panel's is always `RoyalGrey`, captioned `Out of moves` or
+`Out of time` from `LevelManager.limitType`.
+
+- **`StarSprite` is gold artwork and `Image.color` MULTIPLIES it.** There is no
+  tint that makes it blue, grey or neutral: `RoyalBlueDark` was tried, to read as
+  an empty socket in the plate, and came out a dark green blob that looked like a
+  bug. Grey over gold is bronze, which is what an unearned star has looked like
+  in this genre for twenty years.
+- **Both panels are closed by `StoryFlow.ReturnToArea`, not only by their own
+  buttons.** Continue is one door out of a level; a retry, a beat that leaves
+  early and the playtest are others, and a panel closed only by its button
+  survived all of them — including the next `LaunchLevel`, so from the second
+  level of a run the player was reading the previous level's result over a live
+  board. `ReturnToArea` also switches off the kit's `MenuComplete`, `MenuFailed`
+  and `PreFailed` for the same reason.
+- **The area row names its unit.** "Castle Gates / 0/3" two rows under "+1 Star"
+  reads as stars in that area, and it counts repairs. The track says
+  `0/3 repairs` on both panels; the bar keeps the bare count on the home screen
+  and the area page, where the word is already beside it.
 
 ## The level start popup
 
@@ -789,6 +845,16 @@ wrong. Do not spell the level number out again in the message.
 **A level the bot cannot beat is a result, not a fault.** GameOver/PreFailed is
 `RESULT: lost`, counted, and the run goes on. Only a state that is neither won
 nor lost is a finding.
+
+**`Ending` waits out BOTH pre-states before it shoots.** PreWinAnimations was
+always waited on; PreFailed was not, so every lost level's end shot was taken
+while the kit's fail banner was still sliding and never showed the end panel at
+all. A level that never leaves either pre-state is its own finding: it is a
+level that cannot end.
+
+**`Shot` hides the kit tutorial first**, the same three lines `StoryThemeTest`
+has. Without it every shot of a level the kit decides to teach is a picture of a
+dimmed screen with a hand on it.
 
 **Two PNGs per level, in `Application.persistentDataPath/playtest/`**, named
 `0001_level_1_start.png` / `..._end.png` so the directory sorts into playing

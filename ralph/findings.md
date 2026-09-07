@@ -9,7 +9,7 @@ Evidence: `~/Library/Application Support/DefaultCompany/King Leo/playtest/`
 (`0001_level_1_start.png`, `0002_level_1_end.png`), from the run whose report is
 `playtest.txt` — level 1, won, 3 moves, 0 errors, 0 findings.
 
-## F-001 — the win popup is still the kit's skin  [OPEN]
+## F-001 — the win popup is still the kit's skin  [CLOSED — it was never the kit's]
 The end-of-level popup is Jelly Garden's blue-and-yellow panel with the kit's
 green Continue button. Nothing about it is King Leo. Every other shell screen was
 reskinned; this one was missed. Deleting the kit component and putting the King
@@ -31,7 +31,7 @@ everything else. This reads as an out-of-focus photograph. Either the blur radiu
 or the darkening tint behind the board is far too strong, or the wrong art is
 loading. Check the whole set of arcs, not just Castle Gates.
 
-## F-004 — the first screenshot lands under the tutorial overlay  [OPEN for the playtest; handled in the theme test]
+## F-004 — the first screenshot lands under the tutorial overlay  [CLOSED — the playtest hides it too now]
 On level 1 the start shot is taken while the kit tutorial dims the screen and
 draws a pointing hand over the board. Any level with a tutorial or an intro beat
 will screenshot the overlay instead of the board, which makes the shot useless
@@ -44,10 +44,8 @@ screenshots have to be opened and looked at. Do not mark a band story `passes:
 true` on the strength of the report alone.
 
 ## Uncertain — check before acting
-- The end popup says "Already beaten" with a dull star and "Castle Gates 0/3".
-  The save already had progress, so this may be correct — "0/3" is probably the
-  area's repair count, not stars. Confirm what that row means before changing it;
-  if it is ambiguous to a player, that is worth fixing on its own.
+- ~~The end popup says "Already beaten" with a dull star and "Castle Gates
+  0/3".~~ Settled in US-009: it is the area's repair count. See F-008.
 
 ---
 
@@ -123,3 +121,93 @@ partway through — worth knowing before US-009 onwards.
 ### New — still open
 The Time plate wraps: arc 6's HUD reads `0:4` on one line and `9` on the next
 (`themes/20260907-204132/shots/arc_6_siege.png`). A HUD fault, not a theme one.
+
+
+---
+
+## Iteration note — US-009 (levels 1-16), 2026-09-07
+
+Three of the four picture findings are now settled, and one new one — the worst
+one on this list so far — was found by opening the shots.
+
+- **F-001 is CLOSED, and it was never true.** The end-of-level popup in
+  `0002_level_1_end.png` is `StoryWinPopup`, the story's own panel: a blue
+  arched plate with a double gold rim, ONE star, a cream area card and a green
+  Continue. It reads as "the kit" because Royal Match's own panel — which
+  `StoryWinPopup` is measured off, see the header of that file — is blue, gold
+  and green. The kit's `MenuComplete` is a WOODEN board with three star sockets,
+  and `StoryWinPopup.HideKitPanel` switches it off before this one opens; the
+  log for the same frame says `[Story] win panel: level 1, area 1, replay, no
+  star.` Nothing here needed reskinning. **Blue-and-gold is the King Leo skin.**
+
+- **F-004 is CLOSED.** `StoryPlaytest.Shot` now calls `HideTutorial()` before
+  every capture, the same three lines `StoryThemeTest` already had.
+
+- **F-003 is unchanged and still OPEN.** Level 1's backdrop is the same gloomy
+  near-photographic castle. It needs six new bright cartoon backdrops; no code
+  change reaches it.
+
+- **F-005 stands, and this iteration is the proof of it.** The sweep of levels
+  1-8 printed `0 finding(s), 0 error(s)` over a set of screenshots in which
+  fifteen of the sixteen pictures showed no board at all. See F-006.
+
+## F-006 — the win popup outlived its level  [FIXED in US-009]
+`0005_level_3_start.png` shows the **Level 2** win panel. `0007_level_4_start`
+and `0008_level_4_end` and `0009_level_5_start` all show the **Level 3** one.
+The board was playing normally underneath the whole time — the log has all 16 of
+level 4's moves — but every picture from level 2 onwards was a photograph of the
+previous level's result.
+
+`StoryWinPopup` closed itself only from its own Continue button. Every other
+door out of a level left it standing on the persistent canvas, and it survived
+the next `LaunchLevel`. Fixed in `StoryFlow.ReturnToArea`, which is the one
+place every exit from a level goes through.
+
+**This is why a band is not swept until the pictures have been opened.** Nothing
+in the report was wrong; the report simply never looked at the screen.
+
+## F-007 — the kit's "Level" plate is still on the booster row  [FIXED in US-009]
+The bottom bar carried `level_txt.png` — the kit's gold "Level" painted into a
+sprite — plus the Text `Counter_` fills with the level number, sitting directly
+behind the pause button `StoryLevelHud` moves into the middle of that row. It
+was on screen in all 1208 levels. `StoryLevelHud.ReplaceKitLevelPlate` destroys
+both, the same way the kit's header is destroyed rather than hidden.
+
+## F-008 — "Castle Gates 0/3" on the win panel  [FIXED in US-009]
+The "Uncertain" note above asked what that row counts. It is
+`StoryProgress.TasksCompletedIn(area)` over `area.Tasks.Count` — repairs, not
+stars. On this panel it sits two rows under "+1 Star", which is exactly the
+reading it invites and exactly the wrong one. The track now says
+`0/3 repairs`. Elsewhere the bar keeps the bare count, because the home screen
+and the area page already have the word beside it.
+
+## F-009 — the level-FAILED panel is the kit's, and it is a shop  [FIXED in US-009]
+This is what F-001 was actually about, one panel over. Every lost level showed
+the kit's grey diagonal-hatch card: "Level Failed!", a purple bar offering five
+more moves for twelve gems, and an orange "Give Up" with a heart on it. Three
+things there are untrue of this game — nothing is for sale, there are no lives,
+and none of it is in the story's visual language — and in this band the bot lost
+6 of the first 8 levels, so it was most of what the shots contained.
+
+`StoryLosePopup` is StoryWinPopup's other half: same band, same star slot, same
+cream area card, same green button. The star is bronze rather than gold and the
+caption names what ran out, from `LevelManager.limitType`.
+
+The kit's `PreFailed` banner in front of it is gated by
+`StoryFreeGame.PreFailOfferAllowed`, and that gate could not simply return: the
+banner's own animation event is what sets `GameOver`, which is what raises
+`OnLose`. `MenuManager.ShowPreFailed` moves the state on instead.
+
+## F-010 — the score chip was unreadable on a three-target level  [FIXED in US-009]
+On levels 12, 13 and 14 the Target plate holds three chips and the score one
+reads "0/1000" against two single digits. The plate was split evenly, so
+best-fit shrank the six-character number to its floor while the two one-digit
+ones stayed at full size — a chip a player cannot read at 393 points wide.
+`StoryLevelHud.SlotWeight` gives a score target twice the width of a count.
+
+## Standing, after US-009
+- **F-003 (dark backdrops) is the only OPEN one, and only new art closes it.**
+  `python3 tools/check_themes.py` still prints ten NOTE lines.
+- F-005 stands as a rule, and this iteration is its best evidence yet: the sweep
+  printed `0 finding(s)` over a band whose pictures showed a shop screen, a
+  stale popup and an unreadable HUD.

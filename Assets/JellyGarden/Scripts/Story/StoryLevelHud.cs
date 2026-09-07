@@ -230,6 +230,7 @@ namespace JellyGarden.Scripts.Story
 
             hud.ReplaceKitHud(strip);
             hud.MovePauseOutOfTheHudsWay(strip);
+            hud.ReplaceKitLevelPlate(strip);
             hud.Refresh();
 
             Debug.Log("[Story] Level HUD installed: Target + portrait + Moves, no score bar.");
@@ -669,6 +670,17 @@ namespace JellyGarden.Scripts.Story
 
             while (_slots.Count < count) _slots.Add(BuildSlot(_slots.Count));
 
+            // The plate is shared out by how wide each target's number actually
+            // is, not evenly. A score target reads "940/1000" and a collect one
+            // reads "3", so on a three-target level an even split gave the score
+            // an eighth of the room it needed and best-fit shrank it to its floor
+            // — a chip a player cannot read at 393 points wide, next to two
+            // single digits at full size. Levels 12, 13 and 14 are where it
+            // showed. The weights are the two shapes, not per-level tuning.
+            float total = 0f;
+            for (int i = 0; i < count; i++) total += SlotWeight(targets[i]);
+            float placed = 0f;
+
             for (int i = 0; i < _slots.Count; i++)
             {
                 bool used = i < count;
@@ -676,7 +688,9 @@ namespace JellyGarden.Scripts.Story
                     _slots[i].Root.gameObject.SetActive(used);
                 if (!used) continue;
 
-                PlaceSlot(_slots[i].Root, i, count);
+                float share = SlotWeight(targets[i]) / Mathf.Max(0.0001f, total);
+                PlaceSlot(_slots[i].Root, placed, placed + share);
+                placed += share;
 
                 HudTarget target = targets[i];
                 if (_slots[i].Icon.sprite != target.Icon)
@@ -728,11 +742,25 @@ namespace JellyGarden.Scripts.Story
             return slot;
         }
 
-        private static void PlaceSlot(RectTransform slot, int index, int count)
+        /// <summary>
+        /// How much of the target plate a slot is worth.
+        ///
+        /// A score target's number is "have/need" — up to nine characters — and
+        /// every other target's is a count of at most three. Two and one is the
+        /// ratio of those two shapes, measured rather than tuned: it is what
+        /// keeps "940/1000" at the same drawn size beside a "3" as it has on its
+        /// own.
+        /// </summary>
+        private static float SlotWeight(HudTarget target)
         {
-            float share = 1f / Mathf.Max(1, count);
-            slot.anchorMin = new Vector2(index * share, 0f);
-            slot.anchorMax = new Vector2((index + 1) * share, 1f);
+            return target != null && target.IsScore ? 2f : 1f;
+        }
+
+        /// <summary>Puts a slot in the band from one fraction of the plate to another.</summary>
+        private static void PlaceSlot(RectTransform slot, float from, float to)
+        {
+            slot.anchorMin = new Vector2(from, 0f);
+            slot.anchorMax = new Vector2(to, 1f);
             slot.offsetMin = Vector2.zero;
             slot.offsetMax = Vector2.zero;
         }
@@ -842,6 +870,58 @@ namespace JellyGarden.Scripts.Story
             pause.anchorMax = new Vector2(0.5f, 0.5f);
             pause.pivot = new Vector2(0.5f, 0.5f);
             pause.anchoredPosition = new Vector2(0f, y);
+        }
+
+        /// <summary>
+        /// Takes the kit's "Level" plate and its level number off the booster
+        /// row, rather than leaving them under the pause button that just moved
+        /// on top of them.
+        ///
+        /// The row carries three things: the boosters, the pause button this
+        /// HUD put there, and — from the kit — a `level_txt` image with the word
+        /// "Level" painted into it plus a Text that Counter_ fills with the
+        /// level number. The kit drew those because its bottom bar was the only
+        /// place a level was named. This game names the level twice already, on
+        /// the start popup and on the win panel, and neither of those is the
+        /// board; what is left on the bar is a stray word sitting behind the
+        /// pause button in all 1208 levels.
+        ///
+        /// Destroyed for the same reason the kit's header is: a deactivated one
+        /// is still a second layer for anyone reading the hierarchy, and the
+        /// baked-in label is exactly what StoryUi refuses to borrow.
+        /// </summary>
+        private void ReplaceKitLevelPlate(Transform strip)
+        {
+            RectTransform row = FindBoosterRow(strip);
+            if (row == null) return;
+
+            var children = new List<Transform>();
+            foreach (Transform child in row) children.Add(child);
+
+            // FindBoosterRow falls back to the whole bottom panel when it cannot
+            // find the row, and everything on the panel would then look like
+            // chrome to the loop below. Only a row that actually holds boosters
+            // is one whose other children are the kit's level plate.
+            bool isBoosterRow = false;
+            foreach (Transform child in children)
+                if (child != null && child.name.StartsWith("Boost")) isBoosterRow = true;
+            if (!isBoosterRow) return;
+
+            var destroyed = new List<string>();
+            foreach (Transform child in children)
+            {
+                if (child == null) continue;
+                if (child.name == "Pause") continue;
+                if (child.name.StartsWith("Boost")) continue;
+
+                destroyed.Add(child.name);
+                Destroy(child.gameObject);
+            }
+
+            if (destroyed.Count == 0) return;
+
+            Debug.Log("[Story] Level HUD: destroyed the kit's level plate on the booster row (" +
+                      string.Join(", ", destroyed.ToArray()) + ").");
         }
 
         /// <summary>The kit's booster row, found from the boosters in it.</summary>

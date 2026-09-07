@@ -6,7 +6,7 @@
 // are never shown, and boosters are earned rather than bought.
 //
 // Nothing is deleted to achieve this. The kit's ad controllers, IAP integration
-// and shop screens all remain in the repo; they are simply never reached. Four
+// and shop screens all remain in the repo; they are simply never reached. Six
 // marked early-returns in InitScript and MenuManager are the whole of it, and
 // flipping Enabled to false restores the kit's behaviour exactly.
 
@@ -139,6 +139,19 @@ namespace JellyGarden.Scripts.Story
         /// board passed, and the picture was black.
         /// </summary>
         public static bool RatePromptAllowed
+        {
+            get { return !Enabled; }
+        }
+
+        /// <summary>
+        /// Whether the kit's "five more moves for twelve gems" banner may open
+        /// when a level runs out of moves. Never: it is a shop in the one place
+        /// the kit is surest a player will pay, and there is nothing to pay
+        /// with. MenuManager.ShowPreFailed carries the level straight to its end
+        /// panel instead — see the marked block there, which is the sixth and
+        /// last of these early-returns.
+        /// </summary>
+        public static bool PreFailOfferAllowed
         {
             get { return !Enabled; }
         }

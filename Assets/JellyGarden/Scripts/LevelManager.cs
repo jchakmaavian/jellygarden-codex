@@ -1638,7 +1638,22 @@ namespace JellyGarden.Scripts
 
                 if (combinedItems.Count > 0)
                     combo++;
-                foreach (List<Item> desrtoyItems in combinedItems)
+
+                // Walked over a snapshot, not the field.
+                //
+                // combinedItems is a field of this class and this loop yields
+                // inside itself, so a second pass through FallingDown reaches
+                // the Clear() above while this one is still enumerating — and
+                // .NET throws "Collection was modified" straight out of the
+                // foreach. That kills the coroutine where it stands, which
+                // leaves the cascade half finished and the board looking like it
+                // is thinking. It is what the playtest caught on level 9.
+                //
+                // Nothing else changes: the inner lists and the items in them
+                // are the same objects, in the same order, so every destroy,
+                // every score popup and every particle still fires exactly as
+                // it did.
+                foreach (List<Item> desrtoyItems in new List<List<Item>>(combinedItems))
                 {
 
                     //				if (lastDraggedItem == null) {  //1.6

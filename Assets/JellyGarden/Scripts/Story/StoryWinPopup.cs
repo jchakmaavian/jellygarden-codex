@@ -351,9 +351,18 @@ namespace JellyGarden.Scripts.Story
 
             if (_progress != null)
             {
-                StoryUi.SetProgress(_progress,
-                    StoryProgress.TasksCompletedIn(_areaId),
-                    area != null ? area.Tasks.Count : 0);
+                int done = StoryProgress.TasksCompletedIn(_areaId);
+                int total = area != null ? area.Tasks.Count : 0;
+                StoryUi.SetProgress(_progress, done, total);
+
+                // The bar reads "2/4" everywhere else in the game, and on the
+                // home screen and the area page the word "repairs" is already on
+                // the screen beside it. Here it is not: this panel has just said
+                // "+1 Star" two rows above, so a bare "0/3" under an area name
+                // reads as the stars in that area, which is not what it counts.
+                // The unit goes in the track.
+                if (_progress.Label != null)
+                    _progress.Label.text = done + "/" + total + " repairs";
             }
         }
 

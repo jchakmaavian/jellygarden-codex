@@ -24,6 +24,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using JellyGarden.Scripts.GUI.TutorialStuff;
 using JellyGarden.Scripts.Targets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -434,6 +435,40 @@ namespace JellyGarden.Scripts.Story
                 Say("win animation finished after " + wait + "s; state " + manager.gameStatus + ".");
             }
 
+            // The same wait on the losing side, and for the same reason the win
+            // side has one.
+            //
+            // PreFailed is the kit's "buy five more moves" banner sliding in; the
+            // level is not over until its animation event sets GameOver, which is
+            // what raises OnLose and puts the fail panel up. Recording the result
+            // at PreFailed and shooting straight away photographed the banner
+            // mid-slide and never the panel, so every lost level in the band came
+            // back with a picture of a grey stripe. A level that never leaves
+            // PreFailed is a finding of its own: it is a level that cannot end.
+            if (manager.gameStatus == GameState.PreFailed)
+            {
+                float wait = 0f;
+                while (wait < 60f && manager.gameStatus == GameState.PreFailed)
+                {
+                    yield return new WaitForSecondsRealtime(0.5f);
+                    wait += 0.5f;
+                }
+
+                if (manager.gameStatus == GameState.PreFailed)
+                {
+                    Finding(
+                        "the level was lost but never finished losing: it sat in PreFailed " +
+                        "for 60s. Moves are spent and no end panel came.");
+                    yield break;
+                }
+
+                Say("fail banner finished after " + wait + "s; state " + manager.gameStatus + ".");
+            }
+
+            // Give the end panel a moment to build, so the shot that follows is
+            // of the panel rather than of the frame it opens on.
+            yield return new WaitForSecondsRealtime(1f);
+
             // A level the bot cannot beat is a result, not a fault: the sweep
             // records it as lost and goes on to the next one. Only a state that
             // is neither won nor lost is worth a finding.
@@ -545,6 +580,8 @@ namespace JellyGarden.Scripts.Story
         {
             if (_shotDir.Length == 0) yield break;
 
+            HideTutorial();
+
             // End of frame, or the capture catches the UI mid-build.
             yield return new WaitForEndOfFrame();
 
@@ -554,6 +591,34 @@ namespace JellyGarden.Scripts.Story
             // CaptureScreenshot is asynchronous; give it a moment to land.
             yield return new WaitForSecondsRealtime(0.6f);
             Say("shot -> " + name);
+        }
+
+        /// <summary>
+        /// Takes the kit's tutorial overlay off the screen before a shot.
+        ///
+        /// On level 1 — and on any level the kit decides to teach — TutorialManager
+        /// dims the whole screen and puts a pointing hand over the board. The
+        /// start shot landed under it, so the one picture of the level a reviewer
+        /// has shows the overlay and not the board. That is ralph/findings.md
+        /// F-004, and StoryThemeTest already answers it the same way.
+        ///
+        /// Switched off rather than destroyed: this is a run that exists to take
+        /// pictures, and the bot does not need to be taught how to swap two gems.
+        /// </summary>
+        private void HideTutorial()
+        {
+            int hidden = 0;
+
+            foreach (TutorialManager manager in
+                     FindObjectsByType<TutorialManager>(FindObjectsInactive.Include))
+            {
+                if (manager == null || manager.tutorial == null) continue;
+                if (!manager.tutorial.activeSelf) continue;
+                manager.tutorial.SetActive(false);
+                hidden++;
+            }
+
+            if (hidden > 0) Say("kit tutorial overlay hidden for the shot.");
         }
 
         #endregion

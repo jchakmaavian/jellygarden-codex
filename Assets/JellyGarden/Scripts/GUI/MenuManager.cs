@@ -245,6 +245,26 @@ namespace JellyGarden.Scripts.GUI
 
         public void ShowPreFailed(bool show = true)
         {
+            // --- King Leo story layer -------------------------------------
+            // The PreFailed banner is the kit's last sales pitch: five more
+            // moves for twelve gems, or "Give Up". Nothing is for sale here, so
+            // the offer is one button the player cannot take and one they must
+            // press to see the result of a level they have already lost.
+            //
+            // It cannot simply be skipped: this banner's own animation event is
+            // what sets GameOver, and GameOver is what raises OnLose and puts the
+            // story's fail panel up. So the state moves on instead, out of the
+            // gameStatus setter that called this — the same place and the same
+            // one-frame delay the banner's animation event would have used.
+            //
+            // Additive: delete this block and the kit's banner is back.
+            if (show && !JellyGarden.Scripts.Story.StoryFreeGame.PreFailOfferAllowed)
+            {
+                StartCoroutine(EndTheLostLevel());
+                return;
+            }
+            // --------------------------------------------------------------
+
             if (!show)
             {
                 preFailed.GetComponent<AnimationManager>().GoOnFailed();
@@ -252,6 +272,17 @@ namespace JellyGarden.Scripts.GUI
             }
             if (preFailed != null)
                 preFailed.SetActive(true);
+        }
+
+        /// <summary>
+        /// Part of the block above: what the PreFailed banner's animation event
+        /// does at the end of its slide, minus the banner.
+        /// </summary>
+        private global::System.Collections.IEnumerator EndTheLostLevel()
+        {
+            yield return null;
+            if (LevelManager.THIS != null && LevelManager.THIS.Limit <= 0)
+                LevelManager.THIS.gameStatus = GameState.GameOver;
         }
 
         public GameObject ShowReward(bool show = true)

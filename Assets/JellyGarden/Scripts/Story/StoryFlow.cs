@@ -40,11 +40,13 @@ namespace JellyGarden.Scripts.Story
         private void OnEnable()
         {
             LevelManager.OnWin += HandleWin;
+            LevelManager.OnLose += HandleLose;
         }
 
         private void OnDisable()
         {
             LevelManager.OnWin -= HandleWin;
+            LevelManager.OnLose -= HandleLose;
         }
 
         #region Kit hooks
@@ -179,6 +181,22 @@ namespace JellyGarden.Scripts.Story
             PlayingArea = 0;
             PlayingLevel = 0;
 
+            // The win panel closes itself when its own Continue is pressed, but
+            // that is only one of the doors out of a level: anything else that
+            // ends one — the playtest, a retry, a beat that leaves early — left
+            // the panel standing on the persistent canvas, over whatever came
+            // next. It survived the next LaunchLevel too, so from the second
+            // level of a run the player was looking at the previous level's
+            // result with a live board playing underneath it. Leaving the level
+            // is what closes it, whichever door was used.
+            //
+            // The kit's own two end panels go with them: the story panels stand
+            // in for those, and one left active is a second result screen behind
+            // the first.
+            StoryWinPopup.Close();
+            StoryLosePopup.Close();
+            StoryLosePopup.HideKitPanel();
+
             if (LevelManager.THIS != null)
                 LevelManager.THIS.gameStatus = GameState.Map;
 
@@ -264,6 +282,28 @@ namespace JellyGarden.Scripts.Story
             int areaId = PlayingArea;
             StoryWinPopup.Open(levelNumber, areaId, paidStar,
                 () => HandleLevelComplete());
+        }
+
+        /// <summary>
+        /// Puts the story's own level-failed panel up in place of the kit's.
+        ///
+        /// The kit raises OnLose in the same breath as ShowMenuFailed(true), so
+        /// unlike the win panel there is nothing to wait for: no total changes on
+        /// a loss. Continue goes through HandleLevelFailed, the same door the
+        /// kit's own Give Up used.
+        /// </summary>
+        private void HandleLose()
+        {
+            if (PlayingArea <= 0 || LevelManager.THIS == null) return;
+
+            int levelNumber = LevelManager.THIS.currentLevel;
+            int areaId = PlayingArea;
+            bool outOfTime = LevelManager.THIS.limitType == LIMIT.TIME;
+
+            Debug.Log(string.Format("[Story] Level {0} lost; no star awarded.", levelNumber));
+
+            StoryLosePopup.Open(levelNumber, areaId, outOfTime,
+                () => HandleLevelFailed());
         }
 
         #endregion

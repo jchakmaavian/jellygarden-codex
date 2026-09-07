@@ -74,7 +74,29 @@ python3 tools/playtest_sweep.py --levels 1-16 --batch 4
 ```
 
 Zero findings does not mean the band is good — nothing automated here can see a
-layout. Open the run's `shots/` and look.
+layout. Open the run's `shots/` and look. US-009 swept levels 1-16 at `0
+finding(s), 0 error(s)` over a set of pictures that showed the kit's gems shop,
+the previous level's popup and a HUD chip too small to read; all five faults in
+`ralph/findings.md` F-006..F-010 came out of opening them.
+
+**Run one batch in the foreground, never in the background.** A backgrounded
+sweep has twice been killed part-way without a word, and once raced a later run
+and left it reading the wrong report. One batch of 8 takes about six minutes.
+
+**The Editor's project lock does not stop you building a player.** Clone the
+project into the scratchpad and build there, which leaves the open Editor alone:
+
+```bash
+C=<scratchpad>/kl-build
+cp -Rc Assets Packages ProjectSettings Library UserSettings "$C"/   # APFS, seconds
+rsync -a --delete Assets/ "$C/Assets/"                             # between builds
+"$UNITY" -batchmode -quit -nographics -projectPath "$C" -logFile "$C/build.log" \
+  -executeMethod JellyGarden.Scripts.Story.Editor.StoryBuild.BuildMac
+KINGLEO_APP="$C/Builds/Mac/KingLeo.app" python3 tools/playtest_sweep.py --levels 1-8
+```
+
+A NEW script's generated `.meta` has to be copied back out of the clone, or the
+repo gets a script with no guid.
 
 ## Checking the board themes
 

@@ -5,6 +5,31 @@ Started: 2026-09-07
 
 ## Codebase Patterns
 
+- **A screenshot of a level is only worth reading if the level's own end panel
+  has closed.** The end panels live on a persistent canvas and outlast the
+  board; anything that ends a level by a door other than the panel's own button
+  must close it. `StoryFlow.ReturnToArea` is that one place.
+- **A kit screen may be driving a state machine.** `MenuManager.ShowPreFailed`
+  cannot early-return like the other five StoryFreeGame hooks: the banner it
+  shows raises `GameOver` from its own animation event, and GameOver is what
+  raises `OnLose`. Check what a kit screen *drives* before hiding it.
+- **`Image.color` multiplies the sprite.** Gold artwork cannot be tinted blue or
+  neutral. A "disabled" version of a gold icon is bronze, or it is a different
+  sprite.
+- **Enumerating a FIELD across a `yield` is a live bug in this codebase.** The
+  kit does it in `LevelManager.FallingDown`; a second pass through the same
+  coroutine mutates the field and .NET throws out of the `foreach`, killing the
+  cascade silently. Snapshot the collection.
+- **The Editor's project lock does not block a build.** `cp -Rc` (APFS clone) of
+  `Assets Packages ProjectSettings Library UserSettings` into the scratchpad is
+  near-instant and near-free, `rsync -a --delete Assets/` re-syncs it per
+  iteration, and `-projectPath <clone>` builds while the user's Editor stays
+  open. Point the sweep at it with `KINGLEO_APP`.
+- **Do not background a sweep.** A backgrounded `playtest_sweep.py` was killed
+  twice mid-run, silently, and once raced a later foreground run so that it read
+  the other run's report. Run one batch of 8 in the foreground (~6 min, inside
+  the 10-minute tool cap) and check no player is alive first.
+
 - **The template source is `tools/shipped_levels/` and `tools/shipped_targets/`,
   never `Resources/`.** `Resources/Levels` and `Resources/Targets` hold the
   generators' OWN output. A generator that reads a template from there is not
@@ -968,4 +993,112 @@ backdrops in the style of `area_001_state*` are what fixes it.
   black as the sixth level of a session and perfect as the first — running the
   single level through `playtest_sweep.py --levels 987` is what separated the
   level from the session.
+---
+
+## 2026-09-07 - US-009 - Play levels 1-16 and fix what they show
+
+Swept levels 1-16 in the 393x852 player, in two batches of 8. Every level
+reached a won or lost end state; 0 findings and 0 errors in the final run. All
+32 screenshots were opened and looked at, which is where the work was: the same
+report said `0 finding(s)` over a set of pictures showing a shop screen, a stale
+popup and a HUD chip nobody could read.
+
+**Five faults, all fixed in shared code**
+
+1. **The win panel outlived its level.** `StoryWinPopup` closed itself only from
+   its own Continue button, so every other exit left it standing on the
+   persistent canvas — and it survived the next `LaunchLevel`. From level 2
+   onwards every screenshot in the band was the PREVIOUS level's result with a
+   live board playing underneath it: `0005_level_3_start` showed the Level 2
+   panel, `0009_level_5_start` still showed Level 3's. Nothing in the report was
+   wrong; the report never looks at the screen. Fixed in
+   `StoryFlow.ReturnToArea`, the one place every exit from a level goes through.
+2. **The level-failed panel was still the kit's.** Grey diagonal hatch, "Level
+   Failed!", five more moves for twelve gems, "Give Up" with a heart — a shop, in
+   a game whose whole `StoryFreeGame` exists because nothing is for sale. New
+   `StoryLosePopup`, deliberately `StoryWinPopup` twice: same band, same star
+   slot, same cream area card, same green button, differing only in a bronze
+   star and a caption naming which limit ran out.
+3. **The kit's "Level" plate was still on the booster row** — `level_txt.png`
+   plus the Text `Counter_` fills, sitting behind the pause button this HUD moves
+   there, in all 1208 levels. `StoryLevelHud.ReplaceKitLevelPlate` destroys them,
+   the same way the kit's header is destroyed rather than hidden.
+4. **The score chip was unreadable on a three-target level.** The Target plate
+   was split evenly, so best-fit shrank "0/1000" to its floor beside two single
+   digits (levels 12, 13, 14). `StoryLevelHud.SlotWeight` weights a score slot 2
+   to a count slot's 1.
+5. **A kit coroutine died mid-cascade on level 9.**
+   `InvalidOperationException: Collection was modified` out of
+   `LevelManager.FallingDown`: it enumerates the `combinedItems` FIELD across its
+   own `yield`s, and a second pass reaches that field's `Clear()`. Walked over a
+   snapshot now.
+
+**Harness**
+
+- `StoryPlaytest.Shot` hides the kit tutorial before every capture — findings
+  F-004, and the same three lines `StoryThemeTest` already had.
+- `StoryPlaytest.Ending` waits out `PreFailed` as it already waited out
+  `PreWinAnimations`. Without it a lost level's end shot was of the kit's fail
+  banner mid-slide and never of the panel.
+
+**F-001 was checked and closed as never true.** The end-of-level popup a human
+read as "Jelly Garden's blue-and-yellow panel with the kit's green Continue" is
+`StoryWinPopup`. It is blue, gold and green because Royal Match — which it is
+measured off — is. The kit's `MenuComplete` is a wooden board with three star
+sockets, and `HideKitPanel` switches it off before this one opens.
+
+**Still open, and it needs art:** the six arc backdrops (F-003).
+`tools/check_themes.py` prints ten NOTE lines and `--strict` fails.
+
+**Files changed**
+- `Story/StoryLosePopup.cs` — NEW.
+- `Story/StoryFlow.cs` — `OnLose` hook, `HandleLose`, and `ReturnToArea` closes
+  both story panels and the kit's three.
+- `Story/StoryFreeGame.cs` — `PreFailOfferAllowed`, the sixth early-return.
+- `GUI/MenuManager.cs` — `ShowPreFailed`'s hook, plus the one-frame coroutine
+  that does what the banner's animation event used to.
+- `Story/StoryLevelHud.cs` — `ReplaceKitLevelPlate`, `SlotWeight`, weighted
+  `PlaceSlot`.
+- `Story/StoryWinPopup.cs` — the repairs bar names its unit.
+- `Story/StoryPlaytest.cs` — `HideTutorial`, the PreFailed wait.
+- `LevelManager.cs` — `FallingDown` walks a snapshot.
+- `Story/CLAUDE.md`, `ralph/findings.md`, `ralph/prd.json`, `ralph/progress.txt`.
+
+**Checks**
+- `playtest_sweep.py --levels 1-8` → 8 played, 0 findings, 0 errors.
+- `playtest_sweep.py --levels 9-16` → 8 played, 0 findings, 0 errors.
+- 32/32 screenshots opened and read.
+- `lint_levels.py` 0 problems in 1208 levels. `validate_story.py` all passed.
+- `check_vfx_intact.py` clean. `check_launch_args.py` clean.
+- `check_themes.py` 0 problems, 10 notes (the backdrops).
+- `dotnet build Story.Typecheck.csproj` 0 errors.
+- **Not run:** the two Unity batchmode smoke tests — the user's Editor holds the
+  project lock and must not be killed.
+
+**Learnings for future iterations**
+- **The Editor's lock is not a wall.** `cp -Rc` the project (Assets, Packages,
+  ProjectSettings, Library, UserSettings) into the scratchpad — APFS clones the
+  blocks, so 8.4G costs seconds and almost no disk — then build with
+  `-projectPath <clone>` and point the sweep at it with `KINGLEO_APP`. `rsync -a
+  --delete Assets/` re-syncs it between builds; a build is ~2 minutes warm. Copy
+  the generated `.meta` for any NEW script back out of the clone, or git gets a
+  script with no guid.
+- **Never background the sweep.** Two backgrounded runs were killed silently
+  part-way, and one of them then raced a foreground run and wrote the report the
+  foreground run read — which is how a run of levels 1-8 came back with levels
+  9-16's results. One batch of 8 in the foreground is ~6 minutes, inside the
+  tool's 10-minute cap. Check `ps aux | grep "King Leo"` is empty first.
+- **`0 findings` is a statement about the harness, not the band.** Every fault
+  above was in a picture the harness had already scored clean.
+- **Read `Player.log`, not the batch log.** `sweeps/<run>/batch_NNN.log` is the
+  player's stdout and carries almost nothing; the exception stack that named
+  `LevelManager.cs:1641` was only in
+  `~/Library/Logs/DefaultCompany/King Leo/Player.log`.
+- **A dark backdrop and a missing sprite look identical.** The black bars inside
+  level 5's board looked like unrendered holes; sampling the pixels showed them
+  the same colour as the backdrop beside the board. Measure before fixing.
+- The bot loses most levels (6 of 8, 8 of 8) because it plays random legal
+  moves. That is not a difficulty signal and it is not a finding — but it does
+  mean the FAIL path is what a sweep photographs most, so it is worth having it
+  be the panel you want a player to see.
 ---
