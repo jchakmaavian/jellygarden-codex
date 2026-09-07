@@ -48,8 +48,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Verified by playing level 1 in the open Editor: 0001_level_1_start.png shows the live board mid-tutorial, 0002_level_1_end.png shows the win popup. Report prints the absolute directory once. Screenshots are skipped under -nographics, where WaitForEndOfFrame never returns."
     },
     {
       "id": "US-004",

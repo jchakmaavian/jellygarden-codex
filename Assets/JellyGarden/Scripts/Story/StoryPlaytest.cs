@@ -17,7 +17,8 @@
 //     open -a KingLeo.app --args -screen-fullscreen 0 -screen-width 393 -screen-height 852 -storyplaytest
 //
 // The report is written to Application.persistentDataPath/playtest.txt and
-// echoed to the log, so a batchmode run can be read from either.
+// echoed to the log, so a batchmode run can be read from either. Two PNGs per
+// level land next to it in Application.persistentDataPath/playtest/.
 
 using System.Collections;
 using System.Collections.Generic;
@@ -100,6 +101,12 @@ namespace JellyGarden.Scripts.Story
         private int _won;
         private int _lost;
 
+        /// <summary>Where the PNGs go, or empty when the directory could not be made.</summary>
+        private string _shotDir = string.Empty;
+
+        /// <summary>Numbers the shots in playing order, across the whole run.</summary>
+        private int _shot;
+
         private void Say(string line)
         {
             _lines.Add(line);
@@ -143,9 +150,14 @@ namespace JellyGarden.Scripts.Story
         {
             List<int> levels = Levels();
 
+            OpenShotDir();
+
             Say("starting; levels [" +
                 string.Join(", ", levels.ConvertAll(l => l + " (" + Where(l) + ")").ToArray()) +
                 "], back to back in one session.");
+            Say(_shotDir.Length > 0
+                ? "screenshots in " + _shotDir
+                : "screenshots: none (headless, or the directory could not be made).");
             yield return new WaitForSecondsRealtime(2f);
 
             for (int i = 0; i < levels.Count; i++)
@@ -172,6 +184,11 @@ namespace JellyGarden.Scripts.Story
                 yield return Reach(level, area);
                 _played++;
 
+                // Taken before the playable check rather than after it, so that
+                // the one level in the sweep that never draws a board is the one
+                // level with a picture of what the player saw instead.
+                yield return Shot(level, "start");
+
                 if (LevelManager.THIS == null || LevelManager.THIS.gameStatus != GameState.Playing)
                 {
                     // This is the black screen, seen from the inside: the board
@@ -186,6 +203,7 @@ namespace JellyGarden.Scripts.Story
                 }
 
                 yield return PlayOut(level);
+                yield return Shot(level, "end");
 
                 if (i + 1 < levels.Count) yield return LeaveLevel();
             }
@@ -467,6 +485,68 @@ namespace JellyGarden.Scripts.Story
                 if (square.item.falling) return true;
             }
             return false;
+        }
+
+        #endregion
+
+        #region Screenshots
+
+        /// <summary>
+        /// Makes the directory the PNGs go in. A failure here is not worth
+        /// stopping the run for — the log and the report are still the point —
+        /// so it is reported once and every later shot is skipped.
+        /// </summary>
+        private void OpenShotDir()
+        {
+            // -nographics has no frame to wait for the end of, so WaitForEndOfFrame
+            // never returns there and a shot would hang the whole sweep. A headless
+            // run gets the text report and no pictures.
+            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+            {
+                _shotDir = string.Empty;
+                return;
+            }
+
+            string dir = Path.Combine(Application.persistentDataPath, "playtest");
+            try
+            {
+                Directory.CreateDirectory(dir);
+                _shotDir = dir;
+            }
+            catch (global::System.Exception e)
+            {
+                _shotDir = string.Empty;
+                Debug.LogWarning("[Playtest] could not make " + dir + ": " + e.Message);
+            }
+        }
+
+        /// <summary>
+        /// A PNG of the screen as it is right now.
+        ///
+        /// A visual fault raises no error and ends no level: a board off centre,
+        /// a HUD sitting over it, an unreadable target chip and a tile with no
+        /// sprite all play through perfectly. The log cannot see any of them, so
+        /// a sweep that only writes text finds only the faults that throw.
+        ///
+        /// Named 0001_level_1_start.png, so the directory sorts into playing
+        /// order and a level's two shots sit next to each other.
+        ///
+        /// This costs a normal player nothing: the component that calls it is
+        /// only ever built when the playtest was asked for.
+        /// </summary>
+        private IEnumerator Shot(int level, string moment)
+        {
+            if (_shotDir.Length == 0) yield break;
+
+            // End of frame, or the capture catches the UI mid-build.
+            yield return new WaitForEndOfFrame();
+
+            string name = string.Format("{0:0000}_level_{1}_{2}.png", ++_shot, level, moment);
+            ScreenCapture.CaptureScreenshot(Path.Combine(_shotDir, name));
+
+            // CaptureScreenshot is asynchronous; give it a moment to land.
+            yield return new WaitForSecondsRealtime(0.6f);
+            Say("shot -> " + name);
         }
 
         #endregion

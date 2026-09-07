@@ -26,6 +26,13 @@ Started: 2026-09-07
   `Assets > Refresh`, and confirm the recompile landed by asking the menu bar
   for a name you just changed — do not trust a byte count.
 
+- Screenshots of a playtest land in
+  `~/Library/Application Support/DefaultCompany/King Leo/playtest/`, two per
+  level, `0001_level_1_start.png` / `..._end.png`. A visual fault raises no
+  error and ends no level: look at the PNGs, do not infer from the report.
+  `WaitForEndOfFrame` never returns under `-nographics`, so any new capture
+  must be gated on `SystemInfo.graphicsDeviceType != Null`.
+
 - NEVER launch the player full screen. Every launch — by hand, from a script,
   from a sweep — passes `-screen-fullscreen 0 -screen-width 393 -screen-height 852`,
   which is iPhone 15/16 portrait. Full screen takes over the display and the
@@ -376,4 +383,59 @@ Implemented in `Assets/JellyGarden/Scripts/Story/StoryPlaytest.cs` and
   PRD (every `Resources/Levels/*.txt`, art deletions, kit script edits). This
   commit is scoped to the five files US-002 touches; the rest was left exactly
   as found.
+---
+
+## 2026-09-07 - US-003 - Playtest screenshots every level it plays
+
+Implemented in `Assets/JellyGarden/Scripts/Story/StoryPlaytest.cs`.
+
+- `OpenShotDir()` makes `Application.persistentDataPath/playtest/` once, and
+  `Drive` prints the absolute path on its own line right after the "starting"
+  line, so the report says where the pictures are without a caller guessing.
+- `Shot(level, moment)` waits for `WaitForEndOfFrame`, calls
+  `ScreenCapture.CaptureScreenshot`, then waits 0.6s for the async write to
+  land — the same shape as `StoryDemoDriver.Shot`. Files are
+  `{0:0000}_level_{1}_{2}.png`, so the directory sorts into playing order across
+  the whole 1208-level sweep and a level's two shots sit together.
+- The start shot is taken **before** the playable check, not after it. A level
+  that never draws a board is exactly the level whose picture is worth having;
+  taking it after the check would have skipped it.
+- The end shot is taken in `Drive` after `PlayOut` returns, so it covers every
+  way out of `PlayOut` — won, lost, and both giveups — with one call site.
+- Nothing is captured under `-nographics`: `WaitForEndOfFrame` never returns
+  there, so a shot would hang the sweep. `OpenShotDir` checks
+  `SystemInfo.graphicsDeviceType` and leaves `_shotDir` empty; `Shot` is then a
+  `yield break`. A normal player pays nothing either way — the component only
+  exists when the playtest was asked for.
+
+**Verified by playing, not by reading:**
+- `King Leo > Preview > Playtest the band file` with band `1`, Editor open.
+  Report in 35s: level 1 won in 6 moves, `SUMMARY: 1 level(s) played, 1 won,
+  0 lost, 0 finding(s), 2 error(s)`.
+- `~/Library/Application Support/DefaultCompany/King Leo/playtest/` holds
+  `0001_level_1_start.png` (1080x1920, the live board with the tutorial hand and
+  the "Drag the item of the same color" caption) and `0002_level_1_end.png`
+  (the Level 1 / +1 Star / Castle Gates 0/3 win popup). Both opened and looked
+  at, not just listed.
+- `dotnet build Story.Typecheck.csproj` 0 errors; `check_vfx_intact.py` clean.
+- Editor left OUT of play mode (toolbar screenshotted: grey triangle).
+
+**Learnings for future iterations:**
+- The Editor's Game view renders 1080x1920, not the 393x852 the player will be
+  launched at (US-004). Screenshots taken from the open Editor are therefore the
+  right aspect but not the right size, and any pixel measurement against them
+  must scale. The band sweep will want the built player for that reason.
+- Level 1 won this time, having lost twice under US-002. The bot is random, so a
+  single loss is not a level fault — a level needs several runs before "the bot
+  cannot beat it" means anything.
+- 2 PNGs x 1208 levels x ~2MB is roughly 5GB for a full sweep. The band runner
+  (US-005) should clear or archive `playtest/` between bands.
+- Menu driving that worked, end to end, first try: raise Unity + `AXRaise`,
+  screenshot the toolbar to confirm not playing, `Assets > Refresh`, wait ~40s,
+  confirm `Reloading assemblies after finishing script compilation` in the log
+  from a byte mark, then click `King Leo > Preview > Playtest the band file`
+  three levels deep with a 0.6s delay between each click.
+- `osascript -e` with a nested `do shell script "...'$VAR'..."` fights zsh
+  quoting. Use a double-quoted heredoc-free `osascript -e "..."` and escape the
+  inner quotes, or take the screenshot in a separate call.
 ---

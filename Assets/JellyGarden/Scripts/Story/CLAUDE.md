@@ -758,3 +758,15 @@ wrong. Do not spell the level number out again in the message.
 **A level the bot cannot beat is a result, not a fault.** GameOver/PreFailed is
 `RESULT: lost`, counted, and the run goes on. Only a state that is neither won
 nor lost is a finding.
+
+**Two PNGs per level, in `Application.persistentDataPath/playtest/`**, named
+`0001_level_1_start.png` / `..._end.png` so the directory sorts into playing
+order. The start shot is taken *before* the playable check, so a level that
+never draws a board still leaves a picture of what the player saw. A visual
+fault — a board off centre, a HUD over it, a tile with no sprite — raises no
+error and ends no level, so a text-only sweep finds only the faults that throw.
+
+**A shot needs a frame to be the end of.** `WaitForEndOfFrame` never returns
+under `-nographics`, so a capture there hangs the whole sweep. `OpenShotDir`
+turns screenshots off when `SystemInfo.graphicsDeviceType` is `Null`, and the
+report says so on its `screenshots` line.
