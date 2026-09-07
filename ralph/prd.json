@@ -183,8 +183,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Swept 33-48 in four foreground batches of 4: 16/16 reached a won or lost end state, 0 findings, 0 errors, before and after the fix. All 32 before-shots and 24 after-shots opened. One fault found by looking: the BLOCKS target chip drew the kit's block sprite alone, and that sprite is 55% opaque frost meant to sit over a gem, so it read as a pale empty square on 10 of the 16 levels. Fixed in StoryLevelHud for all 508 levels that draw it (HudTarget.Backing), not per level. Measured 0.175 -> 0.288 separation from the card, off level 33's own PNG. Recorded but not acted on: 24 levels have a playable region walled in by holes to fewer than 3 cells (level 45 here), which is the kit's own shipped shape and is booster-reachable; see ralph/findings.md. Two Unity batchmode gates are red on stale content constants from a previous PRD, proven pre-existing by re-running them at HEAD with this change stashed."
     },
     {
       "id": "US-012",

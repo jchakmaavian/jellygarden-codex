@@ -290,3 +290,78 @@ a reshuffle that never ends is its own finding.
   proving it needs the spawn instrumented rather than argued. It belongs in the
   linter (`tools/lint_levels.py`), which is where a goal that cannot be reached
   is supposed to be caught.
+
+
+---
+
+## Iteration note — US-011 (levels 33-48), 2026-09-08
+
+The band swept `0 finding(s), 0 error(s)` in all four batches, twice — before
+and after the fix. Everything below came out of opening the pictures.
+Evidence: `sweeps/20260908-000414`, `-000729`, `-001254`, `-001740` (before);
+`-003048`, `-003456`, `-004002`, `-004503` (after).
+
+## F-014 — the blocks target chip was an empty frosted square  [FIXED in US-011]
+F-012 fixed the chip's *contrast* by giving every icon a silhouette. It did not
+fix what the chip is a picture of, and levels 33, 35, 37, 38, 40, 41, 45, 46
+and 48 all showed the result: a pale square with a number beside it, carrying
+no information about what the level is asking for.
+
+`Textures/Blocks/block.png` is not a picture of a block. Its centre is **55%
+opaque** (alpha 141/255, measured) — it is frost, and `CreateSquare` parents it
+to a square that still holds an item, at z -0.01 in front of it. On the board
+it is therefore always a gem seen through ice. Alone on `RoyalCream` it
+composites to almost the card colour.
+
+`StoryLevelHud.HudTarget.Backing` puts the kit's own first item sprite behind
+it, so the chip is the same picture the board draws. Which gem is measured, not
+chosen: composited under the block on cream, item_01 separates from the card by
+0.274 of luminance against 0.113 for the bare block and 0.145..0.201 for the
+other five. On screen at 393 points that came out 0.288 against 0.175, off
+level 33's own PNG before and after.
+
+It cannot be misread as a collect chip: across all 1208 target assets, **not
+one of the 508 levels carrying a BLOCKS chip carries a bare-gem chip beside
+it** — their other chip is always the star. That count is also the size of the
+fix: 42% of the game draws this chip.
+
+## Uncertain — measured, not acted on
+**A cell walled in by holes can never be matched.** Level 45's board is a
+picture frame with one lone cell in the middle of it, four `00` holes around
+it, and it is one of the 62 blocks the level asks for. No swap can ever include
+it; only a stripped or a package reaching row 4 or column 4 clears it.
+
+Counted over all 1208 boards, treating only `00` (NONE) and `x6`
+(UNDESTROYABLE) as permanent walls — SOLIDBLOCK and THRIVING both go when a
+match lands beside them, `Square.DestroyBlock` cascades into them — **24 levels
+have a walled-in region of fewer than 3 cells: 45 and 97 of the kit's own 100,
+and 22 generated ones** (111, 112, 122, 126, 143, 151, 277, 287, 307, 431, 546,
+553, 567, 578, 583, 584, 598, 599, 617, 630, 654, 675 and two more).
+
+Not acted on this iteration, deliberately: level 45 is the kit's shipped board
+byte for byte, the cell is reachable with a booster, and the level ends
+normally. It is a linter rule waiting for a decision about whether the
+generated 22 should inherit shapes that contain one. **Do not hand-edit a level
+file to fix it** — `tools/level_gen.py` would undo it on the next run.
+
+## Standing, after US-011
+- **F-003 (dark backdrops) is still the only OPEN visual one, and only new art
+  closes it.** `check_themes.py` prints the same ten NOTE lines. Level 39's one
+  hole and level 34's two read as black rectangles cut out of the board for
+  that reason and no other.
+- F-005 stands. Four batches printed `0 finding(s)` over the pictures that
+  carried F-014.
+- The ingredient shortfall first written down in US-010 shows here too: levels
+  39 (2+2) and 42 (2+2) collected 0 and 1 across 40 and 42 moves. Still the
+  linter's problem, still unproven without instrumenting `Item.GenItem`.
+- **Two Unity batchmode gates are RED and were red before this iteration.**
+  `StorySmokeTest.RunAll` fails on `expected 807 tasks, loaded 806` and
+  `expected 1209 stars, loaded 1208`; `StoryScreenTests.RunHeadless` fails five
+  cases in the same family (`areas 1-5 carry 25 repairs (24)`, `cost 29 stars
+  (28)`, the rope's sign count, area 1's third repair region). Proven
+  pre-existing: stashing this iteration's only source change and re-running the
+  screen tests at HEAD gives the identical five failures. The constants were
+  written in `22ddca8` under a previous PRD and never revisited; CLAUDE.md and
+  `validate_story.py` both say 806 tasks / 1208 stars is the truth, so it is the
+  gates that are stale. Left alone — changing an assertion to match reality is
+  not a thing to do in passing.

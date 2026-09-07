@@ -15,6 +15,21 @@ Started: 2026-09-07
   where "0:59" was wrapping to two lines, wrong for a target chip a third of a
   plate wide, where best-fit then stops shrinking and the number runs into its
   neighbour. Box shape decides, not the file.
+- **Ask what a sprite was drawn to sit ON, not only how bright it is.** The
+  kit's block sprite has a 55%-opaque centre because `CreateSquare` composites
+  it over an item — it is frost, not a block. An alpha histogram is ten lines
+  and answers "why does this icon look empty" that a luminance measurement
+  cannot. Same family as the rule below it.
+- **Only NONE and UNDESTROYABLE are permanent walls on a board.**
+  `Square.DestroyBlock` cascades into SOLIDBLOCK and THRIVING neighbours, so a
+  region fenced by wooden blocks opens up the moment a match lands beside them.
+  Any reachability claim has to use that rule: the loose version finds 114
+  levels with "isolated" cells where there are 24 real ones.
+- **Prove "pre-existing" instead of asserting it.** `git stash push -- <file>`,
+  rsync to the clone, re-run the gate, `git stash pop` — two minutes, and it
+  turns "unrelated, surely" into a fact worth writing in the report.
+- **Keep `json.dump`'s default `ensure_ascii`** when editing `ralph/prd.json`.
+  The file stores em dashes escaped; unescaping them is an 85-line diff of noise.
 - **Measure an icon against what it is drawn ON.** The kit's blocks icon is a
   perfectly legible ice tile in isolation and invisible on the HUD's cream card
   (0.77 luminance against 0.92). PIL over the PNG plus the card's own `Color` is
@@ -1207,4 +1222,92 @@ the harness stopped agreeing with the game about what "ended" means.
 - The kit's `AI.CheckPossibleCombines` is worth reading before trusting anything
   it drives: six unsynchronised start sites, one shared `gotTip`, and both its
   work and its re-arm behind `DragBlocked`.
+---
+
+## 2026-09-08 - US-011 - Play levels 33-48 and fix what they show
+
+Levels 33-48 swept in four foreground batches of 4 against a player built in the
+scratchpad clone. Every batch: 16/16 levels reached a won or lost end state,
+0 finding(s), 0 error(s) — before the fix and again after it. All 32 before-
+shots and 24 after-shots opened and read.
+
+**What the report could not see, and the pictures could**
+
+The BLOCKS target chip was a pale empty square with a number beside it, on 10 of
+the 16 levels in the band. US-010's F-012 had already been here and fixed the
+chip's *contrast* with a silhouette; what it did not fix is what the chip is a
+picture of.
+
+`Textures/Blocks/block.png` is not a picture of a block. Its centre is 55%
+opaque (alpha 141/255, measured with PIL), because `LevelManager.CreateSquare`
+parents `blockPrefab` to a square that still holds an item, at z -0.01 in front
+of it. On the board it is always a gem seen through ice. Drawn alone on the
+HUD's `RoyalCream` card it composites to nearly the card colour.
+
+`StoryLevelHud.HudTarget.Backing` puts the kit's own `Prefabs/Item` gem behind
+the icon, so the chip is the picture the board draws. Which of the six gems is
+measured rather than chosen: composited under the block on cream, item_01
+separates from the card by 0.274 of luminance against 0.113 for the bare block
+and 0.145..0.201 for the other five. On screen at 393 points that came out 0.288
+against 0.175, measured off level 33's own PNG before and after.
+
+It cannot be misread as a collect chip: across all 1208 target assets, not one
+of the 508 levels carrying a BLOCKS chip carries a bare-gem chip beside it —
+their other chip is always the star. 508 of 1208 is also the size of the fix.
+
+**Recorded, measured, deliberately not acted on**
+
+Level 45's board is a picture frame with one lone cell walled in by four holes,
+and that cell is one of the 62 blocks the level asks for. Counting over all 1208
+boards with only `00` (NONE) and `x6` (UNDESTROYABLE) treated as permanent —
+SOLIDBLOCK and THRIVING both go when a match lands beside them — 24 levels have
+a walled-in region under 3 cells: 45 and 97 of the kit's own 100, and 22
+generated. Level 45 is the kit's shipped board byte for byte, the cell yields to
+a stripped or a package, and the level ends normally. Written into
+ralph/findings.md as a linter rule waiting for a decision about the 22.
+
+**Files changed**
+- `Assets/JellyGarden/Scripts/Story/StoryLevelHud.cs` — `HudTarget.Backing`,
+  `BlockBacking`, `Slot.Backing` and its sync.
+- `Assets/JellyGarden/Scripts/Story/CLAUDE.md`, `ralph/findings.md`,
+  `ralph/prd.json`, `ralph/progress.txt`.
+
+**Checks**
+- `playtest_sweep.py --levels 33-36 / 37-40 / 41-44 / 45-48 --batch 4
+  --timeout 550` — 16 played, 0 findings, 0 errors. Re-run after the fix, same.
+- 32 before + 24 after screenshots opened.
+- `lint_levels.py` 0 problems in 1208 levels.
+- `check_vfx_intact.py` clean. `check_launch_args.py` clean.
+- `check_themes.py` 0 problems, 10 notes (F-003, the backdrops).
+- `dotnet build Story.Typecheck.csproj` 0 errors.
+- **RED, and red before this iteration:** `StorySmokeTest.RunAll` fails on
+  `expected 807 tasks, loaded 806` and `expected 1209 stars, loaded 1208`;
+  `StoryScreenTests.RunHeadless` fails five cases in the same family. Proven
+  pre-existing by stashing this iteration's one source change and re-running the
+  screen tests at HEAD in the clone: identical five failures. The constants come
+  from `22ddca8` under a previous PRD; CLAUDE.md and `validate_story.py` both
+  say 806/1208 is the truth. Left alone.
+
+**Learnings for future iterations**
+- **Ask what a sprite was drawn to sit ON, not just how bright it is.** F-012
+  measured the block icon's luminance and gave it a silhouette; the actual fact
+  about it is that its centre is 55% opaque, because the kit composites it over
+  an item. One `alpha` histogram would have said so in ten lines, and it is the
+  same class of question as "measure an icon against what it is drawn on".
+- **A clone build survives between iterations.** The scratchpad clone from a
+  previous session still had `Library/` warm; `rsync -a --delete Assets/` plus
+  one `StoryBuild.BuildMac` is about four minutes, and the built
+  `Assembly-CSharp.dll` timestamp is how you tell whether a sweep is testing
+  your change or the last one's.
+- **Prove "pre-existing" rather than asserting it.** `git stash push -- <file>`,
+  rsync, re-run the gate, `git stash pop` costs two minutes and turns "unrelated,
+  surely" into a fact.
+- **`json.dump(..., ensure_ascii=False)` rewrites the whole of `prd.json`.** The
+  file is stored with `—` escapes; unescaping them is an 85-line diff of
+  pure noise. Keep the default.
+- Only NONE and UNDESTROYABLE are permanent walls on a board.
+  `Square.DestroyBlock` cascades into SOLIDBLOCK and THRIVING neighbours, so a
+  region fenced by wooden blocks opens up as soon as a match lands beside them.
+  Any reachability claim about a board has to use that rule or it will find 114
+  false positives where there are 24 real questions.
 ---

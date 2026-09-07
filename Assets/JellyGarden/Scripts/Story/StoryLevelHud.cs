@@ -63,6 +63,19 @@ namespace JellyGarden.Scripts.Story
         public sealed class HudTarget
         {
             public Sprite Icon;
+
+            /// <summary>
+            /// What the icon is drawn ON TOP OF, or null for an icon that stands
+            /// on its own.
+            ///
+            /// The kit's block sprite is not a picture of a block: it is 55%
+            /// opaque frost that `CreateSquare` parents to a square which still
+            /// holds an item, so on the board it is always a gem seen through
+            /// ice. Alone on the HUD's cream card it composites to a pale empty
+            /// square — see <see cref="BlockBacking"/>.
+            /// </summary>
+            public Sprite Backing;
+
             public int Remaining;
             public bool Done;
 
@@ -152,6 +165,7 @@ namespace JellyGarden.Scripts.Story
         {
             public RectTransform Root;
             public Image Shadow;
+            public Image Backing;
             public Image Icon;
             public Text Count;
         }
@@ -581,6 +595,39 @@ namespace JellyGarden.Scripts.Story
                 model.Targets.Add(ScoreSlot(null, model.PassMark, score));
         }
 
+        /// <summary>
+        /// The gem a BLOCKS chip is drawn over: the kit's own first item sprite,
+        /// off the kit's own `Prefabs/Item`, so no new art enters the game and
+        /// the chip cannot drift from what the board draws.
+        ///
+        /// Which of the six is measured, not chosen. Composited under
+        /// `Textures/Blocks/block.png` on RoyalCream, item_01 separates from the
+        /// card by 0.274 of luminance against 0.113 for the bare block and 0.145
+        /// to 0.201 for the other five. On screen at 393 points that came out as
+        /// 0.288 against 0.175 (level 33's chip, measured off the sweep's PNGs).
+        ///
+        /// It cannot be mistaken for a collect chip of the same gem: across all
+        /// 1208 target assets, not one of the 508 levels carrying a BLOCKS chip
+        /// carries a bare-gem chip beside it. Their other chip is always the star.
+        /// </summary>
+        private static Sprite _blockBacking;
+        private static bool _blockBackingLoaded;
+
+        public static Sprite BlockBacking
+        {
+            get
+            {
+                if (_blockBackingLoaded) return _blockBacking;
+                _blockBackingLoaded = true;
+                var prefab = Resources.Load<GameObject>("Prefabs/Item");
+                if (prefab == null) return null;
+                var item = prefab.GetComponent<Item>();
+                if (item == null || item.items == null || item.items.Length == 0) return null;
+                _blockBacking = item.items[0];
+                return _blockBacking;
+            }
+        }
+
         private static HudTarget Slotify(TargetObject target, int star1, int score)
         {
             if (target.type != Target.SCORE)
@@ -588,6 +635,13 @@ namespace JellyGarden.Scripts.Story
                 return new HudTarget
                 {
                     Icon = target.icon,
+                    // The board never shows an empty block. `CreateSquare`
+                    // instantiates blockPrefab as a child of a square that still
+                    // holds an item, at z -0.01 in front of it, and the sprite is
+                    // 55% opaque — so what the player breaks is a gem under ice.
+                    // The chip drew the ice on its own and read as a blank box
+                    // with a number beside it, on 508 of the 1208 levels.
+                    Backing = target.type == Target.BLOCKS ? BlockBacking : null,
                     Remaining = Mathf.Max(0, target.GetCount()),
                     Done = target.Done()
                 };
@@ -716,6 +770,12 @@ namespace JellyGarden.Scripts.Story
                     _slots[i].Shadow.enabled = target.Icon != null;
                 }
 
+                if (_slots[i].Backing.sprite != target.Backing)
+                {
+                    _slots[i].Backing.sprite = target.Backing;
+                    _slots[i].Backing.enabled = target.Backing != null;
+                }
+
                 // A finished target goes green rather than gaining a tick: the
                 // kit's font is not guaranteed to carry a check glyph, and a
                 // missing glyph renders as nothing at all.
@@ -744,6 +804,12 @@ namespace JellyGarden.Scripts.Story
             // showed. A silhouette of the icon's own sprite gives any pale icon
             // an edge without touching the kit's art, and sits under the darker
             // ones where it reads as the depth the reference panel has.
+            //
+            // The silhouette gave the block chip an EDGE; it did not give it a
+            // subject, and levels 33..48 showed it still reading as a blank box
+            // beside a number. `Slot.Backing` is the other half: the block
+            // sprite is 55% opaque frost, so the chip now draws it over a gem
+            // the way the board always has.
             slot.Shadow = StoryUi.CreateImage("IconShadow", root, null,
                 new Color(StoryUi.RoyalNavy.r, StoryUi.RoyalNavy.g, StoryUi.RoyalNavy.b, 0.55f));
             slot.Shadow.preserveAspect = true;
@@ -753,6 +819,18 @@ namespace JellyGarden.Scripts.Story
             shadow.anchorMax = new Vector2(1f, 1f);
             shadow.offsetMin = new Vector2(IconShadowStep * _scale, -IconShadowStep * _scale);
             shadow.offsetMax = new Vector2(IconShadowStep * _scale, -IconShadowStep * _scale);
+
+            // What the icon sits on, between the shadow and the icon. Only a
+            // BLOCKS chip fills this in; see HudTarget.Backing.
+            slot.Backing = StoryUi.CreateImage("IconBacking", root, null, Color.white);
+            slot.Backing.preserveAspect = true;
+            slot.Backing.raycastTarget = false;
+            slot.Backing.enabled = false;
+            RectTransform backing = slot.Backing.rectTransform;
+            backing.anchorMin = new Vector2(0f, 0.34f);
+            backing.anchorMax = new Vector2(1f, 1f);
+            backing.offsetMin = Vector2.zero;
+            backing.offsetMax = Vector2.zero;
 
             slot.Icon = StoryUi.CreateImage("Icon", root, null, Color.white);
             slot.Icon.preserveAspect = true;

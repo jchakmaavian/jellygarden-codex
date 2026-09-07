@@ -686,6 +686,16 @@ kit's score bar. Four things about it are not obvious:
   step down and right (`IconShadowStep`, navy at 0.55), which gives a pale icon
   an edge and a dark one depth, without editing a single kit texture. Any new
   chip artwork gets this for free; do not solve it per icon.
+- **The kit's block sprite is not a picture of a block — it is 55% opaque
+  frost.** `CreateSquare` parents `blockPrefab` to a square that still holds an
+  item, so on the board it is always a gem seen through ice. Drawn alone on the
+  HUD's cream card it composites to a pale empty square: an edge (from the
+  silhouette above) around nothing. `HudTarget.Backing` is the other half — a
+  BLOCKS chip draws the kit's own `Prefabs/Item` gem behind the icon, the way
+  the board always has. Which gem is measured, not chosen: item_01 separates
+  from the card by 0.288 on screen against 0.175 for the bare block, and no
+  level in the game carries a BLOCKS chip beside a bare-gem chip, so it cannot
+  be read as a collect target. 508 of the 1208 levels draw this chip.
 
 ## The board can run out of moves and the kit can miss it
 
