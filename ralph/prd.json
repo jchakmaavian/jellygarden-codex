@@ -98,8 +98,8 @@
         "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "tools/lint_levels.py. 1208 levels in 0.15s. It finds 37 problems in 37 levels, which US-007 has to clear: 23 x MODE 3 with a BLOCKS target of 0 on a board that carries 18 or 176 blocks (28, 35, 783, 790, 832, 870, 877, 891, 900, 907, 912, 960, 963, 976, 1005, 1007, 1015, 1021, 1023, 1029, 1046, 1074, 1098); 12 x a COLLECT target for colour 4 where COLOR LIMIT is 4, so the item never spawns and the level is unwinnable (136, 155, 201, 206, 237, 315, 323, 337, 344, 350, 523, 524); 2 x an INGREDIENT target of 0 (15, 105). Nothing else fires: sizes, star order, limits, colour limits, cell digits and score/star agreement are all clean across the 1208. Target assets carry the count under either 'targetCount' or the pre-rename 'count' — both spellings are live in the shipped data."
     },
     {
       "id": "US-007",

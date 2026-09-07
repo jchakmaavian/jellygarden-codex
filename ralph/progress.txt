@@ -53,6 +53,27 @@ Started: 2026-09-07
   any finding. Everything for a run lands in
   `~/Library/Application Support/DefaultCompany/King Leo/sweeps/<timestamp>/`.
   Its exit code is not a verdict on a band: open `<run>/shots/` and look.
+- **A level is two files, and they must agree.** `Resources/Levels/<n>.txt` is
+  the board and the header; `Resources/Targets/Level<n>.asset` is the goal. The
+  txt's MODE only names the goal — what the game actually enforces is the asset's
+  `targets` array (`TargetObject.Done()`). A level can therefore say MODE 3 and
+  carry a BLOCKS target of 0 and be won without touching a block.
+  `python3 tools/lint_levels.py` reads both and reports the disagreements in
+  0.2s. Run it before a band sweep.
+- **The goal count is spelled two ways in the shipped assets.** `targetCount`
+  (2569 entries) and the pre-rename `count` (221 entries), both live because of
+  `[FormerlySerializedAs]`. Anything that parses a Target asset must accept both
+  or it will silently read no goal at all.
+- **The kit ignores cell digits it does not know.** A cell is two digits,
+  `block` then `obstacle`. `CreateSquare` branches only on 0 NONE / 1 EMPTY /
+  2 BLOCK / 5 DOUBLEBLOCK, and any other first digit leaves an empty square AND
+  skips `CreateObstacles` entirely; `CreateObstacles` branches only on 0 / 3
+  WIREBLOCK / 4 SOLIDBLOCK / 6 UNDESTROYABLE / 7 THRIVING. Nothing throws — the
+  cell just quietly loses what it was meant to hold.
+- **Item colours are `Random.Range(0, colorLimit)`.** A COLLECT target whose
+  `color` is >= the level's COLOR LIMIT names an item that can never spawn, so
+  the level is unwinnable and the playtest just runs out of moves.
+
 - **`open -a` cannot be waited on**, so a sweep cannot time a run out through
   it. `tools/run_player.sh --exec` runs the binary inside the bundle in the
   FOREGROUND instead, with the same flags. Launch a batch in its own session
@@ -601,3 +622,65 @@ One helper each side of the boundary, and a linter holding them together.
   win popup, a missing HUD and a black room in. The sweep is the cheap half of a
   band story; opening `<run>/shots/` is the other half and is not optional.
 ---
+
+## 2026-09-07 - US-006
+- Wrote `tools/lint_levels.py`: a static linter over all 1208 levels that reads
+  each board beside its goal asset and reports the levels that contradict
+  themselves. One line per problem as `<level>: <problem>`, non-zero exit when
+  there is at least one, 0.15s for the whole game (`--levels 1-16` for a band,
+  `--quiet` for counts only).
+- Every rule is anchored to a line of the kit, not to taste. Read the kit first
+  and only then wrote the checks: `ProcessGameDataFromString` (header + the two
+  digits of a cell), `CreateSquare` / `CreateObstacles` (which digits are
+  understood), the board build (`TargetBlocks = BLOCK + 2 * DOUBLEBLOCK`),
+  `Item.GenItem` (`Random.Range(0, colorLimit)`), `TargetObject.Done()`,
+  `CheckStars`, `LevelMakerEditor` (COLOR LIMIT clamped 3..6).
+- It finds 37 problems in 37 levels. US-007 has to clear them:
+  - 23 levels are MODE 3 with a BLOCKS target of 0 while the board carries 18 or
+    176 blocks — a blocks level won without touching a block.
+  - 12 levels have a COLLECT target for colour 4 where COLOR LIMIT is 4. That
+    colour never spawns; the level is unwinnable and a playtest can only report
+    "ran out of moves".
+  - 2 levels have an INGREDIENT target of 0.
+  - Nothing else fires. Sizes, star order, limits, colour limits, cell digits,
+    score-vs-first-star and MODE-vs-asset are clean across the other 1171.
+- Files changed: `tools/lint_levels.py` (new), `CLAUDE.md`, `tools/README.md`,
+  `ralph/prd.json`, `ralph/progress.txt`.
+- Checks: `lint_levels.py` self-tested against 18 synthetic levels in the
+  scratchpad (one per rule, plus a clean control) — all 18 fire as intended;
+  `check_vfx_intact.py` clean; `check_launch_args.py` clean;
+  `validate_story.py` "All checks passed." (150/806/1208/1208);
+  `dotnet build Story.Typecheck.csproj` 0 errors.
+- `ralph/findings.md`: F-001..F-005 are all about what a screenshot shows (win
+  popup skin, missing HUD, dark blurred room, shots taken under the tutorial
+  overlay, and the rule that a report is not a verdict). None of them is inside
+  a static linter, so none is ticked off this iteration. They stay OPEN.
+- **Learnings for future iterations:**
+  - The kit's win condition lives in the ASSET, not in the txt. `MODE` in the
+    level file is a label; `CheckWinLose` only ever asks the asset's targets
+    whether they are `Done()`. Any reasoning about "what is this level's goal"
+    has to read `Resources/Targets/Level<n>.asset`.
+  - `targetCount` and `count` are both live spellings in the shipped assets
+    (`[FormerlySerializedAs]`). A parser that only knows one of them reads 221
+    levels as having no goal — which is exactly the false-clean a linter must
+    not produce. My first survey pass did precisely this.
+  - The first `STARS` threshold and the asset's SCORE target are the same
+    number twice: `CheckWinLose` compares `Score >= star1` when the moves run
+    out, and the SCORE `TargetObject` holds the same pass mark. They agree on
+    all 1208 today; anything that edits one has to edit the other.
+  - `ProcessGameDataFromString` splits on "\n" with `RemoveEmptyEntries`, so a
+    blank line in a board file is invisible to the kit. A parser that keeps
+    blank lines will count them as rows and report a phantom SIZE mismatch.
+  - `COLLECT COUNT` is read for EVERY mode, `COLLECT ITEMS` only for MODE 1 and
+    2. So `COLLECT COUNT` being non-zero on a MODE 1 level is normal kit
+    convention, not a fault — an early version of the linter flagged all 260
+    collect levels because of this. Verify a rule against the shipped data
+    before shipping it: 260 hits means the rule is wrong, not the data.
+  - Ingredients spawn from `Item.GenItem` off the presence of an INGREDIENT
+    target in the ASSET, not off `MODE 2`. So the 27 levels that are MODE 1 with
+    an ingredient target in the asset really do work, and are not a fault.
+  - Don't lint what you cannot anchor. `COLLECT ITEMS` vs the asset's `color`
+    looked like a 45-level fault, but the `CollectItems` enum is only ever used
+    for the PrePlay display and the id-to-colour mapping is a guess. Left out.
+---
+

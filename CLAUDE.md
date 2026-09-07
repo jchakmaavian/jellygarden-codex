@@ -76,6 +76,24 @@ python3 tools/playtest_sweep.py --levels 1-16 --batch 4
 Zero findings does not mean the band is good — nothing automated here can see a
 layout. Open the run's `shots/` and look.
 
+## Linting levels
+
+`tools/lint_levels.py` reads every board and its goal asset and reports the
+levels that contradict themselves — without playing them. Every rule is
+anchored to a line of the kit (which cell digits `CreateSquare` understands,
+`TargetBlocks = BLOCK + 2 * DOUBLEBLOCK`, colours are `Random.Range(0,
+colorLimit)`, `COLOR LIMIT` clamped to 3..6), so a finding is a real fault, not
+taste.
+
+```bash
+python3 tools/lint_levels.py                 # every level, ~0.2s
+python3 tools/lint_levels.py --levels 1-16   # one band
+```
+
+One line per problem as `<level>: <problem>`; non-zero exit when there is at
+least one. Run it before a band sweep — it catches unwinnable goals in a
+fraction of a second that a playtest would take an hour to reach.
+
 ## Regenerating the story
 
 The markdown is the source of truth. After editing it, re-run the pipeline in

@@ -205,3 +205,37 @@ player (the default) or `King Leo > Preview > Playtest the band file`.
 not work here: the window cascades to a new position on every launch and Unity
 moves it again after start, so screen coordinates go stale between reading them
 and clicking. The driver walks the game through its own API instead.
+
+## Linting a level before playing it
+
+```bash
+python3 tools/lint_levels.py                 # every level, ~0.2s
+python3 tools/lint_levels.py --levels 1-16   # one band
+python3 tools/lint_levels.py --quiet         # counts only
+```
+
+`lint_levels.py` is the static half of the sweep: it reads
+`Resources/Levels/<n>.txt` beside `Resources/Targets/Level<n>.asset` and reports
+levels that contradict themselves, without launching Unity. One line per problem
+as `<level>: <problem>`, non-zero exit when there is at least one.
+
+Every rule is anchored to a line of the kit rather than to taste, so a finding is
+a real fault:
+
+| what it flags | why the kit makes it a fault |
+| --- | --- |
+| `SIZE` against the grid actually written | `ProcessGameDataFromString` indexes `mapLine * maxCols + i` and runs off the array |
+| a cell that is not two digits, or a block digit outside `0/1/2/5` | `CreateSquare` branches on NONE/EMPTY/BLOCK/DOUBLEBLOCK only; anything else leaves an empty square and never calls `CreateObstacles` |
+| an obstacle digit outside `0/3/4/6/7` | `CreateObstacles` branches on WIREBLOCK/SOLIDBLOCK/UNDESTROYABLE/THRIVING only |
+| `LIMIT` of 0, moves or time | `CheckWinLose` fails the level on the first check |
+| `COLOR LIMIT` outside 3..6 | `LevelMakerEditor` clamps the slider to that range |
+| `STARS` not strictly ascending | the three thresholds are compared in order in `CheckStars` |
+| a `BLOCKS` target above the board's blocks | the board builds `TargetBlocks = BLOCK + 2 * DOUBLEBLOCK`; a higher goal can never be spent |
+| a `BLOCKS` target of 0 on a board with blocks | `TargetObject.Done()` is already true, so a blocks level is won without touching a block |
+| a `COLLECT` target whose colour is `>= COLOR LIMIT` | `Item.GenItem` picks `Random.Range(0, colorLimit)`, so that colour never spawns |
+| a `SCORE` target that disagrees with the first star | both are the pass mark; they must be the same number |
+| no `SCORE` target at all | a level run out of moves has nothing to check against |
+| `MODE` whose `Target` value is absent from the asset | the mode names a goal the level does not carry |
+
+It does not judge difficulty and it cannot see a layout — that is still
+`playtest_sweep.py` and your eyes.
