@@ -62,6 +62,20 @@ tools/run_player.sh -storyplaytest  # play levels by itself and report
 tools/run_player.sh -storydemo      # walk the story loop, shot at each beat
 ```
 
+## Sweeping levels
+
+`tools/playtest_sweep.py` plays a band in batches, kills a batch that hangs, and
+prints every finding grouped by level. Reports and screenshots land under
+`~/Library/Application Support/DefaultCompany/King Leo/sweeps/<timestamp>/`.
+
+```bash
+python3 tools/playtest_sweep.py --levels 1-16           # batches of 8
+python3 tools/playtest_sweep.py --levels 1-16 --batch 4
+```
+
+Zero findings does not mean the band is good — nothing automated here can see a
+layout. Open the run's `shots/` and look.
+
 ## Regenerating the story
 
 The markdown is the source of truth. After editing it, re-run the pipeline in

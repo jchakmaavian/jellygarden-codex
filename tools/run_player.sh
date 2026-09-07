@@ -17,6 +17,13 @@
 #   tools/run_player.sh -storyselftest
 #   tools/run_player.sh --print-args       # the flags, for a script that must
 #                                          # build its own command line
+#   tools/run_player.sh --exec -storyplaytest
+#                                          # same launch, but in the FOREGROUND:
+#                                          # runs the binary inside the bundle so
+#                                          # the caller owns the process and can
+#                                          # time it out and kill it. `open -a`
+#                                          # returns the moment the app starts,
+#                                          # which a sweep cannot wait on.
 #
 # KINGLEO_APP overrides the app bundle, for a release build kept elsewhere.
 
@@ -31,6 +38,12 @@ if [[ "${1:-}" == "--print-args" ]]; then
     exit 0
 fi
 
+FOREGROUND=0
+if [[ "${1:-}" == "--exec" ]]; then
+    FOREGROUND=1
+    shift
+fi
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP="${KINGLEO_APP:-$ROOT/Builds/Mac/KingLeo.app}"
 
@@ -40,6 +53,24 @@ if [[ ! -d "$APP" ]]; then
     echo "  \"\$UNITY\" -batchmode -quit -nographics -projectPath . -logFile - \\" >&2
     echo "    -executeMethod JellyGarden.Scripts.Story.Editor.StoryBuild.BuildMac" >&2
     exit 1
+fi
+
+if [[ "$FOREGROUND" == "1" ]]; then
+    # The bundle holds exactly one executable and its name is the product name,
+    # which has changed once already ("Match3 Games" -> "King Leo"), so it is
+    # found rather than spelled out.
+    BIN=""
+    for candidate in "$APP/Contents/MacOS/"*; do
+        [[ -x "$candidate" && -f "$candidate" ]] && BIN="$candidate"
+    done
+
+    if [[ -z "$BIN" ]]; then
+        echo "no executable inside $APP/Contents/MacOS" >&2
+        exit 1
+    fi
+
+    echo "running $BIN ${LAUNCH_ARGS[*]} $*"
+    exec "$BIN" "${LAUNCH_ARGS[@]}" "$@"
 fi
 
 echo "launching $APP ${LAUNCH_ARGS[*]} $*"

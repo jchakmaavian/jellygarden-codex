@@ -82,8 +82,8 @@
         "Typecheck passes: python3 tools/make_typecheck_csproj.py && dotnet build Story.Typecheck.csproj -v q --nologo"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "tools/playtest_sweep.py; run_player.sh gained --exec (foreground launch, so a batch can be timed out and killed). Verified on --levels 1-4 --batch 2 (exit 0, 8 shots at 786x1704) and --levels 5 --timeout 20 (hung, exit 1)."
     },
     {
       "id": "US-006",

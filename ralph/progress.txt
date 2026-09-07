@@ -43,6 +43,22 @@ Started: 2026-09-07
   2160x3840, the right superSize and the WRONG aspect — measure a layout off a
   player run, never off an Editor one.
 
+- **Rewrite `ralph/prd.json` with `ensure_ascii=False`.** Python's default
+  escapes every em dash to `\u2014` and turns a two-line story update into an
+  80-line diff.
+- **A band of levels is one command: `python3 tools/playtest_sweep.py --levels
+  1-16`.** It runs the built player in batches of 8, kills a batch that writes
+  no report inside its timeout and lists it as hung, moves each batch's PNGs
+  aside before the next batch renumbers them from 0001, and exits non-zero on
+  any finding. Everything for a run lands in
+  `~/Library/Application Support/DefaultCompany/King Leo/sweeps/<timestamp>/`.
+  Its exit code is not a verdict on a band: open `<run>/shots/` and look.
+- **`open -a` cannot be waited on**, so a sweep cannot time a run out through
+  it. `tools/run_player.sh --exec` runs the binary inside the bundle in the
+  FOREGROUND instead, with the same flags. Launch a batch in its own session
+  (`start_new_session=True`) and kill the process group — a killed Unity leaves
+  children holding the project lock otherwise.
+
 - **A `[MenuItem]` that is also a `-executeMethod` entry point must not call
   `EditorApplication.Exit`.** `JellyGarden > Story > Build macOS Player` did,
   and closed the user's Editor the moment the build succeeded. `StoryBuild` now
@@ -527,4 +543,61 @@ One helper each side of the boundary, and a linter holding them together.
   member names are ASCII but the string blob is not plainly UTF-16. To prove a
   recompile landed, compare `Library/ScriptAssemblies/Assembly-CSharp.dll`'s
   mtime against every source file you edited.
+---
+
+## 2026-09-07 - US-005 - One command sweeps a band of levels and prints the findings
+
+`tools/playtest_sweep.py`, plus the one launcher change it needed.
+
+- **`tools/run_player.sh --exec`** is new: same flags, but it runs the
+  executable inside the bundle in the foreground rather than handing the bundle
+  to `open -a`, which returns the instant the app starts and leaves nothing to
+  wait on or kill. The executable is *found* inside `Contents/MacOS/` rather
+  than named, because the product name has already changed once
+  ("Match3 Games" -> "King Leo"). The flags stay in the one place, so
+  `check_launch_args.py` still passes.
+- **`tools/playtest_sweep.py`** takes `--levels` (`1-16`, `1,5,9`, `1-4,20`),
+  `--batch` (default 8), `--timeout` (default 90s + 75s per level) and
+  `--headless`. Per batch it deletes the stale report and shot directory, arms
+  the run with `-playtestLevels=`, polls for the report, and kills the process
+  group at the deadline. It prefers the built player and falls back to a
+  batchmode `StoryPlaytestRunner.RunHeadless` when `Builds/Mac/KingLeo.app` is
+  missing (honouring `KINGLEO_APP`, as the launcher does).
+- Each run gets `sweeps/<timestamp>/` under the persistent data path, holding
+  `batch_NNN.txt` (the report), `batch_NNN.log` (stdout) and `shots/` with every
+  PNG prefixed `b001_`. That prefix is load-bearing: every run numbers its shots
+  from 0001, so without it batch 2 lands on batch 1's filenames.
+- The final block prints every `FINDING:` line grouped by level, the hung
+  batches with their level numbers, the error count and both directories, and
+  exits 1 if anything was found.
+- `tools/README.md` gained a "Sweeping a band of levels" section and root
+  `CLAUDE.md` a short one, both saying plainly that zero findings is not a good
+  band — the shots still have to be looked at (findings.md F-005).
+
+**Verified by running it:**
+- `--levels 1-4 --batch 2` on the built player: two batches, 77s and 93s, both
+  `SUMMARY: 2 level(s) played, 1 won, 1 lost, 0 finding(s), 0 error(s).`,
+  exit 0, 8 PNGs kept — `b001_0001_level_1_start.png` measured **786x1704**, and
+  batch 2's own `0001` sat beside it as `b002_0001_level_3_start.png` rather
+  than over it.
+- `--levels 5 --timeout 20`: killed at 20s, printed
+  `- levels 5: hung`, exit **1**, and `pgrep -fl "King Leo"` found nothing
+  afterwards — the process group died with it.
+- Bad input exits 2 with a reason (`range runs backwards: 3-1`; no Unity for a
+  `--headless` run).
+- `dotnet build Story.Typecheck.csproj` 0 errors; `check_vfx_intact.py` clean;
+  `check_launch_args.py` passes; `validate_story.py` 1208 boards, all checks
+  passed.
+
+**Learnings for future iterations:**
+- Levels 2 and 4 are LOST by the playtest, not won, with 0 findings and 0
+  errors. That is the harness giving up on a level it cannot beat (US-002), not
+  a fault — do not read "lost" in a sweep report as a bug on its own.
+- A batch takes roughly 35-45s per level end to end on the built player, so a
+  16-level band is about 10 minutes and the whole 1208 is around 13 hours of
+  wall clock. Bands are the right unit; do not try to sweep more at once.
+- `findings.md` F-001..F-004 are all VISUAL and every one of them was invisible
+  to this sweep: it printed 0 findings on the same levels a human found a kit
+  win popup, a missing HUD and a black room in. The sweep is the cheap half of a
+  band story; opening `<run>/shots/` is the other half and is not optional.
 ---

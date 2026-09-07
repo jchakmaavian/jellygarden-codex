@@ -171,6 +171,36 @@ fails if those two ever disagree, if any other file spells the flags out for
 itself, or if a screenshot is taken by anything but `StoryWindow.Capture`
 (which renders at superSize 2, so a 393-point-wide shot is readable).
 
+## Sweeping a band of levels
+
+One command, not a hand-built Unity invocation per band:
+
+```bash
+python3 tools/playtest_sweep.py --levels 1-16          # batches of 8
+python3 tools/playtest_sweep.py --levels 1-16 --batch 4
+python3 tools/playtest_sweep.py --levels 1,5,9 --timeout 200
+python3 tools/playtest_sweep.py --levels 1-8 --headless   # batchmode Editor, no shots
+```
+
+It runs the built player through `tools/run_player.sh --exec` — the foreground
+launch, so the sweep owns the process and can kill it — and falls back to a
+batchmode Editor running `StoryPlaytestRunner.RunHeadless` when there is no
+player. A batch that does not write a report inside its timeout is killed and
+listed as hung, naming its levels, so one bad level cannot stall the sweep.
+
+Every batch gets its own report, log and PNGs under one run directory in
+`~/Library/Application Support/DefaultCompany/King Leo/sweeps/<timestamp>/`.
+The shots are moved there between batches and prefixed `b001_`, because each
+run numbers its own shots from 0001 and would otherwise overwrite the last one.
+
+It exits non-zero if there was any finding or any hung batch. **Zero findings is
+not the same as a good band**: nothing here can see a layout. Open
+`<run>/shots/` and look at the pictures.
+
+A batchmode Editor cannot take the project lock while your own Editor holds it,
+so `--headless` needs the Editor closed. With the Editor open, use the built
+player (the default) or `King Leo > Preview > Playtest the band file`.
+
 `-storydemo` exists because driving the player with synthetic mouse clicks does
 not work here: the window cascades to a new position on every launch and Unity
 moves it again after start, so screen coordinates go stale between reading them
