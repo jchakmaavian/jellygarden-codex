@@ -679,6 +679,18 @@ kit's score bar. Four things about it are not obvious:
   it. Levels 49..64 are where it was measured; it is on every plate carrying a
   score chip beside a count. Anything else added to a slot has the same trap:
   size it from the plate, not from the slot it happens to sit in.
+- **A slot's width is not a gap between slots either.** Each chip's number is
+  best-fit and centred in its own slot, so the only thing holding two of them
+  apart is whatever slack each has left over — and a two-digit count in a slot a
+  quarter of a 100-point card wide has none. Level 65 asks for 25 and 15 and the
+  plate read `2515`: 6 points between the chips against 3 between the digits
+  inside `25`. `SizeCountBox` keeps a `CountGutter` clear on each side of a
+  number whenever the plate carries more than one chip, which is about one
+  digit's advance per boundary. **Both sides or neither** — gutting only the
+  sides facing a neighbour made the first chip's box wider than the second's and
+  best-fit then drew `25` larger than the `15` beside it, which is the same
+  fault `SizeIconBox` exists to prevent. A single-chip plate keeps its full
+  width. Levels 65, 68, 69, 75 and 78 are where it was measured.
 - **Never reorder the target slots.** `AimKitIconsAtThisHud` matches the kit's
   `TargetIcon`s to this HUD's slots by index, so the model must keep
   `LevelManager.targetObject` order or the collect animation flies to the wrong

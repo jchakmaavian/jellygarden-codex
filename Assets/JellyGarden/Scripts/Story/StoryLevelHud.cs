@@ -147,6 +147,24 @@ namespace JellyGarden.Scripts.Story
         /// in the same 1080-wide design units as everything else on the strip.</summary>
         private const float IconShadowStep = 6f;
 
+        /// <summary>
+        /// How much of a slot a target's NUMBER gives up on a side that has
+        /// another chip beside it, in 1080-wide design units.
+        ///
+        /// Each number is centred in its own slot, so the only thing keeping two
+        /// of them apart is whatever slack each has left over. A two-digit count
+        /// has almost none: measured off level 65's own screenshot at 393 points
+        /// wide, "25" and "15" sat 6 pixels apart while the digits INSIDE "25"
+        /// sat 3 apart, so the plate read "2515". Level 69 ("15 35") was worse at
+        /// 5 against 5, and level 78 ("20 25") the same.
+        ///
+        /// Two of these — one from each side of a boundary — are 26 design units,
+        /// which is 9.5 points at 393 wide: about one digit's advance, measured
+        /// as 11 points off the same shot. A gap a digit wide is the typographic
+        /// minimum for two numbers that are not one number.
+        /// </summary>
+        private const float CountGutter = 13f;
+
         /// <summary>The portrait in the middle of the strip. King Leo's game.</summary>
         public const string PortraitCharacter = "leo";
 
@@ -175,6 +193,13 @@ namespace JellyGarden.Scripts.Story
             /// "not applied yet". See <see cref="SizeIconBox"/>.
             /// </summary>
             public float IconFrac = -1f;
+
+            /// <summary>
+            /// The gutter currently held clear on each side of this slot's
+            /// number, in canvas units. NaN means "not applied yet".
+            /// See <see cref="SizeCountBox"/>.
+            /// </summary>
+            public float Gutter = float.NaN;
         }
 
         private readonly List<Slot> _slots = new List<Slot>();
@@ -785,6 +810,14 @@ namespace JellyGarden.Scripts.Story
 
                 SizeIconBox(_slots[i], narrowest / Mathf.Max(0.0001f, weight));
 
+                // Both sides or neither, never one. Gutting only the sides that
+                // face a neighbour left the first chip a wider box than the
+                // second, and best-fit then drew "25" visibly larger than the
+                // "15" beside it — the same "one plate, two sizes" fault
+                // SizeIconBox exists to prevent. A single-chip plate has nothing
+                // to run into and keeps its full width.
+                SizeCountBox(_slots[i], count > 1);
+
                 HudTarget target = targets[i];
                 if (_slots[i].Icon.sprite != target.Icon)
                 {
@@ -926,6 +959,28 @@ namespace JellyGarden.Scripts.Story
             AnchorHorizontally(slot.Icon, min, max);
             AnchorHorizontally(slot.Shadow, min, max);
             AnchorHorizontally(slot.Backing, min, max);
+        }
+
+        /// <summary>
+        /// Keeps a <see cref="CountGutter"/> of the slot clear on each side of a
+        /// number when it shares the plate, so two numbers can never meet.
+        ///
+        /// The number is best-fit and centred, so narrowing its box does one of
+        /// two things and both are wanted: a number that had slack simply moves
+        /// away from the boundary, and one that filled its slot shrinks until it
+        /// fits inside the gutter. Nothing else in the slot moves — the icon is
+        /// centred by <see cref="SizeIconBox"/> and the slot itself still holds
+        /// the width <see cref="SlotWeight"/> gave it.
+        /// </summary>
+        private void SizeCountBox(Slot slot, bool shared)
+        {
+            float gutter = shared ? CountGutter * _scale : 0f;
+            if (Mathf.Approximately(slot.Gutter, gutter)) return;
+            slot.Gutter = gutter;
+
+            RectTransform rect = slot.Count.rectTransform;
+            rect.offsetMin = new Vector2(gutter, rect.offsetMin.y);
+            rect.offsetMax = new Vector2(-gutter, rect.offsetMax.y);
         }
 
         /// <summary>Narrows an icon layer to a horizontal band of its slot, keeping

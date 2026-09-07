@@ -219,8 +219,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Swept 65-80 in four foreground batches of 4 against a player built from a scratchpad clone: 0 finding(s), 0 error(s) in all four, twice (before and after the fix). All 32 before and all 32 after screenshots opened. Found and fixed F-016: two target chips read as one number \u2014 level 65's \"25\" and \"15\" sat 6 points apart while the digits inside \"25\" sat 3 apart, so the plate read \"2515\"; levels 69 and 78 were the same and 68 and 75 marginal. StoryLevelHud.SizeCountBox keeps a CountGutter clear on each side of a number when the plate carries more than one chip \u2014 about one digit's advance per boundary, both sides or neither so the chips stay one size. Chip boundaries now measure 12-19 points against 1-5 inside a number. Gates: typecheck 0 errors, check_vfx_intact clean, check_launch_args clean, lint_levels 0 problems in 1208 levels, check_themes 0 problems / 10 notes (F-003, the backdrops)."
     },
     {
       "id": "US-014",

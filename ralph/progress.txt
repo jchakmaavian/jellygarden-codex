@@ -12,6 +12,20 @@ Started: 2026-09-07
   the MIN of its box's two sides, so a narrow box is width-limited and a wide one
   height-limited and two chips that both "fit" come out different sizes. When a
   weight is added, ask what else in that slot is anchored 0..1.
+- **A layout rule about a slot says nothing about the boundary between two
+  slots.** `SlotWeight` sized the slot and `SizeIconBox` sized the icon in it,
+  and two adjacent numbers still met because nothing owned the gap: level 65's
+  "25 15" read as "2515". `SizeCountBox` is the third rule and it is about the
+  boundary. When a row is split by weight, ask separately what keeps neighbours
+  apart — and give the rule to BOTH sides of every slot, or best-fit draws the
+  same number at two sizes across one plate.
+- **Measure a typographic fault in pixels, both ways.** "Reads as one number" is
+  a fact the moment the gap BETWEEN two numbers is compared with the gap between
+  digits INSIDE one. 6 against 3 is the fault; 12 against 2 is the fix. A glyph-
+  run scan over the number band of the PNG is fifteen lines and gives both.
+- **The HUD's target card is 100 pixels wide at 393.** Three chips get 25, 25
+  and 50 of it (`SlotWeight` 1:1:2), and one design unit is 0.364 of a point.
+  Answer any HUD layout question against those numbers.
 - **Diff a band against `tools/shipped_levels/` and `tools/shipped_targets/`
   before arguing about its difficulty.** Levels 1-100 are the kit's own data;
   a pass mark or a board shape in that range is the asset that was bought, not
@@ -1372,4 +1386,55 @@ ralph/findings.md as a linter rule waiting for a decision about the 22.
     `GetBottomRow`) settles in five minutes what a sweep cannot.
   - Reuse a previous iteration's scratchpad clone: `rsync -a --delete Assets/`
     into it and rebuild in ~40s, instead of re-cloning Library.
+---
+
+## 2026-09-08 - US-013 - Play levels 65-80 and fix what they show
+- Swept 65-80 in four foreground batches of 4 against a player built from the
+  scratchpad clone: `0 finding(s), 0 error(s)` in all four, twice (before and
+  after the fix). Opened all 32 before-shots and all 32 after-shots.
+- All sixteen carry the kit's shipped target asset; eight (66, 67, 68, 69, 71,
+  75, 76, 78) are the kit's shipped board byte for byte and the other eight
+  differ only where US-007's linter replaced cell digit `17` with `10`.
+- Found and fixed F-016: **two target chips read as one number.** Level 65 asks
+  for 25 of one gem and 15 of another and the plate read `2515` — 6 points
+  between the two chips against 3 between the digits inside `25`, measured off
+  its own 393-point screenshot. Levels 69 (`15 35`, 5 against 5) and 78
+  (`20 25`, 5 against 3) were the same; 68 and 75 were marginal at 7 against 5.
+  A number is best-fit and CENTRED in its own slot, so the only thing keeping
+  two apart is leftover slack, and a two-digit count in a quarter of a
+  100-point card has none.
+- `StoryLevelHud.SizeCountBox` keeps a `CountGutter` (13 design units) clear on
+  each side of a number whenever the plate carries more than one chip. Two of
+  those per boundary is 9.5 points at 393 wide — about one digit's advance,
+  measured at 11 points off the same shot. **Both sides or neither:** the first
+  version gutted only the sides facing a neighbour, which gave chip 1 a wider
+  box than chip 2 and best-fit then drew `25` visibly bigger than the `15`
+  beside it — the same fault `SizeIconBox` exists to prevent. Single-chip plates
+  (73, 79, 80) are untouched.
+- Measured after: every multi-chip plate in the band separates its chips by
+  12-19 points against 1-5 inside a number. Before: 5-7 against 3-5.
+- Files changed: `Assets/JellyGarden/Scripts/Story/StoryLevelHud.cs`,
+  `Assets/JellyGarden/Scripts/Story/CLAUDE.md`, `ralph/findings.md`,
+  `ralph/prd.json`, `ralph/progress.txt`.
+- Gates: typecheck 0 errors, `check_vfx_intact.py` clean,
+  `check_launch_args.py` clean, `lint_levels.py` 0 problems in 1208 levels,
+  `check_themes.py` 0 problems / 10 notes (F-003, the backdrops).
+- **Learnings for future iterations:**
+  - **A layout rule about a slot says nothing about the boundary between two
+    slots.** `SlotWeight` sized the slot, `SizeIconBox` sized the icon inside
+    it, and both were right — yet two numbers still met, because nothing owned
+    the gap. When a row of anything is split by weight, ask separately what
+    keeps neighbours apart.
+  - **Give a symmetric layout rule symmetrically.** Applying a gutter only where
+    there is a neighbour is the "efficient" version and it makes the plate draw
+    the same two-digit number at two sizes. Uniformity across a plate beats
+    reclaiming the outer edge.
+  - **Measure a typographic fault in pixels, both ways.** "Reads as one number"
+    becomes a fact the moment you compare the gap BETWEEN the numbers with the
+    gap between digits INSIDE one: 6 against 3 is the fault, 12 against 2 is the
+    fix. A glyph-run scan over the number band of the PNG is fifteen lines and
+    gives both.
+  - **The card in the HUD is 100 pixels wide at 393.** Three chips get 25, 25
+    and 50 of it (`SlotWeight` 1:1:2). Any HUD number question is answered
+    against those numbers, not against the design units.
 ---

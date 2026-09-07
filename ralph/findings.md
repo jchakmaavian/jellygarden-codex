@@ -438,3 +438,74 @@ uniform with. Before/after on level 49 and 50:
 - The two Unity batchmode gates (`StorySmokeTest.RunAll`,
   `StoryScreenTests.RunHeadless`) are still RED on the stale 807-task / 1209-star
   constants US-011 proved pre-existing. Unchanged by this iteration.
+
+
+---
+
+## Iteration note — US-013 (levels 65-80), 2026-09-08
+
+All four batches swept `0 finding(s), 0 error(s)` twice — before and after the
+fix. The one fault came out of opening the 32 pictures.
+Evidence: `sweeps/20260908-015705`, `-020159`, `-021108`, `-021604` (before);
+`-023246`, `-023749`, `-024609`, `-025055` (after).
+
+All sixteen carry the kit's shipped target asset, and eight of them — 66, 67,
+68, 69, 71, 75, 76 and 78 — are the kit's shipped board byte for byte. The other
+eight (65, 70, 72, 73, 74, 77, 79, 80) differ in exactly one way and nowhere
+else: every changed cell is a `17` that `CreateSquare` does not understand,
+replaced with `10` by US-007's linter fix.
+
+## F-016 — two target chips read as one number  [FIXED in US-013]
+Level 65 asks for 25 of one gem and 15 of another and the plate read **`2515`**.
+Measured off its own 393-point screenshot: the gap between the two chips was 6
+pixels while the gap between the digits INSIDE `25` was 3 — so nothing on the
+card said where one number ended and the next began. Level 69 (`15 35`) was
+worse at 5 against 5, level 78 (`20 25`) the same at 5 against 3, and levels 68
+and 75 were marginal at 7 against 5.
+
+The cause is that a number is best-fit and centred in its own slot, so the only
+thing keeping two of them apart is whatever slack each has left over — and a
+two-digit count in a slot a quarter of a 100-pixel card wide has almost none.
+`SlotWeight` (F-010) and `SizeIconBox` (F-015) had both already been here; both
+are about the slot and neither is about what the slot's number does at its
+edges.
+
+`StoryLevelHud.SizeCountBox` keeps a `CountGutter` of the slot clear on each
+side of the number whenever the plate carries more than one chip. Two of those
+— one from each side of a boundary — are 26 design units, 9.5 points at 393
+wide, which is about one digit's advance (11 points, measured off the same
+shot). A gap a digit wide is the typographic minimum for two numbers that are
+not one number.
+
+Both sides or neither, never one. The first version gutted only the sides that
+faced a neighbour, which left the first chip a wider box than the second and
+best-fit then drew `25` visibly larger than the `15` beside it — the same "one
+plate, two sizes" fault `SizeIconBox` exists to prevent. A single-chip plate
+(levels 73, 79, 80 here) has nothing to run into and keeps its full width, and
+its numbers are unchanged.
+
+Measured, before → after, in pixels off the levels' own screenshots:
+
+| level | chip boundary gaps | digit gaps inside a number |
+|---|---|---|
+| 65 | 6, 5 → **12, 12** | 3, 5 → 2, 3 |
+| 68 | 7 → **14** | 5, 4 → 4, 3 |
+| 69 | 5, 5 → **12, 12** | 5, 3 → 3, 2 |
+| 78 | 5, 5 → **12, 12** | 3, 3 → 2, 2 |
+
+Across all sixteen after-shots every multi-chip plate now separates its chips by
+12 to 19 pixels against 1 to 5 inside a number.
+
+## Standing, after US-013
+- **F-003 (dark backdrops) is still the only OPEN visual one, and only new art
+  closes it.** `check_themes.py` prints the same ten NOTE lines. Levels 65, 73,
+  74, 76, 78 and 79 draw their `00` holes as black rectangles cut out of the
+  board for that reason and no other.
+- F-005 stands. Eight batches printed `0 finding(s)` over the pictures that
+  carried F-016.
+- **Not a fault, worth knowing:** level 80's end panel says `Already beaten`
+  with a bronze star, because the bot won it in the before sweep and the after
+  sweep replayed it. A replay paying no star is the economy working.
+- The two Unity batchmode gates (`StorySmokeTest.RunAll`,
+  `StoryScreenTests.RunHeadless`) are still RED on the stale 807-task /
+  1209-star constants US-011 proved pre-existing. Unchanged by this iteration.
