@@ -89,6 +89,49 @@ namespace JellyGarden.Scripts.Story
             }
         }
 
+        private static Font _nameFont, _bodyFont;
+        private static bool _nameFontLooked, _bodyFontLooked;
+
+        /// <summary>
+        /// Baloo 2 Bold — the face a character's NAME is set in. Instanced to a
+        /// single weight before import: Unity's legacy Font renders one weight,
+        /// so a variable TTF would come out Regular however it was asked for.
+        /// </summary>
+        public static Font NameFont
+        {
+            get
+            {
+                if (_nameFontLooked) return _nameFont ?? DisplayFont;
+
+                _nameFontLooked = true;
+                _nameFont = Resources.Load<Font>("Story/Fonts/story_name");
+                if (_nameFont == null)
+                    Debug.LogWarning("[Story] No Story/Fonts/story_name; " +
+                                     "speaker names fall back to the display face.");
+                return _nameFont ?? DisplayFont;
+            }
+        }
+
+        /// <summary>
+        /// Nunito SemiBold — the face spoken lines are set in. A body face is a
+        /// different job from a display one: it is read in sentences, over
+        /// artwork, at a size the display face would be shouting at.
+        /// </summary>
+        public static Font BodyFont
+        {
+            get
+            {
+                if (_bodyFontLooked) return _bodyFont ?? Font;
+
+                _bodyFontLooked = true;
+                _bodyFont = Resources.Load<Font>("Story/Fonts/story_body");
+                if (_bodyFont == null)
+                    Debug.LogWarning("[Story] No Story/Fonts/story_body; " +
+                                     "spoken lines fall back to the kit's UI font.");
+                return _bodyFont ?? Font;
+            }
+        }
+
         // Unlabelled kit art is still fair game — a star is a star.
         public static Sprite StarSprite { get { return LoadSprite("star"); } }
         public static Sprite LockSprite { get { return LoadSprite("lock"); } }

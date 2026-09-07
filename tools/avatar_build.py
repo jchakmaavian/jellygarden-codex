@@ -6,13 +6,20 @@ figure, and it moves: the king breathes, blinks and turns his head a few
 degrees. That motion is a short clip, and this cuts it into the numbered sprites
 StoryArt.AvatarFrames reads.
 
+PARKED. The one clip this had — tools/art/avatar/leo_idle.mp4 — animates the
+retired Leo, and the cast has since been redrawn. Running it would put sixty
+frames of the old face in the HUD while every portrait, card and cutscene shows
+the new one, so CLIPS is empty and this builds nothing. It is kept, not deleted:
+the moment there is an idle clip of the new Leo, adding it back to CLIPS is the
+whole job.
+
 The clip is the master and lives in tools/art/avatar/. It was made by cropping
 the head and shoulders out of the full-body portrait — pixels (585,25)-(965,405)
-of the 1536x1536 portrait_leo.jpg, the same window StoryArt.AvatarCrop names —
-and animating that crop. The prompt asked for a static camera, an unchanged
-background and a return to the opening pose, so the last frame lands back on the
-first and the loop closes without a cut: frame 0 and frame 120 differ by about
-1.1 levels out of 255, which is below what an eye catches.
+of the 1536x1536 portrait_leo.jpg, the window StoryArt.AvatarCrop named before
+the redraw — and animating that crop. The prompt asked for a static camera, an
+unchanged background and a return to the opening pose, so the last frame lands
+back on the first and the loop closes without a cut: frame 0 and frame 120
+differ by about 1.1 levels out of 255, which is below what an eye catches.
 
     python3 tools/avatar_build.py
 
@@ -41,9 +48,11 @@ DEST_ART = os.path.join(STORY_RES, "Art")
 FPS = 12
 SIZE = 256
 
-# character -> the clip that carries their idle
+# character -> the clip that carries their idle.
+#
+# Empty since the redraw: leo_idle.mp4 is the retired Leo. Put a character back
+# here only when the clip shows the face the portraits show.
 CLIPS = {
-    "leo": "leo_idle.mp4",
 }
 
 

@@ -1,7 +1,7 @@
 {
  "totalAreas": 150,
- "totalTasks": 807,
- "totalStars": 1209,
+ "totalTasks": 806,
+ "totalStars": 1208,
  "arcs": [
   {
    "arc": 1,
@@ -9,8 +9,8 @@
    "firstArea": 1,
    "lastArea": 25,
    "areaCount": 25,
-   "taskCount": 162,
-   "starCount": 255
+   "taskCount": 161,
+   "starCount": 254
   },
   {
    "arc": 2,

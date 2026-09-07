@@ -334,6 +334,16 @@ namespace JellyGarden.Scripts.Story
             if (_instance == this) _instance = null;
         }
 
+        /// <summary>
+        /// The gear. Opens the settings panel and refreshes on the way back, so
+        /// a reset taken from here leaves the screen showing the wiped save
+        /// rather than the numbers it had before.
+        /// </summary>
+        private void OpenSettings()
+        {
+            StorySettings.Open(Refresh);
+        }
+
         #endregion
 
         #region Build
@@ -355,7 +365,7 @@ namespace JellyGarden.Scripts.Story
             // The counters sit straight on the artwork, as in the reference —
             // no bar, no scrim. Their own rims carry them against a bright
             // ceiling or a dark one.
-            _topBar = StoryUi.TopBar(_canvas.transform, null);
+            _topBar = StoryUi.TopBar(_canvas.transform, OpenSettings);
 
             _buttonBand = StoryUi.CreateRect("Buttons", _canvas.transform);
             _buttonBand.anchorMin = new Vector2(0f, ButtonsBottomFrac);

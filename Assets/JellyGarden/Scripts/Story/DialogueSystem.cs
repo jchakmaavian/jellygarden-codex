@@ -39,6 +39,8 @@ namespace JellyGarden.Scripts.Story
         private Canvas _canvas;
         private CanvasGroup _group;
         private Image _portrait;
+        private RectTransform _bust;
+        private RectTransform _plate;
         private Text _speaker;
         private Text _body;
         private Text _tapHint;
@@ -92,34 +94,78 @@ namespace JellyGarden.Scripts.Story
             StoryUi.CreateFullScreenButton("Advance", root, new Color(0f, 0f, 0f, 0.001f), Advance);
 
             RectTransform box = StoryUi.CreateRect("Box", root);
-            StoryUi.BottomAnchored(box, 90f, 560f, 50f);
+            StoryUi.BottomAnchored(box, 90f, 400f, 50f);
 
-            Image backdrop = StoryUi.CreateImage("Backdrop", box, StoryUi.PanelSprite,
-                new Color(0.96f, 0.91f, 0.80f, 0.97f));
-            backdrop.type = Image.Type.Sliced;
-            StoryUi.Stretch(backdrop.rectTransform);
+            // A rim is two nested rounded rects, never an Outline: Outline offsets
+            // the whole quad and leaves the corners square. Gold outside, cream
+            // face inside, the same pair every Royal panel in this game is made of.
+            Image rim = StoryUi.CreateImage("Rim", box, StoryUi.RoundedSprite(34),
+                StoryUi.RoyalGoldDeep);
+            rim.type = Image.Type.Sliced;
+            StoryUi.Stretch(rim.rectTransform);
 
-            _portrait = StoryUi.CreateImage("Portrait", box, null, Color.white);
-            _portrait.rectTransform.anchorMin = new Vector2(0f, 0.5f);
-            _portrait.rectTransform.anchorMax = new Vector2(0f, 0.5f);
-            _portrait.rectTransform.pivot = new Vector2(0f, 0.5f);
-            _portrait.rectTransform.anchoredPosition = new Vector2(40f, 0f);
-            _portrait.rectTransform.sizeDelta = new Vector2(280f, 280f);
+            Image face = StoryUi.CreateImage("Face", box, StoryUi.RoundedSprite(28),
+                StoryUi.RoyalCream);
+            face.type = Image.Type.Sliced;
+            StoryUi.Stretch(face.rectTransform, 9f);
+
+            // The portrait is round, ringed in gold, and rides ABOVE the card's
+            // top edge. That overlap is what stops the card reading as a form:
+            // the speaker breaks the box rather than sitting inside it.
+            _bust = StoryUi.CreateRect("Bust", box);
+            _bust.anchorMin = new Vector2(0f, 0.5f);
+            _bust.anchorMax = new Vector2(0f, 0.5f);
+            _bust.pivot = new Vector2(0f, 0.5f);
+            _bust.anchoredPosition = new Vector2(30f, 34f);
+            _bust.sizeDelta = new Vector2(260f, 260f);
+
+            Image ring = StoryUi.CreateImage("Ring", _bust, StoryUi.CircleSprite,
+                StoryUi.RoyalGoldDeep);
+            StoryUi.Stretch(ring.rectTransform);
+
+            // A Mask clips its CHILDREN, not itself — the first version put one on
+            // the portrait, which has no children, so nothing was clipped and the
+            // square painted background showed. The circle is the parent now and
+            // the portrait is what it cuts.
+            Image hole = StoryUi.CreateImage("Hole", _bust, StoryUi.CircleSprite, Color.white);
+            StoryUi.Stretch(hole.rectTransform, 12f);
+            var mask = hole.gameObject.AddComponent<Mask>();
+            mask.showMaskGraphic = false;
+
+            _portrait = StoryUi.CreateImage("Portrait", hole.rectTransform, null, Color.white);
+            StoryUi.Stretch(_portrait.rectTransform);
             _portrait.preserveAspect = true;
 
-            _speaker = StoryUi.CreateText("Speaker", box, "", 40, StoryUi.Gold);
-            _speaker.rectTransform.anchorMin = new Vector2(0f, 1f);
-            _speaker.rectTransform.anchorMax = new Vector2(1f, 1f);
-            _speaker.rectTransform.pivot = new Vector2(0.5f, 1f);
-            _speaker.rectTransform.offsetMin = new Vector2(350f, -110f);
-            _speaker.rectTransform.offsetMax = new Vector2(-50f, -46f);
-            _speaker.fontStyle = FontStyle.Bold;
+            // The name sits on a gold plate rather than floating on the cream,
+            // which is what separates a speaker from the line they are saying.
+            _plate = StoryUi.CreateRect("NamePlate", box);
+            RectTransform plate = _plate;
+            plate.anchorMin = new Vector2(0f, 1f);
+            plate.anchorMax = new Vector2(0f, 1f);
+            plate.pivot = new Vector2(0f, 1f);
+            plate.anchoredPosition = new Vector2(350f, -22f);
+            plate.sizeDelta = new Vector2(280f, 64f);
 
-            _body = StoryUi.CreateText("Body", box, "", 38, StoryUi.Ink, TextAnchor.UpperLeft);
+            Image plateFill = StoryUi.CreateImage("PlateFill", plate,
+                StoryUi.RoundedSprite(20), StoryUi.RoyalGoldDeep);
+            plateFill.type = Image.Type.Sliced;
+            StoryUi.Stretch(plateFill.rectTransform);
+
+            _speaker = StoryUi.CreateText("Speaker", plate, "", 48, StoryUi.RoyalTitle,
+                TextAnchor.MiddleCenter);
+            StoryUi.Stretch(_speaker.rectTransform, 12f);
+            _speaker.font = StoryUi.NameFont;
+            _speaker.resizeTextForBestFit = true;
+            _speaker.resizeTextMinSize = 26;
+            _speaker.resizeTextMaxSize = 48;
+
+            _body = StoryUi.CreateText("Body", box, "", 54, StoryUi.Ink, TextAnchor.UpperLeft);
+            _body.font = StoryUi.BodyFont;
+            _body.lineSpacing = 1.08f;
             _body.rectTransform.anchorMin = new Vector2(0f, 0f);
             _body.rectTransform.anchorMax = new Vector2(1f, 1f);
-            _body.rectTransform.offsetMin = new Vector2(350f, 90f);
-            _body.rectTransform.offsetMax = new Vector2(-50f, -120f);
+            _body.rectTransform.offsetMin = new Vector2(350f, 70f);
+            _body.rectTransform.offsetMax = new Vector2(-50f, -100f);
 
             _tapHint = StoryUi.CreateText("TapHint", box, "tap to continue", 26, StoryUi.Muted,
                 TextAnchor.LowerRight);
@@ -180,8 +226,15 @@ namespace JellyGarden.Scripts.Story
             _portrait.color = portrait != null ? Color.white : new Color(1f, 1f, 1f, 0f);
 
             // A line with no portrait should not leave a hole where one would be.
-            _body.rectTransform.offsetMin = new Vector2(portrait != null ? 350f : 60f, 90f);
-            _speaker.rectTransform.offsetMin = new Vector2(portrait != null ? 350f : 60f, -110f);
+            // The NAME PLATE moves, never the name's own rect: the text is
+            // stretched inside the plate, and writing an offset onto it gave it a
+            // negative height — which draws nothing at all, so the plate came up
+            // empty. Same trap as the panel title that was inset 110 on a 210
+            // plate and was invisible for weeks.
+            float textLeft = portrait != null ? 350f : 60f;
+            _body.rectTransform.offsetMin = new Vector2(textLeft, 70f);
+            _plate.anchoredPosition = new Vector2(textLeft, -22f);
+            _bust.gameObject.SetActive(portrait != null);
 
             StoryAudio.StopVoice();
             if (!string.IsNullOrEmpty(line.VoiceKey))

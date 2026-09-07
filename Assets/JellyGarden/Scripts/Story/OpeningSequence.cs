@@ -1,17 +1,26 @@
-// The first three minutes, as specified in 00-OPENING.md.
+// The opening, as specified in 00-OPENING.md.
 //
 // Rule zero from that document is gameplay before story: no logo hold, no menu,
 // no cinematic to sit through. The app opens on a board, and the story arrives
 // after the first win — never before it. So this plays once, when the player
 // comes back from level 1, and not a moment earlier.
 //
-// The beat sheet it follows:
-//   the board dissolves into the real gate
-//   the portcullis grinds up and Leo rides through, alone
-//   CASTLE REVEAL, with Alfred's four lines over it
+// It is DIALOGUE, not a cutscene. The lines are spoken over whatever the player
+// is already looking at, on the same bottom card with a portrait that every
+// other conversation in the game uses.
+//
+// It used to be a full-screen takeover: black behind a letterboxed castle
+// plate, a 360px Mimi pasted into the corner and the title in white across the
+// middle. On a phone that read as the game going dark and showing a slideshow —
+// the castle plate is `preserveAspect` on a 9:19.5 screen, so most of what the
+// player saw was the black behind it. Nothing was gained by owning the whole
+// screen that the card does not do better, so the screen is left alone.
+//
+// The beat the lines carry:
+//   Alfred, over the room: three lines of what the kingdom has come to
 //   Leo, quiet: "...Freya?"  — no answer
-//   Mimi steps out of the dark. The only welcome he gets.
-//   title card, then the map
+//   Alfred: the answer nobody gave him
+//   Leo: "Where is everyone, cat?"  — Mimi is there, saying nothing
 //
 // The hook is one unanswered word. The spec is explicit that there is no second
 // line and nobody explains who she is, so there is deliberately no room here to
@@ -32,10 +41,6 @@ namespace JellyGarden.Scripts.Story
         private static OpeningSequence _instance;
 
         private Canvas _canvas;
-        private CanvasGroup _group;
-        private Image _backdrop;
-        private Image _mimi;
-        private Text _title;
         private bool _playing;
 
         public static bool IsPlaying
@@ -71,61 +76,61 @@ namespace JellyGarden.Scripts.Story
             _instance.Build();
         }
 
+        /// <summary>
+        /// The room the lines are spoken over.
+        ///
+        /// The shell is closed for the level the player just won, so without this
+        /// the dialogue card floats on nothing — which is the black screen the
+        /// old cutscene was blamed for and which survived deleting it.
+        ///
+        /// It is the Castle Gates room itself, not a separate cinematic plate:
+        /// Leo is standing at his own gate saying her name, and the same picture
+        /// visibly repairs as the area is restored. Covering rather than
+        /// letterboxed, because bars are what made the old version read as a
+        /// slideshow.
+        /// </summary>
         private void Build()
         {
-            _canvas = StoryUi.CreateOverlayCanvas("OpeningCanvas", 880);
+            // Below DialogueSystem's 850 so the card always draws on top.
+            _canvas = StoryUi.CreateOverlayCanvas("OpeningBackdropCanvas", 840);
             _canvas.transform.SetParent(transform, false);
 
-            RectTransform root = StoryUi.Stretch(StoryUi.CreateRect("Root", _canvas.transform));
-            _group = root.gameObject.AddComponent<CanvasGroup>();
+            RectTransform root = StoryUi.Stretch(
+                StoryUi.CreateRect("Room", _canvas.transform));
 
-            Image black = StoryUi.CreateImage("Black", root, null, Color.black);
-            StoryUi.Stretch(black.rectTransform);
+            // A covering view overflows its parent by design, so the parent has
+            // to mask or the room paints outside the screen it belongs to.
+            root.gameObject.AddComponent<RectMask2D>();
+            AreaSceneView.Attach(root, OpeningArea, true);
 
-            // The castle Leo rides into. Desaturated hard, per the direction note
-            // — greys, dead green, rust — which is what the generated art already
-            // is, so it is shown as it came.
-            _backdrop = StoryUi.CreateImage("CastleReveal", root,
-                StoryArt.Load("backdrop_castle"), Color.white);
-            StoryUi.Stretch(_backdrop.rectTransform);
-            _backdrop.preserveAspect = true;
-
-            // Mimi arrives late and stays. The only welcome he gets.
-            _mimi = StoryUi.CreateImage("Mimi", root, StoryArt.Load("portrait_mimi"), Color.white);
-            _mimi.rectTransform.anchorMin = new Vector2(1f, 0f);
-            _mimi.rectTransform.anchorMax = new Vector2(1f, 0f);
-            _mimi.rectTransform.pivot = new Vector2(1f, 0f);
-            _mimi.rectTransform.anchoredPosition = new Vector2(-40f, 620f);
-            _mimi.rectTransform.sizeDelta = new Vector2(360f, 360f);
-            _mimi.preserveAspect = true;
-            _mimi.gameObject.SetActive(false);
-
-            _title = StoryUi.CreateText("TitleCard", root, "King Leo", 110, Color.white,
-                TextAnchor.MiddleCenter);
-            StoryUi.Stretch(_title.rectTransform);
-            _title.fontStyle = FontStyle.Bold;
-            _title.gameObject.SetActive(false);
+            // Enough to hold the card's cream and the white text against a bright
+            // midday castle, not enough to lose the gate behind it.
+            Image dim = StoryUi.CreateImage("Dim", root, null, new Color(0.03f, 0.05f, 0.11f, 0.32f));
+            StoryUi.Stretch(dim.rectTransform);
 
             gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// `DialogueSystem` owns the card, the portrait and the tap-to-advance;
+        /// this owns only the room behind them.
+        /// </summary>
         private void Begin(Action onDone)
         {
             _playing = true;
             gameObject.SetActive(true);
-            _group.alpha = 1f;
-            _group.blocksRaycasts = true;
-            _mimi.gameObject.SetActive(false);
-            _title.gameObject.SetActive(false);
-
-            DialogueSystem.Play(BuildLines(), () => ShowTitleThen(onDone));
+            DialogueSystem.Play(BuildLines(), () => Finish(onDone));
         }
 
         /// <summary>
-        /// The opening's lines, in the order of the beat sheet. Alfred is
-        /// voice-over only for the whole of Area 001 — he does not appear in
-        /// person until Area 005 — so his lines carry no portrait, and the
-        /// emptiness is the point.
+        /// The opening's lines, in the order of the beat sheet.
+        ///
+        /// `DialogueSystem` resolves the portrait from the speaker's name, and
+        /// `portrait_alfred` exists — so Alfred's face is on the card here even
+        /// though 00-OPENING.md has him as voice-over only until Area 005. That
+        /// is a deliberate departure: a card with a name and no face reads as
+        /// missing art rather than as absence. Delete the portrait, or speak his
+        /// lines as an unnamed narrator, if the emptiness is wanted back.
         /// </summary>
         private List<DialogueLine> BuildLines()
         {
@@ -135,38 +140,26 @@ namespace JellyGarden.Scripts.Story
                 new DialogueLine("Alfred", "He had left the kingdom in good hands. So he was told.", "alfred_open_02"),
                 new DialogueLine("Alfred", "He expected trumpets. He got weeds.", "alfred_open_03"),
 
-                // 1:25. The hook. One word, into an empty courtyard, no reply.
+                // The hook. One word, into an empty courtyard, no reply.
                 new DialogueLine("Leo", "...Freya?"),
 
-                new DialogueLine("Alfred", "No one had thought to tell him. That, in itself, was the answer.", "alfred_open_04")
+                new DialogueLine("Alfred", "No one had thought to tell him. That, in itself, was the answer.", "alfred_open_04"),
+
+                new DialogueLine("Leo", "Where is everyone, cat?"),
+
+                // Mimi is the only welcome he gets, and she says nothing, being a
+                // cat. The beat is hers so that her portrait is what the player
+                // is left looking at; the ellipsis is the whole of her answer.
+                new DialogueLine("Mimi", "...")
             };
 
             return lines;
-        }
-
-        /// <summary>
-        /// Mimi appears on Leo's unanswered line, and the title card follows the
-        /// last of Alfred's. Both are driven off the dialogue's own progress
-        /// rather than a timer, so they cannot drift out of sync with a reader
-        /// who taps quickly.
-        /// </summary>
-        private void ShowTitleThen(Action onDone)
-        {
-            _mimi.gameObject.SetActive(true);
-            _title.gameObject.SetActive(true);
-
-            DialogueSystem.Play(new List<DialogueLine>
-            {
-                new DialogueLine("Leo", "Where is everyone, cat?")
-            }, () => Finish(onDone));
         }
 
         private void Finish(Action onDone)
         {
             _playing = false;
             StoryProgress.MarkOpeningSeen();
-
-            _group.blocksRaycasts = false;
             gameObject.SetActive(false);
 
             if (onDone != null) onDone();

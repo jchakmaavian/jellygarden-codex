@@ -513,6 +513,16 @@ namespace JellyGarden.Scripts
 
         }
 
+        /// <summary>
+        /// STORY: hides a piece of the kit's header, tolerating the story HUD
+        /// having removed it. Unity reads a destroyed object as null, so this is
+        /// the whole of the difference from a plain SetActive(false).
+        /// </summary>
+        private static void Hide(GameObject part)
+        {
+            if (part != null) part.SetActive(false);
+        }
+
         void PrepareGame()
         {
             ActivatedBoost = null;
@@ -521,13 +531,21 @@ namespace JellyGarden.Scripts
             moveID = 0;
 
 
-            blocksObject.SetActive(false);
-            ingrObject.SetActive(false);
-            scoreTargetObject.SetActive(false);
+            // STORY: all six belong to the kit's header, and StoryLevelHud
+            // destroys that header once the first level of a session has
+            // loaded. Every level after the first therefore ran PrepareGame
+            // against the wreckage: SetActive on a destroyed GameObject throws,
+            // PrepareGame stopped on this line, and everything below it never
+            // ran — LoadLevel, the board, EnableMap, ShowPrePlay, OnEnterGame.
+            // That is why level 1 played and level 2 was a black screen.
+            // Replace Hide with SetActive(false) and the kit behaves as shipped.
+            Hide(blocksObject);
+            Hide(ingrObject);
+            Hide(scoreTargetObject);
 
-            star1Anim.SetActive(false);
-            star2Anim.SetActive(false);
-            star3Anim.SetActive(false);
+            Hide(star1Anim);
+            Hide(star2Anim);
+            Hide(star3Anim);
 
             collectItems[0] = CollectItems.None;
             collectItems[1] = CollectItems.None;
@@ -594,7 +612,22 @@ namespace JellyGarden.Scripts
                 if(!objectTarget.Done())
                 {
                     if(objectTarget.SetOff(_item))
-                        AnimateCollectedItem(objectTarget.guiObj.transform.position);
+                    {
+                        // guiObj is set by TargetsGroup.OnEnable onto the
+                        // TargetObjects owned by the Targets/Level<n> asset,
+                        // while this plays from DeepCopy()s of them taken in
+                        // LoadDataFromLocal. Whichever runs second decides
+                        // whether the copies carry an icon, so on the orders
+                        // where the copy is taken first this was null — and it
+                        // threw from inside Item.DestroyCor, which truncates the
+                        // cascade that called it and leaves the board half
+                        // resolved. The target is already counted by SetOff
+                        // above; only the flight to the icon needs an icon.
+                        if (objectTarget.guiObj != null)
+                            AnimateCollectedItem(objectTarget.guiObj.transform.position);
+                        else
+                            _item.SetActive(false);
+                    }
                 }
             }
         }
@@ -615,10 +648,21 @@ namespace JellyGarden.Scripts
         IEnumerator StartAnimateIngredient(GameObject item, Vector2 pos)
         {
             ingredientFly = true;
+            // STORY: ingrObject and blocksObject are the kit's header counters,
+            // which StoryLevelHud destroys. Nothing below reads `ingr` — the kit
+            // fills this array and never looks at it again — so once the header
+            // was gone these four lines did nothing but throw, and they threw
+            // from inside a coroutine, which killed the collect animation and
+            // the cascade that started it. The destination of the flight is
+            // TargetIcon, which the story HUD adopts rather than destroys, so
+            // the animation itself is unaffected.
             GameObject[] ingr = new GameObject[2];
-            ingr[0] = ingrObject.transform.Find("Ingr1").gameObject;
-            ingr[1] = ingrObject.transform.Find("Ingr2").gameObject;
-            if (targetBlocks > 0)
+            if (ingrObject != null)
+            {
+                ingr[0] = ingrObject.transform.Find("Ingr1").gameObject;
+                ingr[1] = ingrObject.transform.Find("Ingr2").gameObject;
+            }
+            if (targetBlocks > 0 && blocksObject != null)
             {
                 ingr[0] = blocksObject.transform.gameObject;
                 ingr[1] = blocksObject.transform.gameObject;
@@ -2170,6 +2214,17 @@ namespace JellyGarden.Scripts
 
         void UpdateBar()
         {
+            // STORY: the score bar is chrome StoryLevelHud destroys — the King
+            // Leo header carries Target and Moves and shows no score at all.
+            // Without this the destroyed Image is written on every score popup,
+            // and the MissingReferenceException that throws kills the coroutine
+            // it is thrown inside: Item.DestroyCor never reaches DestroyBlock,
+            // the cascade never settles, DragBlocked is never released, and
+            // PreWinAnimationsCor waits on it forever — a won level that never
+            // shows its win. Delete these two lines and the kit's own bar is
+            // driven exactly as it shipped.
+            if (ProgressBarScript.Instance == null) return;
+
             ProgressBarScript.Instance.UpdateDisplay((float)Score * 100f / ((float)star1 / ((star1 * 100f / star3)) * 100f) / 100f);
 
         }
@@ -2192,6 +2247,14 @@ namespace JellyGarden.Scripts
             // STORY: a level pays one star, never three. Additive — delete this
             // line and the kit's three-star scoring is exactly as it shipped.
             stars = Story.StoryOneStar.CapStars(stars);
+
+            // STORY: the star markers live under Stars, a child of the kit's
+            // header strip, which StoryLevelHud destroys along with the bar they
+            // sit on. Only the marking is skipped — the scoring above it still
+            // runs, so stars are still earned. Same reason as UpdateBar: an
+            // exception here is thrown inside Item.DestroyCor and takes the
+            // cascade down with it.
+            if (star1Anim == null || star2Anim == null || star3Anim == null) return;
 
             if (Score >= star1)
             {

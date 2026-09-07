@@ -53,9 +53,12 @@ ART = {
     # The clue that closes area 001.
     "clue_logbook.jpg": "clue_001",
 
-    # Portraits. StoryArt looks these up by the speaker's name.
-    "leo.jpg": "portrait_leo",
-    "mimi.jpg": "portrait_mimi",
+    # Portraits are no longer imported from here. The whole cast was redrawn —
+    # eight characters in four moods each, bright and warm all the way through,
+    # written straight into Resources/Story/Art as portrait_{name}.png and
+    # portrait_{name}_{mood}.png. Importing leo.jpg and mimi.jpg again would put
+    # a portrait_leo.jpg beside the portrait_leo.png that now owns that key, and
+    # Resources.Load would pick between them by luck.
 
     # The castle reveal is the opening's centrepiece and doubles as arc 1's
     # backdrop, so every castle area has something behind it.

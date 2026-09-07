@@ -126,3 +126,5 @@ __pycache__/
 # Python bytecode from tools/
 __pycache__/
 *.pyc
+ralph/ralph-run.log
+ralph/.ralph.pid

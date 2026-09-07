@@ -4,6 +4,13 @@ You are an autonomous coding agent working on a software project.
 
 ## Your Task
 
+0. Read `ralph/findings.md` FIRST. It holds faults a human found by looking at
+   playtest screenshots — things the automated report cannot see and scores as
+   "0 findings". Fix any that fall inside the story you are working on, and mark
+   them fixed in that file. A visual story is not done while an OPEN finding in
+   there contradicts it.
+
+
 1. Read the PRD at `prd.json` (in the same directory as this file)
 2. Read the progress log at `progress.txt` (check Codebase Patterns section first)
 3. Check you're on the correct branch from PRD `branchName`. If not, check it out or create from main.

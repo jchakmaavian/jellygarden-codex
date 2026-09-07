@@ -112,6 +112,27 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
+        /// A speaking character's portrait in a named mood — `portrait_{name}_{mood}`.
+        ///
+        /// Every character is drawn in four moods, and one of the four is their
+        /// resting face, filed under the plain `portrait_{name}` the rest of the
+        /// game asks for. So a miss here is the normal case rather than a fault:
+        /// asking Leo for `happy` (his resting face) or for a mood nobody drew
+        /// both land on the plain portrait, and neither warns. The mood is a
+        /// hint the art can answer, not a contract it must meet.
+        /// </summary>
+        public static Sprite Portrait(string character, string mood)
+        {
+            if (string.IsNullOrEmpty(character)) return null;
+            if (string.IsNullOrEmpty(mood)) return Portrait(character);
+
+            string key = "portrait_" + character.Trim().ToLowerInvariant() +
+                         "_" + mood.Trim().ToLowerInvariant();
+            Sprite portrait = Load(key);
+            return portrait != null ? portrait : Portrait(character);
+        }
+
+        /// <summary>
         /// A character's avatar animation, in frame order, or an empty array
         /// when none is authored.
         ///
@@ -120,7 +141,7 @@ namespace JellyGarden.Scripts.Story
         /// no code change — the same convention the rest of this file uses. Like
         /// <see cref="TaskIcon"/> it does NOT warn on a miss: a character with
         /// no avatar frames is the normal case, and the caller falls back to a
-        /// crop of the full-body portrait.
+        /// crop of the portrait.
         /// </summary>
         public static Sprite[] AvatarFrames(string character)
         {
@@ -145,18 +166,20 @@ namespace JellyGarden.Scripts.Story
         private static readonly Sprite[] EmptyFrames = new Sprite[0];
 
         /// <summary>
-        /// The head-and-shoulders window onto a full-body portrait, in texture
-        /// coordinates (origin bottom-left), used when a character has no avatar
-        /// frames of their own.
+        /// The head-and-shoulders window onto a portrait, in texture coordinates
+        /// (origin bottom-left), used when a character has no avatar frames of
+        /// their own — which, since the cast was redrawn, is everyone.
         ///
-        /// Measured off Resources/Story/Art/portrait_leo.jpg, which is 1536x1536
-        /// with the figure standing centred: the crown clears the top of the box
-        /// at y=25, the chin sits near its middle and the cloak enters at the
-        /// bottom — pixels (585,25)-(965,405). The other seven portraits are
-        /// framed the same way, so one window serves them all.
+        /// The redrawn portraits are busts rather than standing figures, so the
+        /// head fills far more of the frame than it used to and the old window
+        /// landed on a forehead. This one was picked by cropping all eight and
+        /// looking: 12% in from each side, starting 5% down, 76% of the frame
+        /// square. It clears Leo's crown and the Cook's hat at the top and stops
+        /// below every chin, so one window still serves them all — including
+        /// Mimi, whose whole head is the portrait.
         /// </summary>
         public static readonly Rect AvatarCrop =
-            new Rect(585f / 1536f, 1f - 405f / 1536f, 380f / 1536f, 380f / 1536f);
+            new Rect(0.12f, 1f - 0.81f, 0.76f, 0.76f);
 
         /// <summary>
         /// The keys that have fallen back so far. A miss warns instead of

@@ -152,6 +152,9 @@ namespace JellyGarden.Scripts.Story
             yield return TapFires(ItemsTypes.HORIZONTAL_STRIPPED, "rocket across");
             yield return TapFires(ItemsTypes.VERTICAL_STRIPPED, "rocket up");
             yield return TapFires(ItemsTypes.PACKAGE, "bomb");
+            yield return LandFires(ItemsTypes.HORIZONTAL_STRIPPED, "rocket across");
+            yield return LandFires(ItemsTypes.VERTICAL_STRIPPED, "rocket up");
+            yield return LandFires(ItemsTypes.PACKAGE, "bomb");
             Debug.Log("[Story] ---- self-test done ----");
         }
 
@@ -225,6 +228,114 @@ namespace JellyGarden.Scripts.Story
                 label, canTap, canTap ? "" : " (blocked by " + blockedBy + ")",
                 fired, hit, aimedAt, movesBefore, movesAfter,
                 pass ? "PASS" : "FAIL"));
+        }
+
+        /// <summary>
+        /// A powerup swiped into a cell must fire from the cell it landed in,
+        /// and the swap must stand rather than bouncing back.
+        ///
+        /// The blast is measured against the LANDED square, not the one the
+        /// powerup started on: a rocket that fired from where it began would
+        /// clear a different row entirely, and only aiming at the destination
+        /// tells the two apart.
+        /// </summary>
+        private IEnumerator LandFires(ItemsTypes type, string label)
+        {
+            Made made = new Made();
+            yield return Make(type, made);
+            if (made.item == null)
+            {
+                Debug.LogWarning("[Story] Powerup test: could not make a " + label +
+                                 " to land (" + made.why + ").");
+                yield break;
+            }
+
+            Item powerup = made.item;
+            Square from = powerup.square;
+            if (from == null)
+            {
+                Debug.LogWarning("[Story] Powerup test: the " + label + " had no square to swipe from.");
+                yield break;
+            }
+
+            // A plain neighbour only. Two powerups swapped together are one of
+            // the kit's combinations, which is a different rule and a different
+            // test.
+            Square[] options =
+            {
+                from.GetNeighborLeft(), from.GetNeighborRight(),
+                from.GetNeighborBottom(), from.GetNeighborTop()
+            };
+            // The deltas Item.SwitchDirection reads, inverted against the
+            // direction of travel because the kit measures a drag as
+            // (where the finger started - where it is now).
+            Vector3[] deltas =
+            {
+                new Vector3(1f, 0f, 0f), new Vector3(-1f, 0f, 0f),
+                new Vector3(0f, 1f, 0f), new Vector3(0f, -1f, 0f)
+            };
+
+            Square landed = null;
+            Vector3 delta = Vector3.zero;
+            for (int i = 0; i < options.Length; i++)
+            {
+                Square option = options[i];
+                if (option == null || option.item == null) continue;
+                if (option.type == SquareTypes.WIREBLOCK) continue;
+                if (Item.IsUniversalPowerup(option.item)) continue;
+                if (option.item.currentType == ItemsTypes.INGREDIENT) continue;
+                landed = option;
+                delta = deltas[i];
+                break;
+            }
+
+            if (landed == null)
+            {
+                Debug.LogWarning("[Story] Powerup test: the " + label +
+                                 " had no plain neighbour to land on.");
+                yield break;
+            }
+
+            List<Item> targets = ExpectedTargets(landed, type);
+            targets.Remove(powerup);
+            int aimedAt = targets.Count;
+            int movesBefore = LevelManager.THIS.Limit;
+
+            powerup.switchDirection = Vector3.zero;
+            powerup.SwitchDirection(delta);
+
+            yield return new WaitForSeconds(1.5f);
+
+            int hit = 0;
+            foreach (Item item in targets)
+                if (item == null || item.destroying) hit++;
+
+            bool fired = powerup == null || powerup.destroying;
+            int movesAfter = LevelManager.THIS.Limit;
+            bool charged = movesAfter == movesBefore - 1;
+            bool pass = fired && hit > 0 && charged;
+
+            Debug.Log(string.Format(
+                "[Story] land {0}: swiped from ({1},{2}) onto ({3},{4}); fired={5} " +
+                "hit {6} of the {7} on the landed cell, moves {8}->{9}. {10}",
+                label, from.col, from.row, landed.col, landed.row, fired,
+                hit, aimedAt, movesBefore, movesAfter,
+                pass ? "PASS" : "FAIL"));
+        }
+
+        /// <summary>The items a powerup fired on this square is supposed to take out.</summary>
+        private static List<Item> ExpectedTargets(Square square, ItemsTypes type)
+        {
+            List<Item> targets = new List<Item>();
+            if (type == ItemsTypes.HORIZONTAL_STRIPPED)
+                targets.AddRange(LevelManager.THIS.GetRow(square.row));
+            else if (type == ItemsTypes.VERTICAL_STRIPPED)
+                targets.AddRange(LevelManager.THIS.GetColumn(square.col));
+            else
+                targets.AddRange(LevelManager.THIS.GetItemsAround(square));
+
+            targets.RemoveAll(item => item == null);
+            return targets;
         }
 
         /// <summary>

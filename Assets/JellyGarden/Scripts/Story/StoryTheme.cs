@@ -29,12 +29,13 @@ namespace JellyGarden.Scripts.Story
         /// <summary>
         /// The colour the board is drawn on. The kit's cell sprite is flat black
         /// at half alpha, so the board has never had a ground of its own — it
-        /// showed the backdrop through a dark checker. This is that ground, laid
-        /// under the cells, and the checker still reads on top of it.
+        /// showed the backdrop through a dark checker. This is that ground: the
+        /// cell's own sprite is swapped for a white square and this colour is
+        /// what it is drawn in, so the value is the ground exactly.
         ///
-        /// Because the cells sit over it at alpha 0.50 and 0.65, roughly half of
-        /// this reaches the eye. The values in themes.json are therefore lighter
-        /// than the board looks.
+        /// Its alpha is how much of the backdrop is let through. Below 1 the
+        /// board reads as tinted glass over the arc's picture rather than as a
+        /// solid slab, which is the look the boards being aimed at have.
         /// </summary>
         public Color BoardFill = Color.clear;
 
@@ -93,11 +94,14 @@ namespace JellyGarden.Scripts.Story
                     SquareTint = new Color(
                         tint[0].AsFloat(1f), tint[1].AsFloat(1f), tint[2].AsFloat(1f), 1f),
                     // An arc with no boardFill keeps Color.clear, and the board
-                    // is drawn the way the kit draws it.
+                    // is drawn the way the kit draws it. A fourth component is
+                    // the ground's alpha — how much of the backdrop is let
+                    // through it — and an arc that names only three is opaque.
                     BoardFill = fill.Count < 3
                         ? Color.clear
                         : new Color(
-                            fill[0].AsFloat(0f), fill[1].AsFloat(0f), fill[2].AsFloat(0f), 1f)
+                            fill[0].AsFloat(0f), fill[1].AsFloat(0f), fill[2].AsFloat(0f),
+                            fill.Count >= 4 ? fill[3].AsFloat(1f) : 1f)
                 };
                 if (theme.Arc > 0) _byArc[theme.Arc] = theme;
             }

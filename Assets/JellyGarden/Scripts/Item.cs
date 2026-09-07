@@ -435,9 +435,21 @@ namespace JellyGarden.Scripts
                     switchItem.transform.position = Vector3.Lerp(neighborSquare.transform.position + Vector3.back * 0.2f, startPos, distCovered);
                     yield return new WaitForFixedUpdate();
                 }
-                if (matchesHere <= 0 && matchesInNeithborItem <= 0 && LevelManager.THIS.ActivatedBoost.type != BoostType.Hand ||
+                // STORY: a rocket or a bomb swiped into a cell fires from the
+                // cell it lands in, so a swap carrying one is never rejected —
+                // landing IS the move. The kit's own rejection test is kept
+                // whole above and simply overruled, so deleting the two lines
+                // that mention `landing` restores the kit exactly.
+                Item landing = LandingPowerup(this, switchItem);
+
+                bool reject = matchesHere <= 0 && matchesInNeithborItem <= 0 && LevelManager.THIS.ActivatedBoost.type != BoostType.Hand ||
                     ((currentType == ItemsTypes.BOMB || switchItem.currentType == ItemsTypes.BOMB) && (currentType == ItemsTypes.INGREDIENT || switchItem.currentType == ItemsTypes.INGREDIENT) && (matchesHere + matchesInNeithborItem <= 2)) ||
-                    (((int)currentType >= 1 || (int)switchItem.currentType >= 1) && (currentType == ItemsTypes.INGREDIENT || switchItem.currentType == ItemsTypes.INGREDIENT) && (matchesHere + matchesInNeithborItem <= 2)))
+                    (((int)currentType >= 1 || (int)switchItem.currentType >= 1) && (currentType == ItemsTypes.INGREDIENT || switchItem.currentType == ItemsTypes.INGREDIENT) && (matchesHere + matchesInNeithborItem <= 2));
+
+                if (landing != null)
+                    reject = false;
+
+                if (reject)
                 {//1.6.1
 
                     neighborSquare.item = switchItem;
@@ -517,6 +529,13 @@ namespace JellyGarden.Scripts
 
                     if (currentType != ItemsTypes.BOMB || switchItem.currentType != ItemsTypes.BOMB)
                         LevelManager.THIS.FindMatches();
+
+                    // STORY: fire it where it now sits. This runs whether or not
+                    // the swap also made a match — a swipe on a powerup always
+                    // means "use it here" — and charges nothing, because the
+                    // swap above has already charged the move that carried it.
+                    if (landing != null)
+                        landing.LandActivate();
                 }
                 //Debug.Break();
                 //yield return new WaitForSeconds(2);
@@ -857,6 +876,59 @@ namespace JellyGarden.Scripts
                 || item.currentType == ItemsTypes.VERTICAL_STRIPPED
                 || item.currentType == ItemsTypes.PACKAGE
                 || item.currentType == ItemsTypes.BOMB;
+        }
+
+        /// <summary>
+        /// The powerup a swap is landing, or null when it lands none.
+        ///
+        /// At most one side can qualify. Two powerups swapped together are the
+        /// kit's own combinations — CheckChocoBomb, CheckPackageAndStripped and
+        /// CheckPackageAndPackage own those, and they do more than either
+        /// powerup would alone — and a swap involving an ingredient is left to
+        /// the kit's ingredient rules. The colour bomb is excluded for the same
+        /// reason it cannot be tapped: it needs a colour to eat, and swapping it
+        /// onto one is already how it is fired.
+        /// </summary>
+        private static Item LandingPowerup(Item dragged, Item partner)
+        {
+            if (dragged == null || partner == null)
+                return null;
+            if (dragged.currentType == ItemsTypes.INGREDIENT || partner.currentType == ItemsTypes.INGREDIENT)
+                return null;
+            if (IsUniversalPowerup(dragged) && IsUniversalPowerup(partner))
+                return null;
+
+            if (CanLandFire(dragged)) return dragged;
+            if (CanLandFire(partner)) return partner;
+            return null;
+        }
+
+        /// <summary>Rockets and bombs fire on landing; the colour bomb does not.</summary>
+        private static bool CanLandFire(Item item)
+        {
+            return item != null
+                && !item.destroying
+                && (item.currentType == ItemsTypes.HORIZONTAL_STRIPPED
+                    || item.currentType == ItemsTypes.VERTICAL_STRIPPED
+                    || item.currentType == ItemsTypes.PACKAGE);
+        }
+
+        /// <summary>
+        /// Fire this powerup on the square it has just been swapped into.
+        /// DestroyCor routes by type to DestroyHorizontal, DestroyVertical or
+        /// DestroyPackage against the square it now holds, so the blast comes
+        /// from where it landed and the kit's own sound and particles come with
+        /// it. Unlike TapActivate this charges no move; Switching already
+        /// charged the one that carried it here.
+        /// </summary>
+        public bool LandActivate()
+        {
+            if (!CanLandFire(this) || square == null)
+                return false;
+
+            DestroyItem(true);
+            LevelManager.THIS.FindMatches();
+            return true;
         }
 
         /// <summary>Whether a tap on this item should fire it where it sits.</summary>

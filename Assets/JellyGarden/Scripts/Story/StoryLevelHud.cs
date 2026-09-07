@@ -23,16 +23,20 @@
 //
 // What is NOT done here, and why:
 //
-//   The kit's target icons are not destroyed or deactivated. LevelManager's
-//   collect animation flies a matched piece to `TargetObject.guiObj`, the icon
-//   TargetsGroup made — and TargetsGroup destroys those icons in OnDisable, so
-//   deactivating the group would leave the board animating to a dead transform.
-//   They are made transparent instead and moved onto this HUD's own slots, so
-//   the kit's animation still lands on the icon the player is reading.
+//   The kit's header is DESTROYED, not hidden under this one. The score bar,
+//   its star markers and the static target slots are chrome nothing else
+//   references, and they go.
 //
-//   The score bar and its star markers are the chrome nothing else references,
-//   so those objects are deactivated — hidden, never deleted. Turning
-//   StoryLevelHud.Enabled off restores the kit's HUD exactly.
+//   One object survives and is adopted into this HUD instead: the group owning
+//   the kit's TargetIcons. LevelManager's collect animation flies a matched
+//   piece to `TargetObject.guiObj`, one of those icons, and TargetsGroup
+//   destroys the icons it made in OnDisable — so destroying the group, or even
+//   disabling it, leaves the board animating to a dead transform. It is
+//   reparented in and kept transparent: an anchor inside the new header rather
+//   than a second header behind it.
+//
+//   That means StoryLevelHud.Enabled = false no longer restores the kit's HUD
+//   within a session — the objects are gone until the level is reloaded.
 
 using System;
 using System.Collections.Generic;
@@ -224,7 +228,7 @@ namespace JellyGarden.Scripts.Story
             hud.transform.SetSiblingIndex(strip.GetSiblingIndex());
             hud._kitStrip = strip;
 
-            hud.HideKitHud(strip);
+            hud.ReplaceKitHud(strip);
             hud.MovePauseOutOfTheHudsWay(strip);
             hud.Refresh();
 
@@ -744,34 +748,54 @@ namespace JellyGarden.Scripts.Story
         /// Nothing is destroyed: every object here is still in the scene, and
         /// StoryLevelHud.Enabled = false leaves all of it alone.
         /// </summary>
-        private void HideKitHud(Transform strip)
+        /// <summary>
+        /// Takes the kit's header off the screen for good, rather than leaving it
+        /// alive underneath this one.
+        ///
+        /// Everything that is chrome — the score bar, its star markers, the
+        /// static target slots — is DESTROYED. It used to be deactivated, which
+        /// left a second header sitting under the new one for anyone reading the
+        /// hierarchy or a screenshot.
+        ///
+        /// One object cannot be destroyed and is adopted instead: the group that
+        /// owns the kit's TargetIcons. `LevelManager.CheckCollectedTarget` flies
+        /// every matched piece to `TargetObject.guiObj`, one of those icons, and
+        /// `TargetsGroup.OnDisable` destroys the icons it made — so destroying
+        /// the group, or merely disabling it, leaves the board animating to a
+        /// dead transform. It is reparented INTO this HUD and kept transparent,
+        /// so it is an animation anchor inside the new header rather than a
+        /// second header behind it. Nothing of the kit's own strip survives as a
+        /// layer of its own.
+        /// </summary>
+        private void ReplaceKitHud(Transform strip)
         {
-            var hidden = new List<string>();
-            var faded = new List<string>();
+            var destroyed = new List<string>();
+            var adopted = new List<string>();
 
-            foreach (Transform child in strip)
+            // Copied first: destroying children while enumerating the live
+            // Transform skips every other one.
+            var children = new List<Transform>();
+            foreach (Transform child in strip) children.Add(child);
+
+            foreach (Transform child in children)
             {
-                if (child.name == "Pause") continue;
+                if (child == null || child.name == "Pause") continue;
 
-                // TargetsGroup destroys the icons it made in OnDisable, and
-                // LevelManager flies collected pieces to those icons — so the
-                // group has to stay enabled. Alpha 0 hides it just as well.
                 if (child.GetComponentInChildren<TargetsGroup>(true) != null)
                 {
+                    child.SetParent(_root, false);
                     Fade(child);
-                    faded.Add(child.name);
+                    adopted.Add(child.name);
                     continue;
                 }
 
-                child.gameObject.SetActive(false);
-                hidden.Add(child.name);
+                destroyed.Add(child.name);
+                Destroy(child.gameObject);
             }
 
-            // TargetIngr and TargetScore are the kit's static target slots; they
-            // are chrome, so they went out with the rest above.
-            Debug.Log("[Story] Level HUD: hid " + string.Join(", ", hidden.ToArray()) +
-                      "; faded " + string.Join(", ", faded.ToArray()) +
-                      " (kept alive for the collect animation).");
+            Debug.Log("[Story] Level HUD: destroyed " + string.Join(", ", destroyed.ToArray()) +
+                      "; adopted " + string.Join(", ", adopted.ToArray()) +
+                      " as the collect animation's anchor.");
         }
 
         private static void Fade(Transform target)
@@ -857,9 +881,12 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private void AimKitIconsAtThisHud()
         {
-            if (_kitStrip == null || _visibleSlots == 0) return;
+            if (_root == null || _visibleSlots == 0) return;
 
-            TargetIcon[] icons = _kitStrip.GetComponentsInChildren<TargetIcon>(true);
+            // The icons were reparented into this HUD when the kit's header was
+            // destroyed, so they are found here rather than on the old strip —
+            // which no longer has any children left to search.
+            TargetIcon[] icons = _root.GetComponentsInChildren<TargetIcon>(true);
             for (int i = 0; i < icons.Length && i < _slots.Count; i++)
             {
                 if (icons[i] == null || !_slots[i].Root.gameObject.activeInHierarchy) continue;

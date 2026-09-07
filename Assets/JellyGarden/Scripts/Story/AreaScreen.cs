@@ -327,7 +327,7 @@ namespace JellyGarden.Scripts.Story
             // Royal Match's own area page carries the top bar, and this screen no
             // longer draws a star counter of its own: the stars on the bar are
             // this area's, because Open sets StoryProgress.CurrentArea first.
-            _topBar = StoryUi.TopBar(_canvas.transform, null);
+            _topBar = StoryUi.TopBar(_canvas.transform, OpenSettings);
 
             // The panel sits in the lower two thirds so the room's artwork stays
             // visible above it. Watching the gate change as repairs land is the
@@ -505,6 +505,16 @@ namespace JellyGarden.Scripts.Story
             replayRect.pivot = new Vector2(1f, 0.5f);
             replayRect.sizeDelta = new Vector2(170f, 0f);
             replayRect.anchoredPosition = new Vector2(-8f, 0f);
+        }
+
+        /// <summary>
+        /// The gear. Opens the settings panel and refreshes on the way back, so
+        /// a reset taken from here leaves the screen showing the wiped save
+        /// rather than the numbers it had before.
+        /// </summary>
+        private void OpenSettings()
+        {
+            StorySettings.Open(Refresh);
         }
 
         #endregion

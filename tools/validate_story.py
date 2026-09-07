@@ -27,8 +27,8 @@ from story_common import (  # noqa: E402
 from target_gen import TARGET_BLOCKS, read_target_asset  # noqa: E402
 
 EXPECTED_AREAS = 150
-EXPECTED_TASKS = 807
-EXPECTED_STARS = 1209
+EXPECTED_TASKS = 806
+EXPECTED_STARS = 1208
 BEAT_EVERY = 5
 
 

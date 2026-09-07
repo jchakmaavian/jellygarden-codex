@@ -15,24 +15,18 @@
       "tasks": [
         {
           "index": 1,
-          "label": "Cut back the ivy choking the portcullis",
-          "stars": 1,
-          "onComplete": "Ivy peels off. Stone and iron underneath, sound."
-        },
-        {
-          "index": 2,
           "label": "Replace the rotted gate timbers",
           "stars": 1,
           "onComplete": "Fresh oak beams. The gate stops sagging."
         },
         {
-          "index": 3,
+          "index": 2,
           "label": "Rehang the royal banner",
           "stars": 1,
           "onComplete": "Leo's colours drop down the wall. First colour in the scene."
         },
         {
-          "index": 4,
+          "index": 3,
           "label": "Relight the gate lanterns",
           "stars": 1,
           "onComplete": "Warm light. The castle stops looking abandoned."
@@ -48,7 +42,7 @@
         ]
       },
       "source": "arc-1-the-missing-queen/area-001-castle-gates.md",
-      "stars": 4,
+      "stars": 3,
       "arc": 1,
       "status": "playable",
       "levels": [
@@ -61,75 +55,7 @@
             "cols": 8
           },
           "colors": 5,
-          "moves": 20,
-          "objective": {
-            "type": "clearVines",
-            "count": 8
-          },
-          "obstacles": {
-            "vine": {
-              "spreadEnabled": false,
-              "spreadRate": 0,
-              "anchors": [
-                [
-                  7,
-                  0
-                ]
-              ],
-              "initial": [
-                [
-                  4,
-                  0
-                ],
-                [
-                  5,
-                  0
-                ],
-                [
-                  5,
-                  1
-                ],
-                [
-                  6,
-                  0
-                ],
-                [
-                  6,
-                  1
-                ],
-                [
-                  7,
-                  0
-                ],
-                [
-                  7,
-                  1
-                ],
-                [
-                  7,
-                  2
-                ]
-              ]
-            }
-          },
-          "unloseable": true,
-          "tutorial": {
-            "guidedMove": 1,
-            "hint": "Cut it back."
-          },
-          "targetWinRate": 1.0,
-          "tuningNote": "Vine spread disabled by design call: ivy growing back mid-level read as the blocker moving around, and on levels whose objective is not the ivy it was noise. Vines are now purely static obstacles. Move counts retuned because removing the pressure made every level easier."
-        },
-        {
-          "id": "arc1/001-02",
-          "index": 2,
-          "task": 2,
-          "grid": {
-            "rows": 8,
-            "cols": 8
-          },
-          "colors": 5,
-          "moves": 23,
+          "moves": 26,
           "objective": {
             "type": "breakTimbers",
             "count": 10
@@ -205,14 +131,18 @@
               ]
             }
           },
-          "unloseable": false,
-          "targetWinRate": 0.98,
-          "tuningNote": "Vine spread disabled by design call: ivy growing back mid-level read as the blocker moving around, and on levels whose objective is not the ivy it was noise. Vines are now purely static obstacles. Move counts retuned because removing the pressure made every level easier."
+          "unloseable": true,
+          "targetWinRate": 1.0,
+          "tuningNote": "First level of the game after the ivy task was removed. Inherits the tutorial properties the old level 1 carried — unloseable, one guided move — because the opening sequence still requires zero losses in session one. Moves raised from 23 to 26: 23 was tuned for a level the player could lose. Vines remain on the board as static scenery; they are no longer any level's objective in this area.",
+          "tutorial": {
+            "guidedMove": 1,
+            "hint": "Break the rotten timbers."
+          }
         },
         {
-          "id": "arc1/001-03",
-          "index": 3,
-          "task": 3,
+          "id": "arc1/001-02",
+          "index": 2,
+          "task": 2,
           "grid": {
             "rows": 8,
             "cols": 8
@@ -292,9 +222,9 @@
           "tuningNote": "Vine spread disabled by design call: ivy growing back mid-level read as the blocker moving around, and on levels whose objective is not the ivy it was noise. Vines are now purely static obstacles. Move counts retuned because removing the pressure made every level easier."
         },
         {
-          "id": "arc1/001-04",
-          "index": 4,
-          "task": 4,
+          "id": "arc1/001-03",
+          "index": 3,
+          "task": 3,
           "grid": {
             "rows": 8,
             "cols": 8

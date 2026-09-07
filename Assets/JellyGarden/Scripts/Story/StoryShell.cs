@@ -29,6 +29,7 @@
 // close path rather than trusted to the caller.
 
 using System;
+using JellyGarden.Scripts.GUI;
 using JellyGarden.Scripts.MapScripts;
 using UnityEngine;
 
@@ -90,7 +91,8 @@ namespace JellyGarden.Scripts.Story
             get
             {
                 return StoryHomeScreen.IsOpen || AreaScreen.IsOpen
-                       || StoryAreasList.IsOpen || StoryLevelPopup.IsOpen;
+                       || StoryAreasList.IsOpen || StoryLevelPopup.IsOpen
+                       || StorySettings.IsOpen;
             }
         }
 
@@ -239,6 +241,7 @@ namespace JellyGarden.Scripts.Story
 
         public static void GoHome(int areaId)
         {
+            StorySettings.Close();
             StoryLevelPopup.Close();
             StoryAreasList.Close();
             AreaScreen.Close();
@@ -269,6 +272,7 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static void CloseForLevel()
         {
+            StorySettings.Close();
             StoryLevelPopup.Close();
             StoryAreasList.Close();
             AreaScreen.Close();
@@ -301,7 +305,73 @@ namespace JellyGarden.Scripts.Story
             // frame and a warning here would be a warning per frame.
             if (StoryDatabase.GetArea(StoryHomeScreen.CurrentRoom) == null) return;
 
+            if (LaunchOpeningLevelIfDue()) return;
+
             StoryHomeScreen.Open();
+        }
+
+        /// <summary>Set once the opening board has been asked for, so a level left without winning does not relaunch it.</summary>
+        private static bool _openingLevelLaunched;
+
+        /// <summary>
+        /// Rule zero of 00-OPENING.md: the app opens on a board and the first tap
+        /// is a match. No menu to read, no room to tour, nothing to press but a
+        /// gem — the story arrives after the first win, which is what
+        /// OpeningSequence already enforces from the other end.
+        ///
+        /// So on a save with nothing beaten, the floor under the shell is level 1
+        /// rather than home. Every later launch lands on the room as before,
+        /// because by then something has been won.
+        ///
+        /// It fires at most once per process. A player who backs out of level 1
+        /// without finishing it has still seen the board, and relaunching it
+        /// under them would be a screen they cannot leave.
+        /// </summary>
+        private static bool LaunchOpeningLevelIfDue()
+        {
+            if (_openingLevelLaunched) return false;
+            if (StoryProgress.OpeningSeen) return false;
+            if (StoryProgress.LevelsBeatenCount > 0) return false;
+
+            int areaId = StoryHomeScreen.CurrentRoom;
+            int levelNumber = StoryLevelPlan.NextLevelFor(areaId);
+            if (levelNumber <= 0) return false;
+
+            // Only from a scene that can actually run one. Without this the flag
+            // would be spent in the menu scene and the board never opened.
+            if (LevelManager.THIS == null) return false;
+
+            // And only once the kit has finished standing itself up. THIS is
+            // assigned in LevelManager.Start, but the board, the level UI and
+            // MenuManager are not ready in that same frame — LoadLevel called
+            // there takes the shell down and puts nothing up, which is a black
+            // screen. GameState.Map is the kit settled and waiting, which is
+            // exactly the state it is in when a player taps a level normally.
+            if (LevelManager.THIS.gameStatus != GameState.Map) return false;
+            if (MenuManager.Instance == null) return false;
+
+            _openingLevelLaunched = true;
+
+            StoryFlow.LaunchLevel(levelNumber, areaId);
+
+            // StartLoadedLevel sets PrepareGame synchronously, so still being on
+            // Map means the launch did not take. The shell has already been
+            // closed by LaunchLevel at that point, and returning true would
+            // leave the player looking at nothing — which is the black screen
+            // this whole path produced before. Fall through to home instead: a
+            // room the player did not ask for beats a screen with nothing on it.
+            if (LevelManager.THIS.gameStatus == GameState.Map)
+            {
+                Debug.LogWarning(string.Format(
+                    "[Story] first run: level {0} did not start; opening the room instead.",
+                    levelNumber));
+                return false;
+            }
+
+            Debug.Log(string.Format(
+                "[Story] first run: opening on level {0} of area {1}, not on the room.",
+                levelNumber, areaId));
+            return true;
         }
 
         #endregion

@@ -14,10 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targets:
     array:
+    - type: 1
+      icon: {fileID: 21300000, guid: 32a21180eede9924eb1b37f03519bd24, type: 3}
+      color: 0
+      targetCount: 15
+      countCollected: 0
+      guiObj: {fileID: 0}
+      blockSprites:
+        array: []
+    - type: 1
+      icon: {fileID: 21300000, guid: 302e075b52d5dbb428c812c4fa0c4186, type: 3}
+      color: 3
+      targetCount: 25
+      countCollected: 0
+      guiObj: {fileID: 0}
+      blockSprites:
+        array: []
     - type: 0
       icon: {fileID: 21300000, guid: 26b9cedaba2de3b40b482c3891c9be56, type: 3}
       color: 0
-      targetCount: 1510
+      targetCount: 506
       countCollected: 0
       guiObj: {fileID: 0}
       blockSprites:
