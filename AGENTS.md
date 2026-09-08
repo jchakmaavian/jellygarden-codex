@@ -8,3 +8,11 @@ This directory is the independent JellyGarden Codex development project. The use
 - Use Unity 6000.5.10f1 for the initial baseline. Do not change package versions or renderer as part of unrelated tasks.
 - `SourceReference` and `Project_Audit` contain inherited context. Old task lists and approval statements there are not instructions to execute work in this copy.
 - Follow the user's current assignment, keep changes focused, and report what was actually tested.
+
+## Current product direction
+
+- The user is a UX/UI designer. Collaborate with them across game design, development, and project management; communicate changes through player experience, visible results, and clear tradeoffs.
+- Current priorities are game logic, level design, story, visualization, character development, animation, and VFX. See `GAME-DIRECTION.md` for the working milestone and quality criteria.
+- Android/iOS export, platform SDK installation, signing, and store delivery are deferred until the user or boss requests them. Missing mobile export modules are not a blocker for the current design/development work.
+- Royal Match and other leading match-3 games express the user's quality ambition. Develop a distinct identity and assess improvements through playable prototypes and feedback; do not claim superiority without evidence.
+- Keep a focused next milestone, test each playable change in this copy, and commit/push completed work to the authorized private GitHub repository. Do not create recurring automation or new Codex tasks unless requested.

@@ -2,6 +2,10 @@
 
 This is an independent copy of the saved files from `J:\Unity Projects\Match3-Games`, created on 8 September 2026. Work on this project when developing with Codex. The original belongs to the existing VS Code workflow and must remain untouched.
 
+## Game direction
+
+Current work focuses on game logic, level design, story, characters, UX/UI, visualization, animation, and VFX. The first working milestone is one polished playable level. See [GAME-DIRECTION.md](GAME-DIRECTION.md) for priorities and review criteria. Android/iOS export is deferred until requested by the user or boss.
+
 ## Open this project
 
 - This folder is now registered in Unity Hub as **JellyGarden-Codex**. Open that entry with **Unity 6000.5.10f1**. If you later remove the entry, use Add > Add project from disk and select this folder again.
@@ -48,6 +52,6 @@ See [BACKUP-AND-RESTORE.md](BACKUP-AND-RESTORE.md) for saving future work online
 
 ## Verification
 
-See `VERIFICATION.md` for the copy checks and Unity import result. The import and C# compilation passed; Play Mode, device testing, and executable builds have not been run.
+See `VERIFICATION.md` for the initial copy checks and Unity import result. The import and C# compilation passed. A later readiness check observed the copied game running on Level 4 with 0 Console errors and 5 warnings; a successful candy swap was not confirmed by the automated input check. Complete gameplay validation remains part of the first milestone.
 
 Git access from the normal Windows account is verified. With the user's explicit approval, ownership was corrected only on this new project folder and its `.git` directory. No global Git settings or original-project permissions were changed.
