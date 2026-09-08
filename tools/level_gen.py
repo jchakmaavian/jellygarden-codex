@@ -28,6 +28,7 @@ from level_templates import (  # noqa: E402
     open_ratio,
     parse_level,
     playable_ratio,
+    unmatchable_regions,
 )
 from story_common import LEVELS_RES, OUT, ensure_dir, write_text_meta  # noqa: E402
 
@@ -236,6 +237,40 @@ def strip_self_acting(grid):
     ]
 
 
+def seal_unmatchable_cells(grid):
+    """
+    Close every cell no match can ever reach.
+
+    `unmatchable_regions` is the rule: a region walled in by holes and
+    undestroyable blocks that holds no three collinear cells cannot host a
+    match, so whatever spawns there is frozen for the whole level. Two of the
+    kit's hundred boards contain one — level 45's picture frame has a single
+    cell in the middle of it, level 97 has one in each corner — and a generated
+    level gets one only by inheriting one of those two shapes.
+
+    What the player sees is a gem sitting alone in its own frame, off the edge
+    of the board, that never changes for the whole level — four of them at once
+    on level 141. On the fourteen BLOCKS levels that inherit level 45's picture
+    frame it is worse: the lone cell is a block, so a blocker stays iced no
+    matter what the player does. None of those levels was unwinnable — their
+    goal asks for 62 blocks and 64 to 72 are reachable — but the board is
+    telling the player something untrue about itself.
+
+    Sealing it — writing the hole the board already behaves as if it had — is
+    the smallest honest change: the cell was unreachable before and is absent
+    after, `block_target_count` then reads the goal off a board that can meet
+    all of it, and nothing else about the shape moves. Levels 1-100 never come
+    through here, so the kit's own two boards keep the cells a designer drew.
+    """
+    dead = [cell for region in unmatchable_regions(grid) for cell in region]
+    if not dead:
+        return grid
+    grid = [list(row) for row in grid]
+    for row, col in dead:
+        grid[row][col] = NONE + NONE
+    return grid
+
+
 def generate(template, entry, min_open=0.0):
     """Derive one level from a template. Pure given (template, entry)."""
     rng = random.Random("kingleo/%d" % entry["levelNumber"])
@@ -256,6 +291,11 @@ def generate(template, entry, min_open=0.0):
         sabotaged = apply_sabotage(grid, rng)
         if open_ratio(sabotaged) >= min_open - 1e-9:
             grid = sabotaged
+
+    # Last, so it sees the shape every other mutation left behind. Sealing only
+    # ever removes cells, so the open-cell floor is re-checked in main() on the
+    # finished file rather than trusted here.
+    grid = seal_unmatchable_cells(grid)
 
     return {
         "mode": template["mode"],

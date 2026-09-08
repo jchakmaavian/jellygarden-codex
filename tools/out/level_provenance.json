@@ -5253,7 +5253,7 @@
   "difficulty": 0.4849,
   "areaId": 50,
   "mode": 3,
-  "blockTargetCount": 71,
+  "blockTargetCount": 69,
   "starThresholds": [
    11682,
    14603,
@@ -6737,7 +6737,7 @@
   "difficulty": 0.4557,
   "areaId": 66,
   "mode": 3,
-  "blockTargetCount": 71,
+  "blockTargetCount": 70,
   "starThresholds": [
    11551,
    14438,
@@ -6849,7 +6849,7 @@
   "difficulty": 0.467,
   "areaId": 67,
   "mode": 3,
-  "blockTargetCount": 71,
+  "blockTargetCount": 70,
   "starThresholds": [
    11602,
    14502,
@@ -7073,7 +7073,7 @@
   "difficulty": 0.4526,
   "areaId": 70,
   "mode": 3,
-  "blockTargetCount": 65,
+  "blockTargetCount": 64,
   "starThresholds": [
    11537,
    14421,
@@ -7171,7 +7171,7 @@
   "difficulty": 0.4638,
   "areaId": 71,
   "mode": 3,
-  "blockTargetCount": 71,
+  "blockTargetCount": 70,
   "starThresholds": [
    11587,
    14484,
@@ -7269,7 +7269,7 @@
   "difficulty": 0.475,
   "areaId": 72,
   "mode": 3,
-  "blockTargetCount": 67,
+  "blockTargetCount": 66,
   "starThresholds": [
    11637,
    14547,
@@ -7353,7 +7353,7 @@
   "difficulty": 0.4742,
   "areaId": 73,
   "mode": 3,
-  "blockTargetCount": 69,
+  "blockTargetCount": 68,
   "starThresholds": [
    11634,
    14542,
@@ -7563,7 +7563,7 @@
   "difficulty": 0.4966,
   "areaId": 75,
   "mode": 3,
-  "blockTargetCount": 71,
+  "blockTargetCount": 70,
   "starThresholds": [
    11735,
    14668,
@@ -8025,7 +8025,7 @@
   "difficulty": 0.5108,
   "areaId": 78,
   "mode": 3,
-  "blockTargetCount": 74,
+  "blockTargetCount": 72,
   "starThresholds": [
    11799,
    14748,
@@ -8095,7 +8095,7 @@
   "difficulty": 0.4965,
   "areaId": 79,
   "mode": 3,
-  "blockTargetCount": 69,
+  "blockTargetCount": 67,
   "starThresholds": [
    11734,
    14668,
@@ -8193,7 +8193,7 @@
   "difficulty": 0.5062,
   "areaId": 80,
   "mode": 3,
-  "blockTargetCount": 68,
+  "blockTargetCount": 67,
   "starThresholds": [
    11778,
    14722,
@@ -8347,7 +8347,7 @@
   "difficulty": 0.5016,
   "areaId": 82,
   "mode": 3,
-  "blockTargetCount": 70,
+  "blockTargetCount": 69,
   "starThresholds": [
    11757,
    14697,
@@ -8459,7 +8459,7 @@
   "difficulty": 0.5113,
   "areaId": 83,
   "mode": 3,
-  "blockTargetCount": 70,
+  "blockTargetCount": 69,
   "starThresholds": [
    11801,
    14751,
@@ -8641,7 +8641,7 @@
   "difficulty": 0.5188,
   "areaId": 85,
   "mode": 3,
-  "blockTargetCount": 71,
+  "blockTargetCount": 70,
   "starThresholds": [
    11835,
    14793,

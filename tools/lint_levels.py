@@ -21,9 +21,12 @@ Usage:
     python3 tools/lint_levels.py                 # every level
     python3 tools/lint_levels.py --levels 1-16   # one band
     python3 tools/lint_levels.py --quiet         # counts only
+    python3 tools/lint_levels.py --strict        # count the NOTE lines too
 
 Prints one line per problem as `<level>: <problem>` and exits 1 when there is
-at least one.
+at least one. A fault on one of the kit's preserved 100 boards prints as
+`<level>: NOTE <problem>` and only fails under --strict, because nothing here
+may rewrite those files.
 """
 
 import argparse
@@ -31,9 +34,21 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from level_templates import unmatchable_regions  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LEVELS = os.path.join(ROOT, "Assets/JellyGarden/Resources/Levels")
 TARGETS = os.path.join(ROOT, "Assets/JellyGarden/Resources/Targets")
+
+# Levels 1-100 are the kit's own hand-tuned boards, re-emitted byte for byte by
+# level_gen.py. A fault in one of them is real, but nothing in this project may
+# fix it — the generator does not write them and hand-editing one is undone by
+# the next run. Those levels get NOTE lines, which report and do not fail
+# unless --strict is passed. The same fault above 100 is the generator's and is
+# a problem.
+PRESERVED_THROUGH = 100
 
 # InitScript.Target
 SCORE, COLLECT, INGREDIENT, BLOCKS = 0, 1, 2, 3
@@ -121,14 +136,21 @@ def parse_targets(path):
 
 
 def lint_level(number):
-    """Every problem with one level, as a list of strings."""
+    """
+    Every fault in one level, as `(problems, notes)`.
+
+    A problem is something this project can fix; a note is the same fault on
+    one of the kit's preserved 100 boards, which it cannot. See
+    PRESERVED_THROUGH.
+    """
     problems = []
+    notes = []
     say = problems.append
 
     level_path = os.path.join(LEVELS, "%d.txt" % number)
     target_path = os.path.join(TARGETS, "Level%d.asset" % number)
     if not os.path.exists(level_path):
-        return ["no board file at Resources/Levels/%d.txt" % number]
+        return ["no board file at Resources/Levels/%d.txt" % number], notes
     with open(level_path, "r", encoding="utf-8") as handle:
         level = LevelFile(number, handle.read())
 
@@ -136,17 +158,17 @@ def lint_level(number):
         if key not in level.header:
             say("board has no %s line" % key)
     if len(problems):
-        return problems
+        return problems, notes
 
     # --- SIZE against the grid that was actually written -------------------
     size = level.ints("SIZE", 2)
     if size is None:
         say("SIZE %r is not cols/rows" % level.header["SIZE"])
-        return problems
+        return problems, notes
     cols, rows = size
     if cols < 1 or rows < 1:
         say("SIZE %d/%d is not a board" % (cols, rows))
-        return problems
+        return problems, notes
     if len(level.rows) != rows:
         say("SIZE says %d rows, %d rows are written" % (rows, len(level.rows)))
     for index, row in enumerate(level.rows):
@@ -182,6 +204,33 @@ def lint_level(number):
                 open_cells += 1
     if open_cells == 0:
         say("board has no open cell, nothing can be played")
+
+    # --- cells no match can ever reach --------------------------------------
+    # A match is three of a colour in a line and a swap only reaches an
+    # orthogonal neighbour, so both are confined to one region of the board.
+    # A region with no three collinear cells can never host either: whatever
+    # spawns in it is frozen there for the level. On a BLOCKS level that also
+    # means the goal counts a block no move can clear.
+    frozen = unmatchable_regions(level.rows) if not problems else []
+    for region in frozen:
+        where = ", ".join("row %d column %d" % (r + 1, c + 1) for r, c in region)
+        # TargetBlocks = BLOCK + 2 * DOUBLEBLOCK, counted over this region only.
+        blocked = sum(
+            {"2": 1, "5": 2}.get(level.rows[r][c][0], 0) for r, c in region
+        )
+        line = (
+            "%d cell%s walled off with no three in a line (%s), so no match can "
+            "ever happen there%s"
+            % (
+                len(region),
+                "" if len(region) == 1 else "s",
+                where,
+                "" if not blocked else
+                "; %d of the board's %d blocks sit in it"
+                % (blocked, board_blocks),
+            )
+        )
+        (notes if number <= PRESERVED_THROUGH else problems).append(line)
 
     # --- LIMIT --------------------------------------------------------------
     limit = level.ints("LIMIT", 2)
@@ -219,11 +268,11 @@ def lint_level(number):
     # --- the goal asset -----------------------------------------------------
     if not os.path.exists(target_path):
         say("no goal asset at Resources/Targets/Level%d.asset" % number)
-        return problems
+        return problems, notes
     targets = parse_targets(target_path)
     if not targets:
         say("goal asset has no targets")
-        return problems
+        return problems, notes
 
     mode = None
     try:
@@ -285,7 +334,7 @@ def lint_level(number):
             % (mode, TARGET_NAME[mode],
                ", ".join(TARGET_NAME.get(k, str(k)) for k in sorted(kinds))))
 
-    return problems
+    return problems, notes
 
 
 def parse_range(text, highest):
@@ -317,6 +366,8 @@ def main():
     parser.add_argument("--levels", help="a band such as 1-16, or 1-16,40-48")
     parser.add_argument("--quiet", action="store_true",
                         help="print the summary only")
+    parser.add_argument("--strict", action="store_true",
+                        help="fail on NOTE lines too (the kit's own 100 boards)")
     args = parser.parse_args()
 
     highest = highest_level()
@@ -327,20 +378,25 @@ def main():
 
     faulty = 0
     total = 0
+    noted = 0
     for number in numbers:
-        problems = lint_level(number)
+        problems, notes = lint_level(number)
         if problems:
             faulty += 1
             total += len(problems)
-            if not args.quiet:
-                for problem in problems:
-                    print("%d: %s" % (number, problem))
+        noted += len(notes)
+        if not args.quiet:
+            for problem in problems:
+                print("%d: %s" % (number, problem))
+            for note in notes:
+                print("%d: NOTE %s" % (number, note))
 
-    print("%d level%s checked, %d problem%s in %d level%s"
+    print("%d level%s checked, %d problem%s in %d level%s, %d note%s"
           % (len(numbers), "" if len(numbers) == 1 else "s",
              total, "" if total == 1 else "s",
-             faulty, "" if faulty == 1 else "s"))
-    return 1 if total else 0
+             faulty, "" if faulty == 1 else "s",
+             noted, "" if noted == 1 else "s"))
+    return 1 if total or (args.strict and noted) else 0
 
 
 if __name__ == "__main__":

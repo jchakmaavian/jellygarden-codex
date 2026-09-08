@@ -821,3 +821,102 @@ separated rather than one guard. Recorded rather than done.
 - The two Unity batchmode gates are RED on exactly the five screen assertions
   and the two smoke constants they were red on before this iteration, checked
   line for line against `screen_base.log` and `smoke_us015.log`.
+
+
+---
+
+## Iteration note — US-017 (levels 129-144), 2026-09-08
+
+Four batches of four, `0 finding(s), 0 error(s)` in every one of them, over 32
+screenshots. One fault, found by opening the pictures — and its shape came out
+of the *board data*, not the HUD, which is the first time in this sweep that it
+has.
+
+Levels 129-136 are area 16 The Library, 137-144 area 17 Leo's Study; both are
+arc 1, so both draw the same backdrop. That is F-003 and nothing new.
+
+## F-022 — cells no match can ever reach  [FIXED in US-017]
+**Level 141 opens with four gems sitting alone, each in its own little frame,
+off the edge of the board.** They never move for the whole level. The board is
+9x11 and its top two rows are
+
+    10 00 00 10 10 10 00 00 10
+    00 10 00 10 10 10 00 10 00
+
+so (0,0), (0,8), (1,1) and (1,7) each have four holes around them. A match is
+three of a colour in a line and a swap only reaches an orthogonal neighbour, so
+both live entirely inside one region of the board: a region holding no three
+collinear cells cannot host either, whatever falls into it.
+
+Counted that way over all 1208 boards — treating only `00` and `x6`
+(UNDESTROYABLE) as permanent walls, because `Square.DestroyBlock` cascades into
+SOLIDBLOCK and THRIVING the moment a match lands beside one — there are **55
+such regions across 25 levels, and every one of them is a single cell**:
+
+| shape | levels | what the cell is |
+|---|---|---|
+| the kit's level 97 | 97, and 9 generated (127, 141, 151, 160, 259, 269, 277, 286, 307) | a frozen gem, four per board |
+| the kit's level 45 | 45, and 14 generated (433, 539, 547, 563, 570, 577, 583, 598, 631, 636, 643, 654, 662, 675) | a **block**, in the middle of a picture frame |
+
+US-011 measured this and left it: "a linter rule waiting for a decision about
+whether the generated 22 should inherit shapes that contain one". US-015's
+template re-pick moved the list (22 → 23, different numbers), which is the
+reason to compute it rather than write it down.
+
+**None of the fourteen was unwinnable** — their BLOCKS goal asks for 62 and 64
+to 72 blocks are reachable, so the level ends normally with one blocker still
+iced. Checked, level by level, against the pre-change boards, because "the goal
+counts a block you cannot clear" was the obvious guess and it was wrong.
+
+The fix is `level_gen.seal_unmatchable_cells`, run last in `generate()` so it
+sees the shape mirror, flip, thicken and sabotage left behind: it writes `00`
+over every cell of an unmatchable region. That is the hole the board was
+already behaving as if it had. `block_target_count` is read off the finished
+grid into the provenance file, so the fourteen BLOCKS goals follow by
+themselves; no target asset changed, since all fourteen ask for 62 and still
+have 64+.
+
+**It changes 23 files and no others.** `pick_template` is untouched, so nothing
+is re-picked and no other level moves a byte — 101-128, already swept, are
+unaffected except level 127, which is one of the 23 and was re-swept and
+re-photographed. Idempotence re-checked by hashing the content of
+`Resources/Levels`, `Resources/Targets` and `tools/out`.
+
+`tools/lint_levels.py` gained the rule so it cannot come back, and with it a
+NOTE channel. The kit's levels 45 and 97 carry the same fault and this project
+may not rewrite them — the generator does not write levels 1-100 and a
+hand-edit is undone by the next run — so a fault on a preserved board reports
+as `<level>: NOTE ...` and fails only under `--strict`. Above 100 it is a
+problem. Today: **0 problems, 5 notes**.
+
+## Measured but NOT a fault — checked and cleared
+- **Level 129's pass mark is 99 and it scored 1780.** Level 143 is the same at
+  100. Both come from the kit's template 11 (`STARS 100/1800/2300`), an
+  INGREDIENT level where the score is a formality and the ingredient is the
+  gate. The kit's own design, inherited faithfully.
+- **Level 138 gets 11 moves for two ingredients.** Its template is the kit's
+  level 24, which ships `LIMIT 0/10` — the generated level is *more* generous
+  than the board it came from.
+- **Levels 130/142 and 132/144 are the same board twelve apart**, pass marks
+  1496/1497 and 5041/5046. That is the residual US-015 priced: 100 templates
+  over 1108 generated levels is eleven uses each, so repeats at some distance
+  are arithmetic. The guarantee is "not inside 5 levels" and it holds.
+- **Level 134's blocks look like blue ice and level 144's like lavender.**
+  `CreateSquare` swaps in the `doubleBlock` sprite for DOUBLEBLOCK, and
+  `thicken_blockers` promoted 144's. Two sprites, one goal, the kit's own.
+- **The single-cell-wide columns on 132/144 are playable.** A vertical swap
+  inside a one-wide column can make a three-run (`[B,A,B,B]` → `[A,B,B,B]`),
+  and the column refills from its own top row. The bot cleared 4 of 18 blocks
+  on 132 and 0 on 144 — random play, not a wall.
+
+## Standing, after US-017
+- **F-003 (dark backdrops) is still the only OPEN visual finding that new art
+  alone can close.** `check_themes.py`: same 10 NOTE lines.
+- F-005 stands, and this iteration is its sharpest case yet: six batches
+  printed `0 finding(s), 0 error(s)` over the shots that carried F-022, and the
+  linter — which reads every board in 0.2s — had no rule for it either.
+- The NOTE US-016 left open ("Out of time" over a plate of finished goals) did
+  not recur in this band's 24 level-plays.
+- The two Unity batchmode gates are RED on exactly the five screen assertions
+  and the two smoke constants of the recorded baseline, diffed line for line
+  against `screen_base.log`. No C# changed this iteration.

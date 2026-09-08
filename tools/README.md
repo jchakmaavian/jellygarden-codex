@@ -250,12 +250,19 @@ and clicking. The driver walks the game through its own API instead.
 python3 tools/lint_levels.py                 # every level, ~0.2s
 python3 tools/lint_levels.py --levels 1-16   # one band
 python3 tools/lint_levels.py --quiet         # counts only
+python3 tools/lint_levels.py --strict        # count the NOTE lines too
 ```
 
 `lint_levels.py` is the static half of the sweep: it reads
 `Resources/Levels/<n>.txt` beside `Resources/Targets/Level<n>.asset` and reports
 levels that contradict themselves, without launching Unity. One line per problem
 as `<level>: <problem>`, non-zero exit when there is at least one.
+
+A fault on one of the kit's preserved 100 boards prints as `<level>: NOTE ...`
+and fails only under `--strict`. Those files are bought data: `level_gen.py`
+re-emits them byte for byte and a hand-edit is undone by the next run, so a rule
+that fires on them has nowhere to go. Everything above level 100 is the
+generator's, and there the same fault is a problem.
 
 Every rule is anchored to a line of the kit rather than to taste, so a finding is
 a real fault:
@@ -274,6 +281,7 @@ a real fault:
 | a `SCORE` target that disagrees with the first star | both are the pass mark; they must be the same number |
 | no `SCORE` target at all | a level run out of moves has nothing to check against |
 | `MODE` whose `Target` value is absent from the asset | the mode names a goal the level does not carry |
+| a region of the board with no three cells in a line | a match is three of a colour in a line and a swap only reaches an orthogonal neighbour, so neither can happen there; whatever spawns in it is frozen for the level |
 
 It does not judge difficulty and it cannot see a layout — that is still
 `playtest_sweep.py` and your eyes.

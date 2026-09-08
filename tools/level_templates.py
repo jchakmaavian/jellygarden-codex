@@ -172,6 +172,66 @@ def is_playable(cell):
     return cell[0] != "0" and cell[1] not in IMPASSABLE_OBSTACLES
 
 
+def is_permanently_walled(cell):
+    """
+    Is this cell a wall that never opens?
+
+    Only two of them are. A hole is not a square at all, and an undestroyable
+    block is the one obstacle `Square.DestroyBlock` returns from without doing
+    anything. Solid and thriving blocks look like walls and are not: the same
+    method cascades into both of them the moment a match lands beside one, so a
+    cell behind them is closed now and open later.
+    """
+    return cell[0] == "0" or cell[1] in PERMANENT_OBSTACLES
+
+
+def unmatchable_regions(grid):
+    """
+    The regions of the board no match can ever happen in, as lists of (row, col).
+
+    A match is three of a colour in a line (`LevelManager.FindMatch`), and a
+    swap only ever moves an item to an orthogonal neighbour, so both live
+    entirely inside one region of cells joined across the permanent walls above.
+    A region that holds no three collinear cells therefore cannot host a match
+    however the board falls — the items in it are frozen where they spawned.
+
+    Measured over all 1208 boards, every such region in the game is a single
+    cell: the kit's levels 45 and 97 have them, and a generated level has one
+    only because it inherited one of those two shapes.
+    """
+    rows, cols = len(grid), len(grid[0]) if grid else 0
+    seen = set()
+    regions = []
+    for row in range(rows):
+        for col in range(cols):
+            if (row, col) in seen or is_permanently_walled(grid[row][col]):
+                continue
+            stack = [(row, col)]
+            seen.add((row, col))
+            region = set()
+            while stack:
+                r, c = stack.pop()
+                region.add((r, c))
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = r + dr, c + dc
+                    if (
+                        0 <= nr < rows
+                        and 0 <= nc < cols
+                        and (nr, nc) not in seen
+                        and not is_permanently_walled(grid[nr][nc])
+                    ):
+                        seen.add((nr, nc))
+                        stack.append((nr, nc))
+            has_line = any(
+                ((r, c + 1) in region and (r, c + 2) in region)
+                or ((r + 1, c) in region and (r + 2, c) in region)
+                for r, c in region
+            )
+            if not has_line:
+                regions.append(sorted(region))
+    return regions
+
+
 def playable_ratio(grid):
     """Fraction of cells a gem can occupy at the moment the board opens."""
     total = sum(len(row) for row in grid)

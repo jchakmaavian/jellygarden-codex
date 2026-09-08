@@ -291,8 +291,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 17,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Swept 129-144 in four foreground batches of four against a player built from the scratchpad clone; 0 finding(s), 0 error(s) in every batch, all 32 shots opened. Found and fixed F-022: cells no match can ever reach. Level 141 opened with four gems each walled in by holes, frozen for the whole level. Measured over all 1208 boards (only 00 and x6 are permanent walls) there are 55 such regions in 25 levels and every one is a single cell: the kit's levels 45 and 97 plus 23 generated levels that inherit one of those two shapes. None was unwinnable — the fourteen BLOCKS levels ask for 62 blocks and 64+ are reachable — so the fault is a board that lies about itself. level_gen.seal_unmatchable_cells writes the hole the board already behaved as if it had, last in generate(); pick_template is untouched so exactly 23 level files changed and no target asset did. lint_levels.py gained the rule plus a NOTE channel for the kit's preserved 100, which this project may not rewrite: 0 problems, 5 notes. Levels 141 and 127 re-swept and re-photographed after the change. Gates: typecheck 0 errors, check_vfx_intact clean, check_launch_args clean, validate_story 150/806/1208/1208, check_themes 0 problems / 10 notes (F-003), generators idempotent by content hash. The two Unity batchmode gates are red on exactly the recorded baseline; no C# changed."
     },
     {
       "id": "US-018",

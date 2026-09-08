@@ -78,8 +78,12 @@ Started: 2026-09-07
 - **Prove "pre-existing" instead of asserting it.** `git stash push -- <file>`,
   rsync to the clone, re-run the gate, `git stash pop` — two minutes, and it
   turns "unrelated, surely" into a fact worth writing in the report.
-- **Keep `json.dump`'s default `ensure_ascii`** when editing `ralph/prd.json`.
-  The file stores em dashes escaped; unescaping them is an 85-line diff of noise.
+- **`ralph/prd.json`: pick `ensure_ascii` by looking, not by remembering.** Three
+  bullets in this file have asserted a direction and two of them were stale — the
+  encoding flips whenever an iteration dumps it the other way. Dump it, run
+  `git diff --stat ralph/prd.json`, and if it is not ~3 lines, `git checkout` and
+  dump it with the other setting. On 2026-09-08 (US-017) the file held em dashes
+  LITERAL, so `ensure_ascii=False` was the 3-line answer and the default was 89.
 - **Measure an icon against what it is drawn ON.** The kit's blocks icon is a
   perfectly legible ice tile in isolation and invisible on the HUD's cream card
   (0.77 luminance against 0.92). PIL over the PNG plus the card's own `Color` is
@@ -182,6 +186,29 @@ Started: 2026-09-07
   blacked out every level after the sixth in a session. The fix is the shape the
   four existing hooks already use: an early return on a `StoryFreeGame` flag.
   Anything else the kit triggers from `GameState.Map` deserves the same look.
+- **A board can be legal, playable and still lie about itself.** Every rule in
+  `lint_levels.py` was about a level contradicting its own goal asset; F-022 was
+  a board that contradicted the player's eyes — four gems walled in by holes,
+  frozen for the whole level, on a level that wins and loses normally. Ask what
+  a board PROMISES, not only what it permits.
+- **A "measured, not acted on" note goes stale the moment a generator changes.**
+  US-011 listed the 22 generated levels with a walled-in cell; US-015's template
+  re-pick moved the list to 23 different ones. Re-run the measurement, never
+  quote the numbers.
+- **A generator fix that leaves `pick_template` alone costs nothing to the bands
+  already swept.** `seal_unmatchable_cells` changed exactly 23 level files and no
+  others, so 101-128 stayed valid except the one of the 23 inside it. A fix that
+  touches the PICK reshuffles hundreds. Check which kind you are making before
+  pricing the re-sweep.
+- **A linter for a project that must not edit some of its own data needs two
+  channels.** Levels 1-100 are the kit's and a hand-edit is undone by the next
+  generator run, so a rule that fires on them can only ever be noise in a gate.
+  `lint_levels.py --strict` and the NOTE line are that seam, and `check_themes.py`
+  had already invented the same one.
+- **Verify the obvious guess before writing it down.** "Fourteen BLOCKS levels
+  count a block you cannot clear" was the natural reading of F-022 and it was
+  false: the goal asks for 62 and 64+ were reachable on every one. Fifteen lines
+  of Python against the pre-change boards settled it.
 - **Six gems cover the whole hue wheel, so a board ground cannot separate from
   them by hue.** It separates by being light and low-chroma. `themes_build.py`
   therefore computes each arc's ground rather than authoring it: the arc's own
@@ -1685,3 +1712,78 @@ ralph/findings.md as a linter rule waiting for a decision about the 22.
     fallout. It was a harness bound that had never been checked.
   - **Reuse the previous iteration's scratchpad clone.** `rsync -a --delete
     Assets/` and rebuild: four builds this iteration, none of them slow.
+
+## 2026-09-08 - US-017 - Play levels 129-144 and fix what they show
+- Swept 129-144 in four foreground batches of four against a player built from
+  the scratchpad clone. `0 finding(s), 0 error(s)` in every batch. Opened all 32
+  screenshots. Levels 129-136 are area 16 The Library, 137-144 area 17 Leo's
+  Study — both arc 1, so both draw the same backdrop (F-003, unchanged).
+- Found and fixed **F-022: cells no match can ever reach.** Level 141 opens with
+  four gems each sitting alone in its own frame, walled in by holes, frozen for
+  the whole level. A match is three in a line and a swap only reaches an
+  orthogonal neighbour, so both live inside one region of the board; a region
+  holding no three collinear cells can never host either.
+- Measured over all 1208 boards, treating only `00` and `x6` (UNDESTROYABLE) as
+  permanent walls: **55 such regions across 25 levels, and every one is a single
+  cell.** Two shapes account for all of them — the kit's level 97 (four corner
+  cells; 9 generated levels inherit it) and the kit's level 45 (one cell in the
+  middle of a picture frame, and it is a block; 14 generated levels inherit it).
+- **None of the fourteen BLOCKS levels was unwinnable.** Their goal asks for 62
+  blocks and 64 to 72 are reachable, so the level ends normally with one blocker
+  still iced. That was the obvious guess and it was wrong; checked level by level
+  against the pre-change boards before writing anything down.
+- The fix is `level_gen.seal_unmatchable_cells`, run last in `generate()` so it
+  sees the shape mirror, flip, thicken and sabotage left behind. It writes `00`
+  over the cell — the hole the board was already behaving as if it had. The
+  region finder is `level_templates.unmatchable_regions`, shared with the linter.
+- **23 level files changed and nothing else.** `pick_template` is untouched, so
+  no level is re-picked; 101-128 were already swept and only level 127 is in the
+  changed set. No target asset moved either: `block_target_count` is read off the
+  finished grid into the provenance file, and all fourteen BLOCKS goals ask for
+  62, which 64+ still satisfies.
+- `tools/lint_levels.py` gained the rule, and with it a **NOTE channel**: the
+  kit's levels 45 and 97 carry the same fault and this project may not rewrite
+  them, so a fault on a preserved board reports as `<level>: NOTE ...` and fails
+  only under `--strict`. Now 0 problems, 5 notes over 1208 levels.
+- Re-swept and re-photographed 141-144 and 125-128 after the change: `0
+  finding(s), 0 error(s)`, and level 141 and level 127 now open as one connected
+  board.
+- Cleared without acting: level 129/143's pass mark of 99/100 (the kit's template
+  11, an INGREDIENT level where the score is a formality); level 138's 11 moves
+  for two ingredients (its template, the kit's level 24, ships 10); levels
+  130/142 and 132/144 being the same board 12 apart (the residual US-015 priced —
+  100 templates over 1108 levels is eleven uses each); level 134's ice-blue
+  blocks against 144's lavender (`CreateSquare` swaps in the `doubleBlock` sprite
+  and `thicken_blockers` promoted 144's); the one-wide block columns on 132/144
+  (a vertical swap inside a one-wide column can make a three-run, and the column
+  refills from its own top row).
+- Files changed: `tools/level_templates.py`, `tools/level_gen.py`,
+  `tools/lint_levels.py`, 23 files under `Assets/JellyGarden/Resources/Levels/`,
+  `tools/out/level_provenance.json`, `CLAUDE.md`, `ralph/findings.md`,
+  `ralph/prd.json`, `ralph/progress.txt`.
+- Gates: typecheck 0 errors, `check_vfx_intact.py` clean, `check_launch_args.py`
+  clean, `validate_story.py` 150/806/1208/1208, `check_themes.py` 0 problems /
+  10 notes (F-003), `lint_levels.py` 0 problems / 5 notes, generators idempotent
+  by content hash over `Resources/Levels`, `Resources/Targets` and `tools/out`.
+  `StorySmokeTest` and `StoryScreenTests` fail on exactly the two constants and
+  five assertions of the recorded baseline, diffed line for line against
+  `screen_base.log`; no C# changed this iteration.
+- **Learnings for future iterations:**
+  - **A board can be legal, playable and still lie about itself.** Every existing
+    lint rule was about a level contradicting its own goal asset. F-022 is a
+    board contradicting the player's eyes, on a level that wins and loses
+    normally. Ask what a board promises, not only what it permits.
+  - **Re-run a deferred measurement, never quote it.** US-011 listed the 22
+    levels with a walled-in cell; US-015's template re-pick silently moved the
+    list to 23 different ones. The list belongs in code, not in prose.
+  - **Ask whether a generator fix touches the PICK.** One that does not is nearly
+    free — 23 files here, none of them re-picked, so every earlier band stayed
+    valid. One that does reshuffles hundreds and re-opens every band swept.
+  - **Two channels for a linter that cannot edit some of its own input.** The
+    kit's 100 levels are bought data; a rule that fires on them is noise in a
+    gate unless it has somewhere else to go. `--strict` and NOTE, the same seam
+    `check_themes.py` already had.
+  - **Check the obvious reading before it becomes the finding.** "The goal counts
+    a block you cannot clear" was wrong on all fourteen levels, and fifteen lines
+    of Python against the pre-change boards said so in a minute.
+---

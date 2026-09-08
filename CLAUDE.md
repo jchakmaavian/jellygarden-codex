@@ -148,13 +148,22 @@ taste.
 ```bash
 python3 tools/lint_levels.py                 # every level, ~0.2s
 python3 tools/lint_levels.py --levels 1-16   # one band
+python3 tools/lint_levels.py --strict        # count the NOTE lines too
 ```
 
 One line per problem as `<level>: <problem>`; non-zero exit when there is at
 least one. Run it before a band sweep — it catches unwinnable goals in a
 fraction of a second that a playtest would take an hour to reach.
 
-It currently reports zero over all 1208 levels, and a level is only ever fixed
+A fault on one of the kit's preserved 100 boards prints as `<level>: NOTE ...`
+and does not fail the run unless you pass `--strict`, because nothing in this
+project may rewrite those files. There are five today, all of them the same
+rule: levels 45 and 97 each carry a cell walled off from every other, where no
+three cells stand in a line and so no match can ever happen. Above 100
+`level_gen.seal_unmatchable_cells` closes such a cell, so the same shape reaches
+a player as the hole the board was already behaving as if it had.
+
+It currently reports zero problems over all 1208 levels, and a level is only ever fixed
 by fixing the generator that wrote it (`tools/level_gen.py`,
 `tools/target_gen.py`) and regenerating — never by hand-editing one file, which
 the next regeneration would undo. The generators are deterministic and
