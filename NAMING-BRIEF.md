@@ -1,41 +1,31 @@
-# Current naming brief
+# Royal Throne: locked name
 
-Updated 8 September 2026 after the user rejected Castle Charm and identified Royal Match as the stronger naming benchmark. **No replacement name is selected.** Castle Charm must not be carried into new logos, assets, story titles, or project identity.
+**Decision: Royal Throne.** The user proposed Royal Throne, reviewed the recommendation, and explicitly instructed "lock the name" on 8 September 2026. This is the approved game name, not an open naming candidate.
 
-## What the previous recommendation missed
+## Canonical presentation
 
-The user wants a confident, commanding royal game identity. The earlier recommendation over-weighted warmth and familiar words. Store searches help identify existing names; they do not establish that a name meets the creative brief or has greater brand strength.
+| Use | Wording |
+| --- | --- |
+| Game name in prose and project documentation | **Royal Throne** |
+| Logo or cinematic title lettering | **ROYAL THRONE** |
+| Descriptive store-title form | **Royal Throne: Match 3** |
 
-Royal Match communicates royal status and a familiar gameplay action together. Castle Charm communicates a setting and a gentle mood, leaving the main activity unexplained. Both have two words and roughly three syllables in common English pronunciation. Length alone therefore does not explain the difference.
+Keep the two-word spelling. Use the same name across game branding, character presentations, story materials, UI concepts, and trailer title cards. A tagline and final logo treatment have not been selected. Do not reopen the shortlist unless the user requests it.
 
-| Criterion | Royal Match | Castle Charm |
-| --- | --- | --- |
-| Royal impression | Royal conveys status and authority directly | Castle identifies a place |
-| Gameplay expectation | Match gives a direct puzzle cue | Charm does not communicate the puzzle action |
-| Tone | Confident and accessible | Gentle and whimsical |
-| Fit to the user's clarified brief | The benchmark | Rejected |
+## Creative intent
 
-This is a qualitative reading of the names and the user's expressed preference. It does not establish why Royal Match is commercially successful or predict another title's performance.
+The user wants a confident royal identity with a castle, king, queen, animated storytelling, and a game trailer. Royal Throne conveys authority and provides a concrete visual symbol around which to develop the world. This describes the intended positioning, not a claim about measured player preference or commercial performance.
 
-## Criteria for the next candidate
+The main name does not explain the puzzle mechanic. Use the Match 3 descriptor and recognizable puzzle imagery when the audience needs that context. Royal Match remains a quality benchmark; Royal Throne should establish its own characters, silhouettes, environments, and presentation.
 
-- Prefer two familiar words with a compact spoken rhythm.
-- Communicate royal authority, achievement, or scale while remaining approachable for a casual puzzle game.
-- Make the match-3 activity clear in the main name where possible; otherwise explicitly account for the missing genre cue.
-- Support both the king and queen and a growing castle story.
-- Have an identity beyond replacing Royal or Match with a near synonym.
-- Compare candidate names beside Royal Match using equivalent typography and artwork; do not give one candidate a stronger presentation and confuse the result with name preference.
-- Search for existing titles before recommending a final candidate. A sparse search result is not evidence of naming quality or worldwide availability.
+## What this decision changes
 
-## Additional public search findings
+The current project documentation and creative treatment now use Royal Throne. The name is ready for subsequent logo, character, UI, and cinematic exploration. Specific cast names, plot, tagline, durations, and art direction in the [story treatment](NAME-STORY-AND-CINEMATICS.md) remain proposals.
 
-These were screened during the correction, not adopted as recommendations:
+The development folder remains `JellyGarden-Codex` and the authorized private GitHub backup remains `jchakmaavian/jellygarden-codex`. This naming decision does not move the Unity project or change its application identifier, product settings, or save identity. No gameplay or finished visual assets were changed in this documentation pass.
 
-- [Kingdom Match: Royal Adventure](https://play.google.com/store/apps/details?id=com.gamee.kingdom.royale.match3.blast.escape) is an existing Google Play match-3 title.
-- [Crown Rush](https://play.google.com/store/apps/details?id=com.bearhand.projectchess) is an existing Google Play chess-survival game; [Crown Rush: Queens Puzzle](https://apps.apple.com/ca/app/crown-rush-queens-puzzle/id6791301922) also appears on the App Store.
-- [Royal Rise](https://play.google.com/store/apps/details?id=com.kaelunsundari.royalen.rise) is an existing Google Play app, although its listed category and function differ from our game.
-- [Royal Crest](https://play.google.com/store/apps/details?hl=en&id=com.royal.deck.legacy.gold.operate) is an existing Google Play game.
+## Research status
 
-These observations are limited public search results, not a comprehensive clearance. No name, domain, or account was registered.
+The limited App Store- and Google Play-focused web searches did not surface an exact Royal Throne mobile-game title. The phrase appears within other games' descriptions, including [Majesty](https://play.google.com/store/apps/details?id=com.herocraft.game.majesty). These checks do not establish worldwide store, domain, or trademark availability. The user's decision locks the creative name; no external name reservation or registration has been performed.
 
-The next naming decision remains open. Preserve the previous [research and player journey](NAMING-RESEARCH.md) as history, with its rejected recommendation clearly marked. The royal setting and draft story remain available for exploration; the user's name rejection does not itself reject the cast, plot, or animation plan.
+Earlier naming research is retained in [NAMING-RESEARCH.md](NAMING-RESEARCH.md), clearly marked as superseded history. Castle Charm was rejected. Castlewish, Crown Match, Royal Triumph, Throne Match, Regal Match, and Palace Match are not active working names. The selected name is **Royal Throne**.

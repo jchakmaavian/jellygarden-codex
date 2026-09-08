@@ -1,4 +1,4 @@
-# jellygarden-codex
+# Royal Throne
 
 This is an independent copy of the saved files from `J:\Unity Projects\Match3-Games`, created on 8 September 2026. Work on this project when developing with Codex. The original belongs to the existing VS Code workflow and must remain untouched.
 
@@ -6,7 +6,7 @@ This is an independent copy of the saved files from `J:\Unity Projects\Match3-Ga
 
 Current work focuses on game logic, level design, story, characters, UX/UI, visualization, animation, and VFX. The first working milestone is one polished playable level. See [GAME-DIRECTION.md](GAME-DIRECTION.md) for priorities and review criteria. Android/iOS export is deferred until requested by the user or boss.
 
-The current creative pass explores a castle, king, and queen setting, including a trailer and animated story scenes. The user rejected Castle Charm; no replacement title is selected. See [NAMING-BRIEF.md](NAMING-BRIEF.md) for the current naming criteria, [NAMING-RESEARCH.md](NAMING-RESEARCH.md) for historical research and a proposed player journey, and [NAME-STORY-AND-CINEMATICS.md](NAME-STORY-AND-CINEMATICS.md) for the draft treatment. The project identity has not been renamed.
+The user locked **Royal Throne** as the game name on 8 September 2026. The descriptive store-title form is **Royal Throne: Match 3**. The creative direction includes a castle, king, queen, game trailer, and animated story scenes. See [NAMING-BRIEF.md](NAMING-BRIEF.md) for the naming decision, [NAMING-RESEARCH.md](NAMING-RESEARCH.md) for historical research and a proposed player journey, and [NAME-STORY-AND-CINEMATICS.md](NAME-STORY-AND-CINEMATICS.md) for the draft treatment. The development folder and backup repository remain `JellyGarden-Codex` and `jchakmaavian/jellygarden-codex`; Unity product settings and save identity have not been changed by the name decision.
 
 ## Open this project
 

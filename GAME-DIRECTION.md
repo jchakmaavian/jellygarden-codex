@@ -1,4 +1,4 @@
-# JellyGarden game direction
+# Royal Throne game direction
 
 Working direction recorded on 8 September 2026 from the user's request.
 
@@ -19,7 +19,7 @@ The user and Codex will collaborate across game design, game development, and pr
 | Animation | Anticipation, movement, impacts, reactions, and celebrations | Motion communicates cause and effect with consistent timing |
 | VFX and sound feedback | Match effects, booster effects, combo feedback, and rewards | Effects make actions satisfying while keeping the board and goals readable |
 
-The user has selected a royal setting with a castle, king, and queen, and has requested a game trailer plus animated storytelling inside the game. The user rejected the Castle Charm recommendation and wants the confident royal presence and gameplay clarity associated with Royal Match. [NAMING-BRIEF.md](NAMING-BRIEF.md) records the corrected naming direction; no replacement title is selected. [NAMING-RESEARCH.md](NAMING-RESEARCH.md) preserves the earlier research and proposed journey as history. [NAME-STORY-AND-CINEMATICS.md](NAME-STORY-AND-CINEMATICS.md) develops the draft story/cinematic treatment. The exact name, cast, plot, and final art direction remain proposals for creative review. The existing game's name and assets are the starting material, not a requirement to keep every current design choice.
+The user has locked the name **Royal Throne** and selected a royal setting with a castle, king, and queen, a game trailer, and animated storytelling inside the game. The descriptive store-title form is **Royal Throne: Match 3**. [NAMING-BRIEF.md](NAMING-BRIEF.md) records the approved naming decision. [NAMING-RESEARCH.md](NAMING-RESEARCH.md) preserves the earlier research and proposed journey as history. [NAME-STORY-AND-CINEMATICS.md](NAME-STORY-AND-CINEMATICS.md) develops the draft story/cinematic treatment under the approved name; the specific cast, plot, tagline, and final art direction remain proposals for creative review. The inherited game's assets are starting material, not a requirement to keep every current design choice.
 
 ## First working milestone: one polished playable level
 
@@ -37,7 +37,7 @@ This milestone does not require a complete game redesign or a mobile export. The
 
 Keep one active milestone. For each change: state the intended player benefit, implement a focused prototype, test it in Unity, review the visible result together, then commit and push completed work. Record uncertain behavior as unverified rather than passed. Keep experiments separate from established work when useful.
 
-The user has prioritized selecting a better name and establishing the royal story direction first. Follow that creative pass with character/visual exploration and the first-level interaction baseline. The trailer and story-animation plans should use the same established game assets and show gameplay that is actually implemented.
+The naming decision is complete: **Royal Throne**. Continue the creative pass with the story hook and character/visual exploration, alongside the first-level interaction baseline. The trailer and story-animation plans should use the same established game assets and show gameplay that is actually implemented.
 
 ## Delivery boundary
 

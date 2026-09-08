@@ -1,26 +1,14 @@
-# Royal game: name, story, and cinematics proposal
+# Royal Throne: story and cinematics proposal
 
-Creative proposal, 8 September 2026. The user requested a better game name, a castle/king/queen story, a game trailer, and animated storytelling inside the game. Those are requested directions. The specific title, cast, plot, durations, and visual choices below are proposed creative decisions; they are not implemented assets or user-approved final designs.
+Creative treatment, 8 September 2026. The user has locked **Royal Throne** as the game name and requested a castle/king/queen story, a game trailer, and animated storytelling inside the game. The specific cast, plot, tagline, durations, and visual choices below remain proposals; the approved title does not imply that these assets are implemented or that the remaining designs are final.
 
 ## Name status
 
-**Undecided.** The user rejected Castle Charm because it lacks the commanding feel they value in Royal Match. [NAMING-BRIEF.md](NAMING-BRIEF.md) is the current naming direction. The previous comparison below is retained as history, not as a recommendation to implement.
+**Locked: Royal Throne.** Use this exact two-word name throughout the creative work. The descriptive store-title form is **Royal Throne: Match 3**. [NAMING-BRIEF.md](NAMING-BRIEF.md) records the decision and canonical presentation.
 
-Previous proposed store title, now rejected: **Castle Charm: Match 3**.
+Proposed tagline, not yet selected: **Every match brings magic home.**
 
-Tagline: **Every match brings magic home.**
-
-Castle gives a clear setting; Charm connects the characters' appeal and the castle's magic. The two familiar words support a warm royal adventure, while Match 3 explains the gameplay in the store title. This is a design judgment, not a measured player preference.
-
-Alternatives for comparison:
-
-| Name | Creative character | Tradeoff |
-| --- | --- | --- |
-| Castle Charm | Familiar wording, royal setting, and magical personality; the current recommendation | Castle is crowded; Charm can evoke jewelry |
-| Castlewish | A distinctive invented compound closely linked to the Wishlight story | A new word to learn; spoken spacing may vary |
-| Crown Charm | Compact royal and magical associations | Less explicit castle setting; possible accessory-brand association |
-
-The initial recommendation was Castlewish. The user's request for internet, App Store, Google Play, and player-journey research led to the revised Castle Charm recommendation on 8 September 2026. See [NAMING-RESEARCH.md](NAMING-RESEARCH.md) for the evidence, limited exact-name search results, tradeoffs, and validation plan. No exact Castle Charm title surfaced in the sampled store searches; worldwide availability remains unconfirmed. No domains or accounts were registered. The Unity folder, GitHub repository, application identifier, and save identity have not been renamed.
+The title establishes a confident royal world. The game and trailer should make the match-3 mechanic visible alongside the king-and-queen story. Earlier name proposals are retained only in [historical research](NAMING-RESEARCH.md).
 
 ## Story proposal
 
@@ -57,7 +45,7 @@ First create a 30-second storyboard and timed animatic. Extend only where the pa
 | 8-11 s | Elara catches a floating map; Rowan holds the door open; both turn toward the player | Invite the player into the partnership |
 | 11-22 s | Show actual puzzle play: a readable swap, a match, a booster, and a satisfying combination | Demonstrate the game we are building |
 | 22-27 s | Recovered Wishlights restore the courtyard fountain; the royal pair celebrate with Pip | Show why the gameplay matters |
-| 27-30 s | Final selected title reveal and tagline; name currently undecided | Make the name memorable |
+| 27-30 s | ROYAL THRONE title reveal, with the tagline to be selected | Make the approved name memorable |
 
 The trailer will use the established characters, castle, puzzle pieces, animation style, and VFX. Gameplay shots must represent implemented gameplay. It is currently a script concept; no final video has been produced.
 
@@ -72,7 +60,7 @@ Use a shared character and environment asset set for the trailer and the story s
 
 ## Production order
 
-1. Review the name and story hook together.
+1. Name locked: Royal Throne. Review and refine the story hook.
 2. Create the king, queen, Pip, and castle visual sheets; establish consistent designs.
 3. Draw the opening storyboard and build a timed animatic with temporary sound.
 4. Produce one finished short shot to prove the character animation and lighting style.

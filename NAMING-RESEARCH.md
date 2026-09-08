@@ -1,6 +1,6 @@
 # Naming research and player journey
 
-**Historical proposal — rejected by the user on 8 September 2026.** Castle Charm is not the current working name. Read [NAMING-BRIEF.md](NAMING-BRIEF.md) for the corrected direction. The analysis below is retained as research history; its recommendation and proposed adoption steps are superseded.
+**Historical proposal — rejected by the user on 8 September 2026.** The user subsequently locked **Royal Throne** as the game name. Read [NAMING-BRIEF.md](NAMING-BRIEF.md) for the approved decision. The analysis below is retained as research history; its naming recommendation, candidate-testing plan, and proposed adoption steps are superseded. Do not reopen the name selection from this historical document.
 
 Research date: 8 September 2026. Original recommendation: **Castle Charm**. Original suggested store title: **Castle Charm: Match 3**.
 
