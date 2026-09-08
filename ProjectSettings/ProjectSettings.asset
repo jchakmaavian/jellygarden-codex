@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 29
-  productGUID: 1500f4628401f466a9290b6ac017974a
+  productGUID: a4169cf20f024bde90d83d38ecf34fe3
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: Match3 Games
+  companyName: CodexSandbox
+  productName: JellyGarden Codex Sandbox
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 1, y: 1}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -170,17 +170,17 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.DefaultCompany.JellyGarden
-    Standalone: com.DefaultCompany.Jelly-Garden
-    Tizen: com.best2dgamesstudio.jellygarden
-    iPhone: com.best2dgamesstudio.jellygarden
-    tvOS: com.best2dgamesstudio.jellygarden
+    Android: com.codexsandbox.jellygarden
+    Standalone: com.codexsandbox.jellygarden
+    Tizen: com.codexsandbox.jellygarden
+    iPhone: com.codexsandbox.jellygarden
+    tvOS: com.codexsandbox.jellygarden
   buildNumber:
     Standalone: 0
     VisionOS: 0
     iPhone: 1
     tvOS: 0
-  overrideDefaultApplicationIdentifier: 0
+  overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 26
   AndroidTargetSdkVersion: 0
@@ -982,11 +982,11 @@ PlayerSettings:
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
   enableDirectStorage: 0
-  cloudProjectId: b16f8774-0eb9-48df-a210-1dee922d97e1
+  cloudProjectId:
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: JellyGarden
-  organizationId: softforhuman
+  projectName:
+  organizationId:
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
