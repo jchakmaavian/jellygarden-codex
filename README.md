@@ -42,6 +42,8 @@ The source baseline commit is `7194b95`. The original source revision was `a82c4
 
 Backup destination: [jchakmaavian/jellygarden-codex](https://github.com/jchakmaavian/jellygarden-codex), a private repository owned by the user. This project's `origin` uses that repository. The initial README commit created on GitHub is preserved in the merged history.
 
+The first game upload completed on 8 September 2026. A fresh download from GitHub restored all 1,670 tracked files, including 853 asset `.meta` files, and passed Git integrity and clean-checkout checks. This recovery check did not launch Unity; the earlier import and C# compilation result is recorded below.
+
 See [BACKUP-AND-RESTORE.md](BACKUP-AND-RESTORE.md) for saving future work online and restoring the project after a Windows or drive failure. Only successfully pushed changes are backed up on GitHub.
 
 ## Verification

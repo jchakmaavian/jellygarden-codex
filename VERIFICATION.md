@@ -29,11 +29,16 @@ The baseline commit `7194b95` preserves the verified source copy. The next commi
 
 During the initial copy and validation, the original Unity Editor and VS Code project were not saved, closed, reconfigured, or built. That phase did not create a remote repository, cloud project, or store submission.
 
-## Online backup preparation, 8 September 2026
+## Online backup verification, 8 September 2026
 
 The user requested online backup and created `https://github.com/jchakmaavian/jellygarden-codex`. Its GitHub page was checked: the repository is private, is owned by `jchakmaavian`, and initially contains one README commit (`4adf588dee4827e72a79b09821827998a234af55`).
 
 - This copy's `origin` is now `https://github.com/jchakmaavian/jellygarden-codex.git`. The original project's remote/configuration was not changed.
 - Local `git fsck --full --no-dangling` passed. The largest game file is approximately 15 MB; no tracked file approaches GitHub's 100 MiB limit.
 - A focused scan found no common GitHub/AWS/OpenAI token or private-key signatures in the scanned text files, and no tracked files with common credential-container filenames. This is not a comprehensive credential audit.
-- Git transport sign-in and an authenticated fetch succeeded. The initial GitHub README commit is preserved by merging both histories; the README combines the repository title with this copy's detailed instructions. The first upload and restore-from-GitHub verification are pending.
+- Git transport sign-in and an authenticated fetch succeeded. The initial GitHub README commit is preserved by merging both histories; the README combines the repository title with this copy's detailed instructions.
+- The first game upload succeeded on `main`, at merge commit `791904905e6cf5e0d6243ca6f1f034d3cd082878`. The push advanced the existing GitHub branch without force-pushing. Local `main` tracks `origin/main`.
+- GitHub's page was checked after upload: it still says **Private repository**, and shows `Assets`, `Packages`, `ProjectSettings`, and the project documentation.
+- A fresh HTTPS clone from GitHub completed at 05:18:44 UTC. Its commit matched the uploaded development snapshot. All 1,670 tracked files and 853 asset `.meta` files were restored, including both game scenes, the package manifest/lockfile, and Unity version settings for **6000.5.10f1**.
+- The restored copy passed `git fsck --full --no-dangling`, `git diff --exit-code HEAD`, and a clean working-tree check. This verified repository download, revision-history integrity, and restoration of the tracked files. Unity was not launched in the temporary recovery copy.
+- Future work must be saved, committed, and successfully pushed to be backed up. No scheduled backup job is configured. See `BACKUP-AND-RESTORE.md` for recovery steps and excluded files.
