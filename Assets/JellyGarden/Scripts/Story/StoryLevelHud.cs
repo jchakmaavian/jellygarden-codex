@@ -90,6 +90,33 @@ namespace JellyGarden.Scripts.Story
             public bool IsScore;
 
             public string Display { get { return Text ?? Remaining.ToString(); } }
+
+            /// <summary>
+            /// What the slot reads when it SHARES the plate: always the plain
+            /// number still owed, on every kind of target.
+            ///
+            /// "have/need" is nine characters at its longest ("1511/1511"), and
+            /// the target card is 100 design units — 118 pixels at 393 — shared
+            /// between up to three chips. Best-fit therefore drew the score's
+            /// nine characters at font 8 beside a one-character count at font
+            /// 19: measured off levels 113, 117, 120, 122, 125 and 128's own end
+            /// screenshots, the score's digits were 3 to 5 pixels tall against
+            /// 14, and "1002/1002" on level 122 lost its slash and read as one
+            /// eight-digit number. It is not a size that can be fixed by sharing
+            /// the plate out differently — nine characters and two counts do not
+            /// fit at one legible size — so the string is what gives.
+            ///
+            /// The number owed is what every other chip already says, so a
+            /// shared plate now reads one way throughout: how much is left, and
+            /// green when it is none. Alone on the plate a score chip has all
+            /// 118 pixels to itself, draws "0/970" at the same font 19 as any
+            /// count, and keeps saying have/need — the fault is the sharing, so
+            /// the seam is `count > 1`, the same one SizeCountBox and
+            /// SizeIconBox turn on.
+            ///
+            /// 1062 of the 1208 levels carry more than one chip.
+            /// </summary>
+            public string DisplayShared { get { return Remaining.ToString(); } }
         }
 
         /// <summary>
@@ -612,11 +639,16 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// A score target reads as progress towards the pass mark rather than as
-        /// an amount still owed: "120/300" says both what the player has and what
-        /// the level wants, in the space one count would take. The word "score"
-        /// is deliberately not on the strip — Royal Match never names it, and the
-        /// number under the icon says everything the player has to know.
+        /// A score target ALONE on the plate reads as progress towards the pass
+        /// mark rather than as an amount still owed: "120/300" says both what the
+        /// player has and what the level wants, in the space one count would
+        /// take. The word "score" is deliberately not on the strip — Royal Match
+        /// never names it, and the number under the icon says everything the
+        /// player has to know.
+        ///
+        /// Sharing the plate is the case this string cannot serve; the chip
+        /// falls back to the plain number owed there. See
+        /// <see cref="HudTarget.DisplayShared"/>.
         /// </summary>
         public static string ScoreText(int have, int need)
         {
@@ -802,12 +834,13 @@ namespace JellyGarden.Scripts.Story
             while (_slots.Count < count) _slots.Add(BuildSlot(_slots.Count));
 
             // The plate is shared out by how wide each target's number actually
-            // is, not evenly. A score target reads "940/1000" and a collect one
-            // reads "3", so on a three-target level an even split gave the score
-            // an eighth of the room it needed and best-fit shrank it to its floor
-            // — a chip a player cannot read at 393 points wide, next to two
-            // single digits at full size. Levels 12, 13 and 14 are where it
-            // showed. The weights are the two shapes, not per-level tuning.
+            // is, not evenly. A score target reads up to five digits and a
+            // collect one reads "3", so on a three-target level an even split
+            // gave the score a fraction of the room it needed and best-fit
+            // shrank it to its floor — a chip a player cannot read at 393 points
+            // wide, next to two single digits at full size. Levels 12, 13 and 14
+            // are where it showed. The weights are the two shapes, not per-level
+            // tuning.
             float total = 0f;
             for (int i = 0; i < count; i++) total += SlotWeight(targets[i]);
             float placed = 0f;
@@ -875,9 +908,17 @@ namespace JellyGarden.Scripts.Story
                 // A finished target goes green rather than gaining a tick: the
                 // kit's font is not guaranteed to carry a check glyph, and a
                 // missing glyph renders as nothing at all.
-                SetText(_slots[i].Count, target.Display);
+                //
+                // `count > 1` is the same seam SizeCountBox and SizeIconBox use,
+                // and for the same reason: a shared plate has no room. See
+                // HudTarget.DisplayShared.
+                SetText(_slots[i].Count, count > 1 ? target.DisplayShared : target.Display);
                 _slots[i].Count.color = target.Done ? StoryUi.RoyalGreen : StoryUi.RoyalNavy;
             }
+
+            // Last, because it measures the boxes the loop above has just sized
+            // and the strings it has just written.
+            MatchNumberSizes(count);
 
             _visibleSlots = count;
         }
@@ -945,9 +986,10 @@ namespace JellyGarden.Scripts.Story
             count.offsetMax = Vector2.zero;
             slot.Count.fontStyle = FontStyle.Bold;
 
-            // A score target reads "120/300" where a collect target reads "4",
-            // and three targets share the card. Best fit lets the one number
-            // stay big and the seven-character one still fit its slot.
+            // A score target alone on the plate reads "120/300" where a collect
+            // target reads "4", and up to three targets share the card. Best fit
+            // lets the one number stay big and the longer one still fit its
+            // slot.
             //
             // This one keeps WRAPPING ON, unlike the Moves value. A slot is one
             // third of a plate 393 points wide, so with wrapping off best-fit
@@ -958,20 +1000,120 @@ namespace JellyGarden.Scripts.Story
             // wide enough that a wrap has not been reached — `SlotWeight` is
             // what keeps it that way.
             slot.Count.resizeTextForBestFit = true;
-            slot.Count.resizeTextMinSize = Mathf.Max(8, Mathf.RoundToInt(18f * _scale));
-            slot.Count.resizeTextMaxSize = Mathf.Max(9, Mathf.RoundToInt(52f * _scale));
+            slot.Count.resizeTextMinSize = MinNumberSize();
+            slot.Count.resizeTextMaxSize = MaxNumberSize();
 
             return slot;
+        }
+
+        /// <summary>The smallest a chip's number may ever be drawn.</summary>
+        private int MinNumberSize()
+        {
+            return Mathf.Max(8, Mathf.RoundToInt(18f * _scale));
+        }
+
+        /// <summary>
+        /// The largest a chip's number may be drawn — what a chip with room to
+        /// spare settles at, and the probe size <see cref="MatchNumberSizes"/>
+        /// measures each string at.
+        /// </summary>
+        private int MaxNumberSize()
+        {
+            return Mathf.Max(9, Mathf.RoundToInt(52f * _scale));
+        }
+
+        /// <summary>
+        /// One plate, one number size: every chip on a shared plate is drawn at
+        /// the largest size that fits the tightest of them.
+        ///
+        /// Best-fit solves each chip on its own, so a chip's size is whatever
+        /// its own string needs in its own box, and one card carries several
+        /// answers. Level 113 read "20 2 1511" at three sizes — the two-digit
+        /// count smallest, the single digit largest, half again as tall as the
+        /// count beside it. It is the fourth member of the
+        /// <see cref="SlotWeight"/> / <see cref="SizeIconBox"/> /
+        /// <see cref="SizeCountBox"/> family: those three own how much ROOM a
+        /// chip gets, and nothing owned the relationship between the SIZES the
+        /// room produces.
+        ///
+        /// Nothing shrinks. The size chosen is the one the tightest chip already
+        /// draws at, so the only chips that move are the ones with room to
+        /// spare, and they move down to meet it. Over all 1208 levels the size
+        /// this settles at is the cap on 695 of them, 17 on 229 and 14 on 284 —
+        /// it never reaches <see cref="MinNumberSize"/>. That floor of 14 is
+        /// what <see cref="HudTarget.DisplayShared"/> bought: while the score
+        /// chip still read "have/need" the tightest chip on a plate was a nine-
+        /// character string at the floor, and matching to it would have taken
+        /// every number down with it.
+        ///
+        /// A plate with one chip keeps best-fit: there is nothing to match, and
+        /// a lone score chip's "0/970" is measured to draw at the cap already.
+        /// </summary>
+        private void MatchNumberSizes(int count)
+        {
+            int cap = MaxNumberSize();
+            if (count < 2)
+            {
+                RestoreBestFit(count);
+                return;
+            }
+
+            float size = cap;
+            for (int i = 0; i < count && i < _slots.Count; i++)
+            {
+                Text number = _slots[i].Count;
+                if (number == null) continue;
+
+                number.resizeTextForBestFit = false;
+                number.fontSize = cap;
+
+                float box = number.rectTransform.rect.width;
+                float wanted = number.preferredWidth;
+
+                // No layout yet — the rect has no width to measure against, and
+                // a size picked from it would be the floor. Best-fit is right
+                // until there is one, and Update pulls this again a tenth of a
+                // second later.
+                if (box <= 1f)
+                {
+                    RestoreBestFit(count);
+                    return;
+                }
+
+                if (wanted > 0f) size = Mathf.Min(size, cap * box / wanted);
+            }
+
+            int chosen = Mathf.Clamp(Mathf.FloorToInt(size), MinNumberSize(), cap);
+            for (int i = 0; i < count && i < _slots.Count; i++)
+                if (_slots[i].Count != null) _slots[i].Count.fontSize = chosen;
+        }
+
+        /// <summary>Hands the first <paramref name="count"/> numbers back to
+        /// best-fit, which is what a plate of one chip wants and what a plate
+        /// with no layout yet has to fall back on.</summary>
+        private void RestoreBestFit(int count)
+        {
+            for (int i = 0; i < count && i < _slots.Count; i++)
+            {
+                Text number = _slots[i].Count;
+                if (number != null && !number.resizeTextForBestFit)
+                    number.resizeTextForBestFit = true;
+            }
         }
 
         /// <summary>
         /// How much of the target plate a slot is worth.
         ///
-        /// A score target's number is "have/need" — up to nine characters — and
-        /// every other target's is a count of at most three. Two and one is the
-        /// ratio of those two shapes, measured rather than tuned: it is what
-        /// keeps "940/1000" at the same drawn size beside a "3" as it has on its
-        /// own.
+        /// A score target's number is the pass mark still owed — five digits at
+        /// its longest, and four on 986 of the 1208 levels — and every other
+        /// target's is a count of at most three. Two and one is the ratio of
+        /// those two shapes, measured rather than tuned, and it still holds
+        /// after <see cref="HudTarget.DisplayShared"/> shortened the score
+        /// string: on a three-chip plate the score's slot is 59 pixels at 393
+        /// wide and its two <see cref="CountGutter"/>s leave 49.5 for five
+        /// digits — 9.9 each — against 20 pixels for a two-digit count, 10 each.
+        /// The two numbers are drawn at the same size because they are given the
+        /// same room per character.
         /// </summary>
         private static float SlotWeight(HudTarget target)
         {

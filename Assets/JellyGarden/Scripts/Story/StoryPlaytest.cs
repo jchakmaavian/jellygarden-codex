@@ -430,22 +430,15 @@ namespace JellyGarden.Scripts.Story
 
             if (reached == GameState.PreWinAnimations)
             {
-                float wait = 0f;
-                while (wait < 60f && manager.gameStatus == GameState.PreWinAnimations)
-                {
-                    yield return new WaitForSecondsRealtime(0.5f);
-                    wait += 0.5f;
-                }
-
+                yield return WaitOut(GameState.PreWinAnimations, "win animation");
                 if (manager.gameStatus == GameState.PreWinAnimations)
                 {
                     Finding(
-                        "the level was won but never showed its win: it sat in PreWinAnimations " +
-                        "for 60s. Targets are complete and moves are spent, and no popup came.");
+                        "the level was won but never showed its win: it stopped moving in " +
+                        "PreWinAnimations. Targets are complete and moves are spent, and no " +
+                        "popup came.");
                     yield break;
                 }
-
-                Say("win animation finished after " + wait + "s; state " + manager.gameStatus + ".");
             }
 
             // The same wait on the losing side, and for the same reason the win
@@ -460,22 +453,14 @@ namespace JellyGarden.Scripts.Story
             // PreFailed is a finding of its own: it is a level that cannot end.
             if (manager.gameStatus == GameState.PreFailed)
             {
-                float wait = 0f;
-                while (wait < 60f && manager.gameStatus == GameState.PreFailed)
-                {
-                    yield return new WaitForSecondsRealtime(0.5f);
-                    wait += 0.5f;
-                }
-
+                yield return WaitOut(GameState.PreFailed, "fail banner");
                 if (manager.gameStatus == GameState.PreFailed)
                 {
                     Finding(
-                        "the level was lost but never finished losing: it sat in PreFailed " +
-                        "for 60s. Moves are spent and no end panel came.");
+                        "the level was lost but never finished losing: it stopped moving in " +
+                        "PreFailed. Moves are spent and no end panel came.");
                     yield break;
                 }
-
-                Say("fail banner finished after " + wait + "s; state " + manager.gameStatus + ".");
             }
 
             // Give the end panel a moment to build, so the shot that follows is
@@ -499,6 +484,78 @@ namespace JellyGarden.Scripts.Story
             {
                 Finding("ended in state " + manager.gameStatus + ", which is neither won nor lost.");
             }
+        }
+
+        /// <summary>
+        /// The longest an end-of-level animation may go with NOTHING happening
+        /// before it is called stuck: no bonus spent, no point scored.
+        ///
+        /// Measured, not chosen. Across the end animations of levels 113-128 the
+        /// longest quiet gap inside a win that DID finish was 5.5 seconds, and
+        /// every fail banner was quiet for at most 0.5 before it moved the state
+        /// itself. Fifteen is 2.7x the worst real gap — far enough that a slow
+        /// animation is never called stuck, and short enough that a stuck one is
+        /// reported four times sooner than the 60-second clock it replaced.
+        /// </summary>
+        private const float StallWindow = 15f;
+
+        /// <summary>
+        /// An absolute stop, so an animation that twitches forever still ends the
+        /// level. Two and a half times the longest end animation on record, and
+        /// under `PER_LEVEL_BUDGET` in tools/playtest_sweep.py, so a level that
+        /// hits it is reported as a finding rather than killing its whole batch.
+        /// </summary>
+        private const float EndingCeiling = 120f;
+
+        /// <summary>
+        /// Waits for the board to leave an end-of-level state, and gives up on
+        /// PROGRESS rather than on the clock.
+        ///
+        /// A fixed clock cannot tell a slow win animation from a stopped one, and
+        /// the two are far apart: over the 71 wins in the sweep reports on this
+        /// machine the animation ran anywhere from half a second to 48.5, and it
+        /// does not scale with what it has to spend — level 111 took 33.5s with no
+        /// moves left to convert and level 80 took 30s with 57. The old 60-second
+        /// bound was 1.24x the worst real win, and level 118 duly crossed it and
+        /// was reported as a level that never showed its win, having shown it
+        /// moments later. That is a fault in the thing watching, not in the game.
+        ///
+        /// The score and the move counter are what the win animation moves as it
+        /// spends leftover moves, and the fail banner ends by moving the state
+        /// itself. So: wait while either is still changing, and call it stuck only
+        /// after <see cref="StallWindow"/> of complete quiet. A genuinely stuck
+        /// level is now reported four times sooner than before, and a slow one is
+        /// no longer reported at all.
+        /// </summary>
+        private IEnumerator WaitOut(GameState state, string what)
+        {
+            LevelManager manager = LevelManager.THIS;
+            float waited = 0f;
+            float quiet = 0f;
+            float longestQuiet = 0f;
+            int score = LevelManager.Score;
+            int limit = manager.Limit;
+
+            while (manager.gameStatus == state && waited < EndingCeiling && quiet < StallWindow)
+            {
+                yield return new WaitForSecondsRealtime(0.5f);
+                waited += 0.5f;
+
+                if (LevelManager.Score != score || manager.Limit != limit)
+                {
+                    score = LevelManager.Score;
+                    limit = manager.Limit;
+                    quiet = 0f;
+                }
+                else
+                {
+                    quiet += 0.5f;
+                    if (quiet > longestQuiet) longestQuiet = quiet;
+                }
+            }
+
+            Say(what + " finished after " + waited + "s (longest quiet " + longestQuiet +
+                "s); state " + manager.gameStatus + ".");
         }
 
         /// <summary>True when the board is idle: nothing blocked, nothing falling, nothing matched.</summary>

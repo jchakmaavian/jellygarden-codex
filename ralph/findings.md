@@ -712,3 +712,112 @@ one this iteration.
   proved pre-existing, and this iteration re-confirmed the exact wording:
   `[Story] expected 807 tasks, loaded 806` and `[Story] expected 1209 stars,
   loaded 1208`. `tools/validate_story.py` passes on 150 / 806 / 1208 / 1208.
+
+
+---
+
+## Iteration note — US-016 (levels 113-128), 2026-09-08
+
+Two faults, one in the game and one in the thing watching it. Both were found by
+opening the pictures; all eight sweep batches printed `0 finding(s), 0 error(s)`
+over the shots that carried the first one.
+
+## F-019 — the score chip was three pixels tall  [FIXED in US-016]
+On a plate that carries more than one chip the score read `have/need` — nine
+characters at its longest — beside a count of one or two. Measured by glyph run
+over the number band of the band's own 393-point screenshots:
+
+| level | plate at the end | digit heights |
+|---|---|---|
+| 113 | `0  0  1511/1511` | 14, 14, **3** |
+| 117 | `0  0  1750/2438` | 14, 14, **3** |
+| 122 | `0  0  1002/1002` | 14, 14, **3** |
+| 120 | `3  3  496/496` | 14, 14, **4** |
+| 125 | `1  1  460/485` | 14, 14, **5** |
+| 128 | `0  19  420/493` | 8, 8, **5** |
+
+Level 122's slash was lost between two digits at that size and the chip read as
+one eight-digit number, `10021002`. This is not a fault that a different share
+of the plate can fix — nine characters and two counts do not fit on a 118-pixel
+card at one legible size — so the STRING is what gives.
+
+`HudTarget.DisplayShared` is the plain number still owed, and a shared plate
+draws it on every chip, score included. It is what every other chip already
+says, so the plate now reads one way throughout: how much is left, green when it
+is none. **Alone on the plate the score chip is unchanged** and still reads
+`0/970` at full size — the fault is the sharing, so the seam is `count > 1`, the
+same one `SizeCountBox` and `SizeIconBox` already turn on. 1062 of the 1208
+levels carry more than one chip.
+
+## F-020 — one plate, three number sizes  [FIXED in US-016]
+The NOTE US-015 left open, and the fourth member of the `SlotWeight` /
+`SizeIconBox` / `SizeCountBox` family: those three own how much ROOM a chip
+gets, and nothing owned the relationship between the SIZES that room produces.
+Best-fit solves each chip alone, so level 113 read `20 2 1511` at three
+different heights — the two-digit count smallest, the single digit half again
+as tall as it.
+
+`StoryLevelHud.MatchNumberSizes` measures each string against its own box at the
+cap size and draws every chip on a shared plate at the smallest of those. It
+takes NOTHING down: the size chosen is the one the tightest chip already draws
+at. Over all 1208 levels it settles at the cap on 695, at 17 on 229 and at 14 on
+284, and never reaches the floor.
+
+That floor of 14 is what F-019 bought. While the score chip still read
+`have/need` the tightest chip on a shared plate was a nine-character string at
+the minimum, and matching to it would have taken every number down with it —
+which is exactly why US-015 recorded "one plate, one size" as a rule that could
+not be applied yet. Fix the string first, then the sizes.
+
+## F-021 — the sweep called a slow win a broken one  [FIXED in US-016]
+`StoryPlaytest.Ending` waited a flat 60 seconds for `PreWinAnimations` and then
+reported "the level was won but never showed its win". Level 118 crossed it and
+was reported as a level that never showed its win, having shown it moments
+later — the same level had finished the same animation in 17.5s and 21.5s on the
+two runs before.
+
+Over the 71 wins in this machine's sweep reports the animation runs from half a
+second to **48.5**, and it does not scale with what it has to spend: level 111
+took 33.5s with no moves left to convert and level 80 took 30s with 57. A
+60-second bound is 1.24x the worst real win, so it was going to false-alarm.
+
+`WaitOut` gives up on PROGRESS instead of on the clock: it waits while the score
+or the move counter is still moving and calls the level stuck only after
+`StallWindow` (15s) of complete quiet, with a 120s ceiling that stays under the
+sweep's per-level budget. 15 is measured — the longest quiet gap inside a win
+that DID finish, across this band, is 5.5s, and every fail banner moved the
+state within 0.5s. A stuck level is now reported four times sooner than before,
+and a slow one is not reported at all.
+
+**Ask whether a new finding is about the game or about the thing watching it.**
+This one arrived in the same run as a HUD fix and looked like its fallout.
+
+## Measured but NOT a fault — checked and cleared
+- **Level 113's plate says `20 2` where its level file says `COLLECT COUNT
+  20/20`.** The asset is right and the file is inert: `LevelManager` parses
+  COLLECT COUNT into `ingrCountTarget`, which it reads only in INGREDIENT mode,
+  and 113 is COLLECT. The chip counts come from `Targets/Level113.asset`, which
+  says 20 and 2. Kit data, carried verbatim by `target_gen.py`.
+- **Interior `00` holes are not black rectangles that the code draws.** They are
+  the arc backdrop seen through the board, and the backdrop is a near-black
+  painting. Levels 115, 117, 120, 122, 124, 125 and 127 all show it. F-003, and
+  only new art closes it.
+
+## NOTE — "Out of time" over a plate of finished goals  [OPEN, not a fault yet]
+Level 122 lost on the clock with `COLLECT 32/35` and the cascade that was still
+settling finished it at 35/35, so the end shot is a fail panel over a strip
+reading `0 0 0` in green. The loss is honest — the timer expired first, and the
+report records both numbers — and it happened once in 24 level-plays across this
+band. Freezing the strip at `GameOver`/`PreFailed` would fix the reading and
+would also stop the win animation's score climbing, so it wants the two states
+separated rather than one guard. Recorded rather than done.
+
+## Standing, after US-016
+- **F-003 (dark backdrops) is still the only OPEN visual finding that new art
+  alone can close.** `check_themes.py`: same 10 NOTE lines.
+- F-005 stands. Eight batches across four sweeps printed `0 finding(s),
+  0 error(s)` over the pictures that carried F-019 and F-020.
+- The 101/111 and 102/112 identical-grid pairs US-015 priced are unchanged.
+- The two Unity batchmode gates are RED on exactly the five screen assertions
+  and the two smoke constants they were red on before this iteration, checked
+  line for line against `screen_base.log` and `smoke_us015.log`.

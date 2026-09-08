@@ -35,6 +35,22 @@ Started: 2026-09-07
   (`Item.cs`, `Random.Range(0, LevelManager.Limit) == 0`) and the collect rule
   (`LevelManager.CheckIngredient` over `GetBottomRow`) settles in five minutes
   what a sweep cannot. Before calling a level unwinnable, find the path.
+- **When a layout cannot be made to fit, change the STRING, not the layout.**
+  Three iterations bought room for the HUD's `have/need` score chip by moving
+  weights, gutters and icon boxes; none could work, because nine characters and
+  two counts do not fit on a 118-pixel card at one legible size. `count > 1` is
+  `StoryLevelHud`'s seam — `SizeCountBox`, `SizeIconBox` and `DisplayShared` all
+  behave one way on a shared plate and another on a plate of one — and a chip
+  that renders fine alone must not be changed to fix one that does not.
+- **A rule rejected as impossible may only be waiting for another one.** "One
+  plate, one number size" was rejected in US-015 because the floor it implied was
+  unreadable; the floor was set by the longest string, and once that string was
+  shortened the same rule became free. Re-check a rejected rule after the thing
+  that made it expensive is gone.
+- **A timeout is a measurement.** Check a fixed one against the distribution it
+  watches before trusting a finding it produced: the sweep's 60s win-animation
+  bound was 1.24x the worst real win on record. Prefer giving up on PROGRESS —
+  it is both safer and faster on a real hang.
 - **Reuse a previous iteration's scratchpad clone.** `rsync -a --delete Assets/`
   into it and rebuild in ~40s; re-cloning `Library` is the slow part and it does
   not need doing twice.
@@ -1585,3 +1601,87 @@ ralph/findings.md as a linter rule waiting for a decision about the 22.
     win star at the same hue — F-009 was right and a second finding was avoided
     by measuring instead of trusting the eye.
 ---
+
+## 2026-09-08 - US-016 - Play levels 113-128 and fix what they show
+- Swept 113-128 in four foreground batches of 4 against a player built from the
+  scratchpad clone, four times over (once before the fixes, three after).
+  `0 finding(s), 0 error(s)` in every batch but one, and that one was F-021.
+  Opened all 32 before-shots and all 32 after-shots.
+- Found and fixed **F-019: the score chip was three pixels tall.** On a plate
+  with more than one chip it read `have/need` — nine characters at its longest —
+  beside a one- or two-digit count, and best-fit drew it at 3 to 5 pixels against
+  14. Level 122's `1002/1002` lost its slash and read as `10021002`. Measured by
+  glyph run over the band's own 393-point screenshots on 113, 117, 120, 122, 125
+  and 128.
+- Nine characters and two counts do not fit on a 118-pixel card at one legible
+  size, so the STRING is what gives. `HudTarget.DisplayShared` is the plain
+  number still owed and a shared plate draws it on every chip, score included —
+  what every other chip already says. **A score chip alone on the plate is
+  untouched** and still reads `0/970` at full size. The seam is `count > 1`, the
+  same one `SizeCountBox` and `SizeIconBox` already turn on. 1062 of 1208 levels
+  share a plate.
+- Found and fixed **F-020: one plate, three number sizes** — the NOTE US-015
+  left open, and the fourth member of the `SlotWeight` / `SizeIconBox` /
+  `SizeCountBox` family. Those three own how much ROOM a chip gets; nothing owned
+  the relationship between the SIZES that room produces, so level 113 read
+  `20 2 1511` at three heights. `StoryLevelHud.MatchNumberSizes` measures each
+  string against its own box at the cap and draws every chip on a shared plate at
+  the smallest of those. **Nothing shrinks** — the size chosen is the one the
+  tightest chip already draws at. Over 1208 levels: cap on 695, 17 on 229, 14 on
+  284, floor never.
+- **F-019 is what made F-020 fixable.** While the score read `have/need` the
+  tightest chip was a nine-character string at the minimum, and matching to it
+  would have taken every number down with it — which is exactly why US-015
+  recorded "one plate, one size" as a rule that could not be applied. Fix the
+  string, then the sizes.
+- Found and fixed **F-021: the sweep called a slow win a broken one.**
+  `StoryPlaytest.Ending` waited a flat 60s for `PreWinAnimations`; level 118
+  crossed it and was reported as a level that never showed its win, having shown
+  it moments later. Over the 71 wins in this machine's reports the animation runs
+  from 0.5s to 48.5 and does NOT scale with what it has to spend (level 111:
+  33.5s with 0 moves left; level 80: 30s with 57), so a 60s bound at 1.24x the
+  worst real win was going to false-alarm. `WaitOut` gives up on PROGRESS: it
+  waits while the score or the move counter moves and calls the level stuck after
+  15s of quiet, ceiling 120s. 15 is 2.7x the longest quiet gap inside a win that
+  finished (5.5s, measured across this band by the new log line).
+- Files changed: `Assets/JellyGarden/Scripts/Story/StoryLevelHud.cs`,
+  `Assets/JellyGarden/Scripts/Story/StoryPlaytest.cs`,
+  `Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs`,
+  `Assets/JellyGarden/Scripts/Story/CLAUDE.md`, `ralph/findings.md`,
+  `ralph/prd.json`, `ralph/progress.txt`.
+- Gates: typecheck 0 errors, `check_vfx_intact.py` clean,
+  `check_launch_args.py` clean, `lint_levels.py` 0 problems in 1208 levels,
+  `check_themes.py` 0 problems / 10 notes (F-003), `validate_story.py`
+  150/806/1208/1208. `StoryScreenTests` and `StorySmokeTest` fail on exactly the
+  five assertions and two constants of the recorded baseline — diffed line for
+  line against `screen_base.log` and `smoke_us015.log`, no new failure.
+- Left OPEN: F-003 (six dark backdrops, art only), and a NOTE that level 122 lost
+  on the clock while a settling cascade finished its last goal, so the fail panel
+  sits over a plate of green zeros — once in 24 level-plays.
+- **Learnings for future iterations:**
+  - **When a layout cannot be made to fit, change the STRING, not the layout.**
+    Three iterations of this file bought room for `have/need` by moving weights,
+    gutters and icon boxes. None of them could work: nine characters and two
+    counts do not fit on a 118-pixel card at one legible size. Shortening the
+    string to what every other chip already says fixed it and cost no geometry at
+    all.
+  - **`count > 1` is this file's seam.** `SizeCountBox`, `SizeIconBox` and now
+    `DisplayShared` all behave one way on a shared plate and another on a plate of
+    one. A rule that only bites when there is no room belongs on that seam, and a
+    chip that renders fine alone should not be changed to fix a chip that does
+    not.
+  - **Order the fixes: a rule that "cannot be applied" may only be waiting for
+    another one.** US-015 rejected "one plate, one number size" because the floor
+    it implied was unreadable. The floor was set by the longest string; once that
+    string was gone, the same rule became free and lands on the cap for 695 of
+    1208 levels.
+  - **A timeout is a measurement, and a fixed one has to be checked against the
+    distribution it is watching.** 60 seconds looked generous and was 1.24x the
+    worst real win. Grepping every report on the machine for the durations took a
+    minute and settled it; a progress-based give-up is both safer AND four times
+    faster on a real hang.
+  - **Ask whether a new finding is about the game or about the thing watching
+    it.** F-021 arrived in the same run as a HUD change and looked like its
+    fallout. It was a harness bound that had never been checked.
+  - **Reuse the previous iteration's scratchpad clone.** `rsync -a --delete
+    Assets/` and rebuild: four builds this iteration, none of them slow.

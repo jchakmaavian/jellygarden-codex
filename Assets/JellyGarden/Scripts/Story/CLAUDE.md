@@ -658,8 +658,9 @@ kit's score bar. Four things about it are not obvious:
   and the score entry's `Done()` is `Score >= star1`. So a score slot is never
   chrome to be hidden — on all 1209 levels it is a goal the player must reach,
   and on the 176 `MODE 0` levels it is the *only* goal. The HUD draws it as a
-  target that reads `have/need` against `star1`; the strip still never uses the
-  word "score". `StoryLevelHud.ReadLevel(level, score)` builds the same model
+  target that reads `have/need` against `star1` when it has the plate to itself,
+  and the plain amount still owed when it shares — see "shorten the STRING"
+  below; the strip still never uses the word "score". `StoryLevelHud.ReadLevel(level, score)` builds the same model
   from `Resources/Levels/N.txt` plus `Resources/Targets/LevelN.asset` with no
   board in the scene — use it for any screen that has to state a level's goal.
 - **The target plate is shared out by weight, not evenly.** `SlotWeight` gives a
@@ -706,6 +707,33 @@ kit's score bar. Four things about it are not obvious:
   it (measured: 24 points to 14). Both sides or neither, as ever. Levels 81, 82,
   85, 87, 90, 92, 94 and 95 are where it was measured; icon gaps went from 3-5
   points to 7-19 with icons only 2-3 points narrower.
+- **When the plate cannot fit the string, shorten the STRING.** `SlotWeight`,
+  `SizeIconBox` and `SizeCountBox` are three iterations of buying room for a
+  score chip that read `have/need` — nine characters at its longest — and none of
+  them could work: nine characters plus two counts do not fit on a card 118
+  pixels wide at 393 at one legible size, and best-fit drew the score at 3 to 5
+  pixels beside a count at 14. Level 122's `1002/1002` lost its slash and read as
+  `10021002`. `HudTarget.DisplayShared` is the plain number still owed, and a
+  plate with more than one chip draws it on every chip — the same thing every
+  other chip already says. **A score chip ALONE on the plate is untouched** and
+  still reads `have/need`: the fault is the sharing, so the seam is `count > 1`,
+  the same one `SizeCountBox` and `SizeIconBox` use. Levels 113, 117, 120, 122,
+  125 and 128 are where it was measured; 1062 of the 1208 levels share a plate.
+- **One plate, one number size.** The three rules above own how much ROOM a chip
+  gets; nothing owned the relationship between the SIZES that room produces,
+  because best-fit solves each chip alone. Level 113 read `20 2 1511` at three
+  heights, the single digit half again as tall as the two-digit count.
+  `MatchNumberSizes` measures each string against its own box at
+  `MaxNumberSize()` and draws every chip on a shared plate at the smallest of
+  those. **It takes nothing down**: the size chosen is the one the tightest chip
+  already draws at. Across all 1208 levels it lands on the cap for 695, 17 for
+  229 and 14 for 284, and never on `MinNumberSize()`. It measures rects, so it
+  runs LAST in `SyncTargets` and falls back to best-fit for a frame if the layout
+  has no width yet — `Update` pulls the strip again a tenth of a second later.
+  **This rule was rejected in US-015 and became free in US-016.** Its floor is
+  set by the longest string on the plate, and while that was `have/need` the
+  floor was unreadable. A rule that "cannot be applied" may only be waiting for
+  another one.
 - **Never reorder the target slots.** `AimKitIconsAtThisHud` matches the kit's
   `TargetIcon`s to this HUD's slots by index, so the model must keep
   `LevelManager.targetObject` order or the collect animation flies to the wrong
@@ -945,6 +973,18 @@ always waited on; PreFailed was not, so every lost level's end shot was taken
 while the kit's fail banner was still sliding and never showed the end panel at
 all. A level that never leaves either pre-state is its own finding: it is a
 level that cannot end.
+
+**`WaitOut` gives up on PROGRESS, not on the clock.** A win animation runs
+anywhere from half a second to 48.5 across the 71 wins on record and does not
+scale with what it has to spend — level 111 took 33.5s with no moves left to
+convert, level 80 took 30s with 57. The flat 60-second bound it replaced was
+1.24x the worst real win, and it duly reported level 118 as a level that never
+showed its win moments before it showed it. `WaitOut` waits while `LevelManager.Score`
+or `Limit` is still moving and calls the level stuck after `StallWindow` (15s,
+2.7x the longest quiet gap measured inside a win that finished) with an
+`EndingCeiling` of 120s that stays under `PER_LEVEL_BUDGET` in
+`tools/playtest_sweep.py`. **A fixed timeout is a measurement**: check it against
+the distribution it watches before believing a finding it produced.
 
 **`Shot` hides the kit tutorial first**, the same three lines `StoryThemeTest`
 has. Without it every shot of a level the kit decides to teach is a picture of a

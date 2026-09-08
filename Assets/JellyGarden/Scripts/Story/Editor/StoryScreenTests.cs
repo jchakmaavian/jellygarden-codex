@@ -1174,6 +1174,29 @@ namespace JellyGarden.Scripts.Story.Editor
                     "a non-SCORE level still shows a plain collect count (read '" +
                     string.Join(" ", otherSlots.ToArray()) + "')");
 
+                // A plate that carries more than one chip reads one way
+                // throughout: the plain number still owed, on the score chip
+                // too. "have/need" is nine characters at its longest and the
+                // card is 118 pixels at 393, so on a shared plate best-fit drew
+                // it at font 8 beside a count at 19 — 3-pixel digits on levels
+                // 113, 117, 120, 122, 125 and 128's own end screenshots. The
+                // score chip keeps the have/need form for the plate it has to
+                // itself; the seam is the sharing, not the target.
+                Expect(other.Targets.Count > 1,
+                    "level " + otherLevel + " shares its target plate (read " +
+                    other.Targets.Count + " chip(s))");
+                Expect(otherSlots.All(t => !t.Contains("/")),
+                    "a shared plate draws the plain number owed on every chip, " +
+                    "score included (read '" + string.Join(" ", otherSlots.ToArray()) + "')");
+                StoryLevelHud.HudTarget sharedScore =
+                    other.Targets.FirstOrDefault(t => t.IsScore);
+                Expect(sharedScore != null, "level " + otherLevel + " carries a score chip");
+                if (sharedScore != null)
+                    Expect(sharedScore.Display.Contains("/") &&
+                           !sharedScore.DisplayShared.Contains("/"),
+                        "the score chip keeps have/need for a plate of its own (alone '" +
+                        sharedScore.Display + "', shared '" + sharedScore.DisplayShared + "')");
+
                 Debug.Log("[Story] non-SCORE level " + otherLevel + " (mode " +
                           StoryLevelHud.ModeOf(otherLevel) + "): Target [" +
                           string.Join(" ", otherSlots.ToArray()) + "] " +
