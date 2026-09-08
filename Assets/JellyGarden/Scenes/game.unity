@@ -15321,9 +15321,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ' Drag the item of the same color to destroy them.
-
-'
+  m_Text: Swap neighbours to match 3 of the same colour.
 --- !u!222 &1127369900
 CanvasRenderer:
   m_ObjectHideFlags: 0

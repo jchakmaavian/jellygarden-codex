@@ -42,3 +42,17 @@ The user requested online backup and created `https://github.com/jchakmaavian/je
 - A fresh HTTPS clone from GitHub completed at 05:18:44 UTC. Its commit matched the uploaded development snapshot. All 1,670 tracked files and 853 asset `.meta` files were restored, including both game scenes, the package manifest/lockfile, and Unity version settings for **6000.5.10f1**.
 - The restored copy passed `git fsck --full --no-dangling`, `git diff --exit-code HEAD`, and a clean working-tree check. This verified repository download, revision-history integrity, and restoration of the tracked files. Unity was not launched in the temporary recovery copy.
 - Future work must be saved, committed, and successfully pushed to be backed up. No scheduled backup job is configured. See `BACKUP-AND-RESTORE.md` for recovery steps and excluded files.
+
+## First playtest and production pass, 8 September 2026
+
+See [PLAYTEST-AND-AUDIT-2026-09-08.md](PLAYTEST-AND-AUDIT-2026-09-08.md) for current evidence; earlier rows above describe the initial copy phase.
+
+- Checked all 19 inherited audit/inventory files against the original with SHA-256: all matched. Original reports were not edited.
+- Played the title/map/Level 1 flow and the Level 4 pause/map abandonment path through native UI.
+- Native drag validation remains open. F8 tracing showed the automated press and release at the same destination position, with input enabled and the board unblocked.
+- Added two opt-in Editor-only playtest controls; Unity recompiled `Assembly-CSharp-Editor.dll` successfully. A new deprecated API warning during the first iteration was removed by using `FindAnyObjectByType`; the final tool compile produced no new tool warnings/errors in the checked log segment.
+- F9 exercised six suggested swaps through the existing game rule path: moves 6→0, score 0→1050, jelly targets 4→1, cascades and a striped piece, then a natural out-of-moves failure. It did not set score/goals/outcome directly and is not a real-input pass.
+- Failure summary and Again→map navigation were observed. A natural win, final-move win, invalid swap and full special-combination testing remain outstanding.
+- Revised Level 1 instruction rendered as two centred, unclipped lines at 720×1280. The scene diff changes only its text field. Other aspect ratios and audio were not tested.
+- Final observed Play Mode Console: 0 errors, 7 inherited/integration warnings.
+- Document links and `git diff --check` passed. No renderer/package/mobile-export configuration changes were made.

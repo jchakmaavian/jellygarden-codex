@@ -6,6 +6,8 @@ This is an independent copy of the saved files from `J:\Unity Projects\Match3-Ga
 
 Current work focuses on game logic, level design, story, characters, UX/UI, visualization, animation, and VFX. The first working milestone is one polished playable level. See [GAME-DIRECTION.md](GAME-DIRECTION.md) for priorities and review criteria. Android/iOS export is deferred until requested by the user or boss.
 
+The active workflow and ordered backlog are in [PRODUCTION-PLAN.md](PRODUCTION-PLAN.md). The first live review and reconciliation with the inherited reports are in [PLAYTEST-AND-AUDIT-2026-09-08.md](PLAYTEST-AND-AUDIT-2026-09-08.md). See [PLAYTEST-TOOLS.md](PLAYTEST-TOOLS.md) for Editor input tracing and explicitly labelled developer-assisted board checks.
+
 The user locked **Royal Throne** as the game name on 8 September 2026. The descriptive store-title form is **Royal Throne: Match 3**. The creative direction includes a castle, king, queen, game trailer, and animated story scenes. See [NAMING-BRIEF.md](NAMING-BRIEF.md) for the naming decision, [NAMING-RESEARCH.md](NAMING-RESEARCH.md) for historical research and a proposed player journey, and [NAME-STORY-AND-CINEMATICS.md](NAME-STORY-AND-CINEMATICS.md) for the draft treatment. The development folder and backup repository remain `JellyGarden-Codex` and `jchakmaavian/jellygarden-codex`; Unity product settings and save identity have not been changed by the name decision.
 
 ## Open this project
@@ -30,7 +32,7 @@ Unity has since generated fresh cache, solution, and `.vscode` files inside this
 - A new Git repository has a baseline commit containing the verified source copy. Its `origin` points to the separate private repository `https://github.com/jchakmaavian/jellygarden-codex.git` for the user's requested online backup. It does not synchronize with the original repository.
 - The copy uses company `CodexSandbox`, product `JellyGarden Codex Sandbox`, a new product GUID, and app identifier `com.codexsandbox.jellygarden`. This separates the usual local game-save identity and installation identity from the original.
 - The copied Unity Cloud project/organization link is cleared, and the copied built-in Unity Services enable/startup flags are disabled. This changes only local files in this copy, not the original project or any online project.
-- Game assets, gameplay scripts, levels, package versions, and rendering configuration are preserved.
+- The initial source snapshot is preserved in Git. Subsequent development changes are recorded in this copy's history; package versions and rendering configuration remain at the copied baseline.
 - Third-party integration settings inside the copied game remain as source content. Check ads, purchases, social login, and backend configuration before enabling those features. This copy is not a published or fully offline game.
 - Installed Unity tools, account sign-in, and global editor preferences remain shared on this computer; this is a separate project, not a separate machine.
 

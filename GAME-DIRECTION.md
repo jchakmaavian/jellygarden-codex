@@ -25,6 +25,8 @@ The user has locked the name **Royal Throne** and selected a royal setting with 
 
 Use Level 1 as the initial place to establish the quality bar before applying changes across the game.
 
+The active production backlog and completion gates are maintained in [PRODUCTION-PLAN.md](PRODUCTION-PLAN.md), with current evidence in [PLAYTEST-AND-AUDIT-2026-09-08.md](PLAYTEST-AND-AUDIT-2026-09-08.md). That review reconciles the historical audit against this copy and begins onboarding and playtest tooling.
+
 1. **Verify the interaction baseline.** Confirm real mouse swaps, match resolution, falling/refill, move consumption, win/fail, and restart behavior. The previous readiness check saw Level 4 running with no Console errors, but did not confirm a successful automated candy swap.
 2. **Define the player's experience.** Make the level goal, first action, character motivation, and success moment clear. Review the proposed visual direction with the user before a broad art replacement.
 3. **Implement the core feel.** Improve the most noticeable gameplay/feedback issue first, then add one representative booster interaction when the baseline is reliable.
