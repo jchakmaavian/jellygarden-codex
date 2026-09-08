@@ -1,12 +1,12 @@
-# Castle Charm: name, story, and cinematics proposal
+# Royal game: name, story, and cinematics proposal
 
 Creative proposal, 8 September 2026. The user requested a better game name, a castle/king/queen story, a game trailer, and animated storytelling inside the game. Those are requested directions. The specific title, cast, plot, durations, and visual choices below are proposed creative decisions; they are not implemented assets or user-approved final designs.
 
-## Recommended working name
+## Name status
 
-**Castle Charm**
+**Undecided.** The user rejected Castle Charm because it lacks the commanding feel they value in Royal Match. [NAMING-BRIEF.md](NAMING-BRIEF.md) is the current naming direction. The previous comparison below is retained as history, not as a recommendation to implement.
 
-Suggested store title: **Castle Charm: Match 3**.
+Previous proposed store title, now rejected: **Castle Charm: Match 3**.
 
 Tagline: **Every match brings magic home.**
 
@@ -57,7 +57,7 @@ First create a 30-second storyboard and timed animatic. Extend only where the pa
 | 8-11 s | Elara catches a floating map; Rowan holds the door open; both turn toward the player | Invite the player into the partnership |
 | 11-22 s | Show actual puzzle play: a readable swap, a match, a booster, and a satisfying combination | Demonstrate the game we are building |
 | 22-27 s | Recovered Wishlights restore the courtyard fountain; the royal pair celebrate with Pip | Show why the gameplay matters |
-| 27-30 s | Castle Charm title reveal and tagline | Make the name memorable |
+| 27-30 s | Final selected title reveal and tagline; name currently undecided | Make the name memorable |
 
 The trailer will use the established characters, castle, puzzle pieces, animation style, and VFX. Gameplay shots must represent implemented gameplay. It is currently a script concept; no final video has been produced.
 
@@ -83,4 +83,4 @@ The current naming/story pass takes priority before broad visual changes. The pr
 
 ## Reference
 
-[Dream Games' official Royal Match page](https://www.dreamgames.com/games/royal-match) describes how its royal characters, castle areas, puzzle pieces, and boosters share a consistent world. That cohesion is a useful quality reference. Castle Charm's proposed king-and-queen partnership, living lantern, and wish-driven castle chapters provide our own story structure.
+[Dream Games' official Royal Match page](https://www.dreamgames.com/games/royal-match) describes how its royal characters, castle areas, puzzle pieces, and boosters share a consistent world. That cohesion is a useful quality reference. Our proposed king-and-queen partnership, living lantern, and wish-driven castle chapters provide a distinct story structure.
