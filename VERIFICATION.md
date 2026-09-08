@@ -15,6 +15,8 @@ Completed on 8 September 2026.
 | Git access from the user's normal Windows account | Verified after the explicitly approved ownership correction on this copy |
 | Unity Editor version | 6000.5.10f1 |
 | Unity import and C# compilation | Completed; process exit code 0 |
+| Unity Hub registration | Added as JellyGarden-Codex |
+| Visible Editor launch | Opened from Hub; copied game scene and level map verified visually |
 | C# compiler errors found | None |
 | Compiler warnings | Present in the inherited code; not changed as part of copying |
 | Play Mode / device / executable build validation | Not performed |

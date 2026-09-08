@@ -4,7 +4,7 @@ This is an independent copy of the saved files from `J:\Unity Projects\Match3-Ga
 
 ## Open this project
 
-- In Unity Hub, add this folder as a project and open it with **Unity 6000.5.10f1**.
+- This folder is now registered in Unity Hub as **JellyGarden-Codex**. Open that entry with **Unity 6000.5.10f1**. If you later remove the entry, use Add > Add project from disk and select this folder again.
 - Add this exact folder to Codex when you want a dedicated project workspace. If you use VS Code, open this folder in a separate window.
 - The first import has already completed successfully with Unity 6000.5.10f1. Unity regenerates its cache if that cache is removed later.
 - Existing build scenes: `Assets/JellyGarden/Scenes/main.unity`, followed by `Assets/JellyGarden/Scenes/game.unity`.
