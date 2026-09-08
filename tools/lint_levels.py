@@ -57,6 +57,14 @@ TARGET_NAME = {SCORE: "SCORE", COLLECT: "COLLECT", INGREDIENT: "INGREDIENT", BLO
 # InitScript.LIMIT
 LIMIT_NAME = {0: "moves", 1: "time"}
 
+# A LIMIT is a number in a unit and the two units are not comparable, so a
+# plausible amount has to be judged per unit. Both rows are the shipped set's
+# own range: the kit's 89 move levels run 6..61 and its 11 time levels are 60
+# (nine of them), 80 and 90. A clock under 60 seconds is shorter than anything
+# the kit asks a player to play, which is what one clamp written in moves did to
+# 63 generated levels; a clock over 90 is longer than anything it has shown.
+LIMIT_RANGE = {0: (6, 61), 1: (60, 90)}
+
 # Square.SquareTypes, as the two digits of a cell.
 # CreateSquare only branches on NONE / EMPTY / BLOCK / DOUBLEBLOCK; anything
 # else in the first digit leaves the square EMPTY and never calls
@@ -243,6 +251,12 @@ def lint_level(number):
         if limit_amount <= 0:
             say("LIMIT is %d %s, so the level is over before a move is made"
                 % (limit_amount, LIMIT_NAME.get(limit_type, "units")))
+        elif limit_type in LIMIT_RANGE:
+            low, high = LIMIT_RANGE[limit_type]
+            if not (low <= limit_amount <= high):
+                say("LIMIT is %d %s, outside the %d..%d the kit ships for that "
+                    "unit" % (limit_amount,
+                              LIMIT_NAME[limit_type], low, high))
 
     # --- COLOR LIMIT --------------------------------------------------------
     color_limit = None

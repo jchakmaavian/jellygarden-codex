@@ -641,6 +641,22 @@ raise Unity and take the shot inside ONE osascript
 - Sorting orders in use: home 300, areas list 350, area page 400, nav bar 500,
   level popup 600, cutscenes 780.
 
+- **A clamp belongs to a unit, not to a function.** `scale_moves` ended
+  `max(8, min(60, scaled))` and was called for both LIMIT types, so 60 meant
+  "moves" on one call and "seconds" on the next: every generated clock was
+  capped at a minute and 63 fell below the kit's own 60-second floor. When one
+  helper serves two units, the bound has to be a table keyed by the unit, and
+  each row has to be read off the shipped set FOR THAT UNIT.
+- **A constant that never binds hides one that does.** The same clamp's floor of
+  8 and ceiling of 60 look fine on the moves row — nothing generated reaches
+  either — and that is exactly why the seconds row went unread for 1108 levels.
+  Check a bound against the distribution it is supposed to bound, per input
+  class, and a bound that never fires is as suspicious as one that always does.
+- **Ask what fraction of a set sits exactly ON a bound.** Three of three time
+  levels in the band read 0:59, and one `collections.Counter` over all 1208
+  turned that coincidence into 50 of 113 pinned at the ceiling with none above
+  it. A pile-up at a limit is the shape of a clamp, and it is a one-line query.
+
 ---
 
 
@@ -2005,3 +2021,88 @@ ralph/findings.md as a linter rule waiting for a decision about the 22.
     right regardless of when Unity decides to run `Start`, and the reason it is
     safe — NONE is set at parse time and never set again — is a one-line
     argument worth writing down next to the code.
+
+## 2026-09-08 - US-020 - Play levels 177-192 and fix what they show
+- Swept 177-192 in four foreground batches of four against a player built from
+  the scratchpad clone. `0 finding(s), 0 error(s)` in all four. Opened all 32
+  screenshots. Levels 177-182 are area 20 The Bath House, 183-192 area 21 Royal
+  Bedchamber; both arc 1, so both the one backdrop (F-003, unchanged).
+- **F-030: the clock was clamped in the wrong unit, on 105 of the game's 113
+  generated time levels.** Levels 180, 184 and 189 all read exactly `0:59` at
+  the start, and so did every other generated time level: 50 of 113 sat on 60
+  seconds, none above it, and 63 below it down to 50.
+  `level_gen.scale_moves` ended `return max(8, min(60, scaled))` and was called
+  for both limit types. LIMIT type 0 counts moves and type 1 counts seconds, and
+  the shipped sets do not overlap: the kit's 89 move levels run 6..61 and its 11
+  time levels are 60 (nine of them), 80 (kit level 69) and 90 (kit level 80). So
+  the ceiling capped every clock at a minute — the 80- and 90-second templates
+  could not survive being used — and the floor of 8 caught nothing, leaving 63
+  levels on a clock shorter than any the kit ships.
+- The fix is `scale_limit(limit, limit_type, difficulty, rng)` reading
+  `LIMIT_BOUNDS`, one row per unit. Moves keep the clamp they always had
+  (8..60), which no generated level reaches either end of, so **no move level
+  changed**; seconds get the shipped time set's own min and max, 60..90. The
+  `rng.choice` stays in the same position, so no other field of any level moved.
+  105 level files changed, one LIMIT line each; **no target asset changed**,
+  because `target_gen` only reads a limit when `limitType == LIMIT_MOVES`.
+- `lint_levels.py` gained the matching rule (`LIMIT_RANGE`, one row per unit,
+  both taken from the shipped set). It flagged exactly the 63 short clocks
+  before the regeneration and zero after, and the kit's own 60/80/90 sit inside
+  the bound so it raises no new NOTE.
+- Six of the 105 are in bands already swept (110, 122, 131, 136, 158, 172), all
+  60 -> 66..86. Nothing below 101 moved.
+- Verified on a screen: rebuilt and re-played 180, 184 and 189. They now read
+  `1:25`, `1:06` and `1:27`, each on one line at the same size the plate already
+  drew `0:59` (`StoryLevelHud` formats `{0}:{1:00}`, so the new ceiling of 90 is
+  `1:30`, four characters). Two of the three levels that all lost on 60 seconds
+  now win; 189 went from 1962 points short to 112.
+- Cleared without acting: level 183's 299-point goal against level 190's 8071
+  (15.7 and 244 points per move, inside the kit's own 17.6..546.7, median 100 —
+  the score bar has no progression across the game but that is inherited, since
+  `scale_stars` spans 0.95..1.40 while the template bases span 300..8200);
+  level 187's 18 goal blocks in two 1-wide columns fenced by holes (`DestroyCor`
+  calls `square.DestroyBlock()` on the destroyed item's OWN square, so a BLOCK
+  is frost over a matchable gem, and a vertical swap inside a 1-wide column
+  makes a three-run); level 188's isolated row of 9 DOUBLEBLOCKs (9 x 2 = the
+  goal of 18, matches horizontally, refills from its own top row); the
+  ingredient arrows drawn inside the board on 178 and 181 (F-028 working — those
+  columns have holes at the bottom); the black cells inside 182, 184 and 190
+  (holes, transparent by design, black only because of F-003); the lose panel's
+  star, measured at (138,95,13) bronze against the win panel's (212,140,20)
+  gold; the two small ingredient icons on 192's plate (`SlotWeight` 1:1:2 and
+  `preserveAspect`, the US-015 geometry).
+- Files changed: `tools/level_gen.py`, `tools/lint_levels.py`, 105 files under
+  `Assets/JellyGarden/Resources/Levels`, `tools/out/level_provenance.json`,
+  `ralph/findings.md`, `ralph/prd.json`, `ralph/progress.txt`.
+- Gates: typecheck 0 errors; `check_vfx_intact.py` clean; `check_launch_args.py`
+  clean; `validate_story.py` 150/806/1208/1208; `check_themes.py` 0 problems /
+  10 notes (F-003); `lint_levels.py` 0 problems / 5 notes; generators idempotent
+  by content hash over `Resources/Levels`, `Resources/Targets` and `tools/out`,
+  run twice. `StoryScreenTests` red on exactly the five assertions of the
+  recorded baseline — diffed line for line against US-019's — and
+  `StorySmokeTest` on exactly the two constants, its log differing only in the
+  save-state boot line.
+- **Learnings for future iterations:**
+  - **A clamp belongs to a unit, not to a function.** One helper served two
+    LIMIT types and its `min(60, ...)` meant moves on one call and seconds on
+    the next. When a helper takes a number whose unit varies, the bound has to
+    be a table keyed by the unit, and each row read off the shipped set for that
+    unit — not one pair of numbers that happens to be safe for the common case.
+  - **A constant that never binds hides one that does.** The floor of 8 and the
+    ceiling of 60 are unreachable on the moves row, which is exactly why nobody
+    looked at what they did to the seconds row for 1108 levels. A bound that
+    never fires deserves the same suspicion as one that always fires.
+  - **Ask what fraction of a set sits exactly ON a bound.** "All three time
+    levels in this band read 0:59" is a coincidence; one `Counter` over all 1208
+    turned it into "50 of 113 pinned at the ceiling, none above it", which is
+    the shape of a clamp and not of a design.
+  - **Price a suspicion against the shipped data before writing the fix.** Two
+    other things in this band looked wrong — a 299-point goal beside an 8071 one
+    — and both died on one measurement against `tools/shipped_levels/`. The same
+    measurement is what proved the clock was real: the kit ships 80 and 90
+    seconds and the generator could not produce either.
+  - **A per-unit fix can be free for the other unit.** Keeping the moves row at
+    exactly 8..60 meant 995 move levels were untouched and the diff is 105 LIMIT
+    lines, which is a diff that can be read. Choose the bound that changes
+    nothing where nothing is wrong.
+---

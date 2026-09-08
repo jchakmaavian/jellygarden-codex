@@ -109,17 +109,37 @@ def flip_grid(grid):
     return [list(row) for row in reversed(grid)]
 
 
-def scale_moves(limit, difficulty, rng):
+# A LIMIT is a number in a unit, and the unit decides the clamp. Type 0 counts
+# moves, type 1 counts seconds, and the two shipped sets do not overlap: the
+# kit's 89 move levels run 6..61 and its 11 time levels are 60 (nine of them),
+# 80 and 90. One 8..60 clamp served both for 1108 levels, and in seconds it was
+# wrong at both ends — it capped every clock at 60, so kit level 69's 80 seconds
+# and kit level 80's 90 could not survive being used as a template, and it
+# floored nothing, so 63 of the 113 generated time levels ran SHORTER than any
+# clock the kit ships.
+LIMIT_MOVES, LIMIT_TIME = 0, 1
+LIMIT_BOUNDS = {
+    # (floor, ceiling), in the row's own unit. The moves row is what the single
+    # clamp always was and no generated level reaches either end of it; the
+    # seconds row is the shipped time set's own smallest and largest.
+    LIMIT_MOVES: (8, 60),
+    LIMIT_TIME: (60, 90),
+}
+
+
+def scale_limit(limit, limit_type, difficulty, rng):
     """
-    Harder levels get fewer moves — but never so few that the board cannot be
-    read. The floor rises with board size elsewhere; here it is a flat 8, which
-    is the smallest move count in the shipped set.
+    Harder levels get less of whatever they are limited by — fewer moves, or
+    fewer seconds — but never less than the kit's own floor for that unit, and
+    never more than its ceiling. See LIMIT_BOUNDS for where the two rows come
+    from; a limit type the kit does not ship is measured in moves.
     """
     # 1.15x at the easy end down to 0.80x at the hard end.
     factor = 1.15 - 0.35 * difficulty
     scaled = int(round(limit * factor))
     scaled += rng.choice((-1, 0, 0, 1))
-    return max(8, min(60, scaled))
+    floor, ceiling = LIMIT_BOUNDS.get(limit_type, LIMIT_BOUNDS[LIMIT_MOVES])
+    return max(floor, min(ceiling, scaled))
 
 
 def scale_stars(stars, difficulty):
@@ -311,7 +331,8 @@ def generate(template, entry, min_open=0.0):
         "cols": template["cols"],
         "rows": template["rows"],
         "limitType": template["limitType"],
-        "limit": scale_moves(template["limit"], difficulty, rng),
+        "limit": scale_limit(
+            template["limit"], template["limitType"], difficulty, rng),
         "colorLimit": scale_colours(
             template["colorLimit"],
             difficulty,

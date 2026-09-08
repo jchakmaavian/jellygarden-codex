@@ -168,6 +168,15 @@ one by `item.color == target.color`, and `Item.GenItem` only ever rolls
 below one past the highest colour any inherited COLLECT target names — otherwise
 the target asks for an item that can never spawn and the level is unwinnable.
 
+**A LIMIT is a number in a unit, so its clamp is per unit.** `LIMIT` type 0
+counts moves and type 1 counts seconds, and the kit's two sets do not overlap:
+89 move levels run 6..61 and 11 time levels are 60 (nine of them), 80 and 90.
+`level_gen.scale_limit` reads its floor and ceiling from `LIMIT_BOUNDS`, one row
+per unit. One clamp of 8..60 served both for 1108 levels and was invisible on
+the moves row — nothing generated reaches either end — while on the seconds row
+it capped every clock at a minute and let 63 levels run shorter than anything
+the kit ships.
+
 **Every generated Unity asset needs a sibling `.meta`.** GUIDs are derived from
 the asset path (`story_common.guid_for`) so a regeneration does not move them and
 break every reference.
@@ -273,6 +282,7 @@ a real fault:
 | a cell that is not two digits, or a block digit outside `0/1/2/5` | `CreateSquare` branches on NONE/EMPTY/BLOCK/DOUBLEBLOCK only; anything else leaves an empty square and never calls `CreateObstacles` |
 | an obstacle digit outside `0/3/4/6/7` | `CreateObstacles` branches on WIREBLOCK/SOLIDBLOCK/UNDESTROYABLE/THRIVING only |
 | `LIMIT` of 0, moves or time | `CheckWinLose` fails the level on the first check |
+| `LIMIT` outside the range the kit ships for that unit (moves 6..61, time 60..90) | the two units are not comparable, so a plausible amount is judged per unit; a clock under 60s is shorter than any the kit asks a player to play |
 | `COLOR LIMIT` outside 3..6 | `LevelMakerEditor` clamps the slider to that range |
 | `STARS` not strictly ascending | the three thresholds are compared in order in `CheckStars` |
 | a `BLOCKS` target above the board's blocks | the board builds `TargetBlocks = BLOCK + 2 * DOUBLEBLOCK`; a higher goal can never be spent |

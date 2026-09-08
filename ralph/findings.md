@@ -1172,3 +1172,98 @@ recorded either way.
 - The two Unity batchmode gates are RED on exactly the five screen assertions
   and the two smoke constants of the recorded baseline. The screen log is
   line-for-line identical to US-018's apart from the save-state boot line.
+
+
+---
+
+## Iteration note — US-020 (levels 177-192), 2026-09-08
+
+Swept 177-192 in four foreground batches of four against a player built from the
+scratchpad clone. Every batch: `0 finding(s), 0 error(s)`. All 32 screenshots
+opened. Levels 177-182 are area 20 The Bath House, 183-192 area 21 Royal
+Bedchamber; both arc 1, so both the one backdrop (F-003, unchanged).
+
+One real fault came out of the pictures, and like F-028 it is not a fault of
+this band: it is on 105 of the game's 113 generated time levels.
+
+## F-030 — the clock was clamped in the wrong unit  [FIXED in US-020]
+Levels 180, 184 and 189 are TIME levels and all three read exactly **0:59** at
+the start. So does every other generated time level in the game: 50 of the 113
+sat on 60 seconds and not one was above it, while 63 were BELOW it, down to 50.
+
+`level_gen.scale_moves` ended `return max(8, min(60, scaled))`, and it was
+called for both limit types. LIMIT type 0 counts moves and type 1 counts
+seconds, and the two shipped sets do not overlap: the kit's 89 move levels run
+6..61 and its 11 time levels are 60 (nine of them), **80** (level 69) and **90**
+(level 80). One clamp of 8..60 for both units was wrong at both ends of the
+seconds row —
+
+- the ceiling **capped every clock at 60**, so the 80- and 90-second templates
+  could not survive being used: no generated level anywhere in 1108 had more
+  than a minute, while the kit's own two longest do;
+- the floor **caught nothing**, because 8 seconds is unreachable, so 63 levels
+  ran on a clock SHORTER than any the kit asks a player to play.
+
+`scale_limit(limit, limit_type, difficulty, rng)` takes its floor and ceiling
+from `LIMIT_BOUNDS`, one row per unit. The moves row is the clamp that was
+always there (8..60) and no generated level reaches either end of it, so **no
+move level changed**; the seconds row is the shipped time set's own min and max,
+60..90. 105 level files changed, all of them one LIMIT line, and no target asset
+moved — `target_gen` only reads a limit when `limitType == LIMIT_MOVES`.
+
+`lint_levels.py` gained the matching rule (`LIMIT_RANGE`, one row per unit). It
+flagged exactly the 63 short clocks before the regeneration and zero after.
+
+Six of the 105 are in bands already swept (110, 122, 131, 136, 158, 172), all
+60 -> 66..86. That is the direction the kit ships in, and generator changes are
+free to the bands below 101, which did not move.
+
+Verified on a screen by rebuilding and re-playing the three: 180 now reads
+**1:25**, 184 **1:06**, 189 **1:27**, each on one line at the same size as
+"0:59" (`StoryLevelHud` formats `{0}:{1:00}`, so 90 is "1:30" — four characters,
+the width the plate was already solving for). Two of the three levels that all
+lost on 60 seconds now win.
+
+## Measured but NOT a fault — checked and cleared
+- **Level 183 asks 299 points and level 190 asks 8071.** Against the moves each
+  gets, that is 15.7 and 244 points per move, and the kit's own score levels run
+  17.6 to 546.7 per move (median 100). Both sit inside the shipped envelope,
+  190 at about its p85. The score bar has no progression across the game, but
+  that is inherited: `scale_stars` spans 0.95..1.40 while the template bases
+  span 300..8200, so the pick dominates. Nothing here is outside what was
+  bought.
+- **Level 187's 18 goal blocks sit in two 1-wide columns fenced by holes.**
+  They are reachable: `Item.DestroyCor` calls `square.DestroyBlock()` on the
+  square of the item being destroyed, so a BLOCK is frost over a real gem that
+  matches like any other, and a vertical swap inside a 1-wide column can make a
+  three-run. The shape US-017 cleared.
+- **Level 188's middle band is one row of 9 DOUBLEBLOCKs walled off above and
+  below.** 9 x 2 = the goal of 18, it matches horizontally, and a disconnected
+  region refills from its own top row.
+- **The ingredient arrow inside the board on levels 178 and 181.** This is
+  F-028 working: column 4 of both boards has a hole at the bottom, so its exit
+  is higher up and the arrow is drawn there rather than on the hole. On 181 the
+  column has exactly one playable cell and the arrow floats in the gap under
+  it — correct, and the alternative was pointing at a hole.
+- **The black cells inside boards 182, 184 and 190.** Holes, drawn as
+  transparent by design — the field background is per-cell and its gold outline
+  traces around them. They read as black only because the backdrop behind them
+  is (F-003).
+- **The lose panel's star.** Measured: gold (212,140,20) on the win panel,
+  bronze (138,95,13) on the lose panel. F-009 as designed.
+- **The two ingredient icons on level 192's plate are smaller than the star.**
+  `SlotWeight` 1:1:2 and `preserveAspect`; the US-015 geometry, by design.
+
+## Standing, after US-020
+- **F-003 (dark backdrops) is still the only OPEN visual finding that new art
+  alone can close.** `check_themes.py`: same 10 NOTE lines.
+- **F-029 is OPEN and still the owner's call** — the "Choco" blocker tile.
+- F-005 stands. Four batches printed `0 finding(s)` over a band in which every
+  time level was running on two thirds of its intended clock.
+- `validate_story.py` green at 150/806/1208/1208; `lint_levels.py` 0 problems,
+  5 notes, with one rule more than it had; generators idempotent by content
+  hash.
+- The two Unity batchmode gates are RED on exactly the five screen assertions
+  and the two smoke constants of the recorded baseline — the screen failures
+  diff clean against US-019's and the smoke log differs only in the save-state
+  boot line.

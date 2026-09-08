@@ -345,8 +345,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 20,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Swept 177-192 in four foreground batches of four against a player built from the scratchpad clone; every batch 0 finding(s), 0 error(s), and all 32 screenshots opened. One fault came out of the pictures and it is a generator fault on 105 levels, not a fault of this band: F-030, the clock was clamped in the wrong unit. level_gen.scale_moves ended max(8, min(60, scaled)) and was called for both limit types, but type 0 counts moves and type 1 counts seconds -- the kit's 89 move levels run 6..61 and its 11 time levels are 60, 80 and 90. The 60 ceiling capped every generated clock at a minute (the 80s and 90s templates could not survive) and the 8 floor caught nothing, so 63 of 113 time levels ran shorter than any clock the kit ships. scale_limit now takes its floor and ceiling from LIMIT_BOUNDS, one row per unit: moves keep 8..60 unchanged (no move level moved) and seconds get the shipped set's own 60..90. 105 level files changed, one LIMIT line each, no target asset. lint_levels.py gained the matching LIMIT_RANGE rule: 63 flagged before the regeneration, 0 after. Verified on a screen -- 180 reads 1:25, 184 1:06, 189 1:27, each on one line, and two of the three levels that all lost on 60 seconds now win. Cleared without acting: level 183's 299-point goal and 190's 8071 (15.7 and 244 points per move against the kit's own 17.6..546.7); level 187's 18 blocks in two 1-wide columns (a BLOCK is frost over a matchable gem and a vertical swap in a 1-wide column makes a three-run); level 188's isolated DOUBLEBLOCK row; the in-board ingredient arrows on 178 and 181 (F-028 working); the black hole cells on 182/184/190; the lose panel's bronze star, measured. Gates: typecheck 0 errors, check_vfx_intact clean, check_launch_args clean, validate_story 150/806/1208/1208, check_themes 0 problems / 10 notes (F-003), lint_levels 0 problems / 5 notes, generators idempotent by content hash; the two Unity gates red on exactly the recorded baseline."
     },
     {
       "id": "US-021",
