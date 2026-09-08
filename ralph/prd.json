@@ -327,8 +327,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 19,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Swept 161-176 in four foreground batches of four against a player built from the scratchpad clone: 0 finding(s), 0 error(s) in every batch. All 32 screenshots opened. Levels 161-170 are area 19 Royal Pool, 171-176 area 20 The Bath House. One real fault, and it is not confined to this band: F-028, the ingredient arrows point at holes. Square.Start hung the blue down-arrow on the last row of the GRID, but CheckIngredient collects over GetBottomRow, which is the lowest cell of each column that is not a hole. Over all 1208 levels: 318 carry an INGREDIENT target and 90 of them draw a wrong arrow — 199 arrows on a hole (21 under a column with no playable cell at all) and 178 real collection cells unmarked. Levels 12, 13, 14, 66, 72, 74 and 76 are the kit's own, so it shipped. Fixed with LevelManager.IngredientExitRow(col), read off the parsed level rather than squaresArray so it does not depend on Start() ordering; no level file changed. Verified by re-photographing 166 and 168 after the fix. F-029 recorded and deliberately NOT acted on: the THRIVING sabotage tile says \"Choco\" on it, the ivy replacement already exists in tools/brand_skin.py, and commit a273731 says the owner looked at the reskinned board and asked for the kit's art back — that one is the owner's call. Gates: typecheck 0 errors; check_vfx_intact, check_launch_args clean; validate_story 150/806/1208/1208; check_themes 0 problems / 10 notes (F-003); lint_levels 0 problems / 5 notes; generators idempotent by content hash. StoryScreenTests and StorySmokeTest red on exactly the recorded baseline's five assertions and two constants, the screen log line-for-line identical to US-018's."
     },
     {
       "id": "US-020",

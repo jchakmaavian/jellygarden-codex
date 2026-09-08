@@ -2158,6 +2158,32 @@ namespace JellyGarden.Scripts
             }
         }
 
+        /// <summary>
+        /// The row of the lowest cell of `col` that is not a hole, or -1 when
+        /// the whole column is holes.
+        ///
+        /// This is the square GetBottomRow() returns for that column, and so
+        /// the one square an ingredient has to reach to be collected. The
+        /// ingredient arrow is drawn under it — see Square.Start. Read off the
+        /// parsed level rather than off squaresArray, because Start() runs on
+        /// a square before the game has any reason to promise the rest of the
+        /// grid exists, and the hole pattern is fixed the moment the file is
+        /// read and never changes afterwards: DestroyBlock only ever moves a
+        /// square towards EMPTY, never to NONE.
+        /// </summary>
+        public int IngredientExitRow(int col)
+        {
+            if (levelSquaresFile == null || col < 0 || col >= maxCols)
+                return -1;
+
+            for (int row = maxRows - 1; row >= 0; row--)
+            {
+                if (levelSquaresFile[row * maxCols + col].block != SquareTypes.NONE)
+                    return row;
+            }
+            return -1;
+        }
+
         public List<Square> GetBottomRow()
         {
             List<Square> itemsList = new List<Square>();

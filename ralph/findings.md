@@ -1066,3 +1066,109 @@ target asset moved.
   and the two smoke constants of the recorded baseline, diffed line for line
   against `screen_base.log` and `smoke_us017.log`. Three new screen cases were
   added this iteration and all three pass.
+
+
+---
+
+## Iteration note — US-019 (levels 161-176), 2026-09-08
+
+Swept 161-176 in four foreground batches of four against a player built from the
+scratchpad clone. Every batch: `0 finding(s), 0 error(s)`. All 32 screenshots
+opened. Levels 161-170 are area 19 Royal Pool, 171-176 area 20 The Bath House;
+both arc 1, so both the one backdrop (F-003, unchanged).
+
+One real fault came out of the pictures, and it is not a level-161-176 fault at
+all — it is on 90 of the game's 318 ingredient levels, seven of them the kit's
+own.
+
+## F-028 — the ingredient arrows point at holes  [FIXED in US-019]
+Levels 166, 168 and 173 draw a straight row of nine blue down-arrows under the
+board. Level 168's fifth arrow sits under a channel that is a hole from the top
+row to the bottom — there is no cell above it and nothing can ever arrive there.
+Level 166's column 4 has exactly one playable cell, at row 5 in the middle of
+the board, and that cell — the one place an ingredient in that column is
+collected — had no arrow at all, while an arrow was drawn at the bottom of the
+grid where the column is a hole.
+
+`Square.Start` hung the arrow on `row == LevelManager.THIS.maxRows - 1`: the
+last row of the GRID. What collects an ingredient is `CheckIngredient` over
+`GetBottomRow`, and `GetBottomRow` walks each column from the bottom and takes
+the first square whose `type != NONE` — the lowest cell of that column that is
+not a hole. The two agree only on a board whose bottom row is solid all the way
+across.
+
+Measured over all 1208 levels: 318 carry an INGREDIENT target, **90 of them draw
+at least one wrong arrow** — 199 arrows on a hole (21 of those under a column
+with no playable cell anywhere) and 178 real collection cells left unmarked.
+Levels 12, 13, 14, 66, 72, 74 and 76 are the kit's own, so this shipped.
+
+`LevelManager.IngredientExitRow(col)` is the shared answer, and `Square.Start`
+asks it instead. It reads the parsed level (`levelSquaresFile`) rather than
+`squaresArray`, because `Start()` runs on a square before the game has any
+reason to promise the rest of the grid exists — and the hole pattern is fixed
+the moment the file is read: `DestroyBlock` only ever moves a square towards
+EMPTY, never to NONE. A column that is all holes returns -1 and gets no arrow.
+
+No level file changed; this is a code fault and the fix is in the one place both
+readings of "the bottom" come from. Verified by re-photographing 166 and 168:
+168's phantom arrow is gone (eight arrows under eight real columns) and 166's
+column-4 arrow has moved up to the lone cell it marks.
+
+## F-029 — the spreading blocker says "Choco" on it  [OPEN — owner's call, NOT changed]
+Levels 164, 166, 169 and 170 put a brown chocolate tile on the board with the
+English word **Choco** embossed on it, legible at the shipping size of 393x852.
+It is `Textures/Blocks/thriving_block.png`, the sprite for the THRIVING square —
+which in this game is Grimm's sabotage, the thing that spreads through a castle
+nobody is maintaining. It is the only text anywhere on a board.
+
+**This is not being changed, and the reason is in the history.** The project
+already has the replacement: `tools/brand_skin.py` writes an ivy tile over that
+exact path, with the comment "The kit's 'Choco' tile is the self-spreading
+blocker. Ivy is what actually spreads over a castle nobody has been
+maintaining." It was applied in `75fe40f` and then reverted in `a273731`, whose
+message is explicit: *"The owner looked at the reskinned board and asked for the
+candy back, so the 50 textures the reskin overwrote are restored to exactly what
+the kit shipped: board pieces, boosters, map tiles, logo, title, loading screen
+and the blocker."*
+
+So the tile is an owner decision that was made after looking at it, not an
+oversight. Re-applying the skin is a one-line command
+(`python3 tools/brand_skin.py`) and undoing it is a `git checkout` of one
+directory — but it is the owner's to make. **Ask before touching it.** What is
+worth saying is that the reskin was reviewed as a whole board of 50 textures;
+whether the word "Choco" specifically was what the owner was looking at is not
+recorded either way.
+
+## Measured but NOT a fault — checked and cleared
+- **Level 167's 23 blocks under 23 wire blocks.** Every one of the goal's 23
+  blocks is a `23` cell — BLOCK under WIREBLOCK — so each needs two destroys,
+  46 in 30 moves, and the bot cleared none. It is clearable: `DestroyBlock`
+  takes the wire first, then `if (block.Count > 1) type = SquareTypes.BLOCK`
+  restores the type so the second destroy reaches the `type == BLOCK` branch and
+  ticks the goal. Hard, not broken.
+- **Levels 161 and 174 are the same board 13 apart**, and both are a 5-wide
+  centre panel between two 1-wide columns. The residual US-015 priced: 100
+  templates over 1108 levels is eleven uses each. The 1-wide columns are the
+  shape US-017 cleared — a vertical swap inside one can make a three-run and it
+  refills from its own top row.
+- **Levels 164, 166, 167 and 175 sit high with dead space under them.** The
+  vertical half of F-026, left alone on purpose: the play area is not
+  vertically symmetric and the kit already tunes y per goal.
+- **The ingredient bot still collects zero.** 166 (4+4), 168 (1+2) and 173
+  (3+1) all ended on their starting counts. Known and priced since US-011: the
+  random-move bot is a weak oracle for a goal that needs aiming.
+- **Level 172's clock reads 1:09 at the end of a 0:59 level.** It is a TIME
+  level and its board carries `+5` gems; the clock going up is the gem working.
+
+## Standing, after US-019
+- **F-003 (dark backdrops) is still the only OPEN visual finding that new art
+  alone can close.** `check_themes.py`: same 10 NOTE lines.
+- **F-029 is OPEN and deliberately not acted on** — it needs a word from the
+  owner, not a commit.
+- F-005 stands. Four batches printed `0 finding(s)` over the band that contained
+  F-028, and F-028 is 199 wrong arrows across 90 levels.
+- `validate_story.py` green at 150/806/1208/1208; `lint_levels.py` 0 problems,
+  5 notes; generators idempotent by content hash.
+- The two Unity batchmode gates are RED on exactly the five screen assertions
+  and the two smoke constants of the recorded baseline. The screen log is
+  line-for-line identical to US-018's apart from the save-state boot line.

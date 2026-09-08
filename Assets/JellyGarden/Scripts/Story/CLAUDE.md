@@ -903,6 +903,24 @@ board found nothing and silently did nothing. Per-scene setup belongs in
 `StorySceneHooks`, which subscribes to `SceneManager.sceneLoaded`; only
 once-per-process work belongs in `StoryBoot`.
 
+## The bottom of a column is `GetBottomRow`, not the last row
+
+An ingredient is collected by `LevelManager.CheckIngredient`, which looks only
+at `GetBottomRow()` — the lowest square of each column whose `type != NONE`. On
+a board with a ragged bottom edge that is NOT `maxRows - 1`, and on a column
+that is holes all the way down it does not exist at all.
+
+`Square.Start` drew the blue exit arrow on `row == maxRows - 1` and so lied on
+90 of the game's 318 ingredient levels: 199 arrows on holes, 178 collection
+cells unmarked (F-028). Both readings now come from
+`LevelManager.IngredientExitRow(col)`, which returns -1 for an all-hole column.
+
+It reads `levelSquaresFile`, the parsed level, not `squaresArray`. `Start()`
+runs on a square before the game has any reason to promise the rest of the grid
+exists — and it does not need to, because NONE is decided when the file is read
+and never changes: `Square.DestroyBlock` only ever moves a square towards
+EMPTY. **Anything asking "is this cell a hole" should ask the parsed level.**
+
 ## Typecheck
 
 Unity writes an explicit `<Compile Include>` per file, so a newly added script is

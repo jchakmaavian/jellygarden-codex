@@ -157,6 +157,18 @@ Started: 2026-09-07
   every frame of the kit's slide-in clip; the camera is neither shared nor
   animated, and screen-space canvases follow it for free.
 
+- **When two pieces of code answer the same question, check that they agree.**
+  "Where is the bottom of this column" was answered twice in the kit — by
+  `LevelManager.GetBottomRow` for the collect rule and by `row == maxRows - 1`
+  in `Square.Start` for the arrow that shows it — and they diverge on any board
+  with a ragged bottom edge: 199 arrows on holes across 90 levels, nothing red.
+  A duplicated definition is a fault waiting for the input that separates them.
+- **Read the git history of an asset before "fixing" how it looks.** The board's
+  `thriving_block.png` says "Choco" on it and the ivy replacement is already
+  written (`tools/brand_skin.py`) — and `a273731` says the owner looked at that
+  reskin and asked for the kit's art back. `git log -- <asset>` is the
+  difference between a fix and undoing a decision.
+
 - **Do not background a sweep.** A backgrounded `playtest_sweep.py` was killed
   twice mid-run, silently, and once raced a later foreground run so that it read
   the other run's report. Run one batch of 8 in the foreground (~6 min, inside
@@ -1911,3 +1923,85 @@ ralph/findings.md as a linter rule waiting for a decision about the 22.
   - **Read a gate's exit code, not its last line.** `validate_story.py | tail`
     prints the tail's status, and this branch carried a red gate through a whole
     iteration whose report called it green.
+
+## 2026-09-08 - US-019 - Play levels 161-176 and fix what they show
+- Swept 161-176 in four foreground batches of four against a player built from
+  the scratchpad clone. `0 finding(s), 0 error(s)` in all four. Opened all 32
+  screenshots. Levels 161-170 are area 19 Royal Pool, 171-176 area 20 The Bath
+  House; both arc 1, so both the one backdrop (F-003, unchanged).
+- **F-028: the ingredient arrows point at holes, on 90 of the game's 318
+  ingredient levels.** `Square.Start` hung the blue down-arrow on
+  `row == LevelManager.THIS.maxRows - 1` — the last row of the GRID. What
+  actually collects an ingredient is `CheckIngredient` over `GetBottomRow`, and
+  `GetBottomRow` walks each column from the bottom and takes the first square
+  whose `type != NONE`: the lowest cell of that column that is not a hole. The
+  two agree only when the bottom row is solid all the way across. Measured over
+  all 1208 levels: 199 arrows drawn on a hole (21 of them under a column with no
+  playable cell anywhere) and 178 real collection cells with no arrow at all.
+  Level 168 draws an arrow under a full-height empty channel; level 166's one
+  playable cell in column 4 sits at row 5 and had no arrow while an arrow sat at
+  the bottom of the grid on a hole.
+- The fix is `LevelManager.IngredientExitRow(col)` and `Square.Start` asking it.
+  It reads `levelSquaresFile` — the parsed level — rather than `squaresArray`,
+  because `Start()` runs on a square before the game has any reason to promise
+  the rest of the grid exists, and the hole pattern is fixed the moment the file
+  is read (`DestroyBlock` only ever moves a square towards EMPTY, never to
+  NONE). A column that is all holes returns -1 and gets no arrow.
+- **No level file changed.** Seven of the 90 are the kit's own (12, 13, 14, 66,
+  72, 74, 76), so the fault shipped — and because it is code, fixing it costs
+  nothing to any band already swept and rewrites none of the preserved 100.
+- Verified by rebuilding and re-photographing 166-168: 168's phantom fifth arrow
+  is gone (eight arrows under eight real columns) and 166's column-4 arrow has
+  moved up to the lone cell it marks.
+- **F-029 recorded and deliberately NOT acted on.** The THRIVING sabotage tile
+  is a brown chocolate square with the English word "Choco" on it, legible at
+  393x852, and it is the only text anywhere on a board. The ivy replacement
+  already exists — `tools/brand_skin.py` writes it over that exact path — but
+  commit `a273731` says "The owner looked at the reskinned board and asked for
+  the candy back ... and the blocker." It is an owner decision made after
+  looking, not an oversight. Written into `ralph/findings.md` as OPEN with the
+  one command that applies it, for the owner to answer.
+- Cleared without acting: level 167's 23 blocks under 23 wire blocks (each `23`
+  cell needs two destroys, and `if (block.Count > 1) type = SquareTypes.BLOCK`
+  is what makes the second one tick the goal — hard, not broken); levels 161 and
+  174 being the same board 13 apart (the residual US-015 priced); levels 164,
+  166, 167 and 175 sitting high (the vertical half of F-026, left alone on
+  purpose); the ingredient bot collecting zero on 166, 168 and 173 (known since
+  US-011); level 172's clock reading 1:09 at the end of a 0:59 level (a TIME
+  level whose board carries `+5` gems).
+- Files changed: `Assets/JellyGarden/Scripts/LevelManager.cs`,
+  `Assets/JellyGarden/Scripts/Square.cs`, `ralph/findings.md`, `ralph/prd.json`,
+  `ralph/progress.txt`.
+- Gates: typecheck 0 errors; `check_vfx_intact.py` clean; `check_launch_args.py`
+  clean; `validate_story.py` 150/806/1208/1208; `check_themes.py` 0 problems /
+  10 notes (F-003); `lint_levels.py` 0 problems / 5 notes; generators idempotent
+  by content hash over `Resources/Levels`, `Resources/Targets` and `tools/out`,
+  run twice. `StoryScreenTests` red on exactly the five assertions of
+  `screen_base.log` and `StorySmokeTest` on exactly the two constants — the
+  screen log is line-for-line identical to US-018's apart from the save-state
+  boot line.
+- **Learnings for future iterations:**
+  - **When two pieces of code answer the same question, check that they agree.**
+    "Where is the bottom of this column" was answered twice — once by
+    `GetBottomRow` for the rule and once by `row == maxRows - 1` for the picture
+    — and they diverge on any board with a ragged bottom edge. A duplicated
+    definition is a fault waiting for the input that separates them. Give it one
+    name and make both callers ask it.
+  - **The picture and the rule can disagree without anything failing.** Nothing
+    in 1208 levels errored, no goal became unwinnable, no test went red. The
+    only symptom was an arrow telling a player to aim somewhere the game was not
+    looking — which is exactly the class the automated report cannot score, and
+    exactly why the screenshots have to be opened.
+  - **A fault found in one band is not a fault of that band.** F-028 turned up
+    on level 168 and lives on 90 levels including seven of the kit's own.
+    Measure the blast radius over all 1208 before writing the fix, and the
+    measurement usually also tells you which of the two readings is wrong.
+  - **Read the git history before "fixing" something ugly.** The Choco tile has
+    a finished replacement sitting in `tools/brand_skin.py` and a revert commit
+    explaining that the owner asked for it back. Ten minutes of `git log` on one
+    asset is the difference between a fix and undoing a decision.
+  - **Ordering-free beats ordering-correct.** `Square.Start` could have read
+    `squaresArray` and been right today. Reading the parsed level instead is
+    right regardless of when Unity decides to run `Start`, and the reason it is
+    safe — NONE is set at parse time and never set again — is a one-line
+    argument worth writing down next to the code.

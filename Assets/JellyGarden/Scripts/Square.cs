@@ -52,7 +52,15 @@ namespace JellyGarden.Scripts
         void Start()
         {
             // GenItem();
-            if (row == LevelManager.THIS.maxRows - 1)
+            // The ingredient arrow marks where an ingredient has to arrive, so
+            // it belongs under the square CheckIngredient actually watches —
+            // the lowest cell of this column that is not a hole. The kit hung
+            // it on the last row of the GRID instead, which is the same square
+            // only on a board whose bottom row is solid all the way across. On
+            // the other 90 ingredient levels that drew 199 arrows onto holes
+            // (21 of them under a column with no playable cell at all) and left
+            // 178 real collection cells unmarked.
+            if (row == LevelManager.THIS.IngredientExitRow(col))
             {
                 if(LevelManager.Instance.targetObject.Any(i=>i.type==Target.INGREDIENT))
                 {
