@@ -284,6 +284,20 @@ def generate(template, entry, min_open=0.0):
 
     grid = thicken_blockers(grid, difficulty, rng)
     grid = strip_self_acting(grid)
+
+    # Sealed BEFORE the sabotage, not after it. Sealing writes a hole over a
+    # cell no match can reach, and on level 547 that cell was the one the
+    # sabotage had just been placed on: the board came out with no spreading
+    # blocker on it at all and the plan's sabotage flag became a lie, which
+    # `validate_story.py` catches and did.
+    #
+    # The order is free to change because sealing does not depend on the
+    # obstacle digit — `unmatchable_regions` treats only holes and undestroyable
+    # blocks as walls, and a thriving block is neither — so it sees exactly the
+    # same shape here as it saw at the end. It still runs after the mirror, the
+    # flip and the thickening, which are what decide that shape.
+    grid = seal_unmatchable_cells(grid)
+
     if entry["sabotage"]:
         # A thriving block closes its cell until it is cleared, so it never
         # reduces the board's permanently open area — but the check stays here so
@@ -291,11 +305,6 @@ def generate(template, entry, min_open=0.0):
         sabotaged = apply_sabotage(grid, rng)
         if open_ratio(sabotaged) >= min_open - 1e-9:
             grid = sabotaged
-
-    # Last, so it sees the shape every other mutation left behind. Sealing only
-    # ever removes cells, so the open-cell floor is re-checked in main() on the
-    # finished file rather than trusted here.
-    grid = seal_unmatchable_cells(grid)
 
     return {
         "mode": template["mode"],

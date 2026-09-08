@@ -913,6 +913,62 @@ python3 tools/make_typecheck_csproj.py
 dotnet build Story.Typecheck.csproj -v q --nologo
 ```
 
+## Where the board sits (StoryBoardCentre)
+
+`LevelManager.GenerateLevel` places the field at `-maxCols / 2.75f` and then
+lays its squares out `squareWidth` apart. Those two numbers only agree for one
+board width — at the shipped `squareWidth` of 0.82 that width is **nine** — so
+the game's 1140 nine-wide boards are centred and its other 68 are not, the worst
+of them (five columns) by nine points at 393. The kit ships the same fault on
+eight of its own hundred levels, so nothing in the data can fix it.
+
+`StoryBoardCentre` aims the **camera** at the middle of the grid, on
+`OnLevelLoaded` / `OnStartPlay` like `StoryBoardTheme`, and that choice is the
+part worth keeping:
+
+- **Not the field.** Three other objects hang off its only parent, so moving
+  that moves them; and its own x is driven every frame of the slide-in by the
+  legacy clip `AnimateField` builds fresh per level, so writing it afterwards
+  lands the board and then jerks it sideways. Moving the camera moves nothing
+  else — the level's canvases follow it, the backdrop with them, and the board's
+  effects are children of the board.
+- **It is idempotent and re-applied**, because `EnableMap(false)` puts the
+  camera back on the origin on the way into every level.
+- **It centres the GRID, not the filled cells.** A board with an empty left
+  column is a board the level file drew that way; re-centring on what is left
+  would move the 1140 boards that are already right.
+- **Vertical is deliberately untouched.** The same arithmetic is off in y, but
+  the play area is not symmetric — HUD above, booster row below — and the kit
+  already tunes it per goal (`yOffset = 0.3` for INGREDIENT). There is no
+  correct answer to compare against the way there is for x.
+
+## Speaking over a room (DialogueSystem, StoryDialogueRoom)
+
+`DialogueSystem` draws a card and nothing else, which is right whenever there is
+already a screen underneath it. Twice a beat has fired with nothing behind it
+and the player got a cream card on black: the opening, which grew its own
+backdrop and said so, and the sabotage line at level 157, which did not.
+**`StoryDialogueRoom` is that backdrop, once** — canvas 810, the area's own room
+covering the screen under a `RectMask2D`, a 0.32 dim over it. Anything that
+plays dialogue from a place where the shell is down needs it.
+
+**The card is sized to its line, and the line is measured, not counted.** It was
+a fixed 400 units with room for three lines of type; the *median* line in this
+game is 79 characters, which wraps to five, and 185 of the 354 lines the game
+speaks are long enough to fall out of the card. It grows upward from the same
+bottom edge to a ceiling set by where the Skip button starts, and only then does
+the type shrink (54 down to a floor of 34). Three rules behind it:
+
+- **Fit the WHOLE line, never what the typewriter has drawn so far**, or the
+  card grows a row at a time under the reader's eyes.
+- **`Text.cachedTextGeneratorForLayout` is the only thing that knows the row
+  count.** A character count is not a row count in a proportional font.
+- **The first frame of a beat has no canvas width**, and a card fitted to a
+  zero-width box is fitted to nothing. `Tick` retakes the fit — in `Tick`
+  rather than `Update` so an editor test, which has no frame loop, can force
+  the canvas and read the result back (`LineOverflow`, `CardHeight`,
+  `LineFontSize`).
+
 ## Dressing the board (StoryBoardTheme, StoryThemeTest)
 
 `StoryBoardTheme` puts the arc's picture behind the board and the arc's colour
@@ -989,6 +1045,21 @@ the distribution it watches before believing a finding it produced.
 **`Shot` hides the kit tutorial first**, the same three lines `StoryThemeTest`
 has. Without it every shot of a level the kit decides to teach is a picture of a
 dimmed screen with a hand on it.
+
+**`Reach` taps through a story beat, and photographs it on the way.** A level
+can be gated on dialogue — level 157 is the sabotage beat, and
+`StoryFlow.LaunchLevel` holds the board back until it is done — and a beat waits
+for a tap forever. Before US-018 the bot slept for thirty seconds and then
+reported the beat as *"never became playable — black screen"*, which `break`s
+the run: the sweep of 157-160 played ONE level and abandoned three. It presses
+the dialogue's own `Advance` button, once per poll, the same shape as
+`StoryThemeTest.PressOnThroughDialogue`. **A harness that cannot get past a
+screen reports that screen as a fault and hides everything behind it.**
+
+The `_beat` shot is taken after ONE press, not before: the first press finishes
+the typewriter, and a picture taken on the frame the card opens is a picture of
+an empty card. Both dialogue faults in `ralph/findings.md` (F-024, F-025) were
+found in that one picture.
 
 **Two PNGs per level, in `Application.persistentDataPath/playtest/`**, named
 `0001_level_1_start.png` / `..._end.png` so the directory sorts into playing

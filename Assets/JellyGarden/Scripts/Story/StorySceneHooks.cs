@@ -43,6 +43,7 @@ namespace JellyGarden.Scripts.Story
             StoryMusic.Install();
             StoryLevelFullBleed.Install();
             StoryBoardTheme.Install();
+            StoryBoardCentre.Install();
             StoryMapLabels.Install();
             StoryOneStar.Install();
             StoryLevelHud.Install();

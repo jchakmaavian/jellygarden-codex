@@ -309,8 +309,8 @@
         "python3 tools/check_vfx_intact.py reports no regressions"
       ],
       "priority": 18,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Swept 145-160 in four foreground batches of four against a player built from the scratchpad clone; 0 findings / 0 errors in every batch once the band could be played at all, and all 33 screenshots were opened. Five faults fixed: F-023 the playtest reported level 157's story beat as a black screen and abandoned 158-160; F-024 that beat was spoken over black, now over the Royal Pool room via the shared StoryDialogueRoom; F-025 the dialogue card held three lines where the median line in the game wraps to five, so 185 of 354 lines spilled out of it, now the card is sized to its line; F-026 the kit's -maxCols/2.75 field placement centres nine-wide boards only, leaving 68 levels up to nine points off centre, now corrected on the camera by StoryBoardCentre; F-027 validate_story.py was red at the branch point because US-017's seal ran after apply_sabotage and took level 547's blocker with it."
     },
     {
       "id": "US-019",

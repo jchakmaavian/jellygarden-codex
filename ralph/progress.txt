@@ -130,6 +130,32 @@ Started: 2026-09-07
   `git status --porcelain` lists names; a generator that rewrites a file with
   different bytes shows nothing new. `find ... | sort | xargs shasum | shasum`
   is the check that actually holds.
+- **Read a gate's exit code, not its last line.** `python3 tools/x.py | tail`
+  reports the TAIL's status. `validate_story.py` was red for a whole iteration
+  whose report called it green, on a failure its own last line did not carry.
+- **A harness that cannot get past a screen reports that screen as a fault and
+  hides everything behind it.** The playtest scored level 157's story beat
+  "never became playable — black screen" and, because a finding breaks the run,
+  abandoned three levels — while the picture it had already taken held two real
+  faults. When a finding is about a screen the bot cannot dismiss, ask what the
+  bot could not do before believing what it said.
+- **Measure a text layout in ROWS, not in characters.** Character counts are not
+  row counts in a proportional font; `Text.cachedTextGeneratorForLayout` at the
+  real width is the only thing that knows. And check the MEDIAN of the content,
+  not its extreme: the median dialogue line already overflowed its card, which
+  is what turned one beat into 185 of 354 lines.
+- **A private fix is half a fix.** `OpeningSequence` solved "the dialogue card
+  floats on nothing", wrote a paragraph about it in its own header, and the next
+  caller shipped the same black screen. When a header explains a fault, ask
+  whether the fix is reachable by anyone else.
+- **A kit constant can be right for exactly one input.** `-maxCols / 2.75f`
+  against a `squareWidth` of 0.82 centres nine-wide boards and no others, so
+  1140 levels look right and 68 do not. When a layout is fine on most content
+  and wrong on some, solve the geometry rather than collecting screenshots.
+- **Correct a world-space layout on the CAMERA when the object is not yours.**
+  The board's field shares a parent with three other objects and its x is driven
+  every frame of the kit's slide-in clip; the camera is neither shared nor
+  animated, and screen-space canvases follow it for free.
 
 - **Do not background a sweep.** A backgrounded `playtest_sweep.py` was killed
   twice mid-run, silently, and once raced a later foreground run so that it read
@@ -1787,3 +1813,101 @@ ralph/findings.md as a linter rule waiting for a decision about the 22.
     a block you cannot clear" was wrong on all fourteen levels, and fifteen lines
     of Python against the pre-change boards said so in a minute.
 ---
+
+## 2026-09-08 - US-018 - Play levels 145-160 and fix what they show
+- Swept 145-160 in four foreground batches of four against a player built from
+  the scratchpad clone. `0 finding(s), 0 error(s)` in every batch — but the
+  first run of 157-160 played ONE level and stopped, and that was the iteration.
+  Opened all 33 screenshots (32 plus a new beat shot). Levels 145-146 are area
+  17 Leo's Study, 147-156 area 18 The Map Room, 157-160 area 19 Royal Pool; all
+  arc 1, so all one backdrop (F-003, unchanged).
+- **F-023: the harness reported a story beat as a black screen.** Level 157 is
+  the game's one `sabotageBeat`, and `StoryFlow.LaunchLevel` holds the board
+  back until `StorySabotage.PlayIntroIfDue` is done. A beat waits for a tap
+  forever; `StoryPlaytest.Reach` only slept, then called the level dead — and
+  that finding `break`s the run, so 158, 159 and 160 went unplayed. `Reach` now
+  presses the dialogue's own `Advance` button while it waits and takes a `_beat`
+  screenshot of the card first, after ONE press so the typewriter has finished.
+- **F-024: the sabotage beat was spoken into a void.** The beat fires with the
+  shell down and the board not yet loaded, so Alfred's card sat on pure black.
+  `OpeningSequence` had solved exactly this privately, and says so in its
+  header. That backdrop is now `StoryDialogueRoom` — canvas 810, the area's own
+  room covering the screen under a `RectMask2D`, the 0.32 dim the opening
+  measured — and both callers use it.
+- **F-025: over half the game's dialogue fell out of its card.** The card was a
+  fixed 400 units with the body inset 100/70 — 92 pixels at a 31-pixel line
+  pitch, so three lines. The sabotage line is 70 characters and wraps to five:
+  `tap to continue` sat on top of line four and "Opened." was drawn on the black
+  below the card. The **median** line in this game is 79 characters and **185 of
+  its 354 lines are over 70**. `DialogueSystem` now measures the whole line with
+  `cachedTextGeneratorForLayout` and grows the card upward to a ceiling set by
+  the Skip button, shrinking the type (54 to a floor of 34) only past that. A
+  short line is unchanged; the portrait moved to a top anchor so it stays beside
+  the name plate.
+- **F-026: 68 boards are not in the middle of the screen.** `GenerateLevel`
+  places the field at `-maxCols / 2.75f` and lays squares out `squareWidth`
+  apart, and those agree only at nine columns for the shipped 0.82. 1140 levels
+  are nine wide and centred; the other 68 are 5, 6 or 8 wide and sit 9.0, 6.6
+  and 2.0 points left. The kit ships it on eight of its own hundred levels.
+  `StoryBoardCentre` aims the CAMERA at the middle of the grid — not the field,
+  whose only parent carries three other objects and whose x is driven every
+  frame of the slide-in by the clip `AnimateField` builds. Level 149 measured
+  -9.0 points before and -0.5 after.
+- **F-027: `validate_story.py` was RED at the branch point** on `level 547: plan
+  says sabotage=True but the board says False`, and US-017's report says it was
+  green. `seal_unmatchable_cells` ran after `apply_sabotage` and sealed the very
+  cell the sabotage had been placed on. Sealing runs before it now — free,
+  because `unmatchable_regions` treats only holes and undestroyable blocks as
+  walls. 8 level files changed (269, 286, 433, 539, 547, 583, 631, 675), all
+  above 260, none in a swept band; no target asset moved.
+- Cleared without acting: levels 146/156 being two boards with a wall of holes
+  between them (the kit's own level 55 ships that shape; both halves hold three
+  in a line and refill from their own top row); level 155's one-wide columns
+  (the shape US-017 cleared, and its eleven lavender cells are DOUBLEBLOCK,
+  worth two each against a goal of 18); level 148's board sitting high (the
+  VERTICAL half of F-026, left alone on purpose — the play area is not
+  symmetric and the kit already tunes y per goal); levels 151/152/158/160 ending
+  on "Already beaten" with their goals met (replays, and bronze is right).
+- Files changed: `Assets/JellyGarden/Scripts/Story/DialogueSystem.cs`,
+  `StoryDialogueRoom.cs` (new), `StoryBoardCentre.cs` (new),
+  `StorySabotage.cs`, `OpeningSequence.cs`, `StorySceneHooks.cs`,
+  `StoryPlaytest.cs`, `Editor/StoryScreenTests.cs`, `Story/CLAUDE.md`,
+  `tools/level_gen.py`, 8 files under `Resources/Levels/`,
+  `tools/out/level_provenance.json`, `CLAUDE.md`, `ralph/findings.md`,
+  `ralph/prd.json`, `ralph/progress.txt`.
+- Gates: typecheck 0 errors; `check_vfx_intact.py` clean; `check_launch_args.py`
+  clean; `validate_story.py` **green again** at 150/806/1208/1208;
+  `check_themes.py` 0 problems / 10 notes (F-003); `lint_levels.py` 0 problems /
+  5 notes; generators idempotent by content hash over `Resources/Levels`,
+  `Resources/Targets` and `tools/out`. `StoryScreenTests` fails on exactly the
+  five assertions of `screen_base.log` and `StorySmokeTest` on exactly the two
+  constants of `smoke_us017.log`, diffed line for line; the three screen cases
+  added this iteration all pass.
+- **Learnings for future iterations:**
+  - **A harness that cannot get past a screen reports that screen as a fault and
+    hides everything behind it.** The first sweep of 157-160 printed one finding
+    and looked like a game bug. It was the bot, and the cost was not the wrong
+    finding — it was the three levels it never played and the two real faults
+    sitting in the picture it had already taken.
+  - **Photograph the screen the harness is about to dismiss.** Both dialogue
+    faults were in one PNG. Take it after one press, not before: a shot on the
+    frame a typewriter card opens is a shot of an empty card.
+  - **A private fix is half a fix.** `OpeningSequence` had solved "the card
+    floats on nothing" and written a paragraph about it in its own header, and
+    the next caller shipped the same black screen. When a header explains a
+    fault, ask whether the fix is reachable by anyone else.
+  - **Measure a text layout in ROWS, not in characters.** "How long is the
+    longest line" is the wrong question in a proportional font; `Text`'s own
+    generator at the real width is the only thing that knows. And check the
+    MEDIAN of the content, not the extreme — the median line was already too
+    long, which is what turned one beat into 185 of 354.
+  - **A kit constant can be right for exactly one input.** `-maxCols / 2.75f`
+    against `squareWidth` 0.82 centres nine-wide boards and nothing else. When a
+    layout looks fine on most content and wrong on some, solve the geometry
+    rather than measuring more screenshots.
+  - **Correct a world-space layout on the camera when the object is not yours.**
+    The field's parent is shared and its x is animated; the camera is neither,
+    and screen-space canvases follow it for free.
+  - **Read a gate's exit code, not its last line.** `validate_story.py | tail`
+    prints the tail's status, and this branch carried a red gate through a whole
+    iteration whose report called it green.

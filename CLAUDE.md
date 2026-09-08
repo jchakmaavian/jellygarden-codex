@@ -163,6 +163,14 @@ three cells stand in a line and so no match can ever happen. Above 100
 `level_gen.seal_unmatchable_cells` closes such a cell, so the same shape reaches
 a player as the hole the board was already behaving as if it had.
 
+**`lint_levels.py` is not the only gate a generator change has to pass.**
+Sealing was added at the END of `generate()`, after `apply_sabotage`, and on
+level 547 the cell it closed was the cell the sabotage had just been put on — so
+the board came out with no spreading blocker and `validate_story.py` went red on
+`plan says sabotage=True but the board says False`, silently, for a whole
+iteration. Run **every** gate in "Full verification" after a generator change,
+and read its exit code rather than the last line of its output.
+
 It currently reports zero problems over all 1208 levels, and a level is only ever fixed
 by fixing the generator that wrote it (`tools/level_gen.py`,
 `tools/target_gen.py`) and regenerating — never by hand-editing one file, which

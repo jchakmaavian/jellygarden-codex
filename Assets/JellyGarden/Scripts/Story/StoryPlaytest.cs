@@ -28,6 +28,7 @@ using JellyGarden.Scripts.GUI.TutorialStuff;
 using JellyGarden.Scripts.Targets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace JellyGarden.Scripts.Story
 {
@@ -311,12 +312,61 @@ namespace JellyGarden.Scripts.Story
             StoryFlow.LaunchLevel(level, areaId);
 
             float waited = 0f;
+            bool shotTheBeat = false;
+
             while (waited < 30f && LevelManager.THIS.gameStatus != GameState.Playing)
             {
+                // A level can be gated on a story beat: level 157 opens with the
+                // sabotage line, and StoryFlow.LaunchLevel holds the board back
+                // until it is done. A beat waits for a tap forever, so a bot that
+                // only sleeps reports the beat as "never became playable — black
+                // screen" and, because that finding breaks the run, every level
+                // behind it goes unplayed. Tap through it the way a player would.
+                if (DialogueSystem.IsPlaying && !shotTheBeat)
+                {
+                    // The card IS what the player is looking at here, so it gets
+                    // its own picture before it is dismissed. Without one the only
+                    // evidence a beat ever played is that the level took longer to
+                    // open — and the fault this shot exists to catch is a card
+                    // whose text falls off the bottom of it.
+                    //
+                    // Shot after ONE press, not before it: the first press is what
+                    // finishes the typewriter, and a picture taken on the frame the
+                    // card opens is a picture of an empty card.
+                    shotTheBeat = true;
+                    Say("story beat before the board; photographing it, then tapping through.");
+                    PressOnThroughDialogue();
+                    yield return new WaitForSecondsRealtime(0.4f);
+                    yield return Shot(level, "beat");
+                }
+
+                PressOnThroughDialogue();
+
                 yield return new WaitForSecondsRealtime(0.25f);
                 waited += 0.25f;
             }
             yield return new WaitForSecondsRealtime(1.5f);
+        }
+
+        /// <summary>
+        /// Presses the dialogue's own full-screen Advance button — the handler a
+        /// tap would reach — rather than synthesising a click. Same shape as
+        /// StoryThemeTest.PressOnThroughDialogue and StoryShellTest's.
+        ///
+        /// One press finishes the line being typed, the next moves on, so this is
+        /// called once per poll rather than looped: the card is on screen long
+        /// enough to be worth a picture if a later shot wants one.
+        /// </summary>
+        private static void PressOnThroughDialogue()
+        {
+            if (!DialogueSystem.IsPlaying) return;
+
+            GameObject host = GameObject.Find("~StoryDialogue");
+            if (host == null) return;
+
+            Button[] buttons = host.GetComponentsInChildren<Button>(true);
+            for (int i = 0; i < buttons.Length; i++)
+                if (buttons[i].name == "Advance") buttons[i].onClick.Invoke();
         }
 
         #region Playing

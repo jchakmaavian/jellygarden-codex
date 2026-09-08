@@ -35,6 +35,13 @@ namespace JellyGarden.Scripts.Story
             StoryArea area = StoryDatabase.GetArea(entry.AreaId);
             string room = area != null ? area.Name.ToLowerInvariant() : "the room";
 
+            // The beat fires from StoryFlow.LaunchLevel: the shell has already
+            // come down for the level and the board has not been loaded yet, so
+            // there is nothing on screen for the card to be spoken over. Without
+            // the room behind it the one moment the game names Grimm out loud is
+            // a cream card on black — which is what level 157 photographed.
+            StoryDialogueRoom.Show(entry.AreaId);
+
             DialogueSystem.Play(new List<DialogueLine>
             {
                 new DialogueLine("Alfred",
@@ -42,7 +49,11 @@ namespace JellyGarden.Scripts.Story
                     "Not broken. Opened."),
                 new DialogueLine("Leo",
                     "Then someone is still here, undoing my work as fast as I do it.")
-            }, onDone);
+            }, () =>
+            {
+                StoryDialogueRoom.Hide();
+                if (onDone != null) onDone();
+            });
 
             return true;
         }

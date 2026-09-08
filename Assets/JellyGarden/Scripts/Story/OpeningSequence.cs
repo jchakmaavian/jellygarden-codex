@@ -40,7 +40,6 @@ namespace JellyGarden.Scripts.Story
 
         private static OpeningSequence _instance;
 
-        private Canvas _canvas;
         private bool _playing;
 
         public static bool IsPlaying
@@ -73,52 +72,26 @@ namespace JellyGarden.Scripts.Story
             var go = new GameObject("~StoryOpening");
             StoryObjects.Persist(go);
             _instance = go.AddComponent<OpeningSequence>();
-            _instance.Build();
         }
 
         /// <summary>
-        /// The room the lines are spoken over.
+        /// `DialogueSystem` owns the card, the portrait and the tap-to-advance,
+        /// and `StoryDialogueRoom` owns the room behind them. This owns only the
+        /// lines and when they are owed.
         ///
-        /// The shell is closed for the level the player just won, so without this
-        /// the dialogue card floats on nothing — which is the black screen the
-        /// old cutscene was blamed for and which survived deleting it.
-        ///
-        /// It is the Castle Gates room itself, not a separate cinematic plate:
-        /// Leo is standing at his own gate saying her name, and the same picture
-        /// visibly repairs as the area is restored. Covering rather than
-        /// letterboxed, because bars are what made the old version read as a
-        /// slideshow.
-        /// </summary>
-        private void Build()
-        {
-            // Below DialogueSystem's 850 so the card always draws on top.
-            _canvas = StoryUi.CreateOverlayCanvas("OpeningBackdropCanvas", 840);
-            _canvas.transform.SetParent(transform, false);
-
-            RectTransform root = StoryUi.Stretch(
-                StoryUi.CreateRect("Room", _canvas.transform));
-
-            // A covering view overflows its parent by design, so the parent has
-            // to mask or the room paints outside the screen it belongs to.
-            root.gameObject.AddComponent<RectMask2D>();
-            AreaSceneView.Attach(root, OpeningArea, true);
-
-            // Enough to hold the card's cream and the white text against a bright
-            // midday castle, not enough to lose the gate behind it.
-            Image dim = StoryUi.CreateImage("Dim", root, null, new Color(0.03f, 0.05f, 0.11f, 0.32f));
-            StoryUi.Stretch(dim.rectTransform);
-
-            gameObject.SetActive(false);
-        }
-
-        /// <summary>
-        /// `DialogueSystem` owns the card, the portrait and the tap-to-advance;
-        /// this owns only the room behind them.
+        /// The room matters as much here as the card does: the shell is closed
+        /// for the level the player just won, so without it the card floats on
+        /// nothing — which is the black screen the old cutscene was blamed for
+        /// and which survived deleting it. It is the Castle Gates room itself,
+        /// not a separate cinematic plate: Leo is standing at his own gate saying
+        /// her name, and the same picture visibly repairs as the area is
+        /// restored. That backdrop used to be built here; it is shared now,
+        /// because the sabotage beat needed the same thing and got black instead.
         /// </summary>
         private void Begin(Action onDone)
         {
             _playing = true;
-            gameObject.SetActive(true);
+            StoryDialogueRoom.Show(OpeningArea);
             DialogueSystem.Play(BuildLines(), () => Finish(onDone));
         }
 
@@ -160,7 +133,7 @@ namespace JellyGarden.Scripts.Story
         {
             _playing = false;
             StoryProgress.MarkOpeningSeen();
-            gameObject.SetActive(false);
+            StoryDialogueRoom.Hide();
 
             if (onDone != null) onDone();
         }

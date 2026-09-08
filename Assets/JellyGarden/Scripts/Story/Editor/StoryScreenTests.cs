@@ -74,6 +74,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 RepairPlaysOverTheRoomAndPaysForItself();
                 ClueCardShowsTheClueVerbatimAndDismissesItself();
                 DialogueTypesOutAndAdvancesOnTap();
+                DialogueCardHoldsEveryLineTheGameSpeaks();
                 ArcBeatsHaveScenesAndPlayThemOnce();
                 OpeningPlaysAfterTheFirstWinAndOnlyOnce();
                 GeneratedArtIsWiredUp();
@@ -82,6 +83,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 TheGameIsFree();
                 RepairsAreClassifiedByWhatTheyAre();
                 EveryArcHasATheme();
+                BoardsAreCentredWhateverTheirWidth();
                 EveryAreaOpens();
                 RoyalPrimitivesConstruct();
                 LevelHudIsTargetAndMoves();
@@ -482,6 +484,109 @@ namespace JellyGarden.Scripts.Story.Editor
             Expect(done, "dialogue calls back");
         }
 
+        /// <summary>
+        /// Every line the game speaks has to fit the card it is spoken on.
+        ///
+        /// The card used to be a fixed 400 units tall with room for three lines
+        /// of type, and the MEDIAN line in this game is 79 characters, which
+        /// wraps to five. Level 157's sabotage beat put "Not broken." under the
+        /// tap hint and "Opened." on the black below the card, and 185 of the
+        /// 354 lines the game speaks are long enough to do the same.
+        ///
+        /// It asks the fit, not the scene graph: `LineOverflow` is how far the
+        /// wrapped line spills past its box, measured in the real font at the
+        /// real width, which is the only thing that knows how many rows a string
+        /// becomes.
+        /// </summary>
+        private static void DialogueCardHoldsEveryLineTheGameSpeaks()
+        {
+            // Every line the game can speak, from the data rather than from a
+            // list written here: a longer line added to the markdown tomorrow is
+            // then covered by this without anyone remembering to add it.
+            var spoken = new List<string>();
+            for (int areaId = 5; areaId <= StoryDatabase.AreaCount; areaId += 5)
+            {
+                Cutscene scene = CutsceneRunner.Get(areaId);
+                if (scene == null) continue;
+                for (int i = 0; i < scene.Lines.Count; i++) spoken.Add(scene.Lines[i].Text);
+            }
+
+            // The sabotage beat is not in cutscenes.json — it is assembled in
+            // StorySabotage from the area's own name — and it is the line that
+            // found this fault.
+            spoken.Add("The sluice gates above royal pool had been opened. Not broken. Opened.");
+
+            if (spoken.Count == 0)
+            {
+                Fail("no dialogue to measure");
+                return;
+            }
+
+            spoken.Sort((a, b) => b.Length.CompareTo(a.Length));
+            string longest = spoken[0];
+
+            // How TALL a card comes out is a fact about the screen it is on — a
+            // wide one wraps the same line into fewer rows — so only the two ends
+            // are asserted: a six-character line can never need more than the
+            // card always had, and a 345-character one can never fit in it.
+            Fits("a short line", "Freya?", true, false);
+            Fits("the sabotage beat", spoken[spoken.Count - 1], false, false);
+            Fits("the longest line in the game (" + longest.Length + " characters)",
+                longest, false, true);
+        }
+
+        /// <summary>
+        /// Plays one line and reports whether the card ended up holding it.
+        /// <paramref name="mustStaySmallest"/> and <paramref name="mustGrow"/>
+        /// are the two ends of the height rule; a line between them may come out
+        /// either way depending on how wide the screen is.
+        /// </summary>
+        private static void Fits(string what, string line, bool mustStaySmallest, bool mustGrow)
+        {
+            bool done = false;
+            DialogueSystem.Play(
+                new List<DialogueLine> { new DialogueLine("Alfred", line) },
+                () => done = true);
+
+            var dialogue = Object.FindFirstObjectByType<DialogueSystem>();
+            if (dialogue == null)
+            {
+                Fail("no DialogueSystem object was created for " + what);
+                return;
+            }
+
+            // The canvas has no size until it is forced, and a card fitted to a
+            // zero-width box is a card fitted to nothing; the tick is what takes
+            // the fit again once there is something to measure against.
+            Canvas.ForceUpdateCanvases();
+            StoryClock.Advance(0.1f);
+            dialogue.Tick(StoryClock.Now);
+
+            Expect(DialogueSystem.LineOverflow <= 0f,
+                "the card holds " + what + " (spills " +
+                DialogueSystem.LineOverflow.ToString("0.0") + " units, type at " +
+                DialogueSystem.LineFontSize + ")");
+            Expect(DialogueSystem.LineFontSize >= DialogueSystem.SmallestLineFontSize,
+                "the type stays readable for " + what +
+                " (" + DialogueSystem.LineFontSize + ")");
+
+            if (mustStaySmallest)
+                Expect(Mathf.Approximately(DialogueSystem.CardHeight,
+                           DialogueSystem.ShortestCardHeight),
+                    "a short line leaves the card the size it always was (" +
+                    DialogueSystem.CardHeight + ")");
+
+            if (mustGrow)
+                Expect(DialogueSystem.CardHeight > DialogueSystem.ShortestCardHeight,
+                    "the card grew for " + what + " (" + DialogueSystem.CardHeight + ")");
+
+            Button skip = dialogue.GetComponentsInChildren<Button>(true)
+                .FirstOrDefault(b => b.name == "Skip");
+            if (skip != null) skip.onClick.Invoke();
+
+            Expect(done, "the card hands back after " + what);
+        }
+
         private static void ArcBeatsHaveScenesAndPlayThemOnce()
         {
             StoryProgress.ResetAll();
@@ -570,6 +675,14 @@ namespace JellyGarden.Scripts.Story.Editor
             Expect(OpeningSequence.PlayIfDue(1, () => done = true),
                 "the opening plays after the first win");
             Expect(OpeningSequence.IsPlaying, "the opening is on screen");
+
+            // The card is spoken over the room, never over black. The shell is
+            // closed for the level just won, so without a room behind it the
+            // opening is a cream card floating on nothing — the same fault the
+            // sabotage beat shipped with.
+            Expect(StoryDialogueRoom.AreaShowing == 1,
+                "the opening is spoken over Castle Gates (" +
+                StoryDialogueRoom.AreaShowing + ")");
 
             var dialogue = Object.FindFirstObjectByType<DialogueSystem>();
             Button advance = dialogue.GetComponentsInChildren<Button>(true)
@@ -682,6 +795,48 @@ namespace JellyGarden.Scripts.Story.Editor
             Expect(blank == 0, "every area has something to draw (" + blank + " do not)");
         }
 
+        /// <summary>
+        /// The kit places the field at `-maxCols / 2.75` and then lays its
+        /// squares out `squareWidth` apart, and those two numbers agree for one
+        /// board width only. At the shipped `squareWidth` of 0.82 that width is
+        /// nine — so 1140 of the game's levels are centred and the other 68 are
+        /// not, the worst of them (five columns, level 149 among them) by 0.178
+        /// units, which is nine pixels at 393 points.
+        ///
+        /// This asserts the rule, not one level: every width the game actually
+        /// uses is asked, and the answer is checked against the geometry rather
+        /// than against a table of numbers copied out of a screenshot.
+        /// </summary>
+        private static void BoardsAreCentredWhateverTheirWidth()
+        {
+            const float squareWidth = 0.82f;
+
+            // What the kit does on its own, for the record.
+            Expect(Mathf.Abs(StoryBoardCentre.OffsetFor(9, squareWidth)) < 0.01f,
+                "a nine-wide board was already centred (" +
+                StoryBoardCentre.OffsetFor(9, squareWidth) + ")");
+            Expect(StoryBoardCentre.OffsetFor(5, squareWidth) < -0.15f,
+                "a five-wide board was not (" +
+                StoryBoardCentre.OffsetFor(5, squareWidth) + ")");
+
+            // And what the correction is worth: the camera is aimed at the
+            // middle of the grid, so the board's left and right margins come out
+            // equal for every width.
+            int[] widths = { 5, 6, 8, 9 };
+            for (int i = 0; i < widths.Length; i++)
+            {
+                int columns = widths[i];
+                float aimedAt = StoryBoardCentre.OffsetFor(columns, squareWidth);
+
+                float left = -columns / 2.75f;
+                float right = left + (columns - 1) * squareWidth;
+
+                Expect(Mathf.Abs((aimedAt - left) - (right - aimedAt)) < 0.001f,
+                    "a " + columns + "-wide board sits in the middle of the view (" +
+                    (aimedAt - left) + " left, " + (right - aimedAt) + " right)");
+            }
+        }
+
         private static void SabotageStartsWhereTheStorySaysItDoes()
         {
             // GAMEPLAY.md: areas 001-018 are static neglect. Nothing on the board
@@ -709,12 +864,59 @@ namespace JellyGarden.Scripts.Story.Editor
 
             // The beat itself is marked exactly once.
             int beats = 0;
+            int beatLevel = 0;
             for (int levelNumber = 1; levelNumber <= StoryLevelPlan.LevelCount; levelNumber++)
             {
                 StoryLevelEntry entry = StoryLevelPlan.Get(levelNumber);
-                if (entry != null && entry.SabotageBeat) beats++;
+                if (entry == null || !entry.SabotageBeat) continue;
+                beats++;
+                if (beatLevel == 0) beatLevel = levelNumber;
             }
             Expect(beats == 1, "exactly one level carries the sabotage beat (" + beats + ")");
+
+            if (beatLevel == 0) return;
+            BeatIsSpokenOverItsRoom(beatLevel);
+        }
+
+        /// <summary>
+        /// The one moment the game names Grimm out loud is played from
+        /// `StoryFlow.LaunchLevel`: the shell has come down for the level and the
+        /// board has not loaded yet, so there is nothing on screen for the card
+        /// to be spoken over. It shipped like that — a cream card on black, which
+        /// is what level 157 photographed — until the opening's own backdrop was
+        /// made shareable.
+        ///
+        /// The test leaves the beat UNSEEN, which is the state a fresh install is
+        /// in; `Check` restores the story save but not PlayerPrefs.
+        /// </summary>
+        private static void BeatIsSpokenOverItsRoom(int beatLevel)
+        {
+            StoryLevelEntry entry = StoryLevelPlan.Get(beatLevel);
+            StorySabotage.ResetIntro();
+
+            bool played = false;
+            Expect(StorySabotage.PlayIntroIfDue(beatLevel, () => played = true),
+                "the sabotage beat takes over level " + beatLevel);
+            Expect(StoryDialogueRoom.AreaShowing == entry.AreaId,
+                "the beat is spoken over area " + entry.AreaId + " (showing " +
+                StoryDialogueRoom.AreaShowing + ")");
+
+            Expect(!StorySabotage.PlayIntroIfDue(beatLevel, null),
+                "the beat never plays a second time");
+
+            var dialogue = Object.FindFirstObjectByType<DialogueSystem>();
+            Button skip = dialogue == null
+                ? null
+                : dialogue.GetComponentsInChildren<Button>(true)
+                    .FirstOrDefault(b => b.name == "Skip");
+            if (skip != null) skip.onClick.Invoke();
+
+            Expect(played, "the beat hands the level back when it is over");
+            Expect(StoryDialogueRoom.AreaShowing == 0,
+                "the room comes down with the card (" +
+                StoryDialogueRoom.AreaShowing + ")");
+
+            StorySabotage.ResetIntro();
         }
 
         private static int CountSabotaged(int fromArea, int toArea)

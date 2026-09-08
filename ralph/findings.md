@@ -920,3 +920,149 @@ problem. Today: **0 problems, 5 notes**.
 - The two Unity batchmode gates are RED on exactly the five screen assertions
   and the two smoke constants of the recorded baseline, diffed line for line
   against `screen_base.log`. No C# changed this iteration.
+
+
+---
+
+## Iteration note — US-018 (levels 145-160), 2026-09-08
+
+Four batches, `0 finding(s), 0 error(s)` in all of them once the band could be
+played at all — and the first batch could not. Three faults, one of them the
+first in this sweep that the harness itself was hiding.
+
+Levels 145-146 are area 17 Leo's Study, 147-156 area 18 The Map Room, 157-160
+area 19 Royal Pool. All three are arc 1, so all three draw the same backdrop.
+That is F-003 and nothing new.
+
+## F-023 — the story beat before level 157 was reported as a black screen  [FIXED in US-018]
+`playtest_sweep.py --levels 157-160` played **one** level and stopped:
+
+    level 157: never became playable — state Map, 45 square(s) on the board.
+    Nothing is drawn, which on screen is a black screen.
+
+The board was fine. Level 157 is the one level in the game carrying
+`sabotageBeat`, and `StoryFlow.LaunchLevel` holds the board back until
+`StorySabotage.PlayIntroIfDue` is done. A beat waits for a tap forever;
+`StoryPlaytest.Reach` only slept. After 30 seconds it called the level dead, and
+because that finding `break`s the run, levels 158, 159 and 160 were never played.
+
+`Reach` presses the dialogue's own full-screen `Advance` button while it waits —
+the same three lines `StoryThemeTest` and `StoryShellTest` already had — and
+takes a `_beat` screenshot of the card first, after one press so the typewriter
+has finished. **The card is what the player is looking at there, so it is worth
+a picture**; the two faults below were both found in it.
+
+## F-024 — the sabotage beat was spoken into a void  [FIXED in US-018]
+`sweeps/20260908-072831/shots/b001_0001_level_157_start.png`: Alfred's card and
+a Skip button on a **completely black screen**. The beat fires from
+`StoryFlow.LaunchLevel` — the shell has come down for the level and the board
+has not been loaded — so there was nothing behind it. The one moment the game
+names Grimm out loud was a cream card on black.
+
+`OpeningSequence` had already solved this and says so in its header ("without
+this the dialogue card floats on nothing — which is the black screen the old
+cutscene was blamed for"). It had solved it privately. That backdrop is now
+`StoryDialogueRoom` — canvas 810, the area's own room covering the screen under
+a `RectMask2D`, the same 0.32 dim the opening measured — and both callers use
+it. The beat now plays over Royal Pool.
+
+## F-025 — over half the game's dialogue fell out of its card  [FIXED in US-018]
+The same picture, read again: the card holds four lines, `tap to continue` sits
+**on top of** the fourth, and the fifth — "Opened." — is drawn on the black
+below the card, in ink, clipped by the bottom of the screen.
+
+The card was a fixed 400 units tall with the body inset 100 from its top and 70
+from its bottom. Measured off the PNG that is 92 pixels of body at a 31-pixel
+line pitch: **three lines.** The line that found it is 70 characters. The
+**median** line in this game's dialogue is 79, and **185 of the 354 lines the
+game speaks are over 70** — so this was most of the story, not one beat.
+
+`DialogueSystem` now sizes the card to its line. It grows upward from the same
+bottom edge (`MeasuredBodyHeight` wraps the real string in the real font at the
+real width — a row count cannot be guessed from a length), stops where the Skip
+button begins, and only then does the type shrink, 54 down to a floor of 34.
+A short line draws exactly as it always did. The portrait moved from a middle
+anchor to a top one so it stays beside the name plate as the card grows.
+
+`StoryScreenTests.DialogueCardHoldsEveryLineTheGameSpeaks` reads every line out
+of `cutscenes.json` plus the sabotage line and asserts each one fits — so a
+longer line written into the markdown tomorrow is covered without anyone
+remembering to add it.
+
+## F-026 — 68 boards are not in the middle of the screen  [FIXED in US-018]
+Level 149's board has an 85-point margin on its left and 103 on its right.
+`LevelManager.GenerateLevel` puts the field at `-maxCols / 2.75f` and then lays
+its squares out `squareWidth` apart, and those two numbers only agree for one
+board width:
+
+    centre = -maxCols / 2.75 + (maxCols - 1) * squareWidth / 2
+
+At the shipped `squareWidth` of 0.82 that is zero at **nine** columns and
+nowhere else. 1140 levels are nine wide and centred to within a third of a
+pixel; the other 68 are 5, 6 or 8 wide and sit 9.0, 6.6 and 2.0 pixels left of
+centre at 393 points. **The kit ships the same fault on eight of its own hundred
+levels** (3, 5, 6, 8, 11, 12, 24, 62), so no level file and no generator can fix
+it.
+
+`StoryBoardCentre` aims the CAMERA at the middle of the grid, on
+`OnLevelLoaded` / `OnStartPlay` like `StoryBoardTheme`. Not the board: three
+other things hang off the field's only parent, and the field's own x is driven
+every frame of the slide-in by the legacy clip `AnimateField` builds, so writing
+it afterwards would land the board and then jerk it sideways. Moving the camera
+moves nothing else — the level's canvases follow it and the board's effects are
+children of the board. Measured after: level 149 went from -9.0 to -0.5 pixels.
+
+It centres the GRID, not the filled cells. A board with an empty left column is
+a board the level file drew that way, and re-centring on what is left would move
+the 1140 boards that are already right.
+
+**Vertical is deliberately untouched.** The same arithmetic is off in y
+(`maxRows / 2.75`), but the play area is not vertically symmetric — HUD above,
+booster row below — and the kit already tunes it per goal (`yOffset = 0.3` for
+INGREDIENT). There is no "correct" answer to compare against the way there is
+for x.
+
+## F-027 — level 547 lost the blocker the plan says it has  [FIXED in US-018]
+`validate_story.py` was RED at the branch point and the US-017 report says it
+was green:
+
+    FAIL: level 547: plan says sabotage=True but the board says False
+
+`seal_unmatchable_cells`, added in US-017, ran last in `generate()` — after
+`apply_sabotage` — and on level 547 the cell it sealed was the cell the sabotage
+had just been placed on. Sealing now runs BEFORE the sabotage. It is free to
+move: `unmatchable_regions` treats only holes and undestroyable blocks as walls,
+so it sees the same shape either way, and it still runs after the mirror, flip
+and thickening that decide that shape. 8 level files changed (269, 286, 433,
+539, 547, 583, 631, 675), all above 260 and none in a band already swept; no
+target asset moved.
+
+## Measured but NOT a fault — checked and cleared
+- **Levels 146 and 156 are two boards with a wall of holes between them.** The
+  kit's own level 55 ships exactly that shape and 146 inherits it. Both halves
+  hold three-in-a-line and both refill from their own top row.
+- **Level 155's two one-wide columns.** The same shape US-017 cleared: a
+  vertical swap inside a one-wide column can make a three-run, the column
+  refills from its own top row, and its eleven lavender cells are DOUBLEBLOCK,
+  worth two each against a goal of 18.
+- **Level 148's board sits high with a lot of room under it.** Five rows on a
+  screen sized for eleven. Its grid centre is 34 points above the middle of the
+  play area, which is the vertical case above, left alone on purpose.
+- **Levels 151, 152, 158 and 160 end on "Already beaten" with their goals
+  met.** They are replays — the save carries 43 levels beaten from the earlier
+  batches — and the bronze star is what a replay is supposed to draw.
+
+## Standing, after US-018
+- **F-003 (dark backdrops) is still the only OPEN visual finding that new art
+  alone can close.** `check_themes.py`: same 10 NOTE lines.
+- F-005 stands, and this iteration is a new shape of it: the harness did not
+  merely fail to see F-024 and F-025, it **prevented** them being seen, by
+  dismissing the one screen they were on as a black screen and then abandoning
+  three levels. A report of `0 findings` over four levels was, in the first run,
+  a report over one.
+- `validate_story.py` is green again for the first time since US-017.
+- `lint_levels.py`: 0 problems, 5 notes. Generators idempotent by content hash.
+- The two Unity batchmode gates are RED on exactly the five screen assertions
+  and the two smoke constants of the recorded baseline, diffed line for line
+  against `screen_base.log` and `smoke_us017.log`. Three new screen cases were
+  added this iteration and all three pass.
