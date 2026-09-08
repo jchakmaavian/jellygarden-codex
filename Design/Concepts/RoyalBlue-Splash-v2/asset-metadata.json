@@ -1,0 +1,16 @@
+[
+  {
+    "file": "castle-royal-blue.png",
+    "width": 941,
+    "height": 1672,
+    "alpha": false,
+    "previewBytes": 89424
+  },
+  {
+    "file": "play-royal-blue-crown.png",
+    "width": 2172,
+    "height": 724,
+    "alpha": true,
+    "previewBytes": 49372
+  }
+]
