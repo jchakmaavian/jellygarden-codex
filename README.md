@@ -6,7 +6,7 @@ This is an independent copy of the saved files from `J:\Unity Projects\Match3-Ga
 
 - In Unity Hub, add this folder as a project and open it with **Unity 6000.5.10f1**.
 - Add this exact folder to Codex when you want a dedicated project workspace. If you use VS Code, open this folder in a separate window.
-- Unity recreates its import cache on the first open, which can take several minutes.
+- The first import has already completed successfully with Unity 6000.5.10f1. Unity regenerates its cache if that cache is removed later.
 - Existing build scenes: `Assets/JellyGarden/Scenes/main.unity`, followed by `Assets/JellyGarden/Scenes/game.unity`.
 
 ## What was copied
@@ -16,6 +16,8 @@ All saved files in `Assets`, `Packages`, `ProjectSettings`, and `Project_Audit`,
 The original `CLAUDE.md` and `PLAN.md` are archived under `SourceReference` for context. Their old CURRENT TASK entries are historical information, not the user's current assignment. `SourceReference/COPY-MANIFEST.json` records SHA-256 hashes of the original copied files.
 
 Not copied: generated `Library`, `Temp`, `Logs`, `UserSettings`, solution/project files; the original `.git` repository; `.vscode` and `.mcp.json` configurations. There are no junctions or shared source folders.
+
+Unity has since generated fresh cache, solution, and `.vscode` files inside this copy. The new VS Code settings point to `JellyGarden-Codex.slnx`; the original VS Code configuration was not copied or changed. These generated files are excluded from this copy's Git history.
 
 ## Independence
 
@@ -35,3 +37,9 @@ Not copied: generated `Library`, `Temp`, `Logs`, `UserSettings`, solution/projec
 5. Any future transfer back to the original is a separate, explicitly requested review and merge. Opening or saving this copy does not update the original.
 
 The source baseline commit is `7194b95`. The original source revision was `a82c4df33a929614fd4d7095b59aa26cb0274a8b`, with additional saved changes captured in this copy. Unsaved changes in an open editor are not part of a filesystem copy.
+
+## Verification
+
+See `VERIFICATION.md` for the copy checks and Unity import result. The import and C# compilation passed; Play Mode, device testing, and executable builds have not been run.
+
+Git's ownership check currently prevents the normal Windows account from opening this newly created repository. The task's restricted account can use it. A narrowly scoped ownership correction for this folder and its `.git` directory is awaiting explicit user authorization; no global Git settings have been changed.
