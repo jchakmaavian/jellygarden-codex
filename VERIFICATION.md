@@ -11,7 +11,7 @@ Completed on 8 September 2026.
 | Changes detected in those original files | None |
 | Shared source-folder links | None |
 | Package dependencies using `file:` paths | None |
-| Git remotes in the new repository | None |
+| Git remotes at initial copy verification | None; a separate backup origin was configured later, as noted below |
 | Git access from the user's normal Windows account | Verified after the explicitly approved ownership correction on this copy |
 | Unity Editor version | 6000.5.10f1 |
 | Unity import and C# compilation | Completed; process exit code 0 |
@@ -27,4 +27,13 @@ Unity resolved packages, compiled script assemblies, completed its initial Asset
 
 The baseline commit `7194b95` preserves the verified source copy. The next commit `e84a1d2` introduces the development identity and project boundary documentation. `SourceReference/COPY-MANIFEST.json` records the copied files before those intentional changes.
 
-The original Unity Editor and VS Code project were not saved, closed, reconfigured, or built during this task. No remote repository, cloud project, or store submission was created.
+During the initial copy and validation, the original Unity Editor and VS Code project were not saved, closed, reconfigured, or built. That phase did not create a remote repository, cloud project, or store submission.
+
+## Online backup preparation, 8 September 2026
+
+The user requested online backup and created `https://github.com/jchakmaavian/jellygarden-codex`. Its GitHub page was checked: the repository is private, is owned by `jchakmaavian`, and initially contains one README commit (`4adf588dee4827e72a79b09821827998a234af55`).
+
+- This copy's `origin` is now `https://github.com/jchakmaavian/jellygarden-codex.git`. The original project's remote/configuration was not changed.
+- Local `git fsck --full --no-dangling` passed. The largest game file is approximately 15 MB; no tracked file approaches GitHub's 100 MiB limit.
+- A focused scan found no common GitHub/AWS/OpenAI token or private-key signatures in the scanned text files, and no tracked files with common credential-container filenames. This is not a comprehensive credential audit.
+- Git transport sign-in is required before the first fetch/push. No game upload or restore-from-GitHub verification has completed yet.

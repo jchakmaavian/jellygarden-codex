@@ -21,7 +21,7 @@ Unity has since generated fresh cache, solution, and `.vscode` files inside this
 
 ## Independence
 
-- A new local Git repository has a baseline commit containing the verified source copy. It has no remote and does not synchronize with the original repository.
+- A new Git repository has a baseline commit containing the verified source copy. Its `origin` points to the separate private repository `https://github.com/jchakmaavian/jellygarden-codex.git` for the user's requested online backup. It does not synchronize with the original repository.
 - The copy uses company `CodexSandbox`, product `JellyGarden Codex Sandbox`, a new product GUID, and app identifier `com.codexsandbox.jellygarden`. This separates the usual local game-save identity and installation identity from the original.
 - The copied Unity Cloud project/organization link is cleared, and the copied built-in Unity Services enable/startup flags are disabled. This changes only local files in this copy, not the original project or any online project.
 - Game assets, gameplay scripts, levels, package versions, and rendering configuration are preserved.
@@ -37,6 +37,12 @@ Unity has since generated fresh cache, solution, and `.vscode` files inside this
 5. Any future transfer back to the original is a separate, explicitly requested review and merge. Opening or saving this copy does not update the original.
 
 The source baseline commit is `7194b95`. The original source revision was `a82c4df33a929614fd4d7095b59aa26cb0274a8b`, with additional saved changes captured in this copy. Unsaved changes in an open editor are not part of a filesystem copy.
+
+## Online backup
+
+Backup destination: [jchakmaavian/jellygarden-codex](https://github.com/jchakmaavian/jellygarden-codex), a private repository owned by the user. The remote is configured locally; the first game upload is pending Git sign-in. The README initially created on GitHub must be merged into this project's history before the first push; do not force-push over it.
+
+See [BACKUP-AND-RESTORE.md](BACKUP-AND-RESTORE.md) for saving future work online and restoring the project after a Windows or drive failure. Only successfully pushed changes are backed up on GitHub.
 
 ## Verification
 
