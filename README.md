@@ -6,6 +6,8 @@ This is an independent copy of the saved files from `J:\Unity Projects\Match3-Ga
 
 Current work focuses on game logic, level design, story, characters, UX/UI, visualization, animation, and VFX. The first working milestone is one polished playable level. See [GAME-DIRECTION.md](GAME-DIRECTION.md) for priorities and review criteria. Android/iOS export is deferred until requested by the user or boss.
 
+The current creative pass explores a castle, king, and queen setting under the proposed name **Castlewish**, including a trailer and animated story scenes. See [NAME-STORY-AND-CINEMATICS.md](NAME-STORY-AND-CINEMATICS.md) for the naming recommendation and draft treatment.
+
 ## Open this project
 
 - This folder is now registered in Unity Hub as **JellyGarden-Codex**. Open that entry with **Unity 6000.5.10f1**. If you later remove the entry, use Add > Add project from disk and select this folder again.

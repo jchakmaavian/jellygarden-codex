@@ -19,7 +19,7 @@ The user and Codex will collaborate across game design, game development, and pr
 | Animation | Anticipation, movement, impacts, reactions, and celebrations | Motion communicates cause and effect with consistent timing |
 | VFX and sound feedback | Match effects, booster effects, combo feedback, and rewards | Effects make actions satisfying while keeping the board and goals readable |
 
-The story premise, cast, and final art direction are still open creative decisions. The existing game's name and assets are the starting material, not a requirement to keep every current design choice.
+The user has selected a royal setting with a castle, king, and queen, and has requested a game trailer plus animated storytelling inside the game. [NAME-STORY-AND-CINEMATICS.md](NAME-STORY-AND-CINEMATICS.md) proposes **Castlewish** as the working title and develops an initial story/cinematic treatment. The exact name, cast, plot, and final art direction remain proposals for creative review. The existing game's name and assets are the starting material, not a requirement to keep every current design choice.
 
 ## First working milestone: one polished playable level
 
@@ -37,7 +37,7 @@ This milestone does not require a complete game redesign or a mobile export. The
 
 Keep one active milestone. For each change: state the intended player benefit, implement a focused prototype, test it in Unity, review the visible result together, then commit and push completed work. Record uncertain behavior as unverified rather than passed. Keep experiments separate from established work when useful.
 
-The next actionable task is the interaction baseline check for the first level. Broader story and art exploration can inform it without committing the whole game to an unreviewed theme.
+The user has prioritized selecting a better name and establishing the royal story direction first. Follow that creative pass with character/visual exploration and the first-level interaction baseline. The trailer and story-animation plans should use the same established game assets and show gameplay that is actually implemented.
 
 ## Delivery boundary
 
