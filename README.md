@@ -1,4 +1,4 @@
-# JellyGarden Codex development copy
+# jellygarden-codex
 
 This is an independent copy of the saved files from `J:\Unity Projects\Match3-Games`, created on 8 September 2026. Work on this project when developing with Codex. The original belongs to the existing VS Code workflow and must remain untouched.
 
@@ -40,7 +40,7 @@ The source baseline commit is `7194b95`. The original source revision was `a82c4
 
 ## Online backup
 
-Backup destination: [jchakmaavian/jellygarden-codex](https://github.com/jchakmaavian/jellygarden-codex), a private repository owned by the user. The remote is configured locally; the first game upload is pending Git sign-in. The README initially created on GitHub must be merged into this project's history before the first push; do not force-push over it.
+Backup destination: [jchakmaavian/jellygarden-codex](https://github.com/jchakmaavian/jellygarden-codex), a private repository owned by the user. This project's `origin` uses that repository. The initial README commit created on GitHub is preserved in the merged history.
 
 See [BACKUP-AND-RESTORE.md](BACKUP-AND-RESTORE.md) for saving future work online and restoring the project after a Windows or drive failure. Only successfully pushed changes are backed up on GitHub.
 

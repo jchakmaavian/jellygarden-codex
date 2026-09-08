@@ -36,4 +36,4 @@ The user requested online backup and created `https://github.com/jchakmaavian/je
 - This copy's `origin` is now `https://github.com/jchakmaavian/jellygarden-codex.git`. The original project's remote/configuration was not changed.
 - Local `git fsck --full --no-dangling` passed. The largest game file is approximately 15 MB; no tracked file approaches GitHub's 100 MiB limit.
 - A focused scan found no common GitHub/AWS/OpenAI token or private-key signatures in the scanned text files, and no tracked files with common credential-container filenames. This is not a comprehensive credential audit.
-- Git transport sign-in is required before the first fetch/push. No game upload or restore-from-GitHub verification has completed yet.
+- Git transport sign-in and an authenticated fetch succeeded. The initial GitHub README commit is preserved by merging both histories; the README combines the repository title with this copy's detailed instructions. The first upload and restore-from-GitHub verification are pending.
