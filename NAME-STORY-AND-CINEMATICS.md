@@ -1,26 +1,26 @@
-# Castlewish: name, story, and cinematics proposal
+# Castle Charm: name, story, and cinematics proposal
 
 Creative proposal, 8 September 2026. The user requested a better game name, a castle/king/queen story, a game trailer, and animated storytelling inside the game. Those are requested directions. The specific title, cast, plot, durations, and visual choices below are proposed creative decisions; they are not implemented assets or user-approved final designs.
 
 ## Recommended working name
 
-**Castlewish**
+**Castle Charm**
 
-Optional descriptive subtitle: **Royal Puzzles**.
+Suggested store title: **Castle Charm: Match 3**.
 
 Tagline: **Every match brings magic home.**
 
-Pronunciation: castle + wish. The name gives us a clear royal setting and a story promise. It can support the puzzle game, characters, future chapters, a logo, and a trailer without tying every chapter to one character or one mechanic.
+Castle gives a clear setting; Charm connects the characters' appeal and the castle's magic. The two familiar words support a warm royal adventure, while Match 3 explains the gameplay in the store title. This is a design judgment, not a measured player preference.
 
 Alternatives for comparison:
 
 | Name | Creative character | Tradeoff |
 | --- | --- | --- |
-| Castlewish | Warm royal fantasy; the recommended direction | The puzzle genre needs to be communicated by the subtitle or artwork |
-| Crown & Wonder | Broad fairy-tale adventure | Longer to type; the ampersand creates spelling variants |
-| Crown & Bloom | Gentle restoration and garden fantasy | Stronger association with gardens; similar names exist outside games |
+| Castle Charm | Familiar wording, royal setting, and magical personality; the current recommendation | Castle is crowded; Charm can evoke jewelry |
+| Castlewish | A distinctive invented compound closely linked to the Wishlight story | A new word to learn; spoken spacing may vary |
+| Crown Charm | Compact royal and magical associations | Less explicit castle setting; possible accessory-brand association |
 
-A preliminary exact-name web search for `Castlewish` returned no results on 8 September 2026. This does not establish name, domain, store, or trademark availability. `Crownvale` was rejected from the shortlist because it already appears in gaming, including [a Hytale kingdom server](https://crownvale.net/). No domains or accounts were registered. The Unity folder, GitHub repository, application identifier, and save identity have not been renamed.
+The initial recommendation was Castlewish. The user's request for internet, App Store, Google Play, and player-journey research led to the revised Castle Charm recommendation on 8 September 2026. See [NAMING-RESEARCH.md](NAMING-RESEARCH.md) for the evidence, limited exact-name search results, tradeoffs, and validation plan. No exact Castle Charm title surfaced in the sampled store searches; worldwide availability remains unconfirmed. No domains or accounts were registered. The Unity folder, GitHub repository, application identifier, and save identity have not been renamed.
 
 ## Story proposal
 
@@ -57,7 +57,7 @@ First create a 30-second storyboard and timed animatic. Extend only where the pa
 | 8-11 s | Elara catches a floating map; Rowan holds the door open; both turn toward the player | Invite the player into the partnership |
 | 11-22 s | Show actual puzzle play: a readable swap, a match, a booster, and a satisfying combination | Demonstrate the game we are building |
 | 22-27 s | Recovered Wishlights restore the courtyard fountain; the royal pair celebrate with Pip | Show why the gameplay matters |
-| 27-30 s | Castlewish title reveal and tagline | Make the name memorable |
+| 27-30 s | Castle Charm title reveal and tagline | Make the name memorable |
 
 The trailer will use the established characters, castle, puzzle pieces, animation style, and VFX. Gameplay shots must represent implemented gameplay. It is currently a script concept; no final video has been produced.
 
@@ -83,4 +83,4 @@ The current naming/story pass takes priority before broad visual changes. The pr
 
 ## Reference
 
-[Dream Games' official Royal Match page](https://www.dreamgames.com/games/royal-match) describes how its royal characters, castle areas, puzzle pieces, and boosters share a consistent world. That cohesion is a useful quality reference. Castlewish's proposed king-and-queen partnership, living lantern, and wish-driven castle chapters provide our own story structure.
+[Dream Games' official Royal Match page](https://www.dreamgames.com/games/royal-match) describes how its royal characters, castle areas, puzzle pieces, and boosters share a consistent world. That cohesion is a useful quality reference. Castle Charm's proposed king-and-queen partnership, living lantern, and wish-driven castle chapters provide our own story structure.
