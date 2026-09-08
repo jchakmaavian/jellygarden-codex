@@ -56,3 +56,19 @@ See [PLAYTEST-AND-AUDIT-2026-09-08.md](PLAYTEST-AND-AUDIT-2026-09-08.md) for cur
 - Revised Level 1 instruction rendered as two centred, unclipped lines at 720×1280. The scene diff changes only its text field. Other aspect ratios and audio were not tested.
 - Final observed Play Mode Console: 0 errors, 7 inherited/integration warnings.
 - Document links and `git diff --check` passed. No renderer/package/mobile-export configuration changes were made.
+
+## Final Royal Throne branding, 8 September 2026
+
+The user explicitly locked the generated logo as final and requested replacing the JellyGarden logo and title in this copied game.
+
+- Installed the approved PNG at the existing runtime logo path, preserving its sprite GUID and entrance-animation binding. SHA-256 matches the approved design master exactly: `7397cba6758c49fc1cc5bf13f64919edc3a33bb97d0515c460623575b298ea22`.
+- The opening scene uses a 600 × 600 image with preserved aspect ratio and no decorative raycast interception. Texture import retains alpha, uses full-rectangle sprite geometry, bilinear/clamp sampling, no mipmaps, and a 2048 maximum so the 1254-pixel source is not downscaled on import.
+- Updated Unity product name and tile display name to Royal Throne. The optional Facebook share title now reads the product name; Facebook sharing was not enabled or exercised. Company, application identifiers, product GUID, project folder, and repository identity remain the copy's existing values.
+- The copied game's existing Windows Editor preferences (22 values) and LocalLow data were copied to the Royal Throne location. Existing source data was retained. A standard registry-provider copy hit an integer-type conversion error; the Windows registry API completed the missing values, and the old/new level stars and scores were read back and matched. No original-game save locations were accessed or changed.
+- Unity imported the replacement sprite and compiled successfully (`Tundra build success`, 23.94 seconds); no compiler errors were found in the checked compilation segment. Existing inherited warnings remain.
+- Visually checked the finished opening state at the 720 × 1280 portrait Game view: full crown and lettering visible, transparent background intact, no distortion, and clear space above the Play button. The entrance animation reaches this state. Clicking Play opens the game level map.
+- Play Mode Console after the title-to-map flow showed 0 errors and 7 existing warnings. This focused branding check does not claim full gameplay, other aspect ratios, device exports, or optional social integration validation.
+- Saved the actual Unity-window preview in [Design/Branding/royal-throne-in-game-720x1280.jpg](Design/Branding/royal-throne-in-game-720x1280.jpg). The screenshot includes Editor chrome around the 720 × 1280 Game view.
+- No remaining JellyGarden/Jelly Garden player-title text was found in scanned scene/prefab text and share-title fields. Internal kit namespaces, paths, integration identifiers, menus, and third-party attribution were retained.
+- Diff whitespace checks pass with CRLF endings recognized. No package, renderer, mobile SDK, or original-project changes were made.
+- Restarted only this copied Unity project and repeated the opening-screen → Play → map flow. The approved logo still renders correctly; Levels 1–3 retain three stars each, Level 4 is unlocked, and the copied balance loads as 4 lives and 5 gems. Restarting refreshed Unity's native preferences cache after the product-name change.

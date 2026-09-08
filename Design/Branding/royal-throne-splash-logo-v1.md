@@ -1,15 +1,15 @@
-# Royal Throne — splash logo concept v1
+# Royal Throne — final approved splash logo
 
 Created 8 September 2026 for the user's request: generate a splash-screen logo for Royal Throne with the appeal of Royal Match's game logo.
 
 - Deliverable: `royal-throne-splash-logo-v1.png`.
 - Format: 1254 × 1254 RGBA PNG, 1,510,395 bytes. Transparency verified from the alpha channel; the generated alpha is preserved.
-- Status: first concept for design review; the user-approved game name is Royal Throne. The new logo design has not yet been selected as the final brand artwork.
+- Status: FINAL. The user explicitly approved and locked this exact artwork on 8 September 2026: "lock this logo.. final it. add this in the game. remover jellygarden logo and title." Keep the v1 filename as the approved master; further logo design changes require a new user request.
 - Generation: built-in image generation, not Magnific and not the CLI fallback. Generated as a new image without reference-image inputs.
 - Art direction: dimensional gold display lettering, rich purple throne backing, five-point crown, central ruby accent, transparent background.
 - Visual check: both words are correctly spelled, the full crown and lettering are visible, and the logo is isolated without a tagline or scene background.
 - Reproduction record: the generation prompt below. This is raster artwork; the prompt is not a layered editable source, and the delivery does not include vector paths, a font file, or separated animation layers.
-- Integration: stored as a design deliverable; existing Unity splash/title assets are not replaced by this concept.
+- Integration: the identical PNG replaces `Assets/JellyGarden/Textures/menu/main_menu/logo.png`, preserving sprite GUID `6c0b96a44d47a0846b80777f8bb71d51`. The opening scene uses a 600 × 600 aspect-preserving image and retains its existing entrance animation. Unity product title is Royal Throne. SHA-256 of both master and runtime image: `7397cba6758c49fc1cc5bf13f64919edc3a33bb97d0515c460623575b298ea22`. The former kit artwork provenance was removed from this replaced image metadata; other kit attribution remains intact.
 
 ## Final generation prompt
 

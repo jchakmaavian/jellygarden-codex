@@ -10,7 +10,7 @@
 | Logo or cinematic title lettering | **ROYAL THRONE** |
 | Descriptive store-title form | **Royal Throne: Match 3** |
 
-Keep the two-word spelling. Use the same name across game branding, character presentations, story materials, UI concepts, and trailer title cards. A tagline and final logo treatment have not been selected. Do not reopen the shortlist unless the user requests it.
+Keep the two-word spelling. Use the same name across game branding, character presentations, story materials, UI concepts, and trailer title cards. The final gold-and-purple crown/throne logo is approved and installed; see [approved artwork](Design/Branding/royal-throne-splash-logo-v1.md). A tagline has not been selected. Do not reopen the shortlist unless the user requests it.
 
 ## Creative intent
 
@@ -20,9 +20,9 @@ The main name does not explain the puzzle mechanic. Use the Match 3 descriptor a
 
 ## What this decision changes
 
-The current project documentation and creative treatment now use Royal Throne. The name is ready for subsequent logo, character, UI, and cinematic exploration. Specific cast names, plot, tagline, durations, and art direction in the [story treatment](NAME-STORY-AND-CINEMATICS.md) remain proposals.
+The current project documentation and creative treatment now use Royal Throne. The approved name and logo now appear on the game opening screen. Character, UI, and cinematic exploration can build on this identity. Specific cast names, plot, tagline, durations, and art direction in the [story treatment](NAME-STORY-AND-CINEMATICS.md) remain proposals.
 
-The development folder remains `JellyGarden-Codex` and the authorized private GitHub backup remains `jchakmaavian/jellygarden-codex`. This naming decision does not move the Unity project or change its application identifier, product settings, or save identity. No gameplay or finished visual assets were changed in this documentation pass.
+The development folder remains `JellyGarden-Codex` and the authorized private GitHub backup remains `jchakmaavian/jellygarden-codex`. The subsequent explicit logo approval replaces the old JellyGarden title artwork and changes the Unity product name to Royal Throne. Company, application identifiers, and product GUID remain the independent copy identifiers. Existing copy-specific Windows Editor preferences and local data were carried into the Royal Throne save location, keeping the earlier data intact. Gameplay rules are unchanged.
 
 ## Research status
 
