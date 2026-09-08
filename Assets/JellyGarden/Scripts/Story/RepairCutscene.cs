@@ -27,7 +27,9 @@
 //   2.9  the story's own line for that repair
 //   3.6  the star is spent and it fades back to the area
 //
-// Nothing here is authored per task. The work type comes from the story's own
+// An optional Story/RepairAnimations/area_NNN_taskN clip takes precedence and
+// plays before revealing the finished painting. Other tasks use the effects
+// below. The work type comes from the story's own
 // verb (RepairWork), the effect from that (RepairVfx), where in the room it
 // lands from a pixel diff of the artwork (StoryRepairRegions), and the lines
 // from the story data where it has them.
@@ -104,6 +106,7 @@ namespace JellyGarden.Scripts.Story
         private Text _skipHint;
         private Image _backdrop;
         private RepairVfx _vfx;
+        private StoryRepairVideo _video;
 
         private bool _playing;
         private bool _skipped;
@@ -225,6 +228,7 @@ namespace JellyGarden.Scripts.Story
             _after.fillAmount = 0f;
 
             _vfx = RepairVfx.Attach(_stage);
+            _video = StoryRepairVideo.Attach(_stage);
 
             _flash = StoryUi.CreateImage("Flash", root, null, new Color(1f, 0.96f, 0.86f, 0f));
             StoryUi.Stretch(_flash.rectTransform);
@@ -262,6 +266,8 @@ namespace JellyGarden.Scripts.Story
         private void Begin(int areaId, StoryTask task, int stateAfter, RectTransform room,
             Action onDone)
         {
+            StopAllCoroutines();
+            _video.Release();
             _onDone = onDone;
             _playing = true;
             _skipped = false;
@@ -293,6 +299,7 @@ namespace JellyGarden.Scripts.Story
             // the separate screen this is not supposed to be.
             bool overRoom = _room != null;
             _overRoom = overRoom;
+            _video.SetCovering(overRoom);
 
             _workStart = overRoom ? RoomWorkStart : WorkStart;
             _workEnd = overRoom ? RoomWorkEnd : WorkEnd;
@@ -326,12 +333,42 @@ namespace JellyGarden.Scripts.Story
 
             StorySfx.Play(RepairWork.SoundKey(work));
 
-            StopAllCoroutines();
             StartCoroutine(Run(areaId, task, work, stateAfter));
         }
 
         private IEnumerator Run(int areaId, StoryTask task, RepairWorkType work, int stateAfter)
         {
+            var clip = StoryRepairVideo.Load(areaId, task.Index);
+            if (clip != null)
+            {
+                yield return PlayVideo(clip, task);
+                // A decoder failure before the first frame uses the ordinary
+                // repair effect. A skip or a failure after visible playback
+                // lands on the purchased state, without replaying the repair.
+                if (_video.HasFrame || _skipped)
+                {
+                    Reveal(areaId, task.Index);
+                    _after.fillAmount = 1f;
+                    _damage.color = new Color(0.05f, 0.07f, 0.05f, DamageFor(areaId, stateAfter));
+                    if (!_overRoom)
+                    {
+                        _line.text = task.OnComplete;
+                        _line.color = new Color(1f, 0.93f, 0.78f, 1f);
+                    }
+                    StorySfx.PlayRepair(false);
+
+                    // Let the live room finish its reveal beneath the last
+                    // video frame, then crossfade back to the generated art.
+                    float landed = Time.realtimeSinceStartup;
+                    while (!_skipped && Time.realtimeSinceStartup - landed < 0.6f)
+                        yield return null;
+                    _fadeTime = _skipped ? RoomFadeTime : 0.3f;
+                    yield return Finish();
+                    yield break;
+                }
+                _video.Release();
+            }
+
             float started = StoryClock.Now;
             float damageBefore = DamageFor(areaId, stateAfter - 1);
             float damageAfter = DamageFor(areaId, stateAfter);
@@ -474,6 +511,50 @@ namespace JellyGarden.Scripts.Story
             yield return Finish();
         }
 
+        private IEnumerator PlayVideo(UnityEngine.Video.VideoClip clip, StoryTask task)
+        {
+            _group.alpha = 1f;
+            _vfx.Clear();
+            _video.Prepare(clip);
+            float requested = Time.realtimeSinceStartup;
+            while (!_skipped && !_video.Failed && !_video.HasFrame)
+            {
+                if (Time.realtimeSinceStartup - requested >= 5f)
+                {
+                    _video.Fail("Timed out waiting for the first repair frame.");
+                    break;
+                }
+                yield return null;
+            }
+
+            if (_video.HasFrame && !_skipped && !_video.Failed)
+            {
+                if (!_overRoom)
+                {
+                    _title.text = task.Label;
+                    _title.color = Color.white;
+                }
+                float started = Time.realtimeSinceStartup;
+                float deadline = Mathf.Clamp((float)_video.Duration, 1f, 60f) + 3f;
+                while (!_skipped && !_video.Failed && !_video.Finished)
+                {
+                    float elapsed = Time.realtimeSinceStartup - started;
+                    _video.SetOpacity(elapsed / 0.18f);
+                    if (_overRoom && _room != null) StageOverRoom(_room);
+                    if (elapsed >= deadline)
+                    {
+                        _video.Fail("Repair video playback stopped advancing.");
+                        break;
+                    }
+                    yield return null;
+                }
+            }
+
+            if (_video.Failed)
+                Debug.LogWarning("[Story] Repair video '" + clip.name + "': " + _video.Failure +
+                                 " Finishing with the area's repair artwork.");
+        }
+
         /// <summary>
         /// Lets every live view of the room in on the repair, once. The reveal is
         /// the cutscene's to fire rather than the purchase's: the room the player
@@ -502,6 +583,7 @@ namespace JellyGarden.Scripts.Story
             _group.blocksRaycasts = false;
             _playing = false;
             _stage.localScale = Vector3.one;
+            _video.Release();
 
             // The room is not this object's to leave pushed in: it belongs to the
             // screen underneath, which is about to draw its panel over it again.

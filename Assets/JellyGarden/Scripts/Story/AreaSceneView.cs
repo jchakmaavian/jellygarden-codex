@@ -102,7 +102,16 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The painting's width over its height, or 0 when there is none.</summary>
         public float Aspect
         {
-            get { return _fitter == null ? 0f : _fitter.aspectRatio; }
+            get
+            {
+                foreach (Image layer in _layers)
+                {
+                    if (layer == null || layer.sprite == null) continue;
+                    Rect rect = layer.sprite.rect;
+                    if (rect.height > 0f) return rect.width / rect.height;
+                }
+                return 0f;
+            }
         }
 
         /// <summary>How many state layers are drawn, painted or not.</summary>
@@ -246,13 +255,7 @@ namespace JellyGarden.Scripts.Story
         {
             if (!_cover) return;
 
-            float aspect = 0f;
-            for (int i = 0; i < _layers.Count && aspect <= 0f; i++)
-            {
-                if (_layers[i] == null || _layers[i].sprite == null) continue;
-                Rect rect = _layers[i].sprite.rect;
-                if (rect.height > 0f) aspect = rect.width / rect.height;
-            }
+            float aspect = Aspect;
 
             // No painting at all: there is nothing to shape the root by, and a
             // fitter with a zero ratio collapses it. Leave it stretched.

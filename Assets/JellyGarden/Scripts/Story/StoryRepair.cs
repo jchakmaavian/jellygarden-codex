@@ -17,6 +17,8 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static bool Perform(int areaId, int taskIndex, Action onChanged)
         {
+            // A second purchase must not replace a repair already being shown.
+            if (RepairCutscene.IsPlaying) return false;
             StoryArea area = StoryDatabase.GetArea(areaId);
             if (area == null) return false;
 

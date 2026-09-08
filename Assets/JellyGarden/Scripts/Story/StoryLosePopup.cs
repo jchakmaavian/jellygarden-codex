@@ -147,6 +147,11 @@ namespace JellyGarden.Scripts.Story
 
             HideKitPanel();
 
+            // The HUD is still behind the panel, so the king is on screen to take
+            // the news. Fired before the panel is built, which is when the strip
+            // is last drawn undimmed.
+            StoryAvatar.React("slump");
+
             if (_instance == null)
             {
                 var go = new GameObject(HostName);

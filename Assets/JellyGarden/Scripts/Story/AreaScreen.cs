@@ -537,6 +537,8 @@ namespace JellyGarden.Scripts.Story
                 // on nothing else, so its neglect wash has to be re-read here.
                 _sceneView.SyncDamage();
 
+            LayoutRoom();
+
             // The artwork is attached after the captions were built, so it is a
             // later sibling and draws over them. Push them back to the front.
             _goal.transform.SetAsLastSibling();
@@ -558,6 +560,36 @@ namespace JellyGarden.Scripts.Story
             BuildRows(area);
             RefreshRows(area);
             RefreshPlayButton(area);
+        }
+
+        private void LayoutRoom()
+        {
+            // Portrait paintings fill the screen behind the task card. Fitting
+            // one into the old landscape band creates a second miniature gate
+            // on top of the home screen's full-sized version.
+            bool portrait = _sceneView != null && _sceneView.Aspect > 0f && _sceneView.Aspect < 1f;
+            _scene.anchorMin = new Vector2(0f, portrait || _repairing ? 0f : SceneBottomFrac);
+            _scene.anchorMax = Vector2.one;
+            if (_sceneView != null) _sceneView.SetCovering(portrait || _repairing);
+
+            // Keep captions in the same screen band when the picture grows.
+            // On the portrait layout they also sit above the dimming scrim,
+            // which otherwise darkens the light letters along with the gate.
+            Transform captionParent = portrait ? _canvas.transform : _scene;
+            if (_chapter.transform.parent != captionParent) _chapter.transform.SetParent(captionParent, false);
+            if (_goal.transform.parent != captionParent) _goal.transform.SetParent(captionParent, false);
+            float bottom = portrait ? SceneBottomFrac : 0f;
+            float span = portrait ? 1f - SceneBottomFrac : 1f;
+            CaptionBounds(_chapter, bottom + span * 0.50f, bottom + span * 0.62f);
+            CaptionBounds(_goal, bottom + span * 0.27f, bottom + span * 0.49f);
+            _chapter.color = portrait ? new Color(1f, 0.9f, 0.65f) : StoryUi.RoyalGold;
+            _goal.color = portrait ? new Color(1f, 0.96f, 0.85f) : StoryUi.RoyalTitle;
+        }
+
+        private static void CaptionBounds(Text text, float minY, float maxY)
+        {
+            text.rectTransform.anchorMin = new Vector2(0.06f, minY);
+            text.rectTransform.anchorMax = new Vector2(0.94f, maxY);
         }
 
         private void BuildRows(StoryArea area)
@@ -774,13 +806,7 @@ namespace JellyGarden.Scripts.Story
             if (!_repairing) return;
             _repairing = false;
 
-            if (_sceneView != null) _sceneView.SetCovering(false);
-
-            if (_scene != null)
-            {
-                _scene.anchorMin = new Vector2(0f, SceneBottomFrac);
-                _scene.anchorMax = new Vector2(1f, 1f);
-            }
+            LayoutRoom();
 
             if (_backdrop != null) _backdrop.color = new Color(0f, 0f, 0f, 0f);
             if (_scrim != null) _scrim.color = new Color(0f, 0f, 0f, ScrimAlpha);

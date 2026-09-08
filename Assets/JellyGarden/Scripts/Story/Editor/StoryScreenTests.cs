@@ -78,6 +78,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 ArcBeatsHaveScenesAndPlayThemOnce();
                 OpeningPlaysAfterTheFirstWinAndOnlyOnce();
                 GeneratedArtIsWiredUp();
+                GateRepairAnimationsAreWiredUp();
                 RepairRegionsPointAtTheThingRepaired();
                 SabotageStartsWhereTheStorySaysItDoes();
                 TheGameIsFree();
@@ -87,6 +88,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 EveryAreaOpens();
                 RoyalPrimitivesConstruct();
                 LevelHudIsTargetAndMoves();
+                PortraitBreathesAndReacts();
                 ScoreLevelsShowTheirPassMark();
                 LevelPopupStatesTheGoal();
                 LevelPopupOffersBoosters();
@@ -348,8 +350,8 @@ namespace JellyGarden.Scripts.Story.Editor
             AreaScreen screen = AreaScreen.Instance;
 
             Expect(screen.PanelVisible, "the task list is up before a repair");
-            Expect(!screen.RoomIsFullScreen,
-                "the room shares the screen with the task list");
+            Expect(screen.RoomIsFullScreen && screen.RoomView.IsCovering,
+                "the portrait gate fills the background behind its task list");
 
             AreaSceneView room = screen.RoomView;
             float dirtBefore = room == null ? 0f : room.DamageTarget;
@@ -359,7 +361,7 @@ namespace JellyGarden.Scripts.Story.Editor
             Expect(screen.RoomIsFullScreen, "the room takes the screen the panel left");
             screen.ShowAfterRepair();
             Expect(screen.PanelVisible, "the panel comes back when the repair is over");
-            Expect(!screen.RoomIsFullScreen, "and the room goes back to its band");
+            Expect(screen.RoomIsFullScreen, "the portrait gate keeps its framing after the repair");
 
             int starsBefore = StoryProgress.StarsIn(1);
             Button repair = RepairButtons().FirstOrDefault();
@@ -376,7 +378,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 starsBefore + " -> " + starsAfter + ")");
             Expect(StoryProgress.IsTaskComplete(1, first.Index), "the repair landed");
             Expect(screen.PanelVisible, "the task list is back once the repair is over");
-            Expect(!screen.RoomIsFullScreen, "and so is the room");
+            Expect(screen.RoomIsFullScreen, "the portrait room remains behind the panel");
 
             screen.Refresh();
             Expect(screen.ProgressText == "1/" + area.Tasks.Count,
@@ -388,6 +390,13 @@ namespace JellyGarden.Scripts.Story.Editor
             Expect(room != null && room.DamageTarget < dirtBefore,
                 "the room's neglect lifts with the repair (" + dirtBefore + " -> " +
                 (room == null ? -1f : room.DamageTarget) + ")");
+
+            AreaScreen.Open(2);
+            Expect(!screen.RoomIsFullScreen && !screen.RoomView.IsCovering,
+                "landscape areas retain their existing artwork band");
+            AreaScreen.Open(1);
+            Expect(screen.RoomIsFullScreen && screen.RoomView.IsCovering,
+                "returning to the portrait gate restores its full-screen framing");
 
             string homeBar = StoryHomeScreen.Instance == null
                 ? null
@@ -724,6 +733,30 @@ namespace JellyGarden.Scripts.Story.Editor
         /// outside the room — an emitter placed off-screen is a repair with no
         /// effect at all, which looks exactly like a repair that did not fire.
         /// </summary>
+        private static void GateRepairAnimationsAreWiredUp()
+        {
+            StoryArea gate = StoryDatabase.GetArea(1);
+            Expect(gate != null && gate.Tasks.Count == 3, "the gate has exactly three ordered repairs");
+            if (gate == null) return;
+
+            for (int state = 0; state <= gate.Tasks.Count; state++)
+            {
+                Sprite art = StoryArt.AreaState(gate.Id, state);
+                Expect(art != null && art.rect.width == 941f && art.rect.height == 1672f,
+                    "gate state " + state + " has the approved portrait artwork");
+            }
+            foreach (StoryTask task in gate.Tasks)
+            {
+                var clip = StoryRepairVideo.Load(gate.Id, task.Index);
+                Expect(clip != null, "gate repair " + task.Index + " resolves its authored animation");
+                if (clip == null) continue;
+                Expect(clip.width == 720 && clip.height == 1280 && global::System.Math.Abs(clip.length - 6d) < 0.1d,
+                    "gate repair " + task.Index + " retains the approved six-second portrait clip");
+            }
+            Expect(StoryRepairVideo.Load(2, 1) == null && StoryRepairVideo.Load(1, 4) == null,
+                "unanimated areas and missing tasks keep the ordinary repair effect");
+        }
+
         private static void RepairRegionsPointAtTheThingRepaired()
         {
             StoryRepairRegions.Forget();
@@ -731,18 +764,20 @@ namespace JellyGarden.Scripts.Story.Editor
             Expect(StoryRepairRegions.Count > 0,
                 "the repair region table shipped and parsed");
 
-            // Area 1's third repair is the banner over the gate: a tall, narrow
-            // thing in the middle of a wide picture. If the diff ever starts
-            // returning the whole room this is the one that notices.
+            // Area 1's third repair hangs the two lanterns. Their fallback
+            // sparkles belong beside the gate, below the second repair's banner.
             Expect(StoryRepairRegions.IsKnown(1, 3),
                 "area 1's third repair has a measured region");
 
-            Rect banner = StoryRepairRegions.For(1, 3);
-            Expect(banner.width < 0.9f && banner.height < 0.98f,
+            Rect lanterns = StoryRepairRegions.For(1, 3);
+            Expect(lanterns.width < 0.9f && lanterns.height < 0.98f,
                 "area 1 repair 3 is a region, not the whole room");
-            Expect(banner.xMin >= 0f && banner.yMin >= 0f
-                   && banner.xMax <= 1f && banner.yMax <= 1f,
+            Expect(lanterns.xMin >= 0f && lanterns.yMin >= 0f
+                   && lanterns.xMax <= 1f && lanterns.yMax <= 1f,
                 "area 1 repair 3 stays inside the room");
+            Expect(StoryRepairRegions.IsKnown(1, 2)
+                   && StoryRepairRegions.For(1, 2).yMin > lanterns.yMax,
+                "the banner repair lands above the lantern repair");
 
             // An area nobody has measured must say so rather than invent a
             // corner: the caller spreads the effect over the whole room there.
@@ -751,7 +786,7 @@ namespace JellyGarden.Scripts.Story.Editor
 
             Debug.Log(string.Format(
                 "[Story] repair regions: {0} measured, area 1 repair 3 at {1}.",
-                StoryRepairRegions.Count, banner));
+                StoryRepairRegions.Count, lanterns));
         }
 
         private static void GeneratedArtIsWiredUp()
@@ -1235,6 +1270,110 @@ namespace JellyGarden.Scripts.Story.Editor
         }
 
         /// <summary>
+        /// The king's face loops, and the strip's own numbers are what move it.
+        ///
+        /// Every clip is authored as a ping-pong, so the check that matters is
+        /// that the player runs BACK down its frames rather than wrapping: at
+        /// step 25 of a 25-frame idle a plain modulo shows frame 0 and the loop
+        /// visibly cuts, where the ping-pong shows frame 23 and it does not.
+        ///
+        /// The reactions are driven the way the board drives them — by pushing
+        /// numbers through StoryLevelHud.Source and calling Refresh — so what is
+        /// tested is the path the game actually takes, not a direct call to
+        /// StoryAvatar that no player could cause.
+        /// </summary>
+        private static void PortraitBreathesAndReacts()
+        {
+            var host = new GameObject("~StoryAvatarTest");
+            global::System.Func<StoryLevelHud.HudModel> previous = StoryLevelHud.Source;
+            const float Fps = StoryAvatar.DefaultFps;
+            const float T0 = 1000f;
+            try
+            {
+                Canvas canvas = StoryUi.CreateOverlayCanvas("~AvatarCanvas");
+                canvas.transform.SetParent(host.transform, false);
+
+                var model = new StoryLevelHud.HudModel
+                {
+                    LimitTitle = "Moves", LimitValue = "20", LimitLeft = 20
+                };
+                model.Targets.Add(new StoryLevelHud.HudTarget { Remaining = 60 });
+                StoryLevelHud.Source = () => model;
+
+                StoryClock.Override(T0);
+                StoryLevelHud hud = StoryLevelHud.Build(canvas.transform, 1f);
+                hud.Refresh();
+
+                StoryAvatar avatar = StoryAvatar.Active;
+                if (avatar == null)
+                {
+                    Fail("the level HUD builds an animated portrait");
+                    return;
+                }
+
+                int frames = avatar.FrameCount;
+                Expect(frames > 1,
+                    "King Leo has idle frames to play (found " + frames + ")");
+
+                StoryClock.Override(T0);
+                avatar.Tick();
+                Expect(avatar.ShownFrame == 0, "the idle starts on its first frame");
+
+                StoryClock.Override(T0 + 5f / Fps);
+                avatar.Tick();
+                Expect(avatar.ShownFrame == 5, "the idle advances on the clock (showed " +
+                                               avatar.ShownFrame + ")");
+
+                // One step past the last frame: back down, not round to zero.
+                // Aimed at the middle of the step — frames / Fps multiplied back
+                // out lands a hair under the step it names, and floors to the one
+                // before it.
+                StoryClock.Override(T0 + (frames + 0.5f) / Fps);
+                avatar.Tick();
+                Expect(avatar.ShownFrame == frames - 2,
+                    "the idle runs back down its frames rather than cutting to the start " +
+                    "(showed " + avatar.ShownFrame + ", wanted " + (frames - 2) + ")");
+
+                // A cascade takes a visible bite out of the count.
+                model.Targets[0].Remaining = 48;
+                hud.Refresh();
+                Expect(avatar.Playing == "pop",
+                    "a cascade makes the king react (playing '" + avatar.Playing + "')");
+
+                // And the reaction hands itself back to the idle when it is done.
+                // A reaction's clock starts when it fires rather than at T0, so
+                // the wait here is simply longer than any clip can be.
+                StoryClock.Override(T0 + 100f);
+                avatar.Tick();
+                Expect(avatar.Playing == null,
+                    "the reaction ends and the idle resumes (playing '" + avatar.Playing + "')");
+
+                // Running out of moves is what worries him.
+                model.LimitValue = "2";
+                model.LimitLeft = 2;
+                hud.Refresh();
+                Expect(avatar.Playing == "worry",
+                    "a nearly spent level worries the king (playing '" + avatar.Playing + "')");
+
+                // Clearing the board is what does not.
+                model.Targets[0].Remaining = 0;
+                model.Targets[0].Done = true;
+                hud.Refresh();
+                Expect(avatar.Playing == "cheer",
+                    "finishing the target cheers him (playing '" + avatar.Playing + "')");
+
+                Debug.Log("[Story] portrait: " + frames + " idle frames, ping-pong loop, " +
+                          "reacts to cascade, low moves and the win.");
+            }
+            finally
+            {
+                StoryLevelHud.Source = previous;
+                StoryClock.Override(T0);
+                Object.DestroyImmediate(host);
+            }
+        }
+
+        /// <summary>
         /// The level HUD reads Target and Moves and nothing else.
         ///
         /// There is no board in the Editor outside play mode, so the strip is
@@ -1261,8 +1400,8 @@ namespace JellyGarden.Scripts.Story.Editor
 
                 List<string> texts = TextsIn(hud.gameObject);
 
-                Expect(texts.Contains("Target"), "the HUD names its Target panel");
-                Expect(texts.Contains("Moves"), "the HUD names its Moves panel");
+                Expect(texts.Contains("TARGETS"), "the HUD names its Target panel");
+                Expect(texts.Contains("MOVES"), "the HUD names its Moves panel");
                 Expect(texts.Contains("35"), "the HUD shows the moves left (read '" +
                                              hud.LimitText + "')");
                 Expect(hud.VisibleTargetCount == 2,
@@ -1295,7 +1434,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 model.LimitTitle = "Time";
                 model.LimitValue = "1:30";
                 hud.Refresh();
-                Expect(hud.LimitTitleText == "Time" && hud.LimitText == "1:30",
+                Expect(hud.LimitTitleText == "TIME" && hud.LimitText == "1:30",
                     "a timed level's panel reads Time");
             }
             finally

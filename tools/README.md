@@ -13,6 +13,7 @@ either fail loudly or read a stale file.
 python3 tools/story_sync.py         # story markdown JSON  -> Resources/Story/arc1..6, index.json
 python3 tools/cutscene_build.py     # arc markdown         -> Resources/Story/cutscenes.json
 python3 tools/ui_sprites.py         # kit UI sprites       -> Resources/Story/UI
+python3 tools/hud_frame.py          # tools/art/hud parts  -> Resources/Story/UI/hud_frame.png
 python3 tools/asset_import.py       # generated art/audio  -> Resources/Story/Art, Audio
 python3 tools/themes_build.py       # spec + the backdrops -> Resources/Story/themes.json
 
@@ -22,15 +23,35 @@ python3 tools/level_gen.py          # templates + plan     -> Resources/Levels/1
 python3 tools/target_gen.py         # plan + boards        -> Resources/Targets/Level1..1208.asset
 ```
 
-The art reskins are independent of the story data. **None of them is applied —
-the game currently ships the kit's own candy art**, which is what the owner
-chose. Each script rewrites kit textures in place and can be run, or undone,
-at any time:
+The active level HUD matches the supplied copper-and-blue reference. Its source,
+import instructions, and generation prompt are in
+[`art/hud/reference/README.md`](art/hud/reference/README.md).
+Run **JellyGarden > Story > Import Reference HUD Art**, then **Bake Level HUD
+into the scene**, to regenerate it. `StoryHudReferenceArt.BakeHeadless` performs
+both steps in batch mode.
+
+`hud_frame.py` paints the previous level HUD's single plate — the wood bar, both blue
+panels, their gold rules, the sunburst and the crowned medallion ring — from the
+cut parts in `tools/art/hud`. It is independent of everything above and only has
+to be re-run when a part is re-cut.
+
+**It prints the geometry `StoryLevelHud.cs` is measured against**, and those
+constants are not derived at runtime: re-run it and copy the printed numbers
+into the block above `StripHeight`, or the labels and the king land off the art
+they are drawn over. It reads the medallion's opening off that part's own alpha,
+so a re-cut ring moves the sunburst and the avatar window with it.
+
+The art reskins are independent of the story data. **Only `bar_skin.py` is
+applied — the board and the menus still ship the kit's own candy art**, which
+is what the owner chose; the in-level booster bar is King Leo's, which is what
+the owner asked for after seeing the candy bar under a jewelled board. Each
+script rewrites kit textures in place and can be run, or undone, at any time:
 
 ```bash
 python3 tools/item_skin.py          # painted jewels  -> the 27 board sprites
 python3 tools/item_skin_flat.py     # flat minimal set -> the 27 board sprites
 python3 tools/booster_skin.py       # -> the 14 booster icons
+python3 tools/bar_skin.py           # APPLIED: the 9 in-level booster-bar sprites
 python3 tools/brand_skin.py         # -> logo, title, loading, map tiles, ivy blocker
 python3 tools/splash_build.py       # -> the King Leo wordmark, splash art, display face
 python3 tools/icons_build.py        # -> the 11 HUD, nav and chest icons
@@ -46,6 +67,11 @@ art changes.
 import into `Resources/Story/Art`, where `StoryArt.Load` finds them by name and
 the drawn fallbacks in `StoryUi` step aside. Deleting what they wrote gives the
 drawn primitives straight back.
+
+`bar_skin.py` and `booster_skin.py` overlap on two files — `boost_bomb` and
+`boost_random_color`. `bar_skin.py` redraws the whole tile, plate included;
+`booster_skin.py` only repaints the middle of the kit's blue plate. Run
+`bar_skin.py` last, or the bar comes out half royal and half candy.
 
 `item_skin.py` and `item_skin_flat.py` write the same 27 files, so run one or
 the other, never both. Each script takes `--preview` and writes a contact sheet

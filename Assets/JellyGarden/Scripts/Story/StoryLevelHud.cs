@@ -23,9 +23,16 @@
 //
 // What is NOT done here, and why:
 //
-//   The kit's header is DESTROYED, not hidden under this one. The score bar,
-//   its star markers and the static target slots are chrome nothing else
-//   references, and they go.
+//   This HUD is not a second header. It is built INSIDE the kit's own strip,
+//   which is stretched over the panel the metrics below were measured against.
+//   The strip is the object the kit shows and hides when a level opens and
+//   closes, so hosting the HUD there means it is shown and hidden with it, and
+//   inherits its scaling and sort order, for free.
+//
+//   The kit's header CONTENT is DESTROYED, not hidden under this one. The score
+//   bar, its star markers and the static target slots are chrome nothing else
+//   references, and they go. What survives is the strip itself, now carrying
+//   King Leo's design instead of Jelly Garden's.
 //
 //   One object survives and is adopted into this HUD instead: the group owning
 //   the kit's TargetIcons. LevelManager's collect animation flies a matched
@@ -131,6 +138,14 @@ namespace JellyGarden.Scripts.Story
             public string LimitValue = "0";
 
             /// <summary>
+            /// Moves, or seconds, still left — the same number
+            /// <see cref="LimitValue"/> spells out, kept as an int because the
+            /// portrait reacts to how much is left and a clock string cannot be
+            /// compared. -1 means nothing said.
+            /// </summary>
+            public int LimitLeft = -1;
+
+            /// <summary>
             /// The score the level must reach: LevelManager.star1, which
             /// CheckWinLose tests on every level, not just the SCORE ones.
             /// </summary>
@@ -144,29 +159,23 @@ namespace JellyGarden.Scripts.Story
 
         #endregion
 
-        #region Metrics, measured off docs/royal-match/11-level-hud.jpg
+        #region Reference HUD geometry
 
-        // The capture is 828x1472 and the reference canvas is 1080x1920, so every
-        // pixel measured off the JPG is multiplied by 1080/828 = 1.304 here.
+        // Measured on tools/art/hud/reference/frame-compact-source.png (2172 x 724).
+        // All heights use the existing canvas's width scale. Keep the frame's
+        // aspect ratio, with the live portrait inside its gold opening.
         private const float DesignWidth = 1080f;
-
-        private const float StripHeight = 360f;   // blue body
-        private const float StripBand = 15f;      // the gold band under it
-        private const float PlateTop = 29f;
-        private const float PlateHeight = 66f;
-        private const float CardTop = 110f;
-        private const float CardHeight = 226f;
-
-        // x in fractions of the screen width: left panel, mirrored on the right.
-        private const float TargetPlateMin = 0.0205f;
-        private const float TargetPlateMax = 0.3213f;
-        private const float TargetCardMin = 0.0362f;
-        private const float TargetCardMax = 0.3043f;
-
-        private const float PortraitMin = 0.3442f;
-        private const float PortraitMax = 0.6594f;
-        private const float PortraitTop = 21f;
-        private const float PortraitHeight = 330f;
+        private const float StripHeight = 360f;
+        private const float PanelLeftMin = 0.060f;
+        private const float PanelLeftMax = 0.335f;
+        private const float PanelTop = 80f;
+        private const float PanelHeight = 192f;
+        private const float TitleFrac = 0.32f;
+        private const float TitleSize = 38f;
+        private const float WindowMin = 0.378f;
+        private const float WindowMax = 0.622f;
+        private const float WindowTop = 53f;
+        private const float WindowHeight = 253f;
 
         private const int MaxTargets = 4;
 
@@ -217,6 +226,52 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>The portrait in the middle of the strip. King Leo's game.</summary>
         public const string PortraitCharacter = "leo";
+
+        #endregion
+
+        #region The Royal Court palette
+
+        // Taken from the reference art: a wooden frame, two deep-blue panels,
+        // cream chips, and gold on every rim. The strip used to be flat
+        // RoyalBlue with gold trim; this is the same family with the wood frame
+        // and the panel/chip separation the reference actually has.
+        //
+        // Held HERE rather than in StoryUi.Royal: those colours are shared by
+        // every other screen in the game, and this is the strip's own scheme.
+
+        private static readonly Color WoodFrame = Rgb(138, 90, 51);      // outer frame
+        private static readonly Color WoodShadow = Rgb(101, 63, 33);     // its lower edge
+        private static readonly Color PanelBlue = Rgb(30, 78, 156);      // Targets / Moves panels
+        private static readonly Color PanelBlueDeep = Rgb(20, 55, 115);  // their rim
+        private static readonly Color PanelRule = Rgb(240, 169, 59);     // the rule under a title
+        private static readonly Color PanelTitle = Rgb(255, 241, 197);   // TARGETS / MOVES
+        private static readonly Color PillFill = Rgb(246, 238, 220);     // a target chip
+        private static readonly Color PillEdge = Rgb(214, 194, 160);
+        private static readonly Color BadgeRim = Rgb(232, 180, 74);      // the icon's gold ring
+        private static readonly Color BadgeFace = Rgb(255, 250, 238);
+        private static readonly Color PanelNumber = Rgb(17, 39, 98);     // every number
+
+        /// <summary>The chips' corner radius. A pill: half the row's height.</summary>
+        private const int PillCorner = 40;
+
+        /// <summary>The panels' corner radius, in texture pixels.</summary>
+        private const int PanelCorner = 12;
+
+        /// <summary>
+        /// How wide the round icon badge is, in 1080-wide design units. Matched
+        /// to the content band's height on the half-height bar, so the badge
+        /// reads as a circle rather than as a squashed oval.
+        /// </summary>
+        private const float BadgeSize = 96f;
+
+        /// <summary>The clear space between two stacked chips, in design units.</summary>
+        private const float RowGap = 8f;
+
+
+        private static Color Rgb(int r, int g, int b)
+        {
+            return new Color(r / 255f, g / 255f, b / 255f, 1f);
+        }
 
         #endregion
 
@@ -316,33 +371,79 @@ namespace JellyGarden.Scripts.Story
             Attach();
         }
 
-        /// <summary>Builds the HUD over the kit's, once per board. Cheap to repeat.</summary>
+        /// <summary>Takes over the kit's strip, once per strip. Cheap to repeat.</summary>
         private static void Attach()
         {
             if (!Enabled) return;
-            if (Instance != null) return;
 
             Transform strip = FindKitHudStrip();
             // No strip yet: the level UI is still inactive, and the next
             // OnLevelLoaded will come back through here.
             if (strip == null) return;
 
-            // The HUD lives inside the kit's level canvas rather than on a canvas
-            // of its own, so it inherits the kit's scaling, its sort order and —
-            // the part that matters — its visibility. It is the sibling before
-            // the strip, so anything left visible in the strip stays on top.
-            Transform parent = strip.parent;
-            StoryLevelHud hud = Build(parent, ScaleOf(parent));
-            hud.transform.SetSiblingIndex(strip.GetSiblingIndex());
+            // The guard is on the STRIP, not on a static Instance. A strip that
+            // has already been taken over carries this HUD inside it; a strip the
+            // kit has just built carries nothing and needs one. A singleton
+            // cannot tell those apart — it only knows that SOME HUD exists — so a
+            // rebuilt kit strip kept its score bar, its stars and its own Pause
+            // for the rest of the session, which is the header players were
+            // still seeing.
+            // The HUD is BAKED INTO THE SCENE by StoryHudBaker, so the normal
+            // case is that it is already here. Nothing is built; it is bound to
+            // the objects the scene already holds and driven from there.
+            StoryLevelHud authored = strip.GetComponentInChildren<StoryLevelHud>(true);
+            if (authored != null)
+            {
+                authored.EnsureBound();
+                authored.Refresh();
+                return;
+            }
+
+            // Built INSIDE the kit's strip rather than beside it. The strip is
+            // the header the kit itself shows and hides, so living in it means
+            // this HUD is shown and hidden with it, inherits its scaling and its
+            // sort order, and nothing has to mirror any of that per frame.
+            StoryLevelHud hud = Build(strip, ScaleOf(strip));
             hud._kitStrip = strip;
 
             hud.ReplaceKitHud(strip);
             hud.MovePauseOutOfTheHudsWay(strip);
             hud.ReplaceKitLevelPlate(strip);
+            hud.FillTheKitStrip();
             hud.Refresh();
 
-            Debug.Log("[Story] Level HUD installed: Target + portrait + Moves, no score bar.");
-            hud.ReportPlacement(parent);
+            Debug.Log("[Story] Level HUD installed: the kit's strip, redrawn as " +
+                      "Target + portrait + Moves, no score bar.");
+            hud.ReportPlacement(strip.parent);
+        }
+
+        /// <summary>
+        /// Stretches the kit's strip over the panel it sat in, and silences its
+        /// own background.
+        ///
+        /// The metrics in this file were measured against that panel — the full
+        /// width and height of the level canvas — not against the band the kit
+        /// gave its score bar. Hosting the HUD in the strip therefore only holds
+        /// if the strip covers the same rect, so it is stretched to it.
+        ///
+        /// Safe because nothing of the kit's is left inside to distort: the
+        /// chrome is destroyed, the target icons are in this HUD, and Pause has
+        /// moved to the booster row. Its own Graphic is switched off for the same
+        /// reason the chrome went — at panel size it would paint over the board.
+        /// </summary>
+        private void FillTheKitStrip()
+        {
+            var rect = _kitStrip as RectTransform;
+            if (rect == null) return;
+
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            Graphic background = rect.GetComponent<Graphic>();
+            if (background != null) background.enabled = false;
         }
 
         /// <summary>
@@ -386,9 +487,70 @@ namespace JellyGarden.Scripts.Story
             return canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
         }
 
+        private void Awake()
+        {
+            EnsureBound();
+        }
+
+        /// <summary>
+        /// Points this component at the parts the SCENE already holds.
+        ///
+        /// The strip is baked into game.unity, so on a scene load these objects
+        /// exist before anything runs — but the fields below are private and not
+        /// serialised, so they come back null and have to be found again. They
+        /// are found BY NAME, the names StoryHudBaker wrote, rather than by
+        /// serialised references: a name survives someone re-baking, re-parenting
+        /// or hand-editing the strip in the Editor, and a broken one is a null
+        /// this method reports rather than a silently dead HUD.
+        ///
+        /// Cheap and idempotent: it returns immediately once bound.
+        /// </summary>
+        public void EnsureBound()
+        {
+            if (_root != null) return;
+
+            _root = transform as RectTransform;
+            if (_root == null) return;
+
+            _scale = ScaleOf(_root.parent);
+            // These paths and the ones BuildStrip creates are the same fact
+            // written twice, and they have already drifted apart once — the HUD
+            // came up with an empty Targets panel and a Moves number frozen on
+            // its placeholder, because the binder was still looking for a
+            // hierarchy the builder had stopped making. If you rename anything
+            // in Panel(), BuildPortrait() or BuildLimitPanel(), rename it here.
+            _targetTitle = TextAt("TargetPanel/Title");
+            _limitTitle = TextAt("MovesPanel/Title");
+            _limitValue = TextAt("MovesPanel/Content/MovesCard/MovesValue");
+            _targetRow = _root.Find("TargetPanel/Content") as RectTransform;
+
+            Transform face = _root.Find("Portrait/Window/Face");
+            _portrait = face == null ? null : face.GetComponent<Image>();
+
+            Instance = this;
+
+            if (_targetRow == null || _limitValue == null || _portrait == null)
+                Debug.LogError("[Story] Level HUD: the scene's strip is missing parts — " +
+                               "targets row " + (_targetRow == null ? "MISSING" : "ok") +
+                               ", moves value " + (_limitValue == null ? "MISSING" : "ok") +
+                               ", portrait " + (_portrait == null ? "MISSING" : "ok") +
+                               ". Re-run JellyGarden/Story/Bake Level HUD into the scene.");
+        }
+
+        private Text TextAt(string path)
+        {
+            Transform found = _root.Find(path);
+            return found == null ? null : found.GetComponent<Text>();
+        }
+
         /// <summary>
         /// Builds the strip and nothing else — no board, no kit HUD, no scene
-        /// assumptions. This is what an editor test drives.
+        /// assumptions.
+        ///
+        /// This is no longer what runs when a level opens: StoryHudBaker runs it
+        /// ONCE, in the Editor, and saves the result into game.unity. It stays
+        /// the single definition of the strip's shape, metrics and colours, and
+        /// it is what an editor test drives.
         /// </summary>
         public static StoryLevelHud Build(Transform parent, float scale)
         {
@@ -412,7 +574,10 @@ namespace JellyGarden.Scripts.Story
         private static float ScaleOf(Transform parent)
         {
             if (parent == null) return 1f;
-            var scaler = parent.GetComponentInParent<CanvasScaler>();
+            // The level is inactive while its HUD is baked. Excluding inactive
+            // ancestors silently uses scale 1 on the kit's 720-wide canvas,
+            // stretching the frame vertically by 50%.
+            var scaler = parent.GetComponentInParent<CanvasScaler>(true);
             if (scaler == null || scaler.referenceResolution.x <= 0f) return 1f;
             return scaler.referenceResolution.x / DesignWidth;
         }
@@ -440,138 +605,127 @@ namespace JellyGarden.Scripts.Story
 
         private void BuildStrip()
         {
-            Image body = StoryUi.CreateImage("Strip", _root, null, StoryUi.RoyalBlue);
+            // ONE painted plate. hud_frame carries the wood frame, both blue
+            // panels, their gold rules and the gold medallion with its sunburst
+            // — everything in the reference that never changes. Nothing below
+            // draws a rim, a rule or a ring by hand any more; the code only
+            // places the things that DO change over the art.
+            Image body = StoryUi.CreateImage("Strip", _root,
+                StoryUi.LoadSprite("hud_reference_frame"), Color.white);
             Slab(body.rectTransform, 0f, 1f, 0f, StripHeight);
             body.raycastTarget = true;   // the strip eats taps meant for the board
-
-            Image bandDeep = StoryUi.CreateImage("StripBand", _root, null, StoryUi.RoyalGoldDeep);
-            Slab(bandDeep.rectTransform, 0f, 1f, StripHeight, StripBand);
-            Image bandLit = StoryUi.CreateImage("StripBandLit", _root, null, StoryUi.RoyalGold);
-            Slab(bandLit.rectTransform, 0f, 1f, StripHeight, StripBand * 0.45f);
 
             BuildTargetPanel();
             BuildPortrait();
             BuildLimitPanel();
         }
 
+        /// <summary>
+        /// Lays out one of the two panels PAINTED INTO hud_frame: its name in the
+        /// band above the gold rule, and a content rect below it.
+        ///
+        /// Draws no background of its own. Every number here — where the panel
+        /// sits, how tall it is, where the rule crosses it — was measured off the
+        /// art rather than chosen, so the text lands on the panel the painting
+        /// actually has. Re-measure if the art is regenerated.
+        /// </summary>
+        private RectTransform Panel(string name, float xMin, float xMax, string label)
+        {
+            RectTransform panel = StoryUi.CreateRect(name, _root);
+            Slab(panel, xMin, xMax, PanelTop, PanelHeight);
+
+            Text title = StoryUi.CreateText("Title", panel, label,
+                Mathf.RoundToInt(TitleSize * _scale), PanelTitle, TextAnchor.MiddleCenter);
+            title.font = StoryUi.DisplayFont;
+            title.fontStyle = FontStyle.Normal;
+            var titleShadow = title.gameObject.AddComponent<Shadow>();
+            titleShadow.effectColor = Rgb(71, 35, 28);
+            titleShadow.effectDistance = new Vector2(0f, -1f * _scale);
+            RectTransform titleRect = title.rectTransform;
+            titleRect.anchorMin = new Vector2(0f, 1f - TitleFrac);
+            titleRect.anchorMax = Vector2.one;
+            titleRect.offsetMin = new Vector2(10f * _scale, 2f * _scale);
+            titleRect.offsetMax = new Vector2(-10f * _scale, -2f * _scale);
+            // TARGETS fits within the padded band at this fixed size. Keep all
+            // headings consistent and centre their visible glyphs above the rule.
+            title.resizeTextForBestFit = false;
+            title.alignByGeometry = true;
+            title.horizontalOverflow = HorizontalWrapMode.Overflow;
+            title.verticalOverflow = VerticalWrapMode.Truncate;
+
+            RectTransform content = StoryUi.CreateRect("Content", panel);
+            content.anchorMin = Vector2.zero;
+            content.anchorMax = new Vector2(1f, 1f - TitleFrac);
+            content.offsetMin = new Vector2(5f * _scale, 6f * _scale);
+            content.offsetMax = new Vector2(-5f * _scale, -8f * _scale);
+            return content;
+        }
+
         private void BuildTargetPanel()
         {
-            _targetTitle = Plate("TargetPlate", TargetPlateMin, TargetPlateMax, "Target");
-
-            Image card = StoryUi.CreamCard("TargetCard", _root, 26);
-            Slab(card.rectTransform, TargetCardMin, TargetCardMax, CardTop, CardHeight);
-
-            _targetRow = StoryUi.CreateRect("Targets", card.rectTransform);
-            StoryUi.Stretch(_targetRow, 12f * _scale);
+            _targetRow = Panel("TargetPanel", PanelLeftMin, PanelLeftMax, "TARGETS");
+            Transform title = _root.Find("TargetPanel/Title");
+            _targetTitle = title == null ? null : title.GetComponent<Text>();
         }
 
         private void BuildLimitPanel()
         {
             // Mirrored: the right panel is the left one reflected about the
-            // centre line, which is how the capture measures.
-            _limitTitle = Plate("MovesPlate", 1f - TargetPlateMax, 1f - TargetPlateMin, "Moves");
+            // centre line, which is how the art is painted.
+            RectTransform content = Panel("MovesPanel",
+                1f - PanelLeftMax, 1f - PanelLeftMin, "MOVES");
+            Transform title = _root.Find("MovesPanel/Title");
+            _limitTitle = title == null ? null : title.GetComponent<Text>();
 
-            Image card = StoryUi.CreamCard("MovesCard", _root, 26);
-            Slab(card.rectTransform, 1f - TargetCardMax, 1f - TargetCardMin, CardTop, CardHeight);
+            Image card = StoryUi.CreateImage("MovesCard", content,
+                StoryUi.LoadSprite("hud_reference_moves"), Color.white);
+            StoryUi.Stretch(card.rectTransform);
+            card.type = Image.Type.Sliced;
 
             _limitValue = StoryUi.CreateText("MovesValue", card.rectTransform, "0",
-                Mathf.RoundToInt(150f * _scale), StoryUi.RoyalNavy, TextAnchor.MiddleCenter);
-            StoryUi.Stretch(_limitValue.rectTransform, 8f * _scale);
-            _limitValue.fontStyle = FontStyle.Bold;
+                Mathf.RoundToInt(178f * _scale), PanelNumber, TextAnchor.MiddleCenter);
+            _limitValue.font = StoryUi.DisplayFont;
+            StoryUi.Stretch(_limitValue.rectTransform, 14f * _scale);
+            _limitValue.fontStyle = FontStyle.Normal;
+            var numberEdge = _limitValue.gameObject.AddComponent<Outline>();
+            numberEdge.effectColor = new Color(0.60f, 0.91f, 1f, 0.75f);
+            numberEdge.effectDistance = new Vector2(1f * _scale, -1f * _scale);
 
             // A moves value is one or two characters and a TIME value is four —
-            // "0:59" — and the card is sized for the short one. Left wrapping,
-            // Unity broke the line rather than shrinking it, so every timed
-            // level read "0:5" over "9": two lines of a four-character clock,
-            // which is not a number a player can read at a glance. FitOneLine
-            // turns wrapping off, which is what makes best-fit solve for WIDTH.
+            // "0:59" — and the card is sized for the short one. FitOneLine turns
+            // wrapping off, which is what makes best-fit solve for WIDTH; left
+            // wrapping on, Unity broke "0:59" into "0:5" over "9".
             StoryUi.FitOneLine(_limitValue,
-                Mathf.Max(8, Mathf.RoundToInt(60f * _scale)),
-                Mathf.Max(9, Mathf.RoundToInt(150f * _scale)));
+                Mathf.Max(8, Mathf.RoundToInt(48f * _scale)),
+                Mathf.Max(9, Mathf.RoundToInt(178f * _scale)));
         }
 
         /// <summary>
-        /// A title plate: the same curved banner the popups wear, in the same
-        /// three layers — blue shell, gold, dark blue field — so the word over
-        /// the board and the word over a panel are the same object at different
-        /// sizes. They were flat rounded rects, which was the one place left in
-        /// the game still wearing the old shape.
+        /// The king, inside the medallion the frame art already paints.
+        ///
+        /// No rings are drawn here — the frame has the plain gold circle and
+        /// the sunburst behind it. All this does is clip the portrait to its
+        /// opening. The clip is not optional: the avatar frames carry a
+        /// royal-blue ground in their corners from the clip they were cut out
+        /// of, and the mask is what removes it.
+        ///
+        /// The wrapper spans the whole strip so the window's own numbers are
+        /// read against the same origin the generator measured them in.
         /// </summary>
-        private Text Plate(string name, float xMin, float xMax, string label)
-        {
-            RectTransform plate = StoryUi.CreateRect(name, _root);
-            Slab(plate, xMin, xMax, PlateTop, PlateHeight);
-
-            Image shell = StoryUi.CreateImage("Shell", plate, StoryUi.BannerSprite,
-                StoryUi.RoyalBlue);
-            StoryUi.Stretch(shell.rectTransform);
-
-            Image rim = StoryUi.CreateImage("Rim", plate, StoryUi.BannerSprite,
-                StoryUi.RoyalGoldDeep);
-            StoryUi.Stretch(rim.rectTransform, 5f * _scale);
-
-            Image gold = StoryUi.CreateImage("Gold", plate, StoryUi.BannerSprite,
-                StoryUi.RoyalGold);
-            StoryUi.Stretch(gold.rectTransform, 8f * _scale);
-
-            Image fill = StoryUi.CreateImage("Fill", plate, StoryUi.BannerSprite,
-                StoryUi.RoyalBlueDark);
-            StoryUi.Stretch(fill.rectTransform, 14f * _scale);
-
-            Text text = StoryUi.CreateText("Label", plate, label,
-                Mathf.RoundToInt(56f * _scale), StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
-
-            // The banner's field sits in the TOP of its rect — the band slides
-            // down the arc — so text centred in the whole plate sits under the
-            // gold. Same correction the panel title needed.
-            RectTransform textRect = text.rectTransform;
-            textRect.anchorMin = new Vector2(0f, StoryUi.BannerArc);
-            textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = new Vector2(14f * _scale, 2f * _scale);
-            textRect.offsetMax = new Vector2(-14f * _scale, -6f * _scale);
-            text.fontStyle = FontStyle.Bold;
-            text.resizeTextForBestFit = true;
-            text.resizeTextMinSize = 12;
-            text.resizeTextMaxSize = Mathf.RoundToInt(56f * _scale);
-            return text;
-        }
-
         private void BuildPortrait()
         {
             RectTransform frame = StoryUi.CreateRect("Portrait", _root);
-            Slab(frame, PortraitMin, PortraitMax, PortraitTop, PortraitHeight);
+            Slab(frame, 0f, 1f, 0f, StripHeight);
 
-            Image rim = StoryUi.CreateImage("Rim", frame, StoryUi.RoundedSprite(40),
-                StoryUi.RoyalGoldDeep);
-            StoryUi.Stretch(rim.rectTransform);
-            rim.type = Image.Type.Sliced;
+            Image window = StoryUi.CreateImage("Window", frame, StoryUi.CircleSprite,
+                Color.white);
+            Slab(window.rectTransform, WindowMin, WindowMax, WindowTop, WindowHeight);
+            window.gameObject.AddComponent<Mask>().showMaskGraphic = false;
 
-            Image lit = StoryUi.CreateImage("RimLit", frame, StoryUi.RoundedSprite(40),
-                StoryUi.RoyalGold);
-            StoryUi.Stretch(lit.rectTransform, 6f * _scale);
-            lit.type = Image.Type.Sliced;
-
-            // The mask carries the same rounded corners, so a rectangular
-            // portrait sits inside the frame rather than over its rim.
-            Image window = StoryUi.CreateImage("Window", frame, StoryUi.RoundedSprite(40),
-                StoryUi.RoyalBlueDark);
-            StoryUi.Stretch(window.rectTransform, 16f * _scale);
-            window.type = Image.Type.Sliced;
-            window.gameObject.AddComponent<Mask>().showMaskGraphic = true;
-
-            // Head and shoulders, not the whole standing figure: at this size a
-            // full-body portrait is a brown smudge with a face two pixels wide.
-            // StoryAvatar animates it where frames are authored and crops the
-            // portrait where they are not, and the mask above is what makes the
-            // crop possible — see the note in that file.
             _portrait = StoryAvatar.Build(PortraitCharacter, window.rectTransform);
         }
 
-        /// <summary>
-        /// Places a rect by fractions of the width and pixels from the top. The
-        /// kit's canvas scales on width, so a width fraction is exact at any
-        /// aspect and a vertical pixel only needs the one scale factor.
-        /// </summary>
+
         private void Slab(RectTransform rect, float xMin, float xMax, float top, float height)
         {
             rect.anchorMin = new Vector2(xMin, 1f);
@@ -599,7 +753,6 @@ namespace JellyGarden.Scripts.Story
 
         private void LateUpdate()
         {
-            MirrorKitVisibility();
             AimKitIconsAtThisHud();
         }
 
@@ -609,10 +762,62 @@ namespace JellyGarden.Scripts.Story
             HudModel model = Source != null ? Source() : ReadLevelManager();
             if (model == null) return;
 
-            SetText(_limitTitle, model.LimitTitle);
+            SetText(_limitTitle, model.LimitTitle.ToUpperInvariant());
             SetText(_limitValue, model.LimitValue);
             SyncTargets(model.Targets);
+            React(model);
         }
+
+        #region The face
+
+        // A cascade is what a reaction is for, not a single match. A match of
+        // three takes at most three off the count, so five is the smallest drop
+        // that cannot be one — measured against the refresh interval above,
+        // which is short enough that two separate matches do not land in one
+        // pull.
+        private const int PopDrop = 5;
+
+        // Royal Match starts fretting with a handful of moves left. Three is the
+        // point the kit's own low-moves warning fires at; a timed level counts
+        // seconds instead, where ten is the same fraction of a typical limit.
+        private const int LowMoves = 3;
+        private const int LowSeconds = 10;
+
+        private int _owed = -1;
+        private bool _wasDone;
+
+        /// <summary>
+        /// Turns the strip's numbers into an expression on the portrait.
+        ///
+        /// Read from the model rather than hooked into the board, so nothing in
+        /// the kit's match, cascade or win path is touched to get it — the face
+        /// reacts to what the HUD already pulls ten times a second, and a level
+        /// with no avatar frames authored simply never reacts.
+        /// </summary>
+        private void React(HudModel model)
+        {
+            int owed = 0;
+            bool allDone = model.Targets.Count > 0;
+            for (int i = 0; i < model.Targets.Count; i++)
+            {
+                HudTarget target = model.Targets[i];
+                owed += Mathf.Max(0, target.Remaining);
+                if (!target.Done) allDone = false;
+            }
+
+            bool timed = model.LimitTitle == "Time";
+            int low = timed ? LowSeconds : LowMoves;
+
+            if (allDone && !_wasDone) StoryAvatar.React("cheer");
+            else if (_owed >= 0 && _owed - owed >= PopDrop) StoryAvatar.React("pop");
+            else if (model.LimitLeft >= 0 && model.LimitLeft <= low && !allDone)
+                StoryAvatar.React("worry");
+
+            _wasDone = allDone;
+            _owed = owed;
+        }
+
+        #endregion
 
         private static void SetText(Text text, string value)
         {
@@ -633,6 +838,7 @@ namespace JellyGarden.Scripts.Story
             model.LimitValue = timed
                 ? string.Format("{0}:{1:00}", limit / 60, limit % 60)
                 : limit.ToString();
+            model.LimitLeft = limit;
 
             AddTargets(model, manager.targetObject, manager.star1, LevelManager.Score);
             return model;
@@ -803,6 +1009,7 @@ namespace JellyGarden.Scripts.Story
             model.LimitValue = timed
                 ? string.Format("{0}:{1:00}", limit / 60, limit % 60)
                 : limit.ToString();
+            model.LimitLeft = limit;
 
             var targets = new TargetObject[asset.targets.Count];
             for (int i = 0; i < asset.targets.Count; i++) targets[i] = asset.targets[i].DeepCopy();
@@ -827,37 +1034,15 @@ namespace JellyGarden.Scripts.Story
             return Target.SCORE;
         }
 
+        /// <summary>
+        /// A single horizontal group of objectives, each with its icon above
+        /// its count. Shared objectives show the amount still owed.
+        /// </summary>
         private void SyncTargets(List<HudTarget> targets)
         {
             int count = Mathf.Min(targets == null ? 0 : targets.Count, MaxTargets);
 
             while (_slots.Count < count) _slots.Add(BuildSlot(_slots.Count));
-
-            // The plate is shared out by how wide each target's number actually
-            // is, not evenly. A score target reads up to five digits and a
-            // collect one reads "3", so on a three-target level an even split
-            // gave the score a fraction of the room it needed and best-fit
-            // shrank it to its floor — a chip a player cannot read at 393 points
-            // wide, next to two single digits at full size. Levels 12, 13 and 14
-            // are where it showed. The weights are the two shapes, not per-level
-            // tuning.
-            float total = 0f;
-            for (int i = 0; i < count; i++) total += SlotWeight(targets[i]);
-            float placed = 0f;
-
-            // Widening the score slot widened its ICON too, because the icon box
-            // is the whole slot and `preserveAspect` fits the sprite into it.
-            // The star came out at the icon band's full height on every plate
-            // while a count chip was capped by its own narrower slot: 2.3x the
-            // book and shield on a three-chip plate, 1.5x the blocks chip on a
-            // two-chip one. Levels 49..64 are where it was measured, and it is
-            // on every plate in the game that carries a score chip beside a
-            // count. The plate still shares its WIDTH out by number shape; the
-            // icon box no longer follows, and is the narrowest slot's width on
-            // every chip, so one plate draws one icon size.
-            float narrowest = float.MaxValue;
-            for (int i = 0; i < count; i++)
-                narrowest = Mathf.Min(narrowest, SlotWeight(targets[i]));
 
             for (int i = 0; i < _slots.Count; i++)
             {
@@ -866,348 +1051,114 @@ namespace JellyGarden.Scripts.Story
                     _slots[i].Root.gameObject.SetActive(used);
                 if (!used) continue;
 
-                float weight = SlotWeight(targets[i]);
-                float share = weight / Mathf.Max(0.0001f, total);
-                PlaceSlot(_slots[i].Root, placed, placed + share);
-                placed += share;
-
-                // An icon box the full width of its slot puts two icons only
-                // their own transparent margins apart, and the icon's shadow
-                // then falls into that. Measured on level 81's own screenshot
-                // at 393 points wide: 3 pixels between two gold-rimmed jewels
-                // with 16 between the numbers under them, and the pair read as
-                // one clump. 82, 85, 87, 90, 92, 94 and 95 are the rest of this
-                // band that showed it. `IconGutter` is one shadow step, so an
-                // icon's silhouette can no longer cross into the next slot.
-                SizeIconBox(_slots[i], narrowest / Mathf.Max(0.0001f, weight),
-                    count > 1 ? IconGutter * _scale : 0f);
-
-                // Both sides or neither, never one. Gutting only the sides that
-                // face a neighbour left the first chip a wider box than the
-                // second, and best-fit then drew "25" visibly larger than the
-                // "15" beside it — the same "one plate, two sizes" fault
-                // SizeIconBox exists to prevent. A single-chip plate has nothing
-                // to run into and keeps its full width.
-                SizeCountBox(_slots[i], count > 1);
-
+                Slot slot = _slots[i];
                 HudTarget target = targets[i];
-                if (_slots[i].Icon.sprite != target.Icon)
+                PlaceTarget(slot.Root, i, count);
+                // Keep icons square, with room below for the count. Their size
+                // follows the available column width on three/four-goal levels.
+                float iconSize = Mathf.Min(68f * _scale,
+                    Mathf.Max(1f, _targetRow.rect.width / Mathf.Max(2, count) - 12f * _scale));
+                var iconBox = slot.Icon.transform.parent as RectTransform;
+                iconBox.sizeDelta = new Vector2(iconSize, iconSize);
+
+                if (slot.Icon.sprite != target.Icon)
                 {
-                    _slots[i].Icon.sprite = target.Icon;
-                    _slots[i].Icon.enabled = target.Icon != null;
-                    _slots[i].Shadow.sprite = target.Icon;
-                    _slots[i].Shadow.enabled = target.Icon != null;
+                    slot.Icon.sprite = target.Icon;
+                    slot.Icon.enabled = target.Icon != null;
+                    slot.Shadow.sprite = target.Icon;
+                    slot.Shadow.enabled = target.Icon != null;
                 }
 
-                if (_slots[i].Backing.sprite != target.Backing)
+                if (slot.Backing.sprite != target.Backing)
                 {
-                    _slots[i].Backing.sprite = target.Backing;
-                    _slots[i].Backing.enabled = target.Backing != null;
+                    slot.Backing.sprite = target.Backing;
+                    slot.Backing.enabled = target.Backing != null;
                 }
 
                 // A finished target goes green rather than gaining a tick: the
                 // kit's font is not guaranteed to carry a check glyph, and a
                 // missing glyph renders as nothing at all.
-                //
-                // `count > 1` is the same seam SizeCountBox and SizeIconBox use,
-                // and for the same reason: a shared plate has no room. See
-                // HudTarget.DisplayShared.
-                SetText(_slots[i].Count, count > 1 ? target.DisplayShared : target.Display);
-                _slots[i].Count.color = target.Done ? StoryUi.RoyalGreen : StoryUi.RoyalNavy;
+                SetText(slot.Count, count > 1 ? target.DisplayShared : target.Display);
+                slot.Count.color = target.Done ? StoryUi.RoyalGreen : PanelTitle;
             }
-
-            // Last, because it measures the boxes the loop above has just sized
-            // and the strings it has just written.
-            MatchNumberSizes(count);
 
             _visibleSlots = count;
         }
 
+        /// <summary>Centre one group of evenly spaced icon/count columns.</summary>
+        private void PlaceTarget(RectTransform column, int index, int count)
+        {
+            if (column == null || count <= 0) return;
+            float width = 1f / count;
+            float left = (1f - count * width) * 0.5f + index * width;
+            column.anchorMin = new Vector2(left, 0f);
+            column.anchorMax = new Vector2(left + width, 1f);
+            column.offsetMin = new Vector2(3f * _scale, 0f);
+            column.offsetMax = new Vector2(-3f * _scale, 0f);
+        }
+
+        /// <summary>One bare objective icon with its count underneath.</summary>
         private Slot BuildSlot(int index)
         {
             RectTransform root = StoryUi.CreateRect("Target" + index, _targetRow);
-
             var slot = new Slot { Root = root };
+
+            RectTransform badge = StoryUi.CreateRect("IconBox", root);
+            badge.anchorMin = new Vector2(0.5f, 0.66f);
+            badge.anchorMax = badge.anchorMin;
+            badge.pivot = new Vector2(0.5f, 0.5f);
+            badge.anchoredPosition = Vector2.zero;
 
             // The icon casts its own shape as a shadow, one step down and right.
             //
             // Not decoration: a target icon is the kit's own artwork and some of
             // it is nearly white. `Textures/Blocks/block.png` — the icon on all
             // 40 shipped BLOCKS levels and every generated one — is a pale ice
-            // tile at 0.77 luminance, and it is drawn on RoyalCream at 0.92. On
-            // the board it reads because it frames a coloured gem; alone in a
-            // chip it separated from the card by 0.15 and looked like an empty
-            // box next to a number. Levels 18, 19, 29 and 31 are where it
-            // showed. A silhouette of the icon's own sprite gives any pale icon
-            // an edge without touching the kit's art, and sits under the darker
-            // ones where it reads as the depth the reference panel has.
-            //
-            // The silhouette gave the block chip an EDGE; it did not give it a
-            // subject, and levels 33..48 showed it still reading as a blank box
-            // beside a number. `Slot.Backing` is the other half: the block
-            // sprite is 55% opaque frost, so the chip now draws it over a gem
-            // the way the board always has.
-            slot.Shadow = StoryUi.CreateImage("IconShadow", root, null,
-                new Color(StoryUi.RoyalNavy.r, StoryUi.RoyalNavy.g, StoryUi.RoyalNavy.b, 0.55f));
+            // tile, and on a cream badge it read as an empty box next to a
+            // number. A silhouette gives any pale icon an edge without touching
+            // the kit's art.
+            slot.Shadow = StoryUi.CreateImage("IconShadow", badge, null,
+                new Color(0f, 0f, 0f, 0.28f));
             slot.Shadow.preserveAspect = true;
             slot.Shadow.raycastTarget = false;
-            RectTransform shadow = slot.Shadow.rectTransform;
-            shadow.anchorMin = new Vector2(0f, 0.34f);
-            shadow.anchorMax = new Vector2(1f, 1f);
-            shadow.offsetMin = new Vector2(IconShadowStep * _scale, -IconShadowStep * _scale);
-            shadow.offsetMax = new Vector2(IconShadowStep * _scale, -IconShadowStep * _scale);
+            StoryUi.Stretch(slot.Shadow.rectTransform);
+            slot.Shadow.rectTransform.anchoredPosition =
+                new Vector2(IconShadowStep * _scale, -IconShadowStep * _scale);
 
             // What the icon sits on, between the shadow and the icon. Only a
-            // BLOCKS chip fills this in; see HudTarget.Backing.
-            slot.Backing = StoryUi.CreateImage("IconBacking", root, null, Color.white);
+            // BLOCKS chip fills this in; see HudTarget.Backing. The block sprite
+            // is 55% opaque frost, so the chip draws it over a gem the way the
+            // board always has.
+            slot.Backing = StoryUi.CreateImage("IconBacking", badge, null, Color.white);
             slot.Backing.preserveAspect = true;
             slot.Backing.raycastTarget = false;
             slot.Backing.enabled = false;
-            RectTransform backing = slot.Backing.rectTransform;
-            backing.anchorMin = new Vector2(0f, 0.34f);
-            backing.anchorMax = new Vector2(1f, 1f);
-            backing.offsetMin = Vector2.zero;
-            backing.offsetMax = Vector2.zero;
+            StoryUi.Stretch(slot.Backing.rectTransform);
 
-            slot.Icon = StoryUi.CreateImage("Icon", root, null, Color.white);
+            slot.Icon = StoryUi.CreateImage("Icon", badge, null, Color.white);
             slot.Icon.preserveAspect = true;
-            RectTransform icon = slot.Icon.rectTransform;
-            icon.anchorMin = new Vector2(0f, 0.34f);
-            icon.anchorMax = new Vector2(1f, 1f);
-            icon.offsetMin = Vector2.zero;
-            icon.offsetMax = Vector2.zero;
+            StoryUi.Stretch(slot.Icon.rectTransform);
 
             slot.Count = StoryUi.CreateText("Count", root, "0",
-                Mathf.RoundToInt(52f * _scale), StoryUi.RoyalNavy, TextAnchor.UpperCenter);
+                Mathf.RoundToInt(36f * _scale), PanelTitle, TextAnchor.MiddleCenter);
+            slot.Count.font = StoryUi.DisplayFont;
+            slot.Count.fontStyle = FontStyle.Normal;
+            slot.Count.alignByGeometry = true;
             RectTransform count = slot.Count.rectTransform;
-            count.anchorMin = new Vector2(0f, 0f);
-            count.anchorMax = new Vector2(1f, 0.34f);
+            count.anchorMin = Vector2.zero;
+            count.anchorMax = new Vector2(1f, 0.32f);
             count.offsetMin = Vector2.zero;
             count.offsetMax = Vector2.zero;
-            slot.Count.fontStyle = FontStyle.Bold;
 
-            // A score target alone on the plate reads "120/300" where a collect
-            // target reads "4", and up to three targets share the card. Best fit
-            // lets the one number stay big and the longer one still fit its
-            // slot.
-            //
-            // This one keeps WRAPPING ON, unlike the Moves value. A slot is one
-            // third of a plate 393 points wide, so with wrapping off best-fit
-            // stops shrinking and the number simply runs into its neighbour:
-            // level 20's three chips read "25 350/1000" instead of
-            // "25 35 0/1000". Wrapping on, the same rect shrinks the number
-            // until it fits between the chips either side of it. The slot is
-            // wide enough that a wrap has not been reached — `SlotWeight` is
-            // what keeps it that way.
+            // Fit long score counts inside their own column without wrapping
+            // or running into the neighbouring target's number.
             slot.Count.resizeTextForBestFit = true;
-            slot.Count.resizeTextMinSize = MinNumberSize();
-            slot.Count.resizeTextMaxSize = MaxNumberSize();
+            slot.Count.resizeTextMinSize = Mathf.Max(8, Mathf.RoundToInt(14f * _scale));
+            slot.Count.resizeTextMaxSize = Mathf.Max(9, Mathf.RoundToInt(36f * _scale));
+            slot.Count.horizontalOverflow = HorizontalWrapMode.Wrap;
+            slot.Count.verticalOverflow = VerticalWrapMode.Truncate;
 
             return slot;
-        }
-
-        /// <summary>The smallest a chip's number may ever be drawn.</summary>
-        private int MinNumberSize()
-        {
-            return Mathf.Max(8, Mathf.RoundToInt(18f * _scale));
-        }
-
-        /// <summary>
-        /// The largest a chip's number may be drawn — what a chip with room to
-        /// spare settles at, and the probe size <see cref="MatchNumberSizes"/>
-        /// measures each string at.
-        /// </summary>
-        private int MaxNumberSize()
-        {
-            return Mathf.Max(9, Mathf.RoundToInt(52f * _scale));
-        }
-
-        /// <summary>
-        /// One plate, one number size: every chip on a shared plate is drawn at
-        /// the largest size that fits the tightest of them.
-        ///
-        /// Best-fit solves each chip on its own, so a chip's size is whatever
-        /// its own string needs in its own box, and one card carries several
-        /// answers. Level 113 read "20 2 1511" at three sizes — the two-digit
-        /// count smallest, the single digit largest, half again as tall as the
-        /// count beside it. It is the fourth member of the
-        /// <see cref="SlotWeight"/> / <see cref="SizeIconBox"/> /
-        /// <see cref="SizeCountBox"/> family: those three own how much ROOM a
-        /// chip gets, and nothing owned the relationship between the SIZES the
-        /// room produces.
-        ///
-        /// Nothing shrinks. The size chosen is the one the tightest chip already
-        /// draws at, so the only chips that move are the ones with room to
-        /// spare, and they move down to meet it. Over all 1208 levels the size
-        /// this settles at is the cap on 695 of them, 17 on 229 and 14 on 284 —
-        /// it never reaches <see cref="MinNumberSize"/>. That floor of 14 is
-        /// what <see cref="HudTarget.DisplayShared"/> bought: while the score
-        /// chip still read "have/need" the tightest chip on a plate was a nine-
-        /// character string at the floor, and matching to it would have taken
-        /// every number down with it.
-        ///
-        /// A plate with one chip keeps best-fit: there is nothing to match, and
-        /// a lone score chip's "0/970" is measured to draw at the cap already.
-        /// </summary>
-        private void MatchNumberSizes(int count)
-        {
-            int cap = MaxNumberSize();
-            if (count < 2)
-            {
-                RestoreBestFit(count);
-                return;
-            }
-
-            float size = cap;
-            for (int i = 0; i < count && i < _slots.Count; i++)
-            {
-                Text number = _slots[i].Count;
-                if (number == null) continue;
-
-                number.resizeTextForBestFit = false;
-                number.fontSize = cap;
-
-                float box = number.rectTransform.rect.width;
-                float wanted = number.preferredWidth;
-
-                // No layout yet — the rect has no width to measure against, and
-                // a size picked from it would be the floor. Best-fit is right
-                // until there is one, and Update pulls this again a tenth of a
-                // second later.
-                if (box <= 1f)
-                {
-                    RestoreBestFit(count);
-                    return;
-                }
-
-                if (wanted > 0f) size = Mathf.Min(size, cap * box / wanted);
-            }
-
-            int chosen = Mathf.Clamp(Mathf.FloorToInt(size), MinNumberSize(), cap);
-            for (int i = 0; i < count && i < _slots.Count; i++)
-                if (_slots[i].Count != null) _slots[i].Count.fontSize = chosen;
-        }
-
-        /// <summary>Hands the first <paramref name="count"/> numbers back to
-        /// best-fit, which is what a plate of one chip wants and what a plate
-        /// with no layout yet has to fall back on.</summary>
-        private void RestoreBestFit(int count)
-        {
-            for (int i = 0; i < count && i < _slots.Count; i++)
-            {
-                Text number = _slots[i].Count;
-                if (number != null && !number.resizeTextForBestFit)
-                    number.resizeTextForBestFit = true;
-            }
-        }
-
-        /// <summary>
-        /// How much of the target plate a slot is worth.
-        ///
-        /// A score target's number is the pass mark still owed — five digits at
-        /// its longest, and four on 986 of the 1208 levels — and every other
-        /// target's is a count of at most three. Two and one is the ratio of
-        /// those two shapes, measured rather than tuned, and it still holds
-        /// after <see cref="HudTarget.DisplayShared"/> shortened the score
-        /// string: on a three-chip plate the score's slot is 59 pixels at 393
-        /// wide and its two <see cref="CountGutter"/>s leave 49.5 for five
-        /// digits — 9.9 each — against 20 pixels for a two-digit count, 10 each.
-        /// The two numbers are drawn at the same size because they are given the
-        /// same room per character.
-        /// </summary>
-        private static float SlotWeight(HudTarget target)
-        {
-            return target != null && target.IsScore ? 2f : 1f;
-        }
-
-        /// <summary>
-        /// Centres the icon, its shadow and its backing in a box <paramref
-        /// name="frac"/> of the slot wide, less a <paramref name="gutter"/> on
-        /// each side, leaving the slot itself — and so the number under it — the
-        /// width <see cref="SlotWeight"/> gave it.
-        ///
-        /// `preserveAspect` fits a sprite into whichever of the box's two sides
-        /// binds first. Every icon on the plate gets the same box width here, so
-        /// the widest slot can no longer draw the biggest icon.
-        ///
-        /// The gutter is <see cref="IconGutter"/> — one shadow step, so that an
-        /// icon's silhouette stays inside its own slot instead of closing the
-        /// gap to the chip beside it. Both sides or neither, on every slot: an
-        /// icon inset only where it faces a neighbour would draw at two sizes
-        /// across one plate, which is the fault this method exists to prevent.
-        /// </summary>
-        private void SizeIconBox(Slot slot, float frac, float gutter)
-        {
-            frac = Mathf.Clamp(frac, 0.05f, 1f);
-            bool sameFrac = Mathf.Approximately(slot.IconFrac, frac);
-            bool sameGutter = Mathf.Approximately(slot.IconGutter, gutter);
-            if (sameFrac && sameGutter) return;
-            slot.IconFrac = frac;
-            slot.IconGutter = gutter;
-
-            float min = 0.5f - frac * 0.5f;
-            float max = 0.5f + frac * 0.5f;
-            AnchorHorizontally(slot.Icon, min, max);
-            AnchorHorizontally(slot.Shadow, min, max);
-            AnchorHorizontally(slot.Backing, min, max);
-
-            // The shadow carries its own step; the gutter is added to it rather
-            // than replacing it, or the silhouette snaps back under the icon.
-            InsetHorizontally(slot.Icon, 0f, gutter);
-            InsetHorizontally(slot.Backing, 0f, gutter);
-            InsetHorizontally(slot.Shadow, IconShadowStep * _scale, gutter);
-        }
-
-        /// <summary>
-        /// Keeps a <see cref="CountGutter"/> of the slot clear on each side of a
-        /// number when it shares the plate, so two numbers can never meet.
-        ///
-        /// The number is best-fit and centred, so narrowing its box does one of
-        /// two things and both are wanted: a number that had slack simply moves
-        /// away from the boundary, and one that filled its slot shrinks until it
-        /// fits inside the gutter. Nothing else in the slot moves — the icon is
-        /// centred by <see cref="SizeIconBox"/> and the slot itself still holds
-        /// the width <see cref="SlotWeight"/> gave it.
-        /// </summary>
-        private void SizeCountBox(Slot slot, bool shared)
-        {
-            float gutter = shared ? CountGutter * _scale : 0f;
-            if (Mathf.Approximately(slot.Gutter, gutter)) return;
-            slot.Gutter = gutter;
-
-            RectTransform rect = slot.Count.rectTransform;
-            rect.offsetMin = new Vector2(gutter, rect.offsetMin.y);
-            rect.offsetMax = new Vector2(-gutter, rect.offsetMax.y);
-        }
-
-        /// <summary>Holds <paramref name="gutter"/> clear on each side of an icon
-        /// layer's box, on top of whatever horizontal offset it already wants —
-        /// <paramref name="baseX"/>, which is the shadow's step.</summary>
-        private static void InsetHorizontally(Image image, float baseX, float gutter)
-        {
-            if (image == null) return;
-            RectTransform rect = image.rectTransform;
-            rect.offsetMin = new Vector2(baseX + gutter, rect.offsetMin.y);
-            rect.offsetMax = new Vector2(baseX - gutter, rect.offsetMax.y);
-        }
-
-        /// <summary>Narrows an icon layer to a horizontal band of its slot, keeping
-        /// whatever offsets it carries — the shadow's step, for one.</summary>
-        private static void AnchorHorizontally(Image image, float min, float max)
-        {
-            if (image == null) return;
-            RectTransform rect = image.rectTransform;
-            rect.anchorMin = new Vector2(min, rect.anchorMin.y);
-            rect.anchorMax = new Vector2(max, rect.anchorMax.y);
-        }
-
-        /// <summary>Puts a slot in the band from one fraction of the plate to another.</summary>
-        private static void PlaceSlot(RectTransform slot, float from, float to)
-        {
-            slot.anchorMin = new Vector2(from, 0f);
-            slot.anchorMax = new Vector2(to, 1f);
-            slot.offsetMin = Vector2.zero;
-            slot.offsetMax = Vector2.zero;
         }
 
         #endregion
@@ -1254,6 +1205,10 @@ namespace JellyGarden.Scripts.Story
             {
                 if (child == null || child.name == "Pause") continue;
 
+                // This HUD is a child of the strip now, and the loop below
+                // destroys everything it does not recognise.
+                if (child == _root) continue;
+
                 if (child.GetComponentInChildren<TargetsGroup>(true) != null)
                 {
                     child.SetParent(_root, false);
@@ -1290,7 +1245,7 @@ namespace JellyGarden.Scripts.Story
         /// action, and if the booster row is not there it stays where it was
         /// rather than being hidden.
         /// </summary>
-        private void MovePauseOutOfTheHudsWay(Transform strip)
+        public void MovePauseOutOfTheHudsWay(Transform strip)
         {
             var pause = strip.Find("Pause") as RectTransform;
             if (pause == null) return;
@@ -1370,7 +1325,7 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>The kit's booster row, found from the boosters in it.</summary>
-        private static RectTransform FindBoosterRow(Transform strip)
+        public static RectTransform FindBoosterRow(Transform strip)
         {
             Transform canvas = strip.parent == null ? null : strip.parent.parent;
             if (canvas == null) return null;
@@ -1389,18 +1344,6 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// The HUD is only ever as visible as the kit's own HUD was, so the map,
-        /// the menus and the level-end popups all behave exactly as before.
-        /// </summary>
-        private void MirrorKitVisibility()
-        {
-            if (_kitStrip == null) return;
-            bool shouldShow = _kitStrip.gameObject.activeInHierarchy;
-            if (_root.gameObject.activeSelf != shouldShow)
-                _root.gameObject.SetActive(shouldShow);
-        }
-
-        /// <summary>
         /// Keeps the kit's invisible target icons sitting on this HUD's slots, so
         /// a collected piece flies to the icon the player is actually reading.
         /// </summary>
@@ -1415,7 +1358,7 @@ namespace JellyGarden.Scripts.Story
             for (int i = 0; i < icons.Length && i < _slots.Count; i++)
             {
                 if (icons[i] == null || !_slots[i].Root.gameObject.activeInHierarchy) continue;
-                icons[i].transform.position = _slots[i].Root.position;
+                icons[i].transform.position = _slots[i].Icon.transform.position;
             }
         }
 

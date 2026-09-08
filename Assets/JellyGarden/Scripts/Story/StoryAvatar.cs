@@ -6,9 +6,21 @@
 //
 // Two ways of getting there, and the caller does not have to care which it got:
 //
-//   Frames — Resources/Story/Art/avatar_{name}_00, _01, … are played in order
-//   on a loop. This is the real animation: the king breathes, blinks and turns
-//   his head a few degrees.
+//   Frames — Resources/Story/Art/avatar_{name}_00, _01, … are played there and
+//   back on a loop. This is the real animation: the king breathes, blinks and
+//   turns his head a few degrees.
+//
+//   The frames run FORWARD THEN BACK rather than wrapping, because a generated
+//   clip does not end where it began and a wrap is a visible cut. Running back
+//   down them costs nothing — the same sprites, indexed in reverse — and makes
+//   any clip loop, whatever it was cut from.
+//
+//   Reactions — avatar_{name}_{clip}_00, _01, … is a named clip: cheer, pop,
+//   worry, slump. StoryAvatar.React plays one ONCE and hands back to the idle.
+//   Because a clip ping-pongs, it ends on the pose the idle starts from, so the
+//   hand-back is not a cut either. What fires them is StoryLevelHud, off the
+//   numbers it already pulls, and StoryLosePopup when the level is lost — the
+//   kit's match, cascade and win paths are not touched to get any of it.
 //
 //   A crop — with no frames authored, the full-body portrait is drawn scaled up
 //   and offset so that StoryArt.AvatarCrop fills the frame. Still, but framed
@@ -39,9 +51,25 @@ namespace JellyGarden.Scripts.Story
 
         private Image _image;
         private Sprite[] _frames;
+        private Sprite[] _idle;
+        private string _clip;
+        private bool _once;
         private float _fps = DefaultFps;
         private float _startedAt;
         private int _shown = -1;
+
+        /// <summary>Whose frames these are, so a reaction can be looked up by name.</summary>
+        public string Character;
+
+        /// <summary>
+        /// The avatar on screen, or null. One HUD carries one face, and a
+        /// reaction is fired by whatever notices the event rather than by
+        /// something holding a reference to the portrait.
+        /// </summary>
+        public static StoryAvatar Active { get; private set; }
+
+        /// <summary>The clip playing now, or null while the idle loops. Read by tests.</summary>
+        public string Playing { get { return _once ? _clip : null; } }
 
         /// <summary>How many frames are playing. Zero means the still crop. Read by tests.</summary>
         public int FrameCount { get { return _frames == null ? 0 : _frames.Length; } }
@@ -69,13 +97,18 @@ namespace JellyGarden.Scripts.Story
 
             if (frames.Length > 0)
             {
-                // A generated frame is already the head-and-shoulders crop, so
-                // it simply fills the window.
+                // Cover the masked opening at the frame's native aspect ratio.
+                // preserveAspect alone fits INSIDE it and leaves empty bands
+                // whenever the portrait and opening have different proportions.
                 StoryUi.Stretch(image.rectTransform);
+                var cover = image.gameObject.AddComponent<AspectRatioFitter>();
+                cover.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+                cover.aspectRatio = frames[0].rect.width / frames[0].rect.height;
 
                 if (Animate)
                 {
                     var player = image.gameObject.AddComponent<StoryAvatar>();
+                    player.Character = character;
                     player.Play(image, frames, DefaultFps);
                 }
             }
@@ -115,15 +148,82 @@ namespace JellyGarden.Scripts.Story
             rect.offsetMax = Vector2.zero;
         }
 
+        /// <summary>
+        /// Starts itself when the scene brings it back.
+        ///
+        /// The portrait is baked into game.unity, and `Character` is public so it
+        /// survives with it — but the frames are a private array that does not
+        /// serialise, so on a scene load there is a StoryAvatar sitting on an
+        /// Image with nothing to play. It reloads them from the name it kept.
+        /// </summary>
+        private void Awake()
+        {
+            if (_frames != null && _frames.Length > 0) return;
+            if (string.IsNullOrEmpty(Character)) return;
+
+            var image = GetComponent<Image>();
+            if (image == null) return;
+
+            Sprite[] frames = StoryArt.AvatarFrames(Character);
+            if (frames.Length == 0) return;
+
+            Play(image, frames, DefaultFps);
+        }
+
         /// <summary>Starts the loop. Safe to call again to re-point it.</summary>
         public void Play(Image image, Sprite[] frames, float fps)
         {
             _image = image;
             _frames = frames;
+            _idle = frames;
+            _clip = null;
+            _once = false;
             _fps = fps <= 0f ? DefaultFps : fps;
             _startedAt = StoryClock.Now;
             _shown = -1;
+            Active = this;
             Tick();
+        }
+
+        /// <summary>
+        /// Plays a named reaction on the face that is on screen, if there is one
+        /// and if that character has the clip. Silent when either is missing —
+        /// a reaction is decoration, and nothing that fires one should have to
+        /// check first.
+        /// </summary>
+        public static void React(string clip)
+        {
+            if (Active != null) Active.PlayClip(clip);
+        }
+
+        /// <summary>
+        /// Plays <paramref name="clip"/> once and hands back to the idle loop.
+        ///
+        /// Every clip is authored as a ping-pong — it runs to its last frame and
+        /// back — so the reaction ENDS on the same pose the idle starts from and
+        /// the hand-back is not a cut. Re-firing the clip already playing is
+        /// ignored rather than restarted, so a condition that stays true (three
+        /// moves left, and still three) does not freeze the face on frame zero.
+        /// </summary>
+        public void PlayClip(string clip)
+        {
+            if (string.IsNullOrEmpty(clip)) return;
+            if (_once && _clip == clip) return;
+
+            Sprite[] frames = StoryArt.AvatarFrames(Character, clip);
+            if (frames.Length == 0) return;
+
+            _frames = frames;
+            _clip = clip;
+            _once = true;
+            _startedAt = StoryClock.Now;
+            _shown = -1;
+            Tick();
+        }
+
+        private void OnDestroy()
+        {
+            if (Active == this) Active = null;
         }
 
         private void Update()
@@ -148,8 +248,41 @@ namespace JellyGarden.Scripts.Story
             float elapsed = StoryClock.Now - _startedAt;
             if (elapsed < 0f) elapsed = 0f;
 
-            int index = Mathf.FloorToInt(elapsed * _fps) % _frames.Length;
-            Show(index);
+            int step = Mathf.FloorToInt(elapsed * _fps);
+
+            // A one-shot that has run its whole ping-pong is over: it ended on
+            // the pose the idle begins from, so handing back is a no-op on
+            // screen and the next Tick simply continues the loop.
+            if (_once && step >= Period(_frames))
+            {
+                _frames = _idle;
+                _clip = null;
+                _once = false;
+                _startedAt = StoryClock.Now;
+                step = 0;
+                if (_frames == null || _frames.Length == 0) return;
+            }
+
+            Show(PingPong(step, _frames.Length));
+        }
+
+        /// <summary>
+        /// Frames in one there-and-back cycle: the last frame is not played
+        /// twice, so a 25-frame clip is a 48-step loop rather than a 50-step one
+        /// that stutters at each end.
+        /// </summary>
+        private static int Period(Sprite[] frames)
+        {
+            return frames == null || frames.Length <= 1 ? 1 : frames.Length * 2 - 2;
+        }
+
+        /// <summary>Maps a step onto a frame, running forward then back.</summary>
+        private static int PingPong(int step, int count)
+        {
+            if (count <= 1) return 0;
+            int period = count * 2 - 2;
+            int i = step % period;
+            return i < count ? i : period - i;
         }
 
         private void Show(int index)

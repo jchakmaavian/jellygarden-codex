@@ -145,14 +145,33 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static Sprite[] AvatarFrames(string character)
         {
+            return AvatarFrames(character, null);
+        }
+
+        /// <summary>
+        /// The frames of one NAMED clip: avatar_{character}_{clip}_00, _01, …
+        ///
+        /// A null or empty clip is the idle loop, whose frames carry no clip
+        /// segment at all — so the idle keeps the name it already had on disk
+        /// and a character with only an idle is unaffected by this overload.
+        ///
+        /// Like the idle, a missing clip is the normal case and returns empty
+        /// rather than warning: every reaction is optional, and a character with
+        /// none simply never reacts.
+        /// </summary>
+        public static Sprite[] AvatarFrames(string character, string clip)
+        {
             if (string.IsNullOrEmpty(character)) return EmptyFrames;
 
             string name = character.Trim().ToLowerInvariant();
+            string prefix = string.IsNullOrEmpty(clip)
+                ? "avatar_" + name + "_"
+                : "avatar_" + name + "_" + clip.Trim().ToLowerInvariant() + "_";
             var frames = new List<Sprite>();
 
             for (int i = 0; i < MaxAvatarFrames; i++)
             {
-                Sprite frame = Load(string.Format("avatar_{0}_{1:00}", name, i));
+                Sprite frame = Load(string.Format("{0}{1:00}", prefix, i));
                 if (frame == null) break;
                 frames.Add(frame);
             }

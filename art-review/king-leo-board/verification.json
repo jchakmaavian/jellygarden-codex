@@ -1,0 +1,29 @@
+{
+  "initial": {
+    "title": "King Leo · Board art review",
+    "cards": 11,
+    "broken": [],
+    "overflow": false
+  },
+  "interactions": {
+    "filtered": 4,
+    "modal": true,
+    "choice": "true",
+    "note": "Browser verification note",
+    "surface": "checker",
+    "gray": true,
+    "cells": 81
+  },
+  "mobile": {
+    "width": 393,
+    "scrollWidth": 393,
+    "gloveFits": true,
+    "broken": 0
+  },
+  "runtimeErrors": [],
+  "reviewDownload": {
+    "passed": true,
+    "filename": "king-leo-art-review-v1.md",
+    "containsAllAssets": true
+  }
+}
