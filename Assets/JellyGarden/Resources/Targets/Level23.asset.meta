@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 99268fa66e91c48f2860fae1db8e3706
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Resources/Targets/Level23.asset
+  uploadId: 894794

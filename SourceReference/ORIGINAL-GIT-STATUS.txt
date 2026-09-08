@@ -1,0 +1,31 @@
+ M .mcp.json
+ M .vscode/settings.json
+ M Assets/JellyGarden/Scripts/Item.cs
+ M Assets/JellyGarden/Scripts/LevelManager.cs
+ M ProjectSettings/EditorBuildSettings.asset
+ M ProjectSettings/GraphicsSettings.asset
+ M ProjectSettings/ProjectAuditorSettings.asset
+ M ProjectSettings/ProjectSettings.asset
+ M ProjectSettings/QualitySettings.asset
+ M ProjectSettings/ShaderGraphSettings.asset
+?? Assets/GameRedesign.meta
+?? Assets/GameRedesign/
+?? Assets/JellyGarden/Resources/CandyFragment.mat
+?? Assets/JellyGarden/Resources/CandyFragment.mat.meta
+?? Assets/JellyGarden/Resources/JuiceAdditive.mat
+?? Assets/JellyGarden/Resources/JuiceAdditive.mat.meta
+?? Assets/JellyGarden/Resources/JuiceConfig.asset
+?? Assets/JellyGarden/Resources/JuiceConfig.asset.meta
+?? Assets/JellyGarden/Scripts/Juice.meta
+?? Assets/JellyGarden/Scripts/Juice/
+?? Assets/JellyGarden/Shaders.meta
+?? Assets/JellyGarden/Shaders/
+?? Assets/Settings/JG_2DRenderer.asset
+?? Assets/Settings/JG_2DRenderer.asset.meta
+?? Assets/Settings/JG_URP_2D.asset
+?? Assets/Settings/JG_URP_2D.asset.meta
+?? Assets/_Recovery.meta
+?? Assets/_Recovery/
+?? CLAUDE.md
+?? PLAN.md
+?? Project_Audit/

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: acb13cf7f83bfd34ab58c92ae4926c80
+labels:
+- Level
+- Map
+- Star
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Prefabs/Prefabs/LevelsMap.prefab
+  uploadId: 894794

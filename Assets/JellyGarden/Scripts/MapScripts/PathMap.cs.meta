@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8c1f81aa4c8fe5d43a761a8ad1e594cb
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/MapScripts/PathMap.cs
+  uploadId: 894794

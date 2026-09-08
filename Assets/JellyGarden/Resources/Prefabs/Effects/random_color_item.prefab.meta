@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 29598a5a0cd40ef4c8bab78d164538d3
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Resources/Prefabs/Effects/random_color_item.prefab
+  uploadId: 894794

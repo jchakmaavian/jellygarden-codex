@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: d7a0ec3bdb439fb43a4ec9e26fe3f22c
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Resources/Prefabs/WireBlock.prefab
+  uploadId: 894794

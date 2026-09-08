@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cb05ce18e2e7c1e42b631e09129589fe
+timeCreated: 1439111753
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Resources/Levels/96.txt
+  uploadId: 894794

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 335895c753fa64f08b93cc1842015887
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Prefabs/InputManager.prefab
+  uploadId: 894794

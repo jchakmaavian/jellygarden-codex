@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: c837f20fbfe22054595e41992a2597ce
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Animation/bomb_boost.controller
+  uploadId: 894794

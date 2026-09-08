@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 3b5cb2f0917b1f34f8aceb725a71bfe7
+timeCreated: 1491846866
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Unity-Reorderable-List-master/List/Editor/ReorderableDrawer.cs
+  uploadId: 894794
