@@ -12,6 +12,7 @@ Completed on 8 September 2026.
 | Shared source-folder links | None |
 | Package dependencies using `file:` paths | None |
 | Git remotes in the new repository | None |
+| Git access from the user's normal Windows account | Verified after the explicitly approved ownership correction on this copy |
 | Unity Editor version | 6000.5.10f1 |
 | Unity import and C# compilation | Completed; process exit code 0 |
 | C# compiler errors found | None |

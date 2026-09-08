@@ -42,4 +42,4 @@ The source baseline commit is `7194b95`. The original source revision was `a82c4
 
 See `VERIFICATION.md` for the copy checks and Unity import result. The import and C# compilation passed; Play Mode, device testing, and executable builds have not been run.
 
-Git's ownership check currently prevents the normal Windows account from opening this newly created repository. The task's restricted account can use it. A narrowly scoped ownership correction for this folder and its `.git` directory is awaiting explicit user authorization; no global Git settings have been changed.
+Git access from the normal Windows account is verified. With the user's explicit approval, ownership was corrected only on this new project folder and its `.git` directory. No global Git settings or original-project permissions were changed.
