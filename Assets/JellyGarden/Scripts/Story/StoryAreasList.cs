@@ -6,6 +6,12 @@
 // of the picture (docs/royal-match/04-areas-list.jpg). This is that screen, for
 // a story that has 150 of them rather than forty.
 //
+// The picture's surround is not the reference's red panel: it is the carved
+// oak frame in Resources/Story/UI/area_card_frame_oak.png, 9-sliced with a
+// 200-point border so its corner rosettes stay at their painted size on any
+// card width. If that file is missing the drawn red-and-gold panel is still
+// built, so the list survives an art asset going away.
+//
 // Two things here are not in the reference, and both follow from the length of
 // this story:
 //
@@ -84,6 +90,23 @@ namespace JellyGarden.Scripts.Story
         private const float FrameSide = 34f;
         private const float FrameTop = 149f;
         private const float FrameBottom = 130f;
+
+        // The carved-oak frame that replaces the drawn red panel, when the
+        // artwork is on disk. Resources/Story/UI/area_card_frame_oak.png is
+        // 1024x805 with a 200-point 9-slice border, so the corner rosettes are
+        // drawn at their painted size at any card width and only the vine runs
+        // along the edges stretch. These three are the wood's own thickness
+        // measured off that file: the opening starts 120 points in on the
+        // sides and 125 top and bottom.
+        private const string FrameSpriteName = "area_card_frame_oak";
+        private const float OakSide = 120f;
+        private const float OakTop = 125f;
+        private const float OakBottom = 125f;
+
+        // A locked room is greyed by tinting its panel. The drawn panel took a
+        // flat grey, which would turn the painted wood into mud — a desaturated
+        // warm tint is what greys a coloured sprite without flattening it.
+        private static readonly Color OakLockedTint = new Color(0.62f, 0.60f, 0.58f, 1f);
 
         private const float SeparatorHeight = 5f;
 
@@ -443,26 +466,41 @@ namespace JellyGarden.Scripts.Story
                 CardSideMargin - 12f, -12f);
             card.Halo.gameObject.SetActive(false);
 
-            card.Body = StoryUi.CreateImage("Body", entry, StoryUi.RoundedSprite(44),
-                StoryUi.RoyalCardRed);
+            // The panel is the carved-oak frame when its file is there, and the
+            // drawn red-and-gold one when it is not: a missing sprite greys a
+            // card, it does not lose the list.
+            Sprite oak = StoryUi.LoadSprite(FrameSpriteName);
+            bool carved = oak != null;
+
+            card.Body = StoryUi.CreateImage("Body", entry,
+                carved ? oak : StoryUi.RoundedSprite(44),
+                carved ? Color.white : StoryUi.RoyalCardRed);
             card.Body.type = Image.Type.Sliced;
             Frame(card.Body.rectTransform, BodyBottom, BodyTop, CardSideMargin, 0f);
 
-            // The gold rim is a second rounded rect inset inside the red one,
-            // which is how every rim in this kit is drawn.
-            Image rim = StoryUi.CreateImage("Rim", card.Body.rectTransform,
-                StoryUi.RoundedSprite(40), StoryUi.RoyalGoldDeep);
-            rim.type = Image.Type.Sliced;
-            rim.rectTransform.anchorMin = Vector2.zero;
-            rim.rectTransform.anchorMax = Vector2.one;
-            rim.rectTransform.offsetMin = new Vector2(FrameSide - 8f, FrameBottom - 8f);
-            rim.rectTransform.offsetMax = new Vector2(-(FrameSide - 8f), -(FrameTop - 8f));
+            if (!carved)
+            {
+                // The gold rim is a second rounded rect inset inside the red one,
+                // which is how every rim in this kit is drawn. The oak frame
+                // paints its own rim, so it gets none.
+                Image rim = StoryUi.CreateImage("Rim", card.Body.rectTransform,
+                    StoryUi.RoundedSprite(40), StoryUi.RoyalGoldDeep);
+                rim.type = Image.Type.Sliced;
+                rim.rectTransform.anchorMin = Vector2.zero;
+                rim.rectTransform.anchorMax = Vector2.one;
+                rim.rectTransform.offsetMin = new Vector2(FrameSide - 8f, FrameBottom - 8f);
+                rim.rectTransform.offsetMax = new Vector2(-(FrameSide - 8f), -(FrameTop - 8f));
+            }
+
+            float insetSide = carved ? OakSide : FrameSide;
+            float insetTop = carved ? OakTop : FrameTop;
+            float insetBottom = carved ? OakBottom : FrameBottom;
 
             card.ArtHost = StoryUi.CreateRect("Art", card.Body.rectTransform);
             card.ArtHost.anchorMin = Vector2.zero;
             card.ArtHost.anchorMax = Vector2.one;
-            card.ArtHost.offsetMin = new Vector2(FrameSide, FrameBottom);
-            card.ArtHost.offsetMax = new Vector2(-FrameSide, -FrameTop);
+            card.ArtHost.offsetMin = new Vector2(insetSide, insetBottom);
+            card.ArtHost.offsetMax = new Vector2(-insetSide, -insetTop);
             card.ArtHost.gameObject.AddComponent<RectMask2D>();
 
             // The picture is 4:3 and this window is 1.64:1, so it is enveloped
@@ -610,7 +648,11 @@ namespace JellyGarden.Scripts.Story
                 // rather than hidden. onClick still fires on a greyed button, so
                 // OnCard enforces the rule itself.
                 card.Button.interactable = !locked;
-                card.Body.color = locked ? StoryUi.RoyalGrey : StoryUi.RoyalCardRed;
+                bool carvedBody = card.Body.sprite != null &&
+                                  card.Body.sprite.name == FrameSpriteName;
+                card.Body.color = carvedBody
+                    ? (locked ? OakLockedTint : Color.white)
+                    : (locked ? StoryUi.RoyalGrey : StoryUi.RoyalCardRed);
                 card.Banner.color = locked ? StoryUi.RoyalGrey : StoryUi.RoyalBanner;
                 // The ribbon's face is what is actually seen — the rim around it
                 // covers only its outer few points, so greying the outer image

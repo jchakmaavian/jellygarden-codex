@@ -41,6 +41,26 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
+        /// The top painted layer of the room at the player's saved repair count,
+        /// using the same state order and base-art fallback as AreaSceneView.
+        /// Missing intermediate paintings keep the last available state visible.
+        /// </summary>
+        public static Sprite AreaAtProgress(int areaId)
+        {
+            StoryArea area = StoryDatabase.GetArea(areaId);
+            if (area == null) return null;
+
+            int done = Mathf.Clamp(StoryProgress.TasksCompletedIn(areaId), 0, area.Tasks.Count);
+            for (int state = done; state >= 0; state--)
+            {
+                Sprite sprite = AreaState(areaId, state);
+                if (sprite != null) return sprite;
+            }
+
+            return AreaRestored(areaId);
+        }
+
+        /// <summary>
         /// The area fully restored. Most areas have one of these rather than a
         /// picture per repair — the repair cutscene wipes it in over the ruined
         /// version, and the neglect wash carries the steps in between.

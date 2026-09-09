@@ -1,0 +1,10 @@
+{
+  "area": 15,
+  "state": 1,
+  "label": "Clear the drainage",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 15 Fountain Plaza, STATE 1: Clear the drainage. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Clear leaves and debris from the front-left drainage grate and its channel opening.\nCUMULATIVE CONTINUITY: No earlier repairs.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Repair the fountain basin; Fix the water channels; Restore the surrounding benches; Re-lay the plaza stones; Relight the plaza lamps\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-d018473f-9221-4e44-9118-d2dfc30fac23.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-015/state-01.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-015/state-00.png"
+}

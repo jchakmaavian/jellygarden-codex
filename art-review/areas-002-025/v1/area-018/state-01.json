@@ -1,0 +1,13 @@
+{
+  "area": 18,
+  "state": 1,
+  "label": "Repair the map table",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 18 The Map Room, STATE 1: Repair the map table. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Repair the central map table's oak surface and legs, keeping the same parchment map laid across it.\nCUMULATIVE CONTINUITY: No earlier repairs.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Restore the wall charts; Fix the lantern rig; Rebuild the drawer cabinet; Re-pin the survey maps; Repair the compass stand\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-a54a7656-a353-4f0a-8c19-73b0e8cf8964.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-018/state-01.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-018/state-00.png",
+  "references": [
+    "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-018/state-00.png"
+  ]
+}

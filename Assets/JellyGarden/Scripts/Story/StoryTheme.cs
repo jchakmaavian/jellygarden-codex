@@ -33,33 +33,18 @@ namespace JellyGarden.Scripts.Story
         /// cell's own sprite is swapped for a white square and this colour is
         /// what it is drawn in, so the value is the ground exactly.
         ///
-        /// Its alpha is how much of the backdrop is let through. Below 1 the
-        /// board reads as tinted glass over the arc's picture rather than as a
-        /// solid slab, which is the look the boards being aimed at have.
+        /// Its alpha is how much of the backdrop is let through, and it is low:
+        /// the ground is a shade, not a surface. themes_build.py takes the
+        /// arc's colour down to 30% and writes it at alpha 0.35, so the room
+        /// behind the board reads as itself, only dimmed. There is no longer a
+        /// second, darker value — the checker is gone and the whole board is
+        /// this one colour.
         /// </summary>
         public Color BoardFill = Color.clear;
 
         /// <summary>False when the arc names no fill, which leaves the kit's look.</summary>
         public bool HasBoardFill { get { return BoardFill.a > 0f; } }
 
-        /// <summary>
-        /// The darker half of the board's checker.
-        ///
-        /// The kit makes its checker out of two identical black tiles at
-        /// different alphas, which is a difference that cannot survive the
-        /// cells being given a real ground colour. Derived rather than authored
-        /// because a checker whose two squares are separately chosen is a
-        /// checker somebody will eventually get wrong; 7% is the step the kit's
-        /// own two alphas work out to against a lit board.
-        /// </summary>
-        public Color BoardFillDark
-        {
-            get
-            {
-                return new Color(BoardFill.r * 0.93f, BoardFill.g * 0.93f,
-                    BoardFill.b * 0.93f, BoardFill.a);
-            }
-        }
     }
 
     public static class StoryTheme

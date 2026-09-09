@@ -1,0 +1,10 @@
+{
+  "area": 4,
+  "state": 1,
+  "label": "Fix the collapsed bunk room",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 4 Guard House, STATE 1: Fix the collapsed bunk room. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Rebuild the collapsed left bunk frames and put neat royal-blue folded bedding on the two beds.\nCUMULATIVE CONTINUITY: No earlier repairs.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Restock the armoury rack; Repair the watch bell; Rehang the duty roster board; Re-forge the gate keys\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-3db84e59-3a51-4292-80c3-0c68e37e7c70.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-004/state-01.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-004/state-00.png"
+}

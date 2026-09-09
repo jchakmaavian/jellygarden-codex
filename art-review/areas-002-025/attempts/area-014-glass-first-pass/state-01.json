@@ -1,0 +1,10 @@
+{
+  "area": 14,
+  "state": 1,
+  "label": "Replace the broken glass",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 14 The Greenhouse, STATE 1: Replace the broken glass. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Replace the missing upper glass panes with clean intact transparent greenhouse glass; leave the separate fallen glass pile on the floor.\nCUMULATIVE CONTINUITY: No earlier repairs.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Repair the irrigation; Fix the heating pipes; Restore the planting beds; Rebuild the potting bench; Clear the shattered panes\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-05a3f1b3-bcb9-40bd-9af6-3b3e4e4a8a3a.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-014/state-01.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-014/state-00.png"
+}

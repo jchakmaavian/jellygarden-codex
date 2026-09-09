@@ -989,8 +989,13 @@ the type shrink (54 down to a floor of 34). Three rules behind it:
 
 ## Dressing the board (StoryBoardTheme, StoryThemeTest)
 
-`StoryBoardTheme` puts the arc's picture behind the board and the arc's colour
-under its cells. `StoryThemeTest` (`-storythemetest`, run by
+`StoryBoardTheme` puts the playing area's current repair painting behind the
+board and the arc's colour under its cells. `StoryArt.AreaAtProgress` chooses
+the highest available state at the saved repair count, matching the home room's
+painted layers; areas with a single painting use their restored art. The arc
+backdrop and kit pictures remain fallbacks. The background covers the canvas at
+its native aspect and refreshes on level, area, or repair-count changes.
+`StoryThemeTest` (`-storythemetest`, run by
 `tools/theme_sweep.py`) opens the first level of each of the six arcs in its own
 area and photographs it. Four things it learned the hard way, all of which cost
 a run each:

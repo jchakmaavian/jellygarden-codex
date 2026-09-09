@@ -1,0 +1,13 @@
+{
+  "area": 3,
+  "state": 4,
+  "label": "Re-oil the harnesses",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 3 The Stables, STATE 4: Re-oil the harnesses. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Re-oil the existing harnesses on the repaired tack rack: supple rich brown leather, smooth sheen and clean brass buckles; preserve their positions.\nCUMULATIVE CONTINUITY: Step 1 ALREADY DONE AND MUST REMAIN: Muck out the left stalls: remove dirty straw and replace with neat fresh golden bedding; leave damaged stable structures unchanged. Step 2 ALREADY DONE AND MUST REMAIN: Repair the missing roof tiles and cracked roof supports overhead with matching blue tiles and honey-oak beams; retain bright daylight from the door and windows. Step 3 ALREADY DONE AND MUST REMAIN: Rebuild the broken right tack-wall boards and wooden harness rack with polished honey oak; hang the SAME still dull dry harnesses neatly on it.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Refill the feed bins\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-75418fa0-c6ae-4945-a366-3407658ba8ae.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-003/state-04.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-003/state-03.png",
+  "references": [
+    "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-003/state-03.png"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "area": 23,
+  "state": 1,
+  "label": "Repair the dance floor",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 23 The Ballroom, STATE 1: Repair the dance floor. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Repair the parquet dance floor into smooth level honey-oak geometric panels, keeping all fixtures and fallen chandeliers in place.\nCUMULATIVE CONTINUITY: No earlier repairs.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Restore the chandeliers; Fix the musicians' gallery; Rehang the banners; Re-gild the mirrors; Repair the grand doors; Restore the buffet tables; Relight the hall\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-14663b1c-b651-4566-b7ee-7e4274b5e13b.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-023/state-01.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-023/state-00.png",
+  "references": [
+    "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-023/state-00.png"
+  ]
+}

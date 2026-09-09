@@ -45,6 +45,9 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static float LastOffset { get; private set; }
 
+        /// <summary>The same, down the screen. A test reads it.</summary>
+        public static float LastOffsetY { get; private set; }
+
         /// <summary>Called by StorySceneHooks on every scene load.</summary>
         public static void Install()
         {
@@ -84,8 +87,11 @@ namespace JellyGarden.Scripts.Story
             float offset = OffsetFor(manager.maxCols, manager.squareWidth);
             LastOffset = offset;
 
+            float offsetY = OffsetYFor(manager.maxRows, manager.squareHeight);
+            LastOffsetY = offsetY;
+
             Vector3 at = camera.transform.position;
-            camera.transform.position = new Vector3(offset, at.y, at.z);
+            camera.transform.position = new Vector3(offset, offsetY, at.z);
         }
 
         /// <summary>
@@ -103,6 +109,21 @@ namespace JellyGarden.Scripts.Story
         {
             if (columns <= 0) return 0f;
             return -columns / FieldDivisor + (columns - 1) * squareWidth * 0.5f;
+        }
+
+        /// <summary>
+        /// The same fault down the screen. The field starts at
+        /// `maxRows / 2.75` and the rows run DOWNWARD from there, so the middle
+        /// of the grid is that less half its height — which lands on zero only
+        /// where the two numbers happen to agree. At the kit's pitch of 0.82 an
+        /// eleven-row board misses by 0.1 units and nobody could see it; at the
+        /// story's wider pitch it misses by three quarters of a unit, which is
+        /// a board sitting visibly low in its window.
+        /// </summary>
+        public static float OffsetYFor(int rows, float squareHeight)
+        {
+            if (rows <= 0) return 0f;
+            return rows / FieldDivisor - (rows - 1) * squareHeight * 0.5f;
         }
     }
 }

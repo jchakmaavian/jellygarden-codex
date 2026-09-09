@@ -1,0 +1,13 @@
+{
+  "area": 21,
+  "state": 1,
+  "label": "Repair the bed frame",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 21 Royal Bedchamber, STATE 1: Repair the bed frame. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Repair the four-poster bed frame and its carved crown headboard, with neat cream bedding; leave the torn drapes awaiting their task.\nCUMULATIVE CONTINUITY: No earlier repairs.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Restore the drapes; Fix the fireplace; Rehang the marriage portrait; Re-lay the floorboards; Repair the writing desk; Restore the night lamps; Fix the balcony doors\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-11532957-095d-4b96-ba5b-eeaffd10dcd2.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-021/state-01.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-021/state-00.png",
+  "references": [
+    "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-021/state-00.png"
+  ]
+}

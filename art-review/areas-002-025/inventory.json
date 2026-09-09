@@ -1,0 +1,1199 @@
+{
+  "areas": [
+    {
+      "id": 2,
+      "name": "Outer Courtyard",
+      "goal": "Clear the courtyard so the castle looks lived in again.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Haul away the fallen scaffolding",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repave the cracked stones",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Right the toppled statue of the old king",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Refill the horse trough",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Sweep the gutters clear",
+          "stars": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "The Stables",
+      "goal": "The horses are gone. Find out who took them.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Muck out the stalls",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the stable roof",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Rebuild the tack wall",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Re-oil the harnesses",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Refill the feed bins",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Guard House",
+      "goal": "Find the guards. Someone dismissed them.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Fix the collapsed bunk room",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Restock the armoury rack",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Repair the watch bell",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Rehang the duty roster board",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Re-forge the gate keys",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Entrance Hall",
+      "goal": "Make the front hall fit for a king again.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Sweep out the debris",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the grand staircase",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Rehang the chandelier",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the family portraits",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Re-lay the entry carpet",
+          "stars": 1
+        },
+        {
+          "index": 6,
+          "label": "Polish the great doors",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Throne Room",
+      "goal": "Face Grimm in the throne room.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the cracked throne",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Re-lay the carpet",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the pillars",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Relight the great braziers",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rehang the royal arms",
+          "stars": 1
+        },
+        {
+          "index": 6,
+          "label": "Fix the dais steps",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Replace the audience benches",
+          "stars": 1
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Cloak Room",
+      "goal": "A small room, a small secret.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Rebuild the coat racks",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the mirror",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Fix the floor tiles",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the umbrella stand",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Re-hang the cloaks",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Polish the brass hooks",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Dining Room",
+      "goal": "Feed the staff you have left.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the long table",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Restore the chairs",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Fix the serving hatch",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Rehang the tapestries",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Replace the dinner service",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Relight the wall sconces",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Royal Kitchen",
+      "goal": "The kitchen has been cold for months.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Rebuild the great hearth",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the copper pots",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Fix the water pump",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restock the spice shelves",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Clean the ash pit",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the bread oven",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Re-hang the knife rack",
+          "stars": 1
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "The Pantry",
+      "goal": "Stock the pantry before winter.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Rebuild the shelving",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the cellar door",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Fix the ice box",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restock the stores",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Repair the hanging hooks",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Seal the floor drain",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Servants' Quarters",
+      "goal": "Bring the staff home.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the bunk rooms",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Fix the wash basins",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Rebuild the storage chests",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Relight the stoves",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Restore the common table",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the shutters",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "The Laundry",
+      "goal": "Wash out the last of the neglect.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Fix the boiler",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the wash tubs",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Rehang the drying lines",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the pressing table",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Clear the floor grates",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Replace the linen store",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Rose Garden",
+      "goal": "Freya's roses are dying.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the dead growth",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Repair the trellises",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Fix the garden path",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Replant the queen's roses",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Restore the stone bench",
+          "stars": 1
+        },
+        {
+          "index": 6,
+          "label": "Repair the garden gate",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Re-hang the lanterns",
+          "stars": 1
+        },
+        {
+          "index": 8,
+          "label": "Rebuild the arbour",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "The Greenhouse",
+      "goal": "Save what's left growing.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Replace the broken glass",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the irrigation",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Fix the heating pipes",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Restore the planting beds",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Rebuild the potting bench",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Clear the shattered panes",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Fountain Plaza",
+      "goal": "The fountain hasn't run in months.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the drainage",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the fountain basin",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Fix the water channels",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the surrounding benches",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Re-lay the plaza stones",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Relight the plaza lamps",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "The Library",
+      "goal": "The library is a wreck. That is not an accident.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Rebuild the collapsed shelves",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the reading desks",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Restore the water-damaged books",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Fix the ladder rails",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Re-catalogue the archive",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the reading lamps",
+          "stars": 1
+        },
+        {
+          "index": 7,
+          "label": "Restore the map cabinet",
+          "stars": 2
+        },
+        {
+          "index": 8,
+          "label": "Fix the skylight",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Leo's Study",
+      "goal": "Leo's own room, ransacked.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the desk",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Restore the bookshelf",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Fix the strongbox",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Rehang the hunting trophies",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Re-lay the floorboards",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the window seat",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "The Map Room",
+      "goal": "Find the castle's real floor plan.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the map table",
+          "stars": 1
+        },
+        {
+          "index": 2,
+          "label": "Restore the wall charts",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Fix the lantern rig",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Rebuild the drawer cabinet",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Re-pin the survey maps",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the compass stand",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Royal Pool",
+      "goal": "Grimm makes his first open move.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Drain the pool",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the tile work",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Fix the pump house",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Restore the columns",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Clear the sluice gates",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the diving platform",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Re-lay the poolside stone",
+          "stars": 2
+        },
+        {
+          "index": 8,
+          "label": "Relight the pool lamps",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "The Bath House",
+      "goal": "Get the water out of the lower castle.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Rebuild the drainage channels",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Repair the boilers",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Fix the marble benches",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Restore the steam vents",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Re-tile the plunge pool",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the changing screens",
+          "stars": 1
+        },
+        {
+          "index": 7,
+          "label": "Clear the service shaft",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Royal Bedchamber",
+      "goal": "Leo sleeps in his own room for the first time since he returned.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the bed frame",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the drapes",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Fix the fireplace",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Rehang the marriage portrait",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Re-lay the floorboards",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the writing desk",
+          "stars": 1
+        },
+        {
+          "index": 7,
+          "label": "Restore the night lamps",
+          "stars": 2
+        },
+        {
+          "index": 8,
+          "label": "Fix the balcony doors",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Freya's Dressing Room",
+      "goal": "Her room, untouched since the night she vanished.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the wardrobe",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the vanity",
+          "stars": 1
+        },
+        {
+          "index": 3,
+          "label": "Fix the jewellery cabinet",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Rehang the mirrors",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Restore the dress rail",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the folding screen",
+          "stars": 1
+        },
+        {
+          "index": 7,
+          "label": "Re-lay the rug",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "The Ballroom",
+      "goal": "Summon the nobles. Make them look.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Repair the dance floor",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Restore the chandeliers",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Fix the musicians' gallery",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Rehang the banners",
+          "stars": 1
+        },
+        {
+          "index": 5,
+          "label": "Re-gild the mirrors",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Repair the grand doors",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Restore the buffet tables",
+          "stars": 2
+        },
+        {
+          "index": 8,
+          "label": "Relight the hall",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "name": "The Great Hall",
+      "goal": "Dig out the sealed stairwell.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Clear the rubble",
+          "stars": 2
+        },
+        {
+          "index": 2,
+          "label": "Shore up the ceiling",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the floor",
+          "stars": 1
+        },
+        {
+          "index": 4,
+          "label": "Break through the bricked arch",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Rig the winch",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Clear the collapsed passage",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Light the stairwell",
+          "stars": 2
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "name": "The Sealed Dungeon",
+      "goal": "Get her out.",
+      "tasks": [
+        {
+          "index": 1,
+          "label": "Break the cell door",
+          "stars": 3
+        },
+        {
+          "index": 2,
+          "label": "Clear the flooded corridor",
+          "stars": 2
+        },
+        {
+          "index": 3,
+          "label": "Repair the winch",
+          "stars": 2
+        },
+        {
+          "index": 4,
+          "label": "Light the way out",
+          "stars": 2
+        },
+        {
+          "index": 5,
+          "label": "Force the outer grate",
+          "stars": 2
+        },
+        {
+          "index": 6,
+          "label": "Shore up the tunnel",
+          "stars": 2
+        },
+        {
+          "index": 7,
+          "label": "Clear the last rubble",
+          "stars": 2
+        },
+        {
+          "index": 8,
+          "label": "Carry her up",
+          "stars": 3
+        }
+      ]
+    }
+  ],
+  "areaCount": 24,
+  "repairCount": 158,
+  "stateCount": 182,
+  "existingFiles": [
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state0.jpg",
+      "sha256": "4dd00a6f73cb4785b25815764fb9ca41ab0087d1f9c2a14a90c66a694c8fdbd2"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state0.jpg.meta",
+      "sha256": "083e5a04c4551a5d57a8e4a20775b79864715c6a25156b26a37ec323adcc8cd8"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state1.jpg",
+      "sha256": "18caf384baedd6914c178f766a55843c5f97bdb9d13529ed841fb7a56fc306c0"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state1.jpg.meta",
+      "sha256": "8371637a60bc1a6897c0009151c8da925d9cb24e7ced0391628191087b94e452"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state2.jpg",
+      "sha256": "b483cc18d9deb0a232695c1913994c950780bf27d45ca915896bbe5120a066ae"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state2.jpg.meta",
+      "sha256": "1c6d8f760049e07fc6d36e155ed470a226b322c2e36e647e00d3ef9df9143663"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state3.jpg",
+      "sha256": "90da502e914136605cba70e2938b47d0202bdbcc878b70033295f4e5a90adef6"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state3.jpg.meta",
+      "sha256": "6de76b5ef0faba023745fb0734fd93d07cb6d5d2234c8968944919e6168d8eb9"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state4.jpg",
+      "sha256": "8f5536106bc42497fc1b8b8b6f44e7350ca408cb0d6774246a9ddc9d94a91d20"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state4.jpg.meta",
+      "sha256": "d4394a47c9c5169d5a21e1b394b7bf02ab4a5828b773d66850041eba8e65886d"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state5.jpg",
+      "sha256": "fe5a3d52b97bd18ba65e073d2a8f557309d183f807d5f417717841f79cd34292"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_002_state5.jpg.meta",
+      "sha256": "0faa1514e5c8ab0c693862be09f04345ac023a4bfe696b3587582ed68a8f493e"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_003_restored.jpg",
+      "sha256": "de724e9fcbe46617329dbe1a338428ac4b8164dfb8fe3aeaed1c85028584cf14"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_003_restored.jpg.meta",
+      "sha256": "c36ba2b84ba79b1e640a4818f0f0d30a9552c266027504eaa65b43f388d4d362"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_004_restored.jpg",
+      "sha256": "6b05eb80d2501ec97b06b201d18c186ddb446e611a8ef951d7a59f606793d346"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_004_restored.jpg.meta",
+      "sha256": "ee4eb15974361cc78baadbb0ad7574db824987fff9a1ee55fd610e7da1626e3c"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_005_restored.jpg",
+      "sha256": "f859f4ecf4a5148eee445f0a5fc2c35cb16ab4bab197f2db0f78b67c6e8b8760"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_005_restored.jpg.meta",
+      "sha256": "f2200585da355eb5c68b5a466b64482a0b392ed3a5d8a6c8e2a85c28654f1f88"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_006_restored.jpg",
+      "sha256": "3b5d3b359d87c8bdbcdec55e59b0fe0ae2fe7224c8dd5513394615724712b850"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_006_restored.jpg.meta",
+      "sha256": "28ecea10aa97bd7c37c5d9ba5934450c52c4ee6a4ae051bfafcd47fec90831da"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_007_restored.jpg",
+      "sha256": "d691eff62228678210329daa745774d990420b58ff43cfe7cd5d16b630197b64"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_007_restored.jpg.meta",
+      "sha256": "759133dd67eb7b03a32c97102ca0411c9f4766d0534fc692b10d1f64d071e594"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_008_restored.jpg",
+      "sha256": "691ead754dd7dd65bc1b8df41bb9467b87df6bd80e6db45f6c1c55c990cf3ed3"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_008_restored.jpg.meta",
+      "sha256": "46a414b1177ec8d45f25c0d8fffa535f6f672e92d0bac0bbb8087dcfccb4f19c"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_009_restored.jpg",
+      "sha256": "b2ac0b8c5afe88288f1c6beac4545f750790bf5e14c2819d4e9929b52af73a7b"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_009_restored.jpg.meta",
+      "sha256": "3d853a326ae7d9357dd9fa6330d3f58416725e46f54da66e692e35871e111c9b"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_010_restored.jpg",
+      "sha256": "45bb7d12adc77b4f259f993370bbc2b9c0e1786b42509a07a6bc481b3934fe45"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_010_restored.jpg.meta",
+      "sha256": "ec96353edb678bd7efb54034e2b4daa0c35ffbc700c3c9d9e630f80bad3744a1"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_011_restored.jpg",
+      "sha256": "ebd84868a46387a131b7e20a2132412f839b50ac27e0ff48c0bc3caf73d63b35"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_011_restored.jpg.meta",
+      "sha256": "8e224e804e7f7774a0ed6322aad9f6f8e3d19a7ed9cb89b73518786d04d8f216"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_012_restored.jpg",
+      "sha256": "b1d6999ad78982d73476c90a9b05eb5eb2ee73306bda3195e3d6b76fa9fbf47a"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_012_restored.jpg.meta",
+      "sha256": "a6346cbdbcda64a2a1b64dc861dcbb89715c03e0169aeec6ba6c4a5a2a75d4a7"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_013_restored.jpg",
+      "sha256": "cb6869bed37c157b2960fa6bef30339dbe9b50f6ad4f61636991fb872e9aab51"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_013_restored.jpg.meta",
+      "sha256": "49ca8f64d6394f587188f1e26120a8168432f8d310f4daa65f874664b6509acc"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_014_restored.jpg",
+      "sha256": "7b58f8c7f890bc96ea649105729d024b6faf908d196edc381bd10808a1cd2c40"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_014_restored.jpg.meta",
+      "sha256": "75bba18b59e20e0b8c658158b2a5b954126f8aca8a092a0dcd227d083d246a38"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_015_restored.jpg",
+      "sha256": "585d5fd42c8d03e8d7711195bb5ef0571016569a8fafa07d0c92575d38bb81e3"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_015_restored.jpg.meta",
+      "sha256": "d63da1761aa2ba972ba94ad79bc7f96575db5527479381653f4542e67e760a6c"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_016_restored.jpg",
+      "sha256": "d6c2bdb4ddbee065cd43c043631afa503d6bb3aaa887770123b50dfe245cf37c"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_016_restored.jpg.meta",
+      "sha256": "b5116cac1a41cba0137cdc9fad6b1e8a700911a8ddbeee06730e7888fd941db4"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_017_restored.jpg",
+      "sha256": "fce108213dade7d1f1c60ac1bd3ce7bc8d1dacbe365fcb1eb62be1420f64689c"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_017_restored.jpg.meta",
+      "sha256": "dfbc75da6813ecc5337770e13bf7c4ab423b57de03a0b1a0f8d0200d3a1b5659"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_018_restored.jpg",
+      "sha256": "9abc5ede37a9ca878a4771a1c21429bbf85280b1d5eab95bd5c4a1d13f0ee432"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_018_restored.jpg.meta",
+      "sha256": "505d73ff7e0673095a83e1229c42fb5ea6c9074d2af91a4eccdd4a6299ba4750"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_019_restored.jpg",
+      "sha256": "0f7ae1059a9364a431dfb032afe81181b733c3ee05c44cb525ecd67d39b0a9c4"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_019_restored.jpg.meta",
+      "sha256": "a2626ffa2b54433719581844ec1fb4dfe02d73a9615157a8220088c1e48ef769"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_020_restored.jpg",
+      "sha256": "b5d53988f7d8b59d1bf34994e4842943513d6b0ac5183f9a9f19bc719fa100e2"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_020_restored.jpg.meta",
+      "sha256": "2cc56f1722276c00d626511f0d4de3e47c76273fbdd1a6db0600c461f0f635ee"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_021_restored.jpg",
+      "sha256": "5ccf2472569e70d91f3a644b0d83d30aa0ebdea81601a8ffeccc13f3cd304978"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_021_restored.jpg.meta",
+      "sha256": "048219e543b7dee7fd9c4d40d4ee2e5198911ea5ea8545281eb7865edfb763e4"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_022_restored.jpg",
+      "sha256": "44386e22a6bb6defd8799242a00992a729dbf200b084327d7ee499d3cbce255c"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_022_restored.jpg.meta",
+      "sha256": "ceea8780c215c667d61abbdbb3bdca1dea6e69bd0050c254859e6f931ac649f1"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_023_restored.jpg",
+      "sha256": "1dac302f3545f78a1a99367a179c9758580fb5b5efecee9fbfcabb842791c8b1"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_023_restored.jpg.meta",
+      "sha256": "ea4c4c9a76e11e42188712b398c56d8e4d04fa6cecb22ee7ce906520805d1511"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_024_restored.jpg",
+      "sha256": "68e0327630f009ab30d165302f53ccb3099e6dc45fc6ad3ebf4895270f2dad35"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_024_restored.jpg.meta",
+      "sha256": "05a1b97d4fc9a202180d168ce48a4c2b43e7b6c0d010861cc2beb334eed94b61"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_025_restored.jpg",
+      "sha256": "ebc694e81e9d911c7ae3b2351a8dd0208d161570ae7de1daa72688c1cfd9ccb8"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/Story/Art/area_025_restored.jpg.meta",
+      "sha256": "d1e9855b18ae635497261681bf2a0880dd2e3b37fad584fc4f5db03794b1c8ca"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "area": 19,
+  "state": 1,
+  "label": "Drain the pool",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 19 Royal Pool, STATE 1: Drain the pool. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Drain the murky pool water completely, revealing the same empty basin and its damaged turquoise tile lining.\nCUMULATIVE CONTINUITY: No earlier repairs.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Repair the tile work; Fix the pump house; Restore the columns; Clear the sluice gates; Repair the diving platform; Re-lay the poolside stone; Relight the pool lamps\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-460a0cfc-dcc2-444e-b2f9-241b1dbd539d.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-019/state-01.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-019/state-00.png",
+  "references": [
+    "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-019/state-00.png"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "area": 2,
+  "state": 4,
+  "label": "Refill the horse trough",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 2 Outer Courtyard, STATE 4: Refill the horse trough. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Fill the existing left stone horse trough with clean reflective turquoise water beneath the same brass spout.\nCUMULATIVE CONTINUITY: Step 1 ALREADY DONE AND MUST REMAIN: Remove the entire collapsed wooden scaffolding and its loose timber from the left middle ground, leaving the existing cracked paving visible underneath. Step 2 ALREADY DONE AND MUST REMAIN: Relay only the cracked courtyard paving as level, tightly fitted, softly bevelled cream-gold stone tiles. Keep the gutters and their leaves untouched. Step 3 ALREADY DONE AND MUST REMAIN: Raise and neatly reassemble the SAME crowned lion-king stone statue on its existing square pedestal on the right. Remove only the statue's fallen fragments from the ground.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Sweep the gutters clear\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-8ddb76db-7fb3-43f3-bf70-5fcffaae392a.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-002/state-04.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-002/state-03.png"
+}

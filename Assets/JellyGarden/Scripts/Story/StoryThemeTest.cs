@@ -300,23 +300,54 @@ namespace JellyGarden.Scripts.Story
             else
             {
                 backdrop = image.sprite.name;
-                Sprite expected = StoryArt.Load(theme.BoardBackdrop);
-                if (expected == null)
+
+                // The board wears the KIT's background — StoryBoardTheme.
+                // UseStoryBackdrop is false. What is checked is therefore that
+                // the kit's own rule was honoured, not that the story's room
+                // art arrived; the story art is still checked everywhere it is
+                // actually used, on the home screen and the area page.
+                if (!StoryBoardTheme.UseStoryBackdrop)
                 {
-                    Finding(string.Format(
-                        "its backdrop art is missing: Resources/Story/Art/{0}. The board " +
-                        "is wearing the kit's own '{1}' instead.",
-                        theme.BoardBackdrop, backdrop));
-                }
-                    else if (image.sprite != expected)
-                {
-                    Finding(string.Format(
-                        "the board is wearing '{0}' and not its own Story/Art/{1}",
-                        backdrop, theme.BoardBackdrop));
+                    Sprite[] pictures = background.pictures;
+                    if (pictures == null || pictures.Length == 0)
+                    {
+                        Finding("the kit's Background has no pictures, so the board " +
+                                "is wearing whatever the scene last left on it");
+                    }
+                    else
+                    {
+                        int every = Mathf.Max(1, background.changeBackgoundEveryLevels);
+                        int index = Mathf.Clamp(
+                            (int)((float)level / every - 0.01f), 0, pictures.Length - 1);
+                        if (image.sprite != pictures[index])
+                        {
+                            Finding(string.Format(
+                                "the board is wearing '{0}' and not the kit's picture {1} " +
+                                "for level {2}", backdrop, index, level));
+                        }
+                    }
                 }
                 else
                 {
-                    ReportBackdropSharpness(image);
+                    int areaId = StoryLevelPlan.AreaOf(level);
+                    Sprite expected = StoryArt.AreaAtProgress(areaId) ?? StoryArt.Load(theme.BoardBackdrop);
+                    if (expected == null)
+                    {
+                        Finding(string.Format(
+                            "its room art and fallback are missing: Resources/Story/Art/{0}. The board " +
+                            "is wearing the kit's own '{1}' instead.",
+                            theme.BoardBackdrop, backdrop));
+                    }
+                    else if (image.sprite != expected)
+                    {
+                        Finding(string.Format(
+                            "the board is wearing '{0}' and not area {1}'s current room '{2}'",
+                            backdrop, areaId, expected.name));
+                    }
+                    else
+                    {
+                        ReportBackdropSharpness(image);
+                    }
                 }
             }
 
@@ -331,7 +362,16 @@ namespace JellyGarden.Scripts.Story
             // 3. The ground under the cells. A theme that names a fill and a
             //    board that never got one look identical in the log and nothing
             //    like each other on screen.
-            if (!theme.HasBoardFill)
+            //
+            //    Unless the story is not drawing a ground at all: with
+            //    StoryBoardTheme.UseStoryCellFill off the cells are meant to be
+            //    the kit's black checker, and a board with no story ground on
+            //    it is the board working correctly.
+            if (!StoryBoardTheme.UseStoryCellFill)
+            {
+                Say("cells keep the kit's own checker; the arc's ground is off.");
+            }
+            else if (!theme.HasBoardFill)
             {
                 Finding("names no board ground, so its cells keep the kit's flat " +
                         "black checker whatever the arc is");
@@ -351,10 +391,15 @@ namespace JellyGarden.Scripts.Story
             // 4. Told apart from the arcs already seen. Two arcs wearing the same
             //    picture AND the same ground are one arc, and neither arc's own
             //    screenshot can show that.
+            // With the cells on the kit's checker every arc's ground is the
+            // same, so the backdrop is the only thing telling two arcs apart —
+            // and it is the room being restored, which no two arcs share.
             int firstArc;
             if (_backdropSeen.TryGetValue(backdrop, out firstArc) && backdrop != "none")
             {
-                string ground = Describe(StoryBoardTheme.LastFill);
+                string ground = StoryBoardTheme.UseStoryCellFill
+                    ? Describe(StoryBoardTheme.LastFill)
+                    : "the kit's checker";
                 int groundArc;
                 if (_groundSeen.TryGetValue(ground, out groundArc) && groundArc == firstArc)
                 {

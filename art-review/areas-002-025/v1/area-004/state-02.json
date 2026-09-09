@@ -1,0 +1,13 @@
+{
+  "area": 4,
+  "state": 2,
+  "label": "Restock the armoury rack",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 4 Guard House, STATE 2: Restock the armoury rack. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Straighten and restock the right armour rack with tidy polished ceremonial silver helmets, blue shields and sheathed swords.\nCUMULATIVE CONTINUITY: Step 1 ALREADY DONE AND MUST REMAIN: Rebuild the collapsed left bunk frames and put neat royal-blue folded bedding on the two beds.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Repair the watch bell; Rehang the duty roster board; Re-forge the gate keys\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-7ad70f0d-13dd-479e-ac81-68abdbdc0abc.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-004/state-02.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-004/state-01.png",
+  "references": [
+    "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-004/state-01.png"
+  ]
+}

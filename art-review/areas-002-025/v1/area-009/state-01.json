@@ -1,0 +1,10 @@
+{
+  "area": 9,
+  "state": 1,
+  "label": "Rebuild the great hearth",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 9 Royal Kitchen, STATE 1: Rebuild the great hearth. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Rebuild the great hearth's cracked cream masonry and iron grate, keeping the separate ash pit dirty for its later task.\nCUMULATIVE CONTINUITY: No earlier repairs.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Repair the copper pots; Fix the water pump; Restock the spice shelves; Clean the ash pit; Repair the bread oven; Re-hang the knife rack\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-a1c05fb6-adca-42f0-8eab-e8b6e0e03b17.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-009/state-01.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-009/state-00.png"
+}

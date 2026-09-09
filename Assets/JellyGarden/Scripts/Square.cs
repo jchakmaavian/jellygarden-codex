@@ -77,7 +77,18 @@ namespace JellyGarden.Scripts
             if (IsNone() && !CanGoInto())
                 return null;
             var itemInstance = Instantiate(LevelManager.THIS.itemPrefab);
-            itemInstance.transform.localScale = Vector2.one * 0.6f;
+
+            // The gem's size in its cell. An item sprite is 128px at 100 pixels
+            // per unit and its painted art fills 114 of those, so it draws
+            // 1.14 * scale units wide. The kit's flat 0.6 left the gem at 83%
+            // of its cell, which reads small next to the blocks — their prefabs
+            // sit at scale 1 and spill over their own cell. StoryBoardScale
+            // holds 92% of a cell instead, and follows the board's pitch, so a
+            // bigger cell carries a bigger gem. The idle breath in
+            // Item.AnimIdleStart reads whatever is set here at Start and
+            // shrinks 0.05 from it, so it follows too.
+            itemInstance.transform.localScale =
+                Vector2.one * JellyGarden.Scripts.Story.StoryBoardScale.ItemScale;
             itemInstance.square = this;
             //if (!falling)
             //    item.GetComponent<Item>().anim.SetTrigger("reAppear");

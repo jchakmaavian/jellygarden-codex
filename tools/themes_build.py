@@ -40,14 +40,22 @@ from story_common import ARC_TITLES, STORY_RES, dump_json  # noqa: E402
 # a hole. The fill replaces that sprite with a white square, so the colour here
 # is the board's ground exactly.
 #
-# The fourth component is its alpha, and it was 0.55 — the board as tinted glass
-# over the arc's picture. That was written for backdrops that are bright, and
-# the six the game actually ships are not: castle 78, village 53, siege 50 mean
-# luminance against 152 for the project's own reference room art. At 0.55 that
-# darkness came straight through the board and the ground was dragged to a
-# muddy 41-68. So the glass is thicker now: the arc's picture still tints the
-# board, but it can no longer decide how dark it is.
-BOARD_ALPHA = 0.85
+# The fourth component is its alpha. It has been 0.55 and then 0.85 — the board
+# as tinted glass over the arc's picture, then as a near-solid pale slab once
+# the shipped backdrops turned out to be dark (castle 78, village 53, siege 50
+# mean luminance against 152 for the project's own reference room art) and were
+# dragging a light ground to a muddy 41-68.
+#
+# Neither is what the board wants. The ground is now a SHADE rather than a
+# surface: part transparent, and what it does is darken. The backdrop reads
+# through it as itself, the cells read as a dimmed pane over the room, and the
+# darkness that used to be a problem is the point — a dark ground is what the
+# kit's own board was (flat black at alpha 0.50), only carrying the arc's hue.
+#
+# 0.55 is past the kit's own 0.50: the room is still legible behind the board
+# and the gems have a genuinely dark field to sit on, which is what the six
+# high-chroma kit gems want under them.
+BOARD_ALPHA = 0.55
 
 # Where a ground goes when its own colour will not do.
 #
@@ -57,6 +65,18 @@ BOARD_ALPHA = 0.85
 # in the game is already made of, so a board that has to give up its own colour
 # gives it up to a colour the game already owns rather than to a new one.
 STONE = (250 / 255.0, 234 / 255.0, 208 / 255.0)
+
+# What the arc's own colour is taken down to before anything else happens. A
+# ground is a shade now, so the hue is kept and the light is not: 0.30 is dark
+# enough to read as shadow at alpha 0.35 and far enough off black that the six
+# arcs are still six different boards.
+GROUND_DARKEN = 0.30
+
+# Where a ground goes when even the darkened arc colour will not separate from
+# a gem. Not black — a hair of blue in it keeps it from reading as a hole, and
+# it is the same near-neutral the kit's own black-at-half-alpha cell composites
+# to over a lit backdrop.
+SHADOW = (0.07, 0.06, 0.09)
 
 # How finely the blend toward STONE is searched. An arc keeps as much of its own
 # colour as it can, so the step is small enough that "as much as it can" means
@@ -80,37 +100,39 @@ SPEC = {
 
 
 def ground_fill(arc, key, colour, gems, floor):
-    """The arc's board ground: its own colour, moved only as far as it must.
+    """The arc's board ground: its own colour, darkened, moved only as far as it must.
 
     A gem is drawn on this, and a ground the gem merges into is a ground the
     player cannot read the board on. The bar is not invented — it is the worst
     gem separation the kit's own five shipped boards already accept, computed by
     check_themes.kit_gem_separation_floor. So this walks the arc's colour toward
-    STONE in BLEND_STEP steps and stops at the first one that clears it, which
+    SHADOW in BLEND_STEP steps and stops at the first one that clears it, which
     leaves an arc that was already fine exactly as it was authored.
 
     Returns (fill, blend, separation). With no art to measure — a fresh tree
-    where asset_import.py has not run — it returns STONE, because the safe
+    where asset_import.py has not run — it returns SHADOW, because the safe
     answer when the backdrop is unknown is the one that does not depend on it.
     """
     picture = art_path(key)
     backdrop = mean_colour(picture) if picture else None
 
     if backdrop is None or not gems or floor is None:
-        return list(STONE), 1.0, None
+        return list(SHADOW), 1.0, None
+
+    shade = [c * GROUND_DARKEN for c in colour]
 
     blend = 0.0
     while blend <= 1.0 + 1e-9:
-        fill = [colour[i] * (1.0 - blend) + STONE[i] * blend for i in range(3)]
+        fill = [shade[i] * (1.0 - blend) + SHADOW[i] * blend for i in range(3)]
         separation = worst_gem_separation(
             composite(tuple(fill) + (BOARD_ALPHA,), backdrop), gems)
         if separation >= floor:
             return [round(c, 3) for c in fill], round(blend, 2), separation
         blend += BLEND_STEP
 
-    # Nothing on the line clears it. STONE is the end of that line and the best
+    # Nothing on the line clears it. SHADOW is the end of that line and the best
     # this can do; check_themes.py is the gate that says so out loud.
-    fill = list(STONE)
+    fill = list(SHADOW)
     separation = worst_gem_separation(
         composite(tuple(fill) + (BOARD_ALPHA,), backdrop), gems)
     return [round(c, 3) for c in fill], 1.0, separation
@@ -120,7 +142,7 @@ def main():
     gems = item_colours()
     floor = kit_gem_separation_floor(gems)
     if floor is None:
-        print("WARNING: no gem sprites to measure; every ground falls back to STONE.",
+        print("WARNING: no gem sprites to measure; every ground falls back to SHADOW.",
               file=sys.stderr)
 
     themes = []
@@ -139,11 +161,12 @@ def main():
             # Applied to the board's own cells only, never to a gem.
             "squareTint": tint,
             # The board's own ground, RGB then alpha. Computed, not authored:
-            # the arc's colour moved toward STONE by the least amount that keeps
-            # every one of the kit's six gems readable on it.
+            # the arc's colour taken down to a shade and moved toward SHADOW by
+            # the least amount that keeps every one of the kit's six gems
+            # readable on it.
             "boardFill": fill + [BOARD_ALPHA],
         })
-        print("arc %d %-8s blend %.2f toward stone -> %s%s" % (
+        print("arc %d %-8s blend %.2f toward shadow -> %s%s" % (
             arc, key, blend, fill,
             "" if separation is None else "  (gem dE %.1f)" % separation))
 

@@ -1,0 +1,13 @@
+{
+  "area": 6,
+  "state": 2,
+  "label": "Re-lay the carpet",
+  "generator": "Built-in image_gen",
+  "prompt": "Use case: precise-object-edit. KING LEO area 6 Throne Room, STATE 2: Re-lay the carpet. The input is the EXACT PREVIOUS STATE of this room, the edit target. Preserve image dimensions, camera, crop, perspective, architecture, background, object identity and positions, material style, overall warm daylight and every previously completed repair.\nCHANGE ONLY THIS REPAIR: Replace the torn central runner with rich royal-blue carpet and gold edging along its same path.\nCUMULATIVE CONTINUITY: Step 1 ALREADY DONE AND MUST REMAIN: Repair only the central throne: intact rounded gold frame, plush royal-blue upholstery and the same crown crest.\nSTILL UNFINISHED; keep these subjects in the same damaged/unfixed condition as the input: Restore the pillars; Relight the great braziers; Rehang the royal arms; Fix the dais steps; Replace the audience benches\nDo not redesign the room, move other objects, relight the whole scene, change the floor pattern outside the repair, invent decorations, restore future tasks or remove previous repairs. Exact same scene with one local completed change. Keep the approved warm royal polished 3D animation aesthetic. No panels, text, HUD, captions, particles, workers or watermark. Single finished-stage portrait image, not an action illustration.",
+  "source": "/Users/avian/.codex/generated_images/01a0804b-325a-7751-8b71-c14c4cd9755a/exec-16a1dec9-dbec-4668-992d-df00bb78b498.png",
+  "path": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-006/state-02.png",
+  "reference": "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-006/state-01.png",
+  "references": [
+    "/Users/avian/Desktop/Project/match3/king-leo/art-review/areas-002-025/v1/area-006/state-01.png"
+  ]
+}

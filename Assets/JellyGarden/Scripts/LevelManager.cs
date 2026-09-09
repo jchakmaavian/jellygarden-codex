@@ -501,7 +501,8 @@ namespace JellyGarden.Scripts
         {
 
             GenerateLevel();
-            GenerateOutline();
+            if (JellyGarden.Scripts.Story.StoryBoardTheme.DrawKitOutline)
+                GenerateOutline();
             ReGenLevel();
             if (limitType == LIMIT.TIME)
             {
@@ -916,6 +917,11 @@ namespace JellyGarden.Scripts
 
         private void GenerateLevel()
         {
+            // The story plays on a bigger cell than the kit ships. Set before
+            // anything is laid out, because every position below is a multiple
+            // of the pitch.
+            JellyGarden.Scripts.Story.StoryBoardScale.Apply(this);
+
             bool chessColor = false;
             Vector3 fieldPos = new Vector3(-maxCols / 2.75f, maxRows / 2.75f, -10);
             for (int row = 0; row < maxRows; row++)
@@ -963,6 +969,13 @@ namespace JellyGarden.Scripts
             }
             square.transform.SetParent(GameField);
             square.transform.localPosition = firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight);
+
+            // The cell tile is exactly one kit-pitch wide, so it has to grow
+            // with the pitch or the board shows the gaps between its own cells.
+            // The blocks and obstacles below are parented to the square and
+            // ride this scale; the gems are not, and take StoryBoardScale.ItemScale.
+            square.transform.localScale =
+                Vector3.one * JellyGarden.Scripts.Story.StoryBoardScale.Factor;
             squaresArray[row * maxCols + col] = square.GetComponent<Square>();
             square.GetComponent<Square>().row = row;
             square.GetComponent<Square>().col = col;
