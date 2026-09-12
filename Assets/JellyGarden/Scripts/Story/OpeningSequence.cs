@@ -19,8 +19,8 @@
 // The beat the lines carry:
 //   Alfred, over the room: three lines of what the kingdom has come to
 //   Leo, quiet: "...Freya?"  — no answer
-//   Alfred: the answer nobody gave him
-//   Leo: "Where is everyone, cat?"  — Mimi is there, saying nothing
+//   Alfred: nobody came to greet him
+//   Leo: "Where is everybody, Mimi?"  — Mimi is there, saying nothing
 //
 // The hook is one unanswered word. The spec is explicit that there is no second
 // line and nobody explains who she is, so there is deliberately no room here to
@@ -109,16 +109,16 @@ namespace JellyGarden.Scripts.Story
         {
             var lines = new List<DialogueLine>
             {
-                new DialogueLine("Alfred", "The King had been gone eleven weeks.", "alfred_open_01"),
-                new DialogueLine("Alfred", "He had left the kingdom in good hands. So he was told.", "alfred_open_02"),
-                new DialogueLine("Alfred", "He expected trumpets. He got weeds.", "alfred_open_03"),
+                new DialogueLine("Alfred", "Once upon a time, a king went away on a very long journey."),
+                new DialogueLine("Alfred", "He left his castle with someone he trusted. That was his first mistake."),
+                new DialogueLine("Alfred", "He dreamed of trumpets and cake. He came home to cobwebs."),
 
                 // The hook. One word, into an empty courtyard, no reply.
                 new DialogueLine("Leo", "...Freya?"),
 
-                new DialogueLine("Alfred", "No one had thought to tell him. That, in itself, was the answer.", "alfred_open_04"),
+                new DialogueLine("Alfred", "Nobody answered. And nobody had sent him a single letter."),
 
-                new DialogueLine("Leo", "Where is everyone, cat?"),
+                new DialogueLine("Leo", "Where is everybody, Mimi?"),
 
                 // Mimi is the only welcome he gets, and she says nothing, being a
                 // cat. The beat is hers so that her portrait is what the player

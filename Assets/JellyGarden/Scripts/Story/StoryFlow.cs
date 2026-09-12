@@ -197,6 +197,11 @@ namespace JellyGarden.Scripts.Story
             StoryLosePopup.Close();
             StoryLosePopup.HideKitPanel();
 
+            // The power plate is a second of a level's opening; leaving the
+            // level part-way through one would otherwise leave it on the area
+            // screen that comes next.
+            StoryPrePlay.Close();
+
             if (LevelManager.THIS != null)
                 LevelManager.THIS.gameStatus = GameState.Map;
 

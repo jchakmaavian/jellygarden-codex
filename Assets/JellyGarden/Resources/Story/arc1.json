@@ -11,25 +11,25 @@
       "name": "Castle Gates",
       "phase": "Setup — small goals, texture clues",
       "beatType": "Texture",
-      "goal": "Get the gates open. Nobody has cleared this road in months.",
+      "goal": "Open the gates! Nobody has cleaned this road in a long time.",
       "tasks": [
         {
           "index": 1,
-          "label": "Replace the rotted gate timbers",
+          "label": "Fix the broken gate",
           "stars": 1,
-          "onComplete": "Fresh oak beams. The gate stops sagging."
+          "onComplete": "New wood! The gate stands up straight."
         },
         {
           "index": 2,
-          "label": "Rehang the royal banner",
+          "label": "Hang up the king's flag",
           "stars": 1,
-          "onComplete": "Leo's colours drop down the wall. First colour in the scene."
+          "onComplete": "Leo's flag rolls down the wall. Bright colours at last!"
         },
         {
           "index": 3,
-          "label": "Relight the gate lanterns",
+          "label": "Light the lamps",
           "stars": 1,
-          "onComplete": "Warm light. The castle stops looking abandoned."
+          "onComplete": "The lamps glow. The castle looks awake again."
         }
       ],
       "clue": "The gatekeeper's log stops mid-sentence, eleven weeks ago. The last line reads: the Queen asked me to—",
@@ -136,7 +136,7 @@
           "tuningNote": "First level of the game after the ivy task was removed. Inherits the tutorial properties the old level 1 carried — unloseable, one guided move — because the opening sequence still requires zero losses in session one. Moves raised from 23 to 26: 23 was tuned for a level the player could lose. Vines remain on the board as static scenery; they are no longer any level's objective in this area.",
           "tutorial": {
             "guidedMove": 1,
-            "hint": "Break the rotten timbers."
+            "hint": "Smash the old wood!"
           }
         },
         {
@@ -322,35 +322,40 @@
       "name": "Outer Courtyard",
       "phase": "Setup — small goals, texture clues",
       "beatType": "Texture",
-      "goal": "Clear the courtyard so the castle looks lived in again.",
+      "goal": "Clean up the courtyard so the castle feels like home again.",
       "tasks": [
         {
           "index": 1,
-          "label": "Haul away the fallen scaffolding",
-          "stars": 1
+          "label": "Move the broken poles",
+          "stars": 1,
+          "onComplete": "The poles are gone. You can walk across now!"
         },
         {
           "index": 2,
-          "label": "Repave the cracked stones",
-          "stars": 1
+          "label": "Fix the cracked path",
+          "stars": 1,
+          "onComplete": "Smooth new stones. No more bumps."
         },
         {
           "index": 3,
-          "label": "Right the toppled statue of the old king",
-          "stars": 1
+          "label": "Stand the king's statue up",
+          "stars": 1,
+          "onComplete": "The old king stands tall again."
         },
         {
           "index": 4,
-          "label": "Refill the horse trough",
-          "stars": 1
+          "label": "Fill the horses' water",
+          "stars": 1,
+          "onComplete": "Fresh water! The horses come back."
         },
         {
           "index": 5,
-          "label": "Sweep the gutters clear",
-          "stars": 1
+          "label": "Clean out the drains",
+          "stars": 1,
+          "onComplete": "The rain runs away. No more puddles."
         }
       ],
-      "clue": "The statue of Leo's father was pushed, not fallen. The base is chiselled.",
+      "clue": "Someone pushed the king's statue over. It did not just fall.",
       "pointsTo": 3,
       "board": {
         "obstacle": "Rubble blocks",

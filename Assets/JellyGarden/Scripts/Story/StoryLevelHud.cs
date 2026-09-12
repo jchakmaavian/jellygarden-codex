@@ -395,6 +395,16 @@ namespace JellyGarden.Scripts.Story
             if (authored != null)
             {
                 authored.EnsureBound();
+
+                // The pause button is seated here as well as at bake time.
+                // StoryHudBaker calls MovePauseOutOfTheHudsWay once and saves
+                // the result into the scene, so a change to where the button
+                // belongs — new tray art, a different boss — reached nothing
+                // until the scene was re-baked, and every attempt to move it
+                // looked like a dead constant. It is idempotent: same parent,
+                // same anchors, same position, so running it per level costs
+                // one transform write and removes the bake from the loop.
+                authored.MovePauseOutOfTheHudsWay(strip);
                 authored.Refresh();
                 return;
             }
@@ -1244,32 +1254,88 @@ namespace JellyGarden.Scripts.Story
         /// Moved, not replaced: it is still the kit's button running the kit's
         /// action, and if the booster row is not there it stays where it was
         /// rather than being hidden.
+        ///
+        /// It sits a little ABOVE the boosters rather than level with them,
+        /// because the tray it stands on is not flat: `gui_bottom` has a raised
+        /// centre boss with a round recess in it, and the pause button is the
+        /// thing that recess is for. Level with the boosters it sat on the rail
+        /// under the boss, which reads as a button that missed its socket.
         /// </summary>
         public void MovePauseOutOfTheHudsWay(Transform strip)
         {
-            var pause = strip.Find("Pause") as RectTransform;
-            if (pause == null) return;
-
             RectTransform row = FindBoosterRow(strip);
             if (row == null) return;
 
-            // The row's own boosters say what height the row sits at, so nothing
-            // here has to guess at the kit's layout.
-            float y = 0f;
-            for (int i = 0; i < row.childCount; i++)
-            {
-                var child = row.GetChild(i) as RectTransform;
-                if (child == null || !child.name.StartsWith("Boost")) continue;
-                y = child.anchoredPosition.y;
-                break;
-            }
+            // NOT strip.Find("Pause"). The scene keeps the pause button under
+            // BottomPanel/Panel, and FindKitHudStrip answers with the TOP strip
+            // — its own walk starts at the progress bar and falls back to
+            // `Level/Canvas/Panel/Panel` — so looking for the button on the
+            // strip found nothing and this method returned before doing
+            // anything at all. It looked right anyway, because the scene had
+            // already parked the button in the middle of the tray, which is why
+            // it went unnoticed until the tray art changed and the button was
+            // asked to move.
+            RectTransform pause = FindPause(strip) ?? FindPause(row);
+            if (pause == null) return;
+
+            // The row IS the tray — FindBoosterRow returns the child of
+            // BottomPanel that holds the Boost objects, which is the same
+            // `Panel` that draws `gui_bottom`. So the button is placed against
+            // the tray's own rect rather than against a booster's y: the boss
+            // is part of the artwork, and only the artwork knows where it is.
+            float trayHeight = row.rect.height > 1f ? row.rect.height : KitTrayHeight;
 
             pause.SetParent(row, false);
             pause.SetAsLastSibling();
             pause.anchorMin = new Vector2(0.5f, 0.5f);
             pause.anchorMax = new Vector2(0.5f, 0.5f);
             pause.pivot = new Vector2(0.5f, 0.5f);
-            pause.anchoredPosition = new Vector2(0f, y);
+            pause.anchoredPosition = new Vector2(0f, trayHeight * RecessRise);
+        }
+
+        /// <summary>
+        /// Where the recess on the tray's centre boss sits, as a fraction of the
+        /// tray's height above its middle.
+        ///
+        /// Measured off `gui_bottom` itself: sampling the art's centre column,
+        /// the dark disc inside the gold boss runs from row 66 to row 200 of
+        /// 342, so its middle is at 0.389 of the height from the top — 0.111 of
+        /// the height ABOVE the middle. The disc is 0.392 of the height across,
+        /// which at 171 units is 67, and the kit's pause button is 69: it is
+        /// the plug for that socket, and this is what seats it.
+        ///
+        /// Placing it against the boosters instead — the first two attempts —
+        /// could only ever be a guess, because the boosters know nothing about
+        /// where the artwork put its hole.
+        ///
+        /// 0.16 rather than the disc's own 0.111: the button rides a little
+        /// proud of the recess, which is how a raised control reads against a
+        /// socket. Past about 0.21 the dark disc starts showing under it and
+        /// the button looks like it slipped off the boss.
+        ///
+        /// 0.14 is the value the owner settled on from a running build, walked
+        /// down from 0.45 — the offset that proved the seating works at all —
+        /// through 0.36, 0.26 and 0.16. It sits between the art's two readings:
+        /// 0.111 seats the button dead centre in the recess, and past about
+        /// 0.21 the dark disc shows underneath and the button looks like it
+        /// slipped off the boss.
+        /// </summary>
+        private const float RecessRise = 0.14f;
+
+        /// <summary>The tray's height in canvas units, when its rect cannot be read yet.</summary>
+        private const float KitTrayHeight = 171f;
+
+        /// <summary>The pause button anywhere under the given root, active or not.</summary>
+        private static RectTransform FindPause(Transform root)
+        {
+            if (root == null) return null;
+            if (root.name == "Pause") return root as RectTransform;
+            for (int i = 0; i < root.childCount; i++)
+            {
+                RectTransform found = FindPause(root.GetChild(i));
+                if (found != null) return found;
+            }
+            return null;
         }
 
         /// <summary>

@@ -105,6 +105,16 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
+        /// A GPU-only copy of the current back buffer for a modal's blurred
+        /// backdrop. Like CaptureNative, call after WaitForEndOfFrame; it keeps
+        /// Screen Space - Camera UI and avoids a second camera render.
+        /// </summary>
+        public static void CaptureInto(RenderTexture target)
+        {
+            ScreenCapture.CaptureScreenshotIntoRenderTexture(target);
+        }
+
+        /// <summary>
         /// The old capture: Unity renders the frame AGAIN at
         /// <see cref="ShotSuperSize"/> times the window and writes that.
         ///

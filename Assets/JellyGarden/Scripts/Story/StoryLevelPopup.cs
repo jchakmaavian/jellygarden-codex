@@ -1,18 +1,6 @@
-// The level start popup: "Level 16", what the level wants, and Play.
-//
-// Royal Match states a level's goal before the board opens and says nothing
-// else about it — no moves count, no star rating, no difficulty. The number of
-// moves is the level's problem, not the popup's, and putting it here would give
-// the player a number to fear before they have seen the board.
-//
-// Everything on it comes from StoryLevelHud.ReadLevel: the same model the
-// in-level HUD draws, built from Resources/Levels/N.txt plus
-// Resources/Targets/LevelN.asset with no board in the scene. The popup and the
-// HUD therefore cannot disagree about what a level is asking for.
-//
-// Metrics and colours are measured off docs/royal-match/10-level-start-popup.jpg
-// (828x1472) and scaled to the 1080x1920 reference canvas by 1080/828 = 1.304.
-
+// Sapphire Trim: the selected Soft Royal layout in a blue-and-gold frame.
+// Goals still come from the in-level HUD reader; booster choices still pass
+// through StoryBoosters to the kit when the board is created.
 using System;
 using System.Collections.Generic;
 using JellyGarden.Scripts.GUI;
@@ -24,534 +12,339 @@ namespace JellyGarden.Scripts.Story
     public sealed class StoryLevelPopup : MonoBehaviour
     {
         public const string HostName = "StoryLevelPopup";
-
-        #region Metrics, measured off docs/royal-match/10-level-start-popup.jpg
-
-        // The reference is a 9:16-and-then-some phone. A 4:3 view — an iPad, or
-        // the Editor's default Game view — hands this canvas far fewer reference
-        // units of height than of width, so every VERTICAL measurement here is a
-        // fraction of the panel's own content height rather than a count of
-        // pixels. Fixed heights fit the phone and silently overlap everywhere
-        // else: that is exactly how the booster row first landed under the Play
-        // button. Horizontal measurements stay in reference points, because the
-        // canvas scaler keeps the width honest.
-        //
-        // The fractions are the measured pixel heights over DesignHeight, which
-        // is what the panel's content rect measures on the reference device.
-        private const float DesignHeight = 1146f;
-
-        // The panel band. The popup does not fill the screen: the room and the
-        // top bar stay visible above it and the nav bar below it.
-        private const float PopupTop = 274f;
-        private const float PopupBottom = 238f;
-
-        // The cream Goal card, inset inside the panel's content rect.
-        private const float GoalCardSide = 109f;
-        private const float GoalCardTopFrac = 73f / DesignHeight;
-        private const float GoalTitleFrac = 120f / 690f;   // of the card
-        private const float GoalRowSide = 44f;
-
-        // The Play button, and the gap the card keeps above it.
-        private const float PlayWidth = 574f;
-        private const float PlayHeightFrac = 209f / DesignHeight;
-        private const float PlayBottomFrac = 122f / DesignHeight;
-        private const float PlayGapFrac = 40f / DesignHeight;
-
-        /// <summary>Four is what the Target panel holds; the popup matches it.</summary>
         private const int MaxGoals = 4;
-
-        private const float SlotMaxWidth = 200f;
-        private const float SlotIcon = 130f;
-
-        // The "Select Boosters:" row, under the goal well and inside the same
-        // cream card: three tiles at a fixed pitch, centred. Both fractions are
-        // of the card's height, so the goal well takes whatever is left.
-        private const float BoosterTitleFrac = 110f / 690f;
-        private const float BoosterRowFrac = 210f / 690f;
-        private const float BoosterTileWidth = 150f;
-        private const float BoosterPitch = 238f;
-
-        #endregion
-
-        #region State
-
+        private static readonly Color32 Cream = new Color32(255,253,236,255);
+        private static readonly Color32 Ink = new Color32(64,82,62,255);
+        private static readonly Color32 Muted = new Color32(125,138,105,255);
+        private static readonly Color32 Gold = new Color32(246,216,146,255);
+        private static readonly Color32 Blue = new Color32(35,76,102,255);
         private static StoryLevelPopup _instance;
+        public static StoryLevelPopup Instance => _instance;
+        public static bool IsOpen => _instance!=null && _instance.gameObject.activeSelf;
 
-        public static StoryLevelPopup Instance
-        {
-            get { return _instance; }
-        }
-
-        public static bool IsOpen
-        {
-            get { return _instance != null && _instance.gameObject.activeSelf; }
-        }
-
-        /// <summary>
-        /// What Play does. Null means StoryFlow.LaunchLevel, which is the only
-        /// thing it ever is in the game; a test replaces it so the button can be
-        /// proven without a board in the scene.
-        /// </summary>
-        public static Action<int, int> Launcher;
-
-        private int _level;
-        private int _areaId;
+        /// <summary>Null launches the real board. Tests can observe the level and area instead.</summary>
+        public static Action<int,int> Launcher;
+        private int _level, _areaId;
         private Action _onClose;
-
         private Canvas _canvas;
-        private StoryUi.RoyalPanelParts _panel;
-        private RectTransform _goalRow;
-        private Button _play;
-
+        private StoryModalBackdrop _backdrop;
+        private RectTransform _card, _goalRow;
+        private Text _title, _goalHeading, _hint;
+        private Button _play, _close;
         private readonly List<Slot> _slots = new List<Slot>();
         private readonly List<BoosterSlot> _boosters = new List<BoosterSlot>();
-
-        private sealed class BoosterSlot
-        {
-            public BoostType Boost;
-            public StoryUi.BoosterSlotParts Parts;
-        }
-
         private sealed class Slot
         {
             public RectTransform Root;
-            public Image Icon;
+            public Image Icon, Backing;
+            public Text Count, Unit;
+            public StoryLevelGoalVfx Vfx;
+        }
+        private sealed class BoosterSlot
+        {
+            public BoostType Boost;
+            public Button Button;
+            public Image Border, Face, Icon;
             public Text Count;
+            public GameObject Selected, Locked;
         }
-
-        /// <summary>The level this popup is currently offering.</summary>
-        public int Level
-        {
-            get { return _level; }
-        }
-
-        /// <summary>The area the level will be played for.</summary>
-        public int AreaId
-        {
-            get { return _areaId; }
-        }
-
-        public Button PlayButton
-        {
-            get { return _play; }
-        }
-
-        public Button CloseButton
-        {
-            get { return _panel == null ? null : _panel.Close; }
-        }
-
-        public string TitleText
-        {
-            get { return _panel == null || _panel.Title == null ? null : _panel.Title.text; }
-        }
-
-        /// <summary>What each drawn goal slot reads, in the level's own target order.</summary>
+        public int Level => _level;
+        public int AreaId => _areaId;
+        public Button PlayButton => _play;
+        public Button CloseButton => _close;
+        public string TitleText => _title==null?null:_title.text;
+        public int BoosterCount => _boosters.Count;
+        public BoostType BoosterAt(int index) => _boosters[index].Boost;
+        public Button BoosterButton(int index) => _boosters[index].Button;
+        public bool BoosterIsLocked(int index) => _boosters[index].Locked.activeSelf;
+        public bool BoosterIsSelected(int index) => _boosters[index].Selected.activeSelf;
         public List<string> GoalTexts()
         {
-            var texts = new List<string>();
-            for (int i = 0; i < _slots.Count; i++)
-            {
-                if (!_slots[i].Root.gameObject.activeSelf) continue;
-                texts.Add(_slots[i].Count.text);
-            }
-            return texts;
+            var result=new List<string>();
+            foreach(Slot slot in _slots) if(slot.Root.gameObject.activeSelf) result.Add(slot.Count.text);
+            return result;
         }
-
-        /// <summary>The owned count each booster tile is showing, in row order.</summary>
         public List<string> BoosterCounts()
         {
-            var counts = new List<string>();
-            for (int i = 0; i < _boosters.Count; i++) counts.Add(_boosters[i].Parts.Count.text);
-            return counts;
+            var result=new List<string>();
+            foreach(BoosterSlot slot in _boosters) result.Add(slot.Count.text);
+            return result;
         }
 
-        public int BoosterCount
+        public static void Open(int levelNumber,int areaId,Action onClose)
         {
-            get { return _boosters.Count; }
-        }
-
-        public BoostType BoosterAt(int index)
-        {
-            return _boosters[index].Boost;
-        }
-
-        public Button BoosterButton(int index)
-        {
-            return _boosters[index].Parts.Button;
-        }
-
-        /// <summary>Whether the tile is drawn locked — no booster of that kind owned.</summary>
-        public bool BoosterIsLocked(int index)
-        {
-            return _boosters[index].Parts.Locked.gameObject.activeSelf;
-        }
-
-        /// <summary>Whether the tile is drawn as chosen.</summary>
-        public bool BoosterIsSelected(int index)
-        {
-            return _boosters[index].Parts.Ring.gameObject.activeSelf;
-        }
-
-        #endregion
-
-        #region Open and close
-
-        /// <summary>
-        /// Opens the popup for a level. <paramref name="onClose"/> is what the
-        /// red X goes back to — the screen the popup was opened from. It is not
-        /// called when Play is pressed: the level is where the player went.
-        /// </summary>
-        public static void Open(int levelNumber, int areaId, Action onClose)
-        {
-            if (levelNumber <= 0)
+            if(levelNumber<=0){Debug.LogWarning("[Story] No level to offer.");return;}
+            if(_instance==null)
             {
-                Debug.LogWarning("[Story] No level to offer.");
-                return;
-            }
-
-            if (_instance == null)
-            {
-                var go = new GameObject(HostName);
+                var go=new GameObject(HostName);
                 StoryObjects.Persist(go);
-                _instance = go.AddComponent<StoryLevelPopup>();
+                _instance=go.AddComponent<StoryLevelPopup>();
                 _instance.Build();
             }
-
-            // Each visit is a fresh choice: a booster picked and then backed out
-            // of must not follow the player into the next level they open.
             StoryBoosters.ClearSelection();
-
-            _instance._level = levelNumber;
-            _instance._areaId = areaId;
-            _instance._onClose = onClose;
+            _instance._level=levelNumber;
+            _instance._areaId=areaId;
+            _instance._onClose=onClose;
             _instance.gameObject.SetActive(true);
             _instance.Refresh();
+            _instance._backdrop.Capture();
         }
-
         public static void Close()
         {
-            if (_instance != null) _instance.gameObject.SetActive(false);
+            if(_instance!=null) _instance.gameObject.SetActive(false);
         }
-
-        private void OnDestroy()
-        {
-            if (_instance == this) _instance = null;
-        }
-
-        #endregion
-
-        #region Build
+        private void OnDisable() { _onClose=null; }
+        private void OnDestroy() { if(_instance==this) _instance=null; }
 
         private void Build()
         {
-            _canvas = StoryUi.CreateOverlayCanvas("LevelPopupCanvas", 600);
-            _canvas.transform.SetParent(transform, false);
+            _canvas=StoryUi.CreateOverlayCanvas("LevelPopupCanvas",600);
+            _canvas.transform.SetParent(transform,false);
+            _canvas.GetComponent<CanvasScaler>().referenceResolution=new Vector2(360,720);
+            _backdrop=_canvas.gameObject.AddComponent<StoryModalBackdrop>();
+            _backdrop.Initialize();
+            StoryUi.CreateFullScreenButton("Scrim",_canvas.transform,new Color32(19,38,36,128),null);
+            RectTransform safe=StoryCastleFrame.Create(_canvas.transform);
+            _card=StoryUi.CreateRect("SapphireCard",safe);
+            _card.anchorMin=_card.anchorMax=_card.pivot=new Vector2(.5f,.5f);
+            _card.anchoredPosition=new Vector2(0,-10);
+            _card.sizeDelta=new Vector2(300,504);
 
-            // The scrim dims what is behind and eats the taps that miss the
-            // panel. It does not close: the X is the way out, so a fat-fingered
-            // tap beside the Play button cannot lose the player their place.
-            StoryUi.CreateFullScreenButton("Scrim", _canvas.transform,
-                new Color(0f, 0f, 0f, 0.45f), null);
+            Plate("Shadow",_card,25,new Color32(15,33,28,50),-7,-9,314,521);
+            Plate("Depth",_card,23,new Color32(110,85,47,255),0,-9,300,504);
+            Image cream=Plate("CreamPanel",_card,23,Color.white,0,0,300,504);
+            StoryCastleUi.Gradient(cream,Cream,new Color32(247,243,219,255));
+            Plate("InnerLight",_card,20,new Color32(255,255,255,85),4,-4,292,496);
+            Image face=Plate("InnerCream",_card,19,Color.white,6,-6,288,492);
+            StoryCastleUi.Gradient(face,Cream,new Color32(247,243,219,255));
+            RectTransform frame=StoryUi.CreateRect("SapphireFrame",_card);
+            StoryCastleUi.Place(frame,-12,12,324,528);
+            frame.gameObject.AddComponent<StorySapphireFrame>().raycastTarget=false;
 
-            RectTransform band = StoryUi.CreateRect("Band", _canvas.transform);
-            band.anchorMin = Vector2.zero;
-            band.anchorMax = Vector2.one;
-            band.offsetMin = new Vector2(0f, PopupBottom);
-            band.offsetMax = new Vector2(0f, -PopupTop);
-
-            _panel = StoryUi.RoyalPanel("Panel", band, "Level", OnClose);
-
-            BuildGoalCard(_panel.Content);
-
-            _play = StoryUi.GreenButton("Play", _panel.Content, "Play", 84, OnPlay);
-            RectTransform playRect = _play.GetComponent<RectTransform>();
-            playRect.anchorMin = new Vector2(0.5f, PlayBottomFrac);
-            playRect.anchorMax = new Vector2(0.5f, PlayBottomFrac + PlayHeightFrac);
-            playRect.pivot = new Vector2(0.5f, 0.5f);
-            playRect.sizeDelta = new Vector2(PlayWidth, 0f);
-            playRect.anchoredPosition = Vector2.zero;
-
-            Text playLabel = _play.GetComponentInChildren<Text>();
-            playLabel.resizeTextForBestFit = true;
-            playLabel.resizeTextMinSize = 30;
-            playLabel.resizeTextMaxSize = 84;
+            BuildHeader();
+            Label("Kicker",_card,"A LITTLE CHALLENGE. A LITTLE MAGIC.",7,Muted,24,-43,252,11);
+            _goalRow=StoryUi.CreateRect("GoalRow",_card);
+            StoryCastleUi.Place(_goalRow,24,-68,252,145);
+            _goalHeading=Label("GoalHeading",_card,"YOUR GOAL",8,Muted,24,-155,252,12);
+            Image divider=StoryUi.CreateImage("Divider",_card,null,new Color32(218,222,199,140));
+            StoryCastleUi.Place(divider.rectTransform,24,-229,252,1);
+            var dividerShadow=divider.gameObject.AddComponent<Shadow>();
+            dividerShadow.effectDistance=new Vector2(0,-1);
+            dividerShadow.effectColor=new Color(1,1,1,.45f);
+            BuildBoosterRow();
+            BuildPlay();
+            Label("Footnote",_card,"Your next star is waiting",8,new Color32(150,156,124,255),24,-480,252,12);
         }
-
-        /// <summary>
-        /// The cream card: a "Goal" heading over a sunken row of icons. The row
-        /// is its own rect so the goal slots can be rebuilt per level without
-        /// touching the card around them. The booster row lives in the same card
-        /// underneath, as it does in the reference.
-        /// </summary>
-        private void BuildGoalCard(Transform parent)
+        private void BuildHeader()
         {
-            // Top of the content down to just above Play: whatever height the
-            // screen has left is the card's, and its rows divide that.
-            Image card = StoryUi.CreamCard("GoalCard", parent, 32);
-            RectTransform rect = card.rectTransform;
-            rect.anchorMin = new Vector2(0f, PlayBottomFrac + PlayHeightFrac + PlayGapFrac);
-            rect.anchorMax = new Vector2(1f, 1f - GoalCardTopFrac);
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.offsetMin = new Vector2(GoalCardSide, 0f);
-            rect.offsetMax = new Vector2(-GoalCardSide, 0f);
+            Plate("LevelDepth",_card,14,new Color32(22,55,71,255),48,21,204,49);
+            Image rim=Plate("LevelBadge",_card,14,Gold,48,24,204,49);
+            Image fill=Plate("Sapphire",rim.transform,12,Color.white,2,-2,200,45);
+            StoryCastleUi.Gradient(fill,new Color32(56,103,126,255),Blue);
+            RectTransform crown=StoryUi.CreateRect("Crown",rim.transform);
+            StoryCastleUi.Place(crown,23,-13,24,24);
+            Color gold=new Color32(237,202,124,255);
+            Vector2[] points={new Vector2(3,6),new Vector2(8,11),new Vector2(12,3),new Vector2(16,11),new Vector2(21,6),new Vector2(19,19),new Vector2(5,19),new Vector2(3,6)};
+            for(int i=1;i<points.Length;i++) Line(crown,"CrownEdge",points[i-1],points[i],1.7f,gold);
+            Line(crown,"CrownBand",new Vector2(6,16),new Vector2(18,16),1.7f,gold);
+            _title=Label("Title",rim.transform,"Level",25,Cream,53,-4,137,39,true);
+            StoryUi.FitOneLine(_title,16,25);
 
-            Text heading = Heading("Heading", rect, "Goal", 64,
-                1f - GoalTitleFrac, 1f);
-            heading.fontStyle = FontStyle.Bold;
-
-            // The sunken well the icons sit in: the cream card's own darker
-            // shade, which is how the reference separates the two.
-            Image well = StoryUi.CreateImage("GoalWell", rect,
-                StoryUi.RoundedSprite(24), StoryUi.RoyalCreamDeep);
-            well.type = Image.Type.Sliced;
-            RectTransform wellRect = well.rectTransform;
-            wellRect.anchorMin = new Vector2(0f, BoosterTitleFrac + BoosterRowFrac);
-            wellRect.anchorMax = new Vector2(1f, 1f - GoalTitleFrac);
-            wellRect.pivot = new Vector2(0.5f, 0.5f);
-            wellRect.offsetMin = new Vector2(GoalRowSide, 0f);
-            wellRect.offsetMax = new Vector2(-GoalRowSide, 0f);
-
-            _goalRow = StoryUi.Stretch(StoryUi.CreateRect("GoalRow", wellRect), 12f);
-
-            BuildBoosterRow(rect);
+            Image hit=StoryUi.CreateImage("Close",_card,null,Color.clear);
+            StoryCastleUi.Place(hit.rectTransform,269,19,44,44);
+            _close=StoryCastleUi.Clickable(hit,OnClose);
+            Plate("Depth",hit.transform,18,new Color32(115,83,37,255),4.5f,-7.5f,35,35);
+            Plate("GoldRim",hit.transform,18,Gold,4.5f,-4.5f,35,35);
+            Image blue=Plate("Face",hit.transform,16,Blue,6.5f,-6.5f,31,31);
+            _close.targetGraphic=blue;
+            Line(hit.transform,"Cross",new Vector2(17,17),new Vector2(27,27),1.8f,Cream);
+            Line(hit.transform,"Cross",new Vector2(17,27),new Vector2(27,17),1.8f,Cream);
         }
-
-        /// <summary>
-        /// "Select Boosters:" over three tiles, inside the same cream card as the
-        /// goal — which is where the reference puts them, not in a strip of their
-        /// own under the card.
-        /// </summary>
-        private void BuildBoosterRow(RectTransform card)
+        private void BuildBoosterRow()
         {
-            Text heading = Heading("BoosterHeading", card, "Select Boosters:", 58,
-                BoosterRowFrac, BoosterRowFrac + BoosterTitleFrac);
-            heading.fontStyle = FontStyle.Bold;
-
-            RectTransform row = StoryUi.CreateRect("BoosterRow", card);
-            row.anchorMin = new Vector2(0f, 0f);
-            row.anchorMax = new Vector2(1f, BoosterRowFrac);
-            row.offsetMin = Vector2.zero;
-            row.offsetMax = Vector2.zero;
-
-            BoostType[] boosts = StoryBoosters.PreLevel;
-            for (int i = 0; i < boosts.Length; i++)
+            Label("BoosterHeading",_card,"Choose boosters",13,Ink,24,-251,166,18,false,TextAnchor.MiddleLeft);
+            Label("Optional",_card,"OPTIONAL",7,Muted,191,-253,85,15,false,TextAnchor.MiddleRight);
+            string[] names={"Rocket","Bomb","Color ball"};
+            for(int i=0;i<StoryBoosters.PreLevel.Length;i++)
             {
-                BoostType boost = boosts[i];
-
-                var slot = new BoosterSlot();
-                slot.Boost = boost;
-                slot.Parts = StoryUi.BoosterSlot("Booster" + boost, row, null);
-                slot.Parts.Button.onClick.AddListener(() => OnBooster(boost));
-
-                // Fixed width, height from the row, so the tile is square-ish
-                // whatever height the screen left the row.
-                RectTransform tile = slot.Parts.Root;
-                tile.anchorMin = new Vector2(0.5f, 0.1f);
-                tile.anchorMax = new Vector2(0.5f, 0.9f);
-                tile.pivot = new Vector2(0.5f, 0.5f);
-                tile.sizeDelta = new Vector2(BoosterTileWidth, 0f);
-                tile.anchoredPosition =
-                    new Vector2((i - (boosts.Length - 1) * 0.5f) * BoosterPitch, 0f);
-
-                slot.Parts.Icon.sprite = StoryBoosters.IconOf(boost);
-                slot.Parts.Icon.enabled = slot.Parts.Icon.sprite != null;
-
+                BoostType boost=StoryBoosters.PreLevel[i];
+                float x=26+i*80;
+                var slot=new BoosterSlot{Boost=boost};
+                RectTransform root=StoryUi.CreateRect("Booster"+boost,_card);
+                StoryCastleUi.Place(root,x,-282,67,92);
+                Plate("Depth",root,19,new Color32(232,225,199,255),0,-3,67,65);
+                slot.Border=Plate("Tile",root,19,new Color32(227,222,197,255),0,0,67,65);
+                slot.Face=Plate("Face",root,18,new Color32(255,252,240,255),1.5f,-1.5f,64,62);
+                slot.Button=StoryCastleUi.Clickable(slot.Border,()=>OnBooster(boost));
+                slot.Button.targetGraphic=slot.Face;
+                slot.Icon=StoryUi.CreateImage("Icon",root,StoryBoosters.IconOf(boost),Color.white);
+                slot.Icon.preserveAspect=true;
+                StoryCastleUi.Place(slot.Icon.rectTransform,9,-8,49,49);
+                Label("Name",root,names[i],9,Muted,-5,-76,77,14);
+                Image countRim=Plate("CountRim",root,11,Cream,50,-49,23,23);
+                Plate("Gold",countRim.transform,10,new Color32(217,169,85,255),2,-2,19,19);
+                slot.Count=Label("Count",countRim.transform,"0",10,Cream,2,-2,19,19);
+                StoryUi.FitOneLine(slot.Count,6,10);
+                // Zero inventory keeps the item visible and clearly unavailable.
+                slot.Locked=Label("Empty",root,"EMPTY",7,Muted,6,-1,55,12).gameObject;
+                Image chosen=Plate("Selected",root,10,Cream,52,6,22,22);
+                slot.Selected=chosen.gameObject;
+                Plate("Green",chosen.transform,9,new Color32(80,141,88,255),2,-2,18,18);
+                Line(chosen.transform,"Check",new Vector2(6,11),new Vector2(9,14),1.8f,Color.white);
+                Line(chosen.transform,"Check",new Vector2(9,14),new Vector2(16,7),1.8f,Color.white);
+                slot.Selected.SetActive(false);
                 _boosters.Add(slot);
             }
+            _hint=Label("SelectionHint",_card,"Boosters are optional",9,Muted,24,-380,252,14);
         }
-
-        /// <summary>
-        /// A heading inside the cream card, placed by the fraction of the card's
-        /// height it occupies rather than by a pixel offset from its top.
-        /// </summary>
-        private static Text Heading(string name, RectTransform card, string label, int size,
-            float bottomFrac, float topFrac)
+        private void BuildPlay()
         {
-            Text text = StoryUi.CreateText(name, card, label, size,
-                StoryUi.RoyalNavy, TextAnchor.MiddleCenter);
-            RectTransform rect = text.rectTransform;
-            rect.anchorMin = new Vector2(0f, bottomFrac);
-            rect.anchorMax = new Vector2(1f, topFrac);
-            rect.offsetMin = new Vector2(12f, 4f);
-            rect.offsetMax = new Vector2(-12f, -4f);
-
-            // A heading in a card that shrank must shrink with it rather than
-            // spilling over the row below.
-            text.resizeTextForBestFit = true;
-            text.resizeTextMinSize = 20;
-            text.resizeTextMaxSize = size;
-            return text;
+            Plate("PlayDepth",_card,29,new Color32(49,100,57,255),24,-414,252,56);
+            Image rim=Plate("Play",_card,29,new Color32(231,237,179,255),24,-410,252,56);
+            Image face=Plate("Green",rim.transform,28,Color.white,1.5f,-1.5f,249,53);
+            StoryCastleUi.Gradient(face,new Color32(101,169,98,255),new Color32(65,134,79,255));
+            _play=StoryCastleUi.Clickable(rim,OnPlay);
+            _play.targetGraphic=face;
+            Label("Label",rim.transform,"Play",26,Cream,20,-4,212,46,true);
+            Line(rim.transform,"Arrow",new Vector2(224,22),new Vector2(230,28),2.2f,Cream);
+            Line(rim.transform,"Arrow",new Vector2(230,28),new Vector2(224,34),2.2f,Cream);
         }
-
         private Slot BuildSlot()
         {
-            var slot = new Slot();
-            slot.Root = StoryUi.CreateRect("Goal" + _slots.Count, _goalRow);
-            slot.Root.anchorMin = new Vector2(0.5f, 0f);
-            slot.Root.anchorMax = new Vector2(0.5f, 1f);
-            slot.Root.pivot = new Vector2(0.5f, 0.5f);
-            slot.Root.sizeDelta = new Vector2(SlotMaxWidth, 0f);
-
-            slot.Icon = StoryUi.CreateImage("Icon", slot.Root, null, Color.white);
-            slot.Icon.preserveAspect = true;
-            RectTransform icon = slot.Icon.rectTransform;
-            icon.anchorMin = new Vector2(0.5f, 0.5f);
-            icon.anchorMax = new Vector2(0.5f, 0.5f);
-            icon.pivot = new Vector2(0.5f, 0.5f);
-            icon.sizeDelta = new Vector2(SlotIcon, SlotIcon);
-            icon.anchoredPosition = new Vector2(-12f, 8f);
-
-            // The count overlaps the icon's lower-right corner, as in the
-            // reference, rather than sitting under it: it reads as a label on
-            // the thing rather than as a second row of content.
-            slot.Count = StoryUi.CreateText("Count", slot.Root, "0", 58,
-                StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
-            RectTransform count = slot.Count.rectTransform;
-            count.anchorMin = new Vector2(0.5f, 0.5f);
-            count.anchorMax = new Vector2(0.5f, 0.5f);
-            count.pivot = new Vector2(0.5f, 0.5f);
-            count.sizeDelta = new Vector2(SlotMaxWidth - 20f, 74f);
-            count.anchoredPosition = new Vector2(18f, -58f);
-            slot.Count.fontStyle = FontStyle.Bold;
-            // A pass mark is five digits wide and a collect count is one, in the
-            // same slot; best fit is the only thing that holds both.
-            slot.Count.resizeTextForBestFit = true;
-            slot.Count.resizeTextMinSize = 24;
-            slot.Count.resizeTextMaxSize = 58;
-            var outline = slot.Count.gameObject.AddComponent<Outline>();
-            outline.effectColor = StoryUi.RoyalNavy;
-            outline.effectDistance = new Vector2(3f, -3f);
-
+            var slot=new Slot();
+            slot.Root=StoryUi.CreateRect("Goal"+_slots.Count,_goalRow);
+            RectTransform glow=StoryUi.CreateRect("StarGlow",slot.Root);
+            slot.Vfx=glow.gameObject.AddComponent<StoryLevelGoalVfx>();
+            slot.Vfx.raycastTarget=false;
+            slot.Backing=StoryUi.CreateImage("IconBacking",slot.Root,null,Color.white);
+            slot.Backing.preserveAspect=true;
+            slot.Icon=StoryUi.CreateImage("Icon",slot.Root,null,Color.white);
+            slot.Icon.preserveAspect=true;
+            slot.Count=Label("Count",slot.Root,"0",31,Ink,0,-105,252,40,true);
+            slot.Unit=Label("Unit",slot.Root,"points",14,Muted,0,-111,50,28);
             _slots.Add(slot);
             return slot;
         }
-
-        #endregion
-
-        #region Refresh
-
         private void Refresh()
         {
-            if (_panel != null && _panel.Title != null)
-                _panel.Title.text = "Level " + _level;
-
-            StoryLevelHud.HudModel model = StoryLevelHud.ReadLevel(_level, 0);
-            List<StoryLevelHud.HudTarget> targets = model == null
-                ? new List<StoryLevelHud.HudTarget>()
-                : model.Targets;
-
-            int count = Mathf.Min(targets.Count, MaxGoals);
-            while (_slots.Count < count) BuildSlot();
-
-            for (int i = 0; i < _slots.Count; i++)
+            _title.text="Level "+_level;
+            _play.interactable=true;
+            StoryLevelHud.HudModel model=StoryLevelHud.ReadLevel(_level,0);
+            List<StoryLevelHud.HudTarget> targets=model==null?new List<StoryLevelHud.HudTarget>():model.Targets;
+            int count=Mathf.Min(targets.Count,MaxGoals);
+            _goalHeading.text=count>1?"YOUR GOALS":"YOUR GOAL";
+            while(_slots.Count<count) BuildSlot();
+            for(int i=0;i<_slots.Count;i++)
             {
-                Slot slot = _slots[i];
-                bool used = i < count;
-                slot.Root.gameObject.SetActive(used);
-                if (!used) continue;
-
-                StoryLevelHud.HudTarget target = targets[i];
-                slot.Icon.sprite = target.Icon != null ? target.Icon : StoryUi.StarSprite;
-                slot.Icon.enabled = slot.Icon.sprite != null;
-
-                // Read at score zero, so Remaining is the whole of what the
-                // level asks for — the pass mark on a score target, the count on
-                // a collect one. The popup states the goal, not the progress.
-                slot.Count.text = Mathf.Max(0, target.Remaining).ToString();
-
-                Place(slot.Root, i, count);
+                Slot slot=_slots[i];
+                slot.Vfx.SetStar(null);
+                slot.Root.gameObject.SetActive(i<count);
+                if(i>=count) continue;
+                StoryLevelHud.HudTarget target=targets[i];
+                float width=252f/count;
+                StoryCastleUi.Place(slot.Root,i*width,0,width,145);
+                float icon=count==1?70f:Mathf.Min(58,width-10);
+                StoryCastleUi.Place(slot.Icon.rectTransform,(width-icon)*.5f,-(76-icon)*.5f,icon,icon);
+                slot.Icon.rectTransform.pivot=new Vector2(.5f,.5f);
+                slot.Icon.rectTransform.anchoredPosition=new Vector2(width*.5f,-38);
+                StoryCastleUi.Place(slot.Backing.rectTransform,(width-icon)*.5f,-(76-icon)*.5f,icon,icon);
+                StoryCastleUi.Place(slot.Vfx.rectTransform,(width-Mathf.Min(110,width))*.5f,0,Mathf.Min(110,width),76);
+                slot.Icon.sprite=target.IsScore?StoryUi.StarSprite:(target.Icon!=null?target.Icon:StoryUi.StarSprite);
+                slot.Icon.enabled=slot.Icon.sprite!=null;
+                slot.Backing.sprite=target.Backing;
+                slot.Backing.enabled=target.Backing!=null;
+                slot.Count.text=Mathf.Max(0,target.Remaining).ToString();
+                int size=count==1?31:count==2?27:count==3?23:20;
+                StoryUi.FitOneLine(slot.Count,14,size);
+                slot.Unit.gameObject.SetActive(target.IsScore);
+                if(count==1 && target.IsScore)
+                {
+                    slot.Count.fontSize=size;
+                    float digits=Mathf.Min(174,slot.Count.preferredWidth+4);
+                    float left=(width-digits-51)*.5f;
+                    StoryCastleUi.Place(slot.Count.rectTransform,left,-105,digits,40);
+                    StoryCastleUi.Place(slot.Unit.rectTransform,left+digits+5,-111,46,28);
+                    slot.Unit.fontSize=14;
+                    StoryUi.FitOneLine(slot.Unit,14,14);
+                }
+                else
+                {
+                    StoryCastleUi.Place(slot.Count.rectTransform,2,-105,width-4,34);
+                    StoryCastleUi.Place(slot.Unit.rectTransform,0,-136,width,12);
+                    StoryUi.FitOneLine(slot.Unit,8,9);
+                }
+                if(target.IsScore) slot.Vfx.SetStar(slot.Icon.rectTransform);
             }
-
             RefreshBoosters();
-
-            Debug.Log(string.Format(
-                "[Story] Level popup: Level {0} for area {1}, goal [{2}], boosters [{3}].",
-                _level, _areaId, string.Join(" ", GoalTexts().ToArray()),
-                string.Join(" ", BoosterCounts().ToArray())));
+            Debug.Log(string.Format("[Story] Level popup: Level {0} for area {1}, goal [{2}], boosters [{3}].",
+                _level,_areaId,string.Join(" ",GoalTexts().ToArray()),string.Join(" ",BoosterCounts().ToArray())));
         }
-
-        /// <summary>
-        /// Redraws the row from what the player owns and what they have chosen.
-        /// Called on open and after every tap, so a locked slot unlocks the
-        /// moment a booster is won.
-        /// </summary>
         private void RefreshBoosters()
         {
-            for (int i = 0; i < _boosters.Count; i++)
+            int selectedCount=0;
+            foreach(BoosterSlot slot in _boosters)
             {
-                BoosterSlot slot = _boosters[i];
-                int owned = StoryBoosters.Owned(slot.Boost);
-
-                slot.Parts.Count.text = owned.ToString();
-                StoryUi.SetBoosterLocked(slot.Parts, owned <= 0);
-                StoryUi.SetBoosterSelected(slot.Parts, StoryBoosters.IsSelected(slot.Boost));
+                int owned=Mathf.Max(0,StoryBoosters.Owned(slot.Boost));
+                bool selected=owned>0 && StoryBoosters.IsSelected(slot.Boost);
+                slot.Count.text=owned.ToString();
+                slot.Locked.SetActive(owned<=0);
+                slot.Button.interactable=owned>0;
+                slot.Icon.color=new Color(1,1,1,owned>0?1:.35f);
+                slot.Selected.SetActive(selected);
+                slot.Border.color=selected?new Color32(109,155,96,255):new Color32(227,222,197,255);
+                slot.Face.color=selected?new Color32(233,240,206,255):new Color32(255,252,240,255);
+                if(selected) selectedCount++;
             }
+            _hint.text=selectedCount==0?"Boosters are optional":selectedCount+" booster"+(selectedCount==1?"":"s")+" ready to go";
         }
-
         private void OnBooster(BoostType boost)
         {
-            bool selected = StoryBoosters.Toggle(boost);
+            if(!isActiveAndEnabled) return;
+            StoryBoosters.Toggle(boost);
             RefreshBoosters();
-
-            Debug.Log(string.Format("[Story] Level popup: booster {0} {1}.",
-                boost, selected ? "selected" : "cleared"));
         }
-
-        /// <summary>
-        /// Lays the used slots out evenly across the well, centred. The pitch is
-        /// fixed per count rather than divided out of the well's measured width:
-        /// the well's rect is not resolved until a layout pass has run, and this
-        /// screen is built and read back inside a single editor test.
-        /// </summary>
-        private static void Place(RectTransform slot, int index, int count)
-        {
-            float width = count <= 2 ? SlotMaxWidth : (count == 3 ? 190f : 150f);
-            slot.sizeDelta = new Vector2(width, 0f);
-            slot.anchoredPosition = new Vector2((index - (count - 1) * 0.5f) * width, 0f);
-        }
-
-        #endregion
-
-        #region Actions
-
         private void OnPlay()
         {
-            int level = _level;
-            int areaId = _areaId;
-
-            List<BoostType> chosen = StoryBoosters.Selection();
-            var names = new List<string>();
-            for (int i = 0; i < chosen.Count; i++) names.Add(chosen[i].ToString());
-
-            Debug.Log(string.Format(
-                "[Story] Level popup: Play pressed for level {0}, area {1}, boosters [{2}].",
-                level, areaId, string.Join(" ", names.ToArray())));
-
+            if(!isActiveAndEnabled||!_play.interactable) return;
+            _play.interactable=false;
+            int level=_level,area=_areaId;
             Close();
-
-            if (Launcher != null) Launcher(level, areaId);
-            else StoryFlow.LaunchLevel(level, areaId);
+            if(Launcher!=null) Launcher(level,area);
+            else StoryFlow.LaunchLevel(level,area);
         }
-
         private void OnClose()
         {
-            Action back = _onClose;
-
-            // Backing out spends nothing and chooses nothing.
+            if(!isActiveAndEnabled) return;
+            Action back=_onClose;
             StoryBoosters.ClearSelection();
-
-            Debug.Log(string.Format("[Story] Level popup: closed without playing level {0}.",
-                _level));
-
             Close();
-            if (back != null) back();
-
-            // A popup opened with no onClose — a preview, a test, a path added
-            // later — would otherwise close onto nothing.
+            back?.Invoke();
             StoryShell.EnsureFloor();
         }
 
-        #endregion
+        private static Image Plate(string name,Transform parent,int radius,Color tint,float x,float y,float w,float h)
+        {
+            Image image=StoryCastleUi.Plate(name,parent,radius,tint);
+            StoryCastleUi.Place(image.rectTransform,x,y,w,h);
+            return image;
+        }
+        private static Text Label(string name,Transform parent,string value,int size,Color tint,float x,float y,float w,float h,
+            bool display=false,TextAnchor alignment=TextAnchor.MiddleCenter)
+        {
+            Text label=StoryCastleUi.Label(name,parent,value,size,tint,display,alignment);
+            StoryCastleUi.Place(label.rectTransform,x,y,w,h);
+            return label;
+        }
+        private static void Line(Transform parent,string name,Vector2 from,Vector2 to,float width,Color tint)
+        {
+            Vector2 delta=new Vector2(to.x-from.x,from.y-to.y);
+            Image image=StoryUi.CreateImage(name,parent,null,tint);
+            RectTransform r=image.rectTransform;
+            r.anchorMin=r.anchorMax=new Vector2(0,1);
+            r.pivot=new Vector2(.5f,.5f);
+            r.anchoredPosition=new Vector2((from.x+to.x)*.5f,-(from.y+to.y)*.5f);
+            r.sizeDelta=new Vector2(delta.magnitude,width);
+            r.localRotation=Quaternion.Euler(0,0,Mathf.Atan2(delta.y,delta.x)*Mathf.Rad2Deg);
+        }
     }
 }

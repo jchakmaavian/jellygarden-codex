@@ -37,6 +37,16 @@ namespace JellyGarden.Scripts.Story
         public static readonly Color RoyalCream = Rgb(250, 234, 208);   // row and card fill
         public static readonly Color RoyalCreamDeep = Rgb(236, 222, 177);
         public static readonly Color RoyalNavy = Rgb(26, 48, 112);      // row label text
+
+        /// <summary>Quiet ink for a label ON parchment — an eyebrow, a count.</summary>
+        public static readonly Color RoyalBrownSoft = Rgb(140, 112, 62);
+
+        /// <summary>
+        /// The blue inside the win panel's laurel medallion, sampled from the
+        /// painting so the disc the king is masked into matches the ring around
+        /// it. A darker blue leaves a visible ring of ground at the edge.
+        /// </summary>
+        public static readonly Color RoyalBlueBright = Rgb(30, 79, 181);
         public static readonly Color RoyalTitle = Rgb(250, 247, 205);   // title plate text
         public static readonly Color RoyalGreen = Rgb(101, 163, 2);     // affirmative button
         public static readonly Color RoyalGreenLight = Rgb(166, 211, 84);

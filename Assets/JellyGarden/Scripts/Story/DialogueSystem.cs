@@ -1,8 +1,9 @@
 // Characters talking: a portrait, a name, and a line that types itself out.
 //
-// One tap completes the line, another advances. Narration plays through
-// StoryAudio, which ducks the music underneath it. Everything is optional — a
-// line with no portrait and no clip still reads correctly.
+// One tap completes the line, another advances. The story is read, not spoken:
+// there is no narration track and no voice key, by design — it is a storybook,
+// and the words on the card are the whole of it. A line with no portrait still
+// reads correctly.
 
 using System;
 using System.Collections.Generic;
@@ -16,16 +17,12 @@ namespace JellyGarden.Scripts.Story
         public string Speaker = string.Empty;
         public string Text = string.Empty;
 
-        /// <summary>Key under Resources/Story/Audio/VO, without extension.</summary>
-        public string VoiceKey = string.Empty;
-
         public DialogueLine() { }
 
-        public DialogueLine(string speaker, string text, string voiceKey = null)
+        public DialogueLine(string speaker, string text)
         {
             Speaker = speaker ?? string.Empty;
             Text = text ?? string.Empty;
-            VoiceKey = voiceKey ?? string.Empty;
         }
     }
 
@@ -357,10 +354,6 @@ namespace JellyGarden.Scripts.Story
             // on screen so far: fitting the partial text would grow the card a
             // row at a time under the reader's eyes.
             FitCardTo(line.Text, textLeft);
-
-            StoryAudio.StopVoice();
-            if (!string.IsNullOrEmpty(line.VoiceKey))
-                StoryAudio.PlayVoice(line.VoiceKey);
         }
 
         /// <summary>One tap finishes the typing; the next advances.</summary>
@@ -383,7 +376,6 @@ namespace JellyGarden.Scripts.Story
             if (!_playing) return;
             _playing = false;
 
-            StoryAudio.StopVoice();
             _group.blocksRaycasts = false;
             gameObject.SetActive(false);
 

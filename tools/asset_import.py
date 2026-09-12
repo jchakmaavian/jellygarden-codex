@@ -108,13 +108,19 @@ SFX = {
 }
 
 
-def sprite_meta(dest):
+def sprite_meta(dest, border=None):
     """
     Texture import settings for a story picture.
 
     Sprite, single, full rect, no mip maps — these are full-screen backdrops and
     portraits, not atlased UI, so mip maps would only soften them.
+
+    `border` is (left, bottom, right, top) in pixels for a nine-sliced sprite —
+    a panel whose ornate corners must not stretch. Omitted, the sprite has no
+    border and Image.Type.Sliced falls back to drawing it whole, so passing
+    nothing is the same sprite the callers before this always got.
     """
+    left, bottom, right, top = border if border else (0, 0, 0, 0)
     return """fileFormatVersion: 2
 guid: %s
 TextureImporter:
@@ -166,7 +172,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: BORDER_X, y: BORDER_Y, z: BORDER_Z, w: BORDER_W}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -216,7 +222,9 @@ TextureImporter:
   userData:
   assetBundleName:
   assetBundleVariant:
-""" % guid_for(rel_asset_path(dest))
+""".replace("BORDER_X", str(left)).replace("BORDER_Y", str(bottom)) \
+       .replace("BORDER_Z", str(right)).replace("BORDER_W", str(top)) \
+       % guid_for(rel_asset_path(dest))
 
 
 def audio_meta(dest, streaming):

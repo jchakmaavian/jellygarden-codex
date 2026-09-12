@@ -52,18 +52,18 @@ namespace JellyGarden.Scripts.Story
         /// <summary>
         /// Whether the story gives the CELLS a ground of its own.
         ///
-        /// This is the board itself, not the page behind it. The story swapped
-        /// each cell's sprite for a white square and drew it in the arc's
-        /// colour; that is off, so a cell keeps exactly what the kit gives it —
-        /// Textures/Blocks/square.png and square_2.png, flat black at alpha
-        /// 0.50 and 0.65, alternated by CreateSquare into the kit's checker.
-        /// The board is the kit's dark scrim over the story's room again.
+        /// This is the board itself, not the page behind it. On, every cell's
+        /// sprite is swapped for a white square drawn in CellGround — one
+        /// opaque royal blue across the whole board — so the ground IS that
+        /// colour rather than the kit's black scrim over the room.
         ///
-        /// Nothing is deleted: ApplyCellFill, the generated fill sprite and the
-        /// arc's boardFill in themes.json are all still here and still built,
-        /// so turning this on restores the story's ground exactly.
+        /// Off, a cell keeps exactly what the kit gives it: square.png and
+        /// square_2.png, flat black at alpha 0.50 and 0.65, alternated by
+        /// CreateSquare into the kit's checker. That was the state until the
+        /// blue ground was asked for, and DarkenKitChecker is still here, so
+        /// turning this back off restores it exactly.
         /// </summary>
-        public const bool UseStoryCellFill = false;
+        public const bool UseStoryCellFill = true;
 
         /// <summary>
         /// The two alphas the board's checker is drawn at.
@@ -142,6 +142,7 @@ namespace JellyGarden.Scripts.Story
             if (UseStoryCellFill)
             {
                 ApplyCellFill(theme);
+                ApplyBoardOutline();
             }
             else
             {
@@ -271,11 +272,25 @@ namespace JellyGarden.Scripts.Story
                           "Resources/Story/Art/" + theme.BoardBackdrop + " is missing", true);
         }
 
+        /// <summary>
+        /// How bright the room behind the board is drawn, as a multiplier on the
+        /// painting.
+        ///
+        /// The picture is the level's page, not its subject: at full brightness
+        /// it competes with the board and the HUD, both of which the player is
+        /// actually reading. Taken down it still reads as the room being
+        /// repaired and stops pulling the eye off the pieces. It is a tint on
+        /// the Image, so no art is edited and nothing else on the canvas dims
+        /// with it.
+        /// </summary>
+        private const float BackdropDim = 0.5f;
+
         private static void ShowBackdrop(Image image, Sprite sprite)
         {
             image.sprite = sprite;
             image.raycastTarget = false;
             image.preserveAspect = true;
+            image.color = new Color(BackdropDim, BackdropDim, BackdropDim, 1f);
             if (sprite == null || sprite.rect.height <= 0f) return;
 
             // The kit's fixed-size rect stretches portrait gate art. Cover the
@@ -333,15 +348,117 @@ namespace JellyGarden.Scripts.Story
         private const float FillDepth = -0.05f;
 
         private static Sprite _fillSprite;
+        private static Sprite _flatSprite;
 
         /// <summary>
-        /// A white square the exact size of the kit's cell: 82 pixels at 100 to
-        /// the unit, which is what Textures/Blocks/square.png imports as. Built
-        /// once and shared by every cell on every board.
+        /// The gap between two neighbouring cells, as a fraction of the pitch.
+        ///
+        /// 0.04 — each tile is drawn at 96% of its cell, so a thin line of the
+        /// room shows between every pair and the ground reads as a tile per
+        /// gem rather than as one unbroken sheet. On a 43-pixel cell that line
+        /// is under 2 pixels: a seam, not a grid of separate buttons.
+        ///
+        /// It has been 0.09 and 0.06, and before those 0 (tile IS the cell,
+        /// neighbours touching). The gem is ItemShare = 0.57, 79% of a cell,
+        /// which is the ceiling this can climb to before the gem overhangs its
+        /// tile.
+        /// </summary>
+        private const float CellGap = 0.04f;
+
+        /// <summary>
+        /// Corner radius of a cell, as a fraction of the tile. Small: softened,
+        /// not a circle.
+        ///
+        /// 0.04 of the tile — an edge softened just off square. The rounding is
+        /// cut from the tile's own alpha, so where four cells meet their four
+        /// corners leave a hole of the room showing through. A corner falls
+        /// short of its square by (sqrt(2) - 1) * radius, so that hole is
+        /// 0.83 * CellCorner of a cell along its diagonal: at 0.16 it was 0.13
+        /// of a cell — a 5-pixel dark dot at every crossing of a 43-pixel
+        /// board, dozens of them. At 0.04 it is under 1.5 pixels, and with
+        /// CellGap opening a seam between the tiles anyway, that crossing reads
+        /// as part of the seam rather than as a dot on an unbroken sheet.
+        /// </summary>
+        private const float CellCorner = 0.04f;
+
+        /// <summary>How many texels a tile is drawn into. 64 is enough for a clean curve at phone size.</summary>
+        private const int TileTexels = 64;
+
+        /// <summary>
+        /// One cell's ground: a white rounded square, one cell across LESS the
+        /// gap.
+        ///
+        /// KitPitch and not Pitch is the size it is built to. LevelManager
+        /// scales every Square by StoryBoardScale.Factor, and this renderer is
+        /// on the Square, so a sprite built at Pitch comes out Pitch * Factor
+        /// wide on screen — 43% too big, which is the ground spilling past the
+        /// gold frame and out over the room. The kit's own square.png is 82px
+        /// at 100 to the unit, KitPitch exactly, and this matches it.
+        ///
+        /// The corners are cut in the ALPHA, not in the colour, so what shows
+        /// in them is the arc's room rather than a dark notch. Coverage is
+        /// sampled from the distance to the rounded rectangle so the curve is
+        /// smooth instead of a staircase.
+        ///
+        /// Built once and shared by every cell on every board.
         /// </summary>
         private static Sprite FillSprite()
         {
             if (_fillSprite != null) return _fillSprite;
+
+            int n = TileTexels;
+            var texture = new Texture2D(n, n, TextureFormat.RGBA32, false);
+            texture.hideFlags = HideFlags.HideAndDontSave;
+            texture.wrapMode = TextureWrapMode.Clamp;
+
+            var pixels = new Color32[n * n];
+            float half = n * 0.5f;
+            float radius = CellCorner * n;
+            // The centre of a corner's arc, in texels from the middle.
+            float inner = half - radius;
+
+            for (int y = 0; y < n; y++)
+            {
+                for (int x = 0; x < n; x++)
+                {
+                    // Distance outside the rounded rectangle, in texels: zero
+                    // anywhere inside, and along a corner it is the distance
+                    // past that corner's arc.
+                    float dx = Mathf.Abs(x + 0.5f - half) - inner;
+                    float dy = Mathf.Abs(y + 0.5f - half) - inner;
+                    float outside = Mathf.Sqrt(
+                        Mathf.Max(dx, 0f) * Mathf.Max(dx, 0f) +
+                        Mathf.Max(dy, 0f) * Mathf.Max(dy, 0f)) - radius;
+
+                    // One texel of falloff across the edge: full inside, none
+                    // outside, and the fraction of the texel the shape covers
+                    // in between.
+                    float coverage = Mathf.Clamp01(0.5f - outside);
+                    pixels[y * n + x] = new Color32(255, 255, 255, (byte)Mathf.RoundToInt(coverage * 255f));
+                }
+            }
+
+            texture.SetPixels32(pixels);
+            texture.Apply();
+
+            float size = StoryBoardScale.KitPitch * (1f - CellGap);
+            _fillSprite = Sprite.Create(texture, new Rect(0f, 0f, n, n),
+                new Vector2(0.5f, 0.5f), n / size);
+            _fillSprite.name = "StoryCellFill";
+            _fillSprite.hideFlags = HideFlags.HideAndDontSave;
+            return _fillSprite;
+        }
+
+        /// <summary>
+        /// A plain white square one cell across, for the outline's bars.
+        ///
+        /// The bars cannot use the ground's sprite: its corners are rounded and
+        /// a bar is a sliver of it, so the rounding would eat most of the bar's
+        /// length. This one is flat, and the bar's own scale gives it its shape.
+        /// </summary>
+        private static Sprite FlatSprite()
+        {
+            if (_flatSprite != null) return _flatSprite;
 
             var texture = new Texture2D(8, 8, TextureFormat.RGBA32, false);
             texture.hideFlags = HideFlags.HideAndDontSave;
@@ -350,14 +467,11 @@ namespace JellyGarden.Scripts.Story
             texture.SetPixels32(pixels);
             texture.Apply();
 
-            // 8 pixels drawn at 8 / pitch to the unit is one cell across — the
-            // same square the cell sprite covers, at whatever pitch the board is
-            // playing at. A flat colour needs no more texels than that.
-            _fillSprite = Sprite.Create(texture, new Rect(0f, 0f, 8f, 8f),
-                new Vector2(0.5f, 0.5f), 8f / StoryBoardScale.Pitch);
-            _fillSprite.name = "StoryCellFill";
-            _fillSprite.hideFlags = HideFlags.HideAndDontSave;
-            return _fillSprite;
+            _flatSprite = Sprite.Create(texture, new Rect(0f, 0f, 8f, 8f),
+                new Vector2(0.5f, 0.5f), 8f / StoryBoardScale.KitPitch);
+            _flatSprite.name = "StoryCellFlat";
+            _flatSprite.hideFlags = HideFlags.HideAndDontSave;
+            return _flatSprite;
         }
 
         /// <summary>
@@ -429,10 +543,27 @@ namespace JellyGarden.Scripts.Story
             LastFilledCells = filled;
         }
 
+        /// <summary>
+        /// One shade for every cell of every board: #72A6B7, a pale blue-teal.
+        ///
+        /// The fill is drawn in FRONT of the kit's black cell, so this colour is
+        /// what reaches the screen, composited over the arc's room at
+        /// GroundAlpha. The arc's computed BoardFill in themes.json is left as
+        /// it is and no longer reaches a cell.
+        /// </summary>
+        public static readonly Color CellGround = new Color(114f / 255f, 166f / 255f, 183f / 255f, GroundAlpha);
+
+        /// <summary>
+        /// How opaque the ground is. Under 1 the arc's room reads faintly
+        /// through the blue instead of being sealed off by it; low enough and
+        /// the gems stop separating from what is behind them, which is what the
+        /// kit's own boards get wrong.
+        /// </summary>
+        private const float GroundAlpha = 0.82f;
+
         private static void ApplyCellFill(ArcTheme theme)
         {
             if (LevelManager.THIS == null || LevelManager.THIS.squaresArray == null) return;
-            if (!theme.HasBoardFill) return;
 
             int made = 0;
             int filled = 0;
@@ -465,11 +596,11 @@ namespace JellyGarden.Scripts.Story
                 // frame is the room dimmed, not a grid drawn on it. The cells
                 // are still separate objects and a hole is still a hole; it is
                 // only the two-tone that went.
-                cell.color = theme.BoardFill;
+                cell.color = CellGround;
                 filled++;
             }
 
-            LastFill = theme.HasBoardFill ? theme.BoardFill : Color.clear;
+            LastFill = CellGround;
             LastFilledCells = filled;
 
             if (made > 0 && !_reportedFill)
@@ -477,8 +608,255 @@ namespace JellyGarden.Scripts.Story
                 _reportedFill = true;
                 Debug.Log(string.Format(
                     "[Story] board ground: {0} cell(s) now {1}.",
-                    made, theme.BoardFill));
+                    made, CellGround));
             }
+        }
+
+        /// <summary>The child that carries a cell's share of the board outline.</summary>
+        private const string EdgeName = "~StoryBoardEdge";
+
+        /// <summary>Bright gold, the colour of the frame around the blue ground.</summary>
+        public static readonly Color BoardEdge = new Color(1f, 0.843f, 0f, 1f);
+
+        /// <summary>
+        /// How thick the outline is, as a fraction of one cell. Thin: a drawn
+        /// line around the silhouette, not a second ring of tiles.
+        /// </summary>
+        private const float EdgeThickness = 0.055f;
+
+        /// <summary>Clear space between the blue tile and the gold, in cell pitches.</summary>
+        private const float EdgeGap = 0.045f;
+
+        /// <summary>Soft outer turns, with enough radius for the full stroke width.</summary>
+        private const float EdgeCorner = 0.10f;
+
+        /// <summary>The frame's reach beyond the grid, used when fitting the camera.</summary>
+        public const float BoardOuterPadding = EdgeGap + EdgeThickness - CellGap * 0.5f;
+
+        /// <summary>Nearer the camera than the ground, still behind gems and blockers.</summary>
+        private const float EdgeDepth = -0.1f;
+
+        /// <summary>
+        /// Rings exposed cell sides, joining both outward and inward turns.
+        /// Straight neighbours share an endpoint at the grid seam; inward turns
+        /// stop at the perpendicular stroke's inner edge. All sides use the
+        /// same clearance from the tiles, including the sides around holes.
+        /// </summary>
+        private static void ApplyBoardOutline()
+        {
+            LevelManager manager = LevelManager.THIS;
+            if (manager == null || manager.squaresArray == null) return;
+
+            int cols = manager.maxCols;
+            int rows = manager.maxRows;
+
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < cols; col++)
+                {
+                    Square square = At(manager, row, col);
+                    if (!IsDrawn(square)) continue;
+
+                    Transform edges = square.transform.Find(EdgeName);
+                    if (edges == null)
+                    {
+                        var holder = new GameObject(EdgeName);
+                        edges = holder.transform;
+                        edges.SetParent(square.transform, false);
+                        edges.localPosition = new Vector3(0f, 0f, EdgeDepth - FillDepth);
+                    }
+
+                    // Rebuilt rather than patched: the same board is re-themed
+                    // on retry and on repair progress, and a stale bar left
+                    // over from a different silhouette would draw a line
+                    // through the middle of the board.
+                    for (int i = edges.childCount - 1; i >= 0; i--)
+                    {
+                        GameObject old = edges.GetChild(i).gameObject;
+                        old.SetActive(false);
+                        if (Application.isPlaying) Object.Destroy(old);
+                        else Object.DestroyImmediate(old);
+                    }
+
+                    var cell = square.GetComponent<SpriteRenderer>();
+                    int order = cell == null ? 0 : cell.sortingOrder + 1;
+                    string layer = cell == null ? null : cell.sortingLayerName;
+
+                    // Which sides of this cell are on the boundary. Row 0 is
+                    // the TOP of the board, so a smaller row is up.
+                    bool up = !IsDrawn(At(manager, row - 1, col));
+                    bool down = !IsDrawn(At(manager, row + 1, col));
+                    bool left = !IsDrawn(At(manager, row, col - 1));
+                    bool right = !IsDrawn(At(manager, row, col + 1));
+
+                    // A diagonal filled neighbour makes an inward turn when
+                    // the adjacent side is not exposed. This is the join the
+                    // tile-local bars previously missed at every board step.
+                    bool upLeft = IsDrawn(At(manager, row - 1, col - 1));
+                    bool upRight = IsDrawn(At(manager, row - 1, col + 1));
+                    bool downLeft = IsDrawn(At(manager, row + 1, col - 1));
+                    bool downRight = IsDrawn(At(manager, row + 1, col + 1));
+                    if (up) Bar(edges, 0f, 1f, order, layer, left, right, upLeft, upRight);
+                    if (down) Bar(edges, 0f, -1f, order, layer, left, right, downLeft, downRight);
+                    if (left) Bar(edges, -1f, 0f, order, layer, down, up, downLeft, upLeft);
+                    if (right) Bar(edges, 1f, 0f, order, layer, down, up, downRight, upRight);
+
+                    if (up && left) Elbow(edges, -1f, 1f, order, layer);
+                    if (up && right) Elbow(edges, 1f, 1f, order, layer);
+                    if (down && left) Elbow(edges, -1f, -1f, order, layer);
+                    if (down && right) Elbow(edges, 1f, -1f, order, layer);
+                }
+            }
+        }
+
+        /// <summary>
+        /// The square at a grid position, or null when the position is off the
+        /// board. Row-major, the same indexing CreateSquare fills.
+        /// </summary>
+        private static Square At(LevelManager manager, int row, int col)
+        {
+            if (row < 0 || col < 0 || row >= manager.maxRows || col >= manager.maxCols) return null;
+            int index = row * manager.maxCols + col;
+            if (index < 0 || index >= manager.squaresArray.Length) return null;
+            return manager.squaresArray[index];
+        }
+
+        /// <summary>
+        /// Whether a cell is part of the board the player sees. A hole is a
+        /// square with its renderer switched off, which is the same test
+        /// ApplyCellFill uses to decide what gets a ground.
+        /// </summary>
+        private static bool IsDrawn(Square square)
+        {
+            if (square == null) return false;
+            var cell = square.GetComponent<SpriteRenderer>();
+            return cell != null && cell.enabled && cell.sprite != null;
+        }
+
+        /// <summary>
+        /// A straight run outside a tile. Convex ends leave room for a rounded
+        /// elbow; concave ends meet the neighbouring perpendicular stroke.
+        /// </summary>
+        private static void Bar(Transform parent, float dx, float dy, int order, string layer,
+            bool trimLow, bool trimHigh, bool concaveLow, bool concaveHigh)
+        {
+            var go = new GameObject("edge");
+            go.transform.SetParent(parent, false);
+
+            // Squares already carry StoryBoardScale.Factor, so use KitPitch
+            // locally. Keep the border wholly outside the tile's painted area.
+            float cell = StoryBoardScale.KitPitch;
+            float sprite = cell;
+            float thick = EdgeThickness * cell;
+            float clearance = (EdgeGap - CellGap * 0.5f) * cell;
+            float outer = cell * 0.5f + clearance + thick;
+            float radius = EdgeCorner * cell;
+            float low = trimLow ? -outer + radius
+                : -cell * 0.5f + (concaveLow ? clearance : 0f);
+            float high = trimHigh ? outer - radius
+                : cell * 0.5f - (concaveHigh ? clearance : 0f);
+
+            float length = high - low;
+            if (length <= 0f) return;
+
+            float shift = (high + low) * 0.5f;
+
+            go.transform.localPosition = dx != 0f
+                ? new Vector3(dx * (cell * 0.5f + clearance + thick * 0.5f), shift, 0f)
+                : new Vector3(shift, dy * (cell * 0.5f + clearance + thick * 0.5f), 0f);
+
+            float along = length / sprite;
+            float across = thick / sprite;
+            go.transform.localScale = dx != 0f
+                ? new Vector3(across, along, 1f)
+                : new Vector3(along, across, 1f);
+
+            var renderer = go.AddComponent<SpriteRenderer>();
+            renderer.sprite = FlatSprite();
+            renderer.color = BoardEdge;
+            renderer.sortingOrder = order;
+            if (!string.IsNullOrEmpty(layer)) renderer.sortingLayerName = layer;
+        }
+
+        /// <summary>
+        /// The frame's turn at an outer corner: a quarter of a ring, one
+        /// thickness wide, joining the two bars that were cut back for it.
+        ///
+        /// The arc sprite is drawn for the +x/+y corner with its pivot ON the
+        /// centre of the arc, so the other three corners are the same sprite
+        /// with a negative scale — no second texture, and the join lands in the
+        /// same place on all four.
+        /// </summary>
+        private static void Elbow(Transform parent, float dx, float dy, int order, string layer)
+        {
+            var go = new GameObject("corner");
+            go.transform.SetParent(parent, false);
+
+            float cell = StoryBoardScale.KitPitch;
+            float outer = cell * (0.5f + BoardOuterPadding);
+            float radius = EdgeCorner * cell;
+
+            // Match the tangents of the two trimmed bars, outside the tile.
+            go.transform.localPosition = new Vector3(
+                dx * (outer - radius), dy * (outer - radius), 0f);
+            go.transform.localScale = new Vector3(dx, dy, 1f);
+
+            var renderer = go.AddComponent<SpriteRenderer>();
+            renderer.sprite = ArcSprite();
+            renderer.color = BoardEdge;
+            renderer.sortingOrder = order;
+            if (!string.IsNullOrEmpty(layer)) renderer.sortingLayerName = layer;
+        }
+
+        private static Sprite _arcSprite;
+
+        /// <summary>
+        /// A quarter ring of outer radius EdgeCorner and width EdgeThickness,
+        /// occupying the +x/+y quadrant with its pivot at the arc's centre.
+        ///
+        /// Alpha again, not colour: what is outside the ring has to be the room
+        /// showing through, or the rounded corner would be a gold corner with a
+        /// square block behind it.
+        /// </summary>
+        private static Sprite ArcSprite()
+        {
+            if (_arcSprite != null) return _arcSprite;
+
+            int n = TileTexels;
+            var texture = new Texture2D(n, n, TextureFormat.RGBA32, false);
+            texture.hideFlags = HideFlags.HideAndDontSave;
+            texture.wrapMode = TextureWrapMode.Clamp;
+
+            float cell = StoryBoardScale.KitPitch;
+            float radius = EdgeCorner * cell;
+            // The texture spans one radius, so a texel is this much of the world
+            // and the ring's width can be written in texels.
+            float width = EdgeThickness * cell / radius * n;
+
+            var pixels = new Color32[n * n];
+            for (int y = 0; y < n; y++)
+            {
+                for (int x = 0; x < n; x++)
+                {
+                    float px = x + 0.5f;
+                    float py = y + 0.5f;
+                    float d = Mathf.Sqrt(px * px + py * py);
+
+                    // Inside the outer edge AND outside the inner one, with a
+                    // texel of falloff on each so the curve is smooth.
+                    float coverage = Mathf.Clamp01(Mathf.Min(n - d, d - (n - width)) + 0.5f);
+                    pixels[y * n + x] = new Color32(255, 255, 255, (byte)Mathf.RoundToInt(coverage * 255f));
+                }
+            }
+
+            texture.SetPixels32(pixels);
+            texture.Apply();
+
+            _arcSprite = Sprite.Create(texture, new Rect(0f, 0f, n, n),
+                Vector2.zero, n / radius);
+            _arcSprite.name = "StoryBoardCorner";
+            _arcSprite.hideFlags = HideFlags.HideAndDontSave;
+            return _arcSprite;
         }
 
         private static bool _reportedFill;

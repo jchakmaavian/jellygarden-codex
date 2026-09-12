@@ -576,7 +576,12 @@ namespace JellyGarden.Scripts
                         TargetBlocks += 2;
                 }
             }
-            MenuManager.Instance.ShowPrePlay(true);
+            // STORY: the power plate stands in for the kit's striped goal
+            // card — see StoryPrePlay. It answers whether it took the
+            // screen, so StoryPrePlay.Enabled = false falls straight back
+            // to the kit's own card on the next line.
+            if (!JellyGarden.Scripts.Story.StoryPrePlay.Open())
+                MenuManager.Instance.ShowPrePlay(true);
             if (limitType == LIMIT.MOVES)
             {
                 InGameBoosts[0].gameObject.SetActive(true);
@@ -733,14 +738,34 @@ namespace JellyGarden.Scripts
                     Limit--;
                 item.NextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
                 item.ChangeType();
-                yield return new WaitForSeconds(0.5f);
+                // 0.2s a gem, not the kit's 0.5. Fifteen leftover moves is the
+                // cap, so this is the difference between a 7.5-second wait
+                // before the win banner and a 3-second one.
+                yield return new WaitForSeconds(0.2f);
             }
             yield return new WaitForSeconds(0.3f);
+            // One volley, not one gem at a time. The kit fired GetAllExtaItems()[0]
+            // and then waited out its blast — 1.1 seconds plus the settle for
+            // every special on the board, so fifteen leftover moves cost a
+            // quarter of a minute of watching. Every special still alive when a
+            // pass begins now goes off together; DestroyItem is self-guarding
+            // (its `destroying` flag returns early on a second call), so a
+            // stripe caught in another stripe's blast is a no-op rather than a
+            // double destroy.
+            //
+            // The outer loop stays because a blast can leave a NEW special
+            // behind — a five-in-a-row formed by the fall — and that one is
+            // caught by the next pass. It ends the same way the kit's did:
+            // when no special is left.
             while (GetAllExtaItems().Count > 0 && gameStatus != GameState.Win)
             { //1.6
-                Item item = GetAllExtaItems()[0];
-                item.DestroyItem();
                 dragBlocked = true;
+                foreach (Item item in GetAllExtaItems())
+                {
+                    if (item == null)
+                        continue;
+                    item.DestroyItem();
+                }
                 yield return new WaitForSeconds(0.1f);
                 FindMatches();
                 yield return new WaitForSeconds(1f);
@@ -994,6 +1019,7 @@ namespace JellyGarden.Scripts
             {
                 GameObject block = Instantiate(blockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
                 block.transform.SetParent(square.transform);
+                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.01f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.BLOCK;
@@ -1005,6 +1031,7 @@ namespace JellyGarden.Scripts
             {
                 GameObject block = Instantiate(blockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
                 block.transform.SetParent(square.transform);
+                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.01f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.BLOCK;
@@ -1012,6 +1039,7 @@ namespace JellyGarden.Scripts
                 //  TargetBlocks++;
                 block = Instantiate(blockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
                 block.transform.SetParent(square.transform);
+                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.01f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.BLOCK;
@@ -1240,6 +1268,7 @@ namespace JellyGarden.Scripts
             {
                 GameObject block = Instantiate(wireBlockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
                 block.transform.SetParent(square.transform);
+                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.5f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.WIREBLOCK;
@@ -1250,6 +1279,7 @@ namespace JellyGarden.Scripts
             {
                 GameObject block = Instantiate(solidBlockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
                 block.transform.SetParent(square.transform);
+                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.5f);
                 square.GetComponent<Square>().block.Add(block);
                 block.GetComponent<SpriteRenderer>().sortingOrder = 3;
@@ -1261,6 +1291,7 @@ namespace JellyGarden.Scripts
             {
                 GameObject block = Instantiate(undesroyableBlockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
                 block.transform.SetParent(square.transform);
+                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.5f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.UNDESTROYABLE;
@@ -1271,6 +1302,7 @@ namespace JellyGarden.Scripts
             {
                 GameObject block = Instantiate(thrivingBlockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
                 block.transform.SetParent(square.transform);
+                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.5f);
                 block.GetComponent<SpriteRenderer>().sortingOrder = 3;
                 if (square.GetComponent<Square>().item != null)

@@ -1,24 +1,7 @@
-// The bottom navigation bar: the one piece of the shell that is never a screen.
-//
-// Royal Match carries the same five-tab strip across every screen outside a
-// level — Areas, Leaderboard, Home, Team, Cards, with Home raised and centred
-// (docs/royal-match/01-home-area.jpg). It is not part of the home screen: the
-// area page shows the same bar without redrawing it, which is why this lives on
-// its own persistent canvas rather than inside StoryHomeScreen's NavBand. That
-// band stays as the reservation it always was — the bar is laid out on exactly
-// the same fraction of the screen — so nothing on home is drawn underneath it.
-//
-// Two of the five tabs go somewhere. Leaderboard, Team and Cards are features
-// this game does not have, and Royal Match's bar is five slots wide whether or
-// not you have unlocked them; hiding them would put Home off centre, which is
-// the one thing about this bar the player navigates by. They say so when tapped
-// rather than doing nothing, because a button that swallows a tap reads as
-// broken.
-//
-// Sorting order 500 is deliberate: above home (300) and the area page (400), so
-// the bar is on top of both, and below the level popup (600), the repair
-// cutscene (780) and everything above them, so a modal covers it the way one
-// should.
+// A persistent floating dock shared by the home and area screens.
+// It sits above those screens and below their modals, and hides during gameplay
+// and repair cinematics. Areas and Home retain their existing destinations;
+// Ranks and Cards retain their existing unavailable-feature toast.
 
 using System;
 using UnityEngine;
@@ -32,20 +15,6 @@ namespace JellyGarden.Scripts.Story
 
         private const int SortingOrder = 500;
 
-        /// <summary>
-        /// The signs on the rope, in the order they hang.
-        ///
-        /// FOUR, with Home the raised one in the middle, which is the shape the
-        /// bar was asked for. Two of them go somewhere today: Areas opens the
-        /// list of 150 and Home opens the room. Leaderboard and Card are screens
-        /// that are not written yet and answer a tap by saying so — a board that
-        /// is honest about being early, rather than one that is missing and
-        /// leaves Home off centre.
-        ///
-        /// Adding another is adding a line to each of these arrays and moving
-        /// the raised index. The signs share the width evenly, so nothing else
-        /// moves.
-        /// </summary>
         public enum Tab
         {
             Areas = 0,
@@ -62,7 +31,7 @@ namespace JellyGarden.Scripts.Story
 
         private static readonly string[] Labels =
         {
-            "Areas", "Leaderboard", "Home", "Card"
+            "Areas", "Ranks", "Home", "Cards"
         };
 
         private static StoryNavBar _instance;
@@ -112,7 +81,7 @@ namespace JellyGarden.Scripts.Story
             get { return _selected; }
         }
 
-        /// <summary>The bar's five tabs, for a test that wants to press one.</summary>
+        /// <summary>The four tabs, for navigation checks.</summary>
         public StoryUi.NavBarParts Parts
         {
             get { return _bar; }
@@ -237,7 +206,7 @@ namespace JellyGarden.Scripts.Story
             if (current != _selected)
             {
                 _selected = current;
-                StoryUi.SetNavSelected(_bar, (int)current);
+                StoryCastleUi.SelectNav(_bar, (int)current);
             }
         }
 
@@ -254,15 +223,15 @@ namespace JellyGarden.Scripts.Story
         {
             _canvas = StoryUi.CreateOverlayCanvas("NavCanvas", SortingOrder);
             _canvas.transform.SetParent(transform, false);
+            _canvas.GetComponent<CanvasScaler>().referenceResolution = new Vector2(360, 720);
 
-            _bar = StoryUi.NavBar("Nav", _canvas.transform, Icons, Labels,
-                (int)Tab.Home, OnTab);
-            StoryUi.SetNavSelected(_bar, (int)Tab.Home);
+            _bar = StoryCastleUi.NavBar(_canvas.transform, Icons, Labels, OnTab);
+            StoryCastleUi.SelectNav(_bar, (int)Tab.Home);
 
             _shown = true;
 
             if (Application.isPlaying)
-                Debug.Log(string.Format("[Story] nav bar built: {0} tabs [{1}], '{2}' raised.",
+                Debug.Log(string.Format("[Story] floating dock built: {0} tabs [{1}], '{2}' selected.",
                     _bar.Tabs.Length, string.Join(" ", Labels), NameOf(Tab.Home)));
         }
 

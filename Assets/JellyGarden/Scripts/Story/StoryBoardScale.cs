@@ -55,10 +55,17 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>
         /// The gem's share of its cell, unchanged by the pitch: an item sprite
-        /// paints 114 of its 128 pixels, so 0.66 at the kit's pitch drew 92% of
-        /// a cell, and 0.66 * Factor draws 92% of any cell.
+        /// paints 114 of its 128 pixels, so this * Factor draws
+        /// 1.14 * ItemShare / KitPitch of a cell whatever the pitch is.
+        ///
+        /// 0.57 is 79% of a cell. It was 0.66 — 92% — which was right while a
+        /// cell was a bare patch of ground, and is too big now that the ground
+        /// is a rounded tile inset by StoryBoardTheme.CellGap: at 92% the gem
+        /// ran into the tile's rounded corners and the tile read as a ring
+        /// around the gem rather than as the thing the gem sits on. At 79% the
+        /// blue shows on every side of the gem.
         /// </summary>
-        public const float ItemShare = 0.66f;
+        public const float ItemShare = 0.57f;
 
         /// <summary>Everything pinned to the pitch is multiplied by this.</summary>
         public static float Factor
@@ -70,6 +77,33 @@ namespace JellyGarden.Scripts.Story
         public static float ItemScale
         {
             get { return ItemShare * Factor; }
+        }
+
+        /// <summary>
+        /// Makes a block, an obstacle or anything else parented to a Square
+        /// fill its cell.
+        ///
+        /// The kit instantiates these at a WORLD position and then calls
+        /// SetParent(square.transform) — the one-argument overload, which is
+        /// worldPositionStays: true. Unity keeps the object's world scale by
+        /// dividing the parent's out of the child's localScale, so a prefab
+        /// authored at scale 1 lands under a Square scaled by Factor with a
+        /// localScale of 1 / Factor. The block's art is 82px at 100 to the
+        /// unit — KitPitch exactly, one whole cell at the kit's pitch — so it
+        /// came out 0.82 of a world unit inside a 1.17 cell: 70% of the cell,
+        /// an ice patch floating in the middle of the gem it covers rather
+        /// than the cell's own lid.
+        ///
+        /// Setting localScale back to one puts the art at KitPitch * Factor,
+        /// which is Pitch: the block is exactly its cell, whatever the pitch
+        /// is. Position, sprite, sorting order, material and every animation
+        /// on the prefab are untouched — DestroyBlock's BrickRotate plays on
+        /// the same transform and simply plays bigger.
+        /// </summary>
+        public static void FitToCell(Transform t)
+        {
+            if (t == null) return;
+            t.localScale = Vector3.one;
         }
 
         /// <summary>

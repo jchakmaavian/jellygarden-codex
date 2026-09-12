@@ -40,10 +40,22 @@ original behaviour:
 | `MenuManager.ShowGemsShop` / `ShowLiveShop` | `StoryFreeGame.ShopsAllowed` | never opens a shop |
 | `MenuManager.ShowRate` | `StoryFreeGame.RatePromptAllowed` | never asks for a rating |
 | `MenuManager.ShowPreFailed` | `StoryFreeGame.PreFailOfferAllowed` | never offers five more moves for gems |
+| `LevelManager.PrepareGame` | `StoryPrePlay.Open` | a full-screen power plate instead of the kit's striped goal card |
 
 Star awarding rides on `LevelManager.OnWin`, and the fail panel on
 `LevelManager.OnLose` — both events the kit already raises, so nothing in the
 board is touched at all.
+
+**`StoryPrePlay` is the second hook that had to drive the state.** The kit's
+`PrePlay` card carries an Animation whose event calls `AnimationManager` with
+the name `"PrePlay"`, and that event sets `gameStatus = WaitForPopup` — the
+state whose setter runs `InitLevel` and raises `OnLevelLoaded`, which is what
+builds the board. Deactivate the card without moving the state and the level
+opens on an empty room: royal HUD, arc backdrop, booster tray, no gems and no
+way to play. `StoryPrePlay.StartTheBoard` does what the event did, one frame
+later — `Open` is called from inside the `gameStatus` setter's own
+`PrepareGame`, and setting the state again from in there builds the board before
+`PrepareGame` has finished with it.
 
 **`ShowPreFailed` is the one hook that cannot just return.** That banner's own
 animation event is what sets `GameState.GameOver`, and GameOver is what raises
@@ -475,28 +487,28 @@ the Editor open, batchmode is locked out — run it from the menu instead:
 
 ## The home screen
 
-`StoryHomeScreen` is the room, the top bar over it, and one band of buttons over
-the floor. Its layout constants are worth understanding before moving anything:
+`StoryHomeScreen` implements **03 — Castle First**, selected from
+`art-review/home-screen-variants/index.html`. The existing `AreaSceneView`
+remains full bleed with a lighter neglect wash on home; `StoryCastleUi` builds the floating cream wallet, area title
+and restoration count, repair marker, and green level capsule.
 
-- **Vertical metrics are fractions of the canvas, horizontal ones are reference
-  points.** The band is `164f / 1472f` of the canvas height because the capture
-  is a 9:19.5 phone and the Editor's Game view is 4:3 — a canvas at match 0.5
-  hands the band ~1663 reference units of height there rather than 1920. Every
-  fixed-pixel column that fits one overlaps on the other, and every editor test
-  still passes.
-- **The two buttons are `GreenButton` + `GoldButton`, split by measured
-  fractions of the band** (`LevelRightFrac`, `AreaLeftFrac`) — the gold card is
-  the wider of the two, as in the reference.
-- **`NavBand` is laid out and empty**, waiting for US-010. Fill the rect; do not
-  re-cut the screen.
-- The Level button opens `StoryLevelPopup` and the area card opens
-  `AreaScreen`, both of which sort **above** home (600 and 400 against 300), so
-  home stays open underneath and the popup's `onClose` only has to refresh it.
-- `StoryHomeScreen.AffordableRepairs(areaId)` is the red badge's number: it
-  walks the area's tasks **in the story's order** spending one pool of stars and
-  stops at the first it cannot pay for. Counting every affordable task instead
-  would point the player at buttons that grey out when pressed, because
-  `AreaScreen` only ever offers `StoryProgress.NextTask`.
+- Home and the navigation canvas use a 360x720 reference. `StoryCastleFrame`
+  fits a 360-point-wide frame into `Screen.safeArea`; its height stays flexible,
+  and short screens scale uniformly against a 640-point minimum. Artwork sits
+  outside this frame, so it still fills behind notches and the home indicator.
+- The marker reads `StoryProgress.NextTask`, preserves its authored label and
+  price, and opens `AreaScreen`. Opening it never spends a star. Long labels
+  grow the marker to two lines. An affordable repair gently floats and pulses
+  its star on `StoryClock`, independent of gameplay time scale.
+- Known `StoryRepairRegions` position the marker over the artwork, with safe
+  limits keeping it clear of the title and Play. Unknown regions use a central
+  position. Repairs still use the existing room layers and reveal effects.
+- Play opens `StoryLevelPopup` for `StoryLevelPlan.NextLevelFor`. When the plan
+  falls back to a beaten level, the caption says “Play again.”
+- `NavBand` only reserves the dock's space; `StoryNavBar` owns the actual buttons.
+  Both use the same safe frame and bottom spacing.
+- `AffordableRepairs(areaId)` remains the ordered count of repairs affordable
+  from one pool of area stars, for existing callers.
 
 ## The shell
 
@@ -543,52 +555,24 @@ knows the kit's map exists.
   of the cases that are not about the shell — null it in a `finally`, because
   domain reload is off.
 
-## The signs on the rope
+## The floating navigation dock
 
-`StoryNavBar` is the one piece of the shell that is not a screen. It used to be
-Royal Match's five-tab blue bar; it is now a rope strung across the bottom of
-the screen with a wooden board hung from it per destination.
+`StoryNavBar` is the persistent shell navigation, on canvas 500: above home
+(300) and the area page (400), below the level popup (600). The Castle First
+style uses a rounded translucent green dock with four tabs: Areas, Ranks, Home,
+and Cards. `StoryCastleUi.SelectNav` gives only the current destination a cream
+background and larger icon. The older `StoryUi.NavBar` primitive remains
+available to its other callers.
 
-**There are two boards: Areas and Home.** That is the whole of what the game
-has. The bar it replaced had five slots and three of them answered a tap with an
-apology — Team is not in this game at all, Leaderboard and Cards are not built —
-and three dead buttons made the two real ones harder to find, not easier.
-Adding a third is adding a line to `Icons` and `Labels`; the boards share the
-width evenly, so nothing else moves.
-
-- **There is no bar body any more.** The room runs to the bottom of the screen
-  and the boards hang on it. A tap between two boards falls through, which is
-  correct — there is nothing there to press. It also means the artwork is
-  visible where the bar used to be opaque.
-- **Selection is height and colour, not size.** The chosen board hangs higher
-  (its hook shortens by the same amount, so the rope does not move) and turns
-  gold; the others are wood. Every board is the same size. `SetNavSelected`
-  drives all of it through `SetNavTabRaised`.
-- **The band is 218 of 1472, not 145.** A flat strip needed 145; a rope with
-  hook, board and word stacked on it does not. At the old height the rope came
-  out three pixels tall and vanished into a dark room. Every screen reserves the
-  band by reading `StoryUi.NavBarHeightFrac`, so they all gave way together.
-- **The rope carries its own outline.** Without one it disappears into a dark
-  room; with only an outline it would disappear into a bright one. Three bands:
-  edge, rope, highlight.
-- It still lives on its own persistent canvas at sorting order 500 — above home
-  (300) and the area page (400), below the level popup (600) — because the area
-  page shows the same rope and there must not be two of them.
-  `StoryHomeScreen.NavBand` is a RESERVATION and takes its height from the same
-  constant.
-- **`LevelIsPlaying` reads `LevelManager.THIS.gameStatus`, not
-  `MenuManager.menuPlay`.** `menuPlay` is the kit's PRE-play popup, shown from
-  the map before a level starts, so a bar that hides on it hides in the wrong
-  place and shows in the wrong one. `StoryFlow.PlayingArea` is checked first.
-- **`StoryNavBar.AreasDestination` is the seam `StoryAreasList.Install` sets** to
-  point Areas at the list of all 150 rooms; null is the area the player is
-  restoring, which is what a test that has not installed the list gets.
-  `LevelIsPlayingSource` is the other seam, so a test can put the shell "in a
-  level" with no board in the scene.
-- The rope is driven by `Update`, because a level starts and ends without
-  telling it. An editor test has no frame loop, so it calls `StoryNavBar.Sync()`.
-  Hiding turns off the CANVAS, never the component's own object — deactivating
-  the host would stop `Update` and it could never come back.
+- Areas uses `AreasDestination`, installed by `StoryAreasList.Install`; without
+  it, the tab opens the current area page. Home closes both the list and page.
+- Ranks and Cards retain their existing unavailable-feature toast; their actual
+  screens are not implemented by this visual redesign.
+- `LevelIsPlaying` checks `StoryFlow.PlayingArea` and the board's game state.
+  Navigation hides during levels and repair cinematics. `Sync()` also works
+  without a frame loop for editor checks.
+- Hiding switches off the canvas, keeping the controller active so it can show
+  navigation again after gameplay.
 
 ## The areas list
 
@@ -797,16 +781,30 @@ for twelve seconds with its score goal already met.
 
 ## The two end panels
 
-`StoryWinPopup` and `StoryLosePopup` are one design in two states, and they are
-deliberately the same file twice: the same band, the same star slot, the same
-cream area card, the same green button, the same fractions. A win and a loss are
-the same moment in the game's shape, and reading them as two screens is how one
-ends up feeling borrowed.
+`StoryWinPopup` is a royal celebration card: a crowned blue banner, the level
+number, a dimensional gold star, a reward badge and Continue. The whole card
+scales uniformly inside the screen's safe area. The lose panel keeps its
+existing layout and `Out of moves` / `Out of time` state.
 
-What differs is what the game differs in. The win panel's star is white (gold
-artwork undimmed) and captioned `+1 Star`, or `RoyalGrey` and `Already beaten`
-on a replay. The lose panel's is always `RoyalGrey`, captioned `Out of moves` or
-`Out of time` from `LevelManager.limitType`.
+The win star stays gold on both first wins and replays. The badge says
+`+1 Star earned` for a first win and `Star already earned` for a replay.
+`StoryFlow` remains the only place that awards the star; the popup only presents
+the result and consumes its Continue callback once.
+
+`StoryWinStarVfx` draws a soft halo, rotating rays, a short confetti burst and
+twinkles in one UI mesh, and animates the star with an entrance bounce and a
+small idle float/tilt. It uses `StoryClock` (unscaled time), so pausing gameplay
+does not stop the celebration. Closing cancels the animation and capture.
+The blurred background is a one-time GPU snapshot via `StoryWindow.CaptureInto`,
+with its temporary render texture released when the popup closes.
+
+Painted `win_victory_*` sprites come from `tools/art/win/victory_*.png`, installed
+by `tools/win_art.py`. `win_victory_headline` is transparent curved lettering
+that follows the ribbon; it is an aspect-preserving Image attached to the
+banner. Level number, reward copy and Continue remain live Unity text. In Play mode,
+`JellyGarden > Story > Preview > Open Victory (first win/replay)` opens either
+state without awarding anything. `StoryWinPopupTests.RunHeadless` checks reward
+isolation, replay copy, duplicate taps, reopening and animation while paused.
 
 - **`StarSprite` is gold artwork and `Image.color` MULTIPLIES it.** There is no
   tint that makes it blue, grey or neutral: `RoyalBlueDark` was tried, to read as
@@ -825,11 +823,70 @@ on a replay. The lose panel's is always `RoyalGrey`, captioned `Out of moves` or
   `0/3 repairs` on both panels; the bar keeps the bare count on the home screen
   and the area page, where the word is already beside it.
 
+### The banner one beat before the win panel
+
+`StoryWinBanner` dresses the kit's `PreCompleteBanner` — the "Level Completed"
+ribbon `PreWinAnimationsCor` shows for three seconds before `GameState.Win`. The
+striped blue art under the lettering is the kit's world, so its `Image` is
+disabled (not removed) and `Story/UI/win_banner` is added as a child at sibling
+index 0: a royal blue plaque in a carved gold frame with a crown top and bottom.
+
+The lettering needs nothing from here — see the next section: the kit's own
+`level_completed_text.png` now holds the royal wordmark.
+
+Two things it has to do that a screen does not:
+
+- **It finds the object while it is INACTIVE.** The kit switches the banner on
+  only for its three seconds, and `GameObject.Find` skips inactive objects, so
+  the search walks `GetRootGameObjects()`.
+- **It leaves the transform alone.** `bannerComplete.anim` drives the parent, so
+  the slide and bounce play over the new art untouched. The ribbon keeps the
+  art's own 2.08:1 rather than stretching into the object's 800x346 box.
+- **690 units wide, not the object's 800.** That canvas is authored at 720 and
+  its scaler matches WIDTH, so 800 units is 1.11 screens at any size. The kit's
+  stripe can run off both edges and lose nothing; a framed plaque loses its
+  carved corners. Measure a full-width element against 720, not against the
+  object it replaces.
+
+### The words the board shouts
+
+`Textures/text` holds the six wordmarks the game shouts — Good, Great,
+Fantastic, Level Completed, Level Failed, No more match. All six are repainted
+in the story's hand: chunky rounded caps, deep navy outline, gold rim. **The
+kit's own files carry the new art**, so nothing looks any of them up at runtime
+and every place the kit already points at one gets it.
+
+- **The three praise words escalate by metal, not by hue.** The kit goes orange,
+  green, cyan — three unrelated colours. Bronze, silver, gold is one ladder and
+  reads as one in a glance. Crimson is kept for "No More Matches", the only one
+  of the six that is neither praise nor a verdict; stone with a tipped crown is
+  "Level Failed".
+- **A replacement keeps the original file's ASPECT.** Every one of these is
+  drawn by an `Image` with `preserveAspect: 0`, so the sprite is stretched to
+  whatever rect the scene gives it and a file of a different shape comes out
+  distorted. Each new file is the kit dimensions doubled — same ratio, twice the
+  pixels — with the wordmark fitted to 98% of the width and centred, so the
+  letters keep their proportions and gain resolution.
+- **Nothing else changed.** Same paths, same guids, same `.meta`, so the scene,
+  the Animators and every reference are untouched, and `git checkout` on the
+  folder brings the kit's candy lettering back.
+
 ## The level start popup
 
-`StoryLevelPopup.Open(level, areaId, onClose)` is the "Level N / Goal / Play"
-card. It is opened from the area screen's Play button, and `onClose` is what its
-red X goes back to — pass the screen that opened it, or the player lands nowhere.
+`StoryLevelPopup.Open(level, areaId, onClose)` uses **Sapphire Trim**, selected
+from `art-review/soft-royal-frames/index.html` (02). The Soft Royal cream panel
+has a sapphire enamel frame with gold corner clasps, a floating level badge,
+optional boosters, and a green Play pill. Home and the area screen open it;
+`onClose` returns to the screen that opened it.
+
+The panel is 300 × 504 logical points inside `StoryCastleFrame`. That frame
+fits the complete layout into the safe area on short phones and tablets.
+`StorySapphireFrame` draws the gold rails and corner jewels as UI geometry.
+`StoryLevelGoalVfx` animates score stars and two glints using `StoryClock`;
+collect targets keep their actual icons and any frost backing from the HUD.
+`StoryModalBackdrop` takes a GPU snapshot on open or resize and reuses the
+existing blur shader. Its transparent capture frame still blocks input, and
+temporary render textures are released when the popup closes.
 
 - **Its goal comes from `StoryLevelHud.ReadLevel(level, 0)`,** not from a second
   reader. At score zero every `HudTarget.Remaining` is the whole of what the
@@ -844,6 +901,12 @@ red X goes back to — pass the screen that opened it, or the player lands nowhe
   level for the right area with no board in the scene.
 - The scrim behind it eats taps but does not close. The X is the only way out,
   so a tap that misses Play cannot lose the player their place.
+- Up to four targets share the goal row. Only score targets carry a `points`
+  label. Counts and the level title fit longer values without changing the
+  booster and Play positions. Closed buttons ignore stale or repeated actions.
+- `StoryScreenTests.RunLevelPopupHeadless` runs the focused goal, booster,
+  launch, and close checks. The native visual review is in
+  `art-review/sapphire-trim/`.
 
 ### The booster row
 
@@ -871,16 +934,16 @@ choice they made on the popup.
   `StoryLevelHud.Source`: null is PlayerPrefs, and a test swaps it rather than
   writing the player's save.
 
-**Vertical metrics on a story screen are fractions, not pixels.** The reference
+**Fit the entire layout when using fixed logical measurements.** The reference
 captures are a 9:19.5 phone; the Editor's Game view is 4:3. A `ScaleWithScreenSize`
 canvas at `matchWidthOrHeight 0.5` hands a 4:3 view far fewer reference units of
 height than of width — 1663 rather than 1920 at 768x1024 — so a column of fixed
 pixel heights that fits the phone silently overlaps everywhere else. That is how
 the booster row first landed underneath the Play button while every editor test
-passed. Anchor vertical positions as fractions of the parent (see
-`StoryLevelPopup`'s `DesignHeight` block), keep horizontal measurements in
-reference points, and give any text in a box that can shrink
-`resizeTextForBestFit`.
+passed. Older panels divide the available height with fractional anchors.
+Castle First and Sapphire Trim instead use `StoryCastleFrame` to scale a
+complete logical layout within the device safe area. Keep fixed measurements
+inside a fitted frame, and give variable text `resizeTextForBestFit`.
 
 **A stretched rect can have negative height, and a negative rect draws nothing.**
 `RoyalPanel`'s title was inset 110px on all four sides of a 210px-tall plate, so
@@ -995,6 +1058,15 @@ the highest available state at the saved repair count, matching the home room's
 painted layers; areas with a single painting use their restored art. The arc
 backdrop and kit pictures remain fallbacks. The background covers the canvas at
 its native aspect and refreshes on level, area, or repair-count changes.
+
+The gold board outline sits outside the blue tiles with a gap of 4.5% of a
+cell pitch. Straight runs share their endpoints across grid seams, convex
+turns join rounded elbows, and concave turns meet the perpendicular stroke's
+inner edge. This also closes the borders around holes. `StoryPixelSnap`
+reserves the outline's outward padding and two screen pixels per side when
+fitting wide boards. `StoryBoardBorderTests.RunHeadless` samples the generated
+sprites at seams and corners and checks the clearance on several silhouettes.
+
 `StoryThemeTest` (`-storythemetest`, run by
 `tools/theme_sweep.py`) opens the first level of each of the six arcs in its own
 area and photographs it. Four things it learned the hard way, all of which cost

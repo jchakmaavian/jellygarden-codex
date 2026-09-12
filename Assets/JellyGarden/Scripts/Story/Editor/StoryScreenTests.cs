@@ -50,7 +50,23 @@ namespace JellyGarden.Scripts.Story.Editor
             EditorApplication.Exit(0);
         }
 
-        private static List<string> Check()
+        public static void RunCastleFirstHeadless()
+        {
+            List<string> failures = Check(true);
+            foreach (string failure in failures) Debug.LogError("[Story] " + failure);
+            if (failures.Count == 0) Debug.Log("[Story] Castle First home, navigation and repair checks passed.");
+            EditorApplication.Exit(failures.Count == 0 ? 0 : 1);
+        }
+
+        public static void RunLevelPopupHeadless()
+        {
+            List<string> failures = Check(false, true);
+            foreach (string failure in failures) Debug.LogError("[Story] " + failure);
+            if (failures.Count == 0) Debug.Log("[Story] Sapphire Trim goals, boosters, launch and close checks passed.");
+            EditorApplication.Exit(failures.Count == 0 ? 0 : 1);
+        }
+
+        private static List<string> Check(bool castleOnly = false, bool levelPopupOnly = false)
         {
             _failures = new List<string>();
 
@@ -65,6 +81,22 @@ namespace JellyGarden.Scripts.Story.Editor
             {
                 StoryBoot.BootForTests();
                 StoryProgress.ResetAll();
+
+                if (levelPopupOnly)
+                {
+                    LevelPopupStatesTheGoal();
+                    LevelPopupOffersBoosters();
+                    return _failures;
+                }
+
+                if (castleOnly)
+                {
+                    HomeScreenIsTheRoom();
+                    HomeButtonsOpenTheLevelAndTheArea();
+                    BottomNavFollowsTheShell();
+                    RepairPlaysOverTheRoomAndPaysForItself();
+                    return _failures;
+                }
 
                 AreaScreenShowsTheStory();
                 AreaProgressCountsTheRepairs();
@@ -94,7 +126,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 LevelPopupOffersBoosters();
                 HomeScreenIsTheRoom();
                 HomeButtonsOpenTheLevelAndTheArea();
-                BottomNavHangsItsSignsAcrossTheShell();
+                BottomNavFollowsTheShell();
                 AreasListCoversEveryArea();
                 ShellHasNoDeadEnds();
                 ShellAreasHaveEverythingTheyNeed();
@@ -717,7 +749,7 @@ namespace JellyGarden.Scripts.Story.Editor
 
             Expect(spoken.Any(t => t.Contains("Freya")),
                 "Leo says her name in the opening");
-            Expect(spoken.Any(t => t.Contains("eleven weeks")),
+            Expect(spoken.Any(t => t.Contains("very long journey")),
                 "Alfred's first line is in the opening");
             Expect(done, "the opening hands back when it is over");
             Expect(StoryProgress.OpeningSeen, "the opening is marked seen");
@@ -804,11 +836,6 @@ namespace JellyGarden.Scripts.Story.Editor
             for (int state = 0; state <= area1.Tasks.Count; state++)
                 Expect(StoryArt.AreaState(1, state) != null,
                     "area 1 has artwork for state " + state);
-
-            Expect(StoryAudio.LoadVoice("alfred_open_01") != null,
-                "Alfred's first opening line is present");
-            Expect(StoryAudio.LoadVoice("alfred_clue_001") != null,
-                "Alfred's area 1 clue line is present");
 
             // Every arc needs a backdrop and every speaking character a face, or
             // the game degrades to flat colour somewhere in the middle of itself.
@@ -1629,6 +1656,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 // The X goes back to whatever opened it, without playing.
                 Expect(popup.CloseButton != null, "the popup has a close X");
                 if (popup.CloseButton != null) popup.CloseButton.onClick.Invoke();
+                if (popup.CloseButton != null) popup.CloseButton.onClick.Invoke();
                 Expect(!StoryLevelPopup.IsOpen, "the X closes the popup");
                 Expect(launched.Count == 0, "the X does not start the level");
                 Expect(closes == 1, "the X returns to the screen that opened the popup");
@@ -1637,6 +1665,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 StoryLevelPopup.Open(level, 3, () => closes++);
                 popup = StoryLevelPopup.Instance;
                 Expect(popup.PlayButton != null, "the popup has a Play button");
+                if (popup.PlayButton != null) popup.PlayButton.onClick.Invoke();
                 if (popup.PlayButton != null) popup.PlayButton.onClick.Invoke();
                 Expect(!StoryLevelPopup.IsOpen, "Play closes the popup");
                 Expect(launched.Count == 1 && launched[0] == level + "/3",
@@ -1686,8 +1715,8 @@ namespace JellyGarden.Scripts.Story.Editor
                 if (popup.BoosterCount != 3) return;
 
                 List<string> texts = TextsIn(popup.gameObject);
-                Expect(texts.Any(t => t.Contains("Select Boosters")),
-                    "the row is headed 'Select Boosters:'");
+                Expect(texts.Any(t => t == "Choose boosters"),
+                    "the row is headed 'Choose boosters'");
 
                 List<string> counts = popup.BoosterCounts();
                 var expected = StoryBoosters.PreLevel.Select(b => owned[b].ToString()).ToList();
@@ -1799,7 +1828,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 Expect(home.GetComponentInChildren<RectMask2D>(true) != null,
                     "the room's overflow is masked");
 
-                Expect(home.HasTopBar, "the top bar carries coins, lives, stars and settings");
+                Expect(home.HasTopBar, "the floating wallet carries coins, stars and settings");
 
                 int atStart = home.VisibleRoomLayers;
                 Expect(atStart == 1, "an untouched area shows the ruin alone (showed " +
@@ -1860,13 +1889,18 @@ namespace JellyGarden.Scripts.Story.Editor
                 Expect(home.LevelButtonText == "Level " + next,
                     "the green button reads 'Level " + next + "' (read '" +
                     home.LevelButtonText + "')");
-                Expect(home.AreaButtonText == "Area " + home.AreaId,
-                    "the gold card reads 'Area " + home.AreaId + "' (read '" +
-                    home.AreaButtonText + "')");
-                Expect(home.AreaProgressText == "0/" + area.Tasks.Count,
-                    "an untouched area reads 0/" + area.Tasks.Count + " (read '" +
-                    home.AreaProgressText + "')");
-                Expect(home.HasChest, "the chest sits on the end of the card's bar");
+                Expect(home.AreaTitleText == area.Name, "home names the current room");
+                Expect(home.AreaButtonText == area.Tasks[0].Label,
+                    "the marker names the next repair");
+                Expect(home.RepairCost == area.Tasks[0].Stars && !home.RepairReady,
+                    "the marker shows the real price without promising an unaffordable repair");
+                Expect(home.RestorationText == "0 / " + area.Tasks.Count + " restored",
+                    "the floating progress pill counts repairs");
+                int starsBefore = StoryProgress.StarsIn(1);
+                home.AreaButton.onClick.Invoke();
+                Expect(AreaScreen.IsOpen && StoryProgress.StarsIn(1) == starsBefore,
+                    "an unaffordable marker opens repairs without spending stars");
+                AreaScreen.Close();
 
                 // The counter is the area's own arithmetic, not a snapshot.
                 StoryProgress.AddStar(1, 9);
@@ -1875,6 +1909,10 @@ namespace JellyGarden.Scripts.Story.Editor
                 Expect(home.AreaProgressText == "1/" + area.Tasks.Count,
                     "a bought repair moves the card's counter (read '" +
                     home.AreaProgressText + "')");
+
+                Expect(home.AreaButtonText == area.Tasks[1].Label
+                       && home.RepairCost == area.Tasks[1].Stars && home.RepairReady,
+                    "the marker advances to the next repair and reflects affordability");
 
                 // And the level button follows the levels actually beaten.
                 StoryProgress.MarkLevelBeaten(next);
@@ -1902,7 +1940,7 @@ namespace JellyGarden.Scripts.Story.Editor
 
                     home.AreaButton.onClick.Invoke();
                     Expect(AreaScreen.IsOpen && AreaScreen.Instance.AreaId == 1,
-                        "the gold card opens that area's page");
+                        "the repair marker opens that area's page");
                     AreaScreen.Close();
                 }
                 finally
@@ -1910,10 +1948,19 @@ namespace JellyGarden.Scripts.Story.Editor
                     StoryLevelPopup.Launcher = previousLauncher;
                 }
 
+                foreach (StoryTask task in area.Tasks)
+                    if (!StoryProgress.IsTaskComplete(1, task.Index)) StoryProgress.CompleteTask(1, task.Index);
+                foreach (int level in StoryLevelPlan.LevelsFor(1)) StoryProgress.MarkLevelBeaten(level);
+                home.Refresh();
+                Expect(home.RepairCost == 0 && !home.RepairReady && home.AreaButtonText == "Area restored",
+                    "a completed room no longer advertises a repair price");
+                Expect(home.NextLevel > 0 && home.LevelButton.interactable
+                       && home.LevelCaptionText == "P L A Y  A G A I N",
+                    "an exhausted area preserves replay with an accurate caption");
+
                 Debug.Log(string.Format(
-                    "[Story] Home buttons: '{0}' | '{1}' {2}, chest {3}, {4} repair(s) ready.",
+                    "[Story] Home buttons: '{0}' | '{1}' {2}, {3} repair(s) ready.",
                     home.LevelButtonText, home.AreaButtonText, home.AreaProgressText,
-                    home.HasChest ? "present" : "missing",
                     StoryHomeScreen.AffordableRepairs(1)));
             }
             finally
@@ -1961,128 +2008,62 @@ namespace JellyGarden.Scripts.Story.Editor
             }
         }
 
-        /// <summary>
-        /// The bottom bar: five slots with Home raised in the middle, two of them
-        /// going somewhere and three visibly inert, carried across home and the
-        /// area page and taken away for a level.
-        /// </summary>
-        private static void BottomNavHangsItsSignsAcrossTheShell()
+        /// <summary>The floating dock follows the selected screen and yields to gameplay.</summary>
+        private static void BottomNavFollowsTheShell()
         {
             StoryProgress.ResetAll();
-
             try
             {
                 StoryHomeScreen.Open(1);
                 StoryNavBar.Sync();
-
                 StoryNavBar nav = StoryNavBar.Instance;
-                if (nav == null) { Fail("the nav bar installs"); return; }
-
-                Expect(StoryNavBar.IsVisible, "the nav bar is on screen with home");
-
+                Expect(nav != null && StoryNavBar.IsVisible, "the dock appears on home");
+                if (nav == null) return;
                 StoryUi.NavBarParts bar = nav.Parts;
-                Expect(bar != null && bar.Tabs != null && bar.Tabs.Length == 2,
-                    "the rope carries two signs (found " +
-                    (bar == null || bar.Tabs == null ? 0 : bar.Tabs.Length) + ")");
-                if (bar == null || bar.Tabs == null || bar.Tabs.Length != 2) return;
-
-                var order = new[] { StoryUi.NavIcon.Areas, StoryUi.NavIcon.Home };
+                Expect(bar != null && bar.Tabs.Length == 4, "the dock has four tabs");
+                if (bar == null || bar.Tabs.Length != 4) return;
+                var order = new[] { StoryUi.NavIcon.Areas, StoryUi.NavIcon.Leaderboard,
+                    StoryUi.NavIcon.Home, StoryUi.NavIcon.Cards };
                 for (int i = 0; i < order.Length; i++)
-                    Expect(bar.Tabs[i].Icon == order[i],
-                        "sign " + i + " is " + order[i] + " (found " + bar.Tabs[i].Icon + ")");
+                    Expect(bar.Tabs[i].Icon == order[i], "dock slot " + i + " is " + order[i]);
+                Expect(bar.Tabs[2].Raised && !bar.Tabs[0].Raised, "only Home is selected on home");
+                Expect(bar.Tabs[1].Label.text == "Ranks" && bar.Tabs[3].Label.text == "Cards",
+                    "the compact tab labels match the selected design");
 
-                // Every sign is named, and the one you are on hangs higher.
-                StoryUi.NavTabParts home = bar.Tabs[(int)StoryNavBar.Tab.Home];
-                StoryUi.NavTabParts areas = bar.Tabs[(int)StoryNavBar.Tab.Areas];
-
-                Expect(home.Raised, "the Home sign hangs high on the home screen");
-                Expect(!areas.Raised, "the Areas sign hangs low there");
-                Expect(home.Label != null && home.Label.text == "Home",
-                    "the Home sign is named");
-                Expect(areas.Label != null && areas.Label.text == "Areas",
-                    "the Areas sign is named too");
-
-                Canvas.ForceUpdateCanvases();
-                Expect(home.Label != null && home.Label.rectTransform.rect.height > 1f,
-                    "the Home label has a rect it can be drawn in (height " +
-                    (home.Label == null ? 0f : home.Label.rectTransform.rect.height) + ")");
-
-                // The raised board's top edge is above the flat one's. This is
-                // the whole of what "selected" looks like now, so it is the thing
-                // worth asserting.
-                Expect(home.Board != null && areas.Board != null
-                       && home.Board.anchorMax.y > areas.Board.anchorMax.y,
-                    "the chosen sign hangs higher than the other ("
-                    + (home.Board == null ? 0f : home.Board.anchorMax.y) + " against "
-                    + (areas.Board == null ? 0f : areas.Board.anchorMax.y) + ")");
-
-                RectTransform homeFace = home.Button.GetComponent<RectTransform>();
-                RectTransform sideFace = areas.Button.GetComponent<RectTransform>();
-                float homeWidth = homeFace.anchorMax.x - homeFace.anchorMin.x;
-                float sideWidth = sideFace.anchorMax.x - sideFace.anchorMin.x;
-                Expect(Mathf.Abs(homeWidth - sideWidth) < 0.001f,
-                    "the boards are the same size (" + homeWidth + " against " + sideWidth + ")");
-
-                // With no destination installed, Areas falls back to the one area
-                // the player is restoring, and the bar comes with it.
                 StoryNavBar.AreasDestination = null;
                 nav.ButtonFor(StoryNavBar.Tab.Areas).onClick.Invoke();
                 StoryNavBar.Sync();
-                Expect(AreaScreen.IsOpen, "the Areas tab falls back to an area page");
-                Expect(StoryNavBar.IsVisible, "the bar persists onto the area page");
-                Expect(nav.Selected == StoryNavBar.Tab.Areas,
-                    "the Areas tab lights when the area page is up (lit " + nav.Selected + ")");
-
-                // Home comes back, and takes the area page away with it.
+                Expect(AreaScreen.IsOpen && nav.Selected == StoryNavBar.Tab.Areas,
+                    "Areas reaches the area page and selects its tab");
+                Expect(bar.Tabs[0].Raised && !bar.Tabs[2].Raised,
+                    "the cream selection moves from Home to Areas");
                 nav.ButtonFor(StoryNavBar.Tab.Home).onClick.Invoke();
                 StoryNavBar.Sync();
-                Expect(StoryHomeScreen.IsOpen, "the Home tab opens home");
-                Expect(!AreaScreen.IsOpen, "the Home tab closes the area page behind it");
-                Expect(nav.Selected == StoryNavBar.Tab.Home,
-                    "the Home tab lights on home (lit " + nav.Selected + ")");
+                Expect(StoryHomeScreen.IsOpen && !AreaScreen.IsOpen && nav.Selected == StoryNavBar.Tab.Home,
+                    "Home closes the area page and restores its selection");
 
-                // Installed — which is what the game does, once per scene — the
-                // same tab reaches the list of all 150 instead, and the bar and
-                // its lit slot follow it there.
                 StoryAreasList.Install();
                 nav.ButtonFor(StoryNavBar.Tab.Areas).onClick.Invoke();
                 StoryNavBar.Sync();
-                Expect(StoryAreasList.IsOpen, "the Areas tab opens the areas list");
-                Expect(StoryNavBar.IsVisible, "the bar persists onto the areas list");
-                Expect(nav.Selected == StoryNavBar.Tab.Areas,
-                    "the Areas tab lights on the list (lit " + nav.Selected + ")");
-
+                Expect(StoryAreasList.IsOpen && nav.Selected == StoryNavBar.Tab.Areas,
+                    "Areas reaches the installed areas list");
                 nav.ButtonFor(StoryNavBar.Tab.Home).onClick.Invoke();
                 StoryNavBar.Sync();
-                Expect(!StoryAreasList.IsOpen,
-                    "the Home tab closes the areas list behind it");
-                Expect(StoryHomeScreen.IsOpen, "the Home tab opens home over it");
-                StoryNavBar.AreasDestination = null;
+                Expect(!StoryAreasList.IsOpen && StoryHomeScreen.IsOpen, "Home returns from the list");
 
-                // Every sign on the rope goes somewhere. That is the rule the
-                // two-sign rope exists to keep, so it is asserted rather than
-                // assumed: a board that leads nowhere is a promise the game
-                // cannot keep, and there used to be three of them.
-                foreach (StoryUi.NavTabParts t in bar.Tabs)
-                    Expect(t.Icon == StoryUi.NavIcon.Areas
-                           || t.Icon == StoryUi.NavIcon.Home,
-                        "every sign is a destination that exists (found " + t.Icon + ")");
-
-                // A level takes the bar away and gives it back.
+                // The two unfinished destinations retain their existing toast,
+                // leaving the current screen and its selected tab intact.
+                nav.ButtonFor(StoryNavBar.Tab.Leaderboard).onClick.Invoke();
+                nav.ButtonFor(StoryNavBar.Tab.Card).onClick.Invoke();
+                StoryNavBar.Sync();
+                Expect(StoryHomeScreen.IsOpen && nav.Selected == StoryNavBar.Tab.Home,
+                    "unavailable destinations leave navigation on home");
                 StoryNavBar.LevelIsPlayingSource = () => true;
                 StoryNavBar.Sync();
-                Expect(!StoryNavBar.IsVisible, "the bar is hidden during a level");
-
+                Expect(!StoryNavBar.IsVisible, "the dock hides during gameplay");
                 StoryNavBar.LevelIsPlayingSource = null;
                 StoryNavBar.Sync();
-                Expect(StoryNavBar.IsVisible, "the bar comes back after the level");
-
-                Debug.Log(string.Format(
-                    "[Story] nav bar: {0} slot(s) [{1}], raised '{2}' at {3:0.00}..{4:0.00}, " +
-                    "lit {5}.",
-                    bar.Tabs.Length, string.Join(" ", order.Select(t => t.ToString()).ToArray()),
-                    home.Label == null ? "<none>" : home.Label.text,
-                    homeFace.anchorMin.x, homeFace.anchorMax.x, nav.Selected));
+                Expect(StoryNavBar.IsVisible, "the dock returns after gameplay");
             }
             finally
             {

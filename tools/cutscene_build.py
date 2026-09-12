@@ -188,7 +188,7 @@ def build_scene(area, arc_overview):
         "arc": arc,
         "arcTitle": ARC_TITLES[arc],
         "isFinale": is_finale,
-        "lines": [{"speaker": s, "text": t, "voice": ""} for s, t in lines],
+        "lines": [{"speaker": s, "text": t} for s, t in lines],
     }
 
 

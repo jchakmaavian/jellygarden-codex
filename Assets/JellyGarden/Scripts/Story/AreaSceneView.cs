@@ -62,6 +62,7 @@ namespace JellyGarden.Scripts.Story
         private float _damageFrom;
         private float _damageTo;
         private float _damageStartedAt;
+        private float _neglectStrength = 1f;
 
         public int AreaId
         {
@@ -90,7 +91,16 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public float DamageTarget
         {
-            get { return _damageTo; }
+            get { return _damageTo * _neglectStrength; }
+        }
+
+        /// <summary>Lets a room-led screen keep its painting bright while retaining the repair wash.</summary>
+        public void SetNeglectStrength(float strength)
+        {
+            strength = Mathf.Clamp01(strength);
+            if (Mathf.Approximately(_neglectStrength, strength)) return;
+            _neglectStrength = strength;
+            if (_damage != null) _damage.color = Wash(_damageTo);
         }
 
         /// <summary>Whether this view fills its parent and crops, or letterboxes.</summary>
@@ -312,7 +322,9 @@ namespace JellyGarden.Scripts.Story
             float progress = Mathf.Clamp01(
                 (float)StoryProgress.TasksCompletedIn(_areaId) / area.Tasks.Count);
 
-            _damageFrom = _damage.color.a;
+            // The interpolation stays in unscaled wash values; Wash applies
+            // the screen's strength once when writing the image colour.
+            _damageFrom = _neglectStrength > 0f ? _damage.color.a / _neglectStrength : 0f;
             _damageTo = Mathf.Lerp(MaxDamage, 0f, progress);
             _damageStartedAt = StoryClock.Now;
         }
@@ -342,9 +354,9 @@ namespace JellyGarden.Scripts.Story
             _damage.color = Wash(_damageTo);
         }
 
-        private static Color Wash(float alpha)
+        private Color Wash(float alpha)
         {
-            return new Color(DamageTint.r, DamageTint.g, DamageTint.b, alpha);
+            return new Color(DamageTint.r, DamageTint.g, DamageTint.b, alpha * _neglectStrength);
         }
 
         private void Update()

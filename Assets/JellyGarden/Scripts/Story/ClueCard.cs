@@ -109,8 +109,6 @@ namespace JellyGarden.Scripts.Story
             _showing = true;
             _shownAt = StoryClock.Now;
             _dismissAt = _shownAt + HoldSeconds;
-
-            StoryAudio.PlayClueVoice(area.Id);
         }
 
         private void Dismiss()

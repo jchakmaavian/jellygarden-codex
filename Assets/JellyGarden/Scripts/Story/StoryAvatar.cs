@@ -43,11 +43,24 @@ namespace JellyGarden.Scripts.Story
         public static bool Animate = true;
 
         /// <summary>
-        /// Frames a second. The clip these are cut from is a slow idle — a
-        /// breath, a blink, a small turn — so it reads correctly well under
-        /// cinema rates, and every frame is a texture in memory.
+        /// Frames a second for the IDLE loop. The clip these are cut from is a
+        /// slow idle — a breath, a blink, a small turn — so it reads correctly
+        /// well under cinema rates, and every frame is a texture in memory.
+        ///
+        /// 6, halved from 12. At 12 the 25 frames ping-pong in 48 steps, four
+        /// seconds a cycle, and a breath and a blink that quick is a fidget:
+        /// the face never settles and it pulls the eye off the board. At 6 the
+        /// same cycle takes eight seconds, which is a breath.
         /// </summary>
-        public const float DefaultFps = 12f;
+        public const float DefaultFps = 6f;
+
+        /// <summary>
+        /// Frames a second for a REACTION — the cheer, the pop, the worry.
+        /// Kept at the old 12: a reaction answers something that just happened
+        /// on the board and has to land while the player is still looking at
+        /// what caused it. Only the idle wanted slowing.
+        /// </summary>
+        public const float ClipFps = 12f;
 
         private Image _image;
         private Sprite[] _frames;
@@ -55,6 +68,9 @@ namespace JellyGarden.Scripts.Story
         private string _clip;
         private bool _once;
         private float _fps = DefaultFps;
+
+        /// <summary>The rate the idle runs at, kept so a reaction can hand back to it.</summary>
+        private float _idleFps = DefaultFps;
         private float _startedAt;
         private int _shown = -1;
 
@@ -179,6 +195,7 @@ namespace JellyGarden.Scripts.Story
             _clip = null;
             _once = false;
             _fps = fps <= 0f ? DefaultFps : fps;
+            _idleFps = _fps;
             _startedAt = StoryClock.Now;
             _shown = -1;
             Active = this;
@@ -216,6 +233,7 @@ namespace JellyGarden.Scripts.Story
             _frames = frames;
             _clip = clip;
             _once = true;
+            _fps = ClipFps;
             _startedAt = StoryClock.Now;
             _shown = -1;
             Tick();
@@ -258,6 +276,7 @@ namespace JellyGarden.Scripts.Story
                 _frames = _idle;
                 _clip = null;
                 _once = false;
+                _fps = _idleFps;
                 _startedAt = StoryClock.Now;
                 step = 0;
                 if (_frames == null || _frames.Length == 0) return;

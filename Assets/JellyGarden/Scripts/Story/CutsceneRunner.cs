@@ -60,8 +60,7 @@ namespace JellyGarden.Scripts.Story
                 foreach (JsonValue line in node["lines"].Items)
                     scene.Lines.Add(new DialogueLine(
                         line["speaker"].AsString(),
-                        line["text"].AsString(),
-                        line["voice"].AsString()));
+                        line["text"].AsString()));
 
                 if (scene.AreaId > 0 && scene.Lines.Count > 0)
                     _cutscenes[scene.AreaId] = scene;

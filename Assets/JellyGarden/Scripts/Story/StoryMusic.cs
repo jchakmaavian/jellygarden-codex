@@ -96,10 +96,6 @@ namespace JellyGarden.Scripts.Story
 
             if (_fadeStartedAt <= 0f) return;
 
-            // StoryAudio owns the volume while narration is playing; stepping on
-            // it here would undo the duck mid-line.
-            if (StoryAudio.IsSpeaking) return;
-
             float t = (Time.unscaledTime - _fadeStartedAt) / CrossFadeSeconds;
             if (t >= 1f)
             {
