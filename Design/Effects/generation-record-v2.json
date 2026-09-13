@@ -1,0 +1,84 @@
+{
+  "date": "2026-09-13",
+  "purpose": "Royal Throne gameplay asset and sound polish v2",
+  "images": [
+    {
+      "asset": "gem.webp",
+      "source": "exec-0fcc8c8d-e3ee-43e3-a908-d69893c3239b.png",
+      "brief": "Original smooth 3D cyan and royal-blue faceted currency gem, readable at small sizes, transparent background."
+    },
+    {
+      "asset": "smoke.webp",
+      "source": "exec-1a51599c-b40d-4040-9746-c77f6c542222.png",
+      "brief": "Compact three-lobe sculpted white puff, soft cool shading, clean silhouette, transparent background. Short game impact, no cinematic smoke cloud."
+    },
+    {
+      "asset": "ice.webp",
+      "source": "exec-32ff3f08-31f4-41fd-8da8-1d9bf8c1a1a8.png",
+      "brief": "Smooth stylized royal crystal ice tile, pale blue beveled edges, readable match-three obstacle, transparent background."
+    },
+    {
+      "asset": "key.webp",
+      "source": "exec-54e7813a-29f0-42b2-9e5a-7307baa844db.png",
+      "brief": "Original polished gold royal key, simple 3D silhouette and rounded bevels, isolated transparent background."
+    },
+    {
+      "asset": "chains.webp",
+      "source": "exec-b16e5a82-e07f-4c02-80ed-2f255e5e15a2.png",
+      "brief": "Gold crossing chains with central royal blue padlock, smooth 3D board obstacle, transparent background."
+    },
+    {
+      "asset": "stone.webp",
+      "source": "exec-690b150f-f1d8-49d9-8330-06ff865ce4cb.png",
+      "brief": "Royal slate stone block with shield relief, smooth stylized 3D rounded square, unbreakable obstacle, transparent background."
+    }
+  ],
+  "imageProvider": "Built-in image generation",
+  "imageMasterDirectory": "C:/Users/chakm/.codex/generated_images/01a07f2d-f2b5-7123-a1e6-e3dba88553a7",
+  "imageProcessing": "Fit inside 256x256, WebP quality 85, alpha quality 100, effort 6; preserve source transparency. Editor importer produces compressed Unity textures in Library.",
+  "reused": "heart, star, coin, chest and settings derive from the approved original RoyalBlue-Home-v1 assets. Match pieces, powers, king and castle retain the established original Royal Throne style.",
+  "audio": {
+    "provider": "Magnific/Freepik",
+    "credits": 25,
+    "jobs": [
+      "ovbTgKs829",
+      "rg9Qn6dxtc",
+      "0evZ5fzTfW",
+      "P3cloVe42C",
+      "yiWsBT5PW9"
+    ],
+    "requests": [
+      {
+        "durationSeconds": 1,
+        "variations": 2,
+        "promptInfluence": 0.5,
+        "prompt": "One single close-miked small glazed ceramic jewel snapped and tapped onto polished stone. Immediate dry chunky tok-crack with tiny bright glass chips, satisfying tactile game match impact. Very short 180 millisecond decay. No music, no voices, no beeps, no long whoosh, no reverb."
+      },
+      {
+        "durationSeconds": 1,
+        "variations": 1,
+        "promptInfluence": 0.65,
+        "prompt": "One compact pressurized firework barrel burst for a puzzle game. Immediate sharp wooden crack layered with punchy bass thump, airy white puff, 4 tiny debris ticks. Dry close perspective. Full-bodied playful impact, no huge cinematic sub-bass, no ringing, no music, no voices, tail under half second."
+      },
+      {
+        "durationSeconds": 1,
+        "variations": 1,
+        "promptInfluence": 0.6,
+        "prompt": "One small brass mechanical rocket ignites with a crisp click and bright compressed air snap, accelerates rapidly left to right with an energetic narrow jet hiss and ends in a short pop. Dry close game sound, 0.6 seconds active sound, no music, no sci-fi tones, no cinematic rumble."
+      },
+      {
+        "durationSeconds": 1,
+        "variations": 1,
+        "promptInfluence": 0.55,
+        "prompt": "One miniature mechanical brass propeller spins up fast with tactile ratcheting ticks and a fluttering rotor buzz, then a tiny pneumatic impact pop. Crisp close puzzle game action, no real helicopter ambience, no music, no voices, quick clean decay."
+      }
+    ],
+    "mastering": "master-sfx-v2.cjs: onset trim, high-pass filtering, transient EQ, short fade, limiter, 32 kHz mono PCM sources. Unity ADPCM runtime import. Landing/UI contacts derive from the second match take."
+  },
+  "music": {
+    "status": "Unchanged: source bytes, import settings, volume, loop/crossfade and music preference logic.",
+    "path": "Assets/JellyGarden/Resources/RoyalGameplay/Audio/castle-theme.mp3",
+    "sha256": "389427fe96731cc782aecd21ad27883f3bd4d2227ff0b20aeba710cc2a61aced"
+  },
+  "references": "User-supplied Royal Match recordings reviewed for compact flashes, localized sparkle trails and rapid board recovery. No competitor frames or sound samples are installed."
+}

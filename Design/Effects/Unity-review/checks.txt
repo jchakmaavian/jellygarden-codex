@@ -1,4 +1,4 @@
-Checks completed: 85
+Checks completed: 110
 Authored particle rig loads
 WebP sprite loads: ruby
 WebP sprite loads: shield
@@ -11,6 +11,14 @@ WebP sprite loads: tnt
 WebP sprite loads: helicopter
 WebP sprite loads: orb
 WebP sprite loads: smoke
+WebP sprite loads: gem
+WebP sprite loads: heart
+WebP sprite loads: star
+WebP sprite loads: ice
+WebP sprite loads: key
+WebP sprite loads: chest
+WebP sprite loads: chains
+WebP sprite loads: stone
 Audio imports: match-a
 Audio imports: match-b
 Audio imports: rocket
@@ -18,6 +26,23 @@ Audio imports: tnt
 Audio imports: helicopter
 Audio imports: create
 Audio imports: castle-theme
+Audio imports: land
+Audio imports: click
+Block has new art and preserves target identifier
+Block preserves board footprint
+SolidBlock has new art and preserves target identifier
+SolidBlock preserves board footprint
+ThrivingBlock has new art and preserves target identifier
+ThrivingBlock preserves board footprint
+UndestrBlock has new art and preserves target identifier
+UndestrBlock preserves board footprint
+WireBlock has new art and preserves target identifier
+WireBlock preserves board footprint
+New pieces show royal art before their first rendered frame
+Chain artwork retains trapped-piece rule
+Layered obstacle loses only one layer per direct hit
+Cleared obstacle releases its square
+Goal artwork retains live target data reference
 Ordinary matches do not change global timescale
 3-line detected
 3-line power-up rule
@@ -85,4 +110,4 @@ Projectiles stay within pool cap
 Regression run preserves coins and lives
 No runtime errors during regression run
 Errors: 
-Editor update p95 ms (not device GPU benchmark): 5.9431
+Editor update p95 ms (not device GPU benchmark): 6.6841

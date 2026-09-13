@@ -15,28 +15,28 @@ MonoBehaviour:
   SwapDuration: 0.13
   InvalidSwapDuration: 0.22
   InvalidSwapPushFraction: 0.42
-  MatchAnticipation: 0.02
-  MatchSquashDuration: 0.035
+  MatchAnticipation: 0.015
+  MatchSquashDuration: 0.03
   MatchReboundDuration: 0.02
-  MatchDestroyDuration: 0.06
-  MatchStagger: 0.014
+  MatchDestroyDuration: 0.05
+  MatchStagger: 0.012
   MatchSquashAmount: 0.07
   MatchAnticipationScale: 0.05
   MatchReboundAmount: 0.12
   FlashDuration: 0.065
   FlashStartScale: 0.8
   FlashEndScale: 1.25
-  StarParticleCount: 5
+  StarParticleCount: 4
   ParticleVelocity: 4.8
   ParticleDrag: 3
   ParticleLifetime: 0.25
-  StarSize: 0.29
-  MicroParticleCount: 7
+  StarSize: 0.26
+  MicroParticleCount: 5
   MicroLifetime: 0.28
-  MicroSize: 0.11
-  FragmentCount: 3
+  MicroSize: 0.09
+  FragmentCount: 1
   FragmentLifetime: 0.3
-  FragmentSize: 0.15
+  FragmentSize: 0.12
   StarDelay: 0.01
   MicroDelay: 0.035
   FragmentDelay: 0.02

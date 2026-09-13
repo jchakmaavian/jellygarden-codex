@@ -55,6 +55,10 @@ namespace JellyGarden.Scripts.GUI
             boostType = _boostType;
             gameObject.SetActive( true );
             icon.sprite = boostProducts[(int)_boostType].icon;
+            if(Juice.RoyalEffectsProfile.Get){
+                string art=_boostType==BoostType.ExtraMoves||_boostType==BoostType.ExtraTime?"crown":_boostType==BoostType.Packages?"tnt":_boostType==BoostType.Stripes?"rocket":_boostType==BoostType.Hand?"hammer":"orb";
+                icon.sprite=Juice.RoyalPieceSkin.Art(art);icon.preserveAspect=true;
+            }
             description.text = boostProducts[(int)_boostType].description;
             for (int i = 0; i < 3; i++)
             {

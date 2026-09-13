@@ -307,7 +307,7 @@ namespace JellyGarden.Scripts.Juice
         /// Reads the sprite off the renderer, so it works for every candy colour and for
         /// striped / wrapped variants without any per-candy configuration.
         /// </summary>
-        public void Shatter(SpriteRenderer source, float intensity)
+        public void Shatter(SpriteRenderer source, float intensity,bool powerClear=false)
         {
             var cfg = Cfg;
             if (!cfg.EnableJuice || !cfg.EnableCandyShatter) return;
@@ -322,7 +322,7 @@ namespace JellyGarden.Scripts.Juice
 
             Mesh[] meshes = _patterns[pattern];
             Vector2[] centroids = _patternCentroids[pattern];
-            int wedges = Mathf.Min(meshes.Length, MaxWedges);
+            int wedges = Mathf.Min(meshes.Length, powerClear?2:MaxWedges);
 
             // Bail out rather than allocate if the pool is nearly spent. The sparkle VFX
             // still plays, so a huge clear degrades gracefully instead of stuttering.
@@ -376,7 +376,7 @@ namespace JellyGarden.Scripts.Juice
                 f.SpinSpeed = Mathf.Lerp(cfg.ShatterSpinMin, cfg.ShatterSpinMax, Hash(seed + w, 59))
                               * (Hash(seed + w, 71) < 0.5f ? -1f : 1f);
 
-                f.Life = cfg.ShatterLifetime * Mathf.Lerp(0.78f, 1.22f, Hash(seed + w, 83));
+                f.Life = cfg.ShatterLifetime * (powerClear?.65f:1) * Mathf.Lerp(0.78f, 1.22f, Hash(seed + w, 83));
                 f.Age = 0f;
 
                 // Slight per-chunk size variation so they do not read as a uniform set.

@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace JellyGarden.Scripts.Juice
 {
-    public enum RoyalCue { Match, Land, Rocket, Tnt, Helicopter, Create }
+    public enum RoyalCue { Match, Land, Rocket, Tnt, Helicopter, Create, Click }
     public sealed class RoyalAudioDirector : MonoBehaviour
     {
         static RoyalAudioDirector instance;
         AudioSource[] voices; AudioSource[] music;
-        readonly AudioClip[] clips = new AudioClip[7];
-        readonly float[] last = new float[6];
+        readonly AudioClip[] clips = new AudioClip[9];
+        readonly float[] last = new float[7];
         int variation, musicIndex; float duck, fade=-1;
         public int PeakVoices { get; private set; }
         public static RoyalAudioDirector Get
@@ -23,7 +23,7 @@ namespace JellyGarden.Scripts.Juice
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)] static void ResetStatics() { instance=null; }
         void Build()
         {
-            string[] names={"match-a","match-b","rocket","tnt","helicopter","create","castle-theme"};
+            string[] names={"match-a","match-b","rocket","tnt","helicopter","create","castle-theme","land","click"};
             for(int i=0;i<names.Length;i++) clips[i]=Resources.Load<AudioClip>("RoyalGameplay/Audio/"+names[i]);
             voices=new AudioSource[RoyalEffectsProfile.Get.soundVoices];
             for(int i=0;i<voices.Length;i++) { voices[i]=gameObject.AddComponent<AudioSource>(); voices[i].playOnAwake=false; voices[i].spatialBlend=0; voices[i].priority=160; }
@@ -35,13 +35,13 @@ namespace JellyGarden.Scripts.Juice
         public void Play(RoyalCue cue,float strength=1)
         {
             if (PlayerPrefs.GetInt("Sound",1)==0) return;
-            int k=(int)cue; float interval=cue==RoyalCue.Match?.038f:cue==RoyalCue.Land?.06f:.06f;
+            int k=(int)cue; float interval=cue==RoyalCue.Match?.055f:cue==RoyalCue.Land?.08f:.06f;
             if(Time.unscaledTime-last[k]<interval)return;
             last[k]=Time.unscaledTime;
-            AudioClip clip=cue==RoyalCue.Match?clips[(variation++)%2]:cue==RoyalCue.Land?clips[0]:clips[k];
-            float gain=cue==RoyalCue.Land?.12f:cue==RoyalCue.Match?.42f:cue==RoyalCue.Tnt?.84f:.66f;
+            AudioClip clip=cue==RoyalCue.Match?clips[(variation++)%2]:cue==RoyalCue.Land?clips[7]:cue==RoyalCue.Click?clips[8]:clips[k];
+            float gain=cue==RoyalCue.Land?.22f:cue==RoyalCue.Match?.70f:cue==RoyalCue.Tnt?.92f:cue==RoyalCue.Click?.55f:.78f;
             int priority=cue==RoyalCue.Land?200:cue==RoyalCue.Match?160:60;
-            PlayClip(clip,gain*Mathf.Clamp(strength,.6f,1.2f),priority, cue==RoyalCue.Land?.76f:1+((variation%5)-2)*.022f);
+            PlayClip(clip,gain*Mathf.Clamp(strength,.6f,1.2f),priority, cue==RoyalCue.Land?1:1+((variation%5)-2)*.028f);
             if(cue==RoyalCue.Tnt||cue==RoyalCue.Rocket) duck=.32f;
         }
         public void PlayClip(AudioClip clip,float gain=1,int priority=150,float pitch=1)

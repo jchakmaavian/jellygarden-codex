@@ -72,11 +72,25 @@ namespace RoyalThrone.Editor
         {float until=Time.realtimeSinceStartup+max;do{yield return null;}while(RoyalPowerupDirector.Busy&&Time.realtimeSinceStartup<until);yield return new WaitForSeconds(.35f);Check(!RoyalPowerupDirector.Busy,"Impact queue settles within "+max+" seconds");}
         static IEnumerator Suite()
         {
+            bool completed=false;
             try
             {
                 Check(Resources.Load<GameObject>("RoyalGameplay/EffectsRig"),"Authored particle rig loads");
-                foreach(var name in RoyalPieceSkin.Colours.Concat(new[]{"rocket","tnt","helicopter","orb","smoke"}))Check(RoyalPieceSkin.Art(name),"WebP sprite loads: "+name);
-                foreach(var name in new[]{"match-a","match-b","rocket","tnt","helicopter","create","castle-theme"})Check(Resources.Load<AudioClip>("RoyalGameplay/Audio/"+name),"Audio imports: "+name);
+                foreach(var name in RoyalPieceSkin.Colours.Concat(new[]{"rocket","tnt","helicopter","orb","smoke","gem","heart","star","ice","key","chest","chains","stone"}))Check(RoyalPieceSkin.Art(name),"WebP sprite loads: "+name);
+                foreach(var name in new[]{"match-a","match-b","rocket","tnt","helicopter","create","castle-theme","land","click"})Check(Resources.Load<AudioClip>("RoyalGameplay/Audio/"+name),"Audio imports: "+name);
+                foreach(var blockName in new[]{"Block","SolidBlock","ThrivingBlock","UndestrBlock","WireBlock"}){
+                    var prefab=Resources.Load<GameObject>("Prefabs/"+blockName);var original=prefab.GetComponent<SpriteRenderer>().sprite;
+                    var styled=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(original);
+                    Check(styled&&styled.texture!=original.texture&&styled.name==original.name,blockName+" has new art and preserves target identifier");
+                    Check(Mathf.Abs(Mathf.Max(styled.bounds.size.x,styled.bounds.size.y)-Mathf.Max(original.bounds.size.x,original.bounds.size.y))<.01f,blockName+" preserves board footprint");
+                }
+                Seed();Check(lm.GetItems().Where(i=>i).All(i=>i.sprRenderer.sprite==RoyalPieceSkin.For(i.currentType,i.color)),"New pieces show royal art before their first rendered frame");yield return null;SetColours();var blocked=lm.GetSquare(3,3);blocked.type=SquareTypes.WIREBLOCK;
+                Check(!blocked.CanGoOut(),"Chain artwork retains trapped-piece rule");blocked.type=SquareTypes.BLOCK;
+                for(int k=0;k<2;k++){var block=Object.Instantiate(Resources.Load<GameObject>("Prefabs/Block"),blocked.transform.position,Quaternion.identity,testField);blocked.block.Add(block);}
+                blocked.DestroyBlock();Check(blocked.block.Count==1&&blocked.type==SquareTypes.BLOCK,"Layered obstacle loses only one layer per direct hit");
+                blocked.DestroyBlock();Check(blocked.block.Count==0&&blocked.type==SquareTypes.EMPTY,"Cleared obstacle releases its square");
+                var targetIcon=Object.Instantiate(Resources.Load<TargetIcon>("Targets/TargetBlocks"));targetIcon.SetTarget(lm.targetObject[0]);
+                Check(ReferenceEquals(targetIcon.target,lm.targetObject[0]),"Goal artwork retains live target data reference");Object.DestroyImmediate(targetIcon.gameObject);
                 Check(!JuiceConfig.Instance.EnableHitStop,"Ordinary matches do not change global timescale");
                 capture=RoyalReviewAudioCapture.Begin();
                 for(int n=3;n<=5;n++)
@@ -120,8 +134,9 @@ namespace RoyalThrone.Editor
                 Check(RoyalPowerupDirector.Get.PeakProjectiles<=RoyalEffectsProfile.Get.projectilePool,"Projectiles stay within pool cap");
                 Check(InitScript.Gems==money&&InitScript.lifes==lives,"Regression run preserves coins and lives");
                 Check(errors.Count==0,"No runtime errors during regression run");
+                completed=true;
             }
-            finally {Finish();}
+            finally {if(!completed)errors.Add("Regression aborted before completion; inspect the Unity Console for the originating exception.");Finish();}
         }
         static double previous;
         static void Frame(){double now=EditorApplication.timeSinceStartup;if(recording&&previous>0)frames.Add((float)((now-previous)*1000));previous=now;}

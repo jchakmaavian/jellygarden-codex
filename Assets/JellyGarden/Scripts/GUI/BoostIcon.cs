@@ -25,8 +25,10 @@ namespace JellyGarden.Scripts.GUI
 		{
 			if (name != "Main Camera") {
 				if (LevelManager.THIS != null) {
-					if (LevelManager.THIS.gameStatus == GameState.Map)
-						transform.Find ("Indicator/Image/Check").gameObject.SetActive (false);
+					if (LevelManager.THIS.gameStatus == GameState.Map) {
+                        var mark=transform.Find("Indicator/Image/Check");
+                        if(mark)mark.gameObject.SetActive(false);
+                    }
 //				if (!LevelManager.THIS.enableInApps)
 //					gameObject.SetActive (false);
 				}

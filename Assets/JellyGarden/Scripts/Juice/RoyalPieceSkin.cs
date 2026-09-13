@@ -22,10 +22,14 @@ namespace JellyGarden.Scripts.Juice
             if(type==ItemsTypes.HORIZONTAL_STRIPPED||type==ItemsTypes.VERTICAL_STRIPPED)return rocket;
             return type==ItemsTypes.INGREDIENT?null:colours[Mathf.Clamp(color,0,5)];
         }
-        void LateUpdate()
+        void OnEnable(){ApplyNow();}
+        void LateUpdate(){ApplyNow();}
+        public void ApplyNow()
         {
             if(!ready){item=GetComponent<Item>();if(!item||!item.sprRenderer)return; originalScale=item.sprRenderer.transform.localScale;ready=true;}
-            var sprite=For(item.currentType,item.color); if(!sprite)return;
+            var sprite=For(item.currentType,item.color);
+            if(item.currentType==ItemsTypes.INGREDIENT)sprite=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(item.sprRenderer.sprite);
+            if(!sprite)return;
             item.sprRenderer.sprite=sprite;
             if(!item.destroying)
             {

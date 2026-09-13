@@ -409,7 +409,7 @@ namespace JellyGarden.Scripts.Juice
 
             // Layer 2 - primary stars. Mostly white/gold so every match reads alike.
             Schedule(_stars, position, delay + cfg.StarDelay,
-                Mathf.Clamp(Mathf.RoundToInt(cfg.StarParticleCount * intensity), 6, 12),
+                Mathf.Clamp(Mathf.RoundToInt(cfg.StarParticleCount * intensity), 1, 8),
                 Color.Lerp(Color.white, fruitColor, 0.18f),
                 cfg.ParticleVelocity * cell,
                 cfg.ParticleLifetime,
@@ -417,7 +417,7 @@ namespace JellyGarden.Scripts.Juice
 
             // Layer 3 - micro sparkles: faster, smaller, shorter.
             Schedule(_micro, position, delay + cfg.MicroDelay,
-                Mathf.Clamp(Mathf.RoundToInt(cfg.MicroParticleCount * intensity), 8, 20),
+                Mathf.Clamp(Mathf.RoundToInt(cfg.MicroParticleCount * intensity), 2, 12),
                 Color.Lerp(Color.white, fruitColor, 0.1f),
                 cfg.ParticleVelocity * 1.35f * cell,
                 cfg.MicroLifetime,

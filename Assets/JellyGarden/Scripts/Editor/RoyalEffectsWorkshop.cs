@@ -43,7 +43,7 @@ namespace RoyalThrone.Editor
             foreach(string path in Directory.GetFiles(PathRoot+"Audio"))
             {
                 if(!(AssetImporter.GetAtPath(path.Replace('\\','/')) is AudioImporter importer))continue;
-                bool music=path.Contains("castle-theme");var s=importer.defaultSampleSettings;
+                bool music=path.Contains("castle-theme");if(music)continue;var s=importer.defaultSampleSettings;
                 s.compressionFormat=music?AudioCompressionFormat.Vorbis:AudioCompressionFormat.ADPCM;
                 s.loadType=music?AudioClipLoadType.Streaming:AudioClipLoadType.DecompressOnLoad;s.quality=.55f;
                 // SFX sources are already mono and mastered; avoid automatic downmix normalization.
@@ -77,7 +77,9 @@ namespace RoyalThrone.Editor
                 var drag=ps.limitVelocityOverLifetime;drag.enabled=true;drag.limit=100;drag.dampen=0;drag.drag=2;
                 var renderer=go.GetComponent<ParticleSystemRenderer>();renderer.sharedMaterial=material;renderer.sortingOrder=order;renderer.alignment=ParticleSystemRenderSpace.View;
             }
-            System("Smoke",Mat("Smoke",smokeTexture,false),96,26,.08f,new AnimationCurve(new Keyframe(0,.35f),new Keyframe(.2f,1),new Keyframe(1,1.4f)));
+            System("Smoke",Mat("Smoke",smokeTexture,false),96,26,0,new AnimationCurve(new Keyframe(0,.45f),new Keyframe(.28f,1),new Keyframe(1,1.25f)));
+            System("Aura rays",Mat("Aura rays",diamond,true),128,33,0,AnimationCurve.EaseInOut(0,1,1,0));
+            var rays=root.transform.Find("Aura rays").GetComponent<ParticleSystemRenderer>();rays.renderMode=ParticleSystemRenderMode.Stretch;rays.lengthScale=6;rays.velocityScale=.04f;rays.cameraVelocityScale=0;
             System("Sparkles",Mat("Sparkles",star,true),profile.sparkleBudget,35,0,new AnimationCurve(new Keyframe(0,.4f),new Keyframe(.15f,1),new Keyframe(.6f,.5f),new Keyframe(1,0)));
             System("Embers",Mat("Embers",diamond,true),256,30,.4f,AnimationCurve.Linear(0,1,1,0));
             System("Impact",Mat("Impact",glow,true),24,34,0,AnimationCurve.EaseInOut(0,.4f,1,1.4f));
@@ -86,10 +88,15 @@ namespace RoyalThrone.Editor
             string itemPath="Assets/JellyGarden/Resources/Prefabs/Item.prefab";var item=PrefabUtility.LoadPrefabContents(itemPath);
             if(!item.GetComponent<RoyalPieceSkin>())item.AddComponent<RoyalPieceSkin>();
             PrefabUtility.SaveAsPrefabAsset(item,itemPath);PrefabUtility.UnloadPrefabContents(item);
+            foreach(string blockName in new[]{"Block","SolidBlock","ThrivingBlock","UndestrBlock","WireBlock"}){
+                string path="Assets/JellyGarden/Resources/Prefabs/"+blockName+".prefab";
+                var block=PrefabUtility.LoadPrefabContents(path);if(!block.GetComponent<RoyalBlockSkin>())block.AddComponent<RoyalBlockSkin>();
+                PrefabUtility.SaveAsPrefabAsset(block,path);PrefabUtility.UnloadPrefabContents(block);
+            }
             var juice=Resources.Load<JuiceConfig>("JuiceConfig");
-            juice.EnableHitStop=false;juice.StarSize=.29f;juice.StarParticleCount=5;juice.MicroParticleCount=7;juice.MicroSize=.11f;juice.FragmentCount=3;juice.FragmentSize=.15f;
+            juice.EnableHitStop=false;juice.StarSize=.26f;juice.StarParticleCount=4;juice.MicroParticleCount=5;juice.MicroSize=.09f;juice.FragmentCount=1;juice.FragmentSize=.12f;
             juice.ParticleLifetime=.25f;juice.ParticleVelocity=4.8f;juice.FlashEndScale=1.25f;juice.FlashDuration=.065f;juice.CenterStarCount=3;juice.CenterRingEndScale=1.15f;juice.ShatterLifetime=.32f;juice.ShatterBurstSpeed=2.1f;
-            juice.MatchAnticipation=.02f;juice.MatchSquashDuration=.035f;juice.MatchReboundDuration=.02f;juice.MatchDestroyDuration=.06f;juice.MatchStagger=.014f;juice.FallSpeed=12;juice.FallAcceleration=55;juice.FallMaxSpeed=32;
+            juice.MatchAnticipation=.015f;juice.MatchSquashDuration=.03f;juice.MatchReboundDuration=.02f;juice.MatchDestroyDuration=.05f;juice.MatchStagger=.012f;juice.FallSpeed=12;juice.FallAcceleration=55;juice.FallMaxSpeed=32;
             EditorUtility.SetDirty(juice);AssetDatabase.SaveAssets();
             Debug.Log("[Royal Effects] Built editable particle rig, profile, WebP piece skins and compressed audio. Shift+F9 opens the workshop.");
         }

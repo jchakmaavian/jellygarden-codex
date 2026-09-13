@@ -16,6 +16,7 @@ namespace RoyalThrone.Presentation
         readonly List<string> goalParts=new List<string>();float nextHudUpdate;
         Font display;
         Sprite tileSprite;
+        readonly List<Image> goalIcons=new List<Image>();readonly List<Text> goalNumbers=new List<Text>();
         static Color Navy=>new Color(.025f,.12f,.32f);
         static Color Gold=>new Color(.96f,.74f,.22f);
         RectTransform Rect(string name,Transform parent,float x0,float y0,float x1,float y1)
@@ -45,17 +46,24 @@ namespace RoyalThrone.Presentation
             Panel("Goal inset",content,new Color(.03f,.17f,.4f),Navy,.025f,.845f,.34f,.962f,20);
             Label("Goal heading",content,"GOALS",23,.03f,.926f,.33f,.957f);
             goals=Label("Live goals",content,"",32,.025f,.853f,.34f,.925f);
+            goals.enabled=false;
+            for(int i=0;i<3;i++){
+                float left=.035f+i*.098f;var r=Rect("Goal icon "+i,content,left,.891f,left+.087f,.927f);var icon=r.gameObject.AddComponent<Image>();icon.preserveAspect=true;icon.raycastTarget=false;goalIcons.Add(icon);
+                var number=Label("Goal number "+i,content,"",26,left,.853f,left+.087f,.893f);number.resizeTextMinSize=10;number.horizontalOverflow=HorizontalWrapMode.Overflow;goalNumbers.Add(number);
+            }
             Panel("Moves gold",content,Gold,Gold,.68f,.845f,.9f,.963f,22);
             Panel("Moves blue",content,new Color(.14f,.43f,.78f),Navy,.687f,.85f,.893f,.96f,19);
             Label("Moves heading",content,"MOVES",22,.69f,.928f,.89f,.96f);moves=Label("Moves remaining",content,"24",54,.68f,.849f,.9f,.934f);
             king=Rect("King reactions",content,.35f,.833f,.675f,.99f);kingImage=king.gameObject.AddComponent<Image>();kingImage.sprite=idle;kingImage.preserveAspect=true;kingImage.raycastTarget=false;
-            var pause=Rect("Pause game",content,.909f,.917f,.994f,.97f);var image=pause.gameObject.AddComponent<Image>();image.color=Navy;var button=pause.gameObject.AddComponent<Button>();button.onClick.AddListener(()=>{MenuManager.Instance.ShowMenuPause(true);});Label("Pause icon",pause,"Ⅱ",35,0,0,1,1);
+            var pause=Rect("Pause game",content,.909f,.917f,.994f,.97f);var image=pause.gameObject.AddComponent<Image>();image.color=Navy;var button=pause.gameObject.AddComponent<Button>();button.onClick.AddListener(()=>{MenuManager.Instance.ShowMenuPause(true);});RoyalMenuSkin.Surface(pause,true);Label("Pause icon",pause,"Ⅱ",28,0,0,1,1);
             level=Label("Level",content,"LEVEL 1",22,.35f,.795f,.68f,.828f);
             Panel("Booster rail",content,new Color(.045f,.24f,.53f),Navy,0,0,1,.119f,0);
             Panel("Rail gold",content,Gold,Gold,0,.116f,1,.12f,0);
             var lm=GetComponent<LevelManager>();
             if(lm)
             {
+                var preplay=lm.GameField.parent.Find("Canvas/PrePlay");
+                if(preplay){var banner=preplay.Find("Banner");if(banner){RoyalMenuSkin.Surface(banner);RoyalMenuSkin.Label(banner,"Royal heading","YOUR GOALS",0,88,560,54,32);}preplay.gameObject.AddComponent<RoyalMenuPresenter>();}
                 foreach(string path in new[]{"Canvas/Panel","Canvas/BottomPanel"})
                 {var old=lm.GameField.parent.Find(path);if(old){var cg=old.gameObject.GetComponent<CanvasGroup>();if(!cg)cg=old.gameObject.AddComponent<CanvasGroup>();if(cg){cg.alpha=0;cg.blocksRaycasts=false;hidden.Add(cg);}}}
                 var back=lm.GameField.parent.Find("CanvasBack");if(back)back.gameObject.SetActive(false);
@@ -67,6 +75,7 @@ namespace RoyalThrone.Presentation
                     if(!boost)continue;boost.SetParent(content,false);boost.anchorMin=new Vector2(.06f+i*.235f,.009f);boost.anchorMax=new Vector2(.235f+i*.235f,.087f);boost.offsetMin=boost.offsetMax=Vector2.zero;boost.localScale=Vector3.one;
                     var graphic=boost.GetComponent<Image>();if(graphic){graphic.sprite=RoyalPieceSkin.Art(artNames[i]);graphic.preserveAspect=true;graphic.color=Color.white;}
                     foreach(var text in boost.GetComponentsInChildren<Text>(true)){text.font=display;text.color=new Color(1,.96f,.8f);}
+                    RoyalMenuSkin.Boost(boost,true);
                 }
             }
             // Retain the real boost buttons and their inventory/payment behaviour.
@@ -87,7 +96,10 @@ namespace RoyalThrone.Presentation
             if(Time.unscaledTime>=nextHudUpdate)
             {
                 nextHudUpdate=Time.unscaledTime+.1f;moves.text=Mathf.Max(0,lm.Limit).ToString();level.text="LEVEL "+lm.currentLevel;
-                goalParts.Clear();foreach(var target in lm.targetObject)goalParts.Add(target.type==Target.SCORE?"★ "+Mathf.Max(0,target.GetCount()).ToString("N0"):Mathf.Max(0,target.GetCount())+" "+(target.type==Target.BLOCKS?"blocks":target.type==Target.COLLECT?RoyalPieceSkin.Colours[Mathf.Clamp(target.color,0,5)]:"goals"));goals.text=string.Join("\n",goalParts);
+                for(int i=0;i<goalIcons.Count;i++){
+                    bool active=lm.targetObject!=null&&i<lm.targetObject.Length;goalIcons[i].gameObject.SetActive(active);goalNumbers[i].gameObject.SetActive(active);if(!active)continue;
+                    var target=lm.targetObject[i];goalIcons[i].sprite=RoyalVisualCatalog.Goal(target);goalNumbers[i].text=Mathf.Max(0,target.GetCount()).ToString();
+                }
             }
             excitement=Mathf.MoveTowards(excitement,0,Time.deltaTime*.8f);
             kingImage.sprite=excitement>.5f?cheer:lm.Limit<=5?think:idle;

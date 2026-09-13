@@ -1,7 +1,8 @@
 const fs=require('fs'),path=require('path'),cp=require('child_process');
 const root=path.resolve(__dirname,'../..');
 const capture=path.join(root,'Library/RoyalEffectsCapture');
-const output=path.join(__dirname,'Unity-review');
+const output=path.join(__dirname,process.argv[2]||'Unity-review');
+fs.mkdirSync(output,{recursive:true});
 const ff=process.env.ROYAL_THRONE_FFMPEG||'ffmpeg';
 const frames=fs.readFileSync(path.join(capture,'frames.csv'),'utf8').trim().split(/\r?\n/).map(line=>{const [name,time]=line.split(',');return {name,time:Number(time)};});
 if(frames.length<2)throw new Error('Run the Unity regression capture first.');

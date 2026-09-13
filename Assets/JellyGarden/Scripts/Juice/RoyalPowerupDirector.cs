@@ -10,7 +10,7 @@ namespace JellyGarden.Scripts.Juice
     public sealed class RoyalPowerupDirector : MonoBehaviour
     {
         static RoyalPowerupDirector instance;
-        ParticleSystem smoke, sparks, embers, flash, ring;
+        ParticleSystem smoke, sparks, embers, flash, ring, rays;
         ParticleSystem[] systems;
         sealed class Flyer { public GameObject go,rotor; public SpriteRenderer sprite; public TrailRenderer trail; public bool used; }
         Flyer[] flyers;
@@ -46,7 +46,8 @@ namespace JellyGarden.Scripts.Juice
             instance=this;
             smoke=transform.Find("Smoke").GetComponent<ParticleSystem>(); sparks=transform.Find("Sparkles").GetComponent<ParticleSystem>();
             embers=transform.Find("Embers").GetComponent<ParticleSystem>();flash=transform.Find("Impact").GetComponent<ParticleSystem>();ring=transform.Find("Shockwave").GetComponent<ParticleSystem>();
-            systems=new[]{smoke,sparks,embers,flash,ring};
+            var rayObject=transform.Find("Aura rays");rays=rayObject?rayObject.GetComponent<ParticleSystem>():null;
+            systems=rays?new[]{smoke,sparks,embers,flash,ring,rays}:new[]{smoke,sparks,embers,flash,ring};
             flyers=new Flyer[RoyalEffectsProfile.Get.projectilePool];
             for(int i=0;i<flyers.Length;i++)
             {
@@ -135,13 +136,24 @@ namespace JellyGarden.Scripts.Juice
             n=motion?n:Mathf.Max(1,n/3);
             for(int i=0;i<n;i++){float angle=i*Mathf.PI*2/n+Range(-.25f,.25f);e.velocity=new Vector3(Mathf.Cos(angle),Mathf.Sin(angle),0)*speed*Cell*Range(.65f,1.2f);e.rotation=Range(0,360);ps.Emit(e,1);}
         }
+        void PuffRing(Vector3 p,float strength)
+        {
+            int count=PlayerPrefs.GetInt("RoyalThrone.HomeMotion",1)==0?4:8;
+            for(int i=0;i<count;i++){
+                float a=(i+.15f)*Mathf.PI*2/count;var dir=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);
+                var e=new ParticleSystem.EmitParams{position=p+dir*Cell*.40f*strength+Vector3.back*.5f,velocity=dir*Cell*4.5f*strength,
+                    startLifetime=RoyalEffectsProfile.Get.smokeLifetime*Range(.85f,1.1f),startSize=Cell*.87f*strength*Range(.85f,1.1f),startColor=Color.white,rotation=-a*Mathf.Rad2Deg,applyShapeToPosition=false};
+                smoke.Emit(e,1);
+            }
+        }
         public void Burst(Vector3 p,float strength=1)
         {
-            Emit(flash,p,1,2.8f*strength,0,.10f,new Color(1,.94f,.7f,1));
-            Emit(ring,p,1,1.5f*strength,0,.27f,new Color(1,.82f,.3f,.85f));
-            Emit(smoke,p,7,1.05f*strength,3*strength,RoyalEffectsProfile.Get.smokeLifetime,new Color(1,.94f,.8f,.8f));
-            Emit(sparks,p,22,.43f,8*strength,.43f,new Color(1,.91f,.45f,1));
-            Emit(embers,p,16,.16f,10*strength,.37f,new Color(1,.56f,.08f,1));
+            Emit(flash,p,1,3.9f*strength,0,.085f,new Color(1,.97f,.83f,1));
+            Emit(ring,p,1,1.95f*strength,0,.23f,new Color(1,.85f,.38f,.85f));
+            PuffRing(p,strength);
+            Emit(rays,p,12,.17f,11*strength,.20f,new Color(1,.93f,.68f,1));
+            Emit(sparks,p,10,.32f,7*strength,.34f,new Color(1,.97f,.78f,1));
+            Emit(embers,p,8,.13f,8*strength,.25f,new Color(1,.77f,.25f,1));
             Reaction?.Invoke(strength);shakeEnergy=Mathf.Min(1.5f,Mathf.Max(shakeEnergy,strength)); Impacts++;
         }
         public void Creation(Vector3 p)
@@ -153,7 +165,7 @@ namespace JellyGarden.Scripts.Juice
         void Hit(Square sq)
         {
             if(!sq||sq.IsNone()||sq.type==SquareTypes.UNDESTROYABLE)return;
-            if(sq.item&&sq.item.currentType!=ItemsTypes.INGREDIENT) {sq.item.juiceStagger=0;sq.item.DestroyItem(true);}
+            if(sq.item&&sq.item.currentType!=ItemsTypes.INGREDIENT) {sq.item.royalBlastClear=true;sq.item.juiceStagger=0;sq.item.DestroyItem(true);}
             else if(sq.block.Count>0) sq.DestroyBlock();
         }
         IEnumerator Rocket(Square origin,bool horizontal,int lanes)

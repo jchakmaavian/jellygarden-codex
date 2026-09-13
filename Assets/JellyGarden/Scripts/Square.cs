@@ -304,7 +304,7 @@ namespace JellyGarden.Scripts
                 else
                 {
                     //Destroy( block[block.Count-1]);
-                    if (LevelManager.Instance.targetObject.Any(i => i.blockSprites.Any(x=>x.name == currentBlock.GetComponent<SpriteRenderer>().sprite.name)))
+                    if (LevelManager.Instance.targetObject.Any(i => i.blockSprites != null && i.blockSprites.Any(x=>x && x.name == currentBlock.GetComponent<SpriteRenderer>().sprite.name)))
                     {
                         currentBlock.GetComponent<SpriteRenderer>().enabled = false;
                         LevelManager.THIS.CheckCollectedTarget(currentBlock);
@@ -313,11 +313,15 @@ namespace JellyGarden.Scripts
                     {
                         SoundBase.Instance.PlaySound(SoundBase.Instance.block_destroy);
 
-                        currentBlock.GetComponent<Animation>().Play("BrickRotate");
-                        currentBlock.GetComponent<SpriteRenderer>().sortingOrder = 4;
-                        currentBlock.AddComponent<Rigidbody2D>();
-                        currentBlock.GetComponent<Rigidbody2D>()
-                            .AddRelativeForce(new Vector2(Random.insideUnitCircle.x * Random.Range(30, 200), Random.Range(100, 150)), ForceMode2D.Force);
+                        if(Juice.RoyalEffectsProfile.Get){
+                            var visual=currentBlock.GetComponent<SpriteRenderer>();
+                            Juice.CandyShatterService.Instance.Shatter(visual,.75f,true);visual.enabled=false;
+                        }else{
+                            currentBlock.GetComponent<Animation>().Play("BrickRotate");
+                            currentBlock.GetComponent<SpriteRenderer>().sortingOrder = 4;
+                            currentBlock.AddComponent<Rigidbody2D>();
+                            currentBlock.GetComponent<Rigidbody2D>().AddRelativeForce(new Vector2(Random.insideUnitCircle.x * Random.Range(30, 200), Random.Range(100, 150)), ForceMode2D.Force);
+                        }
                     }
                 }
                 GameObject.Destroy(currentBlock, 1.5f);

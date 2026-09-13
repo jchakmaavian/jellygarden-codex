@@ -133,9 +133,11 @@ namespace JellyGarden.Scripts
                 }
             }
         }
+        private Juice.RoyalPieceSkin royalSkin;
         private void Awake()
         {
             _boxCollider2D = GetComponent<BoxCollider2D>();
+            royalSkin = GetComponent<Juice.RoyalPieceSkin>();
         }
 
         // Use this for initialization
@@ -164,6 +166,7 @@ namespace JellyGarden.Scripts
             xScale = transform.localScale.x;
             yScale = transform.localScale.y;
             juiceBaseScale = transform.localScale;
+            royalSkin?.ApplyNow();
 
             //StartCoroutine(GenRandomSprite());
         }
@@ -277,7 +280,7 @@ namespace JellyGarden.Scripts
                 obj.transform.SetParent(transform);
                 obj.transform.localPosition = Vector3.zero;
             }
-
+            royalSkin?.ApplyNow();
         }
 
         public void SetColor(int col)
@@ -285,6 +288,7 @@ namespace JellyGarden.Scripts
             color = col;
             if (color < items.Length)
                 sprRenderer.sprite = items[color];
+            royalSkin?.ApplyNow();
         }
 
         public void SetAppeared()
@@ -1201,6 +1205,7 @@ namespace JellyGarden.Scripts
         /// animationFinished is raised as soon as the fruit is gone, so the board
         /// resolves while the particles are still finishing on their own.
         /// </summary>
+        [HideInInspector] public bool royalBlastClear;
         IEnumerator JuiceDestroyCor()
         {
             var cfg = JuiceConfig.Instance;
@@ -1224,7 +1229,7 @@ namespace JellyGarden.Scripts
                     if (sprRenderer != null && sprRenderer.enabled)
                         svc.PlayFruitShine(sprRenderer, 0.09f, 0.85f, toShine);
 
-                    svc.PlayMatchBurst(transform.position, GetJuiceColor(), juiceIntensity, toBurst);
+                    svc.PlayMatchBurst(transform.position, GetJuiceColor(), royalBlastClear?.3f:juiceIntensity, toBurst);
                 }
             }
 
@@ -1306,7 +1311,7 @@ namespace JellyGarden.Scripts
                 // intact sprite on the SAME frame, so the chunks take over its silhouette
                 // exactly. That swap is what makes it read as breaking rather than as the
                 // sprite vanishing and debris appearing afterwards.
-                shatter.Shatter(sprRenderer, juiceIntensity);
+                shatter.Shatter(sprRenderer, juiceIntensity,royalBlastClear);
                 didShatter = true;
                 for (int i = 0; i < rendererCount; i++)
                 {

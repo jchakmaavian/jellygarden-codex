@@ -71,6 +71,8 @@ namespace JellyGarden.Scripts
             {
                 if (global::System.Array.IndexOf(destroy, clip) >= 0) royal.Play(Juice.RoyalCue.Match);
                 else if (global::System.Array.IndexOf(drop, clip) >= 0) royal.Play(Juice.RoyalCue.Land);
+                else if (clip == click || clip == wrongMatch) royal.Play(Juice.RoyalCue.Click);
+                else if (clip == block_destroy) royal.Play(Juice.RoyalCue.Match,.85f);
                 else royal.PlayClip(clip, .7f);
                 return;
             }

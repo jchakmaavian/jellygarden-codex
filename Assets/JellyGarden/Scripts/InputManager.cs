@@ -19,6 +19,7 @@ public class InputManager : MonoBehaviour
     }
     
     public InputActionAsset inputActionAsset;
+    private InputActionAsset ownedActions;
     private InputActionMap gameplayMap;
     private InputActionMap mapMap;
     private InputActionMap debugMap;
@@ -132,6 +133,10 @@ public class InputManager : MonoBehaviour
             return;
         }
         
+        // Each persistent manager owns its runtime state; the imported asset must not
+        // retain native input monitors between scene changes and Editor play sessions.
+        ownedActions=Instantiate(inputActionAsset);
+        inputActionAsset=ownedActions;
         gameplayMap = inputActionAsset.FindActionMap("Gameplay");
         mapMap = inputActionAsset.FindActionMap("Map");
         debugMap = inputActionAsset.FindActionMap("Debug");
@@ -229,6 +234,7 @@ public class InputManager : MonoBehaviour
         {
             panPositionAction.performed -= OnPanPositionChanged;
         }
+        if(ownedActions){ownedActions.Disable();Destroy(ownedActions);ownedActions=null;}
     }
     
     private void LateUpdate()

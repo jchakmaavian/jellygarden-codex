@@ -116,3 +116,7 @@ InitTestScene*.unity*
 # Per-machine editor and automation configuration for this independent copy.
 /.vscode/
 /.mcp.json
+
+# Raw editor screenshots are regenerated; optimized WebP reviews are versioned.
+/Design/Effects/Unity-review/*.png
+/Design/Effects/Unity-review-v2/*.png

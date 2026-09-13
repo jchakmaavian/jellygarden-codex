@@ -1,48 +1,162 @@
 using JellyGarden.Scripts.Juice;
 using UnityEngine;
 using UnityEngine.UI;
+
 namespace RoyalThrone.Presentation
 {
-    // Keep existing menu logic and button events; replace its wood/candy presentation.
+    // Original button objects, callbacks and numeric fields remain the economy's source of truth.
     public static class RoyalMenuSkin
     {
+        public static readonly Color Navy=new Color(.025f,.10f,.27f),Cream=new Color(1,.965f,.83f);
+        static Font font;
+        public static RectTransform Place(Transform t,float x,float y,float w,float h)
+        {
+            if(!t)return null;var r=t as RectTransform;if(!r)return null;
+            r.anchorMin=r.anchorMax=r.pivot=new Vector2(.5f,.5f);r.anchoredPosition=new Vector2(x,y);
+            r.sizeDelta=new Vector2(w,h);r.localScale=Vector3.one;r.localRotation=Quaternion.identity;return r;
+        }
+        public static void Typography(Text t,int size=28)
+        {
+            if(!t)return;t.font=font?font:Resources.Load<Font>("RoyalGameplay/Display");t.color=Cream;
+            t.fontSize=size;t.resizeTextForBestFit=true;t.resizeTextMinSize=16;t.resizeTextMaxSize=size;
+            t.alignment=TextAnchor.MiddleCenter;t.raycastTarget=false;
+            foreach(var outline in t.GetComponents<Outline>())outline.enabled=false;
+            var shadow=t.GetComponent<Shadow>();if(!shadow)shadow=t.gameObject.AddComponent<Shadow>();
+            shadow.effectColor=new Color(0,.04f,.14f,.55f);shadow.effectDistance=new Vector2(0,-2);
+        }
+        public static Text Label(Transform p,string name,string value,float x,float y,float w,float h,int size=28)
+        {
+            var tr=p.Find(name);if(!tr){tr=new GameObject(name,typeof(RectTransform)).transform;tr.SetParent(p,false);}
+            Place(tr,x,y,w,h);var t=tr.GetComponent<Text>();if(!t)t=tr.gameObject.AddComponent<Text>();Typography(t,size);t.text=value;return t;
+        }
+        public static Image Art(Transform p,string name,string art,float x,float y,float w,float h)
+        {
+            var tr=p.Find(name);if(!tr){tr=new GameObject(name,typeof(RectTransform)).transform;tr.SetParent(p,false);}
+            Place(tr,x,y,w,h);var i=tr.GetComponent<Image>();if(!i)i=tr.gameObject.AddComponent<Image>();i.sprite=RoyalPieceSkin.Art(art);i.color=Color.white;i.preserveAspect=true;i.raycastTarget=false;return i;
+        }
+        static RoyalPanelGraphic Layer(Transform p,string name,float inset,Color top,Color bottom,float radius)
+        {
+            var tr=new GameObject(name,typeof(RectTransform)).transform;tr.SetParent(p,false);
+            var r=(RectTransform)tr;r.anchorMin=Vector2.zero;r.anchorMax=Vector2.one;r.offsetMin=Vector2.one*inset;r.offsetMax=-Vector2.one*inset;
+            var g=tr.gameObject.AddComponent<RoyalPanelGraphic>();g.topColor=top;g.bottomColor=bottom;g.cornerRadius=radius;g.raycastTarget=false;return g;
+        }
+        public static void Surface(Transform p,bool button=false,bool inset=false)
+        {
+            if(!p||p.Find("Royal skin"))return;var image=p.GetComponent<Image>();if(image)image.color=Color.clear;
+            var go=new GameObject("Royal skin",typeof(RectTransform));go.transform.SetParent(p,false);go.transform.SetAsFirstSibling();
+            var r=(RectTransform)go.transform;r.anchorMin=Vector2.zero;r.anchorMax=Vector2.one;r.offsetMin=r.offsetMax=Vector2.zero;
+            Layer(r,"Depth",0,new Color(.27f,.14f,.04f),new Color(.12f,.08f,.055f),button?30:34);
+            Layer(r,"Gold rim",3,new Color(1,.93f,.6f),new Color(.78f,.43f,.085f),button?28:32);
+            Layer(r,"Inner edge",7,new Color(.09f,.30f,.65f),new Color(.025f,.10f,.29f),button?24:28);
+            var face=Layer(r,"Enamel",10,inset?new Color(.065f,.24f,.48f):new Color(.16f,.46f,.91f),inset?Navy:new Color(.035f,.15f,.40f),button?21:25);
+            var shine=Layer(r,"Top glint",14,new Color(.65f,.88f,1,.27f),new Color(.3f,.55f,1,0),18);
+            var sr=(RectTransform)shine.transform;sr.anchorMin=new Vector2(0,.58f);sr.offsetMin=new Vector2(14,0);
+            var b=p.GetComponent<Button>();if(b){b.targetGraphic=face;var colors=b.colors;colors.normalColor=Color.white;colors.highlightedColor=new Color(1,1,.94f);colors.pressedColor=new Color(.65f,.76f,.95f);colors.disabledColor=new Color(.5f,.55f,.62f);colors.fadeDuration=.08f;b.colors=colors;}
+        }
+        public static void Button(Transform t,string caption,float x,float y,float w,float h,int size=30)
+        {
+            if(!t)return;Place(t,x,y,w,h);Surface(t,true);foreach(var text in t.GetComponentsInChildren<Text>(true))text.enabled=false;
+            var label=Label(t,"Royal caption",caption,0,1,w-28,h-15,size);label.enabled=true;
+        }
+        static void Field(Transform p,string name,float x,float y,float w,float h,int size)
+        {var t=p.Find(name);if(!t)return;Place(t,x,y,w,h);Typography(t.GetComponent<Text>(),size);}
+        static void HideVisual(Transform t)
+        {if(!t)return;var cg=t.GetComponent<CanvasGroup>();if(!cg)cg=t.gameObject.AddComponent<CanvasGroup>();cg.alpha=0;cg.blocksRaycasts=false;}
+        static void Base(Transform menu,Transform p,float h,string title)
+        {
+            foreach(var clamp in menu.GetComponentsInChildren<JellyGarden.Scripts.GUI.KeepUIInScreen>(true))clamp.enabled=false;
+            Place(p,0,0,620,h);Surface(p);Label(p,"Royal heading",title,p.Find("Close")?-24:0,h*.5f-65,430,70,36);Button(p.Find("Close"),"×",257,h*.5f-50,68,68,46);
+            var backdrop=menu.GetComponent<Image>();if(backdrop)backdrop.color=new Color(.005f,.015f,.05f,.82f);HideVisual(menu.Find("Leadboard"));
+        }
+        public static void Boost(Transform t,bool compact=false)
+        {
+            if(!t)return;var indicator=t.Find("Indicator");if(!indicator)return;Place(indicator,0,0,100,100);
+            float badgeY=compact?-24:-46;Button(indicator.Find("Plus"),"+",49,badgeY,48,48,33);
+            var plate=indicator.Find("Image");if(plate){Place(plate,49,badgeY,48,48);Surface(plate,true);Field(plate,"Count",0,0,42,40,24);var check=plate.Find("Check");if(check){Place(check,0,0,38,38);var im=check.GetComponent<Image>();if(im)im.color=Color.clear;Label(check,"Royal check","✓",0,0,38,38,25);}}
+            var locked=t.Find("Lock");if(locked){var im=locked.GetComponent<Image>();if(im)im.color=new Color(.02f,.09f,.23f,.82f);Label(locked,"Royal lock","LOCKED",0,0,120,40,19);}
+        }
         public static void Apply(Transform root,Font display)
         {
-            foreach(string name in new[]{"MenuPlay","MenuPause","MenuComplete","MenuFailed","PreFailed"})
+            font=display;
+            foreach(Transform menu in root)
             {
-                var menu=root.Find(name);if(!menu)continue;
-                foreach(var text in menu.GetComponentsInChildren<Text>(true))
-                {text.font=display;text.color=new Color(1,.96f,.82f);text.resizeTextForBestFit=true;text.resizeTextMinSize=16;if(text.text=="Choose the boost:")text.text="CHOOSE YOUR BOOSTERS";if(text.text=="Target:")text.text="GOALS";}
-                foreach(var image in menu.GetComponentsInChildren<Image>(true))
+                var p=menu.Find("Image");if(!p||p.Find("Royal skin"))continue;
+                foreach(var text in menu.GetComponentsInChildren<Text>(true))Typography(text,32);
+                switch(menu.name)
                 {
-                    if(!image.sprite)continue;string art=image.sprite.name.ToLowerInvariant();
-                    if(image.name=="Image"&&image.transform.parent==menu)
-                    {Surface(image);continue;}
-                    if(image.GetComponent<Button>()&&image.name.ToLowerInvariant().Contains("play"))
-                    {
-                        Surface(image);var labels=image.GetComponentsInChildren<Text>(true);
-                        foreach(var label in labels)label.text="PLAY";
-                        if(labels.Length==0)
-                        {
-                            var labelObject=new GameObject("Royal Play label",typeof(RectTransform));var rect=labelObject.GetComponent<RectTransform>();rect.SetParent(image.transform,false);rect.anchorMin=Vector2.zero;rect.anchorMax=Vector2.one;rect.offsetMin=rect.offsetMax=Vector2.zero;
-                            var label=labelObject.AddComponent<Text>();label.text="PLAY";label.font=display;label.fontSize=44;label.alignment=TextAnchor.MiddleCenter;label.color=new Color(1,.96f,.82f);label.raycastTarget=false;
+                    case "MenuPlay":
+                        Base(menu,p,820,"LEVEL");Field(p,"Level",0,265,220,80,60);
+                        for(int s=1;s<=3;s++)HideVisual(p.Find("Star"+s));
+                        Label(p,"Royal goals heading","LEVEL GOALS",0,182,500,45,24);
+                        var gp=new GameObject("Royal goal plate",typeof(RectTransform)).transform;gp.SetParent(p,false);Place(gp,0,101,506,120);Surface(gp,false,true);gp.SetSiblingIndex(1);
+                        Place(p.Find("Targets"),0,103,460,94);HideVisual(p.Find("TargetDescription1"));HideVisual(p.Find("TargetDescription2"));
+                        Label(p,"Royal boosters heading","START WITH A BOOST",0,-10,460,44,25);
+                        for(int i=1;i<=3;i++){var b=p.Find("Boost"+i);Place(b,(i-2)*174,-113,128,128);var im=b.GetComponent<Image>();im.sprite=RoyalPieceSkin.Art(new[]{"orb","rocket","tnt"}[i-1]);im.preserveAspect=true;Boost(b);Label(p,"Royal boost name "+i,new[]{"MAGIC ORB","ROCKET","TNT"}[i-1],(i-2)*174,-204,160,36,19);}
+                        Button(p.Find("Info"),"?",247,-10,46,46,26);Button(p.Find("Play"),"PLAY",0,-306,382,100,44);HideVisual(p.Find("Offline"));break;
+                    case "GemsShop":
+                        Base(menu,p,880,"ROYAL GEMS");Label(p,"Royal subtitle","A little extra for your next adventure",0,315,520,45,21);
+                        for(int i=1;i<=4;i++){
+                            var pack=p.Find("Pack"+i);Place(pack,i%2==1?-142:142,i<=2?135:-140,260,250);Surface(pack,false,true);
+                            Art(pack,"Royal gem","gem",0,37,118,105);Field(pack,"Count",0,-24,180,49,38);
+                            var buy=pack.Find("Buy");Place(buy,0,-86,224,67);Surface(buy,true);Field(buy,"Price",0,0,196,50,28);
+                        }Button(p.Find("Video"),"WATCH & EARN",0,-371,360,64,23);break;
+                    case "LiveShop":
+                        Base(menu,p,720,"MORE LIVES");foreach(Transform tr in p)if(tr.name=="Label")HideVisual(tr);
+                        Art(p,"Royal heart","heart",0,105,220,210);Label(p,"Royal message","Refill your hearts and keep playing",0,-42,505,50,24);
+                        var life=p.Find("BuyLife");Place(life,0,-147,380,96);Surface(life,true);HideVisual(life.Find("Text"));Label(life,"Royal refill","REFILL",-75,0,210,64,30);
+                        Field(life,"Price",72,0,70,62,35);Art(life,"Royal gem","gem",135,0,55,55);Button(p.Find("Video"),"WATCH FOR A LIFE",0,-265,380,66,24);break;
+                    case "MenuPause":case "Settings":
+                        Base(menu,p,630,menu.name=="MenuPause"?"TAKE A BREATHER":"SETTINGS");Art(p,"Royal crest","crown",0,139,132,110);
+                        Button(p.Find("Continue"),"CONTINUE",0,20,380,92,34);
+                        Button(p.Find("Music"),"MUSIC",-147,-137,136,90,22);Button(p.Find("Sound"),"SFX",0,-137,136,90,25);
+                        Button(p.Find("Map"),"HOME",147,-137,136,90,22);Button(p.Find("Info"),"HELP",147,-137,136,90,22);
+                        foreach(string n in new[]{"Music","Sound"}){var off=p.Find(n+"/"+n+"Off");if(off){Place(off,0,-29,112,23);var im=off.GetComponent<Image>();if(im)im.color=Navy;Label(off,"Royal off","OFF",0,0,108,25,17);off.SetAsLastSibling();}}
+                        if(menu.name=="Settings"){
+                            Place(p,0,0,620,440);Place(p.Find("Royal heading"),-24,155,430,70);Place(p.Find("Close"),257,170,68,68);Place(p.Find("Royal crest"),0,46,132,110);
+                            foreach(string n in new[]{"Music","Sound","Info"}){var control=p.Find(n);if(control){var r=(RectTransform)control;r.anchoredPosition=new Vector2(r.anchoredPosition.x,-100);}}
+                        }break;
+                    case "MenuComplete":case "MenuFailed":
+                        bool win=menu.name=="MenuComplete";Base(menu,p,870,win?"WELL PLAYED!":"TRY AGAIN");Field(p,"Level",0,288,420,50,30);
+                        for(int i=1;i<=3;i++){var star=p.Find("Star"+i);Place(star,(i-2)*130,191+(i==2?12:0),118,118);if(star){star.GetComponent<Image>().sprite=RoyalPieceSkin.Art("star");star.GetComponent<Image>().preserveAspect=true;}}
+                        Art(p,"Royal king",win?"king-cheer":"king-think",0,29,165,146);Place(p.Find("Targets"),0,-84,450,75);
+                        Field(p,"Score",0,-165,490,65,48);Field(p,"BestScore",0,-224,490,42,23);
+                        foreach(string n in new[]{"TargetDescription1","TargetDescription2","TargetCheck1","TargetCheck2","TargetUnCheck1","TargetUnCheck2"})HideVisual(p.Find(n));
+                        Button(p.Find(win?"Next":"Again"),win?"CONTINUE":"TRY AGAIN",0,-335,390,96,34);
+                        Label(p,"Royal score label","SCORE",0,-137,350,30,20);Field(p,"Score",0,-181,490,60,44);Field(p,"BestScore",0,-230,490,38,21);
+                        if(!win){
+                            Place(p,0,0,620,740);Place(p.Find("Royal heading"),0,302,480,70);Field(p,"Level",0,233,420,50,30);
+                            for(int i=1;i<=3;i++)HideVisual(p.Find("Star"+i));Place(p.Find("Royal king"),0,102,180,164);
+                            Place(p.Find("Targets"),0,-30,450,75);Place(p.Find("Royal score label"),0,-105,350,30);Field(p,"Score",0,-148,490,60,44);Field(p,"BestScore",0,-196,490,38,21);Place(p.Find("Again"),0,-279,390,96);
                         }
-                    }
-                    if(art.Contains("panel")||art.Contains("wood")||art.Contains("target_back")||art.Contains("score_back"))Surface(image);
+                        var share=p.Find("Share");if(share)Button(share,"SHARE",0,-264,220,45,18);break;
+                    case "BoostShop":
+                        Base(menu,p,850,"ROYAL BOOSTERS");Place(p.Find("Boost"),-180,211,138,138);Field(p,"BoostDescription",78,211,300,140,23);
+                        for(int i=1;i<=3;i++){var b=p.Find("BuyBoost"+i);Place(b,0,43-(i-1)*128,490,96);Surface(b,true);Field(b,"Count",-130,0,140,65,32);Field(b,"Price",105,0,90,65,32);Art(b,"Royal gem","gem",181,0,56,56);}
+                        Field(p,"Gems",30,-334,230,46,28);Art(p,"Royal balance gem","gem",-125,-334,50,50);break;
+                    case "BoostInfo":
+                        Base(menu,p,810,"POWER UP YOUR PLAY");
+                        int ix=0;var descriptions=p.GetComponentsInChildren<Text>(true);
+                        foreach(var desc in descriptions)if(desc.name=="BoostDescription"){
+                            Place(desc.transform,66,211-ix*192,315,136);Typography(desc,23);desc.text=new[]{"Magic orb\nClears pieces of one colour","Rocket\nClears a full row or column","TNT\nBlasts the surrounding area"}[Mathf.Min(ix,2)];Art(p,"Royal info art "+ix,new[]{"orb","rocket","tnt"}[Mathf.Min(ix,2)],-187,211-ix*192,128,128);ix++;
+                        }break;
+                    case "Reward":
+                        Base(menu,p,670,"A ROYAL REWARD");HideVisual(p.Find("Label"));Art(p,"Royal reward","chest",0,70,270,260);HideVisual(p.Find("icon"));Button(p.Find("Ok"),"COLLECT",0,-220,360,92,34);break;
+                    case "Tutorial":
+                        Base(menu,p,720,"HOW TO PLAY");Button(p.Find("Next"),"NEXT",174,-266,210,80,28);Button(p.Find("Back"),"BACK",-174,-266,210,80,28);break;
                 }
-                var main=menu.Find("Image");if(!main)continue;
-                string[] boosts={"Boost1","Boost2","Boost3"};string[] arts={"orb","rocket","tnt"};
-                for(int i=0;i<boosts.Length;i++)foreach(var t in main.GetComponentsInChildren<Transform>(true))if(t.name==boosts[i])
-                {var image=t.GetComponent<Image>();if(image){image.sprite=RoyalPieceSkin.Art(arts[i]);image.color=Color.white;image.preserveAspect=true;}}
+                if(p.Find("Royal skin"))menu.gameObject.AddComponent<RoyalMenuPresenter>();
             }
-        }
-        static void Surface(Image image)
-        {
-            if(image.transform.Find("Royal surface"))return;
-            image.color=Color.clear;
-            var go=new GameObject("Royal surface",typeof(RectTransform));var rect=go.GetComponent<RectTransform>();rect.SetParent(image.transform,false);rect.SetAsFirstSibling();rect.anchorMin=Vector2.zero;rect.anchorMax=Vector2.one;rect.offsetMin=rect.offsetMax=Vector2.zero;
-            var surface=go.AddComponent<RoyalPanelGraphic>();surface.topColor=new Color(.13f,.39f,.8f);surface.bottomColor=new Color(.025f,.12f,.34f);surface.cornerRadius=28;surface.raycastTarget=false;
-            var button=image.GetComponent<Button>();if(button)button.targetGraphic=surface;
+            var retry=root.Find("PreFailed");if(retry&&!retry.Find("Banner/Royal skin")){
+                var banner=retry.Find("Banner");Surface(banner);Place(banner,0,0,640,660);
+                Label(banner,"Royal heading","SO CLOSE!",0,238,520,65,42);Label(banner,"Royal retry text","A few more moves could do it",0,170,520,50,23);
+                Place(banner.Find("Targets"),0,63,450,90);
+                foreach(var group in retry.GetComponentsInChildren<JellyGarden.Scripts.Targets.TargetsGroup>(true)){
+                    group.transform.SetParent(banner,false);group.name="Royal live goals";Place(group.transform,0,63,450,90);
+                }
+                foreach(string n in new[]{"TargetCheck1","TargetCheck2","TargetUnCheck1","TargetUnCheck2"})HideVisual(banner.Find("Targets/"+n));
+                Button(retry.Find("Buy"),"",0,-85,420,95);var buy=retry.Find("Buy");HideVisual(buy.Find("Royal caption"));Label(buy,"Royal more","CONTINUE",-65,0,250,65,30);Field(buy,"Price",107,0,66,65,32);buy.Find("Price").GetComponent<Text>().enabled=true;Art(buy,"Royal gem","gem",167,0,52,52);
+                Button(retry.Find("GiveUp"),"END LEVEL",0,-199,320,70,26);Button(retry.Find("Video"),"WATCH FOR MOVES",0,-280,400,68,23);retry.gameObject.AddComponent<RoyalMenuPresenter>().ConfigureRetryMotion();
+            }
         }
     }
 }
