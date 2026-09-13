@@ -44,6 +44,8 @@ namespace JellyGarden.Scripts.Targets
         {
             checkObject.gameObject.SetActive(false);
             imageRenderer.sprite = target.icon;
+            // Match the live copy's art; the lazy target lookup below uses its sprite name.
+            imageRenderer.sprite = JellyGarden.Scripts.Story.StorybookBoardArt.Goal(target);
             count = target.targetCount;
             textObj.text = target.targetCount.ToString();
             if (target.type == Target.SCORE)

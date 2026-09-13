@@ -1,0 +1,596 @@
+[
+  {
+    "style": "glossy",
+    "name": "piece-0",
+    "cell": 0,
+    "crop": [
+      37,
+      62,
+      222,
+      200
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "piece-1",
+    "cell": 1,
+    "crop": [
+      332,
+      36,
+      182,
+      234
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "piece-2",
+    "cell": 2,
+    "crop": [
+      597,
+      39,
+      196,
+      232
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "piece-3",
+    "cell": 3,
+    "crop": [
+      863,
+      39,
+      231,
+      223
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "piece-4",
+    "cell": 4,
+    "crop": [
+      34,
+      329,
+      233,
+      201
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "piece-5",
+    "cell": 5,
+    "crop": [
+      314,
+      298,
+      221,
+      246
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "moves",
+    "cell": 6,
+    "crop": [
+      595,
+      312,
+      202,
+      229
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "glove",
+    "cell": 7,
+    "crop": [
+      854,
+      328,
+      239,
+      203
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "hammer",
+    "cell": 8,
+    "crop": [
+      48,
+      568,
+      221,
+      254
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "recolour",
+    "cell": 9,
+    "crop": [
+      319,
+      568,
+      223,
+      250
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "rocket",
+    "cell": 10,
+    "crop": [
+      580,
+      568,
+      215,
+      256
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "area-bomb",
+    "cell": 11,
+    "crop": [
+      870,
+      561,
+      204,
+      255
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "rainbow-orb",
+    "cell": 12,
+    "crop": [
+      34,
+      851,
+      229,
+      230
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "time",
+    "cell": 13,
+    "crop": [
+      333,
+      840,
+      181,
+      241
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "locket",
+    "cell": 14,
+    "crop": [
+      581,
+      842,
+      230,
+      241
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "ring",
+    "cell": 15,
+    "crop": [
+      874,
+      847,
+      205,
+      235
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "ice",
+    "cell": 16,
+    "crop": [
+      38,
+      1116,
+      219,
+      224
+    ]
+  },
+  {
+    "style": "glossy",
+    "name": "score",
+    "cell": 17,
+    "crop": [
+      308,
+      1111,
+      234,
+      238
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "piece-0",
+    "cell": 0,
+    "crop": [
+      35,
+      65,
+      239,
+      211
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "piece-1",
+    "cell": 1,
+    "crop": [
+      336,
+      45,
+      184,
+      237
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "piece-2",
+    "cell": 2,
+    "crop": [
+      600,
+      53,
+      205,
+      229
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "piece-3",
+    "cell": 3,
+    "crop": [
+      856,
+      45,
+      237,
+      231
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "piece-4",
+    "cell": 4,
+    "crop": [
+      26,
+      328,
+      251,
+      215
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "piece-5",
+    "cell": 5,
+    "crop": [
+      311,
+      309,
+      234,
+      247
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "moves",
+    "cell": 6,
+    "crop": [
+      591,
+      315,
+      215,
+      238
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "glove",
+    "cell": 7,
+    "crop": [
+      864,
+      356,
+      236,
+      177
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "hammer",
+    "cell": 8,
+    "crop": [
+      51,
+      574,
+      215,
+      243
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "recolour",
+    "cell": 9,
+    "crop": [
+      328,
+      581,
+      220,
+      241
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "rocket",
+    "cell": 10,
+    "crop": [
+      587,
+      581,
+      219,
+      244
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "area-bomb",
+    "cell": 11,
+    "crop": [
+      880,
+      557,
+      209,
+      264
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "rainbow-orb",
+    "cell": 12,
+    "crop": [
+      32,
+      851,
+      238,
+      233
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "time",
+    "cell": 13,
+    "crop": [
+      341,
+      841,
+      173,
+      245
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "locket",
+    "cell": 14,
+    "crop": [
+      589,
+      841,
+      215,
+      243
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "ring",
+    "cell": 15,
+    "crop": [
+      876,
+      841,
+      202,
+      244
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "ice",
+    "cell": 16,
+    "crop": [
+      37,
+      1117,
+      227,
+      228
+    ]
+  },
+  {
+    "style": "painted",
+    "name": "score",
+    "cell": 17,
+    "crop": [
+      316,
+      1114,
+      227,
+      230
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "piece-0",
+    "cell": 0,
+    "crop": [
+      34,
+      59,
+      239,
+      205
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "piece-1",
+    "cell": 1,
+    "crop": [
+      334,
+      41,
+      184,
+      236
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "piece-2",
+    "cell": 2,
+    "crop": [
+      600,
+      47,
+      205,
+      229
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "piece-3",
+    "cell": 3,
+    "crop": [
+      855,
+      40,
+      234,
+      231
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "piece-4",
+    "cell": 4,
+    "crop": [
+      27,
+      322,
+      251,
+      214
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "piece-5",
+    "cell": 5,
+    "crop": [
+      318,
+      305,
+      219,
+      243
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "moves",
+    "cell": 6,
+    "crop": [
+      594,
+      312,
+      210,
+      230
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "glove",
+    "cell": 7,
+    "crop": [
+      855,
+      336,
+      243,
+      190
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "hammer",
+    "cell": 8,
+    "crop": [
+      49,
+      575,
+      212,
+      248
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "recolour",
+    "cell": 9,
+    "crop": [
+      321,
+      565,
+      225,
+      256
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "rocket",
+    "cell": 10,
+    "crop": [
+      576,
+      578,
+      236,
+      245
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "area-bomb",
+    "cell": 11,
+    "crop": [
+      872,
+      573,
+      210,
+      247
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "rainbow-orb",
+    "cell": 12,
+    "crop": [
+      34,
+      855,
+      233,
+      232
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "time",
+    "cell": 13,
+    "crop": [
+      334,
+      844,
+      188,
+      245
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "locket",
+    "cell": 14,
+    "crop": [
+      588,
+      845,
+      223,
+      237
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "ring",
+    "cell": 15,
+    "crop": [
+      880,
+      845,
+      205,
+      243
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "ice",
+    "cell": 16,
+    "crop": [
+      39,
+      1119,
+      222,
+      224
+    ]
+  },
+  {
+    "style": "bold",
+    "name": "score",
+    "cell": 17,
+    "crop": [
+      316,
+      1119,
+      227,
+      227
+    ]
+  }
+]

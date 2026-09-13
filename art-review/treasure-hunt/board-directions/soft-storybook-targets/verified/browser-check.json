@@ -1,0 +1,1590 @@
+{
+  "reports": [
+    {
+      "layout": "classic-cards",
+      "phone": "tall",
+      "stress": false,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "classic-cards",
+      "phone": "tall",
+      "stress": false,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "classic-cards",
+      "phone": "tall",
+      "stress": true,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "classic-cards",
+      "phone": "tall",
+      "stress": true,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "classic-cards",
+      "phone": "compact",
+      "stress": false,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "classic-cards",
+      "phone": "compact",
+      "stress": false,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "classic-cards",
+      "phone": "compact",
+      "stress": true,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "classic-cards",
+      "phone": "compact",
+      "stress": true,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "compact-bar",
+      "phone": "tall",
+      "stress": false,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "compact-bar",
+      "phone": "tall",
+      "stress": false,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "compact-bar",
+      "phone": "tall",
+      "stress": true,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "compact-bar",
+      "phone": "tall",
+      "stress": true,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "compact-bar",
+      "phone": "compact",
+      "stress": false,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "compact-bar",
+      "phone": "compact",
+      "stress": false,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "compact-bar",
+      "phone": "compact",
+      "stress": true,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "compact-bar",
+      "phone": "compact",
+      "stress": true,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "floating-controls",
+      "phone": "tall",
+      "stress": false,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "floating-controls",
+      "phone": "tall",
+      "stress": false,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "floating-controls",
+      "phone": "tall",
+      "stress": true,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "floating-controls",
+      "phone": "tall",
+      "stress": true,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "floating-controls",
+      "phone": "compact",
+      "stress": false,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "floating-controls",
+      "phone": "compact",
+      "stress": false,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "floating-controls",
+      "phone": "compact",
+      "stress": true,
+      "timed": false,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/moves.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    },
+    {
+      "layout": "floating-controls",
+      "phone": "compact",
+      "stress": true,
+      "timed": true,
+      "cases": [
+        {
+          "id": "score",
+          "targets": 1,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "collect",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "treasure",
+          "targets": 3,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        },
+        {
+          "id": "ice",
+          "targets": 2,
+          "inside": true,
+          "clear": true,
+          "square": true,
+          "goalOverflow": false,
+          "tray": [
+            "art/time.png",
+            "art/glove.png",
+            "art/hammer.png",
+            "art/recolour.png"
+          ]
+        }
+      ],
+      "fourGoals": 4,
+      "goalSampleOverflow": false
+    }
+  ],
+  "broken": [],
+  "errors": []
+}

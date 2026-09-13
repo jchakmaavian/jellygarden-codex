@@ -1,0 +1,103 @@
+{
+  "initial": {
+    "sets": 5,
+    "items": 30,
+    "broken": [],
+    "overflow": false
+  },
+  "reports": [
+    {
+      "set": "royal-keepsakes",
+      "phone": "tall",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    },
+    {
+      "set": "royal-keepsakes",
+      "phone": "compact",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    },
+    {
+      "set": "storybook-magic",
+      "phone": "tall",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    },
+    {
+      "set": "storybook-magic",
+      "phone": "compact",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    },
+    {
+      "set": "castle-garden",
+      "phone": "tall",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    },
+    {
+      "set": "castle-garden",
+      "phone": "compact",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    },
+    {
+      "set": "royal-sweets",
+      "phone": "tall",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    },
+    {
+      "set": "royal-sweets",
+      "phone": "compact",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    },
+    {
+      "set": "playful-classics",
+      "phone": "tall",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    },
+    {
+      "set": "playful-classics",
+      "phone": "compact",
+      "inside": true,
+      "clear": true,
+      "wrongAssets": [],
+      "goalOverflow": false
+    }
+  ],
+  "small": true,
+  "modal": {
+    "open": true,
+    "name": "Purple gem",
+    "loaded": true
+  },
+  "mobileOverflow": false,
+  "mobileModal": {
+    "open": true,
+    "name": "Storybook Magic",
+    "screen": "storybook-magic"
+  },
+  "errors": []
+}

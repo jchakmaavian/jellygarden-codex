@@ -34,6 +34,8 @@ namespace JellyGarden.Scripts.Story
             "Areas", "Ranks", "Home", "Cards"
         };
 
+        private static readonly Tab[] BookTabs = { Tab.Home, Tab.Areas, Tab.Card };
+        private static int SlotOf(Tab tab) => StorybookUi.Enabled ? Array.IndexOf(BookTabs, tab) : (int)tab;
         private static StoryNavBar _instance;
 
         /// <summary>
@@ -91,7 +93,7 @@ namespace JellyGarden.Scripts.Story
         public Button ButtonFor(Tab tab)
         {
             if (_bar == null || _bar.Tabs == null) return null;
-            int index = (int)tab;
+            int index = SlotOf(tab);
             if (index < 0 || index >= _bar.Tabs.Length) return null;
             return _bar.Tabs[index].Button;
         }
@@ -99,6 +101,8 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The name of a tab, as the bar knows it.</summary>
         public static string NameOf(Tab tab)
         {
+            if (StorybookUi.Enabled)
+                return tab == Tab.Areas ? "Map" : tab == Tab.Card ? "Collection" : tab.ToString();
             int index = (int)tab;
             return index >= 0 && index < Labels.Length ? Labels[index] : tab.ToString();
         }
@@ -133,6 +137,7 @@ namespace JellyGarden.Scripts.Story
             get
             {
                 if (LevelIsPlaying) return false;
+                if (StorybookUi.Enabled && AreaScreen.IsOpen) return false;
 
                 // A repair takes the whole screen for four seconds, and the tabs
                 // standing on top of it would be the one thing on screen that is
@@ -202,11 +207,11 @@ namespace JellyGarden.Scripts.Story
             // of 150 and the area page it opens. Home lights Home. Home sorts
             // under both, so when several are open the topmost is the one being
             // read, and that is what the tab reports.
-            Tab current = AreaScreen.IsOpen || StoryAreasList.IsOpen ? Tab.Areas : Tab.Home;
+            Tab current = StorybookCollection.IsOpen ? Tab.Card : AreaScreen.IsOpen || StoryAreasList.IsOpen ? Tab.Areas : Tab.Home;
             if (current != _selected)
             {
                 _selected = current;
-                StoryCastleUi.SelectNav(_bar, (int)current);
+                StoryCastleUi.SelectNav(_bar, SlotOf(current));
             }
         }
 
@@ -225,14 +230,16 @@ namespace JellyGarden.Scripts.Story
             _canvas.transform.SetParent(transform, false);
             _canvas.GetComponent<CanvasScaler>().referenceResolution = new Vector2(360, 720);
 
-            _bar = StoryCastleUi.NavBar(_canvas.transform, Icons, Labels, OnTab);
-            StoryCastleUi.SelectNav(_bar, (int)Tab.Home);
+            _bar = StoryCastleUi.NavBar(_canvas.transform,
+                StorybookUi.Enabled ? new[] { StoryUi.NavIcon.Home, StoryUi.NavIcon.Areas, StoryUi.NavIcon.Cards } : Icons,
+                StorybookUi.Enabled ? new[] { "Home", "Map", "Collection" } : Labels, OnTab);
+            StoryCastleUi.SelectNav(_bar, SlotOf(Tab.Home));
 
             _shown = true;
 
             if (Application.isPlaying)
                 Debug.Log(string.Format("[Story] floating dock built: {0} tabs [{1}], '{2}' selected.",
-                    _bar.Tabs.Length, string.Join(" ", Labels), NameOf(Tab.Home)));
+                    _bar.Tabs.Length, string.Join(" ", StorybookUi.Enabled ? new[] { "Home", "Map", "Collection" } : Labels), NameOf(Tab.Home)));
         }
 
         #endregion
@@ -241,7 +248,7 @@ namespace JellyGarden.Scripts.Story
 
         private void OnTab(int index)
         {
-            var tab = (Tab)index;
+            var tab = StorybookUi.Enabled ? BookTabs[index] : (Tab)index;
             Debug.Log("[Story] nav: " + NameOf(tab) + " tapped.");
 
             switch (tab)
@@ -252,6 +259,16 @@ namespace JellyGarden.Scripts.Story
 
                 case Tab.Home:
                     GoHome();
+                    break;
+
+                case Tab.Card:
+                    if (StorybookUi.Enabled)
+                    {
+                        AreaScreen.Close();
+                        StoryAreasList.Close();
+                        StorybookCollection.Open();
+                    }
+                    else StoryToast.Show(NameOf(tab) + " is not open yet.");
                     break;
 
                 default:
@@ -270,6 +287,7 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private static void GoToAreas()
         {
+            StorybookCollection.Close();
             if (AreasDestination != null)
             {
                 AreasDestination();
@@ -286,6 +304,7 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private static void GoHome()
         {
+            StorybookCollection.Close();
             AreaScreen.Close();
             StoryAreasList.Close();
             StoryHomeScreen.Open();

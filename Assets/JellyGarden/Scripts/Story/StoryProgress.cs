@@ -35,10 +35,14 @@ namespace JellyGarden.Scripts.Story
         private static readonly HashSet<int> _cluesSeen = new HashSet<int>();
         private static readonly HashSet<int> _cutscenesSeen = new HashSet<int>();
         private static readonly HashSet<int> _levelsBeaten = new HashSet<int>();
+        private static readonly HashSet<string> _scenesSeen = new HashSet<string>();
+
+        // Tests use a separate temporary directory and never reset a player's save.
+        public static string SaveDirectoryOverride;
 
         public static string SavePath
         {
-            get { return Path.Combine(Application.persistentDataPath, FileName); }
+            get { return Path.Combine(SaveDirectoryOverride ?? StoryIdentity.SaveDirectory, StoryCampaign.SaveFileName); }
         }
 
         public static int CurrentArea
@@ -47,6 +51,7 @@ namespace JellyGarden.Scripts.Story
             set
             {
                 Load();
+                if (!StoryCampaign.IsReady(value)) return;
                 if (_currentArea == value) return;
                 _currentArea = value;
                 MarkDirty();
@@ -91,6 +96,7 @@ namespace JellyGarden.Scripts.Story
         public static bool IsAreaUnlocked(int areaId)
         {
             Load();
+            if (!StoryCampaign.IsReady(areaId)) return false;
             if (areaId <= 1) return true;
             return _areasCompleted.Contains(areaId - 1);
         }
@@ -136,6 +142,12 @@ namespace JellyGarden.Scripts.Story
         {
             Load();
             if (IsTaskComplete(areaId, taskIndex)) return false;
+            if (StoryCampaign.IsTreasureHunt)
+            {
+                if (!IsAreaUnlocked(areaId)) return false;
+                StoryTask next = NextTask(areaId);
+                if (next == null || next.Index != taskIndex) return false;
+            }
 
             StoryArea area = StoryDatabase.GetArea(areaId);
             if (area == null) return false;
@@ -180,6 +192,36 @@ namespace JellyGarden.Scripts.Story
         {
             Load();
             if (_levelsBeaten.Add(levelNumber)) MarkDirty();
+        }
+
+        /// <summary>Record the first win and its star as one persistence mutation.</summary>
+        public static bool RecordLevelWin(int levelNumber, int areaId)
+        {
+            Load();
+            if (StoryLevelPlan.AreaOf(levelNumber) != areaId || !IsAreaUnlocked(areaId)) return false;
+            if (!_levelsBeaten.Add(levelNumber)) return false;
+            _areaStars[areaId] = StarsIn(areaId) + 1;
+            MarkDirty();
+            return true;
+        }
+
+        public static bool IsSceneSeen(string id)
+        {
+            Load();
+            return _scenesSeen.Contains(id);
+        }
+
+        public static void MarkSceneSeen(string id)
+        {
+            Load();
+            if (string.IsNullOrEmpty(id)) return;
+            bool changed = _scenesSeen.Add(id);
+            if (id == StoryCampaign.OpeningScene && !_openingSeen)
+            {
+                _openingSeen = true;
+                changed = true;
+            }
+            if (changed) MarkDirty();
         }
 
         /// <summary>
@@ -252,6 +294,7 @@ namespace JellyGarden.Scripts.Story
             _cluesSeen.Clear();
             _cutscenesSeen.Clear();
             _levelsBeaten.Clear();
+            _scenesSeen.Clear();
         }
 
         /// <summary>
@@ -299,6 +342,7 @@ namespace JellyGarden.Scripts.Story
 
             _version = root["version"].AsInt(SaveVersion);
             _currentArea = Mathf.Max(1, root["currentArea"].AsInt(1));
+            if (!StoryCampaign.IsReady(_currentArea)) _currentArea = 1;
             _openingSeen = root["openingSeen"].AsBool();
 
             foreach (JsonValue entry in root["areaStars"].Items)
@@ -316,6 +360,7 @@ namespace JellyGarden.Scripts.Story
             ReadIntSet(root["cluesSeen"], _cluesSeen);
             ReadIntSet(root["cutscenesSeen"], _cutscenesSeen);
             ReadIntSet(root["levelsBeaten"], _levelsBeaten);
+            foreach (JsonValue scene in root["scenesSeen"].Items) _scenesSeen.Add(scene.AsString());
         }
 
         private static void ReadIntSet(JsonValue array, HashSet<int> into)
@@ -385,7 +430,16 @@ namespace JellyGarden.Scripts.Story
             AppendIntSet(sb, "areasCompleted", _areasCompleted, true);
             AppendIntSet(sb, "cluesSeen", _cluesSeen, true);
             AppendIntSet(sb, "cutscenesSeen", _cutscenesSeen, true);
-            AppendIntSet(sb, "levelsBeaten", _levelsBeaten, false);
+            AppendIntSet(sb, "levelsBeaten", _levelsBeaten, true);
+            sb.Append("  \"scenesSeen\": [");
+            first = true;
+            foreach (string scene in _scenesSeen)
+            {
+                if (!first) sb.Append(", ");
+                first = false;
+                sb.Append('"').Append(scene.Replace("\\", "\\\\").Replace("\"", "\\\"")).Append('"');
+            }
+            sb.Append("]\n");
             sb.Append("}\n");
 
             string path = SavePath;

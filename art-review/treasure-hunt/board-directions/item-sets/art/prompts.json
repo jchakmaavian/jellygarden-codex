@@ -1,0 +1,98 @@
+{
+  "tool": "Built-in image_gen",
+  "sets": [
+    {
+      "id": "royal-keepsakes",
+      "name": "Royal Keepsakes",
+      "tag": "A LITTLE PIECE OF THE CASTLE",
+      "description": "Seals, coins and royal keepsakes. My pick for the castle story.",
+      "items": [
+        "Wax seal",
+        "Copper coin",
+        "Purple gem",
+        "Shield",
+        "Feather",
+        "Bell"
+      ],
+      "subjects": [
+        "a red round wax seal with gently scalloped wax edge and one simple embossed four-point sparkle symbol",
+        "an orange copper coin, round with a thick beveled rim and one simple centered diamond symbol",
+        "a purple diamond gemstone, chunky cut-diamond silhouette with flat top, broad shoulders and pointed bottom, simple facets",
+        "a blue royal shield, broad pentagonal silhouette, subtle lighter blue central panel",
+        "a green feather, chunky curved plume with a short stem and two simple cut notches",
+        "a yellow royal bell with a small round handle and visible clapper"
+      ],
+      "prompt": "Transparent background. A production sprite sheet of exactly SIX separate match-3 game icons on a true transparent RGBA canvas, 1536 x 1024 landscape. Arrange a strict 3-column by 2-row grid, one icon in each equal square cell, centered with generous empty transparent gutters. Objects fill 72% of each cell. No labels, no borders, no interface, no background, no shadows on a surface.\nArt style: the same excellent modern Bold Cartoon mobile-game icon family across all six objects: thick dark indigo outlines with rounded joins (about 3% of object width), chunky charming slightly asymmetric silhouettes, simple flat cel shading with at most three solid colour tones per material, one or two small crisp graphic highlights. Punchy saturated colours, friendly storybook feel, high clarity at 32 pixels. No 3D rendering, no realistic texture, no painterly brush strokes, no metallic photorealism, no white sticker borders. Front view or very slight three-quarter view. Details must be few, broad and bold.\nRead left to right, top row first. Exact colour sequence: RED, ORANGE, PURPLE; BLUE, GREEN, YELLOW. Each icon should overwhelmingly read as its specified colour. Absolutely no crowns, butterflies or heart-shaped lockets. No text or numbers. \nCell 1: a red round wax seal with gently scalloped wax edge and one simple embossed four-point sparkle symbol.\nCell 2: an orange copper coin, round with a thick beveled rim and one simple centered diamond symbol.\nCell 3: a purple diamond gemstone, chunky cut-diamond silhouette with flat top, broad shoulders and pointed bottom, simple facets.\nCell 4: a blue royal shield, broad pentagonal silhouette, subtle lighter blue central panel.\nCell 5: a green feather, chunky curved plume with a short stem and two simple cut notches.\nCell 6: a yellow royal bell with a small round handle and visible clapper.\nThis six-icon collection is called Royal Keepsakes; do not write its name in the artwork. Final image background is actual alpha transparency, not a picture of a transparent-background pattern."
+    },
+    {
+      "id": "storybook-magic",
+      "name": "Storybook Magic",
+      "tag": "SPELLS & LITTLE WONDERS",
+      "description": "A playful magical collection for Leo’s world.",
+      "items": [
+        "Potion",
+        "Mushroom",
+        "Wizard hat",
+        "Crystal",
+        "Clover",
+        "Star"
+      ],
+      "subjects": [
+        "a red magic potion in a squat round red bottle with small tan cork, red dominates and glass is shown with minimal white highlights",
+        "an orange mushroom with one broad orange cap, three pale orange spots and short cream stem, orange dominates",
+        "a purple wizard hat with wide curved brim and one tall curved pointed tip, plain purple band",
+        "a blue crystal, one chunky upright asymmetric quartz point with two broad flat facets, no cluster of tiny crystals",
+        "a green four-leaf clover with broad heart-shaped lobes and very short curved stem",
+        "a yellow rounded five-point star"
+      ],
+      "prompt": "Transparent background. A production sprite sheet of exactly SIX separate match-3 game icons on a true transparent RGBA canvas, 1536 x 1024 landscape. Arrange a strict 3-column by 2-row grid, one icon in each equal square cell, centered with generous empty transparent gutters. Objects fill 72% of each cell. No labels, no borders, no interface, no background, no shadows on a surface.\nArt style: the same excellent modern Bold Cartoon mobile-game icon family across all six objects: thick dark indigo outlines with rounded joins (about 3% of object width), chunky charming slightly asymmetric silhouettes, simple flat cel shading with at most three solid colour tones per material, one or two small crisp graphic highlights. Punchy saturated colours, friendly storybook feel, high clarity at 32 pixels. No 3D rendering, no realistic texture, no painterly brush strokes, no metallic photorealism, no white sticker borders. Front view or very slight three-quarter view. Details must be few, broad and bold.\nRead left to right, top row first. Exact colour sequence: RED, ORANGE, PURPLE; BLUE, GREEN, YELLOW. Each icon should overwhelmingly read as its specified colour. Absolutely no crowns, butterflies or heart-shaped lockets. No text or numbers. \nCell 1: a red magic potion in a squat round red bottle with small tan cork, red dominates and glass is shown with minimal white highlights.\nCell 2: an orange mushroom with one broad orange cap, three pale orange spots and short cream stem, orange dominates.\nCell 3: a purple wizard hat with wide curved brim and one tall curved pointed tip, plain purple band.\nCell 4: a blue crystal, one chunky upright asymmetric quartz point with two broad flat facets, no cluster of tiny crystals.\nCell 5: a green four-leaf clover with broad heart-shaped lobes and very short curved stem.\nCell 6: a yellow rounded five-point star.\nThis six-icon collection is called Storybook Magic; do not write its name in the artwork. Final image background is actual alpha transparency, not a picture of a transparent-background pattern."
+    },
+    {
+      "id": "castle-garden",
+      "name": "Castle Garden",
+      "tag": "GROWN IN THE ROYAL GARDEN",
+      "description": "Fresh fruit, plants and water in a cheerful garden palette.",
+      "items": [
+        "Strawberry",
+        "Carrot",
+        "Mushroom",
+        "Water drop",
+        "Leaf",
+        "Flower"
+      ],
+      "subjects": [
+        "a red strawberry with a few large cream seeds and a small green leaf cap, red dominates",
+        "an orange chunky carrot angled slightly, with a very small green tuft and two broad dark orange crease marks",
+        "a purple mushroom with broad purple cap, three pale lavender spots and short lavender stem, purple dominates",
+        "a blue water droplet with one curved tip and rounded bottom",
+        "a green leaf with one broad curved vein and short stem",
+        "a yellow flower with six chunky rounded petals, slightly deeper yellow round center, no stem or green leaves"
+      ],
+      "prompt": "Transparent background. A production sprite sheet of exactly SIX separate match-3 game icons on a true transparent RGBA canvas, 1536 x 1024 landscape. Arrange a strict 3-column by 2-row grid, one icon in each equal square cell, centered with generous empty transparent gutters. Objects fill 72% of each cell. No labels, no borders, no interface, no background, no shadows on a surface.\nArt style: the same excellent modern Bold Cartoon mobile-game icon family across all six objects: thick dark indigo outlines with rounded joins (about 3% of object width), chunky charming slightly asymmetric silhouettes, simple flat cel shading with at most three solid colour tones per material, one or two small crisp graphic highlights. Punchy saturated colours, friendly storybook feel, high clarity at 32 pixels. No 3D rendering, no realistic texture, no painterly brush strokes, no metallic photorealism, no white sticker borders. Front view or very slight three-quarter view. Details must be few, broad and bold.\nRead left to right, top row first. Exact colour sequence: RED, ORANGE, PURPLE; BLUE, GREEN, YELLOW. Each icon should overwhelmingly read as its specified colour. Absolutely no crowns, butterflies or heart-shaped lockets. No text or numbers. \nCell 1: a red strawberry with a few large cream seeds and a small green leaf cap, red dominates.\nCell 2: an orange chunky carrot angled slightly, with a very small green tuft and two broad dark orange crease marks.\nCell 3: a purple mushroom with broad purple cap, three pale lavender spots and short lavender stem, purple dominates.\nCell 4: a blue water droplet with one curved tip and rounded bottom.\nCell 5: a green leaf with one broad curved vein and short stem.\nCell 6: a yellow flower with six chunky rounded petals, slightly deeper yellow round center, no stem or green leaves.\nThis six-icon collection is called Castle Garden; do not write its name in the artwork. Final image background is actual alpha transparency, not a picture of a transparent-background pattern."
+    },
+    {
+      "id": "royal-sweets",
+      "name": "Royal Sweets",
+      "tag": "TREATS FROM THE CASTLE KITCHEN",
+      "description": "Candy shapes with six clearly different silhouettes.",
+      "items": [
+        "Heart candy",
+        "Gummy bear",
+        "Macaron",
+        "Wrapped candy",
+        "Lollipop",
+        "Cookie"
+      ],
+      "subjects": [
+        "a red heart-shaped candy, plump asymmetric heart silhouette",
+        "an orange gummy bear standing upright, broad tiny ears, chunky short limbs and subtle simple face, orange only",
+        "a purple macaron, slightly tilted round sandwich biscuit with a pale lavender cream middle and broad purple top and bottom shells",
+        "a blue wrapped candy with a large blue oval center and two chunky blue twisted wrapper ends, blue dominates",
+        "a green round swirl lollipop with broad light green spiral and a short cream stick angled slightly",
+        "a yellow round cookie with softly scalloped edge and only four large warm brown chocolate chips, yellow dominates"
+      ],
+      "prompt": "Transparent background. A production sprite sheet of exactly SIX separate match-3 game icons on a true transparent RGBA canvas, 1536 x 1024 landscape. Arrange a strict 3-column by 2-row grid, one icon in each equal square cell, centered with generous empty transparent gutters. Objects fill 72% of each cell. No labels, no borders, no interface, no background, no shadows on a surface.\nArt style: the same excellent modern Bold Cartoon mobile-game icon family across all six objects: thick dark indigo outlines with rounded joins (about 3% of object width), chunky charming slightly asymmetric silhouettes, simple flat cel shading with at most three solid colour tones per material, one or two small crisp graphic highlights. Punchy saturated colours, friendly storybook feel, high clarity at 32 pixels. No 3D rendering, no realistic texture, no painterly brush strokes, no metallic photorealism, no white sticker borders. Front view or very slight three-quarter view. Details must be few, broad and bold.\nRead left to right, top row first. Exact colour sequence: RED, ORANGE, PURPLE; BLUE, GREEN, YELLOW. Each icon should overwhelmingly read as its specified colour. Absolutely no crowns, butterflies or heart-shaped lockets. No text or numbers. \nCell 1: a red heart-shaped candy, plump asymmetric heart silhouette.\nCell 2: an orange gummy bear standing upright, broad tiny ears, chunky short limbs and subtle simple face, orange only.\nCell 3: a purple macaron, slightly tilted round sandwich biscuit with a pale lavender cream middle and broad purple top and bottom shells.\nCell 4: a blue wrapped candy with a large blue oval center and two chunky blue twisted wrapper ends, blue dominates.\nCell 5: a green round swirl lollipop with broad light green spiral and a short cream stick angled slightly.\nCell 6: a yellow round cookie with softly scalloped edge and only four large warm brown chocolate chips, yellow dominates.\nThis six-icon collection is called Royal Sweets; do not write its name in the artwork. Final image background is actual alpha transparency, not a picture of a transparent-background pattern."
+    }
+  ],
+  "playfulClassics": "Reuse the five approved Bold Cartoon pieces plus the purple gem from Royal Keepsakes."
+}

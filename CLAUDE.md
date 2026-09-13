@@ -8,7 +8,8 @@ effects; the story supplies 150 areas, 806 repair tasks, 1208 levels and the six
 arcs that connect them.
 
 - Unity **6000.5.10f1**
-- Story source of truth: `/Users/avian/Desktop/story` (markdown)
+- Active story source: [Treasure Hunt authoring](docs/story/treasure-hunt/README.md), compiled with `python3 tools/treasure_hunt_build.py`. Area 001 has four tasks/four levels; the other new-story areas are gated while in development.
+- Legacy story reference: `/Users/avian/Desktop/story` (markdown). The totals below describe that campaign; `validate_story.py` validates the legacy package.
 - Story layer: [Assets/JellyGarden/Scripts/Story/](Assets/JellyGarden/Scripts/Story/) — see its [CLAUDE.md](Assets/JellyGarden/Scripts/Story/CLAUDE.md)
 - Generators: [tools/](tools/) — see [tools/README.md](tools/README.md)
 - Adaptation plan: [PLAN.md](PLAN.md) — what changes next, and what must not

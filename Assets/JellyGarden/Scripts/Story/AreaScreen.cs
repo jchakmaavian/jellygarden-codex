@@ -4,6 +4,7 @@
 // This is the screen the map opens instead of the kit's pre-play popup. It reads
 // everything from StoryDatabase and StoryProgress; it knows no area ids.
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,7 @@ namespace JellyGarden.Scripts.Story
         // 154 reference points tall with 50 between cards. The gap is pulled in,
         // because the reference only ever shows two rows and this story writes
         // areas of seven.
-        private const float RowHeight = 150f;
+        private static float RowHeight => StorybookUi.Enabled ? 196f : 150f;
         private const float RowGap = 24f;
 
         // The row's three columns, in reference points from the card's edges:
@@ -84,6 +85,8 @@ namespace JellyGarden.Scripts.Story
         private Image _scrim;
         private Image _backdrop;
         private bool _repairing;
+        private CanvasGroup _repairPanelGroup;
+        private Coroutine _repairPanelFade;
         private AreaSceneView _sceneView;
         private RectTransform _taskList;
         private Text _chapter;
@@ -251,6 +254,11 @@ namespace JellyGarden.Scripts.Story
         /// <summary>Opens the screen for an area, building it on first use.</summary>
         public static void Open(int areaId)
         {
+            if (!StoryCampaign.CanEnter(areaId))
+            {
+                StoryToast.Show(StoryCampaign.ComingSoon);
+                return;
+            }
             if (StoryDatabase.GetArea(areaId) == null)
             {
                 Debug.LogWarning("[Story] No area " + areaId + " to open.");
@@ -274,6 +282,20 @@ namespace JellyGarden.Scripts.Story
             // bare room it was hidden behind.
             _instance.ShowAfterRepair();
             _instance.Refresh();
+            if (StoryCampaign.IsTreasureHunt)
+            {
+                // Open on the next repair, including the last row on short
+                // phones. Players can still scroll back to completed tasks.
+                Canvas.ForceUpdateCanvases();
+                ScrollRect scroll = _instance._taskList.GetComponentInParent<ScrollRect>();
+                if (scroll != null)
+                {
+                    scroll.StopMovement();
+                    int count = StoryDatabase.GetArea(areaId).Tasks.Count;
+                    scroll.verticalNormalizedPosition = 1f - Mathf.Clamp01(
+                        StoryProgress.TasksCompletedIn(areaId) / (float)Mathf.Max(1, count - 1));
+                }
+            }
 
             // One line per open rather than per refresh: Refresh runs on every
             // repair, and the screen tests open all 150 areas in a row.
@@ -361,11 +383,79 @@ namespace JellyGarden.Scripts.Story
             BuildProgressCard(_panel.Content);
             BuildTaskList(_panel.Content);
             BuildFooter(_panel.Content);
+            if (StorybookUi.Enabled) LayoutStorybookSheet();
 
             _toast = StoryUi.CreateText("Toast", _canvas.transform, "", 36, Color.white,
                 TextAnchor.MiddleCenter);
             StoryUi.BottomAnchored(_toast.rectTransform, 260f, 90f, 60f);
             _toast.gameObject.SetActive(false);
+        }
+
+        private Text _bookProgress, _bookSummary;
+        private RectTransform _bookCompletion;
+        private float _bookLayoutHeight = -1;
+        private void LayoutStorybookSheet()
+        {
+            _band.anchorMin = new Vector2(0, .004f);
+            _band.anchorMax = new Vector2(1, .565f);
+            _band.offsetMin = _band.offsetMax = Vector2.zero;
+            _panel.Root.offsetMin = new Vector2(12, 0);
+            _panel.Root.offsetMax = new Vector2(-12, 0);
+            _panel.Content.offsetMin = new Vector2(55, 45);
+            _panel.Content.offsetMax = new Vector2(-55, -408);
+            Transform ribbon = _panel.Title.transform.parent;
+            _panel.Title.transform.SetParent(_panel.Root, false);
+            ribbon.gameObject.SetActive(false);
+            StoryUi.TopAnchored(_panel.Title.rectTransform, 64, 105, 160);
+            _panel.Title.font = StorybookArt.Font;
+            _panel.Title.color = StorybookUi.Ink;
+            var titleShadow = _panel.Title.GetComponent<Shadow>();
+            if (titleShadow != null) titleShadow.enabled = false;
+            _panel.Close.GetComponent<RectTransform>().anchoredPosition = new Vector2(-18, -18);
+            _bookProgress = StoryUi.CreateText("CompletedTasks", _panel.Root, "", 42,
+                StorybookUi.Muted, TextAnchor.MiddleCenter);
+            StoryUi.TopAnchored(_bookProgress.rectTransform, 156, 65, 60);
+            _bookProgress.fontStyle = FontStyle.Normal;
+            Image rule = StoryUi.CreateImage("SummaryRule", _panel.Root, null, StorybookUi.GoldLight);
+            StoryUi.TopAnchored(rule.rectTransform, 251, 2, 66);
+            _bookSummary = StoryUi.CreateText("TaskSummary", _panel.Root, "", 49,
+                StorybookUi.Ink, TextAnchor.MiddleLeft);
+            StoryUi.TopAnchored(_bookSummary.rectTransform, 280, 75, 205);
+            _bookSummary.fontStyle = FontStyle.Normal;
+            Image tick = StorybookArt.Image("SummaryCheck", _panel.Root,
+                StorybookArt.Crop("summary-check",472,569,31,30,15,0,24,3,29,11,29,20,22,28,12,29,4,24,0,16,3,7));
+            StoryCastleUi.Place(tick.rectTransform, 91, -289, 76, 74);
+            _panel.Content.Find("Progress").gameObject.SetActive(false);
+            RectTransform viewport = (RectTransform)_taskList.parent;
+            viewport.anchorMin = Vector2.zero;
+            viewport.anchorMax = Vector2.one;
+            viewport.offsetMin = new Vector2(0, 255);
+            viewport.offsetMax = Vector2.zero;
+            RectTransform play = _playButton.GetComponent<RectTransform>();
+            play.anchorMin = new Vector2(0, 0);
+            play.anchorMax = new Vector2(1, 0);
+            play.pivot = new Vector2(.5f, 0);
+            play.offsetMin = new Vector2(32, 42);
+            play.offsetMax = new Vector2(-32, 241);
+            _playLabel.resizeTextMinSize = 55;
+            _playLabel.resizeTextMaxSize = 86;
+            _scrim.color = Color.clear;
+            _chapter.gameObject.SetActive(false);
+            _goal.gameObject.SetActive(false);
+            _bookCompletion = StoryUi.CreateRect("ChapterComplete", _panel.Content);
+            StoryUi.Stretch(_bookCompletion);
+            _bookCompletion.offsetMin = new Vector2(0, 205);
+            Image clue = StoryUi.CreateImage("SunClue", _bookCompletion, StoryArt.ClueImage(1), Color.white);
+            clue.preserveAspect = true;
+            clue.rectTransform.anchorMin = new Vector2(.28f, .35f);
+            clue.rectTransform.anchorMax = new Vector2(.72f, .98f);
+            clue.rectTransform.offsetMin = clue.rectTransform.offsetMax = Vector2.zero;
+            Text next = StoryUi.CreateText("NextChapter", _bookCompletion,
+                "Next: Outer Courtyard\nComing soon", 42, StorybookUi.Ink, TextAnchor.MiddleCenter);
+            next.rectTransform.anchorMin = Vector2.zero;
+            next.rectTransform.anchorMax = new Vector2(1, .34f);
+            next.rectTransform.offsetMin = next.rectTransform.offsetMax = Vector2.zero;
+            _bookCompletion.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -465,7 +555,7 @@ namespace JellyGarden.Scripts.Story
             viewport.offsetMax = new Vector2(-CardSide, 0f);
 
             var mask = viewport.gameObject.AddComponent<Image>();
-            mask.color = new Color(0f, 0f, 0f, 0.02f);
+            mask.color = StorybookUi.Enabled ? Color.clear : new Color(0f, 0f, 0f, 0.02f);
             viewport.gameObject.AddComponent<RectMask2D>();
 
             var scroll = viewport.gameObject.AddComponent<ScrollRect>();
@@ -550,6 +640,8 @@ namespace JellyGarden.Scripts.Story
                 : string.Format("Area {0:000}", area.Id);
             _goal.text = area.Goal;
             _panel.Title.text = area.Name;
+            if (_bookProgress != null)
+                _bookProgress.text = StoryProgress.TasksCompletedIn(_areaId) + "/" + area.Tasks.Count + " complete";
 
             // Both numbers are read, never stored: a repair anywhere else in the
             // game moves this bar the next time the screen is looked at.
@@ -622,7 +714,7 @@ namespace JellyGarden.Scripts.Story
                 // The object being repaired, on the left of the row as in the
                 // reference. Drawn from the kind of work unless someone has
                 // painted this exact task.
-                row.Icon = StoryUi.TaskIcon("Icon", rowRect, area.Id, task);
+                row.Icon = StorybookUi.Enabled ? StorybookUi.TaskIcon("Icon", rowRect, area.Id, task) : StoryUi.TaskIcon("Icon", rowRect, area.Id, task);
                 row.Icon.anchorMin = new Vector2(0f, 0.5f);
                 row.Icon.anchorMax = new Vector2(0f, 0.5f);
                 row.Icon.pivot = new Vector2(0f, 0.5f);
@@ -666,6 +758,29 @@ namespace JellyGarden.Scripts.Story
                 row.Tick.rectTransform.anchoredPosition = new Vector2(-RowSidePad - 60f, 0f);
                 row.Tick.rectTransform.sizeDelta = new Vector2(72f, 72f);
 
+                if (StorybookUi.Enabled)
+                {
+                    // The whole task row is the purchase target in the HTML
+                    // design. Keep its existing guarded OnRepair callback.
+                    if (Application.isPlaying) Destroy(row.Repair.gameObject);
+                    else DestroyImmediate(row.Repair.gameObject);
+                    Image hit = StoryUi.CreateImage("Repair", rowRect, null, Color.clear);
+                    StoryUi.Stretch(hit.rectTransform);
+                    row.Repair = StoryCastleUi.Clickable(hit, () => OnRepair(captured));
+                    Image price = StorybookArt.Image("CostStar", rowRect, StorybookArt.SmallStar);
+                    price.rectTransform.anchorMin = price.rectTransform.anchorMax = new Vector2(1,.5f);
+                    price.rectTransform.sizeDelta = new Vector2(93,98);
+                    price.rectTransform.anchoredPosition = new Vector2(-123,0);
+                    Text amount = StoryUi.CreateText("Cost",rowRect,task.Stars.ToString(),65,StorybookUi.Ink,TextAnchor.MiddleCenter);
+                    amount.font = StorybookArt.Font;
+                    amount.rectTransform.anchorMin = amount.rectTransform.anchorMax = new Vector2(1,.5f);
+                    amount.rectTransform.sizeDelta = new Vector2(71,110);
+                    amount.rectTransform.anchoredPosition = new Vector2(-47,0);
+                    row.Icon.sizeDelta = new Vector2(156,156);
+                    row.Icon.anchoredPosition = new Vector2(38,0);
+                    row.Label.rectTransform.offsetMin = new Vector2(232,9);
+                    row.Label.rectTransform.offsetMax = new Vector2(-211,-9);
+                }
                 _rows.Add(row);
             }
 
@@ -682,6 +797,7 @@ namespace JellyGarden.Scripts.Story
             // does the same with a task it will not let you afford.
             StoryTask next = StoryProgress.NextTask(_areaId);
 
+            int visibleRow = 0;
             for (int i = 0; i < _rows.Count && i < area.Tasks.Count; i++)
             {
                 TaskRow row = _rows[i];
@@ -712,6 +828,27 @@ namespace JellyGarden.Scripts.Story
                 // something still owed.
                 row.Repair.gameObject.SetActive(!done);
                 StoryUi.SetGreenInteractable(row.Repair, isNext && affordable);
+                if (StorybookUi.Enabled)
+                {
+                    var rect = (RectTransform)row.Label.transform.parent;
+                    rect.gameObject.SetActive(!done);
+                    if (!done)
+                    {
+                        rect.anchoredPosition = new Vector2(0, -visibleRow++ * (RowHeight + RowGap));
+                        row.Label.fontStyle = FontStyle.Normal;
+                        row.Label.font = StoryUi.BodyFont;
+                        row.Label.fontStyle = FontStyle.Normal;
+                        row.Label.resizeTextMinSize = 30;
+                        row.Label.resizeTextMaxSize = 48;
+                    }
+                }
+            }
+            if (StorybookUi.Enabled)
+            {
+                _bookSummary.text = StoryProgress.TasksCompletedIn(_areaId) + " tasks complete";
+                _taskList.sizeDelta = new Vector2(0, visibleRow * (RowHeight + RowGap));
+                _bookCompletion.gameObject.SetActive(visibleRow == 0);
+                if (visibleRow == 0) _bookProgress.text = area.Tasks.Count + "/" + area.Tasks.Count + " complete · First clue found!";
             }
         }
 
@@ -722,12 +859,29 @@ namespace JellyGarden.Scripts.Story
 
             StoryUi.SetGreenInteractable(_playButton, !complete && next > 0);
             if (_playLabel != null)
-                _playLabel.text = complete ? "Restored" : "Play level " + next;
+                _playLabel.text = complete ? (StorybookUi.Enabled ? "Area complete" : "Restored") : "Play Level " + next;
 
             // A beat's scene can be watched again once it has been earned.
-            bool canReplay = complete && CutsceneRunner.Has(_areaId);
+            bool canReplay = complete && (StoryCampaign.IsTreasureHunt
+                ? TreasureHuntPresentation.Has(area.PayoffScene) : CutsceneRunner.Has(_areaId));
             if (_replayButton != null)
+            {
                 _replayButton.gameObject.SetActive(canReplay);
+                if (StorybookUi.Enabled && canReplay)
+                {
+                    _playButton.gameObject.SetActive(false);
+                    RectTransform replay = _replayButton.GetComponent<RectTransform>();
+                    replay.anchorMin = new Vector2(0, 0);
+                    replay.anchorMax = new Vector2(1, 0);
+                    replay.offsetMin = new Vector2(32, 42);
+                    replay.offsetMax = new Vector2(-32, 241);
+                    Text replayLabel = _replayButton.GetComponentInChildren<Text>();
+                    replayLabel.text = "View the sun clue";
+                    replayLabel.fontSize = 60;
+                    StoryUi.FitOneLine(replayLabel, 40, 60);
+                }
+                else _playButton.gameObject.SetActive(true);
+            }
         }
 
         #endregion
@@ -761,12 +915,12 @@ namespace JellyGarden.Scripts.Story
         /// Called by StoryRepair rather than by the button, because a repair can
         /// be bought from more than one place and all of them should look the same.
         /// </summary>
-        public void HideForRepair()
+        public void HideForRepair(bool fadePanel = false)
         {
             if (_repairing) return;
             _repairing = true;
 
-            if (_band != null) _band.gameObject.SetActive(false);
+            SetRepairPanelVisible(false, fadePanel);
 
             // The top bar goes with it, as it does in Royal Match: the reference
             // capture of a repair mid-play has the room running to the top edge
@@ -801,7 +955,7 @@ namespace JellyGarden.Scripts.Story
         /// <see cref="HideForRepair"/> by the caller that hid it: a screen left
         /// hidden is a dead end with no X on it.
         /// </summary>
-        public void ShowAfterRepair()
+        public void ShowAfterRepair(bool fadePanel = false)
         {
             if (!_repairing) return;
             _repairing = false;
@@ -809,12 +963,50 @@ namespace JellyGarden.Scripts.Story
             LayoutRoom();
 
             if (_backdrop != null) _backdrop.color = new Color(0f, 0f, 0f, 0f);
-            if (_scrim != null) _scrim.color = new Color(0f, 0f, 0f, ScrimAlpha);
-            if (_chapter != null) _chapter.gameObject.SetActive(true);
-            if (_goal != null) _goal.gameObject.SetActive(true);
+            if (_scrim != null) _scrim.color = new Color(0f, 0f, 0f, StorybookUi.Enabled ? 0f : ScrimAlpha);
+            if (_chapter != null) _chapter.gameObject.SetActive(!StorybookUi.Enabled);
+            if (_goal != null) _goal.gameObject.SetActive(!StorybookUi.Enabled);
             if (_topBar != null && _topBar.Root != null)
                 _topBar.Root.gameObject.SetActive(true);
-            if (_band != null) _band.gameObject.SetActive(true);
+            SetRepairPanelVisible(true, fadePanel);
+        }
+
+        private void SetRepairPanelVisible(bool visible, bool animated)
+        {
+            if (_band == null) return;
+            if (_repairPanelFade != null) StopCoroutine(_repairPanelFade);
+            _repairPanelFade = null;
+            if (_repairPanelGroup == null)
+                _repairPanelGroup = _band.gameObject.AddComponent<CanvasGroup>();
+            _repairPanelGroup.alpha = 1f;
+            _repairPanelGroup.blocksRaycasts = visible;
+            _repairPanelGroup.interactable = visible;
+            _band.gameObject.SetActive(visible || animated);
+            if (animated && Application.isPlaying && isActiveAndEnabled)
+                _repairPanelFade = StartCoroutine(FadeRepairPanel(visible));
+            else _band.gameObject.SetActive(visible);
+        }
+
+        private IEnumerator FadeRepairPanel(bool visible)
+        {
+            float started = Time.realtimeSinceStartup;
+            float duration = visible ? 0.42f : 0.36f;
+            while (Time.realtimeSinceStartup - started < duration)
+            {
+                float p = Mathf.SmoothStep(0f, 1f, (Time.realtimeSinceStartup - started) / duration);
+                _repairPanelGroup.alpha = visible ? p : 1f - p;
+                yield return null;
+            }
+            _repairPanelGroup.alpha = 1f;
+            _band.gameObject.SetActive(visible);
+            _repairPanelFade = null;
+        }
+
+        private void OnDisable()
+        {
+            if (_repairPanelFade != null) StopCoroutine(_repairPanelFade);
+            _repairPanelFade = null;
+            if (_repairPanelGroup != null) _repairPanelGroup.alpha = 1f;
         }
 
         private void OnRepair(int taskIndex)
@@ -900,7 +1092,10 @@ namespace JellyGarden.Scripts.Story
         {
             int areaId = _areaId;
             Close();
-            CutsceneRunner.Play(areaId, () => Open(areaId));
+            if (StoryCampaign.IsTreasureHunt)
+                TreasureHuntPresentation.Play(StoryDatabase.GetArea(areaId).PayoffScene, areaId, () => Open(areaId), true);
+            else
+                CutsceneRunner.Play(areaId, () => Open(areaId));
         }
 
         private void OnBack()
@@ -925,6 +1120,16 @@ namespace JellyGarden.Scripts.Story
 
         private void Update()
         {
+            if (StorybookUi.Enabled && _panel != null && _bookSummary != null &&
+                Mathf.Abs(_panel.Root.rect.height - _bookLayoutHeight) > .5f)
+            {
+                _bookLayoutHeight = _panel.Root.rect.height;
+                float compact = Mathf.InverseLerp(1230, 1080, _bookLayoutHeight);
+                _panel.Content.offsetMax = new Vector2(-55, -408 + 58 * compact);
+                StoryUi.TopAnchored(_bookSummary.rectTransform, 280 - 40 * compact, 75, 205);
+                StoryUi.TopAnchored((RectTransform)_panel.Root.Find("SummaryRule"),251 - 31 * compact,2,66);
+                StoryCastleUi.Place((RectTransform)_panel.Root.Find("SummaryCheck"),91,-289 + 40 * compact,76,74);
+            }
             if (_toast != null && _toast.gameObject.activeSelf && StoryClock.Now > _toastUntil)
                 _toast.gameObject.SetActive(false);
         }

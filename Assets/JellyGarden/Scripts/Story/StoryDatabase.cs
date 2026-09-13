@@ -62,7 +62,7 @@ namespace JellyGarden.Scripts.Story
 
             for (int arc = 1; arc <= ArcCount; arc++)
             {
-                var text = Resources.Load<TextAsset>("Story/arc" + arc);
+                var text = StoryCampaign.LoadText("arc" + arc);
                 if (text == null)
                 {
                     Debug.LogWarning("[Story] Missing Resources/Story/arc" + arc + ".json");
@@ -81,7 +81,7 @@ namespace JellyGarden.Scripts.Story
 
             _areas.Sort((a, b) => a.Id.CompareTo(b.Id));
 
-            var index = Resources.Load<TextAsset>("Story/index");
+            var index = StoryCampaign.LoadText("index");
             if (index != null)
             {
                 JsonValue root = JsonValue.Parse(index.text);
@@ -114,6 +114,7 @@ namespace JellyGarden.Scripts.Story
         public static string ThemeOf(int areaId)
         {
             StoryArcInfo arc = ArcOf(areaId);
+            if (arc != null && !string.IsNullOrEmpty(arc.ThemeKey)) return arc.ThemeKey;
             int n = arc != null ? arc.Arc : 1;
             switch (n)
             {

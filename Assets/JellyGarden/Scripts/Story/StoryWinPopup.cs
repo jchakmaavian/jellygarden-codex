@@ -15,7 +15,7 @@ namespace JellyGarden.Scripts.Story
         private static StoryWinPopup _instance;
         private static readonly Color Navy = new Color32(19, 43, 91, 255);
         private static readonly Color Gold = new Color32(235, 184, 66, 255);
-        private static readonly Color ScrimColor = new Color(0.025f, 0.065f, 0.16f, 0.68f);
+        private static Color ScrimColor => StorybookUi.Enabled ? new Color(.06f,.04f,.025f,.48f) : new Color(0.025f,0.065f,0.16f,0.68f);
         private static readonly Vector2 DesignSize = new Vector2(1000f, 1400f);
 
         private Canvas _canvas;
@@ -57,7 +57,7 @@ namespace JellyGarden.Scripts.Story
             _instance._onContinue = onContinue;
             _instance._continuing = false;
             _instance._title.text = "Level " + levelNumber;
-            _instance._caption.text = paidStar ? "+1 Star earned" : "Star already earned";
+            _instance._caption.text = paidStar ? (StorybookUi.Enabled ? "+1 Star" : "+1 Star earned") : "Star already earned";
             _instance.FitToScreen();
             _instance._continue.interactable = true;
             if (Application.isPlaying) _instance.StartCoroutine(_instance.Present());
@@ -99,6 +99,7 @@ namespace JellyGarden.Scripts.Story
             StoryUi.Stretch(_card);
             _cardGroup = _card.gameObject.AddComponent<CanvasGroup>();
 
+            if (StorybookUi.Enabled) { BuildStorybook(); return; }
             Image plate = Art("Plate", _card, "win_panel", StoryUi.RoundedSprite(48));
             plate.type = Image.Type.Sliced;
             Place(plate.rectTransform, new Vector2(0f, -70f), new Vector2(920f, 1160f));
@@ -163,6 +164,33 @@ namespace JellyGarden.Scripts.Story
             Stroke(buttonFace.transform, "ArrowBottom", new Vector2(251f, -13f), 36f, 45f, 12f);
         }
 
+        private void BuildStorybook()
+        {
+            // Coordinates follow the fourth phone in the approved HTML board:
+            // 386-wide ribbon, 327-wide Pip and a 370-wide parchment sheet.
+            Image paper = StorybookLayers.Image("StorybookVictory", _card, "victory-paper");
+            Place(paper.rectTransform, new Vector2(1, -175), new Vector2(971, 1002));
+            Image pip = StorybookArt.Image("Pip", _card, StorybookArt.PipVictory);
+            Place(pip.rectTransform, new Vector2(-35, 679), new Vector2(847, 498));
+            Image ribbon = StorybookArt.Image("HeadlineArtwork", _card, StorybookArt.VictoryRibbon);
+            Place(ribbon.rectTransform, new Vector2(0, 313), new Vector2(1000, 295));
+            _title = Label("Level", _card, "", 73, Navy, new Vector2(0, 207), new Vector2(710, 98));
+            RectTransform effects = StoryUi.CreateRect("StarEffects", _card);
+            Place(effects, new Vector2(0, -56), new Vector2(835, 750));
+            _starVfx = effects.gameObject.AddComponent<StoryWinStarVfx>();
+            _starVfx.raycastTarget = false;
+            Image star = StorybookArt.Image("Star", _card, StorybookArt.VictoryStar);
+            Place(star.rectTransform, new Vector2(0, -56), new Vector2(422, 401));
+            _starVfx.SetStar(star.rectTransform);
+            RectTransform footer = StoryUi.Stretch(StoryUi.CreateRect("Footer", _card));
+            _footer = footer.gameObject.AddComponent<CanvasGroup>();
+            _caption = Label("RewardLabel", footer, "", 102, Navy, new Vector2(0, -326), new Vector2(840, 125));
+            StoryUi.FitOneLine(_caption, 52, 102);
+            Image action = StorybookArt.Image("Continue", footer, StorybookArt.VictoryButton);
+            _continue = StoryCastleUi.Clickable(action, OnContinue);
+            Place(action.rectTransform, new Vector2(0, -505), new Vector2(803, 213));
+        }
+
         private void Divider(float x)
         {
             Image line = StoryUi.CreateImage("LevelDivider", _card, null, Gold);
@@ -183,7 +211,7 @@ namespace JellyGarden.Scripts.Story
             Color color, Vector2 at, Vector2 dimensions)
         {
             Text label = StoryUi.CreateText(name, parent, content, size, color, TextAnchor.MiddleCenter);
-            label.font = StoryUi.DisplayFont;
+            label.font = StorybookUi.Enabled ? StorybookArt.Font : StoryUi.DisplayFont;
             label.fontStyle = FontStyle.Normal;
             label.resizeTextForBestFit = true;
             label.resizeTextMinSize = Mathf.RoundToInt(size * 0.75f);
@@ -229,9 +257,11 @@ namespace JellyGarden.Scripts.Story
             _safeArea.offsetMin = _safeArea.offsetMax = Vector2.zero;
             Vector2 available = Vector2.Scale(canvasSize, _safeArea.anchorMax - _safeArea.anchorMin);
             // Uniform scaling preserves the whole layout on phones and tablets.
+            float designHeight = StorybookUi.Enabled ? 1620 : DesignSize.y;
             float scale = Mathf.Min((available.x - 44f) / DesignSize.x,
-                (available.y - 90f) / DesignSize.y, 1.08f);
+                (available.y - 90f) / designHeight, 1.08f);
             _layout.localScale = Vector3.one * Mathf.Max(0.1f, scale);
+            if (StorybookUi.Enabled) _layout.anchoredPosition = new Vector2(0, -90 * scale);
             _lastSafeArea = safe;
             _lastCanvasSize = canvasSize;
         }
@@ -297,7 +327,8 @@ namespace JellyGarden.Scripts.Story
             try
             {
                 StoryWindow.CaptureInto(capture);
-                int smallWidth = Mathf.Max(1, width / 4), smallHeight = Mathf.Max(1, height / 4);
+                int downsample = StorybookUi.Enabled ? 2 : 4;
+                int smallWidth = Mathf.Max(1, width / downsample), smallHeight = Mathf.Max(1, height / downsample);
                 _blurred = RenderTexture.GetTemporary(smallWidth, smallHeight, 0);
                 _blurred.filterMode = FilterMode.Bilinear;
                 _blurred.wrapMode = TextureWrapMode.Clamp;
@@ -305,7 +336,7 @@ namespace JellyGarden.Scripts.Story
                 scratch.filterMode = FilterMode.Bilinear;
                 scratch.wrapMode = TextureWrapMode.Clamp;
                 Graphics.Blit(capture, _blurred);
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < (StorybookUi.Enabled ? 1 : 2); i++)
                 {
                     _blurMaterial.SetVector("_Direction", new Vector4(1f / smallWidth, 0f, 0f, 0f));
                     Graphics.Blit(_blurred, scratch, _blurMaterial);
@@ -313,6 +344,7 @@ namespace JellyGarden.Scripts.Story
                     Graphics.Blit(scratch, _blurred, _blurMaterial);
                 }
                 _backdrop.texture = _blurred;
+                _backdrop.uvRect = SystemInfo.graphicsUVStartsAtTop ? new Rect(0,1,1,-1) : new Rect(0,0,1,1);
                 _backdrop.enabled = true;
             }
             catch (Exception e)

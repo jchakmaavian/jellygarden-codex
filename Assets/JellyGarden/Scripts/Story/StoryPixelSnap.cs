@@ -94,6 +94,14 @@ namespace JellyGarden.Scripts.Story
             LevelManager manager = LevelManager.THIS;
             if (manager == null) return;
             if (manager.gameStatus == GameState.Map) return;
+            if (StorybookBoardArt.Enabled)
+            {
+                StorybookBoardLayout.FitCamera(manager);
+                LastCellPixels = StorybookBoardLayout.CellPixels;
+                LastOrtho = Camera.main == null ? 0 : Camera.main.orthographicSize;
+                LastShiftX = LastShiftY = 0;
+                return;
+            }
 
             Camera camera = Camera.main;
             if (camera == null || !camera.orthographic) return;

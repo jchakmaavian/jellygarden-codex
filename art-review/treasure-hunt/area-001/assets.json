@@ -1,0 +1,68 @@
+[
+  {
+    "file": "Assets/JellyGarden/Resources/Story/TreasureHunt/Art/area_001_state0.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "mode": "RGB",
+    "sha256": "1d11c38c66bd8558efc45f28f18a716e8d7ac1672a63dc232fd39a706419652c",
+    "source": "built-in image_gen"
+  },
+  {
+    "file": "Assets/JellyGarden/Resources/Story/TreasureHunt/Art/area_001_state1.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "mode": "RGB",
+    "sha256": "687a7cfad87931551579b0cf16d0e7a01febaedf9d9f82641ffe10e711a17580",
+    "source": "built-in image_gen"
+  },
+  {
+    "file": "Assets/JellyGarden/Resources/Story/TreasureHunt/Art/area_001_state2.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "mode": "RGB",
+    "sha256": "9cbd15364d2a48cab0c0d3872e441491d1d69d96ef837d099deb6791f595da2b",
+    "source": "built-in image_gen",
+    "generatedMaster": "exec-8801fbee-3621-470a-a362-5ab28c65b263.png",
+    "revision": "wooden-door-20260912"
+  },
+  {
+    "file": "Assets/JellyGarden/Resources/Story/TreasureHunt/Art/area_001_state3.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "mode": "RGB",
+    "sha256": "21a55ed9c2d4c2b16987e4fd295c519bd317719dbd294ca004e48e645262e7e0",
+    "source": "built-in image_gen",
+    "generatedMaster": "exec-14a77a8c-9b1b-4b4e-a7d5-ac92e6f2c41d.png",
+    "revision": "wooden-door-20260912"
+  },
+  {
+    "file": "Assets/JellyGarden/Resources/Story/TreasureHunt/Art/area_001_state4.png",
+    "dimensions": [
+      941,
+      1672
+    ],
+    "mode": "RGB",
+    "sha256": "63f02378c2d9a81278e07a9b4ff4b0cd08a5e5c42f8dcde3a819d2e78f814f88",
+    "source": "built-in image_gen",
+    "generatedMaster": "exec-608cd7f0-751c-412b-83f4-45219ca9ea0c.png",
+    "revision": "wooden-door-20260912"
+  },
+  {
+    "file": "Assets/JellyGarden/Resources/Story/TreasureHunt/Art/portrait_pip.png",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "44a3aca8fdc2fdc9fa863fcda5d3af6fefad13a5525df574bed6cd234912b48b",
+    "source": "built-in image_gen"
+  }
+]

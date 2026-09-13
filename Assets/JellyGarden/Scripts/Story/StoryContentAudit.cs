@@ -118,7 +118,10 @@ namespace JellyGarden.Scripts.Story
 
             var reports = new List<StoryAreaReport>();
             for (int areaId = firstArea; areaId <= lastArea; areaId++)
+            {
+                if (!StoryCampaign.IsReady(areaId)) continue;
                 reports.Add(AuditArea(areaId, openScreens));
+            }
 
             if (openScreens) AreaScreen.Close();
             return reports;
@@ -217,6 +220,8 @@ namespace JellyGarden.Scripts.Story
                 for (int state = 0; state <= area.Tasks.Count; state++)
                     if (StoryArt.AreaState(area.Id, state) != null) states++;
                 report.ArtSource = string.Format("state x{0}", states);
+                if (StoryCampaign.IsTreasureHunt && states != area.Tasks.Count + 1)
+                    report.Problems.Add(where + " is missing a repair state");
             }
             else if (hasRestored)
             {

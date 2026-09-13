@@ -91,7 +91,7 @@ namespace JellyGarden.Scripts.Story
             get
             {
                 int where = StoryProgress.CurrentArea;
-                if (StoryDatabase.GetArea(where) != null && !StoryProgress.IsAreaComplete(where))
+                if (StoryDatabase.GetArea(where) != null && StoryCampaign.IsReady(where) && !StoryProgress.IsAreaComplete(where))
                     return where;
 
                 for (int areaId = 1; areaId <= StoryDatabase.AreaCount; areaId++)
@@ -117,6 +117,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>Opens home on a named area.</summary>
         public static void Open(int areaId)
         {
+            if (!StoryCampaign.CanEnter(areaId)) areaId = CurrentRoom;
             if (StoryDatabase.GetArea(areaId) == null)
             {
                 Debug.LogWarning("[Story] No area " + areaId + " to come home to.");
@@ -182,12 +183,22 @@ namespace JellyGarden.Scripts.Story
 
             // Just enough tint at the edges for the small floating controls.
             EdgeShade("SkyShade", 0.76f, 1f, new Color(0.08f, 0.2f, 0.2f, 0.12f), Color.clear);
-            EdgeShade("FloorShade", 0f, 0.28f, Color.clear, new Color(0.06f, 0.16f, 0.16f, 0.48f));
+            EdgeShade("FloorShade", 0f, 0.28f, Color.clear, new Color(0.06f, 0.16f, 0.16f, StorybookUi.Enabled ? 0.12f : 0.48f));
             _frame = StoryCastleFrame.Create(_canvas.transform);
             _topBar = StoryCastleUi.TopBar(_frame, OpenSettings);
-            BuildTitle();
-            BuildRepairMarker();
-            BuildLevelButton();
+            if (StorybookUi.Enabled)
+            {
+                BuildStorybookTitle();
+                BuildStorybookTask();
+                BuildStorybookPlay();
+            }
+            else
+            {
+                BuildTitle();
+                BuildRepairMarker();
+                BuildLevelButton();
+            }
+            TreasureMapDisplay.AddHomeButton(_frame);
 
             // StoryNavBar draws the actual dock on its persistent canvas.
             _navBand = StoryUi.CreateRect("NavReservation", _frame);
@@ -201,6 +212,60 @@ namespace JellyGarden.Scripts.Story
             shade.rectTransform.anchorMax = new Vector2(1, top);
             shade.rectTransform.offsetMin = shade.rectTransform.offsetMax = Vector2.zero;
             StoryCastleUi.Gradient(shade, topColor, bottomColor);
+        }
+
+        private Text _comingSoon;
+
+        private RectTransform _bookTaskIcon;
+        private Image _bookTitleArt;
+        private int _bookIconTask = -1;
+
+        private void BuildStorybookTitle()
+        {
+            _areaNumber = StoryCastleUi.Label("AreaNumber", _frame, "", 9, StorybookUi.Muted);
+            _areaNumber.gameObject.SetActive(false);
+            Image plaque = StorybookArt.Image("CastleTitle", _frame, StorybookArt.HomeTitle);
+            _bookTitleArt = plaque;
+            StoryCastleUi.Place(plaque.rectTransform, 78, -61, 206, 69);
+            _areaTitle = StoryCastleUi.Label("AreaTitle", plaque.transform, "", 27, StorybookUi.Ink,
+                true, TextAnchor.MiddleCenter);
+            StoryCastleUi.Place(_areaTitle.rectTransform, 16, -6, 210, 40);
+            StoryUi.FitOneLine(_areaTitle, 18, 27);
+            Image badge = StorybookLayers.Image("ProgressBadge", _frame, "progress-badge");
+            StoryCastleUi.Place(badge.rectTransform, 112, -108, 136, 34);
+            _progressLabel = StoryCastleUi.Label("ProgressLabel", badge.transform, "", 13,
+                StorybookUi.Paper, true, TextAnchor.MiddleCenter);
+            StoryUi.Stretch(_progressLabel.rectTransform, 3);
+            _progressLabel.font = StoryUi.BodyFont;
+            _comingSoon = StoryCastleUi.Label("ComingSoon", _frame, StoryCampaign.ComingSoon, 12,
+                StorybookUi.Ink, true, TextAnchor.MiddleCenter);
+            StoryCastleUi.Place(_comingSoon.rectTransform, 50, -158, 260, 23);
+        }
+
+        private void BuildStorybookPlay()
+        {
+            _buttonBand = StoryUi.CreateRect("PlayBand", _frame);
+            StoryCastleUi.Place(_buttonBand, 40, 157, 280, 66, 0, 0);
+            _levelButton = StorybookUi.Primary("PlayLevel", _buttonBand, "", 27, OnLevel, 1);
+            StoryUi.Stretch(_levelButton.GetComponent<RectTransform>());
+            _levelLabel = _levelButton.GetComponentInChildren<Text>();
+            _levelCaption = StoryCastleUi.Label("LevelCaption", _buttonBand, "", 9, StorybookUi.Muted);
+            _levelCaption.gameObject.SetActive(false);
+        }
+
+        private void BuildStorybookTask()
+        {
+            _marker = StoryUi.CreateRect("NextTask", _frame);
+            _marker.anchorMin = _marker.anchorMax = _marker.pivot = new Vector2(.5f, .5f);
+            _marker.sizeDelta = new Vector2(320, 68);
+            _markerHalo = StoryCastleUi.Plate("Halo", _marker, 25, Color.clear);
+            StoryUi.Stretch(_markerHalo.rectTransform, -4);
+            Image paper = StorybookUi.PaperCard("TaskCard", _marker, 1, false);
+            StoryUi.Stretch(paper.rectTransform);
+            _areaButton = StoryCastleUi.Clickable(paper, OnArea);
+            _areaLabel = StoryCastleUi.Label("NextRepair", paper.transform, "", 16, StorybookUi.Ink, true);
+            _costStar = StorybookArt.Image("Star", paper.transform, StorybookArt.SmallStar);
+            _costLabel = StoryCastleUi.Label("Cost", paper.transform, "", 20, StorybookUi.Ink, true);
         }
 
         private void BuildTitle()
@@ -224,6 +289,12 @@ namespace JellyGarden.Scripts.Story
                 StoryCastleUi.Cream, false, TextAnchor.MiddleCenter);
             StoryUi.Stretch(_progressLabel.rectTransform, 3);
             StoryUi.FitOneLine(_progressLabel, 8, 10);
+            _comingSoon = StoryCastleUi.Label("ComingSoon", _frame, "More adventures coming soon", 11,
+                StoryCastleUi.Cream, true);
+            StoryCastleUi.Place(_comingSoon.rectTransform, 22, -154, 224, 22);
+            var noticeShadow = _comingSoon.gameObject.AddComponent<Shadow>();
+            noticeShadow.effectColor = new Color(0.12f, 0.22f, 0.22f, 0.8f);
+            noticeShadow.effectDistance = new Vector2(0, -1);
         }
 
         private void BuildLevelButton()
@@ -301,6 +372,17 @@ namespace JellyGarden.Scripts.Story
         {
             // Opening the repair sheet never spends a star. AreaScreen owns the
             // affordable, ordered purchase and its existing reveal animation.
+            if (StoryCampaign.IsTreasureHunt && StoryProgress.IsAreaComplete(_areaId))
+            {
+                if (StorybookUi.Enabled)
+                {
+                    StorybookCollection.Open();
+                    return;
+                }
+                StoryArea area = StoryDatabase.GetArea(_areaId);
+                StoryToast.Show(area.NextObjective + "\n" + StoryCampaign.ComingSoon, 4f);
+                return;
+            }
             AreaScreen.Open(_areaId);
         }
 
@@ -310,15 +392,16 @@ namespace JellyGarden.Scripts.Story
             if (area == null) return;
             if (_roomView == null) _roomView = AreaSceneView.Attach(_room, _areaId, true);
             else _roomView.Show(_areaId);
-            _roomView.SetNeglectStrength(0.3f);
+            _roomView.SetNeglectStrength(StoryCampaign.IsTreasureHunt ? 0f : 0.3f);
             StoryUi.RefreshTopBar(_topBar);
             // Home can remain underneath an area page that changes CurrentArea.
             _topBar.Stars.text = StoryProgress.StarsIn(_areaId).ToString();
             _areaNumber.text = "A R E A  " + _areaId.ToString("00");
             _areaTitle.text = area.Name;
-            _progressLabel.text = StoryProgress.TasksCompletedIn(_areaId) + " / " + area.Tasks.Count + " restored";
+            _progressLabel.text = StoryProgress.TasksCompletedIn(_areaId) + (StorybookUi.Enabled ? "/" : " / ") + area.Tasks.Count + (StoryCampaign.IsTreasureHunt ? " complete" : " restored");
+            _comingSoon.gameObject.SetActive(StoryCampaign.IsTreasureHunt && StoryProgress.IsAreaComplete(_areaId));
             int next = NextLevel;
-            _levelLabel.text = next > 0 ? "Level " + next : "All played";
+            _levelLabel.text = next > 0 ? (StorybookUi.Enabled ? "Play Level " : "Level ") + next : "All played";
             _levelCaption.text = next <= 0 ? "A R E A  L E V E L S"
                 : StoryProgress.IsLevelBeaten(next) ? "P L A Y  A G A I N" : "N E X T  P U Z Z L E";
             _levelButton.interactable = next > 0;
@@ -332,10 +415,48 @@ namespace JellyGarden.Scripts.Story
             StoryTask task = StoryProgress.NextTask(_areaId);
             _repairCost = task == null ? 0 : task.Stars;
             _repairReady = task != null && StoryProgress.StarsIn(_areaId) >= task.Stars;
-            _areaLabel.text = task == null ? "Area restored" : task.Label;
+            _areaLabel.text = task == null ? (StoryCampaign.IsTreasureHunt ? "Area ready!" : "Area restored") : task.Label;
             _costLabel.text = task == null ? "" : task.Stars.ToString();
             _costStar.gameObject.SetActive(task != null);
             _costLabel.gameObject.SetActive(task != null);
+
+            if (StorybookUi.Enabled)
+            {
+                _areaTitle.enabled = _areaTitle.text != "Castle Gates";
+                _bookTitleArt.enabled = !_areaTitle.enabled;
+                _marker.sizeDelta = new Vector2(320, 68);
+                if (task == null) _areaLabel.text = "View the sun clue";
+                _areaLabel.fontSize = 16;
+                _areaLabel.resizeTextForBestFit = true;
+                _areaLabel.resizeTextMinSize = 13;
+                _areaLabel.resizeTextMaxSize = 16;
+                _areaLabel.horizontalOverflow = HorizontalWrapMode.Wrap;
+                _areaLabel.verticalOverflow = VerticalWrapMode.Truncate;
+                _areaLabel.font = StoryUi.BodyFont;
+                _areaLabel.fontStyle = FontStyle.Normal;
+                StoryCastleUi.Place(_areaLabel.rectTransform, 85, -7, 148, 52);
+                StoryCastleUi.Place(_costStar.rectTransform, 263, -20, 27, 27);
+                StoryCastleUi.Place(_costLabel.rectTransform, 292, -17, 22, 32);
+                int index = task == null ? 0 : task.Index;
+                if (_bookIconTask != index)
+                {
+                    if (_bookTaskIcon != null) Destroy(_bookTaskIcon.gameObject);
+                    _bookIconTask = index;
+                    if (task != null)
+                    {
+                        _bookTaskIcon = StorybookUi.TaskIcon("TaskThumbnail", _areaButton.transform, _areaId, task);
+                        StoryCastleUi.Place(_bookTaskIcon, 14, -8, 61, 54);
+                    }
+                    else
+                    {
+                        Image clue = StoryUi.CreateImage("SunClue", _areaButton.transform, StoryArt.ClueImage(_areaId), Color.white);
+                        clue.preserveAspect = true;
+                        _bookTaskIcon = clue.rectTransform;
+                        StoryCastleUi.Place(_bookTaskIcon, 14, -8, 61, 54);
+                    }
+                }
+                return;
+            }
 
             // Keep authored task names intact, growing to two lines only when
             // the name will not fit a compact pill at a readable size.
@@ -367,6 +488,12 @@ namespace JellyGarden.Scripts.Story
         private void PositionMarker()
         {
             if (_marker == null || _roomView == null || _roomView.Root == null) return;
+            if (StorybookUi.Enabled)
+            {
+                _marker.anchoredPosition = new Vector2(0, _frame.rect.yMin + 201);
+                _markerHalo.color = _repairReady ? new Color(1, .86f, .4f, .18f) : Color.clear;
+                return;
+            }
             Rect room = _roomView.Root.rect;
             Vector3 world = _roomView.Root.TransformPoint(new Vector3(
                 room.xMin + room.width * _repairPoint.x, room.yMin + room.height * _repairPoint.y, 0));

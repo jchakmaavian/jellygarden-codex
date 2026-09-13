@@ -1,0 +1,34 @@
+{
+  "controls": {
+    "door": {
+      "plays": true,
+      "pauses": true,
+      "seeks": true,
+      "resumes": true,
+      "stopsAtEnd": true
+    },
+    "flags": {
+      "plays": true,
+      "pauses": true,
+      "seeks": true,
+      "resumes": true,
+      "stopsAtEnd": true
+    },
+    "lanterns": {
+      "plays": true,
+      "pauses": true,
+      "seeks": true,
+      "resumes": true,
+      "stopsAtEnd": true
+    }
+  },
+  "desktop": {
+    "fits": true,
+    "canvasCount": 3
+  },
+  "mobile": {
+    "fits": true,
+    "columns": "339px"
+  },
+  "browserErrors": []
+}

@@ -13,7 +13,8 @@
 //
 // The lettering on top of it needs nothing from here — `level_completed_text`
 // in the kit's own texture folder now carries the royal wordmark, painted into
-// the file the kit already points at.
+// the file the kit already points at. On the Storybook board that wordmark is
+// destroyed instead: the ribbon there carries its own "Wonderful!".
 //
 // Nothing is deleted, renamed or moved:
 //
@@ -44,6 +45,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The kit's object, and the child carrying its striped art.</summary>
         private const string KitBannerName = "PreCompleteBanner";
         private const string KitRibbonName = "Banner";
+        private const string KitWordmarkName = "Image";
 
         /// <summary>The name this adds, so it is found rather than doubled.</summary>
         private const string RibbonName = "~StoryWinRibbon";
@@ -94,6 +96,20 @@ namespace JellyGarden.Scripts.Story
                 if (kitImage != null) kitImage.enabled = false;
             }
 
+            if (StorybookUi.Enabled)
+            {
+                // The kit's "LEVEL COMPLETED" wordmark drew over "Wonderful!".
+                // Nothing references it; bannerComplete skips a missing path.
+                Transform wordmark = banner.Find(KitWordmarkName);
+                if (wordmark != null) Object.Destroy(wordmark.gameObject);
+                Text title = StorybookUi.Ribbon(RibbonName, banner, "Wonderful!", 80, 2);
+                var root = (RectTransform)title.transform.parent;
+                root.anchorMin = root.anchorMax = root.pivot = new Vector2(.5f, .5f);
+                root.sizeDelta = new Vector2(RibbonWidth, 180);
+                root.anchoredPosition = new Vector2(0, RibbonRise);
+                root.SetSiblingIndex(0);
+                return;
+            }
             Image royal = StoryUi.CreateImage(RibbonName, banner, art, Color.white);
             royal.preserveAspect = true;
 

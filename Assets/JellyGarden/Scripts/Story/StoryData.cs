@@ -1,6 +1,6 @@
 // King Leo story layer — typed view over Resources/Story/*.json.
 //
-// The markdown in /Users/avian/Desktop/story is the source of truth; these
+// docs/story/treasure-hunt/campaign.json authors the active campaign; these
 // classes are only a read model. Nothing here writes, and nothing here knows a
 // specific area id — everything is driven by the data.
 
@@ -15,9 +15,14 @@ namespace JellyGarden.Scripts.Story
         public int Index;
         public string Label = string.Empty;
         public int Stars = 1;
+        // Complete in place, without a repair animation or ordinary dialogue card.
+        public bool InstantRepair;
+        // Optional native transition; authored only for the task that uses it.
+        public string RepairTransition = string.Empty;
 
-        /// <summary>What the player sees when this task lands. Arc 1 only; may be empty.</summary>
+        /// <summary>Optional completion line. Empty skips task dialogue; the final discovery is separate.</summary>
         public string OnComplete = string.Empty;
+        public string Speaker = "Leo";
 
         public static StoryTask From(JsonValue json)
         {
@@ -26,7 +31,10 @@ namespace JellyGarden.Scripts.Story
                 Index = json["index"].AsInt(),
                 Label = json["label"].AsString(),
                 Stars = Math.Max(1, json["stars"].AsInt(1)),
-                OnComplete = json["onComplete"].AsString()
+                InstantRepair = json["instantRepair"].AsBool(),
+                RepairTransition = json["repairTransition"].AsString(),
+                OnComplete = json["onComplete"].AsString(),
+                Speaker = json["speaker"].AsString("Leo")
             };
         }
     }
@@ -99,6 +107,8 @@ namespace JellyGarden.Scripts.Story
         public string Goal = string.Empty;
         public string Clue = string.Empty;
         public int PointsTo;
+        public string PayoffScene = string.Empty;
+        public string NextObjective = string.Empty;
         public string Status = "locked";
         public string Source = string.Empty;
 
@@ -141,6 +151,8 @@ namespace JellyGarden.Scripts.Story
                 Goal = json["goal"].AsString(),
                 Clue = json["clue"].AsString(),
                 PointsTo = json["pointsTo"].AsInt(),
+                PayoffScene = json["payoffScene"].AsString(),
+                NextObjective = json["nextObjective"].AsString(),
                 Status = json["status"].AsString("locked"),
                 Source = json["source"].AsString(),
                 Board = StoryBoard.From(json["board"])
@@ -165,6 +177,7 @@ namespace JellyGarden.Scripts.Story
         public int AreaCount;
         public int TaskCount;
         public int StarCount;
+        public string ThemeKey = string.Empty;
 
         public static StoryArcInfo From(JsonValue json)
         {
@@ -176,7 +189,8 @@ namespace JellyGarden.Scripts.Story
                 LastArea = json["lastArea"].AsInt(),
                 AreaCount = json["areaCount"].AsInt(),
                 TaskCount = json["taskCount"].AsInt(),
-                StarCount = json["starCount"].AsInt()
+                StarCount = json["starCount"].AsInt(),
+                ThemeKey = json["themeKey"].AsString()
             };
         }
     }

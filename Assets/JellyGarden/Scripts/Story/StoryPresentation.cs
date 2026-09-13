@@ -21,6 +21,13 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static void PlayAreaPayoff(int areaId, Action onDone)
         {
+            if (StoryCampaign.IsTreasureHunt)
+            {
+                StoryArea current = StoryDatabase.GetArea(areaId);
+                if (current == null || !TreasureHuntPresentation.Play(current.PayoffScene, areaId, onDone))
+                    if (onDone != null) onDone();
+                return;
+            }
             StoryArea area = StoryDatabase.GetArea(areaId);
             if (area == null)
             {
@@ -78,6 +85,7 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static bool PlayPending(int areaId, Action onDone)
         {
+            if (TreasureHuntPresentation.PlayPending(areaId, onDone)) return true;
             if (_pendingArea == 0 || _pendingArea != areaId) return false;
 
             int pending = _pendingArea;
@@ -88,7 +96,7 @@ namespace JellyGarden.Scripts.Story
 
         public static bool IsBusy
         {
-            get { return ClueCard.IsShowing || CutsceneRunner.IsPlaying; }
+            get { return ClueCard.IsShowing || CutsceneRunner.IsPlaying || TreasureHuntPresentation.IsPlaying; }
         }
     }
 }

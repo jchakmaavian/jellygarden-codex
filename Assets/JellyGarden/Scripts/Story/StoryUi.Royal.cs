@@ -1,3 +1,5 @@
+// Treasure Hunt routes the shared panel/button/wallet helpers through StorybookUi.
+// The remaining palette and builders preserve the legacy campaign.
 // The shapes every Royal Match-style story screen is built from.
 //
 // The reference is docs/royal-match/ — screenshots pulled off a real device,
@@ -432,6 +434,7 @@ namespace JellyGarden.Scripts.Story
         public static RoyalPanelParts RoyalPanel(string name, Transform parent, string title,
             UnityAction onClose)
         {
+            if (StorybookUi.Enabled) return StorybookUi.Panel(name, parent, title, onClose);
             var parts = new RoyalPanelParts();
 
             RectTransform root = CreateRect(name, parent);
@@ -558,6 +561,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The red round X, anchored to the top-right corner of its parent.</summary>
         public static Button CloseButton(Transform parent, UnityAction onClose)
         {
+            if (StorybookUi.Enabled) return StorybookUi.Close(parent, onClose);
             RectTransform rect = CreateRect("Close", parent);
             rect.anchorMin = new Vector2(1f, 1f);
             rect.anchorMax = new Vector2(1f, 1f);
@@ -601,6 +605,7 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static Image CreamCard(string name, Transform parent, int radius = 28)
         {
+            if (StorybookUi.Enabled) return StorybookUi.PaperCard(name, parent, 2, false);
             Image edge = CreateImage(name, parent, RoundedSprite(radius), RoyalCreamDeep);
             edge.type = Image.Type.Sliced;
             edge.raycastTarget = true;
@@ -653,13 +658,13 @@ namespace JellyGarden.Scripts.Story
             // track's own height, so a thin bar came out a lozenge; the fill
             // inside it keeps a slightly tighter one so it sits in the well
             // rather than tracing it.
-            Image well = CreateImage("Well", root, RoundedSprite(14), CardTrack);
+            Image well = CreateImage("Well", root, RoundedSprite(14), StorybookUi.Enabled ? StorybookUi.Ink : CardTrack);
             Stretch(well.rectTransform);
             well.type = Image.Type.Sliced;
 
             // The fill is anchored rather than sized: a fraction of the track's
             // width survives whatever width the screen ends up handing the track.
-            Image fill = CreateImage("Fill", well.rectTransform, RoundedSprite(10), CardFill);
+            Image fill = CreateImage("Fill", well.rectTransform, RoundedSprite(10), StorybookUi.Enabled ? StorybookUi.Blue : CardFill);
             fill.type = Image.Type.Sliced;
             RectTransform fillRect = fill.rectTransform;
             fillRect.anchorMin = Vector2.zero;
@@ -672,7 +677,7 @@ namespace JellyGarden.Scripts.Story
             // rectangle, clipped by the fill so its square corners stay inside
             // the rounded end.
             fill.gameObject.AddComponent<Mask>().showMaskGraphic = true;
-            Image lit = CreateImage("Lit", fillRect, RoundedSprite(8), RoyalGreenLight);
+            Image lit = CreateImage("Lit", fillRect, RoundedSprite(8), StorybookUi.Enabled ? StorybookUi.BlueLight : RoyalGreenLight);
             lit.type = Image.Type.Sliced;
             RectTransform litRect = lit.rectTransform;
             litRect.anchorMin = new Vector2(0f, 0.52f);
@@ -813,6 +818,7 @@ namespace JellyGarden.Scripts.Story
         public static Button GreenButton(string name, Transform parent, string label,
             int fontSize, UnityAction onClick)
         {
+            if (StorybookUi.Enabled) return StorybookUi.Primary(name, parent, label, fontSize, onClick);
             RectTransform rect = CreateRect(name, parent);
 
             var image = rect.gameObject.AddComponent<Image>();
@@ -872,6 +878,7 @@ namespace JellyGarden.Scripts.Story
         {
             if (button == null) return;
             button.interactable = interactable;
+            if (StorybookUi.Enabled) return;
 
             var baseImage = button.targetGraphic as Image;
             Transform face = button.transform.Find("Face");
@@ -1538,6 +1545,24 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public static TopBarParts TopBar(Transform parent, UnityAction onSettings)
         {
+            if (StorybookUi.Enabled)
+            {
+                RectTransform frame = StoryCastleFrame.Create(parent);
+                TopBarParts book = StoryCastleUi.TopBar(frame, onSettings);
+                book.Root = frame;
+                // This shared caller uses a 1080-point canvas, while the wallet
+                // is laid out at 360. Keep glyph rasterisation at the canvas's
+                // native scale so the two small numbers remain crisp.
+                foreach (Text text in new[] { book.Coins, book.Stars })
+                {
+                    text.rectTransform.sizeDelta *= 3;
+                    text.rectTransform.localScale = Vector3.one / 3f;
+                    text.fontSize *= 3;
+                    text.resizeTextMinSize *= 3;
+                    text.resizeTextMaxSize *= 3;
+                }
+                return book;
+            }
             var parts = new TopBarParts();
 
             RectTransform root = CreateRect("TopBar", parent);

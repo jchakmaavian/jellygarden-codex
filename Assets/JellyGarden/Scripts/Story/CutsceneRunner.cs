@@ -41,7 +41,7 @@ namespace JellyGarden.Scripts.Story
             if (_loaded) return;
             _loaded = true;
 
-            var text = Resources.Load<TextAsset>("Story/cutscenes");
+            var text = StoryCampaign.LoadText("cutscenes");
             if (text == null)
             {
                 Debug.Log("[Story] No cutscenes.json yet; arc beats fall back to the clue card.");

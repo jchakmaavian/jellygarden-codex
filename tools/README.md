@@ -1,5 +1,15 @@
 # Story generators
 
+## Active Treasure Hunt campaign
+
+Use `python3 tools/treasure_hunt_build.py`, then `python3 tools/treasure_hunt_build.py --check`.
+Its repository-local source, asset workflow, tests, and player commands are in
+[Treasure Hunt authoring](../docs/story/treasure-hunt/README.md). It currently
+ships Area 001 with four tasks and four rewardable boards. The commands below
+belong to the preserved legacy campaign; they do not import the new screenplay.
+
+## Legacy campaign
+
 Everything under `Resources/Story`, every level board and every target asset is
 generated. Nothing here is hand-edited; to change the game, change the story
 markdown in `/Users/avian/Desktop/story` or a generator, and re-run.

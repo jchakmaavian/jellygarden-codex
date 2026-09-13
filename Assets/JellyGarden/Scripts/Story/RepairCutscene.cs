@@ -107,6 +107,8 @@ namespace JellyGarden.Scripts.Story
         private Image _backdrop;
         private RepairVfx _vfx;
         private StoryRepairVideo _video;
+        private StoryVineTransition _vines;
+        private StoryGateTransition _gate;
 
         private bool _playing;
         private bool _skipped;
@@ -267,6 +269,7 @@ namespace JellyGarden.Scripts.Story
             Action onDone)
         {
             StopAllCoroutines();
+            ClearNativeTransitions();
             _video.Release();
             _onDone = onDone;
             _playing = true;
@@ -338,6 +341,66 @@ namespace JellyGarden.Scripts.Story
 
         private IEnumerator Run(int areaId, StoryTask task, RepairWorkType work, int stateAfter)
         {
+            if (task.RepairTransition == "vines")
+            {
+                // Attach to the painting itself so its existing crop and camera
+                // remain unchanged. The room underneath lands on the last beat.
+                var view = _room == null ? null : _room.GetComponentInChildren<AreaSceneView>();
+                _vines = StoryVineTransition.Attach(view != null ? view.Root : _stage,
+                    _before.sprite, _after.sprite, areaId, task.Index);
+                if (_vines != null)
+                {
+                    _group.alpha = 1f;
+                    _skipHint.enabled = false;
+                    _vfx.Clear();
+                    float start = StoryClock.Now;
+                    while (!_skipped && _vines != null)
+                    {
+                        float elapsed = StoryClock.Now - start;
+                        _vines.SetTime(elapsed);
+                        if (elapsed >= StoryVineTransition.RevealAt)
+                            Reveal(areaId, task.Index, false);
+                        if (elapsed >= StoryVineTransition.Duration) break;
+                        yield return null;
+                    }
+                    Reveal(areaId, task.Index, false);
+                    Destroy(_vines != null ? _vines.gameObject : null);
+                    _vines = null;
+                    _fadeTime = RoomFadeTime;
+                    yield return Finish();
+                    yield break;
+                }
+                Debug.LogWarning("[Story] Vine transition resources unavailable; using the standard repair effect.");
+            }
+
+            if (StoryGateTransition.Supports(task.RepairTransition))
+            {
+                var view = _room == null ? null : _room.GetComponentInChildren<AreaSceneView>();
+                _gate = StoryGateTransition.Attach(view != null ? view.Root : _stage,
+                    _before.sprite, _after.sprite, areaId, task.RepairTransition);
+                if (_gate != null)
+                {
+                    _group.alpha = 1f;
+                    _skipHint.enabled = false;
+                    _vfx.Clear();
+                    float start = StoryClock.Now;
+                    while (!_skipped && _gate != null)
+                    {
+                        float elapsed = StoryClock.Now - start;
+                        _gate.SetTime(elapsed);
+                        if (elapsed >= StoryGateTransition.RevealAt) Reveal(areaId, task.Index, false);
+                        if (elapsed >= StoryGateTransition.Duration) break;
+                        yield return null;
+                    }
+                    Reveal(areaId, task.Index, false);
+                    ClearNativeTransitions();
+                    _fadeTime = RoomFadeTime;
+                    yield return Finish();
+                    yield break;
+                }
+                Debug.LogWarning("[Story] Gate transition resources unavailable; using the standard repair effect.");
+            }
+
             var clip = StoryRepairVideo.Load(areaId, task.Index);
             if (clip != null)
             {
@@ -560,11 +623,24 @@ namespace JellyGarden.Scripts.Story
         /// the cutscene's to fire rather than the purchase's: the room the player
         /// is watching must not change while the "before" is still on screen.
         /// </summary>
-        private void Reveal(int areaId, int taskIndex)
+        private void Reveal(int areaId, int taskIndex, bool animated = true)
         {
             if (_revealed) return;
             _revealed = true;
-            AreaSceneView.NotifyTaskCompleted(areaId, taskIndex);
+            AreaSceneView.NotifyTaskCompleted(areaId, taskIndex, animated);
+        }
+
+        private void OnDisable()
+        {
+            ClearNativeTransitions();
+        }
+
+        private void ClearNativeTransitions()
+        {
+            if (_vines != null) Destroy(_vines.gameObject);
+            _vines = null;
+            if (_gate != null) Destroy(_gate.gameObject);
+            _gate = null;
         }
 
         private IEnumerator Finish()

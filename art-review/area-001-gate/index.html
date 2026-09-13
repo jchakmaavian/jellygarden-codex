@@ -13,7 +13,7 @@
 </head>
 <body><main>
 <header class="topline"><div class="brand">♛ &nbsp;KING LEO / ART ROOM</div><span class="badge">Area 01 · Preview v1</span></header>
-<div class="intro"><div class="eyebrow">The castle gates</div><h1>A royal welcome,<br>one repair at a time.</h1><p>Honey oak, sunlit sandstone, royal blue and warm brass. One gate, four cumulative states, and three repair animations to review.</p></div>
+<div class="intro"><div class="eyebrow">The castle gates</div><h1>A royal welcome,<br>one repair at a time.</h1><p>Honey oak, sunlit sandstone, royal blue and warm brass. Archived gate artwork with four cumulative states. The older repair videos were removed on 12 September 2026.</p></div>
 <section aria-labelledby="art-title">
 <div class="section-title"><div><div class="eyebrow">01 / Generated artwork</div><h2 id="art-title">The same gate. Restored.</h2></div><p>The doorway, towers and camera stay consistent. Each state keeps the work completed before it.</p></div>
 <div class="states">
@@ -24,30 +24,7 @@
 </div>
 <div class="palette"><span>THE PALETTE</span><span><i class="swatch" style="background:#d9b783"></i>Warm sandstone</span><span><i class="swatch" style="background:#b87738"></i>Honey oak</span><span><i class="swatch" style="background:#164ba7"></i>Royal blue</span><span><i class="swatch" style="background:#c99b38"></i>Antique gold</span><span><i class="swatch" style="background:#ffc565"></i>Lantern amber</span></div>
 </section>
-<section class="motion" aria-labelledby="motion-title">
-<div class="section-title"><div><div class="eyebrow">02 / Repair motion</div><h2 id="motion-title">Watch the gate come to life.</h2></div><p>Three six-second clips. A fixed camera and one continuous 3D scene preserve each completed repair.</p></div>
-<p class="motion-note">These are locally rendered 3D motion studies with simplified materials. They show movement and timing; the generated images above show the intended final art finish.</p>
-<div class="videos">
-<article class="clip"><video controls playsinline preload="metadata" poster="v1/animations/00-broken-motion-preview.png" aria-label="Animation 1: repair the gate timbers"><source src="v1/animations/01-fix-timber.mp4" type="video/mp4"></video><div class="copy"><h3><span class="step">01</span>Timber repair</h3><p>Damaged boards clear away. New oak planks move into place, one after another.</p><a class="download" href="v1/animations/01-fix-timber.mp4" download>Download animation · MP4 ↗</a></div></article>
-<article class="clip"><video controls playsinline preload="metadata" poster="v1/animations/02-timber-fixed-motion-preview.png" aria-label="Animation 2: hang and unfurl the royal banner"><source src="v1/animations/02-hang-banner.mp4" type="video/mp4"></video><div class="copy"><h3><span class="step">02</span>Royal banner</h3><p>The rolled banner rises to the rod, unfurls, then rests with a gentle cloth ripple.</p><a class="download" href="v1/animations/02-hang-banner.mp4" download>Download animation · MP4 ↗</a></div></article>
-<article class="clip"><video controls playsinline preload="metadata" poster="v1/animations/04-banner-hung-motion-preview.png" aria-label="Animation 3: hang and light the two brass lanterns"><source src="v1/animations/03-hang-lights.mp4" type="video/mp4"></video><div class="copy"><h3><span class="step">03</span>Warm lanterns</h3><p>Lanterns lift onto the hooks, swing gently, then glow against the sandstone.</p><a class="download" href="v1/animations/03-hang-lights.mp4" download>Download animation · MP4 ↗</a></div></article>
-</div>
-<div class="sequence-link"><a class="button" href="v1/animations/00-full-restoration.mp4" target="_blank" rel="noopener">Play the full restoration ↗</a><span class="fine">18 seconds · 720 × 1280 · 24 fps · silent</span></div>
-<details id="live"><summary>Explore the 3D motion preview</summary><div class="interactive"><iframe title="Interactive 3D gate restoration" data-src="v1/source/scene.html"></iframe><div class="controls"><div class="eyebrow">One scene / Three repairs</div><h2>Scrub through<br>the restoration.</h2><p>Replay a repair or jump to a completed state. This optional viewer works locally with WebGL.</p><div class="buttons"><button type="button" class="button" id="play">Play</button><button type="button" class="button secondary" id="restart">Restart</button></div><label for="time">Restoration timeline · <output id="readout">18.0</output> / 18 seconds</label><input id="time" type="range" min="0" max="18" value="18" step="0.02"><div class="presets"><button class="button secondary" data-time="0">Broken gate</button><button class="button secondary" data-time="6">Timber fixed</button><button class="button secondary" data-time="12">Banner hung</button><button class="button secondary" data-time="18">Lights on</button></div><p class="fine">Review files only. The in-game area has not been changed.</p></div></div></details>
-</section>
+<section class="motion"><h2>Older videos removed</h2><p>The repair clips and full-restoration preview were removed at the owner's request on 12 September 2026. The still-image gallery remains available.</p></section>
 <footer><span>King Leo · Area 1 only · September 2026</span><span><a href="README.md">Asset notes</a> &nbsp; / &nbsp; <a href="v1/prompts.json">Generation prompts</a> &nbsp; / &nbsp; <a href="v1/source/THREE-LICENSE.txt">3D renderer license</a></span></footer>
 </main>
-<script>
-const viewer=document.querySelector('iframe'),details=document.querySelector('#live'),play=document.querySelector('#play'),slider=document.querySelector('#time'),readout=document.querySelector('#readout');let playing=false;
-const send=data=>viewer.contentWindow?.postMessage(data,'*');
-function setPlaying(value){playing=value;play.textContent=value?'Pause':'Play';send({type:'gate-play',play:value});}
-function seek(t){slider.value=t;readout.textContent=Number(t).toFixed(1);send({type:'gate-seek',time:Number(t)});}
-details.addEventListener('toggle',()=>{if(details.open&&!viewer.src)viewer.src=viewer.dataset.src;if(!details.open)setPlaying(false);});
-play.addEventListener('click',()=>{if(!playing&&Number(slider.value)>=18)seek(0);setPlaying(!playing);});
-document.querySelector('#restart').addEventListener('click',()=>{seek(0);setPlaying(true);});
-slider.addEventListener('input',()=>{setPlaying(false);seek(slider.value);});
-document.querySelectorAll('[data-time]').forEach(b=>b.addEventListener('click',()=>{setPlaying(false);seek(b.dataset.time);}));
-window.addEventListener('message',e=>{if(e.source!==viewer.contentWindow)return;if(e.data?.type==='gate-time'){slider.value=e.data.time;readout.textContent=e.data.time.toFixed(1);}if(e.data?.type==='gate-ready'){seek(slider.value);setPlaying(playing);}});
-document.querySelectorAll('video').forEach(video=>video.addEventListener('play',()=>{document.querySelectorAll('video').forEach(other=>{if(other!==video)other.pause();});setPlaying(false);}));
-</script>
 </body></html>

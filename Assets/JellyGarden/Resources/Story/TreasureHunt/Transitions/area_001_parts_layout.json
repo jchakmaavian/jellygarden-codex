@@ -1,0 +1,159 @@
+{
+  "width": 1024,
+  "height": 512,
+  "parts": [
+    {
+      "key": "doorFrame",
+      "x": 229,
+      "y": 457,
+      "width": 259,
+      "height": 395,
+      "atlasX": 2,
+      "atlasY": 2
+    },
+    {
+      "key": "doorWood",
+      "x": 237,
+      "y": 484,
+      "width": 240,
+      "height": 362,
+      "atlasX": 265,
+      "atlasY": 2
+    },
+    {
+      "key": "flag0",
+      "x": 48,
+      "y": 388,
+      "width": 89,
+      "height": 170,
+      "atlasX": 509,
+      "atlasY": 2
+    },
+    {
+      "key": "flag1",
+      "x": 586,
+      "y": 388,
+      "width": 90,
+      "height": 170,
+      "atlasX": 602,
+      "atlasY": 2
+    },
+    {
+      "key": "hardware4",
+      "x": 305,
+      "y": 669,
+      "width": 49,
+      "height": 62,
+      "atlasX": 696,
+      "atlasY": 2
+    },
+    {
+      "key": "hardware5",
+      "x": 364,
+      "y": 669,
+      "width": 49,
+      "height": 62,
+      "atlasX": 749,
+      "atlasY": 2
+    },
+    {
+      "key": "hardware0",
+      "x": 245,
+      "y": 565,
+      "width": 104,
+      "height": 49,
+      "atlasX": 802,
+      "atlasY": 2
+    },
+    {
+      "key": "hardware1",
+      "x": 366,
+      "y": 565,
+      "width": 104,
+      "height": 49,
+      "atlasX": 910,
+      "atlasY": 2
+    },
+    {
+      "key": "hardware2",
+      "x": 245,
+      "y": 739,
+      "width": 104,
+      "height": 47,
+      "atlasX": 2,
+      "atlasY": 401
+    },
+    {
+      "key": "hardware3",
+      "x": 366,
+      "y": 739,
+      "width": 104,
+      "height": 47,
+      "atlasX": 110,
+      "atlasY": 401
+    },
+    {
+      "key": "stone0",
+      "x": 29,
+      "y": 419,
+      "width": 140,
+      "height": 47,
+      "atlasX": 218,
+      "atlasY": 401
+    },
+    {
+      "key": "stone1",
+      "x": 556,
+      "y": 419,
+      "width": 140,
+      "height": 47,
+      "atlasX": 362,
+      "atlasY": 401
+    },
+    {
+      "key": "pole0",
+      "x": 32,
+      "y": 382,
+      "width": 130,
+      "height": 25,
+      "atlasX": 506,
+      "atlasY": 401
+    },
+    {
+      "key": "pole1",
+      "x": 556,
+      "y": 382,
+      "width": 133,
+      "height": 25,
+      "atlasX": 640,
+      "atlasY": 401
+    },
+    {
+      "key": "white",
+      "x": 0,
+      "y": 0,
+      "width": 4,
+      "height": 4,
+      "atlasX": 777,
+      "atlasY": 401
+    }
+  ],
+  "sourceHashes": [
+    {
+      "file": "area_001_state1.png",
+      "sha256": "687a7cfad87931551579b0cf16d0e7a01febaedf9d9f82641ffe10e711a17580"
+    },
+    {
+      "file": "area_001_state2.png",
+      "sha256": "9cbd15364d2a48cab0c0d3872e441491d1d69d96ef837d099deb6791f595da2b"
+    },
+    {
+      "file": "area_001_state3.png",
+      "sha256": "21a55ed9c2d4c2b16987e4fd295c519bd317719dbd294ca004e48e645262e7e0"
+    },
+    {
+      "file": "area_001_state4.png",
+      "sha256": "63f02378c2d9a81278e07a9b4ff4b0cd08a5e5c42f8dcde3a819d2e78f814f88"
+    }
+  ]
+}

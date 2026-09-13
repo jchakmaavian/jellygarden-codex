@@ -95,6 +95,18 @@ namespace JellyGarden.Scripts.Story
                 Vector2 at = Polar(angle, 226f + (i % 3) * 25f);
                 Sparkle(vh, at, (12f + (i % 3) * 5f) * (0.65f + alpha * 0.35f), alpha);
             }
+            if (StorybookUi.Enabled)
+            {
+                // The reference keeps four bright glints around the reward,
+                // including after the entrance burst has finished.
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector2 at = new Vector2(i % 2 == 0 ? -337 : 337, i < 2 ? 188 : -180);
+                    float light = (.83f + .13f * Mathf.Sin(_elapsed * 1.7f + i)) * reveal;
+                    Sparkle(vh, at, 24, light * .22f);
+                    Sparkle(vh, at, 17, light);
+                }
+            }
             // A short local burst; it never drifts over the button or headline.
             float flight = Mathf.Clamp01((_elapsed - 0.3f) / 2.1f);
             if (flight > 0f && flight < 1f)

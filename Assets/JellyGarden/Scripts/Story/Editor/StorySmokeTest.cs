@@ -66,6 +66,7 @@ namespace JellyGarden.Scripts.Story.Editor
 
         private static List<string> Check()
         {
+            if (StoryCampaign.IsTreasureHunt) return TreasureHuntTests.Check();
             var failures = new List<string>();
 
             // Never run against a developer's real progress.

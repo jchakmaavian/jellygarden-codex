@@ -306,6 +306,8 @@ namespace JellyGarden.Scripts.Story
             if (StoryDatabase.GetArea(StoryHomeScreen.CurrentRoom) == null) return;
 
             if (LaunchOpeningLevelIfDue()) return;
+            int current = StoryHomeScreen.CurrentRoom;
+            if (TreasureHuntPresentation.PlayPending(current, () => StoryHomeScreen.Open(current))) return;
 
             StoryHomeScreen.Open();
         }

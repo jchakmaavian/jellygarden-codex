@@ -219,7 +219,7 @@ namespace JellyGarden.Scripts.Story
                 ? 1f
                 : Mathf.Clamp01((float)done / area.Tasks.Count);
 
-            _damageTo = Mathf.Lerp(MaxDamage, 0f, progress);
+            _damageTo = StoryCampaign.IsTreasureHunt ? 0f : Mathf.Lerp(MaxDamage, 0f, progress);
             _damageFrom = _damageTo;
             _damageStartedAt = 0f;
 
@@ -284,18 +284,22 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// Fades and scales in the layer a repair just unlocked, and fires the
-        /// kit's own repair particle at the same moment. Nothing appears without
-        /// an arrival — a layer that pops in reads as a bug.
+        /// Reveals the layer a repair just unlocked. Normal repairs fade and
+        /// scale it in; an instant task applies the finished layer immediately.
         /// </summary>
-        public void Reveal(int taskIndex)
+        public void Reveal(int taskIndex, bool animated = true)
         {
             // The wash lifts on every repair, before anything is said about
             // layers: most areas have no painting for the state just reached, and
             // the grime leaving is the whole of what those rooms can show. It was
             // previously only recomputed by a full Rebuild, so a repair watched on
             // this screen left the room exactly as dirty as it found it.
-            LiftDamage();
+            if (animated) LiftDamage();
+            else
+            {
+                _damageStartedAt = 0f;
+                SyncDamage();
+            }
 
             int state = Mathf.Clamp(taskIndex, 0, _layers.Count - 1);
             if (state < 0 || state >= _layers.Count) return;
@@ -304,7 +308,12 @@ namespace JellyGarden.Scripts.Story
             if (layer == null) return;
 
             layer.gameObject.SetActive(true);
-            _revealStartedAt[state] = StoryClock.Now;
+            _revealStartedAt[state] = animated ? StoryClock.Now : 0f;
+            if (!animated)
+            {
+                layer.color = Color.white;
+                layer.rectTransform.localScale = Vector3.one;
+            }
         }
 
         /// <summary>
@@ -325,7 +334,7 @@ namespace JellyGarden.Scripts.Story
             // The interpolation stays in unscaled wash values; Wash applies
             // the screen's strength once when writing the image colour.
             _damageFrom = _neglectStrength > 0f ? _damage.color.a / _neglectStrength : 0f;
-            _damageTo = Mathf.Lerp(MaxDamage, 0f, progress);
+            _damageTo = StoryCampaign.IsTreasureHunt ? 0f : Mathf.Lerp(MaxDamage, 0f, progress);
             _damageStartedAt = StoryClock.Now;
         }
 
@@ -346,7 +355,7 @@ namespace JellyGarden.Scripts.Story
 
             float progress = Mathf.Clamp01(
                 (float)StoryProgress.TasksCompletedIn(_areaId) / area.Tasks.Count);
-            _damageTo = Mathf.Lerp(MaxDamage, 0f, progress);
+            _damageTo = StoryCampaign.IsTreasureHunt ? 0f : Mathf.Lerp(MaxDamage, 0f, progress);
 
             if (_damageStartedAt > 0f) return;
 
@@ -405,7 +414,7 @@ namespace JellyGarden.Scripts.Story
         /// not have to know whether a scene view happens to be on screen. Every
         /// view of that area reveals, because more than one can be alive.
         /// </summary>
-        public static void NotifyTaskCompleted(int areaId, int taskIndex)
+        public static void NotifyTaskCompleted(int areaId, int taskIndex, bool animated = true)
         {
             for (int i = _live.Count - 1; i >= 0; i--)
             {
@@ -415,7 +424,7 @@ namespace JellyGarden.Scripts.Story
                     _live.RemoveAt(i);
                     continue;
                 }
-                if (view._areaId == areaId) view.Reveal(taskIndex);
+                if (view._areaId == areaId) view.Reveal(taskIndex, animated);
             }
         }
     }

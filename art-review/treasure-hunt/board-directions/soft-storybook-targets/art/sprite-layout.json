@@ -1,0 +1,90 @@
+[
+  {
+    "name": "moves",
+    "sheet": "in-game-tools",
+    "cell": 0,
+    "crop": [
+      71,
+      55,
+      505,
+      548
+    ]
+  },
+  {
+    "name": "glove",
+    "sheet": "in-game-tools",
+    "cell": 1,
+    "crop": [
+      119,
+      38,
+      430,
+      553
+    ]
+  },
+  {
+    "name": "hammer",
+    "sheet": "in-game-tools",
+    "cell": 2,
+    "crop": [
+      55,
+      0,
+      492,
+      566
+    ]
+  },
+  {
+    "name": "recolour",
+    "sheet": "in-game-tools",
+    "cell": 3,
+    "crop": [
+      68,
+      19,
+      518,
+      541
+    ]
+  },
+  {
+    "name": "rocket",
+    "sheet": "pre-level-and-time",
+    "cell": 0,
+    "crop": [
+      90,
+      43,
+      489,
+      553
+    ]
+  },
+  {
+    "name": "area-bomb",
+    "sheet": "pre-level-and-time",
+    "cell": 1,
+    "crop": [
+      87,
+      43,
+      445,
+      553
+    ]
+  },
+  {
+    "name": "rainbow-orb",
+    "sheet": "pre-level-and-time",
+    "cell": 2,
+    "crop": [
+      83,
+      25,
+      509,
+      507
+    ]
+  },
+  {
+    "name": "time",
+    "sheet": "pre-level-and-time",
+    "cell": 3,
+    "crop": [
+      112,
+      12,
+      400,
+      546
+    ]
+  }
+]

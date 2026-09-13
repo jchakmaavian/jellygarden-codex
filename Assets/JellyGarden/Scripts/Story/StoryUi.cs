@@ -314,7 +314,7 @@ namespace JellyGarden.Scripts.Story
         {
             RectTransform rect = CreateRect(name, parent);
             var text = rect.gameObject.AddComponent<Text>();
-            text.font = Font;
+            text.font = StorybookUi.Enabled ? BodyFont : Font;
             text.fontSize = size;
             text.color = color;
             text.text = content;
@@ -333,6 +333,7 @@ namespace JellyGarden.Scripts.Story
         public static Button CreateButton(string name, Transform parent, string label,
             int fontSize, UnityEngine.Events.UnityAction onClick)
         {
+            if (StorybookUi.Enabled) return StorybookUi.Primary(name, parent, label, fontSize, onClick);
             RectTransform rect = CreateRect(name, parent);
 
             var image = rect.gameObject.AddComponent<Image>();

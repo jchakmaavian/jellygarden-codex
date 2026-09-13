@@ -225,6 +225,12 @@ namespace JellyGarden.Scripts.Story
             band.offsetMax = new Vector2(0f, -PopupTop);
 
             // No close X: the green button is the only way out of a loss.
+            if (StorybookUi.Enabled)
+            {
+                band.anchorMin = new Vector2(0, .20f);
+                band.anchorMax = new Vector2(1, .80f);
+                band.offsetMin = band.offsetMax = Vector2.zero;
+            }
             _panel = StoryUi.RoyalPanel("Panel", band, "Level", null);
 
             BuildStar();
@@ -305,7 +311,7 @@ namespace JellyGarden.Scripts.Story
 
         private void BuildContinue()
         {
-            Button button = StoryUi.GreenButton("Continue", _panel.Content, "Continue", 64,
+            Button button = StoryUi.GreenButton("Continue", _panel.Content, StorybookUi.Enabled ? "Back to Castle" : "Continue", 64,
                 OnContinue);
 
             RectTransform rect = button.GetComponent<RectTransform>();

@@ -48,8 +48,8 @@ namespace JellyGarden.Scripts.Story
             _group.interactable = false;
             _group.alpha = 0f;
 
-            Image backdrop = StoryUi.CreateImage("Backdrop", holder, StoryUi.PanelSprite,
-                new Color(0.10f, 0.08f, 0.06f, 0.92f));
+            Image backdrop = StoryUi.CreateImage("Backdrop", holder, StorybookUi.Enabled ? StoryUi.RoundedSprite(24) : StoryUi.PanelSprite,
+                StorybookUi.Enabled ? StorybookUi.Blue : new Color(0.10f, 0.08f, 0.06f, 0.92f));
             backdrop.type = Image.Type.Sliced;
             StoryUi.Stretch(backdrop.rectTransform);
 

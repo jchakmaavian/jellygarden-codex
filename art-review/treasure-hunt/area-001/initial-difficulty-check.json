@@ -1,0 +1,10 @@
+{
+    "passed": false,
+    "area2Locked": true,
+    "wins": 3,
+    "tasks": 3,
+    "stars": 0,
+    "errors": [
+        "Board 4 did not end in a real first win"
+    ]
+}

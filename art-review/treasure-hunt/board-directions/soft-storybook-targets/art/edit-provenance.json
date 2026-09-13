@@ -1,0 +1,22 @@
+{
+  "tool": "built-in image_gen",
+  "backgroundExtractionPrompt": "Use case: background-extraction.\nEdit target: the supplied four-icon sheet.\nRemove the entire checkerboard background from this image. It is a printed checkerboard, and must be replaced by genuinely transparent alpha. Deliver an RGBA PNG with fully transparent pixels outside the four object silhouettes. Preserve the four objects, their colours, lighting, shapes and 2-by-2 positions exactly. Preserve the opening in the paintbrush handle if present. Keep the glass on the hourglass if present. No checkerboard, no RGB background, no gray halos, no new objects, no text. This is background removal only; do not redesign the icons.",
+  "secondExtractionPrompt": "Use case: background-extraction. Image 1 is the edit target: four power-up icons. Image 2 is a transparency example only; do NOT copy its objects. Remove the printed gray-and-white checkerboard from Image 1. Make the outside empty, transparent alpha exactly as in Image 2. The final PNG must have an alpha channel with transparent pixels outside the rocket, round bomb, rainbow ball and hourglass. Do not draw a new checkerboard. Keep all four icons and their positions unchanged. No redesign, no new objects, no extra shadows. Clean cutout edges, including the spaces around the rocket fins and hourglass. Transparent background, not a picture of transparency.",
+  "selected": [
+    {
+      "sheet": "in-game-tools",
+      "source": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-c96e10a9-471f-46a5-9319-259e5ada7dfc.png",
+      "edits": 1
+    },
+    {
+      "sheet": "pre-level-and-time",
+      "source": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-b528f152-b308-4c41-8b16-5461d8f23a60.png",
+      "edits": 2
+    }
+  ],
+  "secondExtractionReferences": [
+    "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-a1002a6b-6647-4334-84e9-0cb7676d0af9.png",
+    "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-c96e10a9-471f-46a5-9319-259e5ada7dfc.png"
+  ],
+  "packaging": "Selected tool outputs are RGBA. Browser canvas cropped four grid cells from each sheet to alpha bounds, then fitted them into 256 × 256 transparent sprites. No recolouring or hand-drawn substitute art."
+}

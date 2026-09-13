@@ -1,0 +1,36 @@
+{
+  "scenes": [
+    {
+      "id": "OPEN-01",
+      "trigger": "first-win",
+      "lines": [
+        {
+          "speaker": "Leo",
+          "text": "Welcome, Puzzle Partner!"
+        },
+        {
+          "speaker": "Pip",
+          "text": "I’m Pip! Six keys lead to one royal surprise!",
+          "cue": "map"
+        }
+      ],
+      "areaId": 1
+    },
+    {
+      "id": "A001-DISCOVERY",
+      "trigger": "area-complete",
+      "lines": [
+        {
+          "speaker": "Pip",
+          "text": "Look! The sun is our first clue!",
+          "cue": "sun"
+        },
+        {
+          "speaker": "Freya",
+          "text": "Next, let’s restore the courtyard fountain!"
+        }
+      ],
+      "areaId": 1
+    }
+  ]
+}

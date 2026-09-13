@@ -1,0 +1,1 @@
+[Story] Build Succeeded (development): 0 errors, 379 warnings, 584.2 MB, 21s -> Builds/Mac/KingLeo.app

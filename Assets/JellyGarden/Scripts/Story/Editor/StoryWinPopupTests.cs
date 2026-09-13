@@ -42,7 +42,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 StoryWinPopup.Open(level, area, true, () => callbacks++);
                 host = GameObject.Find(StoryWinPopup.HostName);
                 Require(StoryWinPopup.IsOpen && StoryWinPopup.TitleText == "Level 3", "first win opens");
-                Require(StoryWinPopup.CaptionText == "+1 Star earned", "first win describes one star");
+                Require(StoryWinPopup.CaptionText == (StorybookUi.Enabled ? "+1 Star" : "+1 Star earned"), "first win describes one star");
                 Button button = host.GetComponentInChildren<Button>();
                 button.onClick.Invoke();
                 button.onClick.Invoke();
@@ -52,11 +52,21 @@ namespace JellyGarden.Scripts.Story.Editor
                 Require(StoryWinPopup.CaptionText == "Star already earned", "replay has truthful positive wording");
                 Image star = host.GetComponentsInChildren<Image>().Single(i => i.name == "Star");
                 Require(star.color == Color.white && star.sprite != null, "replay star stays bright gold");
+                if (StorybookUi.Enabled)
+                {
+                    Require(host.GetComponentsInChildren<Image>().Any(i => i.name == "HeadlineArtwork" && i.sprite == StorybookArt.VictoryRibbon),
+                        "storybook uses the approved illustrated headline");
+                    Require(button.GetComponent<Image>().sprite == StorybookArt.VictoryButton,
+                        "victory uses the approved Back to Castle artwork");
+                }
+                else
+                {
                 Image headline = host.GetComponentsInChildren<Image>().Single(i => i.name == "Headline");
                 Require(headline.sprite == StoryArt.Load("win_victory_headline") && headline.sprite != null &&
                     headline.preserveAspect && !headline.raycastTarget, "curved headline image is visible and keeps its proportions");
                 Require(!host.GetComponentsInChildren<Text>().Any(t => t.text == "Level Complete!"),
                     "straight headline text is replaced");
+                }
                 StoryWinPopup.Close();
                 button.onClick.Invoke();
                 Require(callbacks == 1, "external close discards a stale continuation");

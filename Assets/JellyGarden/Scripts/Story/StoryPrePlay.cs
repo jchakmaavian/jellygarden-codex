@@ -181,6 +181,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>One of the six board gems, by colour index.</summary>
         private static Sprite Gem(int color)
         {
+            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Piece(color);
             Item item = ItemPrefab;
             if (item == null || item.items == null || item.items.Length == 0) return null;
             return item.items[Mathf.Clamp(color, 0, item.items.Length - 1)];
@@ -190,6 +191,7 @@ namespace JellyGarden.Scripts.Story
         /// arrow across the plate; the vertical one is the same power.</summary>
         private static Sprite Rocket(int color)
         {
+            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Get("rocket");
             Item item = ItemPrefab;
             if (item == null || item.stripedItems == null || item.stripedItems.Count == 0) return null;
             StripedItem striped = item.stripedItems[Mathf.Clamp(color, 0, item.stripedItems.Count - 1)];
@@ -199,6 +201,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The bomb of a colour — the kit calls it a package.</summary>
         private static Sprite Bomb(int color)
         {
+            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Get("area-bomb");
             Item item = ItemPrefab;
             if (item == null || item.packageItems == null || item.packageItems.Length == 0) return null;
             return item.packageItems[Mathf.Clamp(color, 0, item.packageItems.Length - 1)];
@@ -207,6 +210,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The rainbow ball. There is only ever one.</summary>
         private static Sprite Rainbow()
         {
+            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Get("rainbow-orb");
             Item item = ItemPrefab;
             if (item == null || item.bombItems == null || item.bombItems.Length == 0) return null;
             return item.bombItems[0];
@@ -496,11 +500,11 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private void Ground(RectTransform parent)
         {
-            Image ground = StoryUi.CreateImage("Ground", parent, null, StoryUi.RoyalBlueDark);
+            Image ground = StoryUi.CreateImage("Ground", parent, null, StorybookUi.Enabled ? StorybookUi.PaperShade : StoryUi.RoyalBlueDark);
             StoryUi.Stretch(ground.rectTransform);
 
             Image glow = StoryUi.CreateImage("Glow", parent, StoryUi.CircleSprite,
-                new Color(StoryUi.RoyalBlue.r, StoryUi.RoyalBlue.g, StoryUi.RoyalBlue.b, 0.92f));
+                StorybookUi.Enabled ? StorybookUi.Paper : new Color(StoryUi.RoyalBlue.r, StoryUi.RoyalBlue.g, StoryUi.RoyalBlue.b, 0.92f));
             RectTransform glowRect = glow.rectTransform;
             glowRect.anchorMin = new Vector2(0.5f, 0.5f);
             glowRect.anchorMax = glowRect.anchorMin;
@@ -512,13 +516,13 @@ namespace JellyGarden.Scripts.Story
         private void Title(RectTransform parent, Plate plate)
         {
             Text title = StoryUi.CreateText("Title", parent, plate.Title, TitleSize,
-                StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
-            title.font = StoryUi.DisplayFont;
+                StorybookUi.Enabled ? StorybookUi.Ink : StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
+            title.font = StorybookUi.Enabled ? StoryUi.NameFont : StoryUi.DisplayFont;
             title.fontStyle = FontStyle.Bold;
             Band(title.rectTransform, TitleTop, TitleHeight);
 
             var outline = title.gameObject.AddComponent<Outline>();
-            outline.effectColor = StoryUi.RoyalBlueDark;
+            outline.effectColor = StorybookUi.Enabled ? Color.clear : StoryUi.RoyalBlueDark;
             outline.effectDistance = new Vector2(4f, -4f);
 
             StoryUi.FitOneLine(title, 60, TitleSize);
@@ -527,13 +531,13 @@ namespace JellyGarden.Scripts.Story
         private void Foot(RectTransform parent, Plate plate)
         {
             Text foot = StoryUi.CreateText("Foot", parent, plate.Foot, FootSize,
-                StoryUi.RoyalGold, TextAnchor.MiddleCenter);
-            foot.font = StoryUi.DisplayFont;
+                StorybookUi.Enabled ? StorybookUi.Ink : StoryUi.RoyalGold, TextAnchor.MiddleCenter);
+            foot.font = StorybookUi.Enabled ? StoryUi.NameFont : StoryUi.DisplayFont;
             foot.fontStyle = FontStyle.Bold;
             Band(foot.rectTransform, FootBottom, FootHeight);
 
             var outline = foot.gameObject.AddComponent<Outline>();
-            outline.effectColor = StoryUi.RoyalBlueDark;
+            outline.effectColor = StorybookUi.Enabled ? Color.clear : StoryUi.RoyalBlueDark;
             outline.effectDistance = new Vector2(3f, -3f);
 
             StoryUi.FitOneLine(foot, 34, FootSize);

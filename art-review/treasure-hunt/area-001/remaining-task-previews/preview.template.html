@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Area 1 · Door, flags and lanterns</title>
+<style>
+*{box-sizing:border-box} :root{font-family:system-ui,-apple-system,sans-serif;color-scheme:dark}
+body{margin:0;background:#101b2a;color:#fbf4e3;min-height:100svh}
+main{max-width:1190px;margin:auto;padding:26px 28px 22px}
+header{display:flex;justify-content:space-between;gap:25px;align-items:center;margin-bottom:24px}
+.eyebrow{color:#dfbb79;font-size:11px;letter-spacing:.13em;text-transform:uppercase}
+h1{font-size:26px;font-weight:640;letter-spacing:-.035em;margin:5px 0}header p{font-size:13px;color:#a9baca;margin:6px 0 0}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+article{min-width:0}h2{font-size:17px;letter-spacing:-.02em;margin:0 0 7px;font-weight:600}
+.description{font-size:12px;line-height:1.55;color:#a9baca;margin:0 0 13px;min-height:37px}
+.phone{width:min(100%,calc((100svh - 280px)*.5625));min-width:230px;margin:auto;border-radius:18px;overflow:hidden;border:1px solid #7286a044;box-shadow:0 18px 60px #0007}
+canvas{width:100%;height:auto;display:block;cursor:pointer;touch-action:manipulation}
+.controls{display:flex;justify-content:center;gap:9px;margin:13px 0 10px}
+button{font:600 12px system-ui;border:1px solid #d7b268;background:#efd099;color:#203148;border-radius:8px;padding:9px 14px;cursor:pointer}
+button.secondary{background:transparent;color:#c9d7e6;border-color:#42546b}button:hover{filter:brightness(1.1)}
+.timeline{width:min(100%,320px);margin:0 auto;display:block;accent-color:#e8c283;cursor:pointer}
+.status{font-size:11px;color:#94a8bd;text-align:center;margin:6px 0 0}
+.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.loop{font-size:12px;color:#a9baca;white-space:nowrap}.loop input{accent-color:#e8c283;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:#8094a9;margin-top:18px}
+.export main{padding:0}.export header,.export footer,.export h2,.export .description,.export .controls,.export .timeline,.export .status{display:none}
+.export .grid{display:block}.export article{display:none}.export article.selected{display:block}.export .phone{width:720px;min-width:0;margin:0;border:0;box-shadow:none;border-radius:0}
+@media(max-width:820px){main{padding:24px 18px}.grid{grid-template-columns:1fr;gap:38px}article{max-width:360px;margin:auto;width:100%}.phone{width:100%;max-width:330px}header{align-items:flex-start;flex-direction:column;margin-bottom:28px}.description{min-height:0}h1{font-size:24px}}
+</style>
+</head>
+<body><main>
+<header><div><div class="eyebrow">Area 1 · Castle Gates</div><h1>Door, flags &amp; lanterns</h1><p>Three transition previews using the current castle artwork.</p></div><div class="actions"><button id="all">Replay all</button><label class="loop"><input type="checkbox" id="loop" checked> Loop previews</label></div></header>
+<div class="grid">
+<article data-key="door"><h2>Build the wooden door</h2><p class="description">Oak planks settle into the arch, then the brass fittings click into place.</p><div class="phone"><canvas width="720" height="1280" aria-label="Wooden door transition preview"></canvas></div><div class="controls"><button class="play">Replay</button><button class="pause secondary">Pause</button></div><input class="timeline" aria-label="Wooden door timeline" type="range" min="0" max="6.6" step=".01" value="0"><p class="status">Before · 0.0 / 6.6 s</p></article>
+<article data-key="flags"><h2>Decorate with royal flags</h2><p class="description">Royal blue banners unfurl, ripple gently, and settle against the towers.</p><div class="phone"><canvas width="720" height="1280" aria-label="Royal flags transition preview"></canvas></div><div class="controls"><button class="play">Replay</button><button class="pause secondary">Pause</button></div><input class="timeline" aria-label="Royal flags timeline" type="range" min="0" max="6.6" step=".01" value="0"><p class="status">Before · 0.0 / 6.6 s</p></article>
+<article data-key="lanterns"><h2>Light the lanterns</h2><p class="description">The lanterns kindle in sequence, followed by a sparkle on the smiling sun.</p><div class="phone"><canvas width="720" height="1280" aria-label="Lantern lighting transition preview"></canvas></div><div class="controls"><button class="play">Replay</button><button class="pause secondary">Pause</button></div><input class="timeline" aria-label="Lantern lighting timeline" type="range" min="0" max="6.6" step=".01" value="0"><p class="status">Before · 0.0 / 6.6 s</p></article>
+</div><footer>Preview only · No changes to the game · Click a task button or replay to watch again</footer>
+</main>
+<script>
+(() => {
+'use strict';
+const W=720,H=1280,S=720/941,DURATION=6.6;
+const exportMode=new URLSearchParams(location.search).has('render');
+if(exportMode)document.body.classList.add('export');
+const sources=['__STATE_1__','__STATE_2__','__STATE_3__','__STATE_4__'];
+const images=sources.map(()=>new Image());
+const clamp=(n,a=0,b=1)=>Math.min(b,Math.max(a,n));
+const smooth=n=>{n=clamp(n);return n*n*(3-2*n);};
+const out=n=>1-Math.pow(1-clamp(n),3);
+const rand=n=>{const x=Math.sin(n*127.1+311.7)*43758.5453123;return x-Math.floor(x);};
+function surface(){const c=document.createElement('canvas');c.width=W;c.height=H;return c;}
+function original(ctx,img){ctx.drawImage(img,0,0,W,H);}
+function poly(ctx,points){ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x*S,y*S):ctx.moveTo(x*S,y*S));ctx.closePath();}
+function round(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);}
+function text(ctx,value,x,y,size,color,align='center',weight=700){ctx.font=`${weight} ${size}px system-ui,-apple-system,sans-serif`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillStyle=color;ctx.fillText(value,x,y);}
+function star(ctx,x,y,r,alpha=1){ctx.save();ctx.globalAlpha*=alpha;ctx.translate(x,y);ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.46:r;i?ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr):ctx.moveTo(Math.cos(a)*rr,Math.sin(a)*rr);}ctx.closePath();ctx.fillStyle='#ffcf44';ctx.strokeStyle='#a56a18';ctx.lineWidth=2;ctx.fill();ctx.stroke();ctx.restore();}
+function glint(ctx,x,y,r,alpha){if(alpha<=0)return;ctx.save();ctx.globalAlpha*=alpha;const g=ctx.createRadialGradient(x,y,0,x,y,r*3);g.addColorStop(0,'#fff0ac90');g.addColorStop(1,'#fff0ac00');ctx.fillStyle=g;ctx.fillRect(x-r*3,y-r*3,r*6,r*6);ctx.translate(x,y);ctx.fillStyle='#fff5d2';ctx.beginPath();ctx.moveTo(0,-r);ctx.quadraticCurveTo(r*.13,-r*.12,r,0);ctx.quadraticCurveTo(r*.13,r*.12,0,r);ctx.quadraticCurveTo(-r*.13,r*.12,-r,0);ctx.quadraticCurveTo(-r*.13,-r*.12,0,-r);ctx.fill();ctx.restore();}
+function glow(ctx,x,y,r,alpha,color='255,190,55'){if(alpha<=0)return;ctx.save();ctx.globalCompositeOperation='screen';const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${color},${alpha})`);g.addColorStop(.25,`rgba(${color},${alpha*.6})`);g.addColorStop(1,`rgba(${color},0)`);ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);ctx.restore();}
+function dust(ctx,x,y,age,seed,warm=true){if(age<0||age>1)return;const a=Math.sin(age*Math.PI)*.55;ctx.save();ctx.globalAlpha=a;const dx=(rand(seed)*2-1)*(15+age*35),dy=-age*(18+rand(seed+1)*24);const r=1+rand(seed+2)*1.9;ctx.fillStyle=warm?'#eac48d':'#fff0ac';ctx.translate(x+dx,y+dy);ctx.rotate(seed+age*2);ctx.fillRect(-r,-r*.45,r*2,r*.9);ctx.restore();}
+function cut(img,path){const c=surface(),g=c.getContext('2d');path(g);g.clip();original(g,img);return c;}
+function doorPath(g,inner=false){g.beginPath();if(inner){g.moveTo(311*S,1105*S);g.lineTo(311*S,778*S);g.bezierCurveTo(311*S,692*S,381*S,633*S,468*S,633*S);g.bezierCurveTo(555*S,633*S,623*S,692*S,623*S,778*S);g.lineTo(623*S,1105*S);}else{g.moveTo(300*S,1113*S);g.lineTo(300*S,772*S);g.bezierCurveTo(300*S,668*S,374*S,598*S,468*S,598*S);g.bezierCurveTo(562*S,598*S,637*S,668*S,637*S,772*S);g.lineTo(637*S,1113*S);}g.closePath();}
+const hardware=[{x:321,y:739,w:134,h:62,side:-1,start:2.40},{x:479,y:739,w:134,h:62,side:1,start:2.52},{x:321,y:967,w:134,h:60,side:-1,start:2.64},{x:479,y:967,w:134,h:60,side:1,start:2.76},{x:399,y:875,w:62,h:79,side:0,start:2.94},{x:477,y:875,w:62,h:79,side:0,start:3.06}];
+const flagSpecs=[{x:42,y:501,w:169,h:232,top:510,bottom:727,start:1.27,phase:0,points:[[81,508],[177,508],[179,728],[117,686],[63,729]]},{x:727,y:501,w:173,h:232,top:510,bottom:727,start:1.50,phase:1.4,points:[[766,508],[862,508],[883,729],[823,686],[773,729]]}];
+let doorFrame,doorWood,doorFull,flagBase,flagLayers,flagPoles;
+function buildLayers(){
+  doorFull=cut(images[1],g=>doorPath(g));
+  doorFrame=surface();const f=doorFrame.getContext('2d');f.drawImage(doorFull,0,0);f.globalCompositeOperation='destination-out';f.save();f.translate(468*S,870*S);f.scale(.992,.995);f.translate(-468*S,-870*S);doorPath(f,true);f.fill();f.restore();
+  doorWood=cut(images[1],g=>doorPath(g,true));const wood=doorWood.getContext('2d');
+  // Hide the final fittings beneath their own animated pieces. Only the
+  // temporary preview layer is composited; the original art is never edited.
+  const pixels=wood.getImageData(0,0,W,H),originalPixels=new Uint8ClampedArray(pixels.data);
+  for(const h of hardware){
+    const x0=Math.floor((h.x-3)*S),x1=Math.ceil((h.x+h.w+3)*S),y0=Math.floor((h.y-3)*S),y1=Math.ceil((h.y+h.h+3)*S);
+    for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++){
+      const p=(y-y0)/(y1-y0),a=smooth(Math.min(x-x0,x1-x,y-y0,y1-y)/3);
+      const index=(y*W+x)*4,top=((y0-2)*W+x)*4,bottom=((y1+2)*W+x)*4;
+      for(let channel=0;channel<3;channel++){
+        const grain=originalPixels[top+channel]*(1-p)+originalPixels[bottom+channel]*p;
+        pixels.data[index+channel]=pixels.data[index+channel]*(1-a)+grain*a;
+      }
+    }
+  }
+  wood.putImageData(pixels,0,0);
+  flagBase=surface();const b=flagBase.getContext('2d');original(b,images[1]);
+  // The final artwork places the mounts slightly higher. Quietly remove the
+  // old rails as the new mounts seat, using nearby stone from the same tower.
+  for(const x of [39,727]){
+    const feather=surface(),fg=feather.getContext('2d');
+    fg.drawImage(images[1],x,607,181,48,x*S,548*S,181*S,59*S);
+    fg.globalCompositeOperation='destination-in';const gg=fg.createLinearGradient(0,548*S,0,607*S);gg.addColorStop(0,'#0000');gg.addColorStop(.10,'#000');gg.addColorStop(.90,'#000');gg.addColorStop(1,'#0000');fg.fillStyle=gg;fg.fillRect(x*S,548*S,181*S,59*S);b.drawImage(feather,0,0);
+  }
+  flagLayers=flagSpecs.map(spec=>cut(images[2],g=>poly(g,spec.points)));
+  flagPoles=flagSpecs.map(spec=>cut(images[2],g=>{round(g,spec.x*S,500*S,spec.w*S,31*S,13*S);}));
+}
+function drawDoor(ctx,t){
+  original(ctx,images[0]);
+  if(t<=1)return;
+  // First the arch frame seats; then individual oak boards rise into place.
+  ctx.save();ctx.globalAlpha=smooth((t-1.03)/.55);ctx.drawImage(doorFrame,0,0);ctx.restore();
+  const left=311*S,width=(623-311)*S,top=630*S,bottom=1106*S;
+  for(let i=0;i<8;i++){
+    const start=1.17+i*.115,p=clamp((t-start)/.75);if(p<=0)continue;
+    const settle=out(p),dx=(i<4?-1:1)*7*(1-settle),dy=67*(1-settle)-4*Math.sin(Math.PI*p);
+    const x=left+i*width/8;
+    ctx.save();doorPath(ctx,true);ctx.clip();ctx.globalAlpha=smooth(p/.22);
+    ctx.drawImage(doorWood,x,top,width/8+.4,bottom-top,x+dx,top+dy,width/8+.4,bottom-top);
+    ctx.restore();
+    for(let k=0;k<5;k++)dust(ctx,x+width/16,bottom-3,t-(start+.52+k*.025),i*17+k);
+  }
+  for(const h of hardware){
+    const p=clamp((t-h.start)/.38);if(p<=0)continue;
+    const cx=(h.x+h.w/2)*S,cy=(h.y+h.h/2)*S;
+    ctx.save();ctx.globalAlpha=smooth(p/.4);ctx.translate(cx+h.side*15*(1-out(p)),cy);
+    const scale=h.side===0?(.66+.34*out(p)+.05*Math.sin(p*Math.PI)):1;ctx.scale(scale,scale);
+    ctx.drawImage(images[1],h.x,h.y,h.w,h.h,-h.w*S/2,-h.h*S/2,h.w*S,h.h*S);ctx.restore();
+    const a=(t-h.start-.25)/.56;glint(ctx,cx+(h.side||1)*h.w*S*.30,cy-3,5,a>0&&a<1?Math.sin(a*Math.PI)*.8:0);
+  }
+  const finish=smooth((t-3.60)/.28);if(finish>0){ctx.save();ctx.globalAlpha=finish;original(ctx,images[1]);ctx.restore();}
+  [[307,1083],[630,1083],[468,624]].forEach(([x,y],i)=>{const a=(t-3.70-i*.12)/.65;glint(ctx,x*S,y*S,5,a>0&&a<1?Math.sin(a*Math.PI)*.7:0);});
+}
+function drawFlags(ctx,t){
+  original(ctx,images[1]);if(t<=.98)return;
+  ctx.save();ctx.globalAlpha=smooth((t-1.0)/.28);ctx.drawImage(flagBase,0,0);ctx.restore();
+  flagSpecs.forEach((f,i)=>{
+    const mount=smooth((t-1.05-i*.12)/.30);ctx.save();ctx.globalAlpha=mount;ctx.drawImage(flagPoles[i],0,4*(1-mount));ctx.restore();
+    const p=clamp((t-f.start)/1.42);if(p<=0)return;
+    const extent=f.top+(f.bottom-f.top)*out(p),y0=f.top*S,y1=extent*S;
+    const motion=(1-smooth((t-2.7)/1.15));
+    const x=f.x*S,w=f.w*S;
+    for(let y=y0;y<y1;y+=2){
+      const frac=(y-y0)/((f.bottom-f.top)*S),wave=Math.sin(frac*7.5-t*5.6+f.phase)*4.1*frac*motion;
+      ctx.drawImage(flagLayers[i],x-1,y,w+2,Math.min(2.1,y1-y),x-1+wave,y,w+2,Math.min(2.1,y1-y));
+    }
+    if(p<.91){
+      ctx.save();poly(ctx,f.points);ctx.clip();ctx.globalAlpha=.85*(1-smooth((p-.77)/.14));
+      const roll=ctx.createLinearGradient(0,y1-8,0,y1+2);roll.addColorStop(0,'#1039a800');roll.addColorStop(.35,'#17377c');roll.addColorStop(.70,'#688deb');roll.addColorStop(1,'#e3b24b');ctx.fillStyle=roll;ctx.fillRect(x,y1-8,w,10);ctx.restore();
+    }
+    [[f.x+13,515],[f.x+f.w-13,515],[f.x+30,721],[f.x+f.w-33,721]].forEach(([xx,yy],k)=>{const a=(t-(2.8+i*.22+k*.07))/.7;glint(ctx,xx*S,yy*S,4.5,a>0&&a<1?Math.sin(a*Math.PI)*.7:0);});
+  });
+  const finish=smooth((t-3.85)/.3);if(finish>0){ctx.save();ctx.globalAlpha=finish;original(ctx,images[2]);ctx.restore();}
+}
+const lightLayer=surface(),lightMask=surface();
+function drawLanterns(ctx,t){
+  original(ctx,images[2]);if(t<=1.0)return;
+  const lamps=[{x:178,y:787,start:1.18},{x:761,y:787,start:1.72}];
+  const mask=lightMask.getContext('2d');mask.clearRect(0,0,W,H);
+  for(const lamp of lamps){
+    const p=smooth((t-lamp.start)/.68),x=lamp.x*S,y=lamp.y*S,r=156*S;
+    const grad=mask.createRadialGradient(x,y,18,x,y,r);grad.addColorStop(0,`rgba(255,255,255,${p})`);grad.addColorStop(.68,`rgba(255,255,255,${p})`);grad.addColorStop(1,'#fff0');mask.fillStyle=grad;mask.fillRect(x-r,y-r,r*2,r*2);
+  }
+  const finish=smooth((t-2.9)/.9);mask.fillStyle=`rgba(255,255,255,${finish})`;mask.fillRect(0,0,W,H);
+  const layer=lightLayer.getContext('2d');layer.clearRect(0,0,W,H);layer.globalCompositeOperation='source-over';original(layer,images[3]);layer.globalCompositeOperation='destination-in';layer.drawImage(lightMask,0,0);layer.globalCompositeOperation='source-over';ctx.drawImage(lightLayer,0,0);
+  for(const lamp of lamps){
+    const age=t-lamp.start,x=lamp.x*S,y=lamp.y*S;
+    // A small ignition spark comes to the glass, then the warm light blooms.
+    if(age>-.23&&age<.12){const p=clamp((age+.23)/.35);const xx=x+Math.sin(p*Math.PI)*11,yy=y+35*(1-p);glint(ctx,xx,yy,3+4*Math.sin(p*Math.PI),Math.sin(p*Math.PI)*.9);}
+    const flare=age>0&&age<1.45?Math.sin(clamp(age/1.45)*Math.PI):0;
+    glow(ctx,x,y,76*S,.22*flare);
+    glow(ctx,x,y,18*S,.42*flare,'255,229,136');
+    for(let k=0;k<12;k++){
+      const a=age-.1-k*.055;if(a<0||a>1.1)continue;
+      const xx=x+(rand(k+lamp.x)-.5)*23+Math.sin(a*3+k)*4,yy=y-a*(28+rand(k)*22);
+      glint(ctx,xx,yy,1.3+rand(k+4)*1.2,Math.sin(a/1.1*Math.PI)*.6);
+    }
+  }
+  const sun=(t-3.13)/1.1;if(sun>0&&sun<1){glint(ctx,510*S,445*S,11,Math.sin(sun*Math.PI));glow(ctx,475*S,473*S,42,.10*Math.sin(sun*Math.PI));}
+}
+const config={door:{before:1,after:2,label:'Build the wooden door',done:'Wooden door built',draw:drawDoor,phase:'Building the door'},flags:{before:2,after:3,label:'Decorate with royal flags',done:'Royal flags hung',draw:drawFlags,phase:'Unfurling the flags'},lanterns:{before:3,after:4,label:'Light the lanterns',done:'Lanterns lit',draw:drawLanterns,phase:'Lighting the lanterns'}};
+function taskCard(ctx,t,cfg){
+  const hide=smooth((t-.62)/.36),show=smooth((t-4.65)/.42),alpha=t<2?1-hide:show;if(alpha<=0)return;
+  const complete=t>4;ctx.save();ctx.globalAlpha=alpha;ctx.translate(0,32*(1-alpha));
+  ctx.shadowColor='#102b4580';ctx.shadowBlur=22;ctx.shadowOffsetY=8;round(ctx,40,1094,640,128,23);ctx.fillStyle='#f9edce';ctx.fill();ctx.shadowColor='transparent';ctx.lineWidth=4;ctx.strokeStyle='#edbd5f';ctx.stroke();
+  text(ctx,'Castle Gates',64,1120,18,'#315e83','left');text(ctx,`${complete?cfg.after:cfg.before}/4`,655,1120,18,'#315e83','right');
+  if(!complete){
+    const press=1-.035*Math.sin(Math.PI*clamp((t-.38)/.24));ctx.translate(360,1168);ctx.scale(press,press);const g=ctx.createLinearGradient(0,-28,0,30);g.addColorStop(0,'#8fb82b');g.addColorStop(1,'#518c03');round(ctx,-297,-29,594,59,15);ctx.fillStyle=g;ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#386700';ctx.stroke();
+    text(ctx,cfg.label,-24,0,cfg.label.length>22?23:25,'#fff5d6');star(ctx,235,0,15);text(ctx,'1',268,1,24,'#fff5d6');
+    if(t>.33&&t<.84){const p=clamp((t-.33)/.51);ctx.globalAlpha*=1-p;ctx.beginPath();ctx.arc(150,2,15+35*p,0,2*Math.PI);ctx.strokeStyle='#fff2b3';ctx.lineWidth=3;ctx.stroke();}
+  }else{
+    text(ctx,'✓',78,1169,31,'#639721');text(ctx,cfg.done,116,1169,26,'#275776','left');round(ctx,494,1154,160,27,10);ctx.fillStyle='#c9d6c2';ctx.fill();round(ctx,494,1154,160*cfg.after/4,27,10);ctx.fillStyle='#85a922';ctx.fill();
+  }ctx.restore();
+}
+const previews={};
+class Preview{
+  constructor(article){this.article=article;this.key=article.dataset.key;this.cfg=config[this.key];this.canvas=article.querySelector('canvas');this.ctx=this.canvas.getContext('2d',{alpha:false});this.seek=article.querySelector('.timeline');this.status=article.querySelector('.status');this.pauseButton=article.querySelector('.pause');this.playing=false;this.time=0;this.epoch=0;
+    article.querySelector('.play').onclick=()=>this.play();this.canvas.onclick=()=>this.play();this.pauseButton.onclick=()=>this.playing?this.pause():this.play(false);this.seek.oninput=()=>{this.pause();this.setTime(+this.seek.value);};this.setTime(0);
+  }
+  setTime(t){this.time=clamp(t,0,DURATION);this.ctx.globalAlpha=1;this.ctx.globalCompositeOperation='source-over';this.cfg.draw(this.ctx,this.time);taskCard(this.ctx,this.time,this.cfg);this.seek.value=this.time;this.status.textContent=`${this.time<.62?'Before':this.time<1.02?'Task selected':this.time<4.15?this.cfg.phase:this.time<4.65?'Settling':'Complete'} · ${this.time.toFixed(1)} / ${DURATION.toFixed(1)} s`;return this.time;}
+  play(restart=true){if(restart||this.time>=DURATION)this.time=0;this.epoch=performance.now()-this.time*1000;this.playing=true;this.pauseButton.textContent='Pause';}
+  pause(){this.playing=false;this.pauseButton.textContent='Resume';}
+  tick(now){if(!this.playing)return;let t=(now-this.epoch)/1000;if(t>DURATION+.9&&document.getElementById('loop').checked){this.epoch=now;t=0;}if(t>DURATION&&!document.getElementById('loop').checked)this.pause();this.setTime(t);}
+}
+Promise.all(images.map((img,i)=>new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=sources[i];}))).then(()=>{
+  buildLayers();document.querySelectorAll('article').forEach(a=>{const p=new Preview(a);previews[p.key]=p;});
+  window.areaPreview={ready:true,duration:DURATION,width:W,height:H,previews,setTime:(key,t)=>previews[key].setTime(t),select:key=>{document.querySelectorAll('article').forEach(a=>a.classList.toggle('selected',a.dataset.key===key));}};
+  document.getElementById('all').onclick=()=>Object.values(previews).forEach(p=>p.play());
+  areaPreview.select('door');if(!exportMode){Object.values(previews).forEach(p=>p.play());const tick=now=>{Object.values(previews).forEach(p=>p.tick(now));requestAnimationFrame(tick);};requestAnimationFrame(tick);}
+}).catch(e=>{console.error(e);document.querySelector('header p').textContent='Could not load the preview artwork.';});
+})();
+</script></body></html>

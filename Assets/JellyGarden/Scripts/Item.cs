@@ -117,6 +117,7 @@ namespace JellyGarden.Scripts
         private void Awake()
         {
             _boxCollider2D = GetComponent<BoxCollider2D>();
+            JellyGarden.Scripts.Story.StorybookBoardArt.Apply(this);
         }
 
         // Use this for initialization

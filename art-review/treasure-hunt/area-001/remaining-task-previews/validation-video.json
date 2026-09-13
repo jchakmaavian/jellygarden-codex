@@ -1,0 +1,26 @@
+{
+  "scope": "Area 1 task 2\u20134 standalone previews only",
+  "width": 720,
+  "height": 1280,
+  "fps": 30,
+  "duration": 6.6,
+  "mode": "video",
+  "browserErrors": [],
+  "tasks": {
+    "door": {
+      "replayStartMatches": true,
+      "replayEndMatches": true
+    },
+    "flags": {
+      "replayStartMatches": true,
+      "replayEndMatches": true
+    },
+    "lanterns": {
+      "replayStartMatches": true,
+      "replayEndMatches": true
+    }
+  },
+  "gameFilesUnchanged": true,
+  "existingSourceFilesChecked": 763,
+  "sequenceDuration": 19.8
+}

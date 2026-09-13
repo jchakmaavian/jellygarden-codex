@@ -133,6 +133,12 @@ namespace JellyGarden.Scripts.Story
         /// <summary>Starts the given level, remembering which area it was played for.</summary>
         public static void LaunchLevel(int levelNumber, int areaId)
         {
+            if (StoryCampaign.IsTreasureHunt &&
+                (!StoryCampaign.CanEnter(areaId) || StoryLevelPlan.AreaOf(levelNumber) != areaId))
+            {
+                StoryToast.Show(StoryCampaign.ComingSoon);
+                return;
+            }
             PlayingArea = areaId;
             PlayingLevel = levelNumber;
             _returningFromLevel = false;
@@ -154,7 +160,7 @@ namespace JellyGarden.Scripts.Story
 
             // The one level where the board starts fighting back gets its line
             // first, so the new obstacle reads as Grimm rather than as difficulty.
-            if (StorySabotage.PlayIntroIfDue(levelNumber, StartLoadedLevel))
+            if (!StoryCampaign.IsTreasureHunt && StorySabotage.PlayIntroIfDue(levelNumber, StartLoadedLevel))
                 return;
 
             StartLoadedLevel();
@@ -257,8 +263,11 @@ namespace JellyGarden.Scripts.Story
                 return;
             }
 
-            StoryProgress.MarkLevelBeaten(levelNumber);
-            StoryProgress.AddStar(PlayingArea);
+            if (!StoryProgress.RecordLevelWin(levelNumber, PlayingArea))
+            {
+                ShowWinPanel(levelNumber, false);
+                return;
+            }
             StorySfx.PlayStarEarned();
 
             // Boosters are earned, never sold. Winning is the price.
@@ -315,6 +324,11 @@ namespace JellyGarden.Scripts.Story
 
         private static void ShowLockedToast(int areaId)
         {
+            if (!StoryCampaign.IsReady(areaId))
+            {
+                StoryToast.Show(StoryCampaign.ComingSoon);
+                return;
+            }
             StoryArea previous = StoryDatabase.GetArea(areaId - 1);
             string message = previous != null
                 ? string.Format("Restore the {0} first.", previous.Name.ToLowerInvariant())

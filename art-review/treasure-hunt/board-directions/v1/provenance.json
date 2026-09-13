@@ -1,0 +1,94 @@
+[
+  {
+    "id": "royal-gems",
+    "name": "Royal Gems",
+    "file": "art/royal-gems-sheet.png",
+    "source": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-8a313242-5683-4710-8893-c4902872117b.png",
+    "prompt": "Use case: stylized-concept.\nAsset type: ONE game-piece collection sheet for Royal Gems, consisting of exactly SIX isolated pieces.\nPrimary request: Premium bright cartoon match-3 game art, smoothly sculpted 3D pieces. Bold inflated silhouette, very broad clean highlights, soft ambient occlusion, rich solid color, only a few broad facets. Charming polished toy gems, NOT realistic jewelry. Each silhouette distinct. No thin rims or metallic outlines. These should feel like the best polished modern casual puzzle game.\nComposition: precisely 1536x1024 landscape image divided into an INVISIBLE equal 3-column by 2-row grid. Cells are 512x512. Put one piece dead center in each cell at these centers: (256,256), (768,256), (1280,256), (256,768), (768,768), (1280,768). Each piece fits in a centered 320x320 bounding box, with ample empty margin. All six have equal apparent visual mass and size. Front view with a slight shared upper-front view showing volume, same lighting from upper left.\nReading order left-to-right top-to-bottom: a ruby-red plump HEART; a sapphire-blue rounded SHIELD, entirely blue with a simple lighter-blue inset, no gold rim; an emerald-green FOUR-LEAF CLOVER with a very short stem; a sunshine-yellow THREE-POINT CROWN, no jewels; a saturated violet faceted HEXAGONAL GEM; a tangerine-orange ROUND MEDALLION with a simple sun relief.\nBackground: perfectly flat uniform very dark navy #101D35 across the entire canvas. NO gradients, texture, cast shadows on the background, grid lines, frames, pedestals or cards. Soft self-shading is allowed only ON the objects. This plain background is for asset extraction.\nConstraints: color must fill each piece, each is primarily ONE of the six specified colors. Crisp separated silhouettes. Exactly six pieces, no extras. No captions, text, numerals, watermarks, UI, game board, or decorative stars. The pieces must occupy their assigned grid centers accurately.",
+    "tool": "built-in image_gen",
+    "pieces": [
+      "a ruby-red plump HEART",
+      "a sapphire-blue rounded SHIELD, entirely blue with a simple lighter-blue inset, no gold rim",
+      "an emerald-green FOUR-LEAF CLOVER with a very short stem",
+      "a sunshine-yellow THREE-POINT CROWN, no jewels",
+      "a saturated violet faceted HEXAGONAL GEM",
+      "a tangerine-orange ROUND MEDALLION with a simple sun relief"
+    ],
+    "packaging": "The generated sheet contains alpha. Six grid cells were cropped to their alpha bounds and fitted, without recolouring, into separate 256 × 256 PNGs with 12 px margin. Sprite bounds are in sprite-layout.json.",
+    "sha256": "ca59daf2240bb63f07757c79714dec648690dfaf413615b693c7629c1c95f5c6"
+  },
+  {
+    "id": "soft-storybook",
+    "name": "Soft Storybook",
+    "file": "art/soft-storybook-sheet.png",
+    "source": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-0ad953c8-171f-4022-9577-53a26e79ee47.png",
+    "prompt": "Use case: stylized-concept.\nAsset type: ONE game-piece collection sheet for Soft Storybook, consisting of exactly SIX isolated pieces.\nPrimary request: Warm storybook toy charms, premium softly sculpted clay-and-enamel 3D render. Chunky pillowy shapes, soft broad highlights, velvety smooth surfaces, gentle shadows, saturated cheerful colors. Lovable and tactile but NO eyes, faces or character expressions. Very simple readable silhouettes; no black outlines, metallic edges or tiny decoration.\nComposition: precisely 1536x1024 landscape image divided into an INVISIBLE equal 3-column by 2-row grid. Cells are 512x512. Put one piece dead center in each cell at these centers: (256,256), (768,256), (1280,256), (256,768), (768,768), (1280,768). Each piece fits in a centered 320x320 bounding box, with ample empty margin. All six have equal apparent visual mass and size. Front view with a slight shared upper-front view showing volume, same lighting from upper left.\nReading order left-to-right top-to-bottom: a coral-red rounded HEART-shaped enamel charm; a bright cornflower-blue plump WATER DROP; a vivid apple-green single curving LEAF; a butter-yellow five-point STAR with rounded points; a lilac-purple puffy BUTTERFLY silhouette, no face; a vivid orange rounded SQUARE GIFT with a simple same-orange raised ribbon.\nBackground: perfectly flat uniform very dark navy #101D35 across the entire canvas. NO gradients, texture, cast shadows on the background, grid lines, frames, pedestals or cards. Soft self-shading is allowed only ON the objects. This plain background is for asset extraction.\nConstraints: color must fill each piece, each is primarily ONE of the six specified colors. Crisp separated silhouettes. Exactly six pieces, no extras. No captions, text, numerals, watermarks, UI, game board, or decorative stars. The pieces must occupy their assigned grid centers accurately.",
+    "editPrompt": "Edit this six-piece game sprite sheet. Preserve each of the six objects exactly: the same design, color, shape, lighting, material, size and 3x2 layout. Remove ALL surrounding background, including every colored glow and light bloom outside the objects. Deliver a real TRANSPARENT RGBA PNG sprite sheet, with zero background pixels outside the six silhouettes. No colored halos, no cast shadows, no checkerboard pattern, no navy backdrop. The only opaque content is the six original game pieces. Make edges crisp with subtle antialiasing. Do not redraw or add anything. Keep the entire six-object grid uncropped.",
+    "tool": "built-in image_gen",
+    "pieces": [
+      "a coral-red rounded HEART-shaped enamel charm",
+      "a bright cornflower-blue plump WATER DROP",
+      "a vivid apple-green single curving LEAF",
+      "a butter-yellow five-point STAR with rounded points",
+      "a lilac-purple puffy BUTTERFLY silhouette, no face",
+      "a vivid orange rounded SQUARE GIFT with a simple same-orange raised ribbon"
+    ],
+    "referenceSource": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-253fc22f-624d-41b3-9d5e-1c38029574ca.png",
+    "packaging": "The generated sheet contains alpha. Six grid cells were cropped to their alpha bounds and fitted, without recolouring, into separate 256 × 256 PNGs with 12 px margin. Sprite bounds are in sprite-layout.json.",
+    "sha256": "09bf570c6ccc6c18861d9903ba9ef7915946fe7e443ab0f481482d3a2205fdb8"
+  },
+  {
+    "id": "enchanted-jewels",
+    "name": "Enchanted Jewels",
+    "file": "art/enchanted-jewels-sheet.png",
+    "source": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-8aea9ebb-1a56-4580-806e-72bc72ea52e1.png",
+    "prompt": "Use case: stylized-concept.\nAsset type: ONE game-piece collection sheet for Enchanted Jewels, consisting of exactly SIX isolated pieces.\nPrimary request: High-end magical royal gem collection for a bright mobile match-3 game. Jewel-like luminous depth but cartoon simplicity, clear large geometric planes, juicy saturated colors, crisp highlights, broad thick silhouettes and smooth beveled edges. No metal settings, no chains, no sparkle particles, no outer glow, no texture clutter. Readable as small tokens, not realistic cut diamonds.\nComposition: precisely 1536x1024 landscape image divided into an INVISIBLE equal 3-column by 2-row grid. Cells are 512x512. Put one piece dead center in each cell at these centers: (256,256), (768,256), (1280,256), (256,768), (768,768), (1280,768). Each piece fits in a centered 320x320 bounding box, with ample empty margin. All six have equal apparent visual mass and size. Front view with a slight shared upper-front view showing volume, same lighting from upper left.\nReading order left-to-right top-to-bottom: a deep ruby-red rounded TRIANGULAR gemstone with three broad facets; a luminous sapphire-blue DIAMOND gemstone with a broad center face; an emerald-green beveled RECTANGULAR gemstone; a brilliant golden-yellow faceted FIVE-POINT STAR gemstone; a saturated amethyst-purple CRESCENT MOON gemstone; a warm amber-orange ROUND gemstone, domed cabochon.\nBackground: TRUE TRANSPARENT ALPHA PNG. All space outside the six objects must be fully transparent. Absolutely NO backdrop, no glow or light bloom surrounding the objects, no gradient, no shadow behind or below the pieces, no checkerboard, no text, no frame. Only six isolated solid objects. \nConstraints: color must fill each piece, each is primarily ONE of the six specified colors. Crisp separated silhouettes. Exactly six pieces, no extras. No captions, text, numerals, watermarks, UI, game board, or decorative stars. The pieces must occupy their assigned grid centers accurately.",
+    "tool": "built-in image_gen",
+    "pieces": [
+      "a deep ruby-red rounded TRIANGULAR gemstone with three broad facets",
+      "a luminous sapphire-blue DIAMOND gemstone with a broad center face",
+      "an emerald-green beveled RECTANGULAR gemstone",
+      "a brilliant golden-yellow faceted FIVE-POINT STAR gemstone",
+      "a saturated amethyst-purple CRESCENT MOON gemstone",
+      "a warm amber-orange ROUND gemstone, domed cabochon"
+    ],
+    "packaging": "The generated sheet contains alpha. Six grid cells were cropped to their alpha bounds and fitted, without recolouring, into separate 256 × 256 PNGs with 12 px margin. Sprite bounds are in sprite-layout.json.",
+    "sha256": "3f0053d022a607c25c83d0c93bfc8d38ab7a04a16e0dbc5f4cf9179aaab4475d"
+  },
+  {
+    "id": "royal-keepsakes",
+    "name": "Royal Keepsakes",
+    "file": "art/royal-keepsakes-sheet.png",
+    "source": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-f158c16a-3c77-409a-8e1a-e3b688a9bfc9.png",
+    "prompt": "Use case: stylized-concept.\nAsset type: ONE game-piece collection sheet for Royal Keepsakes, consisting of exactly SIX isolated pieces.\nPrimary request: Delightful castle treasure objects designed as premium chunky 3D match-3 tokens. Broad simple silhouettes, warm storybook toy materials, saturated single dominant color per object, strong smooth volume and restrained highlights. Two large shapes per object at most. No fine etching, labels, tiny highlights, black outlines, thin gold rims or realistic textures. Each object must read instantly at 40 pixels.\nComposition: precisely 1536x1024 landscape image divided into an INVISIBLE equal 3-column by 2-row grid. Cells are 512x512. Put one piece dead center in each cell at these centers: (256,256), (768,256), (1280,256), (256,768), (768,768), (1280,768). Each piece fits in a centered 320x320 bounding box, with ample empty margin. All six have equal apparent visual mass and size. Front view with a slight shared upper-front view showing volume, same lighting from upper left.\nReading order left-to-right top-to-bottom: a cherry-red plump satin BOW with two wide loops, very short ends; a royal-blue sealed ENVELOPE with a simple blue round seal; a vivid green FOUR-LEAF LUCKY CLOVER; a solid golden-yellow rounded BELL with a thick yellow handle; a vivid purple squat POTION BOTTLE, wide body and short neck, same purple stopper; a rich tangerine-orange ACORN with an orange cap, simple rounded shape.\nBackground: TRUE TRANSPARENT ALPHA PNG. All space outside the six objects must be fully transparent. Absolutely NO backdrop, no glow or light bloom surrounding the objects, no gradient, no shadow behind or below the pieces, no checkerboard, no text, no frame. Only six isolated solid objects. \nConstraints: color must fill each piece, each is primarily ONE of the six specified colors. Crisp separated silhouettes. Exactly six pieces, no extras. No captions, text, numerals, watermarks, UI, game board, or decorative stars. The pieces must occupy their assigned grid centers accurately.",
+    "tool": "built-in image_gen",
+    "pieces": [
+      "a cherry-red plump satin BOW with two wide loops, very short ends",
+      "a royal-blue sealed ENVELOPE with a simple blue round seal",
+      "a vivid green FOUR-LEAF LUCKY CLOVER",
+      "a solid golden-yellow rounded BELL with a thick yellow handle",
+      "a vivid purple squat POTION BOTTLE, wide body and short neck, same purple stopper",
+      "a rich tangerine-orange ACORN with an orange cap, simple rounded shape"
+    ],
+    "packaging": "The generated sheet contains alpha. Six grid cells were cropped to their alpha bounds and fitted, without recolouring, into separate 256 × 256 PNGs with 12 px margin. Sprite bounds are in sprite-layout.json.",
+    "sha256": "4763de2bd65e96f022ca7944a6daa15eba18dc999e68cd1dc3bec6bed6c3f8bb"
+  },
+  {
+    "id": "garden-magic",
+    "name": "Garden Magic",
+    "file": "art/garden-magic-sheet.png",
+    "source": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-ee67403b-f504-41c0-8330-16d4ab088977.png",
+    "prompt": "Use case: stylized-concept.\nAsset type: ONE game-piece collection sheet for Garden Magic, consisting of exactly SIX isolated pieces.\nPrimary request: Premium enchanted palace-garden match-3 game tokens, bright sunlit sculpted 3D toy illustration. Juicy saturated solid colors, beautifully smooth round surfaces, broad highlights, restrained shading, joyful chunky silhouettes. No photorealism, tiny veins, black outlines, dewdrop textures or sparkles. More polished toy object than botanical illustration.\nComposition: precisely 1536x1024 landscape image divided into an INVISIBLE equal 3-column by 2-row grid. Cells are 512x512. Put one piece dead center in each cell at these centers: (256,256), (768,256), (1280,256), (256,768), (768,768), (1280,768). Each piece fits in a centered 320x320 bounding box, with ample empty margin. All six have equal apparent visual mass and size. Front view with a slight shared upper-front view showing volume, same lighting from upper left.\nReading order left-to-right top-to-bottom: a vivid scarlet-red TULIP BLOOM with three broad petal tips, no stem; a bright aqua-blue DEWDROP with a smooth pointed top; a vivid spring-green broad LEAF with one simple center fold; a golden-yellow six-petal FLOWER with same-yellow domed center; a vibrant purple BUTTERFLY with four broad wings, no face; a bright tangerine-orange MANDARIN FRUIT with one tiny orange stem and no green leaf.\nBackground: TRUE TRANSPARENT ALPHA PNG. All space outside the six objects must be fully transparent. Absolutely NO backdrop, no glow or light bloom surrounding the objects, no gradient, no shadow behind or below the pieces, no checkerboard, no text, no frame. Only six isolated solid objects. \nConstraints: color must fill each piece, each is primarily ONE of the six specified colors. Crisp separated silhouettes. Exactly six pieces, no extras. No captions, text, numerals, watermarks, UI, game board, or decorative stars. The pieces must occupy their assigned grid centers accurately.",
+    "tool": "built-in image_gen",
+    "pieces": [
+      "a vivid scarlet-red TULIP BLOOM with three broad petal tips, no stem",
+      "a bright aqua-blue DEWDROP with a smooth pointed top",
+      "a vivid spring-green broad LEAF with one simple center fold",
+      "a golden-yellow six-petal FLOWER with same-yellow domed center",
+      "a vibrant purple BUTTERFLY with four broad wings, no face",
+      "a bright tangerine-orange MANDARIN FRUIT with one tiny orange stem and no green leaf"
+    ],
+    "packaging": "The generated sheet contains alpha. Six grid cells were cropped to their alpha bounds and fitted, without recolouring, into separate 256 × 256 PNGs with 12 px margin. Sprite bounds are in sprite-layout.json.",
+    "sha256": "55fb00eb10b1de0a67915f5da44d118525bc4f39be0b8eb0c9b5d604d43f613b"
+  }
+]

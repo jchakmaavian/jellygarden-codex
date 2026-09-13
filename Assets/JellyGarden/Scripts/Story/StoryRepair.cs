@@ -34,6 +34,26 @@ namespace JellyGarden.Scripts.Story
             // still looking at the "before".
             int stateAfter = StoryProgress.TasksCompletedIn(areaId);
 
+            if (task.InstantRepair)
+            {
+                AreaSceneView.NotifyTaskCompleted(areaId, task.Index, false);
+                if (onChanged != null) onChanged();
+                if (StoryHomeScreen.IsOpen && StoryHomeScreen.Instance != null)
+                    StoryHomeScreen.Instance.Refresh();
+                // Keep ordinary tasks in the panel; a final task still delivers
+                // its required discovery and continuation.
+                if (StoryProgress.IsAreaComplete(areaId))
+                {
+                    if (StoryCampaign.IsTreasureHunt)
+                    {
+                        AreaScreen.Close();
+                        TreasureHuntPresentation.AfterTask(areaId, task, () => StoryShell.ShowAfterLevel(areaId));
+                    }
+                    else OnAreaFinished(areaId);
+                }
+                return true;
+            }
+
             // A repair plays on the room that is already on screen. Royal Match
             // never cuts away for one: the task list goes, the room stays exactly
             // where it was, and the work happens on the picture the star was
@@ -54,7 +74,7 @@ namespace JellyGarden.Scripts.Story
             if (screen != null)
             {
                 room = screen.RoomRect;
-                screen.HideForRepair();
+                screen.HideForRepair(task.RepairTransition == "vines" || StoryGateTransition.Supports(task.RepairTransition));
             }
             else if (StoryHomeScreen.IsOpen && StoryHomeScreen.Instance != null
                      && StoryHomeScreen.Instance.AreaId == areaId)
@@ -69,7 +89,7 @@ namespace JellyGarden.Scripts.Story
             {
                 // The panel comes back before anything else can close it: a screen
                 // left hidden is a screen with no X on it.
-                if (screen != null) screen.ShowAfterRepair();
+                if (screen != null) screen.ShowAfterRepair(task.RepairTransition == "vines" || StoryGateTransition.Supports(task.RepairTransition));
 
                 if (onChanged != null) onChanged();
 
@@ -79,7 +99,16 @@ namespace JellyGarden.Scripts.Story
                 if (StoryHomeScreen.IsOpen && StoryHomeScreen.Instance != null)
                     StoryHomeScreen.Instance.Refresh();
 
-                if (StoryProgress.IsAreaComplete(areaId))
+                if (StoryCampaign.IsTreasureHunt)
+                {
+                    // Silent tasks return to the task list after their animation.
+                    // Final discoveries still run even with no completion line.
+                    if (string.IsNullOrWhiteSpace(task.OnComplete) && !StoryProgress.IsAreaComplete(areaId))
+                        return;
+                    AreaScreen.Close();
+                    TreasureHuntPresentation.AfterTask(areaId, task, () => StoryShell.ShowAfterLevel(areaId));
+                }
+                else if (StoryProgress.IsAreaComplete(areaId))
                     OnAreaFinished(areaId);
             });
 

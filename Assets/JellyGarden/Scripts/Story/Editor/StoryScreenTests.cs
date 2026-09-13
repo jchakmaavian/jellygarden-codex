@@ -66,6 +66,15 @@ namespace JellyGarden.Scripts.Story.Editor
             EditorApplication.Exit(failures.Count == 0 ? 0 : 1);
         }
 
+        public static void RunGateAssetsHeadless()
+        {
+            _failures = new List<string>();
+            GateRepairArtIsWiredUp();
+            foreach (string failure in _failures) Debug.LogError("[Story] " + failure);
+            Debug.Log("[Story] Gate art and removed-video checks: " + _failures.Count + " failure(s).");
+            if (Application.isBatchMode) EditorApplication.Exit(_failures.Count == 0 ? 0 : 1);
+        }
+
         private static List<string> Check(bool castleOnly = false, bool levelPopupOnly = false)
         {
             _failures = new List<string>();
@@ -110,7 +119,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 ArcBeatsHaveScenesAndPlayThemOnce();
                 OpeningPlaysAfterTheFirstWinAndOnlyOnce();
                 GeneratedArtIsWiredUp();
-                GateRepairAnimationsAreWiredUp();
+                GateRepairArtIsWiredUp();
                 RepairRegionsPointAtTheThingRepaired();
                 SabotageStartsWhereTheStorySaysItDoes();
                 TheGameIsFree();
@@ -758,17 +767,14 @@ namespace JellyGarden.Scripts.Story.Editor
         }
 
         /// <summary>
-        /// The repair sparkles sit on the thing being repaired, and the table
-        /// that says where that is comes off a pixel diff of the room's own
-        /// artwork (tools/repair_regions_build.py). Two things can break it
-        /// silently: the table failing to ship, and a rect that has drifted
-        /// outside the room — an emitter placed off-screen is a repair with no
-        /// effect at all, which looks exactly like a repair that did not fire.
+        /// Every gate repair keeps its room painting. The owner removed the
+        /// older area movies; neither campaign should import or resolve them.
         /// </summary>
-        private static void GateRepairAnimationsAreWiredUp()
+        private static void GateRepairArtIsWiredUp()
         {
             StoryArea gate = StoryDatabase.GetArea(1);
-            Expect(gate != null && gate.Tasks.Count == 3, "the gate has exactly three ordered repairs");
+            int expectedTasks = StoryCampaign.IsTreasureHunt ? 4 : 3;
+            Expect(gate != null && gate.Tasks.Count == expectedTasks, "the gate has its campaign's ordered repairs");
             if (gate == null) return;
 
             for (int state = 0; state <= gate.Tasks.Count; state++)
@@ -779,14 +785,12 @@ namespace JellyGarden.Scripts.Story.Editor
             }
             foreach (StoryTask task in gate.Tasks)
             {
-                var clip = StoryRepairVideo.Load(gate.Id, task.Index);
-                Expect(clip != null, "gate repair " + task.Index + " resolves its authored animation");
-                if (clip == null) continue;
-                Expect(clip.width == 720 && clip.height == 1280 && global::System.Math.Abs(clip.length - 6d) < 0.1d,
-                    "gate repair " + task.Index + " retains the approved six-second portrait clip");
+                Expect(StoryRepairVideo.Load(gate.Id, task.Index) == null,
+                    "gate repair " + task.Index + " has no older video");
             }
-            Expect(StoryRepairVideo.Load(2, 1) == null && StoryRepairVideo.Load(1, 4) == null,
-                "unanimated areas and missing tasks keep the ordinary repair effect");
+            Expect(AssetDatabase.FindAssets("t:VideoClip",
+                new[] { "Assets/JellyGarden/Resources/Story" }).Length == 0,
+                "no area repair videos remain in the story resources");
         }
 
         private static void RepairRegionsPointAtTheThingRepaired()

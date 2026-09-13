@@ -291,6 +291,7 @@ namespace JellyGarden.Scripts.Story
             image.raycastTarget = false;
             image.preserveAspect = true;
             image.color = new Color(BackdropDim, BackdropDim, BackdropDim, 1f);
+            if (StorybookBoardArt.Enabled) StorybookBoardLayout.DressBackdrop(image);
             if (sprite == null || sprite.rect.height <= 0f) return;
 
             // The kit's fixed-size rect stretches portrait gate art. Cover the
@@ -563,6 +564,7 @@ namespace JellyGarden.Scripts.Story
 
         private static void ApplyCellFill(ArcTheme theme)
         {
+            if (StorybookBoardArt.Enabled) { StorybookBoardLayout.DressCells(LevelManager.THIS); return; }
             if (LevelManager.THIS == null || LevelManager.THIS.squaresArray == null) return;
 
             int made = 0;
@@ -644,6 +646,7 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private static void ApplyBoardOutline()
         {
+            if (StorybookBoardArt.Enabled) return;
             LevelManager manager = LevelManager.THIS;
             if (manager == null || manager.squaresArray == null) return;
 

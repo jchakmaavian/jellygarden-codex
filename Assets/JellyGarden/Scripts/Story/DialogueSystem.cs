@@ -14,6 +14,7 @@ namespace JellyGarden.Scripts.Story
 {
     public sealed class DialogueLine
     {
+        public string StageCue = string.Empty;
         public string Speaker = string.Empty;
         public string Text = string.Empty;
 
@@ -28,6 +29,7 @@ namespace JellyGarden.Scripts.Story
 
     public sealed class DialogueSystem : MonoBehaviour
     {
+        public static event Action<DialogueLine> LineStarted;
         /// <summary>Characters per second while a line types itself out.</summary>
         private const float TypeSpeed = 45f;
 
@@ -124,6 +126,8 @@ namespace JellyGarden.Scripts.Story
             get { return _instance != null && _instance._playing; }
         }
 
+        public static bool IsTyping => IsPlaying && !_instance._lineComplete;
+
         #region What the fit came out at
 
         // Three read-only numbers so a test can ask whether the line on screen
@@ -209,12 +213,12 @@ namespace JellyGarden.Scripts.Story
             // the whole quad and leaves the corners square. Gold outside, cream
             // face inside, the same pair every Royal panel in this game is made of.
             Image rim = StoryUi.CreateImage("Rim", box, StoryUi.RoundedSprite(34),
-                StoryUi.RoyalGoldDeep);
+                StorybookUi.Enabled ? StorybookUi.Gold : StoryUi.RoyalGoldDeep);
             rim.type = Image.Type.Sliced;
             StoryUi.Stretch(rim.rectTransform);
 
             Image face = StoryUi.CreateImage("Face", box, StoryUi.RoundedSprite(28),
-                StoryUi.RoyalCream);
+                StorybookUi.Enabled ? StorybookUi.Paper : StoryUi.RoyalCream);
             face.type = Image.Type.Sliced;
             StoryUi.Stretch(face.rectTransform, 9f);
 
@@ -234,7 +238,7 @@ namespace JellyGarden.Scripts.Story
             _bust.sizeDelta = new Vector2(260f, 260f);
 
             Image ring = StoryUi.CreateImage("Ring", _bust, StoryUi.CircleSprite,
-                StoryUi.RoyalGoldDeep);
+                StorybookUi.Enabled ? StorybookUi.Gold : StoryUi.RoyalGoldDeep);
             StoryUi.Stretch(ring.rectTransform);
 
             // A Mask clips its CHILDREN, not itself — the first version put one on
@@ -261,7 +265,7 @@ namespace JellyGarden.Scripts.Story
             plate.sizeDelta = new Vector2(280f, 64f);
 
             Image plateFill = StoryUi.CreateImage("PlateFill", plate,
-                StoryUi.RoundedSprite(20), StoryUi.RoyalGoldDeep);
+                StoryUi.RoundedSprite(20), StorybookUi.Enabled ? StorybookUi.Blue : StoryUi.RoyalGoldDeep);
             plateFill.type = Image.Type.Sliced;
             StoryUi.Stretch(plateFill.rectTransform);
 
@@ -273,7 +277,7 @@ namespace JellyGarden.Scripts.Story
             _speaker.resizeTextMinSize = 26;
             _speaker.resizeTextMaxSize = 48;
 
-            _body = StoryUi.CreateText("Body", box, "", BodySizeMax, StoryUi.Ink, TextAnchor.UpperLeft);
+            _body = StoryUi.CreateText("Body", box, "", BodySizeMax, StorybookUi.Enabled ? StorybookUi.Ink : StoryUi.Ink, TextAnchor.UpperLeft);
             _body.font = StoryUi.BodyFont;
             _body.lineSpacing = 1.08f;
             _body.rectTransform.anchorMin = new Vector2(0f, 0f);
@@ -354,6 +358,7 @@ namespace JellyGarden.Scripts.Story
             // on screen so far: fitting the partial text would grow the card a
             // row at a time under the reader's eyes.
             FitCardTo(line.Text, textLeft);
+            LineStarted?.Invoke(line);
         }
 
         /// <summary>One tap finishes the typing; the next advances.</summary>

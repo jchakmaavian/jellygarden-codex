@@ -1,0 +1,15 @@
+{
+  "scope": "Area 1 task 2–4 standalone previews only",
+  "width": 720,
+  "height": 1280,
+  "fps": 30,
+  "duration": 6.6,
+  "mode": "stills",
+  "browserErrors": [],
+  "tasks": {
+    "door": {
+      "replayStartMatches": true,
+      "replayEndMatches": true
+    }
+  }
+}

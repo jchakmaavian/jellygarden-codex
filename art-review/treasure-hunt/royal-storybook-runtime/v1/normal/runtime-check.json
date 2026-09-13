@@ -1,0 +1,11 @@
+{
+    "passed": false,
+    "area2Locked": true,
+    "wins": 4,
+    "tasks": 4,
+    "stars": 0,
+    "startingTasks": 0,
+    "errors": [
+        "Expected two dialogue cards in opening, got 1"
+    ]
+}

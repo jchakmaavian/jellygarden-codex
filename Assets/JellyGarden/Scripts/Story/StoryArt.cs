@@ -26,7 +26,7 @@ namespace JellyGarden.Scripts.Story
             Sprite sprite;
             if (_cache.TryGetValue(key, out sprite)) return sprite;
 
-            sprite = Resources.Load<Sprite>(Root + key);
+            sprite = StoryCampaign.LoadArt(key);
             _cache[key] = sprite;
             return sprite;
         }

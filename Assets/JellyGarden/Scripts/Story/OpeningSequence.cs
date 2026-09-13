@@ -91,6 +91,12 @@ namespace JellyGarden.Scripts.Story
         private void Begin(Action onDone)
         {
             _playing = true;
+            if (StoryCampaign.IsTreasureHunt)
+            {
+                if (!TreasureHuntPresentation.Play(StoryCampaign.OpeningScene, OpeningArea, () => Finish(onDone)))
+                    Finish(onDone);
+                return;
+            }
             StoryDialogueRoom.Show(OpeningArea);
             DialogueSystem.Play(BuildLines(), () => Finish(onDone));
         }

@@ -101,6 +101,7 @@ namespace JellyGarden.Scripts.Story
 
         public static Sprite IconOf(BoostType boost)
         {
+            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Booster(boost);
             switch (boost)
             {
                 case BoostType.Stripes: return StoryUi.LoadSprite("booster_stripes");

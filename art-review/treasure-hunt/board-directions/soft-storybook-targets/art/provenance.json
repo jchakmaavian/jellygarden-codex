@@ -1,0 +1,36 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "../v1/art/soft-storybook-sheet.png",
+  "sheets": [
+    {
+      "id": "in-game-tools",
+      "items": [
+        "moves",
+        "glove",
+        "hammer",
+        "recolour"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: a NEW collection of four isolated game power-up icons. Image 1 is STYLE REFERENCE ONLY: match the soft rounded toy/clay materials, gentle highlights and cheerful storybook feeling of these game pieces. Do not copy the six reference objects.\nComposition: exactly 1024x1024 square, invisible 2-column by 2-row grid, one icon per 512x512 cell, centered at (256,256), (768,256), (256,768), (768,768). Each complete icon fits within a centered 350x350 box. All four have equal apparent visual mass. Front view with a subtle shared top-left view, lighting from upper left. Readable at 36 pixels.\nStyle: premium softly sculpted 3D mobile puzzle game sprites. Chunky, pillowy, smooth clay/enamel, broad clean highlights, warm cream, cornflower blue, lilac and buttery yellow, with small bright accents. Rich cheerful colours, not pale washed-out objects. No thin metallic outlines, realistic textures, faces, eyes or micro-details.\nBackground: real transparent RGBA PNG with fully transparent empty space outside the icons. No backdrop, gradients, drop shadows, floor, pedestal, border, checkerboard or glow outside the objects. Crisp antialiased silhouettes, self shading only on objects.\n\nFour icons, reading order:\nTOP LEFT: a plump cornflower-blue hexagonal medallion with a thick raised buttery-yellow PLUS symbol, simple cream bevel around the edge. No numerals.\nTOP RIGHT: a friendly cream-white padded royal glove with a short blue cuff; hand upright, index finger pointing upward and thumb visible, three other fingers folded. Clearly a hand, not a character.\nBOTTOM LEFT: a toy royal mallet, thick buttery-yellow rounded rectangular hammer head and a short lilac handle, tilted diagonally, simple cream inset on hammer head. No symbols.\nBOTTOM RIGHT: a chunky magical paintbrush with a short golden-yellow handle, lilac ferrule and a broad brush tip divided into four large colourful rounded bristle sections: pink, sky blue, green, yellow. Diagonal orientation. This means recolour nearby pieces.\nExactly these four objects. No labels, words, numerals, additional decorations or other objects.",
+      "originalGenerationSource": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-8df46c68-a285-4dfe-8c6c-f9f88ab210b9.png",
+      "selectedSource": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-c96e10a9-471f-46a5-9319-259e5ada7dfc.png",
+      "selectedFile": "in-game-tools-sheet.png",
+      "selectedSha256": "20342f71fb2fbf7b9cfdf96b9bb8c1114b5ea6570c25fb726a81b03dcdd0a523"
+    },
+    {
+      "id": "pre-level-and-time",
+      "items": [
+        "rocket",
+        "area-bomb",
+        "rainbow-orb",
+        "time"
+      ],
+      "prompt": "Use case: stylized-concept.\nAsset type: a NEW collection of four isolated game power-up icons. Image 1 is STYLE REFERENCE ONLY: match the soft rounded toy/clay materials, gentle highlights and cheerful storybook feeling of these game pieces. Do not copy the six reference objects.\nComposition: exactly 1024x1024 square, invisible 2-column by 2-row grid, one icon per 512x512 cell, centered at (256,256), (768,256), (256,768), (768,768). Each complete icon fits within a centered 350x350 box. All four have equal apparent visual mass. Front view with a subtle shared top-left view, lighting from upper left. Readable at 36 pixels.\nStyle: premium softly sculpted 3D mobile puzzle game sprites. Chunky, pillowy, smooth clay/enamel, broad clean highlights, warm cream, cornflower blue, lilac and buttery yellow, with small bright accents. Rich cheerful colours, not pale washed-out objects. No thin metallic outlines, realistic textures, faces, eyes or micro-details.\nBackground: real transparent RGBA PNG with fully transparent empty space outside the icons. No backdrop, gradients, drop shadows, floor, pedestal, border, checkerboard or glow outside the objects. Crisp antialiased silhouettes, self shading only on objects.\n\nFour icons, reading order:\nTOP LEFT: a chunky upright toy rocket, cornflower-blue cylindrical body, rounded cream nose cone, one broad buttery-yellow band and two coral-red tail fins. No flame or smoke.\nTOP RIGHT: a squat round lilac toy bomb with a broad buttery-yellow belt, short cream fuse and one tiny yellow fuse tip. Smooth, cute, clearly distinct from a plain purple game piece. No explosion or sparks around it.\nBOTTOM LEFT: a plump rainbow ball made of six large smoothly joined coloured segments in red, blue, green, yellow, purple and orange. One creamy star-shaped inset at the centre, no metal ribs, no tiny sparkles.\nBOTTOM RIGHT: a rounded storybook hourglass, buttery-yellow upper and lower caps, pale blue glass waist and visible yellow sand, short and chunky, no numerals.\nExactly these four objects. No labels, words, numerals, additional decorations or other objects.",
+      "originalGenerationSource": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-89995f9e-6813-47f5-98af-21222cc36fff.png",
+      "selectedSource": "/Users/avian/.codex/generated_images/01a094b1-ecdc-74a1-8bc4-e54f7a2f8b69/exec-b528f152-b308-4c41-8b16-5461d8f23a60.png",
+      "selectedFile": "pre-level-and-time-sheet.png",
+      "selectedSha256": "2b3186ddd7c9e9b9942472e607ab2fb269dea3276552a376285e66ef434a7632"
+    }
+  ],
+  "edits": "edit-provenance.json",
+  "spriteLayout": "sprite-layout.json"
+}

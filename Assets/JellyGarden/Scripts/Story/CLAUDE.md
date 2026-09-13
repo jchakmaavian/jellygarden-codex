@@ -1,3 +1,13 @@
+# Active campaign update — 2026-09-12
+
+Treasure Hunt is now selected through `Story/active_campaign.json`. Author it in
+`docs/story/treasure-hunt/campaign.json` and run `python3 tools/treasure_hunt_build.py`.
+See [authoring and checks](../../../../docs/story/treasure-hunt/README.md).
+Area 001 has four tasks and four boards; unfinished new areas remain gated.
+The legacy content totals and external source-path workflows below remain
+reference material for the preserved original campaign. Keep the shared kit
+animation/VFX and player-launch rules below in force.
+
 # Story layer — King Leo
 
 Everything in this folder is **additive** to the Jelly Garden kit. The kit is a
@@ -93,6 +103,21 @@ commits, which meant 1205 of the 1208 levels were being played wearing area 1's
 theme and reported as fine.
 
 ## The repair animation
+
+Treasure Hunt Area 001 task 1 uses its approved native `repairTransition: "vines"`
+beat: the task panel fades out, vines dissolve upward with falling leaves and
+soft glints, then the panel returns at 1/4 without a dialogue card. The room
+does not move. `StoryVineTransition` uses the existing non-readable paintings
+and offline leaf anchors from `tools/vine_transition_build.py`; it loads no
+video. Area 001 tasks 2–4 use the approved `door`, `flags`, and `lanterns`
+transitions through `StoryGateTransition`: timber and brass assemble, banners
+unfurl, and the lamps kindle before the sun glints. Tasks 1–3 return to the task
+panel without dialogue; the final discovery has only Pip and Freya's two lines.
+The opening has only Leo and Pip's two lines. Empty `speaker` / `onComplete`
+pairs suppress task cards while preserving the final payoff scene.
+`tools/gate_transition_build.cjs` bakes
+the preview's temporary layers into one non-readable atlas. The paths below
+remain the default for repairs without a native transition key.
 
 Pressing Do It plays one of two things, and which one depends on whether a room
 is already on screen.
@@ -1221,3 +1246,72 @@ now runs through `Finish()`, which returns instead when
 `Application.isBatchMode` is false. Clicking `JellyGarden > Story > Build macOS
 Player` closed the Editor the moment the build succeeded. Anything else that is
 both a menu item and a batchmode entry point needs the same guard.
+
+## Royal Storybook UI — 2026-09-12
+
+Treasure Hunt uses StorybookUi's native ivory paper, gold edges, blue ribbons and
+blue primary buttons. The legacy builders remain available behind the campaign
+switch. Home uses a 360-point safe frame; most older story canvases use 1080
+points. Keep text rasterisation at the canvas scale when placing a 360-point
+wallet on a 1080-point canvas.
+
+The shipping HUD is baked into game.unity. ApplyStorybookToBoundHud styles the
+bound instances, while BuildStrip covers newly built HUDs. Editing only the
+builder will pass construction tests but leave the shipping header unchanged.
+Retain its target animation anchors and the kit's menu callbacks.
+
+The three navigation tabs are Home, Map and Collection. The collection is a
+read-only discovery album, bound to the Treasure Hunt payoff-scene flag rather
+than the legacy clue-card flag. It never grants rewards. All four Area 001 native
+repair transitions and the four approved dialogue cards remain in place.
+
+Run StorybookTests.RunHeadless and use -treasure-review -treasure-review-ui with
+an explicit review directory for real-player captures. Inspect both phone sizes;
+test success does not prove that a font fits a pre-existing baked text box.
+
+### Match the approved HTML artwork
+
+The initial native approximation was rejected for visual differences. Royal
+Storybook now takes its decorative sprites from the unchanged approved art board
+at `TreasureHunt/UI/storybook_reference.png`. `StorybookArt` holds the source
+rectangles and native cutout meshes; its coordinate convention is top-left image
+pixels. **Sprite.OverrideGeometry receives unscaled lower-left sprite-rect
+pixels**, not pivot-relative world units. The latter passed headless construction
+but raised errors in the real player and reverted to rectangular cutouts.
+
+Keep fixed illustrated text (victory headline and Back to Castle/Play art) in its
+source artwork. Keep level numbers, prices, progress, goals, booster ownership,
+selection and callbacks live. Dynamic display text uses the bundled Bree Serif
+font with its OFL and FONTLOG. Area 1's title has an illustrated exact-match path
+and a native-text fallback. Never redraw the actual kit board to imitate sample
+gems in the concept image.
+
+Area task purchase targets now cover the whole row; the native repair callback
+and affordability/order guards are unchanged. Both remaining rows fit the compact
+phone by reducing the summary spacing in AreaScreen.Update. Victory has native
+sparkles, a larger exact-reference Pip silhouette and a correctly oriented GPU
+backdrop. The decorative outer screen border was removed at the owner's request;
+keep the full-screen canvas free of a gold phone frame.
+
+The real-play fidelity harness uses `-treasure-review-fidelity`, an explicit
+review directory and the earned-before-task-2 checkpoint. It buys the door through
+its normal row callback, captures the four reference screens and wins board 3.
+See `art-review/treasure-hunt/royal-storybook-fidelity/index.html` for the paired
+HTML/reference and real-player images. Visual review at both phone sizes remains
+required; passing behavior tests does not establish visual fidelity.
+
+### Production layer follow-up — 2026-09-12
+
+The four screens now load 33 ordinary RGBA sprites from TreasureHunt/UI/Layers.
+StorybookLayers owns loading and cap scaling. Full invitation, area and victory
+surfaces replace the earlier strip-built paper and patched ribbon. Original Pip,
+icons, star and fixed victory lettering remain source artwork; imagegen only
+cleared the surfaces behind changing content. StorybookLayerBuilder packages
+source sheets in the review directory and validates transparent/opaque coverage.
+Use the explicit SourceOutlines to export masks; do not infer their coordinate
+space from Sprite.vertices after OverrideGeometry.
+
+The latest comparison and reproduction instructions are in
+art-review/treasure-hunt/royal-storybook-layers/. The rendered game still has its
+real restoration paintings, fonts, board dimensions and pieces. Do not describe
+the entire screen as pixel-identical to the flattened concept.

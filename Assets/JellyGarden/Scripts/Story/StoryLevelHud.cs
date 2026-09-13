@@ -55,7 +55,7 @@ using UnityEngine.UI;
 namespace JellyGarden.Scripts.Story
 {
     [DisallowMultipleComponent]
-    public sealed class StoryLevelHud : MonoBehaviour
+    public sealed partial class StoryLevelHud : MonoBehaviour
     {
         /// <summary>The whole feature, in one switch.</summary>
         public static bool Enabled = true;
@@ -395,6 +395,13 @@ namespace JellyGarden.Scripts.Story
             if (authored != null)
             {
                 authored.EnsureBound();
+                if (StorybookBoardArt.Enabled)
+                {
+                    authored.BuildSoftHud(strip);
+                    authored.Refresh();
+                    return;
+                }
+                authored.ApplyStorybookToBoundHud();
 
                 // The pause button is seated here as well as at bake time.
                 // StoryHudBaker calls MovePauseOutOfTheHudsWay once and saves
@@ -417,6 +424,12 @@ namespace JellyGarden.Scripts.Story
             hud._kitStrip = strip;
 
             hud.ReplaceKitHud(strip);
+            if (StorybookBoardArt.Enabled)
+            {
+                hud.BuildSoftHud(strip);
+                hud.Refresh();
+                return;
+            }
             hud.MovePauseOutOfTheHudsWay(strip);
             hud.ReplaceKitLevelPlate(strip);
             hud.FillTheKitStrip();
@@ -547,6 +560,53 @@ namespace JellyGarden.Scripts.Story
                                ". Re-run JellyGarden/Story/Bake Level HUD into the scene.");
         }
 
+        // The shipping HUD is baked into game.unity. Style those bound instances
+        // as well as newly built HUDs, preserving the collect-animation anchors.
+        private void ApplyStorybookToBoundHud()
+        {
+            if (!StorybookUi.Enabled || _root == null || _root.Find("StorybookBound") != null) return;
+            StoryUi.CreateRect("StorybookBound", _root);
+            Transform strip = _root.Find("Strip");
+            if (strip != null) strip.GetComponent<Image>().enabled = false;
+            foreach (string name in new[] { "TargetPanel", "MovesPanel" })
+            {
+                Transform panel = _root.Find(name);
+                if (panel == null || panel.Find("PaperPanel") != null) continue;
+                Image paper = StorybookUi.PaperCard("PaperPanel", panel, 3f * _scale, false);
+                StoryUi.Stretch(paper.rectTransform);
+                paper.transform.SetAsFirstSibling();
+            }
+            foreach (Text title in new[] { _targetTitle, _limitTitle, _limitValue })
+            {
+                if (title == null) continue;
+                title.color = StorybookUi.Ink;
+                title.font = StoryUi.BodyFont;
+                title.verticalOverflow = VerticalWrapMode.Overflow;
+                if (title != _limitValue)
+                {
+                    title.fontSize = Mathf.RoundToInt(38 * _scale);
+                    title.resizeTextForBestFit = false;
+                }
+                foreach (Shadow shadow in title.GetComponents<Shadow>()) shadow.enabled = false;
+            }
+            Transform card = _root.Find("MovesPanel/Content/MovesCard");
+            if (card != null)
+            {
+                Image image = card.GetComponent<Image>();
+                image.sprite = StoryUi.RoundedSprite(20);
+                image.type = Image.Type.Sliced;
+                image.color = StorybookUi.Paper;
+            }
+            Transform portrait = _root.Find("Portrait");
+            if (portrait != null && portrait.Find("GoldMedallion") == null)
+            {
+                Image ring = StoryUi.CreateImage("GoldMedallion", portrait, StoryUi.CircleSprite, StorybookUi.Gold);
+                Slab(ring.rectTransform, WindowMin, WindowMax, WindowTop, WindowHeight);
+                ring.rectTransform.sizeDelta += Vector2.one * (12 * _scale);
+                ring.transform.SetAsFirstSibling();
+            }
+        }
+
         private Text TextAt(string path)
         {
             Transform found = _root.Find(path);
@@ -624,6 +684,7 @@ namespace JellyGarden.Scripts.Story
                 StoryUi.LoadSprite("hud_reference_frame"), Color.white);
             Slab(body.rectTransform, 0f, 1f, 0f, StripHeight);
             body.raycastTarget = true;   // the strip eats taps meant for the board
+            if (StorybookUi.Enabled) body.color = Color.clear;
 
             BuildTargetPanel();
             BuildPortrait();
@@ -643,13 +704,18 @@ namespace JellyGarden.Scripts.Story
         {
             RectTransform panel = StoryUi.CreateRect(name, _root);
             Slab(panel, xMin, xMax, PanelTop, PanelHeight);
+            if (StorybookUi.Enabled)
+            {
+                Image paper = StorybookUi.PaperCard("PaperPanel", panel, 3f * _scale, false);
+                StoryUi.Stretch(paper.rectTransform);
+            }
 
             Text title = StoryUi.CreateText("Title", panel, label,
-                Mathf.RoundToInt(TitleSize * _scale), PanelTitle, TextAnchor.MiddleCenter);
-            title.font = StoryUi.DisplayFont;
+                Mathf.RoundToInt(TitleSize * _scale), StorybookUi.Enabled ? StorybookUi.Ink : PanelTitle, TextAnchor.MiddleCenter);
+            title.font = StorybookUi.Enabled ? StoryUi.NameFont : StoryUi.DisplayFont;
             title.fontStyle = FontStyle.Normal;
             var titleShadow = title.gameObject.AddComponent<Shadow>();
-            titleShadow.effectColor = Rgb(71, 35, 28);
+            titleShadow.effectColor = StorybookUi.Enabled ? Color.clear : Rgb(71, 35, 28);
             titleShadow.effectDistance = new Vector2(0f, -1f * _scale);
             RectTransform titleRect = title.rectTransform;
             titleRect.anchorMin = new Vector2(0f, 1f - TitleFrac);
@@ -691,10 +757,15 @@ namespace JellyGarden.Scripts.Story
                 StoryUi.LoadSprite("hud_reference_moves"), Color.white);
             StoryUi.Stretch(card.rectTransform);
             card.type = Image.Type.Sliced;
+            if (StorybookUi.Enabled)
+            {
+                card.sprite = StoryUi.RoundedSprite(20);
+                card.color = StorybookUi.Paper;
+            }
 
             _limitValue = StoryUi.CreateText("MovesValue", card.rectTransform, "0",
                 Mathf.RoundToInt(178f * _scale), PanelNumber, TextAnchor.MiddleCenter);
-            _limitValue.font = StoryUi.DisplayFont;
+            _limitValue.font = StorybookUi.Enabled ? StoryUi.NameFont : StoryUi.DisplayFont;
             StoryUi.Stretch(_limitValue.rectTransform, 14f * _scale);
             _limitValue.fontStyle = FontStyle.Normal;
             var numberEdge = _limitValue.gameObject.AddComponent<Outline>();
@@ -732,6 +803,13 @@ namespace JellyGarden.Scripts.Story
             Slab(window.rectTransform, WindowMin, WindowMax, WindowTop, WindowHeight);
             window.gameObject.AddComponent<Mask>().showMaskGraphic = false;
 
+            if (StorybookUi.Enabled)
+            {
+                Image ring = StoryUi.CreateImage("GoldMedallion", frame, StoryUi.CircleSprite, StorybookUi.Gold);
+                Slab(ring.rectTransform, WindowMin, WindowMax, WindowTop, WindowHeight);
+                ring.rectTransform.sizeDelta += Vector2.one * (12 * _scale);
+                ring.transform.SetAsFirstSibling();
+            }
             _portrait = StoryAvatar.Build(PortraitCharacter, window.rectTransform);
         }
 
@@ -771,6 +849,7 @@ namespace JellyGarden.Scripts.Story
         {
             HudModel model = Source != null ? Source() : ReadLevelManager();
             if (model == null) return;
+            if (_softRoot != null) { RefreshSoft(model); return; }
 
             SetText(_limitTitle, model.LimitTitle.ToUpperInvariant());
             SetText(_limitValue, model.LimitValue);
@@ -944,14 +1023,14 @@ namespace JellyGarden.Scripts.Story
             {
                 return new HudTarget
                 {
-                    Icon = target.icon,
+                    Icon = StorybookBoardArt.Goal(target),
                     // The board never shows an empty block. `CreateSquare`
                     // instantiates blockPrefab as a child of a square that still
                     // holds an item, at z -0.01 in front of it, and the sprite is
                     // 55% opaque — so what the player breaks is a gem under ice.
                     // The chip drew the ice on its own and read as a blank box
                     // with a number beside it, on 508 of the 1208 levels.
-                    Backing = target.type == Target.BLOCKS ? BlockBacking : null,
+                    Backing = target.type == Target.BLOCKS ? (StorybookBoardArt.Enabled ? StorybookBoardArt.Piece(0) : BlockBacking) : null,
                     Remaining = Mathf.Max(0, target.GetCount()),
                     Done = target.Done()
                 };
@@ -969,7 +1048,7 @@ namespace JellyGarden.Scripts.Story
             int have = Mathf.Clamp(score, 0, Mathf.Max(0, need));
             return new HudTarget
             {
-                Icon = icon != null ? icon : StoryUi.StarSprite,
+                Icon = StorybookBoardArt.Enabled ? StorybookBoardArt.Get("score") : (icon != null ? icon : StoryUi.StarSprite),
                 Remaining = Mathf.Max(0, need - have),
                 Done = need > 0 && have >= need,
                 Text = ScoreText(have, need),
@@ -1089,7 +1168,7 @@ namespace JellyGarden.Scripts.Story
                 // kit's font is not guaranteed to carry a check glyph, and a
                 // missing glyph renders as nothing at all.
                 SetText(slot.Count, count > 1 ? target.DisplayShared : target.Display);
-                slot.Count.color = target.Done ? StoryUi.RoyalGreen : PanelTitle;
+                slot.Count.color = target.Done ? StoryUi.RoyalGreen : StorybookUi.Enabled ? StorybookUi.Ink : PanelTitle;
             }
 
             _visibleSlots = count;
@@ -1151,7 +1230,7 @@ namespace JellyGarden.Scripts.Story
 
             slot.Count = StoryUi.CreateText("Count", root, "0",
                 Mathf.RoundToInt(36f * _scale), PanelTitle, TextAnchor.MiddleCenter);
-            slot.Count.font = StoryUi.DisplayFont;
+            slot.Count.font = StorybookUi.Enabled ? StoryUi.BodyFont : StoryUi.DisplayFont;
             slot.Count.fontStyle = FontStyle.Normal;
             slot.Count.alignByGeometry = true;
             RectTransform count = slot.Count.rectTransform;
@@ -1167,6 +1246,13 @@ namespace JellyGarden.Scripts.Story
             slot.Count.resizeTextMaxSize = Mathf.Max(9, Mathf.RoundToInt(36f * _scale));
             slot.Count.horizontalOverflow = HorizontalWrapMode.Wrap;
             slot.Count.verticalOverflow = VerticalWrapMode.Truncate;
+            if (StorybookUi.Enabled)
+            {
+                slot.Count.fontSize = Mathf.RoundToInt(34 * _scale);
+                slot.Count.resizeTextForBestFit = false;
+                slot.Count.horizontalOverflow = HorizontalWrapMode.Overflow;
+                slot.Count.verticalOverflow = VerticalWrapMode.Overflow;
+            }
 
             return slot;
         }
@@ -1291,6 +1377,23 @@ namespace JellyGarden.Scripts.Story
             pause.anchorMax = new Vector2(0.5f, 0.5f);
             pause.pivot = new Vector2(0.5f, 0.5f);
             pause.anchoredPosition = new Vector2(0f, trayHeight * RecessRise);
+            if (StorybookUi.Enabled && row.Find("StorybookTray") == null)
+            {
+                Image original = row.GetComponent<Image>();
+                if (original != null) original.color = Color.clear;
+                Image paper = StorybookUi.PaperCard("StorybookTray", row, .65f, false);
+                StoryUi.Stretch(paper.rectTransform);
+                paper.transform.SetAsFirstSibling();
+                Image pauseFace = pause.GetComponent<Image>();
+                if (pauseFace != null)
+                {
+                    pauseFace.sprite = StoryUi.CircleSprite;
+                    pauseFace.color = StorybookUi.Blue;
+                    Image gear = StoryUi.CreateImage("StorybookGear", pause, StoryUi.GearSprite, StorybookUi.Paper);
+                    StoryUi.Stretch(gear.rectTransform, 15);
+                    gear.preserveAspect = true;
+                }
+            }
         }
 
         /// <summary>
@@ -1432,6 +1535,7 @@ namespace JellyGarden.Scripts.Story
 
         private void OnDestroy()
         {
+            if (_softRoot != null) Destroy(_softRoot.gameObject);
             if (Instance == this) Instance = null;
         }
     }

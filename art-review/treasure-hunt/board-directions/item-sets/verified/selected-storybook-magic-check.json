@@ -1,0 +1,15 @@
+{
+  "desktop": {
+    "title": "Adventure of King Leo · Storybook Magic",
+    "heading": "Adventure of King Leo",
+    "firstSet": "storybook-magic",
+    "boardSet": "storybook-magic",
+    "selected": "true",
+    "broken": []
+  },
+  "mobile": {
+    "overflow": false,
+    "brand": "Adventure of King Leo\nTHE ROYAL STORYBOOK"
+  },
+  "errors": []
+}

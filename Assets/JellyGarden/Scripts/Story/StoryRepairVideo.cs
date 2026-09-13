@@ -19,7 +19,8 @@ namespace JellyGarden.Scripts.Story
 
         public static string ResourcePath(int areaId, int taskIndex)
         {
-            return string.Format("Story/RepairAnimations/area_{0:000}_task{1}", areaId, taskIndex);
+            return string.Format("{0}/RepairAnimations/area_{1:000}_task{2}",
+                StoryCampaign.ResourceRoot, areaId, taskIndex);
         }
 
         public static VideoClip Load(int areaId, int taskIndex)

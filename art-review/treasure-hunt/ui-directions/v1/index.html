@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f5ee">
+<title>King Leo — Three UI Directions</title>
+<style>
+  :root{color-scheme:light;--ink:#172b47;--muted:#637083;--paper:#f7f5ee;--line:#deded4;--blue:#174979}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  button,select,a{touch-action:manipulation}
+  button,select{font:inherit}
+  button{cursor:pointer}
+  button:focus-visible,a:focus-visible,select:focus-visible{outline:3px solid #238bb0;outline-offset:4px}
+  .masthead{max-width:1500px;margin:auto;padding:25px 32px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .brand{font-weight:800;letter-spacing:.12em;font-size:13px;display:flex;align-items:center;gap:10px}
+  .crown{font-size:29px;color:#b08b37;letter-spacing:0}
+  .status{font-size:12px;color:var(--muted);background:#eceee6;border:1px solid var(--line);padding:7px 12px;border-radius:99px}
+  main{max-width:1500px;margin:auto;padding:38px 32px 52px}
+  .intro{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px}
+  .eyebrow{font-size:11px;font-weight:750;letter-spacing:.16em;text-transform:uppercase;color:#8a7038;margin:0 0 10px}
+  h1{font-family:Georgia,serif;font-size:clamp(30px,4vw,49px);font-weight:500;letter-spacing:-.035em;margin:0 0 12px;line-height:1.1}
+  .intro p:last-child{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+  .count{white-space:nowrap;font-size:13px;color:var(--muted);padding-bottom:6px}
+  .count strong{color:var(--ink)}
+  .controls{background:#fffdf8;border:1px solid var(--line);border-radius:18px;padding:16px 20px;margin-bottom:18px;display:grid;gap:12px}
+  .control-row{display:flex;align-items:center;gap:14px}
+  .control-label{width:55px;flex:none;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .options{display:flex;gap:6px;flex-wrap:wrap}
+  .option{border:1px solid transparent;border-radius:9px;background:transparent;color:#506077;padding:9px 13px;font-size:13px;font-weight:600;transition:background .15s}
+  .option:hover{background:#eaf0f2}
+  .option[aria-pressed="true"]{background:var(--blue);color:white}
+  .hint{font-size:12px;color:var(--muted);margin:14px 2px 24px;line-height:1.6}
+  .gallery{display:grid;gap:25px}
+  .gallery.focused{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
+  .gallery.focused.single{grid-template-columns:minmax(0,470px);justify-content:center}
+  .concept{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 6px 24px #24364906}
+  .concept-header{padding:21px 24px;display:flex;gap:14px;align-items:center}
+  .number{width:37px;height:37px;display:grid;place-items:center;flex:none;border:1px solid #e1d6b9;background:#fbf7eb;color:#927234;border-radius:12px;font-family:Georgia,serif;font-size:20px}
+  .concept h2{font-family:Georgia,serif;font-size:24px;font-weight:500;margin:0 0 5px;line-height:1.15}
+  .description{font-size:12px;line-height:1.6;color:var(--muted);margin:0}
+  .swatches{display:flex;gap:5px;margin-left:auto;padding-left:10px}
+  .swatches i{width:13px;height:13px;border-radius:50%;border:1px solid #00000012}
+  .art-button{display:block;width:100%;padding:0;border:0;background:#eef1ef;position:relative;text-align:left}
+  .frame{position:relative;display:block;width:100%;overflow:hidden;aspect-ratio:var(--ratio);background:#e8eee9}
+  .frame img{display:block;position:absolute;max-width:none;left:var(--left);top:var(--top);width:var(--width);height:auto}
+  .art-button .enlarge{position:absolute;right:13px;bottom:13px;border:1px solid #ffffff90;border-radius:99px;background:#132c49e8;color:white;padding:8px 13px;font-size:12px;box-shadow:0 2px 10px #0002}
+  .art-button:hover .enlarge{background:#176089}
+  .concept-footer{padding:12px 23px;display:flex;justify-content:space-between;gap:16px;align-items:center;color:var(--muted);font-size:11px;line-height:1.5}
+  .concept-footer a{color:var(--blue);text-decoration:none;white-space:nowrap}
+  .concept-footer a:hover{text-decoration:underline}
+  footer{margin-top:30px;padding:22px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;font-size:12px;line-height:1.8;color:var(--muted)}
+  footer a{color:var(--blue)}
+  dialog{width:calc(100vw - 32px);max-width:none;height:calc(100dvh - 32px);max-height:none;padding:0;border:1px solid #d5d9d9;border-radius:19px;background:#edf0ec;color:var(--ink);overflow:hidden}
+  dialog::backdrop{background:#102439be;backdrop-filter:blur(5px)}
+  .viewer-shell{height:100%;display:flex;flex-direction:column}
+  .viewer-toolbar{flex:none;background:#fffdf8;border-bottom:1px solid var(--line);padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .viewer-toolbar h2{font-size:17px;margin:0}
+  .viewer-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .viewer-tools button,.viewer-tools select{background:white;border:1px solid #d4dadb;border-radius:8px;padding:9px 12px;color:var(--ink);font-size:12px}
+  #close{background:var(--blue);color:white;border-color:var(--blue)}
+  .viewer-viewport{min-height:0;flex:1;overflow:auto;display:flex;padding:18px}
+  .viewer-art{flex:none;margin:auto;width:100%}
+  .viewer-foot{flex:none;display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fffdf8;border-top:1px solid var(--line);padding:10px 20px;font-size:12px;color:var(--muted)}
+  .viewer-foot button{border:0;color:var(--blue);background:none;padding:7px;font-weight:650}
+  @media(min-width:1100px){.gallery.focused .concept-header{padding:20px 18px}.gallery.focused .swatches{display:none}.gallery.focused .concept h2{font-size:23px}}
+  @media(max-width:900px){.gallery.focused{grid-template-columns:repeat(2,minmax(0,1fr))}.swatches{display:none}.count{display:none}}
+  @media(max-width:620px){.masthead{padding:16px 18px}.status{font-size:10px}main{padding:26px 14px}.intro{margin-bottom:22px;padding:0 4px}.controls{padding:13px 10px}.control-row{align-items:flex-start;gap:5px;flex-direction:column}.control-label{padding-left:7px}.option{padding:8px 10px;font-size:12px}.gallery.focused{grid-template-columns:minmax(0,1fr)}.gallery{gap:18px}.concept-header{padding:18px 16px}.concept h2{font-size:23px}.concept-footer{padding:12px 16px}.hint{padding:0 4px}.concept{border-radius:15px}.enlarge{font-size:10px!important;padding:6px 9px!important}.viewer-toolbar{padding:12px;gap:12px}.viewer-toolbar h2{font-size:15px}.viewer-tools{gap:5px}.viewer-tools button,.viewer-tools select{padding:8px;font-size:11px}.viewer-viewport{padding:8px}.viewer-foot{padding:8px;font-size:10px}footer{flex-direction:column}dialog{width:calc(100vw - 12px);height:calc(100dvh - 12px);border-radius:12px}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="masthead"><div class="brand"><span class="crown" aria-hidden="true">♛</span> KING LEO</div><span class="status">Visual previews · Game unchanged</span></header>
+<main>
+  <section class="intro"><div><p class="eyebrow">The Great Royal Treasure Hunt</p><h1>Explore the three UI styles.</h1><p>Compare the same four screens across each direction.</p></div><div class="count"><strong>3</strong> styles &nbsp; / &nbsp; <strong>12</strong> screen previews</div></section>
+  <section class="controls" aria-label="Compare designs">
+    <div class="control-row"><span class="control-label" id="style-label">Style</span><div class="options" role="group" aria-labelledby="style-label">
+      <button class="option" data-style="all" aria-pressed="true">All three</button><button class="option" data-style="storybook" aria-pressed="false">1 · Royal Storybook</button><button class="option" data-style="map" aria-pressed="false">2 · Pip’s Map</button><button class="option" data-style="festival" aria-pressed="false">3 · Royal Festival</button>
+    </div></div>
+    <div class="control-row"><span class="control-label" id="screen-label">Screen</span><div class="options" role="group" aria-labelledby="screen-label">
+      <button class="option" data-screen="all" aria-pressed="true">Whole set</button><button class="option" data-screen="home" aria-pressed="false">Homepage</button><button class="option" data-screen="tasks" aria-pressed="false">Area tasks</button><button class="option" data-screen="before" aria-pressed="false">Before level</button><button class="option" data-screen="victory" aria-pressed="false">Level complete</button>
+    </div></div>
+  </section>
+  <p class="hint" id="hint" role="status">Each board shows Home → Area Tasks → Before Level → Level Complete. Select a screen for a closer comparison.</p>
+  <section id="gallery" class="gallery" aria-label="UI design previews"></section>
+  <noscript><p>Enable JavaScript for the comparison controls, or open the original boards: <a href="01-royal-storybook.png">Royal Storybook</a>, <a href="02-pips-treasure-map.png">Pip’s Treasure Map</a>, <a href="03-royal-festival.png">Royal Festival</a>.</p></noscript>
+  <footer><span>Concept artwork for review. Use the gallery controls to explore; the pictured game buttons are part of the artwork.</span><span><a href="README.md">Preview notes</a> · <a href="prompts.md">Generation prompts</a></span></footer>
+</main>
+<dialog id="viewer" aria-labelledby="viewer-title">
+  <div class="viewer-shell">
+    <header class="viewer-toolbar"><h2 id="viewer-title">Design preview</h2><div class="viewer-tools"><select id="viewer-screen" aria-label="Screen to inspect"><option value="all">Whole set</option><option value="home">Homepage</option><option value="tasks">Area tasks</option><option value="before">Before level</option><option value="victory">Level complete</option></select><button id="zoom" aria-pressed="false">Actual size</button><button id="close" autofocus>Close ×</button></div></header>
+    <div class="viewer-viewport" id="viewport"><div class="viewer-art" id="viewer-art"></div></div>
+    <div class="viewer-foot"><button id="previous" aria-label="Previous style">← Previous style</button><span id="viewer-position">1 / 3</span><button id="next" aria-label="Next style">Next style →</button></div>
+  </div>
+</dialog>
+<script>
+(() => {
+  'use strict';
+  const concepts = [
+    {id:'storybook',name:'Royal Storybook',description:'Warm ivory, blue ribbons, soft gold.',file:'01-royal-storybook.png',size:[1701,924],colors:['#f9edcf','#164888','#d5ac4b'],screens:{home:[16,126,400,777],tasks:[438,126,401,777],before:[860,126,403,777],victory:[1284,126,404,777]}},
+    {id:'map',name:'Pip’s Treasure Map',description:'Folded paper, turquoise, golden trails.',file:'02-pips-treasure-map.png',size:[1748,900],colors:['#efe2bf','#168ba4','#c8a050'],screens:{home:[28,151,409,716],tasks:[456,150,408,716],before:[884,151,409,715],victory:[1310,151,409,715]}},
+    {id:'festival',name:'Royal Festival',description:'Colourful pennants, gold, celebration.',file:'03-royal-festival.png',size:[1698,926],colors:['#1b6ad3','#ebba3a','#ed7b70'],screens:{home:[27,129,397,770],tasks:[444,129,397,770],before:[862,129,396,770],victory:[1278,129,396,770]}}
+  ];
+  const names={all:'Whole set',home:'Homepage',tasks:'Area tasks',before:'Before level',victory:'Level complete'};
+  const gallery=document.querySelector('#gallery'), viewer=document.querySelector('#viewer');
+  const detail=document.querySelector('#viewer-art'), viewport=document.querySelector('#viewport');
+  let style='all', screen='all', active=0, detailScreen='all', actualSize=false, opener=null;
+  function dimensions(concept, which) {return which==='all'?[0,0,...concept.size]:concept.screens[which];}
+  function frame(concept, which) {
+    const [x,y,w,h]=dimensions(concept,which), box=document.createElement('span');
+    box.className='frame';
+    box.style.setProperty('--ratio',w+'/'+h);
+    box.style.setProperty('--left',(-x/w*100)+'%');
+    box.style.setProperty('--top',(-y/h*100)+'%');
+    box.style.setProperty('--width',(concept.size[0]/w*100)+'%');
+    const image=new Image();image.src=concept.file;image.alt=concept.name+' — '+(which==='all'?'homepage, area tasks, pre-level and victory mockups':names[which]);image.decoding='async';
+    box.append(image);return box;
+  }
+  function render() {
+    gallery.replaceChildren();
+    gallery.className='gallery'+(screen!=='all'?' focused':'')+(style!=='all'?' single':'');
+    document.querySelectorAll('[data-style]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.style===style)));
+    document.querySelectorAll('[data-screen]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.screen===screen)));
+    const selected=concepts.filter(c=>style==='all'||c.id===style);
+    document.querySelector('#hint').textContent=screen==='all'?'Each board shows Home → Area Tasks → Before Level → Level Complete. Select a screen for a closer comparison.':names[screen]+' · '+selected.length+' '+(selected.length===1?'style':'styles')+' shown. Open a preview to enlarge it or switch between styles.';
+    selected.forEach(c=>{
+      const index=concepts.indexOf(c), card=document.createElement('article');card.className='concept';
+      card.innerHTML='<header class="concept-header"><span class="number">'+(index+1)+'</span><div><h2>'+c.name+'</h2><p class="description">'+c.description+'</p></div><span class="swatches" aria-hidden="true">'+c.colors.map(color=>'<i style="background:'+color+'"></i>').join('')+'</span></header>';
+      const button=document.createElement('button');button.className='art-button';button.setAttribute('aria-label','Enlarge '+c.name+' — '+names[screen]);button.append(frame(c,screen));
+      const label=document.createElement('span');label.className='enlarge';label.textContent='View larger ↗';button.append(label);button.addEventListener('click',()=>openViewer(index,button));card.append(button);
+      const foot=document.createElement('div');foot.className='concept-footer';foot.innerHTML='<span>'+names[screen]+'</span><a href="'+c.file+'" target="_blank" rel="noopener">Open original ↗</a>';card.append(foot);gallery.append(card);
+    });
+  }
+  document.querySelectorAll('[data-style]').forEach(b=>b.addEventListener('click',()=>{style=b.dataset.style;render();}));
+  document.querySelectorAll('[data-screen]').forEach(b=>b.addEventListener('click',()=>{screen=b.dataset.screen;render();}));
+  function fit() {
+    if(!viewer.open)return;
+    const [, , w,h]=dimensions(concepts[active],detailScreen);
+    const padding=parseFloat(getComputedStyle(viewport).paddingLeft)*2;
+    const scale=actualSize?1:Math.min((viewport.clientWidth-padding)/w,(viewport.clientHeight-padding)/h,1);
+    detail.style.width=Math.max(1,w*scale)+'px';
+  }
+  function renderViewer() {
+    detail.replaceChildren(frame(concepts[active],detailScreen));
+    document.querySelector('#viewer-title').textContent=(active+1)+'. '+concepts[active].name;
+    document.querySelector('#viewer-position').textContent=(active+1)+' / 3 · '+names[detailScreen];
+    document.querySelector('#viewer-screen').value=detailScreen;
+    document.querySelector('#zoom').textContent=actualSize?'Fit to window':'Actual size';
+    document.querySelector('#zoom').setAttribute('aria-pressed',String(actualSize));
+    fit();viewport.scrollTo(0,0);
+  }
+  function openViewer(index,button) {
+    active=index;detailScreen=screen;actualSize=false;opener=button;
+    document.body.style.overflow='hidden';viewer.showModal();renderViewer();
+  }
+  function move(delta) {active=(active+delta+concepts.length)%concepts.length;renderViewer();}
+  document.querySelector('#close').addEventListener('click',()=>viewer.close());
+  document.querySelector('#previous').addEventListener('click',()=>move(-1));
+  document.querySelector('#next').addEventListener('click',()=>move(1));
+  document.querySelector('#zoom').addEventListener('click',()=>{actualSize=!actualSize;renderViewer();});
+  document.querySelector('#viewer-screen').addEventListener('change',e=>{detailScreen=e.target.value;actualSize=false;renderViewer();});
+  viewer.addEventListener('close',()=>{document.body.style.overflow='';if(opener?.isConnected)opener.focus();});
+  viewer.addEventListener('click',e=>{if(e.target===viewer)viewer.close();});
+  viewer.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return;if(e.key==='ArrowRight'){e.preventDefault();move(1);}if(e.key==='ArrowLeft'){e.preventDefault();move(-1);}});
+  new ResizeObserver(fit).observe(viewport);
+  render();
+})();
+</script>
+</body>
+</html>

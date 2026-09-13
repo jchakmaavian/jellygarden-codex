@@ -1,8 +1,8 @@
 # King Leo — Area 1 gate restoration, preview v1
 
-**Integration update:** the user subsequently approved implementation. The four states and three clips are now installed; see [integration notes and verification](integration-v1/README.md). The sections below describe the original preview package and its generation-time scope.
+**Video removal — 2026-09-12:** All three installed repair clips and all four MP4 previews, including the full restoration, were removed at the owner's request. The still artwork remains. For the historical integration, see [integration notes and verification](integration-v1/README.md). The sections below describe the original preview package and its generation-time scope.
 
-Open [the visual review](index.html) in a browser to compare all four generated images and play the three repair animations. All deliverables live in this folder; nothing has been installed in the game.
+Open [the visual review](index.html) to compare the four archived generated images. The removed video players and download links have been taken out of that page.
 
 The sequence uses one gate throughout: a damaged oak door is repaired, a royal banner is hung above that repaired door, then two warm brass lanterns are hung beside it. Each completed repair persists into the next objective.
 
@@ -19,19 +19,9 @@ The art uses warm sandstone, honey oak, blue roofs and cloth, antique gold, and 
 
 All four are opaque PNGs at **941 × 1672**. These are complete environment images, not isolated sprites or transparent layers. They were generated using the **built-in image_gen tool**, with states 1–3 created as sequential edits. The exact prompt set is saved in [v1/prompts.json](v1/prompts.json). The original outputs have been copied into this folder without image retouching.
 
-## Repair animation previews
+## Removed repair animation previews
 
-| Objective | Video | Motion |
-| --- | --- | --- |
-| 1. Fix the timber | [01-fix-timber.mp4](v1/animations/01-fix-timber.mp4) | Old wood clears away; individual oak boards move and rotate into position, then settle |
-| 2. Hang the royal banner | [02-hang-banner.mp4](v1/animations/02-hang-banner.mp4) | A rolled banner rises to the rod, unfurls and ripples gently |
-| 3. Hang the lights | [03-hang-lights.mp4](v1/animations/03-hang-lights.mp4) | Two lanterns lift onto the hooks, swing, settle and illuminate |
-
-Each individual video is **6 seconds, 720 × 1280, 24 fps, H.264 MP4**, with no audio. [00-full-restoration.mp4](v1/animations/00-full-restoration.mp4) contains the complete **18-second** sequence. There are no camera cuts, and all repairs use the same scene and model.
-
-These are **locally rendered 3D motion studies**, with a simplified scene built to resemble the generated gate. They demonstrate the actual object movement, cloth deformation, lighting and timing. Their geometry and material finish are simpler than the generated stills; they are not generated videos of those exact images. The available Motion video service was not connected, so no service-generated video job completed. The generated stills remain the visual reference for the final art finish.
-
-The optional interactive viewer in the HTML review lets you scrub the full sequence or jump to states at 0, 6, 12 and 18 seconds. It uses a bundled local copy of Three.js and does not need a CDN or network connection. The videos and image gallery work without opening the interactive viewer.
+The former timber, banner, lantern, and full-restoration MP4s have been deleted. Their historical dimensions, hashes, and removal status remain in [the manifest](v1/manifest.json). Archived rendering source is retained for provenance; it is not used by the game or the review gallery.
 
 ## Review scope
 
@@ -39,7 +29,7 @@ This package is for **Area 1 only**. No Unity scene, gameplay code, story task, 
 
 The three objectives follow the current runtime tasks in `Assets/JellyGarden/Resources/Story/arc1.json`: replace rotted gate timbers, rehang the royal banner, and relight the gate lanterns. The older story document's ivy objective is outside this requested sequence.
 
-Review the gate design, cumulative state consistency, and motion direction before any in-game integration. The MP4s are review renders, not Unity animation clips or production character/prop rigs. No integration is authorized by this preview request.
+The original preview and integration history below predates the removal of the older videos.
 
 ## Source and reproducibility
 

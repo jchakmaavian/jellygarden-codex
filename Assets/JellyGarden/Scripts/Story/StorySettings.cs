@@ -102,10 +102,16 @@ namespace JellyGarden.Scripts.Story
             band.offsetMin = new Vector2(0f, 520f);
             band.offsetMax = new Vector2(0f, -520f);
 
+            if (StorybookUi.Enabled)
+            {
+                band.anchorMin = new Vector2(0, .25f);
+                band.anchorMax = new Vector2(1, .75f);
+                band.offsetMin = band.offsetMax = Vector2.zero;
+            }
             _panel = StoryUi.RoyalPanel("Panel", band, "Settings", OnClose);
 
             _blurb = StoryUi.CreateText("Blurb", _panel.Content, string.Empty, 46,
-                StoryUi.RoyalTitle, TextAnchor.UpperCenter);
+                StorybookUi.Enabled ? StorybookUi.Ink : StoryUi.RoyalTitle, TextAnchor.UpperCenter);
             _blurb.rectTransform.anchorMin = new Vector2(0.06f, 0.42f);
             _blurb.rectTransform.anchorMax = new Vector2(0.94f, 0.92f);
             _blurb.rectTransform.offsetMin = Vector2.zero;

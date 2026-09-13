@@ -145,7 +145,28 @@ namespace JellyGarden.Scripts.Story
 
         private void Start()
         {
-            StartCoroutine(Drive());
+            if (!_campaignReview) StartCoroutine(Drive());
+        }
+
+        private bool _campaignReview;
+
+        // The area review uses the same legal-move player, with normal win and
+        // repair handlers between boards. No forced wins or injected stars.
+        public static IEnumerator PlayForCampaignReview(int level, int area)
+        {
+            var host = new GameObject("~CampaignBoardReview");
+            var player = host.AddComponent<StoryPlaytest>();
+            player._campaignReview = true;
+            player._level = level;
+            // Fresh campaign entry already launched board 1. Loading it again
+            // mid-tutorial would destroy the pieces its hint coroutine owns.
+            if (LevelManager.THIS == null || StoryFlow.PlayingLevel != level ||
+                LevelManager.THIS.gameStatus != GameState.Playing)
+                yield return player.Reach(level, area);
+            player.HideTutorial();
+            yield return TreasureHuntReview.ReviewBoard(level);
+            yield return player.PlayOut(level);
+            Destroy(host);
         }
 
         private IEnumerator Drive()

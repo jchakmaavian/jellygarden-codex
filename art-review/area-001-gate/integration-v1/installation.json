@@ -25,21 +25,6 @@
       "installed": "Assets/JellyGarden/Resources/Story/Art/area_001_state3.jpg",
       "sha256": "28e54260cfbcbc0b4d0e5da05a42fc1be1e25ec77e4771bd01c6bc965482fc31",
       "existing_guid_preserved": true
-    },
-    {
-      "source": "art-review/area-001-gate/v1/animations/01-fix-timber.mp4",
-      "installed": "Assets/JellyGarden/Resources/Story/RepairAnimations/area_001_task1.mp4",
-      "sha256": "872d455bba2f8ffcdca462b5e6997eab9e55691c235f963dc0b1b3d357a20999"
-    },
-    {
-      "source": "art-review/area-001-gate/v1/animations/02-hang-banner.mp4",
-      "installed": "Assets/JellyGarden/Resources/Story/RepairAnimations/area_001_task2.mp4",
-      "sha256": "4645fb3b79531d41b33befb648d58b5056d8ee6864a1b27001cf57a17dcf7457"
-    },
-    {
-      "source": "art-review/area-001-gate/v1/animations/03-hang-lights.mp4",
-      "installed": "Assets/JellyGarden/Resources/Story/RepairAnimations/area_001_task3.mp4",
-      "sha256": "201d60dbc67dd7ba10791b862ff46829a10b1e89dd1c6edaef77aa9692e007b8"
     }
   ],
   "notes": "Generated states exported as high quality JPEGs to retain existing sprite paths and GUIDs. Approved 3D motion-study clips copied unchanged.",
@@ -112,5 +97,23 @@
     "Assets/JellyGarden/Scripts/Story/Editor/StoryScreenTests.cs",
     "Assets/JellyGarden/Resources/Story/repair_regions.json"
   ],
-  "sprite_guid_check": "preserved"
+  "sprite_guid_check": "preserved",
+  "removed_video_assets": [
+    {
+      "source": "art-review/area-001-gate/v1/animations/01-fix-timber.mp4",
+      "installed": "Assets/JellyGarden/Resources/Story/RepairAnimations/area_001_task1.mp4",
+      "sha256": "872d455bba2f8ffcdca462b5e6997eab9e55691c235f963dc0b1b3d357a20999"
+    },
+    {
+      "source": "art-review/area-001-gate/v1/animations/02-hang-banner.mp4",
+      "installed": "Assets/JellyGarden/Resources/Story/RepairAnimations/area_001_task2.mp4",
+      "sha256": "4645fb3b79531d41b33befb648d58b5056d8ee6864a1b27001cf57a17dcf7457"
+    },
+    {
+      "source": "art-review/area-001-gate/v1/animations/03-hang-lights.mp4",
+      "installed": "Assets/JellyGarden/Resources/Story/RepairAnimations/area_001_task3.mp4",
+      "sha256": "201d60dbc67dd7ba10791b862ff46829a10b1e89dd1c6edaef77aa9692e007b8"
+    }
+  ],
+  "video_removal": "2026-09-12: all installed area videos and source previews removed at the owner's request. Original runtime validation below is historical."
 }

@@ -1,5 +1,7 @@
 # Area 1 integration
 
+**Video removal — 2026-09-12:** The three installed repair MP4s and their four preview copies were deleted at the owner's request. The notes below record the earlier integration, not the current video inventory. Tasks now use the ordinary repair effect, except Treasure Hunt vine clearing, which completes instantly.
+
 The four approved gate states and three approved animation clips are installed in the game following the user's “ok implement” instruction.
 
 The existing `area_001_state0.jpg` through `area_001_state3.jpg` paths and sprite GUIDs are preserved. Each image was exported from the approved PNG at JPEG quality 97 with no chroma subsampling. The review PNGs remain the original source assets.

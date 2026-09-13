@@ -1,0 +1,58 @@
+{
+  "levelCount": 4,
+  "firstSabotageArea": 2147483647,
+  "levels": [
+    {
+      "levelNumber": 1,
+      "areaId": 1,
+      "arc": 1,
+      "taskIndex": 1,
+      "starIndexWithinArea": 1,
+      "difficulty": 0,
+      "themeKey": "castle",
+      "sabotage": false,
+      "minimumMoves": 20
+    },
+    {
+      "levelNumber": 2,
+      "areaId": 1,
+      "arc": 1,
+      "taskIndex": 2,
+      "starIndexWithinArea": 2,
+      "difficulty": 0,
+      "themeKey": "castle",
+      "sabotage": false,
+      "minimumMoves": 20
+    },
+    {
+      "levelNumber": 3,
+      "areaId": 1,
+      "arc": 1,
+      "taskIndex": 3,
+      "starIndexWithinArea": 3,
+      "difficulty": 0,
+      "themeKey": "castle",
+      "sabotage": false,
+      "minimumMoves": 24
+    },
+    {
+      "levelNumber": 4,
+      "areaId": 1,
+      "arc": 1,
+      "taskIndex": 4,
+      "starIndexWithinArea": 4,
+      "difficulty": 0,
+      "themeKey": "castle",
+      "sabotage": false,
+      "minimumMoves": 36
+    }
+  ],
+  "byArea": {
+    "1": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}

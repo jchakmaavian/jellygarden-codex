@@ -1,0 +1,11 @@
+{
+    "passed": false,
+    "area2Locked": true,
+    "wins": 0,
+    "tasks": 0,
+    "stars": 0,
+    "errors": [
+        "First star lost after reload",
+        "Repair 1 unavailable after win"
+    ]
+}

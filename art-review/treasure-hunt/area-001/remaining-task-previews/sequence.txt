@@ -1,0 +1,3 @@
+file 'area-1-door-preview.mp4'
+file 'area-1-flags-preview.mp4'
+file 'area-1-lanterns-preview.mp4'

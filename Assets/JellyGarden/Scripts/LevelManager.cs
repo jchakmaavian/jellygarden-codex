@@ -404,7 +404,9 @@ namespace JellyGarden.Scripts
             if (currentLevel == 0)
                 currentLevel = 1;
             LoadDataFromLocal(currentLevel);
-
+            // Apply campaign tuning after every load, including PrepareGame's
+            // second load. The shipped board files remain the source layout.
+            Story.StoryCampaign.ApplyLevelTuning(this);
         }
 
         public void EnableMap(bool enable)
@@ -696,6 +698,10 @@ namespace JellyGarden.Scripts
 
         public void CheckWinLose()
         {
+            // The first Treasure Hunt puzzle is a guided introduction. Keep a
+            // few moves available until its real targets are met; never auto-win.
+            if (Limit <= 0 && Story.StoryCampaign.ProtectFirstPuzzle(currentLevel) &&
+                targetObject.Any(i => !i.Done())) Limit = 3;
             //		print ("check win lose");
             if (Limit <= 0)
             {

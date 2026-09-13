@@ -77,7 +77,7 @@ namespace JellyGarden.Scripts.Story
             if (_regions != null) return;
             _regions = new Dictionary<int, Rect>();
 
-            var text = Resources.Load<TextAsset>(Path);
+            var text = StoryCampaign.LoadText("repair_regions");
             if (text == null)
             {
                 Debug.Log("[Story] No repair regions table; every repair sparkles room-wide.");

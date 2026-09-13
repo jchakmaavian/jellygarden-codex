@@ -48,6 +48,7 @@ namespace JellyGarden.Scripts.Targets
         public TargetObject DeepCopy()
         {
             TargetObject other = (TargetObject) MemberwiseClone();
+            other.icon = JellyGarden.Scripts.Story.StorybookBoardArt.Goal(other);
             return other;
         }
 

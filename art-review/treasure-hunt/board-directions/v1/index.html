@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f6f3ec">
+  <title>King Leo · Five new ways to play</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">♛</span><span>KING LEO<small>THE ROYAL STORYBOOK</small></span></a>
+    <span class="preview-label"><i></i> Design preview · 01</span>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">A NEW LOOK FOR EVERY MATCH</p><h1>Five new ways to play.</h1><p class="intro-copy">New boards. New pieces. The same little royal adventure.<br>Explore a direction, try a match, and find your favourite.</p></div>
+      <aside class="recommendation"><span class="small-crown" aria-hidden="true">♛</span><div><strong>My pick: Royal Gems</strong><p>Bright, easy to read, and at home in Leo’s castle.</p><button class="text-button" data-open="0">Take a closer look <span aria-hidden="true">↗</span></button></div></aside>
+    </section>
+    <div class="review-toolbar"><p><strong>05</strong> complete directions <span>·</span> <strong>30</strong> new pieces</p><div class="toolbar-actions"><label>Phone size <select id="phone-size"><option value="tall">393 × 852</option><option value="compact">320 × 568</option></select></label><label class="toggle"><input id="grayscale" type="checkbox"><span>Check silhouettes</span></label></div></div>
+    <section id="gallery" class="gallery" aria-label="Five board design variants"></section>
+    <section class="piece-section" id="pieces">
+      <div class="section-heading"><div><p class="eyebrow">THE PIECES, UP CLOSE</p><h2>Small shapes. Big personality.</h2></div><p>Six colours, six silhouettes in each collection.<br>See them enlarged or at their approximate board size.</p></div>
+      <div class="piece-controls"><div id="piece-tabs" class="segmented" role="group" aria-label="Piece collection"></div><div class="segmented size-buttons" role="group" aria-label="Piece display size"><button data-piece-size="large" aria-pressed="true">Up close</button><button data-piece-size="small" aria-pressed="false">Game size</button></div></div>
+      <div id="piece-display" class="piece-display"></div>
+      <details class="old-pieces"><summary>Compare with the current pieces</summary><div id="current-pieces" class="current-piece-row"></div><p>The proposed sets simplify surface detail and give each colour a distinct shape.</p></details>
+    </section>
+    <section class="decision-note"><span aria-hidden="true">✦</span><p><strong>Your favourite board and pieces can be mixed.</strong> You can choose a complete direction, or pair one board with another collection.</p><a href="README.md">About this preview ↗</a></section>
+  </main>
+  <footer><p>King Leo · Board exploration</p><p>Visual prototypes. The game has not been changed. <a href="provenance.json">Artwork &amp; prompts ↗</a></p></footer>
+  <dialog id="detail"><div class="dialog-layout"><div class="detail-stage"><div id="detail-phone"></div></div><div class="detail-copy"><button class="close-dialog" aria-label="Close enlarged preview">×</button><p id="detail-number" class="eyebrow"></p><h2 id="detail-title"></h2><p id="detail-description"></p><dl id="detail-notes"></dl><div id="detail-lineup" class="mini-lineup"></div><button id="detail-demo" class="primary-button">▶ Try a match</button><p class="demo-note">A visual animation preview, not a playable level.</p><div class="detail-navigation"><button id="previous">← Previous</button><button id="next">Next →</button></div></div></div></dialog>
+  <div id="announcement" class="sr-only" aria-live="polite"></div>
+  <script src="preview.js"></script>
+</body>
+</html>

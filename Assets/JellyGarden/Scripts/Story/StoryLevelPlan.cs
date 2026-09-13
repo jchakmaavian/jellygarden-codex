@@ -20,6 +20,7 @@ namespace JellyGarden.Scripts.Story
         public float Difficulty;
         public string ThemeKey = string.Empty;
         public bool Sabotage;
+        public int MinimumMoves;
 
         /// <summary>True on the single level that introduces Grimm's sabotage.</summary>
         public bool SabotageBeat;
@@ -47,7 +48,7 @@ namespace JellyGarden.Scripts.Story
             if (_loaded) return;
             _loaded = true;
 
-            var text = Resources.Load<TextAsset>("Story/level_plan");
+            var text = StoryCampaign.LoadText("level_plan");
             if (text == null)
             {
                 Debug.LogWarning("[Story] Missing Resources/Story/level_plan.json — " +
@@ -70,6 +71,7 @@ namespace JellyGarden.Scripts.Story
                     Difficulty = node["difficulty"].AsFloat(),
                     ThemeKey = node["themeKey"].AsString(),
                     Sabotage = node["sabotage"].AsBool(),
+                    MinimumMoves = node["minimumMoves"].AsInt(),
                     SabotageBeat = node["sabotageBeat"].AsBool()
                 };
 

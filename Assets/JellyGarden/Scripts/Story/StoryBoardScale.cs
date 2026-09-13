@@ -76,7 +76,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The gem's localScale, in the kit's own units.</summary>
         public static float ItemScale
         {
-            get { return ItemShare * Factor; }
+            get { return (StorybookBoardArt.Enabled ? .64f : ItemShare) * Factor; }
         }
 
         /// <summary>

@@ -14,8 +14,8 @@ namespace JellyGarden.Scripts.Story
         public const string HostName = "StoryLevelPopup";
         private const int MaxGoals = 4;
         private static readonly Color32 Cream = new Color32(255,253,236,255);
-        private static readonly Color32 Ink = new Color32(64,82,62,255);
-        private static readonly Color32 Muted = new Color32(125,138,105,255);
+        private static Color Ink => StorybookUi.Enabled ? StorybookUi.Ink : new Color32(64,82,62,255);
+        private static Color Muted => StorybookUi.Enabled ? StorybookUi.Muted : new Color32(125,138,105,255);
         private static readonly Color32 Gold = new Color32(246,216,146,255);
         private static readonly Color32 Blue = new Color32(35,76,102,255);
         private static StoryLevelPopup _instance;
@@ -73,6 +73,12 @@ namespace JellyGarden.Scripts.Story
 
         public static void Open(int levelNumber,int areaId,Action onClose)
         {
+            if (StoryCampaign.IsTreasureHunt &&
+                (!StoryCampaign.CanEnter(areaId) || StoryLevelPlan.AreaOf(levelNumber) != areaId))
+            {
+                StoryToast.Show(StoryCampaign.ComingSoon);
+                return;
+            }
             if(levelNumber<=0){Debug.LogWarning("[Story] No level to offer.");return;}
             if(_instance==null)
             {
@@ -109,6 +115,7 @@ namespace JellyGarden.Scripts.Story
             _card.anchorMin=_card.anchorMax=_card.pivot=new Vector2(.5f,.5f);
             _card.anchoredPosition=new Vector2(0,-10);
             _card.sizeDelta=new Vector2(300,504);
+            if (StorybookUi.Enabled) { BuildStorybook(); return; }
 
             Plate("Shadow",_card,25,new Color32(15,33,28,50),-7,-9,314,521);
             Plate("Depth",_card,23,new Color32(110,85,47,255),0,-9,300,504);
@@ -135,6 +142,64 @@ namespace JellyGarden.Scripts.Story
             BuildPlay();
             Label("Footnote",_card,"Your next star is waiting",8,new Color32(150,156,124,255),24,-480,252,12);
         }
+        private void BuildStorybook()
+        {
+            _card.name = "StorybookInvitation";
+            _card.sizeDelta = new Vector2(332, 385);
+            _card.anchoredPosition = new Vector2(0, -45);
+            // One complete source panel includes the ribbon and all four paper
+            // edges. The changing level number is the only title overlay.
+            Image paper = StorybookLayers.Image("Invitation", _card, "invitation");
+            StoryCastleUi.Place(paper.rectTransform, 0, 52, 332, 435);
+            _title = Label("LevelRibbon", _card, "", 36, StorybookUi.Paper,
+                72, 48, 184, 65, true);
+            var titleShadow = _title.gameObject.AddComponent<Shadow>();
+            titleShadow.effectColor = StorybookUi.Ink;
+            titleShadow.effectDistance = new Vector2(0,-1.5f);
+            _close = StorybookUi.Close(_card, OnClose, 1);
+            _close.GetComponent<RectTransform>().anchoredPosition = new Vector2(-2, 28);
+            _goalHeading = Label("GoalHeading", _card, "Goal", 23, Ink, 40, -20, 252, 42, true);
+            _goalRow = StoryUi.CreateRect("GoalRow", _card);
+            StoryCastleUi.Place(_goalRow, 40, -65, 252, 65);
+            Image goals = StorybookLayers.Sliced("GoalWell", _goalRow, "goal-well");
+            StoryUi.Stretch(goals.rectTransform, -3);
+            BuildBoosterRow();
+            Text boosterHeading = _card.Find("BoosterHeading").GetComponent<Text>();
+            boosterHeading.text = "Boosters";
+            boosterHeading.font = StorybookArt.Font;
+            boosterHeading.alignment = TextAnchor.MiddleCenter;
+            StoryUi.FitOneLine(boosterHeading, 22, 22);
+            StoryCastleUi.Place(boosterHeading.rectTransform, 88, -144, 156, 30);
+            _card.Find("Optional").gameObject.SetActive(false);
+            Line(_card,"LeftRule",new Vector2(28,159),new Vector2(104,159),.7f,StorybookUi.Gold);
+            Line(_card,"RightRule",new Vector2(228,159),new Vector2(304,159),.7f,StorybookUi.Gold);
+            for (int i = 0; i < _boosters.Count; i++)
+            {
+                BoosterSlot slot = _boosters[i];
+                var root = (RectTransform)slot.Button.transform.parent;
+                StoryCastleUi.Place(root, 24 + i * 98, -183, 88, 90);
+                root.Find("Name").gameObject.SetActive(false);
+                StoryCastleUi.Place((RectTransform)root.Find("Depth"),0,-3,88,90);
+                StoryCastleUi.Place(slot.Border.rectTransform,0,0,88,90);
+                StoryCastleUi.Place(slot.Face.rectTransform,1,-1,86,88);
+                root.Find("Depth").gameObject.SetActive(false);
+                slot.Border.sprite = StorybookLayers.Get("booster-tile");
+                slot.Border.type = Image.Type.Simple;
+                slot.Border.color = Color.white;
+                slot.Face.color = Color.clear;
+                slot.Button.targetGraphic = slot.Border;
+                slot.Icon.sprite = StorybookArt.Booster(i);
+                slot.Icon.useSpriteMesh = true;
+                StoryCastleUi.Place(slot.Icon.rectTransform,10,-7,68,73);
+                StoryCastleUi.Place((RectTransform)root.Find("CountRim"),69,-72,23,23);
+                StoryCastleUi.Place((RectTransform)root.Find("Selected"),70,6,22,22);
+            }
+            _hint.gameObject.SetActive(false);
+            Image playArt = StorybookArt.Image("Play", _card, StorybookArt.PlayButton);
+            _play = StoryCastleUi.Clickable(playArt, OnPlay);
+            StoryCastleUi.Place(playArt.rectTransform, 31, -292, 270, 73);
+        }
+
         private void BuildHeader()
         {
             Plate("LevelDepth",_card,14,new Color32(22,55,71,255),48,21,204,49);
@@ -232,7 +297,7 @@ namespace JellyGarden.Scripts.Story
             StoryLevelHud.HudModel model=StoryLevelHud.ReadLevel(_level,0);
             List<StoryLevelHud.HudTarget> targets=model==null?new List<StoryLevelHud.HudTarget>():model.Targets;
             int count=Mathf.Min(targets.Count,MaxGoals);
-            _goalHeading.text=count>1?"YOUR GOALS":"YOUR GOAL";
+            _goalHeading.text=StorybookUi.Enabled ? (count>1 ? "Goals" : "Goal") : (count>1?"YOUR GOALS":"YOUR GOAL");
             while(_slots.Count<count) BuildSlot();
             for(int i=0;i<_slots.Count;i++)
             {
@@ -249,7 +314,7 @@ namespace JellyGarden.Scripts.Story
                 slot.Icon.rectTransform.anchoredPosition=new Vector2(width*.5f,-38);
                 StoryCastleUi.Place(slot.Backing.rectTransform,(width-icon)*.5f,-(76-icon)*.5f,icon,icon);
                 StoryCastleUi.Place(slot.Vfx.rectTransform,(width-Mathf.Min(110,width))*.5f,0,Mathf.Min(110,width),76);
-                slot.Icon.sprite=target.IsScore?StoryUi.StarSprite:(target.Icon!=null?target.Icon:StoryUi.StarSprite);
+                slot.Icon.sprite=target.IsScore?(StorybookUi.Enabled ? StorybookLayers.Get("score-token") : StoryUi.StarSprite):(target.Icon!=null?target.Icon:StoryUi.StarSprite);
                 slot.Icon.enabled=slot.Icon.sprite!=null;
                 slot.Backing.sprite=target.Backing;
                 slot.Backing.enabled=target.Backing!=null;
@@ -273,7 +338,40 @@ namespace JellyGarden.Scripts.Story
                     StoryCastleUi.Place(slot.Unit.rectTransform,0,-136,width,12);
                     StoryUi.FitOneLine(slot.Unit,8,9);
                 }
-                if(target.IsScore) slot.Vfx.SetStar(slot.Icon.rectTransform);
+                if(target.IsScore && !StorybookUi.Enabled) slot.Vfx.SetStar(slot.Icon.rectTransform);
+            }
+            if (StorybookUi.Enabled)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    Slot slot = _slots[i];
+                    float width = 252f / count;
+                    StoryCastleUi.Place(slot.Root, i * width, 0, width, 65);
+                    float icon = Mathf.Min(36, width - 14);
+                    StoryCastleUi.Place(slot.Icon.rectTransform, (width - icon) / 2, 0, icon, icon);
+                    StoryCastleUi.Place(slot.Backing.rectTransform, (width - icon) / 2, 0, icon, icon);
+                    StoryCastleUi.Place(slot.Vfx.rectTransform, (width - 64) / 2, 4, 64, 64);
+                    StoryCastleUi.Place(slot.Count.rectTransform, 3, -34, width - 6, 30);
+                    slot.Count.text = Mathf.Max(0, targets[i].Remaining).ToString();
+                    StoryUi.FitOneLine(slot.Count, 16, count == 1 ? 25 : 21);
+                    slot.Unit.gameObject.SetActive(false);
+                    if (count == 1 && targets[i].IsScore)
+                    {
+                        StoryCastleUi.Place(slot.Icon.rectTransform, 25, -10, 45, 45);
+                        StoryCastleUi.Place(slot.Backing.rectTransform, 25, -10, 45, 45);
+                        StoryCastleUi.Place(slot.Vfx.rectTransform, 16, -1, 64, 64);
+                        StoryCastleUi.Place(slot.Count.rectTransform, 80, -10, 92, 45);
+                        slot.Count.alignment = TextAnchor.MiddleLeft;
+                        StoryUi.FitOneLine(slot.Count,28,28);
+                        StoryCastleUi.Place(slot.Unit.rectTransform, 149, -10, 90, 45);
+                        slot.Unit.gameObject.SetActive(true);
+                        slot.Unit.font = StorybookArt.Font;
+                        slot.Unit.color = Ink;
+                        slot.Unit.alignment = TextAnchor.MiddleLeft;
+                        StoryUi.FitOneLine(slot.Unit, 24, 24);
+                    }
+                    if (targets[i].IsScore) slot.Vfx.SetStar(slot.Icon.rectTransform);
+                }
             }
             RefreshBoosters();
             Debug.Log(string.Format("[Story] Level popup: Level {0} for area {1}, goal [{2}], boosters [{3}].",
@@ -291,8 +389,10 @@ namespace JellyGarden.Scripts.Story
                 slot.Button.interactable=owned>0;
                 slot.Icon.color=new Color(1,1,1,owned>0?1:.35f);
                 slot.Selected.SetActive(selected);
-                slot.Border.color=selected?new Color32(109,155,96,255):new Color32(227,222,197,255);
-                slot.Face.color=selected?new Color32(233,240,206,255):new Color32(255,252,240,255);
+                slot.Border.color=StorybookUi.Enabled ? (selected ? new Color32(210,239,191,255) : Color.white)
+                    : selected?new Color32(109,155,96,255):new Color32(227,222,197,255);
+                slot.Face.color=StorybookUi.Enabled ? Color.clear
+                    : selected?new Color32(233,240,206,255):new Color32(255,252,240,255);
                 if(selected) selectedCount++;
             }
             _hint.text=selectedCount==0?"Boosters are optional":selectedCount+" booster"+(selectedCount==1?"":"s")+" ready to go";

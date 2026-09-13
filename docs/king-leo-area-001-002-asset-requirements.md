@@ -1,5 +1,7 @@
 # Areas 001–002 — kid-friendly asset requirements
 
+**Superseded — 2026-09-12:** This is a historical proposal for the original campaign. All older area repair videos have been removed at the owner's request. Its video requirements are withdrawn; use the [Treasure Hunt development plan](story/TREASURE-HUNT-DEVELOPMENT-PLAN.md) for current production.
+
 Date: 2026-09-10
 Status: **requirement only.** Nothing here is designed or implemented. No art
 has been made, no prompt written, no file replaced.

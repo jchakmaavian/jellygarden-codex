@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Area 1 · Clear the vines transition</title>
+<style>
+  * { box-sizing: border-box; }
+  :root { color-scheme: dark; font-family: system-ui, -apple-system, sans-serif; }
+  body { margin:0; background:#101b2a; color:#fbf4e3; min-height:100svh; display:grid; place-items:center; }
+  main { display:flex; align-items:center; justify-content:center; gap:52px; padding:24px; width:100%; }
+  .phone { position:relative; width:min(390px, calc((100svh - 48px) * 941 / 1672)); flex-shrink:0; overflow:hidden; border-radius:22px; border:1px solid #8090a044; box-shadow:0 22px 75px #0008; }
+  canvas { display:block; width:100%; height:auto; cursor:pointer; touch-action:manipulation; }
+  aside { width:320px; }
+  .eyebrow { color:#e1bd77; font-size:12px; letter-spacing:.13em; text-transform:uppercase; }
+  h1 { font-size:32px; font-weight:650; letter-spacing:-.04em; line-height:1.15; margin:12px 0 18px; }
+  p { color:#b6c2d0; line-height:1.65; font-size:15px; }
+  .controls { display:flex; gap:10px; margin:25px 0 20px; }
+  button { border:1px solid #d7b268; background:#efd099; color:#203148; border-radius:10px; padding:12px 19px; font:600 14px system-ui; cursor:pointer; }
+  button.secondary { background:transparent; color:#dbe3ec; border-color:#3b4b60; }
+  button:hover { filter:brightness(1.1); }
+  input { width:100%; accent-color:#e8c283; cursor:pointer; }
+  .timing { display:flex; justify-content:space-between; color:#a4b4c6; font-size:12px; margin-top:8px; }
+  .note { font-size:12px; margin-top:28px; color:#899aae; }
+  .export main { padding:0; }
+  .export .phone { border:0; border-radius:0; box-shadow:none; width:720px; }
+  .export aside { display:none; }
+  @media(max-width:740px) { main { flex-direction:column; gap:22px; padding:20px; } .phone { width:min(360px,calc((100svh - 220px) * 941 / 1672)); min-width:240px; } aside { width:min(360px,100%); } h1 { font-size:24px; margin:6px 0; } p,.note { margin:8px 0; } .controls { margin:14px 0; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="phone"><canvas id="scene" width="720" height="1280" aria-label="Area 1 vine-clearing animation preview. Click to play."></canvas></div>
+  <aside>
+    <div class="eyebrow">Area 1 · Castle Gates</div>
+    <h1>Clear the vines</h1>
+    <p>Vines clear from the lower walls up around the arch, with falling leaves and a soft shimmer.</p>
+    <div class="controls"><button id="play">Play transition</button><button id="pause" class="secondary">Pause</button></div>
+    <input id="seek" aria-label="Preview timeline" type="range" min="0" max="6.4" step="0.01" value="0">
+    <div class="timing"><span id="phase">Before</span><span id="time">0.0 / 6.4 s</span></div>
+    <p class="note">Standalone preview only. No changes to the game.</p>
+  </aside>
+</main>
+<script>
+(() => {
+  'use strict';
+  const exporting = new URLSearchParams(location.search).has('render');
+  if (exporting) document.body.classList.add('export');
+  const canvas = document.getElementById('scene');
+  const ctx = canvas.getContext('2d', { alpha:false });
+  const W=720, H=1280, DURATION=6.4;
+  const BEFORE='__BEFORE_DATA__', AFTER='__AFTER_DATA__';
+  const before=new Image(), after=new Image();
+  let playing=false, time=0, epoch=0, raf=0;
+  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+  const smooth=v=>{v=clamp(v);return v*v*(3-2*v);};
+  const easeOut=v=>1-Math.pow(1-clamp(v),3);
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const rand=i=>{const v=Math.sin(i*127.1+311.7)*43758.5453123;return v-Math.floor(v);};
+  const layer=document.createElement('canvas'); layer.width=W; layer.height=H;
+  const lctx=layer.getContext('2d');
+  const mask=document.createElement('canvas'); mask.width=360; mask.height=640;
+  const mctx=mask.getContext('2d');
+  const maskPixels=mctx.createImageData(mask.width,mask.height);
+  const arrivals=new Float32Array(mask.width*mask.height);
+  const flecks=[];
+  const pointTime=(x,y)=>{
+    // Start low on both walls, climb towards the sun above the arch.
+    const vertical=clamp((.69-y)/.43);
+    const sideDelay=.09*(1-Math.abs(x-.5)*2);
+    return .08 + .76*vertical + sideDelay;
+  };
+  const roundRect=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);};
+  function label(text,x,y,size,color,align='center',weight=700) {
+    ctx.font=`${weight} ${size}px system-ui, -apple-system, sans-serif`;
+    ctx.textAlign=align; ctx.textBaseline='middle';ctx.fillStyle=color;ctx.fillText(text,x,y);
+  }
+  function drawStar(x,y,r,alpha=1) {
+    ctx.save();ctx.globalAlpha*=alpha;ctx.translate(x,y);ctx.beginPath();
+    for(let k=0;k<10;k++){const a=-Math.PI/2+k*Math.PI/5;const radius=k%2?r*.46:r;const xx=Math.cos(a)*radius,yy=Math.sin(a)*radius;k?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}
+    ctx.closePath();ctx.fillStyle='#ffcf44';ctx.strokeStyle='#a56a18';ctx.lineWidth=2;ctx.fill();ctx.stroke();ctx.restore();
+  }
+  function taskCard(t) {
+    const hide=smooth((t-.62)/.36);
+    const show=smooth((t-4.65)/.42);
+    const alpha=t<2?1-hide:show;
+    if(alpha<=0)return;
+    const complete=t>4;
+    ctx.save();ctx.globalAlpha=alpha;ctx.translate(0,32*(1-alpha));
+    ctx.shadowColor='#102b4580';ctx.shadowBlur=22;ctx.shadowOffsetY=8;
+    roundRect(52,1094,616,128,23);ctx.fillStyle='#f9edce';ctx.fill();
+    ctx.shadowColor='transparent';ctx.lineWidth=4;ctx.strokeStyle='#edbd5f';ctx.stroke();
+    label('Castle Gates',78,1120,18,'#315e83','left');
+    label(complete?'1/4':'0/4',640,1120,18,'#315e83','right');
+    if(!complete){
+      const press=1-.035*Math.sin(Math.PI*clamp((t-.38)/.24));
+      ctx.translate(360,1168);ctx.scale(press,press);
+      const g=ctx.createLinearGradient(0,-28,0,30);g.addColorStop(0,'#8fb82b');g.addColorStop(1,'#518c03');
+      roundRect(-282,-29,564,59,15);ctx.fillStyle=g;ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#386700';ctx.stroke();
+      label('Clear the vines',-14,0,26,'#fff5d6');drawStar(217,0,15);label('1',249,1,24,'#fff5d6');
+      if(t>.33&&t<.84){const p=clamp((t-.33)/.51);ctx.globalAlpha*=1-p;ctx.beginPath();ctx.arc(116,2,15+35*p,0,2*Math.PI);ctx.strokeStyle='#fff2b3';ctx.lineWidth=3;ctx.stroke();}
+    }else{
+      label('✓',86,1169,31,'#639721');label('Vines cleared',126,1169,28,'#275776','left');
+      const p=ctx.createLinearGradient(475,0,630,0);p.addColorStop(0,'#86ab24');p.addColorStop(1,'#709911');
+      roundRect(478,1153,160,28,10);ctx.fillStyle='#c9d6c2';ctx.fill();roundRect(478,1153,40,28,10);ctx.fillStyle=p;ctx.fill();
+    }
+    ctx.restore();
+  }
+  function makeMask(progress){
+    const data=maskPixels.data;
+    for(let i=0;i<arrivals.length;i++){
+      const a=1-smooth((progress-arrivals[i])/.105);
+      data[i*4+3]=Math.round(a*255);
+    }
+    mctx.putImageData(maskPixels,0,0);
+    lctx.clearRect(0,0,W,H);lctx.globalCompositeOperation='source-over';lctx.drawImage(before,0,0,W,H);
+    lctx.globalCompositeOperation='destination-in';lctx.drawImage(mask,0,0,W,H);lctx.globalCompositeOperation='source-over';
+  }
+  function drawLeaf(p,age){
+    if(age<0||age>p.life)return;
+    const a=age/p.life;
+    const opacity=smooth(age/.1)*(1-smooth((a-.56)/.44));
+    const drift=p.side*(35*age+22*age*age)+Math.sin(age*5+p.seed)*10*age;
+    const x=p.x+drift,y=p.y-28*age+70*age*age;
+    const scale=(.75+.25*Math.sin(Math.min(age/.16,1)*Math.PI/2))*(1-.45*smooth(a));
+    ctx.save();ctx.translate(x,y);ctx.rotate(p.rotation+p.spin*age);
+    ctx.scale(scale*(.65+.35*Math.cos(p.seed+age*7)),scale);ctx.globalAlpha=opacity;
+    ctx.shadowColor='#26471e30';ctx.shadowBlur=3;ctx.shadowOffsetY=2;
+    const r=p.size;
+    ctx.beginPath();ctx.moveTo(-r,0);ctx.bezierCurveTo(-r*.38,-r*.9,r*.63,-r*.6,r,0);ctx.bezierCurveTo(r*.25,r*.9,-r*.7,r*.55,-r,0);
+    const g=ctx.createLinearGradient(0,-r*.8,0,r*.7);g.addColorStop(0,p.bright?'#c6d564':'#9bab3c');g.addColorStop(.42,p.bright?'#82a440':'#538734');g.addColorStop(1,'#345d32');
+    ctx.fillStyle=g;ctx.fill();ctx.shadowColor='transparent';ctx.strokeStyle='#d2cf795a';ctx.lineWidth=.85;ctx.beginPath();ctx.moveTo(-r*.7,0);ctx.quadraticCurveTo(0,-r*.13,r*.8,0);ctx.stroke();ctx.restore();
+  }
+  function sparkle(x,y,r,alpha) {
+    if(alpha<=0)return;ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);
+    const glow=ctx.createRadialGradient(0,0,0,0,0,r*3);glow.addColorStop(0,'#fff2bd80');glow.addColorStop(1,'#ffeeb300');
+    ctx.fillStyle=glow;ctx.fillRect(-r*3,-r*3,r*6,r*6);
+    ctx.fillStyle='#fff4c9';ctx.beginPath();ctx.moveTo(0,-r);ctx.quadraticCurveTo(r*.13,-r*.12,r,0);ctx.quadraticCurveTo(r*.13,r*.12,0,r);ctx.quadraticCurveTo(-r*.13,r*.12,-r,0);ctx.quadraticCurveTo(-r*.13,-r*.12,0,-r);ctx.fill();ctx.restore();
+  }
+  function setTime(t){
+    time=clamp(t,0,DURATION);
+    ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
+    const progress=(time-1.02)/2.55;
+    if(progress<=0)ctx.drawImage(before,0,0,W,H);
+    else {ctx.drawImage(after,0,0,W,H);if(progress<1.15){makeMask(progress);ctx.drawImage(layer,0,0);}}
+    for(const p of flecks){
+      const age=time-p.start;
+      if(p.type==='leaf')drawLeaf(p,age);
+      else if(age>0&&age<.85){const life=age/.85;sparkle(p.x+Math.sin(age*3+p.seed)*6,p.y-age*21,p.size,Math.sin(life*Math.PI)*.75);}
+    }
+    // A few tiny completion glints emphasize clean stone, then settle.
+    [[.50,.289],[.283,.371],[.71,.398],[.226,.535],[.743,.56]].forEach(([x,y],i)=>{
+      const a=(time-3.68-i*.1)/.8;sparkle(x*W,y*H,5+2*rand(i),a>0&&a<1?Math.sin(a*Math.PI)*.85:0);
+    });
+    taskCard(time);
+    document.getElementById('seek').value=time;
+    document.getElementById('time').textContent=`${time.toFixed(1)} / ${DURATION.toFixed(1)} s`;
+    document.getElementById('phase').textContent=time<.62?'Before':time<1.02?'Task selected':time<3.95?'Clearing vines':time<4.65?'Clean gate':'Complete';
+    return time;
+  }
+  function tick(now){
+    if(!playing)return;
+    const t=(now-epoch)/1000;setTime(t);
+    if(t<DURATION)raf=requestAnimationFrame(tick);
+    else{playing=false;document.getElementById('play').textContent='Replay transition';}
+  }
+  function play(restart=true){
+    cancelAnimationFrame(raf);if(restart||time>=DURATION)time=0;
+    playing=true;epoch=performance.now()-time*1000;document.getElementById('play').textContent='Replay transition';document.getElementById('pause').textContent='Pause';raf=requestAnimationFrame(tick);
+  }
+  function pause(){playing=false;cancelAnimationFrame(raf);}
+  function init(){
+    const sample=document.createElement('canvas');sample.width=W;sample.height=H;
+    const sc=sample.getContext('2d',{willReadFrequently:true});sc.drawImage(before,0,0,W,H);const a=sc.getImageData(0,0,W,H).data;
+    sc.drawImage(after,0,0,W,H);const b=sc.getImageData(0,0,W,H).data;
+    // Organic local timing avoids a straight wipe. The unaffected artwork stays fixed.
+    for(let y=0;y<mask.height;y++)for(let x=0;x<mask.width;x++){
+      const nx=x/mask.width,ny=y/mask.height;
+      const noise=.028*Math.sin(x*.23+Math.sin(y*.17)*2)+.019*Math.sin(y*.38+x*.31)+.014*Math.sin(x*.81-y*.66);
+      arrivals[y*mask.width+x]=pointTime(nx,ny)+noise;
+    }
+    let n=0;
+    // Place falling leaves only where green pixels are actually removed.
+    for(let y=270;y<900;y+=14)for(let x=5;x<W-5;x+=14){
+      const xx=Math.round(x+rand(n+1)*10),yy=Math.round(y+rand(n+2)*10);n++;
+      const k=(yy*W+xx)*4;
+      const diff=Math.abs(a[k]-b[k])+Math.abs(a[k+1]-b[k+1])+Math.abs(a[k+2]-b[k+2]);
+      const green=a[k+1]>a[k]*.92&&a[k+1]>a[k+2]*1.23&&a[k+2]<140;
+      if(diff<100||!green||rand(n+13)<.65)continue;
+      const start=1.02+2.55*(pointTime(xx/W,yy/H)+.022*Math.sin(xx*.12))+.04;
+      flecks.push({type:'leaf',x:xx,y:yy,start,life:.82+rand(n)*.67,seed:n,size:5+rand(n+2)*6.5,side:xx<W*.5?-1:1,rotation:rand(n+3)*6.28,spin:(rand(n+4)-.5)*7,bright:rand(n+5)>.6});
+      if(rand(n+7)>.56)flecks.push({type:'spark',x:xx,y:yy,start:start-.06,seed:n,size:2+rand(n+9)*2});
+    }
+    window.vinePreview={ready:true,setTime,play,pause,duration:DURATION,width:W,height:H,particles:flecks.length};
+    document.getElementById('play').onclick=()=>play();
+    document.getElementById('pause').onclick=()=>{if(playing){pause();document.getElementById('pause').textContent='Resume';}else{play(false);document.getElementById('pause').textContent='Pause';}};
+    document.getElementById('seek').oninput=e=>{pause();setTime(Number(e.target.value));document.getElementById('pause').textContent='Resume';};
+    canvas.onclick=()=>play();setTime(0);
+    if(!exporting)play();
+  }
+  Promise.all([new Promise((resolve,reject)=>{before.onload=resolve;before.onerror=reject;before.src=BEFORE;}),new Promise((resolve,reject)=>{after.onload=resolve;after.onerror=reject;after.src=AFTER;})]).then(init).catch(error=>{document.getElementById('phase').textContent='Could not load preview artwork';console.error(error);});
+})();
+</script>
+</body>
+</html>

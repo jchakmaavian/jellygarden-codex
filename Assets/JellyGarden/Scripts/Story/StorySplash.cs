@@ -67,7 +67,19 @@ namespace JellyGarden.Scripts.Story
                 // be stretched to whatever rect the kit's logo happened to use.
                 // The banner behind it is a backdrop and is meant to fill.
                 if (image.sprite.name == "splash_logo" || story == "splash_logo")
+                    {
                     image.preserveAspect = true;
+                    if (StorybookUi.Enabled && image.transform.Find("AdventureTitle") == null)
+                    {
+                        image.enabled = false;
+                        Text title = StoryUi.CreateText("AdventureTitle", image.transform, "Adventure of\nKing Leo", 72, StorybookUi.Ink, TextAnchor.MiddleCenter);
+                        title.font = StorybookArt.Font;
+                        StoryUi.Stretch(title.rectTransform);
+                        title.resizeTextForBestFit = true;
+                        title.resizeTextMinSize = 24;
+                        title.resizeTextMaxSize = 72;
+                    }
+                }
 
                 swapped.Add(story);
             }
@@ -238,7 +250,7 @@ namespace JellyGarden.Scripts.Story
 
                 Text word = StoryUi.CreateText(LoadingMarker, image.rectTransform,
                     "Loading...", 40, StoryUi.RoyalTitle, TextAnchor.MiddleCenter);
-                word.font = StoryUi.DisplayFont;
+                word.font = StorybookUi.Enabled ? StoryUi.NameFont : StoryUi.DisplayFont;
                 word.raycastTarget = false;
 
                 // Centred, not sat on the bottom edge. On a phone the word was
@@ -251,7 +263,7 @@ namespace JellyGarden.Scripts.Story
                 rect.sizeDelta = new Vector2(0f, 120f);
                 rect.anchoredPosition = Vector2.zero;
                 var outline = word.gameObject.AddComponent<Outline>();
-                outline.effectColor = StoryUi.IconWood;
+                outline.effectColor = StorybookUi.Enabled ? StorybookUi.Ink : StoryUi.IconWood;
                 outline.effectDistance = new Vector2(3f, -3f);
 
                 return true;

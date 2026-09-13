@@ -57,7 +57,7 @@ namespace JellyGarden.Scripts.Story
             if (_loaded) return;
             _loaded = true;
 
-            var text = Resources.Load<TextAsset>("Story/themes");
+            var text = StoryCampaign.LoadText("themes");
             if (text == null)
             {
                 Debug.LogWarning("[Story] No themes.json; the board keeps the kit's own look.");

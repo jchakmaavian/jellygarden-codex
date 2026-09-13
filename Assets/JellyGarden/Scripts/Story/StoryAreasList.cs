@@ -330,7 +330,7 @@ namespace JellyGarden.Scripts.Story
             _canvas = StoryUi.CreateOverlayCanvas("AreasCanvas", SortingOrder);
             _canvas.transform.SetParent(transform, false);
 
-            Image ground = StoryUi.CreateImage("Ground", _canvas.transform, null, StoryUi.RoyalSlate);
+            Image ground = StoryUi.CreateImage("Ground", _canvas.transform, null, StorybookUi.Enabled ? StorybookUi.PaperShade : StoryUi.RoyalSlate);
             StoryUi.Stretch(ground.rectTransform);
             // The ground eats taps, so a press that misses a card does not fall
             // through to the map behind this canvas.
@@ -362,10 +362,11 @@ namespace JellyGarden.Scripts.Story
             rim.rectTransform.sizeDelta = new Vector2(0f, HeaderRimHeight);
             rim.rectTransform.anchoredPosition = Vector2.zero;
 
-            _title = StoryUi.CreateText("Title", header, "Areas", 72, StoryUi.RoyalTitle,
+            _title = StoryUi.CreateText("Title", header, StorybookUi.Enabled ? "Kingdom Map" : "Areas", 72, StoryUi.RoyalTitle,
                 TextAnchor.MiddleCenter);
             StoryUi.Stretch(_title.rectTransform);
             _title.fontStyle = FontStyle.Bold;
+            if (StorybookUi.Enabled) _title.font = StoryUi.NameFont;
             var outline = _title.gameObject.AddComponent<Outline>();
             outline.effectColor = StoryUi.RoyalTealInk;
             outline.effectDistance = new Vector2(3f, -3f);
@@ -418,7 +419,7 @@ namespace JellyGarden.Scripts.Story
             {
                 // Row 0 is the LAST area: the reference reads downward into the
                 // past, and the player opens on their own frontier.
-                int areaId = count - row;
+                int areaId = StorybookUi.Enabled ? row + 1 : count - row;
                 _cards.Add(BuildCard(row, areaId));
             }
         }
@@ -469,12 +470,12 @@ namespace JellyGarden.Scripts.Story
             // The panel is the carved-oak frame when its file is there, and the
             // drawn red-and-gold one when it is not: a missing sprite greys a
             // card, it does not lose the list.
-            Sprite oak = StoryUi.LoadSprite(FrameSpriteName);
+            Sprite oak = StorybookUi.Enabled ? null : StoryUi.LoadSprite(FrameSpriteName);
             bool carved = oak != null;
 
             card.Body = StoryUi.CreateImage("Body", entry,
                 carved ? oak : StoryUi.RoundedSprite(44),
-                carved ? Color.white : StoryUi.RoyalCardRed);
+                carved ? Color.white : (StorybookUi.Enabled ? StorybookUi.Paper : StoryUi.RoyalCardRed));
             card.Body.type = Image.Type.Sliced;
             Frame(card.Body.rectTransform, BodyBottom, BodyTop, CardSideMargin, 0f);
 
@@ -526,6 +527,11 @@ namespace JellyGarden.Scripts.Story
             card.Lock.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
             card.Lock.rectTransform.sizeDelta = new Vector2(LockSize, LockSize);
             card.Lock.rectTransform.anchoredPosition = Vector2.zero;
+            if (StorybookUi.Enabled)
+            {
+                card.Lock.color = Color.clear;
+                StorybookUi.Padlock(card.Lock.transform);
+            }
             card.Lock.gameObject.SetActive(false);
 
             card.Progress = StoryUi.ProgressBar("Progress", card.Body.rectTransform);
@@ -537,7 +543,7 @@ namespace JellyGarden.Scripts.Story
             // The ribbon last, so it lies over the frame's top edge, and wider
             // than the card, so it overhangs it.
             card.Banner = StoryUi.CreateImage("Banner", entry, StoryUi.RoundedSprite(24),
-                StoryUi.RoyalBanner);
+                (StorybookUi.Enabled ? StorybookUi.Blue : StoryUi.RoyalBanner));
             card.Banner.type = Image.Type.Sliced;
             Frame(card.Banner.rectTransform, BannerBottom, BannerTop,
                 CardSideMargin - BannerOverhang, 0f);
@@ -548,7 +554,7 @@ namespace JellyGarden.Scripts.Story
             StoryUi.Stretch(bannerRim.rectTransform, 7f);
 
             card.BannerFace = StoryUi.CreateImage("Face", bannerRim.rectTransform,
-                StoryUi.RoundedSprite(18), StoryUi.RoyalBanner);
+                StoryUi.RoundedSprite(18), (StorybookUi.Enabled ? StorybookUi.Blue : StoryUi.RoyalBanner));
             card.BannerFace.type = Image.Type.Sliced;
             StoryUi.Stretch(card.BannerFace.rectTransform, 5f);
 
@@ -564,7 +570,7 @@ namespace JellyGarden.Scripts.Story
             // ribbon these sit on is one line tall.
             StoryUi.FitOneLine(card.Name, 20, 62);
             var nameOutline = card.Name.gameObject.AddComponent<Outline>();
-            nameOutline.effectColor = StoryUi.RoyalBannerDeep;
+            nameOutline.effectColor = (StorybookUi.Enabled ? StorybookUi.Ink : StoryUi.RoyalBannerDeep);
             nameOutline.effectDistance = new Vector2(2.5f, -2.5f);
 
             // The plate is drawn AFTER the ribbon but tucks behind it, because
@@ -637,6 +643,8 @@ namespace JellyGarden.Scripts.Story
                 card.Name.text = area.Name;
                 StoryUi.SetProgress(card.Progress,
                     StoryProgress.TasksCompletedIn(card.AreaId), area.Tasks.Count);
+                if (!StoryCampaign.IsReady(card.AreaId) && card.Progress.Label != null)
+                    card.Progress.Label.text = "Coming soon";
 
                 bool locked = !StoryProgress.IsAreaUnlocked(card.AreaId);
                 card.Locked = locked;
@@ -652,12 +660,12 @@ namespace JellyGarden.Scripts.Story
                                   card.Body.sprite.name == FrameSpriteName;
                 card.Body.color = carvedBody
                     ? (locked ? OakLockedTint : Color.white)
-                    : (locked ? StoryUi.RoyalGrey : StoryUi.RoyalCardRed);
-                card.Banner.color = locked ? StoryUi.RoyalGrey : StoryUi.RoyalBanner;
+                    : (locked ? StoryUi.RoyalGrey : (StorybookUi.Enabled ? StorybookUi.Paper : StoryUi.RoyalCardRed));
+                card.Banner.color = locked ? StoryUi.RoyalGrey : (StorybookUi.Enabled ? StorybookUi.Blue : StoryUi.RoyalBanner);
                 // The ribbon's face is what is actually seen — the rim around it
                 // covers only its outer few points, so greying the outer image
                 // alone leaves a locked area wearing a bright red name plate.
-                card.BannerFace.color = locked ? StoryUi.RoyalGrey : StoryUi.RoyalBanner;
+                card.BannerFace.color = locked ? StoryUi.RoyalGrey : (StorybookUi.Enabled ? StorybookUi.Blue : StoryUi.RoyalBanner);
                 card.Plate.color = locked ? StoryUi.RoyalCreamDeep : StoryUi.RoyalCream;
 
                 card.Current = !locked && card.AreaId == current;
@@ -737,6 +745,7 @@ namespace JellyGarden.Scripts.Story
         private static void LoadArt(CardParts card)
         {
             card.ArtLoaded = true;
+            if (!StoryCampaign.IsReady(card.AreaId)) return;
 
             // The room as it stands: the state for the repairs already paid for,
             // falling back to the restored picture and then to the arc's backdrop,
