@@ -29,11 +29,13 @@ namespace JellyGarden.Scripts
         HORIZONTAL_STRIPPED,
         PACKAGE,
         BOMB,
-        INGREDIENT
+        INGREDIENT,
+        HELICOPTER
     }
 
     public class Item : MonoBehaviour
     {
+        [NonSerialized] public bool royalConsumed;
         //items sprites array
         public Sprite[] items;
         public GameObject[] prefabs;
@@ -448,6 +450,7 @@ namespace JellyGarden.Scripts
                     thisItemHaveMatch = false;
                 int matchesHereOneColor = matchesHere;
                 matchesHere += matchesInNeithborItem;
+                if (RoyalEffectsProfile.Get && (RoyalPowerupDirector.IsPower(currentType) || RoyalPowerupDirector.IsPower(switchItem.currentType)) && currentType != ItemsTypes.INGREDIENT && switchItem.currentType != ItemsTypes.INGREDIENT) matchesHere++;
 
                 if ((currentType == ItemsTypes.BOMB || switchItem.currentType == ItemsTypes.BOMB) && (currentType != ItemsTypes.INGREDIENT && switchItem.currentType != ItemsTypes.INGREDIENT))
                     matchesHere++;
@@ -530,6 +533,12 @@ namespace JellyGarden.Scripts
                     square = neighborSquare;
                     LevelManager.THIS.lastDraggedItem = this;
                     LevelManager.THIS.lastSwitchedItem = switchItem;
+                    if (RoyalPowerupDirector.TrySwap(this, switchItem))
+                    { LevelManager.THIS.FindMatches(); ResetDrag(); yield break; }
+                    // RoyalPatterns/CombineManager own formation rules, including 2×2 squares.
+                    // The legacy count-only prepass would mark a square as a striped piece.
+                    if (RoyalEffectsProfile.Get)
+                    { LevelManager.THIS.FindMatches(); ResetDrag(); yield break; }
 
                     if (matchesHereOneColor == 4 || matchesInNeithborItem == 4)
                     {
@@ -943,6 +952,13 @@ namespace JellyGarden.Scripts
 
         IEnumerator ChangeTypeCor()
         {
+            if (RoyalEffectsProfile.Get && NextType != ItemsTypes.NONE)
+            {
+                currentType = NextType; debugType = NextType; NextType = ItemsTypes.NONE;
+                if (currentType == ItemsTypes.BOMB) color = 555;
+                appeared = true; sprRenderer.sprite = RoyalPieceSkin.For(currentType, color);
+                RoyalPowerupDirector.Get?.Creation(transform.position); yield break;
+            }
             if (NextType == ItemsTypes.HORIZONTAL_STRIPPED)
             {
                 anim.SetTrigger("appear");
@@ -1033,9 +1049,16 @@ namespace JellyGarden.Scripts
 
         IEnumerator DestroyCor(bool showScore = false, string anim_name = "", bool explEffect = false)
         {
+            bool royalSpecial = RoyalEffectsProfile.Get && RoyalPowerupDirector.IsPower(currentType);
+            if (royalSpecial || royalConsumed)
+            {
+                if (!royalConsumed) RoyalPowerupDirector.Get.Queue(this);
+                sprRenderer.enabled = false; if (anim) anim.enabled = false; SetAnimationDestroyingFinished();
+            }
             //if (anim_name == "")
             //{
-            if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
+            if (royalSpecial || royalConsumed) { }
+            else if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
                 PlayDestroyAnimation("destroy");
             else if (currentType == ItemsTypes.VERTICAL_STRIPPED)
                 PlayDestroyAnimation("destroy");
@@ -1111,7 +1134,8 @@ namespace JellyGarden.Scripts
                 yield return new WaitForFixedUpdate();
 
             square.DestroyBlock();
-            if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
+            if (royalSpecial || royalConsumed) { }
+            else if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
                 DestroyHorizontal();
             else if (currentType == ItemsTypes.VERTICAL_STRIPPED)
                 DestroyVertical();
@@ -1445,6 +1469,7 @@ namespace JellyGarden.Scripts
                 {
                     if (dragThis)
                     {
+                        if (switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
                         dragThis = false;
                         if (switchDirection != Vector3.zero)
                             ResetDrag();
@@ -1472,6 +1497,7 @@ namespace JellyGarden.Scripts
 
         public void OnMouseUp()
         {
+            if (dragThis && switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
             dragThis = false;
             if (switchDirection != Vector3.zero)
                 ResetDrag();

@@ -1,4 +1,4 @@
-﻿// // ©2015 - 2026 Candy Smith
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -485,6 +485,8 @@ namespace JellyGarden.Scripts
             combineManager = new CombineManager();
             THIS = this;
             Instance = this;
+            if (Juice.RoyalEffectsProfile.Get && !GetComponent<RoyalThrone.Presentation.RoyalGameplayPresentation>())
+                gameObject.AddComponent<RoyalThrone.Presentation.RoyalGameplayPresentation>();
             //        if (!LevelManager.THIS.enableInApps)
             //            GameObject.Find("CanvasMap/Gems").gameObject.SetActive(false);//2.1.2
 
@@ -515,6 +517,7 @@ namespace JellyGarden.Scripts
 
         void PrepareGame()
         {
+            royalResolving = false;
             ActivatedBoost = null;
             Score = 0;
             stars = 0;
@@ -578,7 +581,8 @@ namespace JellyGarden.Scripts
             {
                 GameObject item = new GameObject();
                 item.transform.position = _item.transform.position;
-                _item.SetActive(false);
+                // Keep the destruction coroutine alive while its visual clone flies to the goal.
+                foreach (var renderer in _item.GetComponentsInChildren<SpriteRenderer>()) renderer.enabled = false;
                 item.transform.localScale = Vector3.one / 2f;
                 SpriteRenderer spr = item.AddComponent<SpriteRenderer>();
                 var spriteRenderer = _item.GetComponentInChildren<SpriteRenderer>();
@@ -1476,8 +1480,11 @@ namespace JellyGarden.Scripts
 
         }
 
+        bool royalResolving;
         public void FindMatches()
         {
+            if (royalResolving) return;
+            royalResolving = true;
             StartCoroutine(FallingDown());
         }
 
@@ -1648,6 +1655,7 @@ namespace JellyGarden.Scripts
                         if (centerCount > 0)
                         {
                             matchCenter /= centerCount;
+                            Juice.RoyalPowerupDirector.Get?.Match(matchCenter, groupIntensity);
                             Item mid = desrtoyItems[Mathf.Clamp(desrtoyItems.Count / 2, 0, desrtoyItems.Count - 1)];
                             Color centerColor = mid != null ? mid.GetJuiceColor() : Color.white;
                             var vfxService = Juice.MatchVFXService.Instance;
@@ -1744,7 +1752,7 @@ namespace JellyGarden.Scripts
                     // yield return new WaitForFixedUpdate();
                 }
                 if (!nearEmptySquareDetected)
-                    yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(Juice.RoyalEffectsProfile.Get ? .035f : .2f);
 
                 CheckIngredient();
                 for (int col = 0; col < maxCols; col++)
@@ -1881,6 +1889,7 @@ namespace JellyGarden.Scripts
             }
             LevelManager.THIS.latstMatchColor = -1;
             CheckItemsPositions();//1.6.1
+            royalResolving = false;
             DragBlocked = false;//2.1.5 prevents early move
             if (gameStatus == GameState.Playing)
                 StartCoroutine(AI.THIS.CheckPossibleCombines());
@@ -1948,7 +1957,7 @@ namespace JellyGarden.Scripts
         {
             if (!safe)
             {
-                if (row >= maxRows || col >= maxCols)
+                if (row < 0 || col < 0 || row >= maxRows || col >= maxCols)
                     return null;
                 return squaresArray[row * maxCols + col];
             }
@@ -1962,6 +1971,7 @@ namespace JellyGarden.Scripts
 
         bool IsAllDestoyFinished()
         {
+            if (Juice.RoyalPowerupDirector.Busy) return false;
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
             foreach (GameObject item in items)
             {

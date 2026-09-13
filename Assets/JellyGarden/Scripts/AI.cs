@@ -494,6 +494,11 @@ namespace JellyGarden.Scripts
 
 
 				}
+				if (Juice.RoyalEffectsProfile.Get)
+				{
+					var royalHint = Juice.RoyalPatterns.ExtraHint();
+					if (royalHint != null) { nextMoveItems = royalHint; tipItem = royalHint[0]; showTip(royalHint); yield break; }
+				}
 				//if we don't get any tip.  call nomatches to regenerate level
 				if (!LevelManager.THIS.DragBlocked)
 				{

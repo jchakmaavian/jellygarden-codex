@@ -1,0 +1,67 @@
+{
+  "date": "2026-09-13",
+  "role": "Original Royal Throne VFX and audio implementation",
+  "images": {
+    "smoke": {
+      "method": "Built-in image generation",
+      "source": "exec-0ba98e09-70a0-4e36-a042-02546b706b36.png",
+      "output": "Assets/JellyGarden/Resources/RoyalGameplay/smoke.webp",
+      "processing": "Trim alpha, contain 256x256, WebP quality86 alpha100",
+      "description": "Original ivory sculpted smoke puff, rounded smooth 3D forms with lavender shading, transparent background."
+    },
+    "pieces": "Reused original RoyalBlue-Gameplay-v1 assets; see ../Concepts/RoyalBlue-Gameplay-v1/generation-record.json",
+    "castle": "Reused approved RoyalBlue-Home-v1 castle; resized WebP"
+  },
+  "audio": {
+    "provider": "Magnific/Freepik original generation",
+    "credits": 205,
+    "jobs": {
+      "castle-theme": "P3csfLk42C",
+      "tnt": "4R0lCs69Aa",
+      "match-a": "ksPCMiL16B",
+      "match-b": "dtFYOKvXSL",
+      "rocket": "tCkM6LZmZJ",
+      "helicopter": "O6YjaM4ynm",
+      "create": "p8uz75lehw"
+    },
+    "mastering": "See master-audio.cjs. Six SFX are 22050 Hz mono PCM sources imported ADPCM; music is normalized, 128 kbps stereo MP3 source imported Vorbis streaming.",
+    "royalMusicArgs": {
+      "model": "google-lyria-3-pro",
+      "durationSeconds": 60,
+      "prompt": "An original instrumental seamless-loop-style underscore for Royal Throne, a premium lighthearted royal castle match-three puzzle game. Elegant chamber orchestra, pizzicato strings, warm clarinet and oboe, soft harp arpeggios, occasional celesta sparkle, restrained french horn warmth. A memorable gentle eight-bar original motif, D major, 92 BPM, subtle rhythmic forward motion, playful regal optimism, no vocals, no speech, no choir, no bombastic drums, no trailer impacts. Consistent calm dynamics leave room for frequent crisp puzzle sound effects. Begin and end on matching soft tonic beds so the loop can be crossfaded. Do not quote any existing game theme."
+    },
+    "royalTntAudioArgs": {
+      "durationSeconds": 2,
+      "variations": 1,
+      "promptInfluence": 0.65,
+      "prompt": "Single polished cartoon game TNT detonation, close perspective: tiny rising fuse chirp, sharp bright punchy impact, warm rounded low-frequency thump, short papery air burst, scattered wooden chips and delicate magical gold tinkles fading out. Friendly toy explosion, powerful but not harsh, no voices, no music, isolated clean sound with natural short tail."
+    },
+    "royalSfxArgs": [
+      {
+        "durationSeconds": 1,
+        "variations": 2,
+        "prompt": "Single snappy polished puzzle piece pop, ceramic jewel lightly cracking with a soft rounded pluck and a very short high crystalline shimmer, close dry recording, instant onset, clean tail, no music, no voices.",
+        "promptInfluence": 0.6
+      },
+      {
+        "durationSeconds": 2,
+        "variations": 1,
+        "prompt": "Single playful toy rocket launching fast left to right: tiny pressure click then immediate rising airy zip whistle, silky rushing trail, punchy soft impact and delicate glitter at the end. Premium casual puzzle game, close dry recording, no voices, no music.",
+        "promptInfluence": 0.65
+      },
+      {
+        "durationSeconds": 2,
+        "variations": 1,
+        "prompt": "A miniature magical wooden helicopter spinning up then swooping away, cute fluttering rotor accelerating into a short smooth pitched whoosh and a bright soft impact. Clean isolated cartoon puzzle game effect, no engine realism, no music, no voices.",
+        "promptInfluence": 0.65
+      },
+      {
+        "durationSeconds": 1,
+        "variations": 1,
+        "prompt": "Single magical royal power-up creation sound, a bright ascending cluster of three glassy chimes with a soft warm pluck underneath and a short sparkling golden tail. Precise playful rewarding puzzle effect, immediate onset, no speech, no background music.",
+        "promptInfluence": 0.65
+      }
+    ]
+  },
+  "references": "Royal Match 1.mp4, Royal Match 2.mp4, Royal Match 3.mp4 and longer gameplay recordings in J:/Unity Projects/Match3-Games_ArtSource/Match-3-JC/00_References. Viewed for motion analysis only. No audiovisual samples extracted into game."
+}

@@ -1,4 +1,4 @@
-﻿// // ©2015 - 2026 Candy Smith
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -90,7 +90,8 @@ namespace JellyGarden.Scripts.System
 				}
 				combinedItems.Add (cmb.items);			
 			}
-			return combinedItems;
+			if (Juice.RoyalEffectsProfile.Get) Juice.RoyalPatterns.AddSquares(combinedItems);
+            return combinedItems;
 		}
 
 		void CheckCombines ()
@@ -157,6 +158,7 @@ namespace JellyGarden.Scripts.System
 			if (combine.hCount >= 3 && combine.vCount >= 3)
 				return ItemsTypes.PACKAGE;
 			if (combine.hCount > 3 || combine.vCount > 3) {
+                if (Juice.RoyalEffectsProfile.Get) return combine.hCount > 3 ? ItemsTypes.HORIZONTAL_STRIPPED : ItemsTypes.VERTICAL_STRIPPED;
 				if (LevelManager.THIS.lastDraggedItem) {
 					Vector2 dir = LevelManager.THIS.lastDraggedItem.moveDirection;
 					if (Math.Abs (dir.x) > Math.Abs (dir.y))
@@ -239,6 +241,7 @@ namespace JellyGarden.Scripts.System
 
 		bool CheckColor (Item item, Item nextItem)
 		{
+			if (Juice.RoyalEffectsProfile.Get && (item.currentType != ItemsTypes.NONE || nextItem && nextItem.currentType != ItemsTypes.NONE)) return false;
 			if (nextItem) {
 				if (nextItem.color == item.color && nextItem.currentType != ItemsTypes.BOMB && nextItem.currentType != ItemsTypes.INGREDIENT)//2.0
 					return true;

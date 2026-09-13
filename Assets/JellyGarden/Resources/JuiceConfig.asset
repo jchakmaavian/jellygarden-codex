@@ -15,42 +15,42 @@ MonoBehaviour:
   SwapDuration: 0.13
   InvalidSwapDuration: 0.22
   InvalidSwapPushFraction: 0.42
-  MatchAnticipation: 0.025
+  MatchAnticipation: 0.02
   MatchSquashDuration: 0.035
-  MatchReboundDuration: 0.025
-  MatchDestroyDuration: 0.075
-  MatchStagger: 0.02
+  MatchReboundDuration: 0.02
+  MatchDestroyDuration: 0.06
+  MatchStagger: 0.014
   MatchSquashAmount: 0.07
   MatchAnticipationScale: 0.05
   MatchReboundAmount: 0.12
-  FlashDuration: 0.08
+  FlashDuration: 0.065
   FlashStartScale: 0.8
-  FlashEndScale: 2.3
-  StarParticleCount: 9
-  ParticleVelocity: 6
+  FlashEndScale: 1.25
+  StarParticleCount: 5
+  ParticleVelocity: 4.8
   ParticleDrag: 3
-  ParticleLifetime: 0.32
-  StarSize: 0.85
-  MicroParticleCount: 13
+  ParticleLifetime: 0.25
+  StarSize: 0.29
+  MicroParticleCount: 7
   MicroLifetime: 0.28
-  MicroSize: 0.3
-  FragmentCount: 6
+  MicroSize: 0.11
+  FragmentCount: 3
   FragmentLifetime: 0.3
-  FragmentSize: 0.55
+  FragmentSize: 0.15
   StarDelay: 0.01
   MicroDelay: 0.035
   FragmentDelay: 0.02
   FragmentColorBlend: 0.8
   EnableCenterEmphasis: 1
   CenterRingDuration: 0.24
-  CenterRingEndScale: 1.5
-  CenterStarCount: 5
-  FallSpeed: 9
-  FallAcceleration: 42
-  FallMaxSpeed: 26
+  CenterRingEndScale: 1.15
+  CenterStarCount: 3
+  FallSpeed: 12
+  FallAcceleration: 55
+  FallMaxSpeed: 32
   LandingSquash: 0.075
   LandingSquashDuration: 0.1
-  EnableHitStop: 1
+  EnableHitStop: 0
   HitStopDuration: 0.045
   HitStopScale: 0.12
   HitStopIntensityBonus: 0.025
@@ -61,14 +61,14 @@ MonoBehaviour:
   EnableCandyShatter: 1
   ShatterPoolSize: 96
   ShatterSortingOrder: 20
-  ShatterBurstSpeed: 2.35
+  ShatterBurstSpeed: 2.1
   ShatterUpwardBias: 1.05
   ShatterDirectionJitter: 0.85
   ShatterGravity: -20
   ShatterDrag: 1.7
   ShatterSpinMin: 110
   ShatterSpinMax: 460
-  ShatterLifetime: 0.45
+  ShatterLifetime: 0.32
   ShatterFadeStart: 0.5
   ShatterEndScale: 0.55
   EnableBloom: 1

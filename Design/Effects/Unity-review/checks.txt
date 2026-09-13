@@ -1,0 +1,88 @@
+Checks completed: 85
+Authored particle rig loads
+WebP sprite loads: ruby
+WebP sprite loads: shield
+WebP sprite loads: crown
+WebP sprite loads: leaf
+WebP sprite loads: lily
+WebP sprite loads: vase
+WebP sprite loads: rocket
+WebP sprite loads: tnt
+WebP sprite loads: helicopter
+WebP sprite loads: orb
+WebP sprite loads: smoke
+Audio imports: match-a
+Audio imports: match-b
+Audio imports: rocket
+Audio imports: tnt
+Audio imports: helicopter
+Audio imports: create
+Audio imports: castle-theme
+Ordinary matches do not change global timescale
+3-line detected
+3-line power-up rule
+Impact queue settles within 10 seconds
+4-line detected
+4-line power-up rule
+Impact queue settles within 10 seconds
+5-line detected
+5-line power-up rule
+Impact queue settles within 10 seconds
+2×2 square detected
+2×2 creates helicopter
+Impact queue settles within 10 seconds
+Helicopter survives match destruction as a playable piece
+T match creates TNT
+Impact queue settles within 10 seconds
+HORIZONTAL_STRIPPED removes additional targets on impact
+Impact queue settles within 10 seconds
+PACKAGE removes additional targets on impact
+Impact queue settles within 10 seconds
+HELICOPTER removes additional targets on impact
+Impact queue settles within 10 seconds
+BOMB removes additional targets on impact
+Combo accepted: HORIZONTAL_STRIPPED + HORIZONTAL_STRIPPED
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + HORIZONTAL_STRIPPED
+Combo accepted: HORIZONTAL_STRIPPED + PACKAGE
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + PACKAGE
+Combo accepted: HORIZONTAL_STRIPPED + HELICOPTER
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + HELICOPTER
+Combo accepted: HORIZONTAL_STRIPPED + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + BOMB
+Combo accepted: PACKAGE + PACKAGE
+Impact queue settles within 14 seconds
+Combo changes board: PACKAGE + PACKAGE
+Combo accepted: PACKAGE + HELICOPTER
+Impact queue settles within 14 seconds
+Combo changes board: PACKAGE + HELICOPTER
+Combo accepted: PACKAGE + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: PACKAGE + BOMB
+Combo accepted: HELICOPTER + HELICOPTER
+Impact queue settles within 14 seconds
+Combo changes board: HELICOPTER + HELICOPTER
+Combo accepted: HELICOPTER + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: HELICOPTER + BOMB
+Combo accepted: BOMB + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: BOMB + BOMB
+Impact queue settles within 10 seconds
+TNT chains into rocket and reaches board edge
+Pause holds TNT impact
+Impact queue settles within 10 seconds
+Invalid swap returns pieces and spends no move
+Tap activates power-up
+Power-up tap spends exactly one move
+Live gravity/refill/cascade finishes and input returns
+Refill has valid square ownership and no falling leftovers
+Simultaneous audio stays within voice cap
+Projectiles stay within pool cap
+Regression run preserves coins and lives
+No runtime errors during regression run
+Errors: 
+Editor update p95 ms (not device GPU benchmark): 5.9431

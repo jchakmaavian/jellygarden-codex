@@ -1,0 +1,296 @@
+{
+  "sourceBytes": 3033901,
+  "fileCount": 37,
+  "files": [
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Audio/castle-theme.mp3",
+      "bytes": 1628413,
+      "sha256": "389427fe96731cc782aecd21ad27883f3bd4d2227ff0b20aeba710cc2a61aced",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Audio/create.wav",
+      "bytes": 28744,
+      "sha256": "ab13b71de4bbb865f37a7a858fff8f6b37facec46c061fcd7ed867141f2f032e",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Audio/helicopter.wav",
+      "bytes": 39526,
+      "sha256": "77f31a6b71ac37cec9b16c2593c73de4a0a1b4d7a491f9e12efe10dd6dd68132",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Audio/match-a.wav",
+      "bytes": 19924,
+      "sha256": "a9339af0df690d02afb361ef14cbd2c82d9d4d958d9e5bd531e553b2b8b6d2a0",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Audio/match-b.wav",
+      "bytes": 19924,
+      "sha256": "8782421ccb4e703f5b3897babd704dc4d100c4243c9c78c44660b454304eb33c",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Audio/rocket.wav",
+      "bytes": 32514,
+      "sha256": "27ca7ae24c3793f509d8eb6648cf4219daefa03e1c69440ad5db148602e8716c",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Audio/tnt.wav",
+      "bytes": 35358,
+      "sha256": "62fd845c16875d2f5bc779445088d072a0ef02b5fab1fdac2db78b69daea814a",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/crate.webp",
+      "bytes": 9200,
+      "sha256": "f2f68af2171d36c602c0788c1b770d1330c2fc3401bcc63e994e3b5c3456b4cc",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/crown.webp",
+      "bytes": 9338,
+      "sha256": "91916cc912a2afdc07d014d1bce1a8063c804edf17e4ed7f8e59c3a8bf790770",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Display.ttf",
+      "bytes": 53152,
+      "sha256": "f7b9dab620c7a789668b02f8bdc5ad9b803be331f51cbcc461231fa40d0bec66",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/EffectsProfile.asset",
+      "bytes": 783,
+      "sha256": "6c2f7e880591ef1f6d12ebdbad72131aad7c352c3266699c77096770bc91d5fa",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/EffectsRig.prefab",
+      "bytes": 587347,
+      "sha256": "4b53c4db3ba10e244ecb86ff8512b62de0d1abd13620882c8249a5b283527576",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Embers.mat",
+      "bytes": 1028,
+      "sha256": "7825fc30e4693bd2942d8e838aa317090b14651c51d1b3b98e7898814e7134b5",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/EmberShape.asset",
+      "bytes": 19457,
+      "sha256": "f6109cb18234e864aa5fe1718f19a75fad64a08d69640934a8e2935b65089e46",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/hammer.webp",
+      "bytes": 9664,
+      "sha256": "cba71b7d581fad482892e54541e43cd04a57b68247409190ef84bb261bdc5a22",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/helicopter.webp",
+      "bytes": 13572,
+      "sha256": "5568141414cb1bf6cdf67210e2826653e327a690d5658f86694967f71443d191",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/home-castle.webp",
+      "bytes": 152800,
+      "sha256": "8af3557af83db71ea5ab6a0530c34cd9bdd5a768de20b9a5fcaf5aaae48fd041",
+      "metaPresent": true,
+      "width": 800,
+      "height": 1779,
+      "format": "WEBP",
+      "mode": "RGB"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Impact.mat",
+      "bytes": 1028,
+      "sha256": "3be7bae6637e1276edf3fa5b76bb58134c81a0dff21a08fb2538729ad546f555",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/ImpactShape.asset",
+      "bytes": 33796,
+      "sha256": "ab6d33cf388292fb9d5f7c3a60de7008e14b2ae8d2ce44e66d156174a7339123",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/king-cheer.webp",
+      "bytes": 29284,
+      "sha256": "29c0ca9d7b29f9307a08176fa5ccff43da6b0bde8e7c71cb10ed1e3534983bf2",
+      "metaPresent": true,
+      "width": 320,
+      "height": 340,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/king-idle.webp",
+      "bytes": 23968,
+      "sha256": "bff35a4862d522217d6c061bcd7fad29fa4ba297fe9f55247e13c90e68638a0d",
+      "metaPresent": true,
+      "width": 320,
+      "height": 340,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/king-think.webp",
+      "bytes": 27264,
+      "sha256": "14515b86251315d9647b601cda18aa5ccdcf278f20b3b86e41f3a84d7d2e33a4",
+      "metaPresent": true,
+      "width": 320,
+      "height": 340,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/leaf.webp",
+      "bytes": 9022,
+      "sha256": "88188bae49a8d986c59468e8677ffe8e48c4be6222856727e7f8dd4f426aee95",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/lily.webp",
+      "bytes": 8866,
+      "sha256": "6443aa3ceeabe82835662aa745329dcbac9367e5466006959dfb84f61efe7fc5",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/orb.webp",
+      "bytes": 10902,
+      "sha256": "34c8c4f7949880590ad001200066d91084fad67acd4a71c9bd0fae7154a0088b",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/RingShape.asset",
+      "bytes": 132100,
+      "sha256": "dc94dbe93f99a3a36ed634e6544a891f089f32a63b811873eaef5084c30377ed",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/rocket.webp",
+      "bytes": 6554,
+      "sha256": "8bf97bb2f40c1cde04c1e36f00a87a8ddcaa19efa3bd96c1e30c209c2ab9d565",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/ruby.webp",
+      "bytes": 10874,
+      "sha256": "bbd2ea69efb38a0ef46640d8e688669f1efaaea15323f48dce500b025b77823d",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/shield.webp",
+      "bytes": 8462,
+      "sha256": "5bf88ca2d38a08170671673c06a8f2cf5e93e06f4353429e381782fdf72333e8",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Shockwave.mat",
+      "bytes": 1031,
+      "sha256": "713b07fb07a3372c5fd555c03b3b5c052d4f41f79f229e608f1d30eab9fde53e",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Smoke.mat",
+      "bytes": 932,
+      "sha256": "482b9bc859f33c4f235d1f26d2817d9295e9ae261d2c39bc422ee7778717b465",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/smoke.webp",
+      "bytes": 14552,
+      "sha256": "9d61792c6124b015586719e9b6e420e7fe297493c2e9bfea7ac05ab12c56a495",
+      "metaPresent": true,
+      "width": 256,
+      "height": 256,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Sparkles.mat",
+      "bytes": 1030,
+      "sha256": "0d3570c213fca728301cb2be48c471e69795c56cb8dc5869875f18bd7e2b9970",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/SparkleShape.asset",
+      "bytes": 33797,
+      "sha256": "eb6ffaec4d671b8bf6c6f0fd23497f2f60d7d72ea1721366083540d445a05667",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/tnt.webp",
+      "bytes": 9966,
+      "sha256": "68bed774beed8c0490f750183ab0f16c01aa105229abcd265da8a812c5a84050",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/Trail.mat",
+      "bytes": 1027,
+      "sha256": "4eb558d2bcff3f88fbc67b7120b4060b5b79e6bb5e5231db9ded2a4cdea7abb3",
+      "metaPresent": true
+    },
+    {
+      "path": "Assets/JellyGarden/Resources/RoyalGameplay/vase.webp",
+      "bytes": 8702,
+      "sha256": "26589724211db889874f8067e1d1e127745db298a4a4f2b786fec34e9acbc4cd",
+      "metaPresent": true,
+      "width": 160,
+      "height": 160,
+      "format": "WEBP",
+      "mode": "RGBA"
+    }
+  ]
+}

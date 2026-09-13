@@ -1,4 +1,4 @@
-﻿// // ©2015 - 2026 Candy Smith
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -128,6 +128,7 @@ namespace JellyGarden.Scripts
                 return countedSquares;
             if (this.item.destroying)
                 return countedSquares;
+            if (Juice.RoyalEffectsProfile.Get && item.currentType != ItemsTypes.NONE) return countedSquares;
             //    if (LevelManager.THIS.countedSquares.ContainsValue(this.item) && globalCounter) return countedSquares;
             if (this.item.color == spr_COLOR && !countedSquares.ContainsValue(this.item) && this.item.currentType != ItemsTypes.INGREDIENT && item.currentType != ItemsTypes.BOMB)
             {  //2.0
@@ -200,6 +201,8 @@ namespace JellyGarden.Scripts
             {
                 newList.Add((Item)de.Value);
             }
+            if (separating == FindSeparating.NONE && matches == 3 && Juice.RoyalEffectsProfile.Get)
+                foreach (var match in Juice.RoyalPatterns.SquareAt(this)) if (!newList.Contains(match)) newList.Add(match);
             // print(countedSquares.Count);
             return newList;
         }
@@ -277,6 +280,7 @@ namespace JellyGarden.Scripts
             }
             if (block.Count > 0)
             {
+                Juice.RoyalPowerupDirector.Get?.Chip(transform.position);
                 var currentBlock = block[block.Count - 1];
                 if (type == SquareTypes.WIREBLOCK)
                 {

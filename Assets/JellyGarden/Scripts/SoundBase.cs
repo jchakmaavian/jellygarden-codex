@@ -1,4 +1,4 @@
-﻿// // ©2015 - 2026 Candy Smith
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -66,6 +66,14 @@ namespace JellyGarden.Scripts
 		}
 
 		public void PlaySound(AudioClip clip) {
+            var royal = Juice.RoyalAudioDirector.Get;
+            if (royal)
+            {
+                if (global::System.Array.IndexOf(destroy, clip) >= 0) royal.Play(Juice.RoyalCue.Match);
+                else if (global::System.Array.IndexOf(drop, clip) >= 0) royal.Play(Juice.RoyalCue.Land);
+                else royal.PlayClip(clip, .7f);
+                return;
+            }
 			if (_audioSource && clip)
 				_audioSource.PlayOneShot(clip);
 		}
