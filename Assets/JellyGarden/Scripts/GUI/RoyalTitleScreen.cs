@@ -16,6 +16,8 @@ namespace RoyalThrone.Presentation
         public RectTransform loadingSafeArea;
         public RectTransform titleLogo;
         public RectTransform loadingLogo;
+        public RectTransform titleHalo;
+        public RectTransform loadingHalo;
         public RectTransform playRect;
         public RectTransform loadingCard;
         public CanvasGroup wholeScreen;
@@ -80,7 +82,7 @@ namespace RoyalThrone.Presentation
             {
                 float pulse = .5f + .5f * Mathf.Sin(time * 5 - i * .8f);
                 jewels[i].localScale = Vector3.one * Mathf.Lerp(.75f, 1.12f, pulse);
-                jewels[i].anchoredPosition = new Vector2((i - 1) * 42, 110 + pulse * 7);
+                jewels[i].anchoredPosition = new Vector2((i - 1) * 42, -49 + pulse * 7);
             }
             progressShine.anchorMin = new Vector2(Mathf.Repeat(time * .65f, 1), 0);
             progressShine.anchorMax = new Vector2(progressShine.anchorMin.x, 1);
@@ -105,12 +107,26 @@ namespace RoyalThrone.Presentation
             loadingSafeArea.offsetMin = loadingSafeArea.offsetMax = Vector2.zero;
             float width = root.rect.width * (max.x - min.x);
             float height = root.rect.height * (max.y - min.y);
-            float logoSize = Mathf.Max(1, Mathf.Min(550, width - 56, height * .435f));
+            float logoSize = Mathf.Max(1, Mathf.Min(width * .8f, height * .45f));
             titleLogo.sizeDelta = Vector2.one * logoSize;
-            titleLogo.anchoredPosition = new Vector2(0, -Mathf.Clamp(height * .023f, 16, 36));
-            loadingLogo.sizeDelta = Vector2.one * Mathf.Min(440, width - 72, height * .38f);
-            playRect.sizeDelta = new Vector2(Mathf.Min(440, width - 96), 112);
-            loadingCard.sizeDelta = new Vector2(Mathf.Min(570, width - 64), 236);
+            titleLogo.anchoredPosition = new Vector2(0, -height * .01f);
+            loadingLogo.sizeDelta = titleLogo.sizeDelta;
+            loadingLogo.anchoredPosition = titleLogo.anchoredPosition;
+            LayoutHalo(titleHalo, width, logoSize);
+            LayoutHalo(loadingHalo, width, logoSize);
+            float buttonWidth = Mathf.Max(1, Mathf.Min(width * .84f, height * .48f));
+            playRect.sizeDelta = new Vector2(buttonWidth, buttonWidth / 3);
+            playRect.anchoredPosition = new Vector2(0, height * .07f);
+            float cardWidth = Mathf.Max(1, Mathf.Min(660, width * .84f));
+            loadingCard.sizeDelta = new Vector2(cardWidth, Mathf.Max(270, cardWidth * .5f));
+            loadingCard.anchoredPosition = new Vector2(0, height * .08f);
+        }
+
+        void LayoutHalo(RectTransform halo, float width, float logoSize)
+        {
+            if (!halo) return;
+            halo.sizeDelta = new Vector2(width * 1.56f, width * 1.56f * 690 / 763);
+            halo.anchoredPosition = titleLogo.anchoredPosition + Vector2.down * (logoSize * .5f);
         }
 
         IEnumerator Entrance()

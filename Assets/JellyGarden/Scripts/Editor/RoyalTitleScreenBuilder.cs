@@ -15,7 +15,9 @@ namespace RoyalThrone.Editor
     public static class RoyalTitleScreenBuilder
     {
         const string MainScene = "Assets/JellyGarden/Scenes/main.unity";
-        const string ArtPath = "Assets/JellyGarden/Textures/menu/main_menu/royal_castle_twilight.png";
+        const string ArtPath = "Assets/JellyGarden/Textures/menu/main_menu/royal_castle_blue.png";
+        const string PlayPath = "Assets/JellyGarden/Textures/menu/main_menu/royal_play_crown.png";
+        const string HaloPath = "Assets/JellyGarden/Textures/menu/main_menu/wheel.png";
         const string LogoPath = "Assets/JellyGarden/Textures/menu/main_menu/logo.png";
         static Font displayFont;
         static Font bodyFont;
@@ -30,12 +32,16 @@ namespace RoyalThrone.Editor
             if (current.isDirty) throw new InvalidOperationException("Save the current scene before rebuilding its title UI.");
             if (!File.Exists(ArtPath)) throw new FileNotFoundException("Castle illustration is not installed.", ArtPath);
             var scene = EditorSceneManager.OpenScene(MainScene, OpenSceneMode.Single);
-            ConfigureArt();
+            ConfigureArt(ArtPath, false, 2048);
+            ConfigureArt(PlayPath, true, 4096);
             var art = AssetDatabase.LoadAssetAtPath<Sprite>(ArtPath);
             var logo = AssetDatabase.LoadAssetAtPath<Sprite>(LogoPath);
+            var playArt = AssetDatabase.LoadAssetAtPath<Sprite>(PlayPath);
+            var haloArt = AssetDatabase.LoadAssetAtPath<Sprite>(HaloPath);
             displayFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/JellyGarden/Fonts/BorisBlackBloxx.ttf");
             bodyFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (!art || !logo || !displayFont || !bodyFont) throw new InvalidOperationException("Required title assets are missing.");
+            if (!art || !logo || !playArt || !haloArt || !displayFont || !bodyFont)
+                throw new InvalidOperationException("Required title assets are missing.");
 
             // The main scene contains only its opening UI, camera, input and sound roots.
             // Keep the existing camera/input/audio and replace only this scene's Canvas.
@@ -56,12 +62,12 @@ namespace RoyalThrone.Editor
 
             var backgroundFrame = Rect("Castle background", rootRect);
             Stretch(backgroundFrame);
-            var background = Picture("Twilight castle", backgroundFrame, art);
+            var background = Picture("Royal blue castle", backgroundFrame, art);
             var aspect = background.gameObject.AddComponent<AspectRatioFitter>();
             aspect.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
             aspect.aspectRatio = art.rect.width / art.rect.height;
             var shade = Surface("Lower vignette", rootRect, new Vector2(720, 480), new Vector2(.5f, 0), Vector2.zero,
-                new Color(.055f, .027f, .13f, 0), new Color(.035f, .018f, .09f, .78f), 0);
+                new Color(.055f, .08f, .22f, 0), new Color(.09f, .12f, .30f, .14f), 0);
             shade.rectTransform.anchorMin = Vector2.zero;
             shade.rectTransform.anchorMax = new Vector2(1, .4f);
             shade.rectTransform.offsetMin = shade.rectTransform.offsetMax = Vector2.zero;
@@ -82,43 +88,27 @@ namespace RoyalThrone.Editor
             var titleGroup = titleRoot.gameObject.AddComponent<CanvasGroup>();
             var safe = Rect("Safe area", titleRoot);
             Stretch(safe);
+            var titleHalo = Halo(safe, haloArt);
             var titleLogo = Picture("Logo", safe, logo);
             Place(titleLogo.rectTransform, Vector2.one * 550, new Vector2(.5f, 1), new Vector2(0, -28));
             titleLogo.rectTransform.pivot = new Vector2(.5f, 1);
 
             var play = Rect("Play", safe);
-            Place(play, new Vector2(440, 112), new Vector2(.5f, .135f), Vector2.zero);
-            var shadow = Surface("Soft shadow", play, Vector2.zero, Vector2.zero, Vector2.zero,
-                new Color(.025f, .01f, .06f, .65f), new Color(.025f, .01f, .06f, .2f), 39);
-            Inset(shadow.rectTransform, -6, -10, -6, 2);
-            var edge = Surface("Gold edge", play, Vector2.zero, Vector2.zero, Vector2.zero, Hex("B87826"), Hex("784016"), 35);
-            Stretch(edge.rectTransform);
-            var rim = Surface("Polished gold rim", play, Vector2.zero, Vector2.zero, Vector2.zero, Hex("FFF0A7"), Hex("EFB746"), 32);
-            Inset(rim.rectTransform, 3, 8, 3, 2);
-            var face = Surface("Emerald face", play, Vector2.zero, Vector2.zero, Vector2.zero, Hex("6AD94A"), Hex("108B47"), 27);
-            Inset(face.rectTransform, 8, 14, 8, 7);
+            Place(play, new Vector2(604, 201), new Vector2(.5f, 0), Vector2.zero);
+            play.pivot = new Vector2(.5f, 0);
+            var face = play.gameObject.AddComponent<Image>();
+            face.sprite = playArt;
+            face.preserveAspect = true;
             face.raycastTarget = true;
-            var inner = Surface("Upper gloss", play, Vector2.zero, Vector2.zero, Vector2.zero,
-                new Color(.86f, 1, .72f, .45f), new Color(.65f, 1, .52f, 0), 20);
-            inner.rectTransform.anchorMin = new Vector2(0, .54f);
-            inner.rectTransform.anchorMax = Vector2.one;
-            inner.rectTransform.offsetMin = new Vector2(15, 0);
-            inner.rectTransform.offsetMax = new Vector2(-15, -13);
-            var playLabel = Label("Label", play, "PLAY", 51, true, Hex("FFFBE6"));
-            Stretch(playLabel.rectTransform);
-            playLabel.rectTransform.anchoredPosition = new Vector2(0, 5);
-            var textShadow = playLabel.gameObject.AddComponent<Shadow>();
-            textShadow.effectColor = new Color(.015f, .2f, .075f, .8f);
-            textShadow.effectDistance = new Vector2(0, -3);
             var button = play.gameObject.AddComponent<Button>();
             button.targetGraphic = face;
             button.transition = Selectable.Transition.ColorTint;
             var colors = button.colors;
             colors.normalColor = Color.white;
-            colors.highlightedColor = new Color(1, 1, .88f);
-            colors.selectedColor = new Color(1, 1, .92f);
-            colors.pressedColor = new Color(.77f, .88f, .73f);
-            colors.disabledColor = new Color(.62f, .72f, .61f);
+            colors.highlightedColor = Color.white;
+            colors.selectedColor = Color.white;
+            colors.pressedColor = new Color(.82f, .87f, 1);
+            colors.disabledColor = new Color(.65f, .68f, .78f);
             colors.fadeDuration = .08f;
             button.colors = colors;
             play.gameObject.AddComponent<RoyalButtonMotion>();
@@ -129,41 +119,47 @@ namespace RoyalThrone.Editor
             Stretch(loadingRoot);
             var loadingGroup = loadingRoot.gameObject.AddComponent<CanvasGroup>();
             loadingGroup.alpha = 0;
-            var veil = Surface("Twilight veil", loadingRoot, Vector2.zero, Vector2.zero, Vector2.zero,
-                new Color(.055f, .025f, .14f, .64f), new Color(.045f, .018f, .10f, .88f), 0);
+            var veil = Surface("Loading input shield", loadingRoot, Vector2.zero, Vector2.zero, Vector2.zero,
+                Color.clear, Color.clear, 0);
             Stretch(veil.rectTransform);
             veil.raycastTarget = true;
             var loadingSafe = Rect("Safe area", loadingRoot);
             Stretch(loadingSafe);
+            var loadingHalo = Halo(loadingSafe, haloArt);
             var loadingLogo = Picture("Royal Throne logo", loadingSafe, logo);
-            Place(loadingLogo.rectTransform, Vector2.one * 440, new Vector2(.5f, .72f), Vector2.zero);
+            Place(loadingLogo.rectTransform, Vector2.one * 576, new Vector2(.5f, 1), Vector2.zero);
+            loadingLogo.rectTransform.pivot = new Vector2(.5f, 1);
             var card = Rect("Loading card", loadingSafe);
-            Place(card, new Vector2(570, 236), new Vector2(.5f, .225f), Vector2.zero);
+            Place(card, new Vector2(604, 302), new Vector2(.5f, 0), Vector2.zero);
+            card.pivot = new Vector2(.5f, 0);
+            var cardDepth = Surface("Gold depth", card, Vector2.zero, Vector2.zero, Vector2.zero, Hex("BC812D"), Hex("9C611E"), 43);
+            Inset(cardDepth.rectTransform, 0, -8, 0, 0);
             var cardBorder = Surface("Gold hairline", card, Vector2.zero, Vector2.zero, Vector2.zero,
-                new Color(.95f, .78f, .44f, .65f), new Color(.48f, .3f, .2f, .35f), 30);
+                Hex("FFE5A0"), Hex("F9D37A"), 43);
             Stretch(cardBorder.rectTransform);
-            var cardFace = Surface("Purple panel", card, Vector2.zero, Vector2.zero, Vector2.zero, Hex("36265A"), Hex("19122E"), 28);
-            Inset(cardFace.rectTransform, 2, 2, 2, 2);
+            var cardFace = Surface("Royal blue panel", card, Vector2.zero, Vector2.zero, Vector2.zero, Hex("345FE0"), Hex("152B77"), 40);
+            Inset(cardFace.rectTransform, 5, 5, 5, 5);
             var jewels = new RectTransform[3];
             for (int i = 0; i < 3; i++)
             {
-                var jewel = Surface("Animated jewel " + (i + 1), card, Vector2.one * 22, new Vector2(.5f, .5f),
-                    new Vector2((i - 1) * 42, 113), Hex("FFF1A2"), Hex("DA8B2A"), 0);
+                var jewel = Surface("Animated jewel " + (i + 1), card, Vector2.one * 28, new Vector2(.5f, 1),
+                    new Vector2((i - 1) * 42, -44), Hex("FFF1A2"), Hex("DA8B2A"), 0);
                 jewel.diamond = true;
                 jewels[i] = jewel.rectTransform;
             }
-            var loadingLabel = Label("Heading", card, "Loading your kingdom", 28, true, Hex("FFF3D0"));
-            Place(loadingLabel.rectTransform, new Vector2(510, 48), new Vector2(.5f, .5f), new Vector2(0, 58));
-            var track = Surface("Progress gold rim", card, Vector2.zero, Vector2.zero, Vector2.zero, Hex("E9C672"), Hex("A47530"), 18);
+            var loadingLabel = Label("Heading", card, "Loading your kingdom", 34, false, Hex("FFF3D0"));
+            loadingLabel.fontStyle = FontStyle.Bold;
+            Place(loadingLabel.rectTransform, new Vector2(520, 48), new Vector2(.5f, 1), new Vector2(0, -103));
+            var track = Surface("Progress rim", card, Vector2.zero, Vector2.zero, Vector2.zero, Hex("101C49"), Hex("7E9CE0"), 20);
             track.rectTransform.anchorMin = new Vector2(0, .5f);
             track.rectTransform.anchorMax = new Vector2(1, .5f);
-            track.rectTransform.offsetMin = new Vector2(38, -17);
-            track.rectTransform.offsetMax = new Vector2(-38, 17);
-            var inset = Surface("Progress track", track.transform, Vector2.zero, Vector2.zero, Vector2.zero, Hex("100C21"), Hex("2A193E"), 15);
-            Inset(inset.rectTransform, 3, 3, 3, 3);
+            track.rectTransform.offsetMin = new Vector2(52, -39);
+            track.rectTransform.offsetMax = new Vector2(-52, 0);
+            var inset = Surface("Progress track", track.transform, Vector2.zero, Vector2.zero, Vector2.zero, Hex("070D28"), Hex("101C49"), 18);
+            Inset(inset.rectTransform, 2, 2, 2, 2);
             var fillContainer = Rect("Progress fill area", inset.transform);
             Inset(fillContainer, 3, 3, 3, 3);
-            var fill = Surface("Progress fill", fillContainer, Vector2.zero, Vector2.zero, Vector2.zero, Hex("FFF2A2"), Hex("ECA72C"), 10);
+            var fill = Surface("Sapphire progress fill", fillContainer, Vector2.zero, Vector2.zero, Vector2.zero, Hex("E4ECFF"), Hex("315DE3"), 15);
             Stretch(fill.rectTransform);
             fill.rectTransform.anchorMax = new Vector2(0, 1);
             fill.gameObject.AddComponent<RectMask2D>();
@@ -172,14 +168,16 @@ namespace RoyalThrone.Editor
             shine.rectTransform.anchorMin = Vector2.zero;
             shine.rectTransform.anchorMax = new Vector2(0, 1);
             shine.rectTransform.sizeDelta = new Vector2(28, 0);
-            var status = Label("Status", card, "Preparing your game...", 24, false, Hex("D6C9E7"));
-            Place(status.rectTransform, new Vector2(500, 46), new Vector2(.5f, .5f), new Vector2(0, -62));
+            var status = Label("Status", card, "Preparing your game...", 24, false, Hex("E1EAFF"));
+            Place(status.rectTransform, new Vector2(500, 46), new Vector2(.5f, 0), new Vector2(0, 54));
 
             var controller = rootRect.gameObject.AddComponent<RoyalTitleScreen>();
             controller.safeArea = safe;
             controller.loadingSafeArea = loadingSafe;
             controller.titleLogo = titleLogo.rectTransform;
             controller.loadingLogo = loadingLogo.rectTransform;
+            controller.titleHalo = titleHalo.rectTransform;
+            controller.loadingHalo = loadingHalo.rectTransform;
             controller.playRect = play;
             controller.loadingCard = card;
             controller.wholeScreen = whole;
@@ -212,7 +210,8 @@ namespace RoyalThrone.Editor
         {
             var controller = UnityEngine.Object.FindAnyObjectByType<RoyalTitleScreen>();
             if (!controller) throw new InvalidOperationException("Open the main scene to validate its title UI.");
-            if (!controller.playButton || !controller.progressFill || !controller.loadingGroup || controller.jewels.Length != 3)
+            if (!controller.playButton || !controller.progressFill || !controller.loadingGroup || controller.jewels.Length != 3 ||
+                !controller.titleHalo || !controller.loadingHalo)
                 throw new InvalidOperationException("Title UI bindings are incomplete.");
             foreach (var graphic in controller.GetComponentsInChildren<Graphic>(true))
                 if (!graphic.GetComponent<CanvasRenderer>())
@@ -220,6 +219,12 @@ namespace RoyalThrone.Editor
             var image = controller.titleLogo.GetComponent<Image>();
             if (AssetDatabase.GetAssetPath(image.sprite) != LogoPath || !image.preserveAspect)
                 throw new InvalidOperationException("Approved logo reference or aspect was changed.");
+            var playImage = controller.playButton.GetComponent<Image>();
+            if (!playImage || AssetDatabase.GetAssetPath(playImage.sprite) != PlayPath || !playImage.preserveAspect)
+                throw new InvalidOperationException("Approved crowned Play artwork is missing or stretched.");
+            foreach (var halo in controller.GetComponentsInChildren<RoyalLogoHalo>(true))
+                if (AssetDatabase.GetAssetPath(halo.sprite) != HaloPath || halo.raycastTarget || halo.rotationSeconds != 6)
+                    throw new InvalidOperationException("Original six-second decorative halo is not configured correctly.");
             if (controller.playButton.onClick.GetPersistentEventCount() != 1 ||
                 controller.playButton.onClick.GetPersistentMethodName(0) != nameof(RoyalTitleScreen.BeginPlay))
                 throw new InvalidOperationException("Play must have exactly one async-loading callback.");
@@ -240,19 +245,33 @@ namespace RoyalThrone.Editor
             UnityEngine.Object.FindAnyObjectByType<RoyalTitleScreen>()?.PreviewLoadingAnimation();
         }
 
-        static void ConfigureArt()
+        static void ConfigureArt(string path, bool transparent, int maxSize)
         {
-            var importer = (TextureImporter)AssetImporter.GetAtPath(ArtPath);
+            var importer = (TextureImporter)AssetImporter.GetAtPath(path);
+            if (!importer) throw new FileNotFoundException("Required artwork has not been imported.", path);
             importer.textureType = TextureImporterType.Sprite;
             importer.spriteImportMode = SpriteImportMode.Single;
             importer.mipmapEnabled = false;
             importer.filterMode = FilterMode.Bilinear;
             importer.wrapMode = TextureWrapMode.Clamp;
-            importer.maxTextureSize = 2048;
+            importer.maxTextureSize = maxSize;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
-            importer.alphaIsTransparency = false;
+            importer.alphaIsTransparency = transparent;
+            importer.alphaSource = TextureImporterAlphaSource.FromInput;
             importer.npotScale = TextureImporterNPOTScale.None;
             importer.SaveAndReimport();
+        }
+
+        static RoyalLogoHalo Halo(Transform parent, Sprite sprite)
+        {
+            var rect = Rect("Rotating logo halo", parent);
+            Place(rect, new Vector2(1123, 1015), new Vector2(.5f, 1), new Vector2(0, -301));
+            var halo = rect.gameObject.AddComponent<RoyalLogoHalo>();
+            halo.sprite = sprite;
+            halo.color = new Color(1, .99f, .96f, .3f);
+            halo.raycastTarget = false;
+            halo.SetAllDirty();
+            return halo;
         }
 
         static Color Hex(string value) { ColorUtility.TryParseHtmlString("#" + value, out var color); return color; }

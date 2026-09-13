@@ -1,8 +1,8 @@
 # Royal Throne royal-blue splash study v2
 
-Status: **CONCEPT — for visual review, not finalized or installed.**
+Status: **APPROVED AND INSTALLED — 13 September 2026.**
 
-The user requested less green, royal-blue accents, and a more regal Play button. This revision keeps the smooth 3D direction, locked Royal Throne logo, and rotating halo from the previous concept. It does not authorize or perform Unity integration.
+The user requested less green, royal-blue accents, and a more regal Play button. This revision keeps the smooth 3D direction, locked Royal Throne logo, and rotating halo from the previous concept. The initial study was isolated from Unity. The user's subsequent request, “add this in main game in unity,” approved this revision for integration in the independent Codex copy. The exact background and button PNGs are now installed in the main scene; see [current implementation](../../Branding/SPLASH-AND-LOADING.md) and [Unity screenshots](../../Branding/RoyalBlue-Unity/README.md).
 
 ## Revised artwork
 
@@ -21,7 +21,7 @@ PLAY starts a 4.2-second simulated loading preview and returns to the title. It 
 
 Focused checks passed in headless installed Microsoft Edge: images decode, the halo moves, background comparison and halo controls work, loading preview progresses and returns to the splash, reduced-motion preferences stop continuous decorative animation, and no page errors occur. Widths 736, 360 and 320 pixels fit without horizontal overflow; the button target remains over 44 pixels high. See `preview-checks.json` and `asset-metadata.json`.
 
-The v1 concept is retained. No Unity Assets, scenes, scripts, Packages or ProjectSettings were changed. No Unity Editor input, device test or game build was performed.
+The v1 concept is retained. The checks in this section describe the original concept-only phase, which did not change Unity Assets, scenes, scripts, Packages or ProjectSettings. Later Unity integration and Play Mode checks are recorded separately in the implementation links above. No device export was performed.
 
 ## Generation provenance
 

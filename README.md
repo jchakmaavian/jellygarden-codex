@@ -10,7 +10,7 @@ The active workflow and ordered backlog are in [PRODUCTION-PLAN.md](PRODUCTION-P
 
 The user locked **Royal Throne** as the game name on 8 September 2026. The descriptive store-title form is **Royal Throne: Match 3**. The creative direction includes a castle, king, queen, game trailer, and animated story scenes. See [NAMING-BRIEF.md](NAMING-BRIEF.md) for the naming decision, [NAMING-RESEARCH.md](NAMING-RESEARCH.md) for historical research and a proposed player journey, and [NAME-STORY-AND-CINEMATICS.md](NAME-STORY-AND-CINEMATICS.md) for the draft treatment. The development folder and backup repository remain `JellyGarden-Codex` and `jchakmaavian/jellygarden-codex`. The user also locked the [final splash logo](Design/Branding/royal-throne-splash-logo-v1.md), now installed in the opening scene, and the Unity product title is **Royal Throne**.
 
-The opening flow now has a castle background, an emerald-and-gold Play button, and an animated loading page with real asynchronous scene progress. See [splash and loading design](Design/Branding/SPLASH-AND-LOADING.md) for assets, editing instructions and the F7 motion-preview shortcut in Play Mode.
+The opening flow uses the approved smooth 3D royal-blue castle, a crowned sapphire-and-gold Play button, the locked logo with its rotating light halo, and a matching blue loading page with real asynchronous scene progress. This revision was approved for Unity integration on 13 September 2026. See [splash and loading design](Design/Branding/SPLASH-AND-LOADING.md) for assets, editing instructions and the F7 motion-preview shortcut in Play Mode.
 
 ## Open this project
 
