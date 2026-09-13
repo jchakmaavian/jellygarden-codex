@@ -17,8 +17,29 @@ namespace JellyGarden.Scripts.GUI
 {
     public class KeepUIInScreen : MonoBehaviour
     {
+        readonly Vector3[] screenCorners = new Vector3[4];
+
+        private void LateUpdate()
+        {
+            var canvas = GetComponentInParent<Canvas>();
+            if (!canvas || canvas.rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay) return;
+            var rect = (RectTransform)transform;
+            rect.GetWorldCorners(screenCorners);
+            Rect safe = Screen.safeArea;
+            float minX = screenCorners[0].x, maxX = screenCorners[2].x;
+            float minY = screenCorners[0].y, maxY = screenCorners[2].y;
+            const float margin = 8;
+            float x = minX < safe.xMin + margin ? safe.xMin + margin - minX : maxX > safe.xMax - margin ? safe.xMax - margin - maxX : 0;
+            float y = minY < safe.yMin + margin ? safe.yMin + margin - minY : maxY > safe.yMax - margin ? safe.yMax - margin - maxY : 0;
+            rect.position += new Vector3(x, y, 0);
+        }
+
         private void OnEnable()
         {
+            // Home presents legacy dialogs on an overlay canvas. Their world coordinates
+            // are already screen pixels; camera projection would move Close off-screen.
+            var canvas = GetComponentInParent<Canvas>();
+            if (canvas && canvas.rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay) return;
             RectTransform wordRT = GetComponent<RectTransform>();
  
             Vector2 wordScreenPosition = Camera.main.WorldToScreenPoint(wordRT.position);

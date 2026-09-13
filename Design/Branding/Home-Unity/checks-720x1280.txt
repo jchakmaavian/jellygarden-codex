@@ -1,0 +1,89 @@
+Royal Throne Unity home checks
+2026-09-13T07:23:00.4148278Z
+Resolution: 720x1280
+PASS Fresh save starts at level 1 / area 1
+PASS Six completed levels advance the area
+PASS Restored non-contiguous progress matches map unlocks
+PASS Final partial area has four levels
+PASS Completed campaign never offers missing level 101
+PASS Unexpected saved star values are clamped
+PASS Empty level list is safe
+PASS All 100 existing levels available
+PASS Next level obeys the original unlock rule
+PASS HUD shows real saved resources
+PASS Original life-regeneration counter remains active
+PASS Old map HUD hidden without disabling its timer
+PASS Legacy level/boost/lives canvas can render above Home
+PASS Old map camera cannot pan behind Home
+PASS Profile stays on screen
+PASS Profile receives its pointer hit (hits: Profile, Royal blue courtyard; interactable: True; center: (67.59, 1171.20))
+PASS Coins stays on screen
+PASS Coins receives its pointer hit (hits: Coins, Royal blue courtyard; interactable: True; center: (218.07, 1171.20))
+PASS Lives stays on screen
+PASS Lives receives its pointer hit (hits: Lives, Royal blue courtyard; interactable: True; center: (401.04, 1171.20))
+PASS Stars stays on screen
+PASS Stars receives its pointer hit (hits: Stars, Royal blue courtyard; interactable: True; center: (544.68, 1171.20))
+PASS Settings stays on screen
+PASS Settings receives its pointer hit (hits: Settings, Royal blue courtyard; interactable: True; center: (654.12, 1171.20))
+PASS Story stays on screen
+PASS Story receives its pointer hit (hits: Story, Royal blue courtyard; interactable: True; center: (69.23, 81.00))
+PASS Leagues stays on screen
+PASS Leagues receives its pointer hit (hits: Leagues, Royal blue courtyard; interactable: True; center: (207.68, 81.00))
+PASS Home stays on screen
+PASS Home receives its pointer hit (hits: Home, Royal blue courtyard; interactable: True; center: (360.00, 81.00))
+PASS Team stays on screen
+PASS Team receives its pointer hit (hits: Team, Royal blue courtyard; interactable: True; center: (512.32, 81.00))
+PASS Collection stays on screen
+PASS Collection receives its pointer hit (hits: Collection, Royal blue courtyard; interactable: True; center: (650.77, 81.00))
+PASS Next level stays on screen
+PASS Next level receives its pointer hit (hits: Next level, Royal blue courtyard; interactable: True; center: (192.15, 257.62))
+PASS Area progress stays on screen
+PASS Area progress receives its pointer hit (hits: Area progress, Royal blue courtyard; interactable: True; center: (540.71, 257.62))
+PASS HUD, level/area actions and navigation do not overlap
+PASS Play session remains available
+PASS Area dialog blocks Home input
+PASS Unbuilt restoration/rewards are disclosed
+PASS Play session remains available
+PASS Close stays on screen
+PASS Close receives its pointer hit (hits: Close, Royal dialog panel, Home dialog; interactable: True; center: (660.80, 966.14))
+PASS Back to home stays on screen
+PASS Back to home receives its pointer hit (hits: Back to home, Royal dialog panel, Home dialog; interactable: True; center: (360.00, 393.66))
+PASS Story opens replay and level selection
+PASS Story subtitle does not overlap level grid
+PASS Story lock rule for level 1
+PASS Story lock rule for level 2
+PASS Story lock rule for level 3
+PASS Story lock rule for level 4
+PASS Story lock rule for level 5
+PASS Story lock rule for level 6
+PASS Story lock rule for level 7
+PASS Story lock rule for level 8
+PASS Story lock rule for level 9
+PASS Story lock rule for level 10
+PASS Story lock rule for level 11
+PASS Story lock rule for level 12
+PASS Play session remains available
+PASS Story pagination advances
+PASS Settings opens real audio and motion controls
+PASS Motion toggle updates the saved setting
+PASS Play session remains available
+PASS Setting 0 stays on screen
+PASS Setting 0 receives its pointer hit (hits: Setting 0, Royal dialog panel, Home dialog; interactable: True; center: (360.00, 687.64))
+PASS Setting 1 stays on screen
+PASS Setting 1 receives its pointer hit (hits: Setting 1, Royal dialog panel, Home dialog; interactable: True; center: (360.00, 569.67))
+PASS Setting 2 stays on screen
+PASS Setting 2 receives its pointer hit (hits: Setting 2, Royal dialog panel, Home dialog; interactable: True; center: (360.00, 451.70))
+PASS Future tab 1 has no fabricated feature
+PASS Future tab 3 has no fabricated feature
+PASS Future tab 4 has no fabricated feature
+PASS Repeated level press creates only one entry request
+PASS Existing pre-level booster menu opens
+PASS Pre-level selection receives the real next level
+PASS Opening Home dialogs consumes no coins or lives
+PASS Play session remains available
+PASS Close stays on screen
+PASS Close receives its pointer hit (hits: Close, Image, MenuPlay; interactable: True; center: (522.01, 1085.69))
+PASS Play session remains available
+PASS Play session remains available
+PASS Closing pre-level returns control to Home
+PASS No runtime errors during homepage checks

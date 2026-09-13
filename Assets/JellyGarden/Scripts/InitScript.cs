@@ -709,19 +709,29 @@ using Facebook.Unity;
         {
             if (EventSystem.current.IsPointerOverGameObject(-1))
                 return;
-            
+            TryOpenLevel(args.Number);
+        }
+
+        // Shared entry for world-map selection and the Royal Throne homepage UI.
+        public bool TryOpenLevel(int number)
+        {
+            if (number < 1 || LevelsMap.IsLevelLocked(number) || LevelManager.THIS == null ||
+                LevelManager.THIS.gameStatus != GameState.Map || MenuManager.Instance == null)
+                return false;
             if (!MenuManager.Instance.menuPlay.activeSelf &&
                 !MenuManager.Instance.gemsShop.activeSelf &&
                 !MenuManager.Instance.liveShop.activeSelf &&
                 !MenuManager.Instance.settings.activeSelf)
             {
-                PlayerPrefs.SetInt("OpenLevel", args.Number);
+                PlayerPrefs.SetInt("OpenLevel", number);
                 PlayerPrefs.Save();
                 LevelManager.THIS.MenuPlayEvent();
                 LevelManager.THIS.LoadLevel();
-                openLevel = args.Number;
+                openLevel = number;
                 MenuManager.Instance.ShowMenuPlay(true);
+                return true;
             }
+            return false;
         }
 
         void OnEnable()

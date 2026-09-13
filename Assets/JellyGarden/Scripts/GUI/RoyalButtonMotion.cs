@@ -8,6 +8,7 @@ namespace RoyalThrone.Presentation
     public sealed class RoyalButtonMotion : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
     {
+        public float hoverScale = 1.025f;
         Button button;
         bool pressed;
         bool hovered;
@@ -18,7 +19,7 @@ namespace RoyalThrone.Presentation
         void Update()
         {
             bool usable = button != null && button.IsInteractable();
-            float target = !usable ? 1 : pressed ? .955f : hovered || selected ? 1.025f : 1;
+            float target = !usable ? 1 : pressed ? .955f : hovered || selected ? hoverScale : 1;
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * target,
                 1 - Mathf.Exp(-22 * Time.unscaledDeltaTime));
         }
