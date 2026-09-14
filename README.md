@@ -4,7 +4,7 @@ This is an independent copy of the saved files from `J:\Unity Projects\Match3-Ga
 
 ## Game direction
 
-Current work focuses on game logic, level design, story, characters, UX/UI, visualization, animation, and VFX. The first working milestone is one polished playable level. See [GAME-DIRECTION.md](GAME-DIRECTION.md) for priorities and review criteria. Android/iOS export is deferred until requested by the user or boss.
+Current work focuses on game logic, level design, story, characters, UX/UI, visualization, animation, and VFX. The first working milestone is one polished playable level. See [GAME-DIRECTION.md](GAME-DIRECTION.md) for priorities and review criteria. On 13 September 2026 the user requested an Android build for QA on physical phones; see [QA-ANDROID.md](QA-ANDROID.md). iOS export, release signing and store delivery remain deferred until requested by the user or boss.
 
 The active workflow and ordered backlog are in [PRODUCTION-PLAN.md](PRODUCTION-PLAN.md). The first live review and reconciliation with the inherited reports are in [PLAYTEST-AND-AUDIT-2026-09-08.md](PLAYTEST-AND-AUDIT-2026-09-08.md). See [PLAYTEST-TOOLS.md](PLAYTEST-TOOLS.md) for Editor input tracing and explicitly labelled developer-assisted board checks.
 

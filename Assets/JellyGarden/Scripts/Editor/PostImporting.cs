@@ -150,7 +150,7 @@ namespace JellyGarden.Scripts.Editor
 				if (CheckDefines(ref defines, "Assets/FacebookSDK", "FACEBOOK"))
 					CheckDefines(ref defines,"Assets/PlayFabSDK", "PLAYFAB");
 				CheckDefines(ref defines,"Assets/GameSparks", "GAMESPARKS");
-				AddDefine(ref defines, "UNITY_ADS");
+				// Royal Throne: UNITY_ADS is no longer forced on. The Ads SDK is not installed and the inherited IDs belong to the original game.
 
 				PlayerSettings.SetScriptingDefineSymbolsForGroup(_target, defines);
 			}
