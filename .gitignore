@@ -120,3 +120,5 @@ InitTestScene*.unity*
 # Raw editor screenshots are regenerated; optimized WebP reviews are versioned.
 /Design/Effects/Unity-review/*.png
 /Design/Effects/Unity-review-v2/*.png
+/Design/Effects/Unity-review-v3/*.png
+/Design/Branding/Home-Unity/*-622x1245.png

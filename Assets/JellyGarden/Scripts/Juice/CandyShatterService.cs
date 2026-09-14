@@ -5,7 +5,7 @@ namespace JellyGarden.Scripts.Juice
 {
     /// <summary>
     /// Breaks a destroyed candy into chunky mesh fragments that burst outward, tumble,
-    /// fall under gravity and fade out.
+    /// fall under gravity and leave the bottom of the board while still solid.
     ///
     /// How the fragments keep the candy's own look:
     ///  - A small library of shatter patterns is generated ONCE at startup. Each pattern
@@ -78,6 +78,8 @@ namespace JellyGarden.Scripts.Juice
             public float Spin;
             public float BaseScale;
             public Color Tint;
+            public float ExitY;
+            public float Gravity;
         }
 
         private Fragment[] _pool;
@@ -91,6 +93,14 @@ namespace JellyGarden.Scripts.Juice
         private readonly Dictionary<Texture, Material> _materialsByTexture = new Dictionary<Texture, Material>(8);
 
         private int _spawnCounter;
+        public int ActiveFragments => _pool == null ? 0 : _pool.Length - FreeCount();
+        public int PeakFragments { get; private set; }
+
+        public void Clear()
+        {
+            if (_pool == null) return;
+            foreach (var fragment in _pool) { fragment.Active = false; fragment.Renderer.enabled = false; }
+        }
 
         private JuiceConfig Cfg { get { return JuiceConfig.Instance; } }
 
@@ -322,17 +332,30 @@ namespace JellyGarden.Scripts.Juice
 
             Mesh[] meshes = _patterns[pattern];
             Vector2[] centroids = _patternCentroids[pattern];
-            int wedges = Mathf.Min(meshes.Length, powerClear?2:MaxWedges);
+            bool reducedMotion = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0;
+            int wedges = Mathf.Min(meshes.Length, reducedMotion ? 2 : powerClear ? 3 : MaxWedges);
 
-            // Bail out rather than allocate if the pool is nearly spent. The sparkle VFX
-            // still plays, so a huge clear degrades gracefully instead of stuttering.
-            if (FreeCount() < wedges) return;
+            // Use the last one to three slots for a smaller physical breakup instead
+            // of dropping the whole event. Never recycle a chunk that is still falling.
+            int free = FreeCount();
+            if (free == 0) return;
+            if (free < MaxWedges * 2) wedges = Mathf.Min(wedges, 3);
+            wedges = Mathf.Min(wedges, free);
 
             // World footprint of the intact candy, so fragments start exactly on top of it.
             Bounds b = source.bounds;
             Vector3 centre = b.center;
             centre.z -= 0.45f;                       // sit in front of the board pieces
             float worldSize = Mathf.Max(b.size.x, b.size.y);
+            float exitY = centre.y - worldSize * 9f;
+            var level = LevelManager.THIS;
+            if (level && level.squaresArray != null)
+            {
+                float bottom = float.PositiveInfinity;
+                foreach (var square in level.squaresArray)
+                    if (square && !square.IsNone()) bottom = Mathf.Min(bottom, square.transform.position.y);
+                if (!float.IsPositiveInfinity(bottom)) exitY = bottom - worldSize * 1.1f;
+            }
 
             // Map the mesh's 0-1 UVs onto this sprite's region of its texture (atlas-safe).
             Rect tr = sprite.textureRect;
@@ -368,15 +391,19 @@ namespace JellyGarden.Scripts.Juice
                 float speed = cfg.ShatterBurstSpeed * worldSize *
                               Mathf.Lerp(0.62f, 1.38f, Hash(seed + w, 23)) * intensity;
 
-                f.Velocity = new Vector3(dir.x * speed,
-                                         dir.y * speed + cfg.ShatterUpwardBias * worldSize,
+                f.Velocity = new Vector3(dir.x * speed * (reducedMotion ? .4f : .72f),
+                                         Mathf.Clamp(dir.y * speed, -worldSize * 2f, worldSize * 1.25f) + cfg.ShatterUpwardBias * worldSize,
                                          0f);
 
                 f.Spin = Hash(seed + w, 41) * 360f;
                 f.SpinSpeed = Mathf.Lerp(cfg.ShatterSpinMin, cfg.ShatterSpinMax, Hash(seed + w, 59))
                               * (Hash(seed + w, 71) < 0.5f ? -1f : 1f);
 
-                f.Life = cfg.ShatterLifetime * (powerClear?.65f:1) * Mathf.Lerp(0.78f, 1.22f, Hash(seed + w, 83));
+                // Recycle beyond the board boundary, not in mid-air. Life is a safety
+                // limit for destroyed boards; gravity is scaled to the piece footprint.
+                f.Life = Mathf.Max(1.8f, cfg.ShatterLifetime);
+                f.ExitY = exitY;
+                f.Gravity = Mathf.Min(-30f, cfg.ShatterGravity) * worldSize;
                 f.Age = 0f;
 
                 // Slight per-chunk size variation so they do not read as a uniform set.
@@ -393,6 +420,7 @@ namespace JellyGarden.Scripts.Juice
                 f.Active = true;
                 f.Renderer.enabled = true;
             }
+            PeakFragments = Mathf.Max(PeakFragments, ActiveFragments);
         }
 
         // ------------------------------------------------------------------
@@ -422,9 +450,12 @@ namespace JellyGarden.Scripts.Juice
         {
             if (_pool == null) return;
 
+            var level = LevelManager.THIS;
+            if (level && level.gameStatus == GameState.Pause) return;
+            if (level && (level.gameStatus == GameState.Map || level.gameStatus == GameState.PrepareGame)) { Clear(); return; }
+
             var cfg = Cfg;
             float dt = Time.deltaTime;
-            float gravity = cfg.ShatterGravity;
             float drag = Mathf.Clamp01(cfg.ShatterDrag * dt);
 
             for (int i = 0; i < _pool.Length; i++)
@@ -435,7 +466,7 @@ namespace JellyGarden.Scripts.Juice
                 f.Age += dt;
                 float k = f.Life > 0f ? f.Age / f.Life : 1f;
 
-                if (k >= 1f)
+                if (k >= 1f || f.Tr.position.y < f.ExitY)
                 {
                     f.Active = false;
                     f.Renderer.enabled = false;
@@ -443,25 +474,16 @@ namespace JellyGarden.Scripts.Juice
                 }
 
                 // position += velocity * dt ; velocity.y += gravity * dt
-                f.Velocity.y += gravity * dt;
-                f.Velocity -= f.Velocity * drag;          // energy loss, so the burst settles
+                f.Velocity.y += f.Gravity * dt;
+                f.Velocity.x *= 1f - drag; // air resistance slows sideways motion, gravity keeps its weight
                 f.Tr.position += f.Velocity * dt;
 
                 f.Spin += f.SpinSpeed * dt;
                 f.Tr.rotation = Quaternion.Euler(0f, 0f, f.Spin);
 
-                // Fade and shrink only over the tail, so the chunk stays solid and readable
-                // while it is doing the interesting part of the motion.
-                float tail = cfg.ShatterFadeStart;
-                float fade = k <= tail ? 1f : 1f - Mathf.Clamp01((k - tail) / (1f - tail));
-
-                float s = f.BaseScale * Mathf.Lerp(1f, cfg.ShatterEndScale, 1f - fade);
-                f.Tr.localScale = new Vector3(s, s, 1f);
-
-                var c = f.Tint;
-                c.a = fade;
-                f.Props.SetColor("_Color", c);
-                f.Renderer.SetPropertyBlock(f.Props);
+                // Preserve silhouette and opacity for the entire fall. Fragments have
+                // no collider and never participate in matching, collection or input.
+                f.Tr.localScale = new Vector3(f.BaseScale, f.BaseScale, 1f);
             }
         }
     }

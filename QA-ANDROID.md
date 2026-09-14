@@ -1,6 +1,17 @@
 # Royal Throne — Android QA build
 
-A test build of the game for physical Android phones. It was first produced on 13 September 2026 from this independent copy.
+A test build of the game for physical Android phones. The latest build was produced on **14 September 2026 at 13:26 Bangladesh time** from this independent copy.
+
+This build includes larger board pieces and touch targets, persisted matching hints,
+new sound effects and falling fragments, power-up and text celebrations, the app icon,
+and the revised home and loading presentation. **452 Editor checks passed** across
+gameplay/input, hints, home and dialogs. See the [screen and effects review](Design/Effects/Unity-review-v3/README.md).
+Physical-phone frame rate, battery use and speaker balance remain unverified.
+
+Unity reported a build time of 2 minutes 52 seconds. The APK is **79,592,603 bytes**
+(75.9 MiB); Android's signature verifier passed with the existing Android Debug key.
+SHA-256: `b8795a40da8cf20a86da49cd5424a2692e2c8a2685fb512605f7f6597b956eda`.
+The [build record](Design/Effects/Unity-review-v3/android-build.json) records the package checks.
 
 ## Build facts
 

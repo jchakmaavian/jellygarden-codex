@@ -24,7 +24,7 @@ namespace RoyalThrone.Editor
             if(GUILayout.Button("Select effects prefab"))Selection.activeObject=AssetDatabase.LoadAssetAtPath<GameObject>(PathRoot+"EffectsRig.prefab");
             using(new EditorGUI.DisabledScope(!EditorApplication.isPlaying))
             {
-                foreach(string s in new[]{"Match 3","Match 4","Rocket","TNT","Helicopter"})if(GUILayout.Button("Preview "+s))
+                foreach(string s in new[]{"Match 3","Match 4","Match 5","Rocket","TNT","Helicopter","Celebration"})if(GUILayout.Button("Preview "+s))
                 {var camera=Camera.main;var p=camera?camera.ViewportToWorldPoint(new Vector3(.5f,.52f,10)):Vector3.zero;RoyalPowerupDirector.Get?.Preview(s,p);}
             }
             var profile=AssetDatabase.LoadAssetAtPath<RoyalEffectsProfile>(PathRoot+"EffectsProfile.asset");
@@ -78,10 +78,10 @@ namespace RoyalThrone.Editor
                 var renderer=go.GetComponent<ParticleSystemRenderer>();renderer.sharedMaterial=material;renderer.sortingOrder=order;renderer.alignment=ParticleSystemRenderSpace.View;
             }
             System("Smoke",Mat("Smoke",smokeTexture,false),96,26,0,new AnimationCurve(new Keyframe(0,.45f),new Keyframe(.28f,1),new Keyframe(1,1.25f)));
-            System("Aura rays",Mat("Aura rays",diamond,true),128,33,0,AnimationCurve.EaseInOut(0,1,1,0));
-            var rays=root.transform.Find("Aura rays").GetComponent<ParticleSystemRenderer>();rays.renderMode=ParticleSystemRenderMode.Stretch;rays.lengthScale=6;rays.velocityScale=.04f;rays.cameraVelocityScale=0;
-            System("Sparkles",Mat("Sparkles",star,true),profile.sparkleBudget,35,0,new AnimationCurve(new Keyframe(0,.4f),new Keyframe(.15f,1),new Keyframe(.6f,.5f),new Keyframe(1,0)));
-            System("Embers",Mat("Embers",diamond,true),256,30,.4f,AnimationCurve.Linear(0,1,1,0));
+            System("Aura rays",Mat("Aura rays",diamond,true),160,33,0,AnimationCurve.EaseInOut(0,1,1,0));
+            var rays=root.transform.Find("Aura rays").GetComponent<ParticleSystemRenderer>();rays.renderMode=ParticleSystemRenderMode.Stretch;rays.lengthScale=7.2f;rays.velocityScale=.04f;rays.cameraVelocityScale=0;
+            System("Sparkles",Mat("Sparkles",star,true),profile.sparkleBudget,35,.20f,new AnimationCurve(new Keyframe(0,.6f),new Keyframe(.15f,1),new Keyframe(.6f,.7f),new Keyframe(1,0)));
+            System("Embers",Mat("Embers",diamond,true),256,30,.65f,AnimationCurve.Linear(0,1,1,.3f));
             System("Impact",Mat("Impact",glow,true),24,34,0,AnimationCurve.EaseInOut(0,.4f,1,1.4f));
             System("Shockwave",Mat("Shockwave",ring,true),24,29,0,AnimationCurve.EaseInOut(0,.2f,1,3.3f));
             Mat("Trail",glow,true);root.AddComponent<RoyalPowerupDirector>();PrefabUtility.SaveAsPrefabAsset(root,PathRoot+"EffectsRig.prefab");UnityEngine.Object.DestroyImmediate(root);
@@ -94,8 +94,9 @@ namespace RoyalThrone.Editor
                 PrefabUtility.SaveAsPrefabAsset(block,path);PrefabUtility.UnloadPrefabContents(block);
             }
             var juice=Resources.Load<JuiceConfig>("JuiceConfig");
-            juice.EnableHitStop=false;juice.StarSize=.26f;juice.StarParticleCount=4;juice.MicroParticleCount=5;juice.MicroSize=.09f;juice.FragmentCount=1;juice.FragmentSize=.12f;
-            juice.ParticleLifetime=.25f;juice.ParticleVelocity=4.8f;juice.FlashEndScale=1.25f;juice.FlashDuration=.065f;juice.CenterStarCount=3;juice.CenterRingEndScale=1.15f;juice.ShatterLifetime=.32f;juice.ShatterBurstSpeed=2.1f;
+            juice.EnableHitStop=false;juice.StarSize=.26f;juice.StarParticleCount=6;juice.MicroParticleCount=8;juice.MicroSize=.09f;juice.FragmentCount=1;juice.FragmentSize=.12f;
+            juice.ParticleLifetime=.34f;juice.MicroLifetime=.38f;juice.ParticleVelocity=4.8f;juice.FlashEndScale=1.25f;juice.FlashDuration=.065f;juice.CenterStarCount=5;juice.CenterRingEndScale=1.15f;
+            juice.ShatterPoolSize=240;juice.ShatterLifetime=1.8f;juice.ShatterBurstSpeed=2.2f;juice.ShatterUpwardBias=.65f;juice.ShatterGravity=-34;juice.ShatterDrag=1.1f;juice.ShatterFadeStart=1;juice.ShatterEndScale=1;
             juice.MatchAnticipation=.015f;juice.MatchSquashDuration=.03f;juice.MatchReboundDuration=.02f;juice.MatchDestroyDuration=.05f;juice.MatchStagger=.012f;juice.FallSpeed=12;juice.FallAcceleration=55;juice.FallMaxSpeed=32;
             EditorUtility.SetDirty(juice);AssetDatabase.SaveAssets();
             Debug.Log("[Royal Effects] Built editable particle rig, profile, WebP piece skins and compressed audio. Shift+F9 opens the workshop.");

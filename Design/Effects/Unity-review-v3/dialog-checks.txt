@@ -1,0 +1,21 @@
+PASS MenuPlay heading clears close control
+PASS MenuPlay target counts do not overlap
+PASS MenuPlay target counts do not overlap
+PASS GemsShop heading clears close control
+PASS LiveShop heading clears close control
+PASS BoostShop heading clears close control
+PASS BoostInfo heading clears close control
+PASS Settings heading clears close control
+PASS Tutorial heading clears close control
+PASS Tutorial page 1 formation clears result icon
+PASS Tutorial page 2 formation clears result icon
+PASS Tutorial page 3 formation clears result icon
+PASS Tutorial page 4 formation clears result icon
+PASS MenuComplete heading visible; dismissal uses primary action
+PASS MenuFailed heading visible; dismissal uses primary action
+PASS MenuFailed target counts do not overlap
+PASS MenuFailed target counts do not overlap
+PASS PreFailed heading visible; dismissal uses primary action
+PASS PreFailed target counts do not overlap
+PASS PreFailed target counts do not overlap
+PASS Dialog review preserves gems and lives; no purchase callbacks invoked

@@ -10283,14 +10283,14 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 0.2
       minScalar: 0
       maxCurve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0
+          value: 1
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -10299,7 +10299,7 @@ ParticleSystem:
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0
+          value: 1
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -10659,7 +10659,7 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.4
+          value: 0.6
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -10677,7 +10677,7 @@ ParticleSystem:
           outWeight: 0
         - serializedVersion: 3
           time: 0.6
-          value: 0.5
+          value: 0.7
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -20025,7 +20025,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 0
-    maxNumParticles: 128
+    maxNumParticles: 160
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -24233,7 +24233,7 @@ ParticleSystemRenderer:
   m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
   m_VelocityScale: 0.04
-  m_LengthScale: 6
+  m_LengthScale: 7.2
   m_SortingFudge: 0
   m_NormalDirection: 1
   m_ShadowBias: 0
@@ -24868,7 +24868,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.4
+      scalar: 0.65
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -25246,15 +25246,15 @@ ParticleSystem:
           time: 0
           value: 1
           inSlope: 0
-          outSlope: -1
+          outSlope: -0.7
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
           time: 1
-          value: 0
-          inSlope: -1
+          value: 0.3
+          inSlope: -0.7
           outSlope: 0
           tangentMode: 0
           weightedMode: 0

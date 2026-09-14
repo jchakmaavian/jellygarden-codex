@@ -47,16 +47,10 @@ namespace JellyGarden.Scripts
 
 		// Use this for initialization
 		void Awake () {
-			if (transform.parent == null) {
-				transform.parent = Camera.main.transform;
-				transform.localPosition = Vector3.zero;
-			}
-			DontDestroyOnLoad (gameObject);
-			if (Instance == null)
-				Instance = this;
-			else if (Instance != this)
-				Destroy (gameObject);
-
+			if (Instance && Instance != this) { Destroy(gameObject); return; }
+			Instance = this;
+			transform.SetParent(null);
+			DontDestroyOnLoad(gameObject);
 			_audioSource = GetComponent<AudioSource>();
 		}
 	
@@ -66,19 +60,27 @@ namespace JellyGarden.Scripts
 		}
 
 		public void PlaySound(AudioClip clip) {
+            if (!clip) return;
             var royal = Juice.RoyalAudioDirector.Get;
             if (royal)
             {
-                if (global::System.Array.IndexOf(destroy, clip) >= 0) royal.Play(Juice.RoyalCue.Match);
-                else if (global::System.Array.IndexOf(drop, clip) >= 0) royal.Play(Juice.RoyalCue.Land);
-                else if (clip == click || clip == wrongMatch) royal.Play(Juice.RoyalCue.Click);
+                if (Contains(destroy, clip)) royal.Play(Juice.RoyalCue.Match);
+                else if (Contains(drop, clip)) royal.Play(Juice.RoyalCue.Land);
+                else if (clip == click || clip == wrongMatch || clip == noMatch || clip == alert || clip == timeOut || Contains(gameOver,clip)) royal.Play(Juice.RoyalCue.Click);
                 else if (clip == block_destroy) royal.Play(Juice.RoyalCue.Match,.85f);
+                else if (clip == strippedExplosion) royal.Play(Juice.RoyalCue.Rocket);
+                else if (clip == boostBomb || clip == explosion || clip == destroyPackage || clip == colorBombExpl) royal.Play(Juice.RoyalCue.Tnt);
+                else if (clip == appearStipedColorBomb || clip == appearPackage || clip == boostColorReplace || clip == cash || clip == getStarIngr) royal.Play(Juice.RoyalCue.Create);
+                else if (Contains(star,clip) || Contains(complete,clip)) royal.Play(Juice.RoyalCue.Celebrate);
+                else if (Contains(swish,clip)) royal.Play(Juice.RoyalCue.Click,.65f);
                 else royal.PlayClip(clip, .7f);
                 return;
             }
 			if (_audioSource && clip)
 				_audioSource.PlayOneShot(clip);
 		}
+
+        static bool Contains(AudioClip[] clips, AudioClip clip) => clips != null && global::System.Array.IndexOf(clips,clip) >= 0;
 
 		public void SetVolume(float volume) {
 			if (_audioSource)

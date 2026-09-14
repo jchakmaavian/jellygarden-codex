@@ -1449,7 +1449,12 @@ namespace JellyGarden.Scripts
 
         public int GetIngredientsCount(string spritename)
         {
-            return FindObjectsOfType<SpriteRenderer>().Count(i => i.sprite.name==spritename);
+            if (string.IsNullOrEmpty(spritename)) return 0;
+            // Count owned board pieces only. Particle renderers can have no sprite,
+            // and falling fragments can retain the ingredient's sprite name.
+            return GetItems().Count(item => item && !item.destroying &&
+                item.currentType == ItemsTypes.INGREDIENT && item.sprRenderer &&
+                item.sprRenderer.sprite && item.sprRenderer.sprite.name == spritename);
         }
 
 
@@ -1884,7 +1889,7 @@ namespace JellyGarden.Scripts
 
             if (combo > 2 && gameStatus == GameState.Playing)
             {
-                gratzWords[UnityEngine.Random.Range(0, gratzWords.Length)].SetActive(true);
+                Juice.RoyalCelebration.Play(combo);
                 combo = 0;
             }
             LevelManager.THIS.latstMatchColor = -1;

@@ -149,6 +149,7 @@ namespace RoyalThrone.Editor
             home.legacyMapUI.alpha = 0; home.legacyMapUI.interactable = home.legacyMapUI.blocksRaycasts = false;
             home.mapCamera = UnityEngine.Object.FindAnyObjectByType<MapCamera>();
             home.levelGrid.SetActive(false); home.settingsGroup.SetActive(false); home.dialog.SetActive(false);
+            home.ApplyPresentationPolish();
             Canvas.ForceUpdateCanvases(); home.RefreshProgress(); home.RefreshLayout();
             EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
             Selection.activeGameObject = root.gameObject;

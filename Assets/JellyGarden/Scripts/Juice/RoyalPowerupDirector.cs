@@ -16,6 +16,9 @@ namespace JellyGarden.Scripts.Juice
         Flyer[] flyers;
         readonly HashSet<Square> reserved=new HashSet<Square>();
         int pending;
+        GameState previousState;
+        bool observedState;
+        float lastCoreFlash = -10f, lastFireworkSound = -10f;
         readonly global::System.Random visualRandom=new global::System.Random(72813);
         Camera shakeCamera; Vector3 shakeOffset; float shakeEnergy;
         float Range(float min,float max)=>min+(float)visualRandom.NextDouble()*(max-min);
@@ -73,10 +76,20 @@ namespace JellyGarden.Scripts.Juice
         void StartOperation(IEnumerator sequence){pending++;StartCoroutine(Own(sequence));}
         IEnumerator Own(IEnumerator sequence){try{yield return sequence;}finally{pending=Mathf.Max(0,pending-1);}}
         void OnDisable(){StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){f.used=false;f.go.SetActive(false);} }
-        public void Cancel(){OnDisable();foreach(var ps in GetComponentsInChildren<ParticleSystem>())ps.Clear();}
+        public void Cancel(){OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();}
         void Update()
         {
-            if(pending>0&&LevelManager.THIS&&(LevelManager.THIS.gameStatus==GameState.Map||LevelManager.THIS.gameStatus==GameState.PrepareGame))Cancel();
+            var level=LevelManager.THIS;
+            if(level)
+            {
+                var state=level.gameStatus;
+                // Decorative coronas and trails can outlive the board operation.
+                // Clear them when leaving the board even when pending is already zero.
+                // Staying on Map permits deliberate Effects Workshop previews.
+                bool transition=observedState&&state!=previousState;
+                if((pending>0||transition)&&(state==GameState.Map||state==GameState.PrepareGame))Cancel();
+                previousState=state;observedState=true;
+            }
             foreach(var ps in systems) { if(Paused&&!ps.isPaused)ps.Pause(); else if(!Paused&&ps.isPaused)ps.Play(); }
             if(!Paused)foreach(var f in flyers)if(f.used&&f.rotor.activeSelf)f.rotor.transform.Rotate(0,0,Time.deltaTime*2400);
         }
@@ -148,13 +161,31 @@ namespace JellyGarden.Scripts.Juice
         }
         public void Burst(Vector3 p,float strength=1)
         {
-            Emit(flash,p,1,3.9f*strength,0,.085f,new Color(1,.97f,.83f,1));
-            Emit(ring,p,1,1.95f*strength,0,.23f,new Color(1,.85f,.38f,.85f));
+            strength=Mathf.Clamp(strength,.35f,1.45f);
+            bool motion=PlayerPrefs.GetInt("RoyalThrone.HomeMotion",1)!=0;
+            // A warm core, expanding corona and trailing sparks give the blast a
+            // readable sequence. Closely chained TNTs share the bright core beat.
+            if(Time.time-lastCoreFlash>.11f){Emit(flash,p,1,(motion?4.3f:2.5f)*strength,0,.10f,new Color(1,.96f,.74f,motion?.92f:.38f));lastCoreFlash=Time.time;}
+            Emit(ring,p,1,2.1f*strength,0,.34f,new Color(1,.88f,.43f,.9f));
             PuffRing(p,strength);
-            Emit(rays,p,12,.17f,11*strength,.20f,new Color(1,.93f,.68f,1));
-            Emit(sparks,p,10,.32f,7*strength,.34f,new Color(1,.97f,.78f,1));
-            Emit(embers,p,8,.13f,8*strength,.25f,new Color(1,.77f,.25f,1));
+            Emit(rays,p,22,.19f,10*strength,.31f,new Color(1,.94f,.69f,1));
+            Emit(sparks,p,24,.27f,6.2f*strength,.58f,new Color(1,.96f,.73f,1));
+            Emit(embers,p,20,.12f,7*strength,.61f,new Color(1,.70f,.2f,1));
+            StartCoroutine(Corona(p,strength));
             Reaction?.Invoke(strength);shakeEnergy=Mathf.Min(1.5f,Mathf.Max(shakeEnergy,strength)); Impacts++;
+        }
+        IEnumerator Corona(Vector3 p,float strength)
+        {
+            yield return Wait(.075f);
+            Emit(ring,p,1,1.45f*strength,0,.33f,new Color(1,.72f,.24f,.5f));
+            Emit(sparks,p,14,.17f,4.6f*strength,.66f,new Color(1,.93f,.67f,1));
+        }
+        public void Firework(Vector3 p,float intensity)
+        {
+            int count=Mathf.RoundToInt(Mathf.Lerp(9,19,Mathf.InverseLerp(1,1.55f,intensity)));
+            Emit(sparks,p,count,.18f,3.3f,.44f,new Color(1,.94f,.7f,.95f));
+            Emit(embers,p,count/2,.085f,3.8f,.55f,new Color(1,.75f,.27f,1));
+            if(intensity>=1.17f&&Time.time-lastFireworkSound>.35f){RoyalAudioDirector.Get?.Play(RoyalCue.Firework);lastFireworkSound=Time.time;}
         }
         public void Creation(Vector3 p)
         {Emit(ring,p,1,.6f,0,.2f,new Color(.75f,.9f,1,1));Emit(sparks,p,10,.33f,3,.34f,new Color(1,.9f,.3f,1));RoyalAudioDirector.Get?.Play(RoyalCue.Create);Reaction?.Invoke(.6f);}
@@ -197,7 +228,7 @@ namespace JellyGarden.Scripts.Juice
         {
             Vector3 p=origin.transform.position;var fuse=Take("tnt",p,.9f);
             float elapsed=0,duration=RoyalEffectsProfile.Get.tntAnticipation;
-            while(elapsed<duration){if(!Paused)elapsed+=Time.deltaTime;if(fuse!=null)fuse.go.transform.localScale=Vector3.one*Cell*(.9f+.18f*Mathf.Sin(elapsed/duration*Mathf.PI));yield return null;}
+            while(elapsed<duration){if(!Paused)elapsed+=Time.deltaTime;if(fuse!=null)fuse.go.transform.localScale=Vector3.one*Cell*(.9f+(PlayerPrefs.GetInt("RoyalThrone.HomeMotion",1)!=0?.18f:0)*Mathf.Sin(elapsed/duration*Mathf.PI));yield return null;}
             if(fuse!=null)StartCoroutine(Retire(fuse));
             Burst(p,radius>2?1.45f:1);RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);
             var lm=LevelManager.THIS;
@@ -255,7 +286,8 @@ namespace JellyGarden.Scripts.Juice
         {
             if(effect=="TNT") {Burst(p);RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);}
             else if(effect=="Match 3") {for(int i=-1;i<=1;i++)MatchVFXService.Instance.PlayMatchBurst(p+Vector3.right*i*Cell,new Color(.2f,.7f,1),1,i*.018f);RoyalAudioDirector.Get?.Play(RoyalCue.Match);}
-            else if(effect=="Match 4")Creation(p);
+            else if(effect=="Match 4"||effect=="Match 5") {Creation(p);Firework(p,effect=="Match 5"?1.36f:1.18f);}
+            else if(effect=="Celebration")RoyalCelebration.Play(4);
             else StartCoroutine(PreviewFlight(effect,p));
         }
         IEnumerator PreviewFlight(string effect,Vector3 p)

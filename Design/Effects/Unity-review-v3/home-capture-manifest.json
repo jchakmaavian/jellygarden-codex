@@ -1,0 +1,37 @@
+{
+  "reviewDate": "2026-09-14",
+  "captures": [
+    {
+      "file": "home.webp",
+      "source": "Design/Branding/Home-Unity/home-622x1245.png",
+      "capturedFileModifiedUtc": "2026-09-14T06:24:57.428Z",
+      "width": 622,
+      "height": 1245,
+      "bytes": 141216
+    },
+    {
+      "file": "home-settings.webp",
+      "source": "Design/Branding/Home-Unity/settings-622x1245.png",
+      "capturedFileModifiedUtc": "2026-09-14T06:24:59.409Z",
+      "width": 622,
+      "height": 1245,
+      "bytes": 67294
+    },
+    {
+      "file": "story-navigation.webp",
+      "source": "Design/Branding/Home-Unity/story-622x1245.png",
+      "capturedFileModifiedUtc": "2026-09-14T06:24:58.708Z",
+      "width": 622,
+      "height": 1245,
+      "bytes": 79878
+    },
+    {
+      "file": "pre-level.webp",
+      "source": "Design/Effects/Unity-review-v2/MenuPlay.png",
+      "capturedFileModifiedUtc": "2026-09-14T06:25:56.109Z",
+      "width": 622,
+      "height": 1245,
+      "bytes": 59658
+    }
+  ]
+}

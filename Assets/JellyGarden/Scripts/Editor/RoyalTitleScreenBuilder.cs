@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using RoyalThrone.Presentation;
 using UnityEditor;
 using UnityEditor.Events;
@@ -192,6 +193,7 @@ namespace RoyalThrone.Editor
             controller.loadingStatus = status;
             controller.motes = motes;
             controller.gameScene = "game";
+            controller.PrepareLoadingJourney();
             loadingRoot.gameObject.SetActive(false);
             UnityEventTools.AddPersistentListener(button.onClick, controller.BeginPlay);
             var eventSystem = UnityEngine.Object.FindAnyObjectByType<EventSystem>();
@@ -213,6 +215,17 @@ namespace RoyalThrone.Editor
             if (!controller.playButton || !controller.progressFill || !controller.loadingGroup || controller.jewels.Length != 3 ||
                 !controller.titleHalo || !controller.loadingHalo)
                 throw new InvalidOperationException("Title UI bindings are incomplete.");
+            if (Application.isPlaying || controller.jewels[0].Find("Crown matching piece"))
+            {
+                foreach (var jewel in controller.jewels)
+                {
+                    var piece = jewel.Find("Crown matching piece");
+                    if (!piece || !piece.GetComponent<Image>().sprite || piece.GetComponent<Image>().raycastTarget)
+                        throw new InvalidOperationException("Loading journey is missing a non-blocking crown piece.");
+                }
+                if (controller.loadingCard.GetComponentsInChildren<RoyalPanelGraphic>(true).Count(g => g.name.StartsWith("Match sparkle ")) != 12)
+                    throw new InvalidOperationException("Loading journey must retain its bounded 12-sparkle pool.");
+            }
             foreach (var graphic in controller.GetComponentsInChildren<Graphic>(true))
                 if (!graphic.GetComponent<CanvasRenderer>())
                     throw new InvalidOperationException("Missing CanvasRenderer on " + graphic.name);

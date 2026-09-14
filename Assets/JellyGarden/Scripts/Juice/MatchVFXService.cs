@@ -184,10 +184,10 @@ namespace JellyGarden.Scripts.Juice
             _glowSprite = MakeSprite(SparkleTextureFactory.SoftGlow);
             _ringSprite = MakeSprite(SparkleTextureFactory.Ring);
 
-            _stars = BuildSystem("Stars", SparkleTextureFactory.FourPointSparkle, 320, 0f);
-            _micro = BuildSystem("Micro", SparkleTextureFactory.Diamond, 420, 0f);
-            _fragments = BuildSystem("Fragments", SparkleTextureFactory.SoftGlow, 260, 0.9f);
-            _centerStars = BuildSystem("CenterStars", SparkleTextureFactory.SixPointStar, 160, 0f);
+            _stars = BuildSystem("Stars", SparkleTextureFactory.FourPointSparkle, 144, .14f);
+            _micro = BuildSystem("Micro", SparkleTextureFactory.Diamond, 192, .22f);
+            _fragments = BuildSystem("Fragments", SparkleTextureFactory.Diamond, 64, .9f);
+            _centerStars = BuildSystem("CenterStars", SparkleTextureFactory.SixPointStar, 80, .12f);
 
             _pending = new Pending[PendingPoolSize];
             for (int i = 0; i < PendingPoolSize; i++) _pending[i] = new Pending();
@@ -316,6 +316,8 @@ namespace JellyGarden.Scripts.Juice
         /// </summary>
         private float CellSize()
         {
+            var level = LevelManager.THIS;
+            if (level && level.GameField) return level.squareWidth * Mathf.Abs(level.GameField.lossyScale.x);
             if (_cellSize > 0f) return _cellSize;
 
             // Measure the spacing between two adjacent board squares. Squares are laid
@@ -384,7 +386,7 @@ namespace JellyGarden.Scripts.Juice
             float sizeIntensity = Mathf.Lerp(1f, intensity, 0.35f);
 
             // Layer 1 - impact flash.
-            var flash = Take();
+            var flash = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) != 0 ? Take() : null;
             if (flash != null)
             {
                 flash.Mode = OverlayMode.Flash;
@@ -469,6 +471,7 @@ namespace JellyGarden.Scripts.Juice
                 cfg.ParticleVelocity * 0.85f * cell,
                 cfg.ParticleLifetime * 1.15f,
                 cfg.StarSize * 1.25f * cell * sizeIntensity);
+            RoyalPowerupDirector.Get?.Firework(position, intensity);
         }
 
         /// <summary>
@@ -480,6 +483,7 @@ namespace JellyGarden.Scripts.Juice
         {
             var cfg = Cfg;
             if (!cfg.EnableJuice || source == null || source.sprite == null) return;
+            if (PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0) return;
 
             var o = Take();
             if (o == null) return;
@@ -545,6 +549,7 @@ namespace JellyGarden.Scripts.Juice
                                float speed, float lifetime, float size)
         {
             if (ps == null || count <= 0) return;
+            if (PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0) count = Mathf.Max(1, count / 3);
 
             ps.transform.position = pos;
 
@@ -578,6 +583,17 @@ namespace JellyGarden.Scripts.Juice
             // Hit-stop runs on unscaled time - it is what MOVES timeScale, so it can
             // never depend on it.
             TickHitStop(Time.unscaledDeltaTime);
+
+            var level = LevelManager.THIS;
+            bool paused = level && level.gameStatus == GameState.Pause;
+            SetPaused(_stars, paused); SetPaused(_micro, paused);
+            SetPaused(_fragments, paused); SetPaused(_centerStars, paused);
+            if (paused) return;
+            if (level && (level.gameStatus == GameState.Map || level.gameStatus == GameState.PrepareGame))
+            {
+                Clear();
+                return;
+            }
 
             float dt = Time.deltaTime;
 
@@ -652,6 +668,22 @@ namespace JellyGarden.Scripts.Juice
                     o.Renderer.enabled = false;
                 }
             }
+        }
+
+        private static void SetPaused(ParticleSystem system, bool paused)
+        {
+            if (!system) return;
+            if (paused && !system.isPaused) system.Pause();
+            else if (!paused && system.isPaused) system.Play();
+        }
+
+        public void Clear()
+        {
+            if (_overlays != null) foreach (var overlay in _overlays) { overlay.Active = false; overlay.Renderer.enabled = false; }
+            if (_pending != null) foreach (var pending in _pending) { pending.Active = false; pending.Ps = null; }
+            if (_stars) _stars.Clear(); if (_micro) _micro.Clear();
+            if (_fragments) _fragments.Clear(); if (_centerStars) _centerStars.Clear();
+            _cellSize = -1;
         }
 
         // ------------------------------------------------------------------

@@ -1,0 +1,40 @@
+{
+  "reviewDate": "2026-09-14",
+  "conversion": "WebP quality 88; original dimensions and content preserved",
+  "visualReview": "Full-frame replacement PNGs inspected: no grey editor strip, no clipped right edge; pause labels and all controls visible. No crop or image repair applied.",
+  "files": [
+    {
+      "file": "gameplay.webp",
+      "source": "gameplay.png",
+      "sourceModifiedUtc": "2026-09-14T07:08:57.454Z",
+      "width": 622,
+      "height": 1245,
+      "bytes": 161114
+    },
+    {
+      "file": "pause-hints-on.webp",
+      "source": "pause-hints-on.png",
+      "sourceModifiedUtc": "2026-09-14T07:11:12.372Z",
+      "width": 622,
+      "height": 1245,
+      "bytes": 44888
+    },
+    {
+      "file": "pause-hints-off.webp",
+      "source": "pause-hints-off.png",
+      "sourceModifiedUtc": "2026-09-14T07:11:54.186Z",
+      "width": 622,
+      "height": 1245,
+      "bytes": 44912
+    },
+    {
+      "file": "celebration-bravo.webp",
+      "source": "../Unity-review/celebration-bravo.png",
+      "sourceModifiedUtc": "2026-09-14T07:19:21.638Z",
+      "width": 622,
+      "height": 1245,
+      "bytes": 160914,
+      "visualReview": "Final full-frame capture inspected: legible Bravo lettering with sparkles spread outside the lettering; no grey editor strip or clipped right edge."
+    }
+  ]
+}

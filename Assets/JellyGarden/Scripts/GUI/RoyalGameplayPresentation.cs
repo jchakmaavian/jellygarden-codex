@@ -17,6 +17,7 @@ namespace RoyalThrone.Presentation
         Font display;
         Sprite tileSprite;
         readonly List<Image> goalIcons=new List<Image>();readonly List<Text> goalNumbers=new List<Text>();
+        Transform framedField;Square[] framedSquares;Vector2 framedScreen;Rect framedSafeArea;
         static Color Navy=>new Color(.025f,.12f,.32f);
         static Color Gold=>new Color(.96f,.74f,.22f);
         RectTransform Rect(string name,Transform parent,float x0,float y0,float x1,float y1)
@@ -41,29 +42,32 @@ namespace RoyalThrone.Presentation
             var scaler=root.gameObject.AddComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(720,1280);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
             root.gameObject.AddComponent<GraphicRaycaster>();group=root.gameObject.AddComponent<CanvasGroup>();group.alpha=0;group.blocksRaycasts=false;
             content=Rect("Safe area",root,0,0,1,1);
-            Panel("Header gold edge",content,Gold,new Color(.66f,.36f,.08f),0,.824f,1,1,0);
-            Panel("Header royal blue",content,new Color(.08f,.32f,.65f),Navy,0,.83f,1,1,0);
-            Panel("Goal inset",content,new Color(.03f,.17f,.4f),Navy,.025f,.845f,.34f,.962f,20);
-            Label("Goal heading",content,"GOALS",23,.03f,.926f,.33f,.957f);
-            goals=Label("Live goals",content,"",32,.025f,.853f,.34f,.925f);
+            Panel("Header gold edge",content,Gold,new Color(.66f,.36f,.08f),0,.85f,1,1,0);
+            Panel("Header royal blue",content,new Color(.08f,.32f,.65f),Navy,0,.855f,1,1,0);
+            Panel("Goal gold",content,Gold,Gold,.025f,.866f,.395f,.982f,20);
+            Panel("Goal ivory",content,new Color(1,.98f,.88f),new Color(.91f,.85f,.66f),.032f,.871f,.388f,.977f,17);
+            Panel("Goal title bar",content,new Color(.075f,.32f,.64f),Navy,.033f,.944f,.388f,.977f,13);
+            Label("Goal heading",content,"GOALS",22,.04f,.945f,.38f,.976f);
+            goals=Label("Live goals",content,"",32,.025f,.871f,.395f,.944f);
             goals.enabled=false;
             for(int i=0;i<3;i++){
-                float left=.035f+i*.098f;var r=Rect("Goal icon "+i,content,left,.891f,left+.087f,.927f);var icon=r.gameObject.AddComponent<Image>();icon.preserveAspect=true;icon.raycastTarget=false;goalIcons.Add(icon);
-                var number=Label("Goal number "+i,content,"",26,left,.853f,left+.087f,.893f);number.resizeTextMinSize=10;number.horizontalOverflow=HorizontalWrapMode.Overflow;goalNumbers.Add(number);
+                float left=.043f+i*.114f;var r=Rect("Goal icon "+i,content,left,.910f,left+.106f,.944f);var icon=r.gameObject.AddComponent<Image>();icon.preserveAspect=true;icon.raycastTarget=false;goalIcons.Add(icon);
+                var number=Label("Goal number "+i,content,"",27,left,.873f,left+.106f,.911f);number.resizeTextMinSize=11;number.color=Navy;number.GetComponent<Shadow>().enabled=false;goalNumbers.Add(number);
             }
-            Panel("Moves gold",content,Gold,Gold,.68f,.845f,.9f,.963f,22);
-            Panel("Moves blue",content,new Color(.14f,.43f,.78f),Navy,.687f,.85f,.893f,.96f,19);
-            Label("Moves heading",content,"MOVES",22,.69f,.928f,.89f,.96f);moves=Label("Moves remaining",content,"24",54,.68f,.849f,.9f,.934f);
-            king=Rect("King reactions",content,.35f,.833f,.675f,.99f);kingImage=king.gameObject.AddComponent<Image>();kingImage.sprite=idle;kingImage.preserveAspect=true;kingImage.raycastTarget=false;
-            var pause=Rect("Pause game",content,.909f,.917f,.994f,.97f);var image=pause.gameObject.AddComponent<Image>();image.color=Navy;var button=pause.gameObject.AddComponent<Button>();button.onClick.AddListener(()=>{MenuManager.Instance.ShowMenuPause(true);});RoyalMenuSkin.Surface(pause,true);Label("Pause icon",pause,"Ⅱ",28,0,0,1,1);
-            level=Label("Level",content,"LEVEL 1",22,.35f,.795f,.68f,.828f);
-            Panel("Booster rail",content,new Color(.045f,.24f,.53f),Navy,0,0,1,.119f,0);
-            Panel("Rail gold",content,Gold,Gold,0,.116f,1,.12f,0);
+            Panel("Moves gold",content,Gold,Gold,.631f,.866f,.886f,.982f,20);
+            Panel("Moves ivory",content,new Color(1,.98f,.88f),new Color(.91f,.85f,.66f),.638f,.871f,.879f,.977f,17);
+            Panel("Moves title bar",content,new Color(.075f,.32f,.64f),Navy,.638f,.944f,.879f,.977f,13);
+            Label("Moves heading",content,"MOVES",22,.64f,.945f,.877f,.976f);moves=Label("Moves remaining",content,"24",58,.642f,.874f,.875f,.947f);moves.color=Navy;moves.GetComponent<Shadow>().enabled=false;
+            king=Rect("King reactions",content,.405f,.861f,.619f,.986f);kingImage=king.gameObject.AddComponent<Image>();kingImage.sprite=idle;kingImage.preserveAspect=true;kingImage.raycastTarget=false;
+            var pause=Rect("Pause game",content,.901f,.933f,.99f,.985f);var image=pause.gameObject.AddComponent<Image>();image.color=Navy;var button=pause.gameObject.AddComponent<Button>();button.onClick.AddListener(()=>{MenuManager.Instance.ShowMenuPause(true);});RoyalMenuSkin.Surface(pause,true);Label("Pause icon",pause,"II",28,0,0,1,1);
+            level=Label("Level",content,"LEVEL 1",22,.35f,.818f,.68f,.85f);
+            Panel("Booster rail",content,new Color(.045f,.24f,.53f),Navy,0,0,1,.106f,0);
+            Panel("Rail gold",content,Gold,Gold,0,.103f,1,.107f,0);
             var lm=GetComponent<LevelManager>();
             if(lm)
             {
                 var preplay=lm.GameField.parent.Find("Canvas/PrePlay");
-                if(preplay){var banner=preplay.Find("Banner");if(banner){RoyalMenuSkin.Surface(banner);RoyalMenuSkin.Label(banner,"Royal heading","YOUR GOALS",0,88,560,54,32);}preplay.gameObject.AddComponent<RoyalMenuPresenter>();}
+                if(preplay)preplay.gameObject.AddComponent<RoyalMenuPresenter>().ConfigurePrePlay();
                 foreach(string path in new[]{"Canvas/Panel","Canvas/BottomPanel"})
                 {var old=lm.GameField.parent.Find(path);if(old){var cg=old.gameObject.GetComponent<CanvasGroup>();if(!cg)cg=old.gameObject.AddComponent<CanvasGroup>();if(cg){cg.alpha=0;cg.blocksRaycasts=false;hidden.Add(cg);}}}
                 var back=lm.GameField.parent.Find("CanvasBack");if(back)back.gameObject.SetActive(false);
@@ -88,6 +92,7 @@ namespace RoyalThrone.Presentation
         {
             var lm=LevelManager.THIS;if(!lm)return;
             bool show=lm.gameStatus!=GameState.Map&&lm.gameStatus!=GameState.WaitForPopup&&lm.GameField.gameObject.activeInHierarchy;
+            if(lm.gameStatus==GameState.Map){framedField=null;framedSquares=null;}
             group.alpha=show?1:0;group.blocksRaycasts=show;backdrop.enabled=show;
             if(lm.gameStatus==GameState.Pause||lm.gameStatus==GameState.GameOver||lm.gameStatus==GameState.Win||lm.gameStatus==GameState.PreFailed){group.alpha=0;group.blocksRaycasts=false;}
             if(!show)return;
@@ -99,21 +104,52 @@ namespace RoyalThrone.Presentation
                 for(int i=0;i<goalIcons.Count;i++){
                     bool active=lm.targetObject!=null&&i<lm.targetObject.Length;goalIcons[i].gameObject.SetActive(active);goalNumbers[i].gameObject.SetActive(active);if(!active)continue;
                     var target=lm.targetObject[i];goalIcons[i].sprite=RoyalVisualCatalog.Goal(target);goalNumbers[i].text=Mathf.Max(0,target.GetCount()).ToString();
+                    float step=.342f/Mathf.Min(3,lm.targetObject.Length),left=.04f+i*step;
+                    var ir=goalIcons[i].rectTransform;ir.anchorMin=new Vector2(left,.909f);ir.anchorMax=new Vector2(left+step,.944f);
+                    var nr=goalNumbers[i].rectTransform;nr.anchorMin=new Vector2(left+.002f,.873f);nr.anchorMax=new Vector2(left+step-.002f,.911f);
                 }
             }
             excitement=Mathf.MoveTowards(excitement,0,Time.deltaTime*.8f);
             kingImage.sprite=excitement>.5f?cheer:lm.Limit<=5?think:idle;
             bool motion=PlayerPrefs.GetInt("RoyalThrone.HomeMotion",1)!=0;
             king.localRotation=Quaternion.Euler(0,0,motion?Mathf.Sin(Time.time*5)*Mathf.Min(excitement,1)*3:0);king.localScale=Vector3.one*(1+(motion?Mathf.Sin(Time.time*4)*.006f+Mathf.Sin(excitement*Mathf.PI)*.022f:0));
-            var cam=Camera.main;if(cam){backdrop.transform.position=cam.ViewportToWorldPoint(new Vector3(.5f,.5f,18));var bounds=backdrop.sprite.bounds.size;float scale=Mathf.Max(cam.orthographicSize*2*cam.aspect/bounds.x,cam.orthographicSize*2/bounds.y);backdrop.transform.localScale=Vector3.one*scale;}
+            var cam=Camera.main;if(cam){FrameBoard(lm,cam);backdrop.transform.position=cam.ViewportToWorldPoint(new Vector3(.5f,.5f,18));var bounds=backdrop.sprite.bounds.size;float scale=Mathf.Max(cam.orthographicSize*2*cam.aspect/bounds.x,cam.orthographicSize*2/bounds.y);backdrop.transform.localScale=Vector3.one*scale;}
             if(Time.unscaledTime>lastRefresh){lastRefresh=Time.unscaledTime+.3f;StyleBoard(lm);}
+        }
+        public static Rect PlayableViewport(Rect safeNormalized)
+        {
+            return UnityEngine.Rect.MinMaxRect(Mathf.Lerp(safeNormalized.xMin,safeNormalized.xMax,.02f),Mathf.Lerp(safeNormalized.yMin,safeNormalized.yMax,.145f),
+                Mathf.Lerp(safeNormalized.xMin,safeNormalized.xMax,.98f),Mathf.Lerp(safeNormalized.yMin,safeNormalized.yMax,.808f));
+        }
+        public static float FitSize(Bounds bounds,float aspect,Rect viewport)
+        {return Mathf.Max(bounds.extents.x/(Mathf.Max(.01f,aspect)*viewport.width),bounds.extents.y/viewport.height);}
+        void FrameBoard(LevelManager lm,Camera cam)
+        {
+            var screen=new Vector2(Screen.width,Screen.height);var safe=Screen.safeArea;
+            if(framedField==lm.GameField&&framedSquares==lm.squaresArray&&framedScreen==screen&&framedSafeArea==safe)return;
+            if(lm.squaresArray==null||lm.squaresArray.Length==0)return;
+            var entrance=lm.GameField.GetComponent<Animation>();if(entrance&&entrance.isPlaying)return;
+            bool hasBounds=false;var bounds=new Bounds();
+            foreach(var sq in lm.squaresArray){if(!sq||sq.type==SquareTypes.NONE)continue;
+                var cell=new Bounds(sq.transform.position,new Vector3(lm.squareWidth,lm.squareHeight,0));
+                if(!hasBounds){bounds=cell;hasBounds=true;}else bounds.Encapsulate(cell);
+            }
+            if(!hasBounds)return;
+            bounds.Expand(new Vector3(lm.squareWidth*.06f,lm.squareHeight*.06f,0));
+            bool ingredients=false;if(lm.targetObject!=null)foreach(var target in lm.targetObject)if(target.type==Target.INGREDIENT)ingredients=true;
+            if(ingredients)bounds.Encapsulate(new Vector3(bounds.center.x,bounds.min.y-lm.squareHeight*.45f,bounds.center.z));
+            var viewport=PlayableViewport(new Rect(safe.position/screen,safe.size/screen));
+            float size=FitSize(bounds,cam.aspect,viewport);cam.orthographicSize=size;
+            Vector2 offset=(viewport.center-new Vector2(.5f,.5f))*new Vector2(size*2*cam.aspect,size*2);
+            cam.transform.position=new Vector3(bounds.center.x-offset.x,bounds.center.y-offset.y,cam.transform.position.z);
+            framedField=lm.GameField;framedSquares=lm.squaresArray;framedScreen=screen;framedSafeArea=safe;styled.Clear();
         }
         void StyleBoard(LevelManager lm)
         {
             if(lm.squaresArray!=null)foreach(var sq in lm.squaresArray)
             {
                 if(!sq||!styled.Add(sq))continue;
-                var sr=sq.GetComponent<SpriteRenderer>();if(sr){var size=sr.sprite.bounds.size;sr.sprite=tileSprite;sr.drawMode=SpriteDrawMode.Sliced;sr.size=size;sr.color=(sq.row+sq.col)%2==0?new Color(.23f,.59f,.9f):new Color(.16f,.48f,.8f);}
+                var sr=sq.GetComponent<SpriteRenderer>();if(sr){sr.sprite=tileSprite;sr.drawMode=SpriteDrawMode.Sliced;sr.size=new Vector2(lm.squareWidth,lm.squareHeight);sr.color=(sq.row+sq.col)%2==0?new Color(.23f,.59f,.9f):new Color(.16f,.48f,.8f);}
                 foreach(Transform tr in sq.transform)if(tr.name.ToLowerInvariant().Contains("outline")){var edge=tr.GetComponent<SpriteRenderer>();if(edge)edge.color=Gold;}
             }
         }

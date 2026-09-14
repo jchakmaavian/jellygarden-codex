@@ -1,6 +1,7 @@
 using System;
 using JellyGarden.Scripts;
 using JellyGarden.Scripts.GUI;
+using JellyGarden.Scripts.Juice;
 using JellyGarden.Scripts.MapScripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -31,6 +32,7 @@ namespace RoyalThrone.Presentation
         public bool IsHomeVisible { get; private set; }
         public int OpenRequestCount { get; private set; }
         public RoyalHomeProgress Progress { get; private set; }
+        public int SelectedTab { get; private set; } = 2;
         public bool MotionEnabled => PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) != 0;
         Rect lastSafe;
         Vector2 lastSize;
@@ -40,6 +42,12 @@ namespace RoyalThrone.Presentation
         string openPanel;
         GameObject returnFocus;
         Canvas legacyCanvas;
+        CanvasGroup navigationInput;
+        Image[] tabIcons;
+        Text[] tabLabels;
+        RoyalPanelGraphic[] tabSurfaces;
+        float[] tabEmphasis;
+        bool presentationPolished;
         // Existing game-scene canvas settings, restored whenever the board owns presentation.
         const RenderMode LegacyRenderMode = RenderMode.ScreenSpaceCamera;
         const int LegacySortingOrder = 2;
@@ -48,6 +56,7 @@ namespace RoyalThrone.Presentation
         {
             if (runtimeInitialized) return;
             runtimeInitialized = true;
+            ApplyPresentationPolish();
             legacyCanvas = globalMenus.GetComponent<Canvas>();
             levelButton.onClick.AddListener(OpenNextLevel);
             areaButton.onClick.AddListener(() => OpenPanel("area", areaButton.gameObject));
@@ -91,7 +100,7 @@ namespace RoyalThrone.Presentation
             if (map != lastMap)
             {
                 lastMap = map;
-                if (map) { waitingForLevel = false; RefreshProgress(); }
+                if (map) { waitingForLevel = false; SelectedTab = 2; RefreshProgress(); }
                 else { dialog.SetActive(false); openPanel = null; }
             }
             IsHomeVisible = map;
@@ -114,7 +123,10 @@ namespace RoyalThrone.Presentation
             if (map && globalMenus)
                 foreach (Transform child in globalMenus)
                     if (child.gameObject.activeInHierarchy) { legacyPopup = true; break; }
+            // The dialog veil catches the castle controls; navigation remains available
+            // above it so a tab can be changed directly without a second close tap.
             controls.interactable = controls.blocksRaycasts = map && !legacyPopup && !dialog.activeSelf;
+            if (navigationInput) navigationInput.interactable = navigationInput.blocksRaycasts = map && !legacyPopup;
             if (!legacyPopup) waitingForLevel = false;
             if (map && Time.unscaledTime >= nextRefresh)
             {
@@ -123,6 +135,7 @@ namespace RoyalThrone.Presentation
             }
             if (map && dialog.activeSelf && InputManager.Instance.Gameplay.Cancel.WasPressedThisFrame()) ClosePanel();
             float time = Time.unscaledTime;
+            UpdateNavigation(false);
             if (waterGlow) waterGlow.color = new Color(.8f, .95f, 1, map && MotionEnabled ? .08f + .1f * (1 + Mathf.Sin(time * 1.8f)) : 0);
             for (int i = 0; i < motes.Length; i++)
             {
@@ -164,6 +177,7 @@ namespace RoyalThrone.Presentation
             if (InitScript.Instance.TryOpenLevel(number))
             {
                 waitingForLevel = true;
+                SelectedTab = 2;
                 OpenRequestCount++;
                 dialog.SetActive(false);
                 openPanel = null;
@@ -176,6 +190,9 @@ namespace RoyalThrone.Presentation
         {
             if (!IsHomeVisible || waitingForLevel) return;
             if (panel == "home") { ClosePanel(); return; }
+            string[] tabs = { "story", "leagues", "home", "team", "collection" };
+            int selected = Array.IndexOf(tabs, panel);
+            SelectedTab = selected < 0 ? 2 : selected;
             RefreshProgress();
             openPanel = panel;
             returnFocus = focus ? focus : levelButton.gameObject;
@@ -207,6 +224,7 @@ namespace RoyalThrone.Presentation
         {
             bool wasOpen = dialog.activeSelf;
             dialog.SetActive(false); openPanel = null;
+            SelectedTab = 2;
             controls.interactable = controls.blocksRaycasts = IsHomeVisible;
             if (wasOpen) Click();
             if (EventSystem.current) EventSystem.current.SetSelectedGameObject(returnFocus ? returnFocus : levelButton.gameObject);
@@ -231,6 +249,11 @@ namespace RoyalThrone.Presentation
         }
         void ToggleSetting(int index)
         {
+            if (index == 3)
+            {
+                RoyalHintSettings.Enabled = !RoyalHintSettings.Enabled;
+                RefreshSettings(); Click(); return;
+            }
             string key = index == 0 ? "Music" : index == 1 ? "Sound" : "RoyalThrone.HomeMotion";
             int value = PlayerPrefs.GetInt(key, 1) == 0 ? 1 : 0;
             PlayerPrefs.SetInt(key, value); PlayerPrefs.Save();
@@ -240,11 +263,121 @@ namespace RoyalThrone.Presentation
         }
         void RefreshSettings()
         {
-            string[] labels = { "Music", "Sound", "Motion" }; string[] keys = { "Music", "Sound", "RoyalThrone.HomeMotion" };
+            string[] labels = { "Music", "Sound", "Motion", "Hints" }; string[] keys = { "Music", "Sound", "RoyalThrone.HomeMotion", "RoyalThrone.ShowHints" };
             for (int i = 0; i < settingButtons.Length; i++)
                 settingButtons[i].GetComponentInChildren<Text>().text = labels[i] + ": " + (PlayerPrefs.GetInt(keys[i], 1) != 0 ? "On" : "Off");
         }
         static void Click() { if (SoundBase.Instance) SoundBase.Instance.PlaySound(SoundBase.Instance.click); }
+
+        // Runtime migration keeps existing scene references and button callbacks intact.
+        // The authoring builder also invokes this after all bindings have been assigned.
+        public void ApplyPresentationPolish()
+        {
+            if (presentationPolished || !navigation || tabButtons == null || tabButtons.Length != 5) return;
+            presentationPolished = true;
+            // Keep keyboard navigation as well as pointer input on the visible tabs;
+            // the castle buttons remain disabled while a dialog is open.
+            navigation.SetParent(layout, false);
+            navigationInput = navigation.GetComponent<CanvasGroup>();
+            if (!navigationInput) navigationInput = navigation.gameObject.AddComponent<CanvasGroup>();
+            var navCanvas = navigation.GetComponent<Canvas>();
+            if (!navCanvas) navCanvas = navigation.gameObject.AddComponent<Canvas>();
+            navCanvas.overrideSorting = true; navCanvas.sortingOrder = 20;
+            if (!navigation.GetComponent<GraphicRaycaster>()) navigation.gameObject.AddComponent<GraphicRaycaster>();
+            var navFace = CreateSurface("Navigation clean blue", navigation,
+                new Color(.07f, .36f, .78f), new Color(.03f, .21f, .56f), 0);
+            navFace.transform.SetAsFirstSibling();
+            var navTrim = CreateSurface("Navigation fine gold edge", navFace.transform,
+                new Color(1, .92f, .48f), new Color(.87f, .57f, .12f), 0);
+            navTrim.rectTransform.anchorMin = new Vector2(0, 1); navTrim.rectTransform.anchorMax = Vector2.one;
+            navTrim.rectTransform.sizeDelta = new Vector2(0, 4);
+            tabIcons = new Image[5]; tabLabels = new Text[5];
+            tabSurfaces = new RoyalPanelGraphic[5]; tabEmphasis = new float[5];
+            for (int i = 0; i < 5; i++)
+            {
+                var button = tabButtons[i];
+                button.GetComponent<Image>().color = Color.clear;
+                tabIcons[i] = button.transform.Find(button.name + " icon").GetComponent<Image>();
+                tabIcons[i].raycastTarget = true; // The raised icon is part of the same button hit target.
+                tabLabels[i] = button.GetComponentInChildren<Text>(true);
+                tabLabels[i].fontSize = 27; tabLabels[i].resizeTextMaxSize = 27;
+                tabLabels[i].resizeTextMinSize = 18;
+                var panel = CreateSurface("Selected tab surface", button.transform,
+                    new Color(.16f, .49f, .91f), new Color(.055f, .26f, .64f), 0);
+                panel.transform.SetAsFirstSibling(); tabSurfaces[i] = panel;
+                var line = CreateSurface("Tab divider", button.transform,
+                    new Color(.035f, .17f, .44f, .55f), new Color(.035f, .17f, .44f, .12f), 0);
+                line.rectTransform.anchorMin = new Vector2(0, 0); line.rectTransform.anchorMax = new Vector2(0, 1);
+                line.rectTransform.sizeDelta = new Vector2(i == 0 ? 0 : 2, 0);
+                line.transform.SetSiblingIndex(1);
+            }
+            // A single strong action replaces the narrow crowned plaque on Home.
+            var artwork = levelButton.transform.Find("Artwork");
+            if (artwork) artwork.gameObject.SetActive(false);
+            var depth = CreateSurface("Play gold frame", levelButton.transform,
+                new Color(1, .89f, .42f), new Color(.71f, .36f, .035f), 26);
+            depth.transform.SetAsFirstSibling();
+            var face = CreateSurface("Play green face", depth.transform,
+                new Color(.56f, .82f, .10f), new Color(.19f, .49f, .025f), 22);
+            face.rectTransform.offsetMin = new Vector2(5, 8); face.rectTransform.offsetMax = new Vector2(-5, -5);
+            var highlight = CreateSurface("Play upper highlight", face.transform,
+                new Color(.9f, 1, .65f, .24f), Color.clear, 18);
+            highlight.rectTransform.anchorMin = new Vector2(0, .52f);
+            levelLabel.rectTransform.anchorMin = new Vector2(.07f, .09f);
+            levelLabel.rectTransform.anchorMax = new Vector2(.93f, .91f);
+            levelLabel.rectTransform.offsetMin = levelLabel.rectTransform.offsetMax = Vector2.zero;
+            levelLabel.fontSize = levelLabel.resizeTextMaxSize = 43;
+            if (settingButtons.Length == 3)
+            {
+                var hint = Instantiate(settingButtons[2], settingsGroup.transform);
+                hint.name = "Setting 3 Hints";
+                Array.Resize(ref settingButtons, 4); settingButtons[3] = hint;
+            }
+            for (int i = 0; i < settingButtons.Length; i++)
+            {
+                var rect = (RectTransform)settingButtons[i].transform;
+                rect.anchorMin = new Vector2(0, 1 - (i + 1) * .25f + .015f);
+                rect.anchorMax = new Vector2(1, 1 - i * .25f - .015f);
+                rect.offsetMin = rect.offsetMax = Vector2.zero;
+            }
+            UpdateNavigation(true);
+        }
+
+        void UpdateNavigation(bool immediate)
+        {
+            if (tabIcons == null) return;
+            float step = immediate || !MotionEnabled ? 1 : 1 - Mathf.Exp(-19 * Time.unscaledDeltaTime);
+            for (int i = 0; i < tabButtons.Length; i++)
+            {
+                bool selected = i == SelectedTab;
+                tabEmphasis[i] = Mathf.Lerp(tabEmphasis[i], selected ? 1 : 0, step);
+                float t = tabEmphasis[i];
+                var rect = (RectTransform)tabButtons[i].transform;
+                rect.anchorMin = new Vector2(i / 5f, 0); rect.anchorMax = new Vector2((i + 1) / 5f, 1);
+                rect.offsetMin = rect.offsetMax = Vector2.zero;
+                var icon = tabIcons[i].rectTransform;
+                icon.anchorMin = icon.anchorMax = new Vector2(.5f, .58f + .24f * t);
+                icon.sizeDelta = Vector2.one * navigation.rect.width * Mathf.Lerp(.17f, .22f, t);
+                icon.anchoredPosition = Vector2.zero;
+                tabLabels[i].gameObject.SetActive(selected);
+                tabLabels[i].rectTransform.anchorMin = new Vector2(.01f, .04f);
+                tabLabels[i].rectTransform.anchorMax = new Vector2(.99f, .29f);
+                tabLabels[i].rectTransform.offsetMin = tabLabels[i].rectTransform.offsetMax = Vector2.zero;
+                tabSurfaces[i].color = new Color(1, 1, 1, t);
+            }
+        }
+
+        static RoyalPanelGraphic CreateSurface(string name, Transform parent, Color top, Color bottom, float radius)
+        {
+            var existing = parent.Find(name);
+            var go = existing ? existing.gameObject : new GameObject(name, typeof(RectTransform)); go.layer = 5;
+            var rect = (RectTransform)go.transform; rect.SetParent(parent, false);
+            rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
+            rect.offsetMin = rect.offsetMax = Vector2.zero;
+            var panel = go.GetComponent<RoyalPanelGraphic>(); if (!panel) panel = go.AddComponent<RoyalPanelGraphic>(); panel.raycastTarget = false;
+            panel.topColor = top; panel.bottomColor = bottom; panel.cornerRadius = radius;
+            return panel;
+        }
 
         public void RefreshLayout()
         {
@@ -259,16 +392,19 @@ namespace RoyalThrone.Presentation
             layout.sizeDelta = new Vector2(width, 0);
             bool shortPhone = height / Mathf.Max(width, 1) < 2;
             Place(hud, width * .95f, width * .16f, .5f, 1, 0, -height * .04f - width * .08f);
-            float logoSize = width * (shortPhone ? .30f : .36f);
+            float logoSize = width * (shortPhone ? .25f : .29f);
             Place(logo, logoSize, logoSize, .5f, 1, 0, -height * .117f - logoSize * .5f);
-            float actionWidth = width * .94f, leftWidth = actionWidth * .504f, rightWidth = actionWidth * .466f;
-            float actionHeight = Mathf.Max(100, leftWidth / 2.35f);
-            float navHeight = Mathf.Max(width * .225f, height * (shortPhone ? .125f : .108f));
-            Place(actions, actionWidth, actionHeight, .5f, 0, 0, navHeight + height * .018f + actionHeight * .5f);
+            float actionWidth = width * .94f, leftWidth = actionWidth * .59f, rightWidth = actionWidth * .38f;
+            float actionHeight = Mathf.Max(96, width * .16f);
+            float navHeight = Mathf.Max(width * .21f, height * (shortPhone ? .108f : .093f));
+            float raisedIconClearance = width * .122f - navHeight * .18f;
+            float actionGap = Mathf.Max(height * .045f, raisedIconClearance);
+            Place(actions, actionWidth, actionHeight, .5f, 0, 0, navHeight + actionGap + actionHeight * .5f);
             Place(levelRect, leftWidth, actionHeight, 0, .5f, leftWidth * .5f, 0);
             Place(areaRect, rightWidth, actionHeight, 1, .5f, -rightWidth * .5f, 0);
             Place(navigation, width, navHeight, .5f, 0, 0, navHeight * .5f);
             navigationBackground.sizeDelta = new Vector2(0, navHeight + root.rect.height * min.y);
+            UpdateNavigation(!Application.isPlaying);
             bool tallDialog = openPanel == "story" || openPanel == "settings";
             float dialogWidth = Mathf.Min(width * .88f, 670), dialogHeight = Mathf.Min(height * .84f, dialogWidth * (tallDialog ? 1.48f : 1.08f));
             Place(dialogRect, dialogWidth, dialogHeight, .5f, .5f, 0, 0);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using JellyGarden.Scripts;
 using JellyGarden.Scripts.GUI;
+using JellyGarden.Scripts.Juice;
 using JellyGarden.Scripts.MapScripts;
 using RoyalThrone.Presentation;
 using UnityEditor;
@@ -46,9 +47,13 @@ namespace RoyalThrone.Editor
                 Check(home.legacyMapUI.alpha == 0 && !home.legacyMapUI.blocksRaycasts, "Old map HUD hidden without disabling its timer");
                 Check(home.globalMenus.GetComponent<Canvas>().renderMode == RenderMode.ScreenSpaceOverlay && home.globalMenus.GetComponent<Canvas>().sortingOrder > home.GetComponent<Canvas>().sortingOrder, "Legacy level/boost/lives canvas can render above Home");
                 Check(!home.mapCamera.enabled, "Old map camera cannot pan behind Home");
+                CheckNavigation(2);
+                Check(home.settingButtons.Length == 4, "Home exposes Music, Sound, Motion and Hints");
                 foreach (var b in home.resourceButtons.Concat(home.tabButtons).Concat(new[] { home.levelButton, home.areaButton })) CheckHit(b);
                 Rect left = ScreenRect(home.levelRect), right = ScreenRect(home.areaRect), nav = ScreenRect(home.navigation), hud = ScreenRect(home.hud);
                 Check(left.xMax < right.xMin && left.yMin > nav.yMax && hud.yMin > left.yMax, "HUD, level/area actions and navigation do not overlap");
+                var homeIcon = home.tabButtons[2].transform.Find("Home icon") as RectTransform;
+                Check(!ScreenRect(homeIcon).Overlaps(left) && !ScreenRect(homeIcon).Overlaps(right), "Lifted Home icon leaves the primary actions clear");
                 Capture("home");
                 phase = 0; next = EditorApplication.timeSinceStartup + .6;
                 Application.logMessageReceived += Log; EditorApplication.update += Tick;
@@ -66,12 +71,14 @@ namespace RoyalThrone.Editor
                 switch (phase++)
                 {
                     case 0:
-                        home.areaButton.onClick.Invoke(); Check(home.dialog.activeSelf && !home.controls.interactable, "Area dialog blocks Home input");
+                        home.areaButton.onClick.Invoke(); Check(home.dialog.activeSelf && !home.controls.interactable, "Area dialog disables castle controls while navigation stays usable");
+                        CheckHit(home.tabButtons[0]);
                         Check(home.dialogDetail.text.Contains("coming soon"), "Unbuilt restoration/rewards are disclosed"); Capture("area"); break;
                     case 1:
                         CheckHit(home.closeButton); CheckHit(home.dialogButton);
                         home.ClosePanel(); home.tabButtons[0].onClick.Invoke(); Canvas.ForceUpdateCanvases();
                         Check(home.levelGrid.activeSelf, "Story opens replay and level selection");
+                        CheckNavigation(0);
                         Check(!ScreenRect(home.gridRect).Overlaps(ScreenRect(home.dialogCopy.rectTransform)), "Story subtitle does not overlap level grid");
                         for (int i = 0; i < home.levelChoices.Length; i++)
                         {
@@ -90,12 +97,15 @@ namespace RoyalThrone.Editor
                         home.settingButtons[2].onClick.Invoke(); Check(home.MotionEnabled == (motion == 0), "Motion toggle updates the saved setting");
                         home.settingButtons[2].onClick.Invoke();
                         if (!hadMotion) { PlayerPrefs.DeleteKey("RoyalThrone.HomeMotion"); PlayerPrefs.Save(); }
+                        CheckHints();
                         Capture("settings"); break;
                     case 3:
                         foreach (var setting in home.settingButtons) CheckHit(setting);
                         home.ClosePanel();
                         foreach (int i in new[] { 1, 3, 4 })
-                        { home.tabButtons[i].onClick.Invoke(); Check(home.dialogDetail.text.Contains("coming soon"), "Future tab " + i + " has no fabricated feature"); home.ClosePanel(); }
+                        { home.tabButtons[i].onClick.Invoke(); Check(home.dialogDetail.text.Contains("coming soon"), "Future tab " + i + " has no fabricated feature"); CheckNavigation(i); CheckHit(home.tabButtons[2]); }
+                        home.tabButtons[2].onClick.Invoke();
+                        Check(!home.dialog.activeSelf, "Home tab returns directly from a feature panel"); CheckNavigation(2);
                         openingCount = home.OpenRequestCount;
                         home.OpenNextLevel(); home.OpenNextLevel();
                         Check(home.OpenRequestCount == openingCount + 1, "Repeated level press creates only one entry request");
@@ -142,6 +152,34 @@ namespace RoyalThrone.Editor
             Check(hits.Count > 0 && hits[0].gameObject.GetComponentInParent<Button>() == button,
                 button.name + " receives its pointer hit (hits: " + string.Join(", ", hits.Take(3).Select(h => h.gameObject.name)) +
                 "; interactable: " + button.IsInteractable() + "; center: " + rect.center + ")");
+        }
+        static void CheckNavigation(int selected)
+        {
+            home.RefreshLayout(); Canvas.ForceUpdateCanvases();
+            Check(home.SelectedTab == selected, "Navigation selects tab " + selected);
+            for (int i = 0; i < home.tabButtons.Length; i++)
+            {
+                var label = home.tabButtons[i].GetComponentInChildren<Text>(true);
+                Check(label.gameObject.activeSelf == (i == selected), "Tab " + i + " shows a label only when selected");
+                Rect hit = ScreenRect((RectTransform)home.tabButtons[i].transform);
+                Check(hit.width >= Screen.width * .13f, "Tab " + i + " retains a generous touch target");
+            }
+        }
+        static void CheckHints()
+        {
+            bool hints = RoyalHintSettings.Enabled, hadHints = PlayerPrefs.HasKey("RoyalThrone.ShowHints");
+            try
+            {
+                home.settingButtons[3].onClick.Invoke();
+                Check(RoyalHintSettings.Enabled != hints && home.settingButtons[3].GetComponentInChildren<Text>().text.EndsWith(hints ? "Off" : "On"), "Hints button immediately updates the shared setting and label");
+                home.settingButtons[3].onClick.Invoke();
+                Check(RoyalHintSettings.Enabled == hints, "Home Hints check restores the player's preference");
+            }
+            finally
+            {
+                RoyalHintSettings.Enabled = hints;
+                if (!hadHints) { PlayerPrefs.DeleteKey("RoyalThrone.ShowHints"); PlayerPrefs.Save(); }
+            }
         }
         static Rect ScreenRect(RectTransform rect)
         {

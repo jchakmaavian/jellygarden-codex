@@ -175,9 +175,8 @@ namespace JellyGarden.Scripts.Juice
         [Tooltip("Break the candy into chunky mesh fragments cut from its own sprite.")]
         public bool EnableCandyShatter = true;
 
-        [Tooltip("Pooled fragment objects. ~6 per candy, so this covers roughly 16 " +
-                 "simultaneous candies before the effect degrades gracefully.")]
-        [Range(16, 256)] public int ShatterPoolSize = 96;
+        [Tooltip("Fixed fragment pool. Ordinary matches use 5-7 chunks; power clears use 3.")]
+        [Range(16, 256)] public int ShatterPoolSize = 240;
 
         [Tooltip("Draw order for fragments. Board pieces are 2 and the sparkle burst is 25, " +
                  "so 20 puts debris above the board and under the sparkles.")]
@@ -193,7 +192,7 @@ namespace JellyGarden.Scripts.Juice
                  "Stops the burst reading as a perfectly symmetrical radial star.")]
         [Range(0f, 2f)] public float ShatterDirectionJitter = 0.85f;
 
-        [Tooltip("Downward acceleration (world units/sec^2). This is what sells the weight.")]
+        [Tooltip("Downward acceleration scaled to each piece's world footprint.")]
         [Range(-60f, 0f)] public float ShatterGravity = -20f;
 
         [Tooltip("Velocity bleed-off per second, so chunks lose momentum before gravity wins.")]
@@ -202,13 +201,13 @@ namespace JellyGarden.Scripts.Juice
         [Range(0f, 900f)] public float ShatterSpinMin = 110f;
         [Range(0f, 900f)] public float ShatterSpinMax = 460f;
 
-        [Tooltip("Fragment lifetime in seconds, varied +/-22% per chunk.")]
-        [Range(0.15f, 1.2f)] public float ShatterLifetime = 0.45f;
+        [Tooltip("Safety lifetime; solid fragments normally recycle after crossing below the board.")]
+        [Range(1.8f, 3f)] public float ShatterLifetime = 1.8f;
 
-        [Tooltip("Fraction of life before fade/shrink begins. Keeps chunks solid while they move.")]
+        [Tooltip("Legacy serialized value. Solid gravity-driven debris no longer fades.")]
         [Range(0.1f, 1f)] public float ShatterFadeStart = 0.5f;
 
-        [Tooltip("Scale reached at the end of the fade.")]
+        [Tooltip("Legacy serialized value. Debris now keeps its full silhouette during the fall.")]
         [Range(0.1f, 1f)] public float ShatterEndScale = 0.55f;
 
         [Header("Bloom (URP)")]

@@ -1,0 +1,10 @@
+{
+  "sampleRate": 48000,
+  "channels": 2,
+  "bitsPerSample": 16,
+  "seconds": 37.845333,
+  "peakDbfs": -8.66,
+  "rmsDbfs": -33.23,
+  "samplesAtFullScale": 0,
+  "source": "Library/RoyalEffectsCapture/unity-audio.wav"
+}

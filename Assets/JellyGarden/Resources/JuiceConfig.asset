@@ -26,13 +26,13 @@ MonoBehaviour:
   FlashDuration: 0.065
   FlashStartScale: 0.8
   FlashEndScale: 1.25
-  StarParticleCount: 4
+  StarParticleCount: 6
   ParticleVelocity: 4.8
   ParticleDrag: 3
-  ParticleLifetime: 0.25
+  ParticleLifetime: 0.34
   StarSize: 0.26
-  MicroParticleCount: 5
-  MicroLifetime: 0.28
+  MicroParticleCount: 8
+  MicroLifetime: 0.38
   MicroSize: 0.09
   FragmentCount: 1
   FragmentLifetime: 0.3
@@ -44,7 +44,7 @@ MonoBehaviour:
   EnableCenterEmphasis: 1
   CenterRingDuration: 0.24
   CenterRingEndScale: 1.15
-  CenterStarCount: 3
+  CenterStarCount: 5
   FallSpeed: 12
   FallAcceleration: 55
   FallMaxSpeed: 32
@@ -59,18 +59,18 @@ MonoBehaviour:
   FourMatchBonus: 0.18
   FiveMatchBonus: 0.36
   EnableCandyShatter: 1
-  ShatterPoolSize: 96
+  ShatterPoolSize: 240
   ShatterSortingOrder: 20
-  ShatterBurstSpeed: 2.1
-  ShatterUpwardBias: 1.05
+  ShatterBurstSpeed: 2.2
+  ShatterUpwardBias: 0.65
   ShatterDirectionJitter: 0.85
-  ShatterGravity: -20
-  ShatterDrag: 1.7
+  ShatterGravity: -34
+  ShatterDrag: 1.1
   ShatterSpinMin: 110
   ShatterSpinMax: 460
-  ShatterLifetime: 0.32
-  ShatterFadeStart: 0.5
-  ShatterEndScale: 0.55
+  ShatterLifetime: 1.8
+  ShatterFadeStart: 1
+  ShatterEndScale: 1
   EnableBloom: 1
   BloomThreshold: 1.05
   BloomIntensity: 0.62

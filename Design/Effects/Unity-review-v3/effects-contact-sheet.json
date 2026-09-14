@@ -1,0 +1,66 @@
+{
+  "source": "Library/RoyalEffectsCapture/frames.csv",
+  "selection": "Most visual change in each of twelve equal time windows; actual captured frames",
+  "frames": [
+    {
+      "file": "frame-00018.jpg",
+      "time": 1.717026,
+      "frame": 18
+    },
+    {
+      "file": "frame-00053.jpg",
+      "time": 5.271225,
+      "frame": 53
+    },
+    {
+      "file": "frame-00097.jpg",
+      "time": 9.356949,
+      "frame": 97
+    },
+    {
+      "file": "frame-00134.jpg",
+      "time": 12.7781,
+      "frame": 134
+    },
+    {
+      "file": "frame-00135.jpg",
+      "time": 12.87162,
+      "frame": 135
+    },
+    {
+      "file": "frame-00192.jpg",
+      "time": 18.06427,
+      "frame": 192
+    },
+    {
+      "file": "frame-00215.jpg",
+      "time": 20.18151,
+      "frame": 215
+    },
+    {
+      "file": "frame-00234.jpg",
+      "time": 22.66615,
+      "frame": 234
+    },
+    {
+      "file": "frame-00292.jpg",
+      "time": 28.12125,
+      "frame": 292
+    },
+    {
+      "file": "frame-00333.jpg",
+      "time": 31.97993,
+      "frame": 333
+    },
+    {
+      "file": "frame-00334.jpg",
+      "time": 32.10099,
+      "frame": 334
+    },
+    {
+      "file": "frame-00386.jpg",
+      "time": 36.98118,
+      "frame": 386
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+Checks completed: 264
+Authored particle rig loads
+WebP sprite loads: ruby
+WebP sprite loads: shield
+WebP sprite loads: crown
+WebP sprite loads: leaf
+WebP sprite loads: lily
+WebP sprite loads: vase
+WebP sprite loads: rocket
+WebP sprite loads: tnt
+WebP sprite loads: helicopter
+WebP sprite loads: orb
+WebP sprite loads: smoke
+WebP sprite loads: gem
+WebP sprite loads: heart
+WebP sprite loads: star
+WebP sprite loads: ice
+WebP sprite loads: key
+WebP sprite loads: chest
+WebP sprite loads: chains
+WebP sprite loads: stone
+Audio imports: match-a
+Audio imports: match-b
+Audio imports: rocket
+Audio imports: tnt
+Audio imports: helicopter
+Audio imports: create
+Audio imports: castle-theme
+Audio imports: land
+Audio imports: click
+Audio imports: firework
+Audio imports: celebrate
+Block has new art and preserves target identifier
+Block preserves board footprint
+SolidBlock has new art and preserves target identifier
+SolidBlock preserves board footprint
+ThrivingBlock has new art and preserves target identifier
+ThrivingBlock preserves board footprint
+UndestrBlock has new art and preserves target identifier
+UndestrBlock preserves board footprint
+WireBlock has new art and preserves target identifier
+WireBlock preserves board footprint
+New pieces show royal art before their first rendered frame
+Chain artwork retains trapped-piece rule
+Layered obstacle loses only one layer per direct hit
+Cleared obstacle releases its square
+Goal artwork retains live target data reference
+Ordinary matches do not change global timescale
+Empty decorative sprite does not throw in ingredient counting
+Decorative sprite with a matching name is not counted as an ingredient
+Only the owned board ingredient contributes to the count
+Ordinary gem break emits recognisable mesh chunks
+Chunks visibly fall more than half a gem height instead of disappearing on impact
+Falling chunks remain opaque after the former fade-out point
+Pause freezes falling debris
+Debris leaves below the board and returns to the pool
+Reduced motion uses a restrained two-chunk breakup
+Fragment pressure scenarios use the authored 240-slot pool
+Debris pressure fixture leaves 3 slots
+Low-capacity breakup uses the remaining 3 fragment slots
+Exhausted debris pool stays inside its renderer and activity cap
+Debris pressure fixture leaves 2 slots
+Low-capacity breakup uses the remaining 2 fragment slots
+Exhausted debris pool stays inside its renderer and activity cap
+Debris pressure fixture leaves 1 slots
+Low-capacity breakup uses the remaining 1 fragment slots
+Exhausted debris pool stays inside its renderer and activity cap
+Decorative TNT tail does not hold board input
+Leaving gameplay cancels finished TNT particles and delayed corona
+Effects Workshop preview still plays while already on Map
+Cascade achievement opens the native celebration
+Consecutive celebrations coalesce through the cooldown
+Celebration sparkles use a fixed 32-element pool
+Celebration never intercepts a swap or booster tap
+Celebration clears promptly without delaying input
+Virtual pointer routes through production InputManager: press expected=(125.79, 778.45) routed=(125.79, 778.45) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213528172
+Virtual pointer routes through production InputManager: move expected=(199.87, 778.45) routed=(199.87, 778.45) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213528154
+Virtual pointer routes through production InputManager: release expected=(199.87, 778.45) routed=(199.87, 778.45) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=item 568105589213528154
+Input event swap settles and returns control
+Mouse invalid drag returns both pieces and spends no move
+Virtual pointer routes through production InputManager: press expected=(199.87, 704.37) routed=(199.87, 704.37) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213526858
+Virtual pointer routes through production InputManager: move expected=(273.96, 704.37) routed=(273.96, 704.37) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213526858
+Virtual pointer routes through production InputManager: release expected=(273.96, 704.37) routed=(273.96, 704.37) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=item 568105589213526858
+Input event swap settles and returns control
+Mouse horizontal drag matches through production input and spends one move (moves 99 -> 98, score 0 -> 30)
+Virtual pointer routes through production InputManager: press expected=(231.73, 704.37) routed=(231.73, 704.37) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213525652
+Virtual pointer routes through production InputManager: move expected=(273.96, 704.37) routed=(273.96, 704.37) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213525652
+Virtual pointer routes through production InputManager: release expected=(273.96, 704.37) routed=(273.96, 704.37) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=item 568105589213525652
+Input event swap settles and returns control
+Mouse drag starting on visible gem edge matches and spends exactly one move (moves 99 -> 98, score 30 -> 60)
+Edge-start drag releases without a stuck pointer
+Virtual pointer routes through production InputManager: press expected=(273.96, 630.28) routed=(273.96, 630.28) held=True positionDevice=Royal QA virtual touch pressDevice=Royal QA virtual touch hit=item 568105589213524284
+Virtual pointer routes through production InputManager: move expected=(273.96, 704.37) routed=(273.96, 704.37) held=True positionDevice=Royal QA virtual touch pressDevice=Royal QA virtual touch hit=item 568105589213524284
+Virtual pointer routes through production InputManager: release expected=(273.96, 704.37) routed=(273.96, 704.37) held=False positionDevice=Royal QA virtual touch pressDevice=none hit=item 568105589213524284
+Input event swap settles and returns control
+Touch vertical drag matches through production input and spends one move (moves 99 -> 98, score 60 -> 90)
+Virtual pointer routes through production InputManager: press expected=(199.87, 704.37) routed=(199.87, 704.37) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213523238
+Virtual pointer routes through production InputManager: move expected=(273.96, 704.37) routed=(273.96, 704.37) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213523220
+Virtual pointer routes through production InputManager: release expected=(273.96, 704.37) routed=(273.96, 704.37) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=item 568105589213523220
+Drag during input lock does not exchange pieces
+Virtual pointer routes through production InputManager: press expected=(-20.00, -20.00) routed=(-20.00, -20.00) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=none
+Virtual pointer routes through production InputManager: move expected=(-80.00, -20.00) routed=(-80.00, -20.00) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=none
+Virtual pointer routes through production InputManager: release expected=(-80.00, -20.00) routed=(-80.00, -20.00) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=none
+Press outside board does not spend a move
+Releasing virtual inputs leaves no stuck drag state
+Input tests preserve one piece per owned square
+Input regression restores caller moves, score, move ID and input-lock state
+Pointer regression preserves gems and lives
+3-line detected
+3-line power-up rule
+Impact queue settles within 10 seconds
+4-line detected
+4-line power-up rule
+Impact queue settles within 10 seconds
+5-line detected
+5-line power-up rule
+Impact queue settles within 10 seconds
+2×2 square detected
+2×2 creates helicopter
+Impact queue settles within 10 seconds
+Helicopter survives match destruction as a playable piece
+T match creates TNT
+Impact queue settles within 10 seconds
+HORIZONTAL_STRIPPED removes additional targets on impact
+Impact queue settles within 10 seconds
+PACKAGE removes additional targets on impact
+Impact queue settles within 10 seconds
+HELICOPTER removes additional targets on impact
+Impact queue settles within 10 seconds
+BOMB removes additional targets on impact
+Combo accepted: HORIZONTAL_STRIPPED + HORIZONTAL_STRIPPED
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + HORIZONTAL_STRIPPED
+Combo accepted: HORIZONTAL_STRIPPED + PACKAGE
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + PACKAGE
+Combo accepted: HORIZONTAL_STRIPPED + HELICOPTER
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + HELICOPTER
+Combo accepted: HORIZONTAL_STRIPPED + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + BOMB
+Combo accepted: PACKAGE + PACKAGE
+Impact queue settles within 14 seconds
+Combo changes board: PACKAGE + PACKAGE
+Combo accepted: PACKAGE + HELICOPTER
+Impact queue settles within 14 seconds
+Combo changes board: PACKAGE + HELICOPTER
+Combo accepted: PACKAGE + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: PACKAGE + BOMB
+Combo accepted: HELICOPTER + HELICOPTER
+Impact queue settles within 14 seconds
+Combo changes board: HELICOPTER + HELICOPTER
+Combo accepted: HELICOPTER + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: HELICOPTER + BOMB
+Combo accepted: BOMB + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: BOMB + BOMB
+Impact queue settles within 10 seconds
+TNT chains into rocket and reaches board edge
+Pause holds TNT impact
+Impact queue settles within 10 seconds
+Hint controller exists
+Hints ON reveals a legal candidate after the idle delay
+Hints OFF cancels the active visual immediately
+Hints OFF exits any current tip animation
+Hints OFF keeps move discovery active while suppressing automatic visuals
+Hints OFF is stored for scene and app reloads
+Hints ON resumes automatic assistance
+Opening pause cancels a visible board hint
+Piece fills its cell without crossing adjacent hit areas: 0,0
+Piece fills its cell without crossing adjacent hit areas: 1,0
+Piece fills its cell without crossing adjacent hit areas: 2,0
+Piece fills its cell without crossing adjacent hit areas: 3,0
+Piece fills its cell without crossing adjacent hit areas: 4,0
+Piece fills its cell without crossing adjacent hit areas: 5,0
+Piece fills its cell without crossing adjacent hit areas: 6,0
+Piece fills its cell without crossing adjacent hit areas: 7,0
+Piece fills its cell without crossing adjacent hit areas: 0,1
+Piece fills its cell without crossing adjacent hit areas: 1,1
+Piece fills its cell without crossing adjacent hit areas: 2,1
+Piece fills its cell without crossing adjacent hit areas: 3,1
+Piece fills its cell without crossing adjacent hit areas: 4,1
+Piece fills its cell without crossing adjacent hit areas: 5,1
+Piece fills its cell without crossing adjacent hit areas: 6,1
+Piece fills its cell without crossing adjacent hit areas: 7,1
+Piece fills its cell without crossing adjacent hit areas: 0,2
+Piece fills its cell without crossing adjacent hit areas: 1,2
+Piece fills its cell without crossing adjacent hit areas: 2,2
+Piece fills its cell without crossing adjacent hit areas: 3,2
+Piece fills its cell without crossing adjacent hit areas: 4,2
+Piece fills its cell without crossing adjacent hit areas: 5,2
+Piece fills its cell without crossing adjacent hit areas: 6,2
+Piece fills its cell without crossing adjacent hit areas: 7,2
+Piece fills its cell without crossing adjacent hit areas: 0,3
+Piece fills its cell without crossing adjacent hit areas: 1,3
+Piece fills its cell without crossing adjacent hit areas: 2,3
+Piece fills its cell without crossing adjacent hit areas: 3,3
+Piece fills its cell without crossing adjacent hit areas: 4,3
+Piece fills its cell without crossing adjacent hit areas: 5,3
+Piece fills its cell without crossing adjacent hit areas: 6,3
+Piece fills its cell without crossing adjacent hit areas: 7,3
+Piece fills its cell without crossing adjacent hit areas: 0,4
+Piece fills its cell without crossing adjacent hit areas: 1,4
+Piece fills its cell without crossing adjacent hit areas: 2,4
+Piece fills its cell without crossing adjacent hit areas: 3,4
+Piece fills its cell without crossing adjacent hit areas: 4,4
+Piece fills its cell without crossing adjacent hit areas: 5,4
+Piece fills its cell without crossing adjacent hit areas: 6,4
+Piece fills its cell without crossing adjacent hit areas: 7,4
+Piece fills its cell without crossing adjacent hit areas: 0,5
+Piece fills its cell without crossing adjacent hit areas: 1,5
+Piece fills its cell without crossing adjacent hit areas: 2,5
+Piece fills its cell without crossing adjacent hit areas: 3,5
+Piece fills its cell without crossing adjacent hit areas: 4,5
+Piece fills its cell without crossing adjacent hit areas: 5,5
+Piece fills its cell without crossing adjacent hit areas: 6,5
+Piece fills its cell without crossing adjacent hit areas: 7,5
+Piece fills its cell without crossing adjacent hit areas: 0,6
+Piece fills its cell without crossing adjacent hit areas: 1,6
+Piece fills its cell without crossing adjacent hit areas: 2,6
+Piece fills its cell without crossing adjacent hit areas: 3,6
+Piece fills its cell without crossing adjacent hit areas: 4,6
+Piece fills its cell without crossing adjacent hit areas: 5,6
+Piece fills its cell without crossing adjacent hit areas: 6,6
+Piece fills its cell without crossing adjacent hit areas: 7,6
+Piece fills its cell without crossing adjacent hit areas: 0,7
+Piece fills its cell without crossing adjacent hit areas: 1,7
+Piece fills its cell without crossing adjacent hit areas: 2,7
+Piece fills its cell without crossing adjacent hit areas: 3,7
+Piece fills its cell without crossing adjacent hit areas: 4,7
+Piece fills its cell without crossing adjacent hit areas: 5,7
+Piece fills its cell without crossing adjacent hit areas: 6,7
+Piece fills its cell without crossing adjacent hit areas: 7,7
+MenuPause includes an interactive matching-hints setting
+Settings includes an interactive matching-hints setting
+8x10 board fits safe area above boosters with readable cells at 360x640 (36.3 px/cell)
+9x11 board fits safe area above boosters with readable cells at 360x640 (33.2 px/cell)
+5x11 board fits safe area above boosters with readable cells at 360x640 (33.2 px/cell)
+9x5 board fits safe area above boosters with readable cells at 360x640 (38.1 px/cell)
+8x10 board fits safe area above boosters with readable cells at 390x844 (46.5 px/cell)
+9x11 board fits safe area above boosters with readable cells at 390x844 (41.3 px/cell)
+5x11 board fits safe area above boosters with readable cells at 390x844 (44.9 px/cell)
+9x5 board fits safe area above boosters with readable cells at 390x844 (41.3 px/cell)
+8x10 board fits safe area above boosters with readable cells at 412x915 (49.1 px/cell)
+9x11 board fits safe area above boosters with readable cells at 412x915 (43.7 px/cell)
+5x11 board fits safe area above boosters with readable cells at 412x915 (49.0 px/cell)
+9x5 board fits safe area above boosters with readable cells at 412x915 (43.7 px/cell)
+8x10 board fits safe area above boosters with readable cells at 768x1024 (60.6 px/cell)
+9x11 board fits safe area above boosters with readable cells at 768x1024 (55.3 px/cell)
+5x11 board fits safe area above boosters with readable cells at 768x1024 (55.3 px/cell)
+9x5 board fits safe area above boosters with readable cells at 768x1024 (81.4 px/cell)
+Hint and layout checks preserve moves, score, gems and lives
+Invalid swap returns pieces and spends no move
+Tap activates power-up
+Power-up tap spends exactly one move
+Live gravity/refill/cascade finishes and input returns
+Refill has valid square ownership and no falling leftovers
+Simultaneous audio stays within voice cap
+Projectiles stay within pool cap
+Falling fragments stay within their fixed pool
+Regression run preserves coins and lives
+No runtime errors during regression run
+Errors:
+Editor update p95 ms (not device GPU benchmark): 6.539

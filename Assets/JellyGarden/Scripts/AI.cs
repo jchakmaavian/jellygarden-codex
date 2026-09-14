@@ -48,6 +48,43 @@ namespace JellyGarden.Scripts
 		/// The tip items
 		/// </summary>
 		private List<Item> nextMoveItems;
+		readonly List<Item> visibleHintItems = new List<Item>();
+		Coroutine hintRoutine;
+		int visibleHintMove;
+		public int VisibleHintCount => visibleHintItems.Count;
+		public const float HintIdleSeconds = 4f;
+		void OnEnable() { Juice.RoyalHintSettings.Changed += HintPreferenceChanged; }
+		void OnDisable()
+		{
+			Juice.RoyalHintSettings.Changed -= HintPreferenceChanged;
+			CancelVisibleHint();
+			if (hintRoutine != null) StopCoroutine(hintRoutine);
+			hintRoutine = null; corCount = 0;
+		}
+		void HintPreferenceChanged(bool enabled) { if (!enabled) CancelVisibleHint(); }
+		void Update()
+		{
+			var level = LevelManager.THIS;
+			if (visibleHintItems.Count > 0 && (!Juice.RoyalHintSettings.Enabled || !level ||
+				level.gameStatus != GameState.Playing || level.DragBlocked || level.moveID != visibleHintMove ||
+				InputManager.Instance.IsTouching || !HintCandidatesPresent(visibleHintItems))) CancelVisibleHint();
+		}
+		public void CancelVisibleHint()
+		{
+			foreach (var item in visibleHintItems)
+			{
+				if (!item || !item.anim) continue;
+				item.anim.ResetTrigger("tip");
+				var state = item.anim.GetCurrentAnimatorStateInfo(0);
+				bool nextTip = item.anim.IsInTransition(0) && item.anim.GetNextAnimatorStateInfo(0).IsName("tip");
+				if (!item.destroying && !item.falling && (state.IsName("tip") || nextTip))
+				{
+					item.anim.Play("stop", 0, 1f);
+					if (item.sprRenderer) item.sprRenderer.transform.localPosition = Vector3.zero;
+				}
+			}
+			visibleHintItems.Clear();
+		}
 		// Use this for initialization
 		void Start()
 		{
@@ -518,54 +555,50 @@ namespace JellyGarden.Scripts
 		//show tip function calls coroutine for
 		void showTip(List<Item> nextMoveItems)
 		{
-			//        print("show tip");
-			StopCoroutine(showTipCor(nextMoveItems));
-			StartCoroutine(showTipCor(nextMoveItems));
+			// Discovery must remain true even when visual hints are disabled: otherwise
+			// the no-moves solver would incorrectly shuffle a perfectly playable board.
+			gotTip = true;
+			if (hintRoutine != null) StopCoroutine(hintRoutine);
+			CancelVisibleHint();
+			hintRoutine = StartCoroutine(showTipCor(new List<Item>(nextMoveItems)));
+		}
+
+		static bool HintCandidatesPresent(List<Item> items)
+		{
+			foreach (var item in items)
+				if (!item || item.destroying || !item.gameObject.activeInHierarchy || !item.square || item.square.item != item) return false;
+			return items.Count > 0;
 		}
 
 		//show tip coroutine
 		IEnumerator showTipCor(List<Item> nextMoveItems)
 		{
-			gotTip = true;
-			corCount++;
-			if (corCount > 1)
-			{
-				corCount--;
-				yield break;
-			}
-			if (LevelManager.THIS.DragBlocked && !allowShowTip)
-			{
-				corCount--;
-				yield break;
-			}
+			corCount = 1;
 			tipID = LevelManager.THIS.moveID;
-			//while (!LevelManager.THIS.DragBlocked && allowShowTip)
-			//{
-			yield return new WaitForSeconds(1);
-			if (LevelManager.THIS.DragBlocked && !allowShowTip && tipID != LevelManager.THIS.moveID)
+			float idle = 0;
+			while (idle < HintIdleSeconds)
 			{
-				corCount--;
-				yield break;
+				var level = LevelManager.THIS;
+				if (!level || level.moveID != tipID || !HintCandidatesPresent(nextMoveItems)) break;
+				bool settled = level.gameStatus == GameState.Playing && !level.DragBlocked && allowShowTip && !InputManager.Instance.IsTouching;
+				foreach (var item in nextMoveItems) if (!item || item.destroying || item.falling) settled = false;
+				idle = settled ? idle + Time.deltaTime : 0;
+				yield return null;
 			}
-			foreach (Item item in nextMoveItems)
+			var lm = LevelManager.THIS;
+			if (lm && lm.moveID == tipID && lm.gameStatus == GameState.Playing && !lm.DragBlocked &&
+				allowShowTip && Juice.RoyalHintSettings.Enabled && idle >= HintIdleSeconds &&
+				!InputManager.Instance.IsTouching && HintCandidatesPresent(nextMoveItems))
 			{
-				if (item == null)
-				{
-					corCount--;
-					yield break;
-				}
-
+				visibleHintMove = tipID;
+				foreach (var item in nextMoveItems)
+					if (item && !item.destroying && !item.falling && item.anim)
+					{ item.anim.SetTrigger("tip"); visibleHintItems.Add(item); }
+				yield return new WaitForSeconds(1.5f);
 			}
-			//call animation trigger for every found item to show tip
-			foreach (Item item in nextMoveItems)
-			{
-				if (item != null)
-					item.anim.SetTrigger("tip");
-			}
-			yield return new WaitForSeconds(0);
-			StartCoroutine(CheckPossibleCombines());
-			corCount--;
-			// }
+			CancelVisibleHint();
+			corCount = 0; hintRoutine = null;
+			if (lm && lm.gameStatus == GameState.Playing) StartCoroutine(CheckPossibleCombines());
 		}
 
 

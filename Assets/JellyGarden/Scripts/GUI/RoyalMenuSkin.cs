@@ -106,15 +106,19 @@ namespace RoyalThrone.Presentation
                         var life=p.Find("BuyLife");Place(life,0,-147,380,96);Surface(life,true);HideVisual(life.Find("Text"));Label(life,"Royal refill","REFILL",-75,0,210,64,30);
                         Field(life,"Price",72,0,70,62,35);Art(life,"Royal gem","gem",135,0,55,55);Button(p.Find("Video"),"WATCH FOR A LIFE",0,-265,380,66,24);break;
                     case "MenuPause":case "Settings":
-                        Base(menu,p,630,menu.name=="MenuPause"?"TAKE A BREATHER":"SETTINGS");Art(p,"Royal crest","crown",0,139,132,110);
-                        Button(p.Find("Continue"),"CONTINUE",0,20,380,92,34);
-                        Button(p.Find("Music"),"MUSIC",-147,-137,136,90,22);Button(p.Find("Sound"),"SFX",0,-137,136,90,25);
-                        Button(p.Find("Map"),"HOME",147,-137,136,90,22);Button(p.Find("Info"),"HELP",147,-137,136,90,22);
-                        foreach(string n in new[]{"Music","Sound"}){var off=p.Find(n+"/"+n+"Off");if(off){Place(off,0,-29,112,23);var im=off.GetComponent<Image>();if(im)im.color=Navy;Label(off,"Royal off","OFF",0,0,108,25,17);off.SetAsLastSibling();}}
-                        if(menu.name=="Settings"){
-                            Place(p,0,0,620,440);Place(p.Find("Royal heading"),-24,155,430,70);Place(p.Find("Close"),257,170,68,68);Place(p.Find("Royal crest"),0,46,132,110);
-                            foreach(string n in new[]{"Music","Sound","Info"}){var control=p.Find(n);if(control){var r=(RectTransform)control;r.anchoredPosition=new Vector2(r.anchoredPosition.x,-100);}}
-                        }break;
+                        bool paused=menu.name=="MenuPause";
+                        Base(menu,p,paused?720:600,paused?"TAKE A BREATHER":"SETTINGS");
+                        Art(p,"Royal crest","crown",0,paused?181:124,116,98);
+                        Button(p.Find("Continue"),"CONTINUE",0,70,420,86,34);
+                        float soundY=paused?-46:9;
+                        Button(p.Find("Music"),"MUSIC ON",-119,soundY,218,74,23);Button(p.Find("Sound"),"SFX ON",119,soundY,218,74,23);
+                        foreach(string n in new[]{"Music","Sound"}){var off=p.Find(n+"/"+n+"Off");if(off)HideVisual(off);}
+                        var hint=new GameObject("Hints",typeof(RectTransform),typeof(Image),typeof(UnityEngine.UI.Button));hint.transform.SetParent(p,false);
+                        Button(hint.transform,"MATCHING HINTS ON",0,paused?-143:-89,456,74,24);
+                        hint.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{RoyalHintSettings.Enabled=!RoyalHintSettings.Enabled;RoyalAudioDirector.Get?.Play(RoyalCue.Click);});
+                        Button(p.Find("Map"),"HOME",0,-241,280,68,24);Button(p.Find("Info"),"HELP",0,-189,280,68,24);
+                        if(paused)Label(p,"Royal hint description","A gentle clue after a few quiet seconds",0,-303,510,38,19);
+                        break;
                     case "MenuComplete":case "MenuFailed":
                         bool win=menu.name=="MenuComplete";Base(menu,p,870,win?"WELL PLAYED!":"TRY AGAIN");Field(p,"Level",0,288,420,50,30);
                         for(int i=1;i<=3;i++){var star=p.Find("Star"+i);Place(star,(i-2)*130,191+(i==2?12:0),118,118);if(star){star.GetComponent<Image>().sprite=RoyalPieceSkin.Art("star");star.GetComponent<Image>().preserveAspect=true;}}

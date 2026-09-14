@@ -21,17 +21,10 @@ namespace JellyGarden.Scripts
         private AudioSource _audioSource;
 
         void Awake() {
-            if (transform.parent == null) {
-                transform.parent = Camera.main.transform;
-                transform.localPosition = Vector3.zero;
-            }
-
+            if (Instance && Instance != this) { Destroy(gameObject); return; }
+            Instance = this;
+            transform.SetParent(null);
             DontDestroyOnLoad(gameObject);
-            if (Instance == null)
-                Instance = this;
-            else if (Instance != this)
-                Destroy(gameObject);
-
             _audioSource = GetComponent<AudioSource>();
         }
 
