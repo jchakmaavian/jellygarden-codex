@@ -312,7 +312,20 @@ namespace JellyGarden.Scripts
                     else
                         trigger = false;
                 }
-                transform.localScale = new Vector3(xScale, yScale, 1);
+                // STORY: stand aside while a pop or a punch owns this gem.
+                //
+                // This loop does not merely READ xScale, it drives it: it walks
+                // xScale toward a target captured when the coroutine started and
+                // rewrites localScale every fixed update. So a story effect that
+                // set xScale had it walked straight back at 50Hz, before the
+                // effect was on screen for long enough to see. Composing with it
+                // was the original approach and it does not work.
+                //
+                // Skipping the WRITE rather than the whole loop is deliberate:
+                // the loop keeps its own phase, so the gem resumes breathing
+                // from where it was instead of jumping when the effect ends.
+                if (!_popOwned)
+                    transform.localScale = new Vector3(xScale, yScale, 1);
                 yield return new WaitForFixedUpdate();
             }
             //anim.SetBool("stop", true);
@@ -860,6 +873,76 @@ namespace JellyGarden.Scripts
             animationFinished = true;
         }
 
+        /// <summary>
+        /// STORY: multiply the idle breathing by a pop stage's scale.
+        ///
+        /// AnimIdleStart owns transform.localScale — it assigns it from xScale
+        /// and yScale every WaitForFixedUpdate, forever, and DestroyItem's
+        /// StopCoroutine(AnimIdleStart()) does not stop it (Unity matches the
+        /// IEnumerator by reference, and that is a fresh enumerator). So a
+        /// caller that wrote localScale directly would be erased within 20ms.
+        /// This writes the fields the idle loop reads instead, so the two
+        /// compose and the loop applies the result for us.
+        ///
+        /// The base is captured once, on the first call, so repeated stages
+        /// multiply against the gem's resting size rather than compounding.
+        /// </summary>
+        public void PopScale(float x, float y)
+        {
+            if (!_popBaseTaken)
+            {
+                _popBaseX = xScale;
+                _popBaseY = yScale;
+                _popBaseTaken = true;
+            }
+
+            // Take ownership of the transform for the length of the effect. The
+            // idle loop checks this before writing; see AnimIdleStart. Without
+            // it the loop walks xScale back toward its own target at 50Hz and
+            // the effect never becomes visible.
+            _popOwned = true;
+
+            // Write the transform DIRECTLY rather than through xScale/yScale.
+            // Those two fields belong to the idle loop's own state machine —
+            // writing them moves the breathing's target and makes the gem
+            // resume from the wrong place once the effect releases.
+            transform.localScale = new Vector3(_popBaseX * x, _popBaseY * y, 1);
+        }
+
+        /// <summary>
+        /// STORY: put the gem back to the scale it was resting at before
+        /// PopScale first touched it.
+        ///
+        /// A gem being DESTROYED never needs this — it is gone a frame later.
+        /// A gem merely shaken by a clear next to it (StoryPunchVfx) does: the
+        /// idle loop keeps asserting xScale/yScale every fixed update, so a
+        /// neighbour left mid-spring stays deformed for the rest of the level
+        /// rather than drifting back. Every spring calls this on every path out,
+        /// including the early ones.
+        /// </summary>
+        public void PopRelease()
+        {
+            if (!_popBaseTaken) return;
+
+            xScale = _popBaseX;
+            yScale = _popBaseY;
+            transform.localScale = new Vector3(xScale, yScale, 1);
+            _popBaseTaken = false;
+
+            // Hand the transform back to the idle loop, which resumes writing
+            // on its next fixed update from the phase it kept throughout.
+            _popOwned = false;
+        }
+
+        private float _popBaseX, _popBaseY;
+        private bool _popBaseTaken;
+
+        /// <summary>
+        /// True while a story effect owns this gem's localScale. Read by
+        /// AnimIdleStart, which otherwise overwrites it 50 times a second.
+        /// </summary>
+        private bool _popOwned;
+
         #region Universal powerups   // STORY: added
 
         /// <summary>
@@ -999,6 +1082,32 @@ namespace JellyGarden.Scripts
             // either swaps that sprite or switches the renderer off.
             // No-op unless -storyshatter.
             JellyGarden.Scripts.Story.StoryShatterVfx.Shatter(this);
+
+            // STORY: the wind-up before the gem is allowed to die — squash,
+            // snap, flash, 143ms in total on this gem's own root transform.
+            // It sits ABOVE the kit's clip trigger and far above
+            // square.DestroyBlock(), so the synchronous contract everything
+            // downstream relies on is untouched; see StoryRocketSweep's header
+            // for what breaking that looks like. No-op unless -storypop.
+            yield return JellyGarden.Scripts.Story.StoryPopVfx.PreRoll(this);
+
+            // STORY: the kit fades a gem out over 250ms (destroy.anim, the
+            // Sprite child's scale curve 1 -> 0). That is longer than any of the
+            // six variants, so whatever is drawn on top is followed by a quarter
+            // second of the gem melting — which is what makes a clear read as
+            // soft however good the effect over it is.
+            //
+            // The CLIP is not edited: anim.speed is a playback multiplier, so
+            // destroy.anim stays byte-identical and check_vfx_intact stays
+            // green. The clip's own event at 0.25s (SetAnimationDestroyingFinished,
+            // which DestroyCor waits on below) simply arrives sooner, which is
+            // exactly what is wanted. Kit alone keeps the original pace.
+            float popFadeSpeed = anim == null ? 1f : anim.speed;
+            if (anim != null &&
+                JellyGarden.Scripts.Story.StoryVfxVariant.WantsFastFade(
+                    JellyGarden.Scripts.Story.StoryVfxVariant.Current))
+                anim.speed = 4f;
+
             //if (anim_name == "")
             //{
             if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
@@ -1031,6 +1140,13 @@ namespace JellyGarden.Scripts
                     // shards, sparks and a flash — the three things a baked
                     // 4-frame sprite cannot do. No-op unless -storyblastvfx.
                     JellyGarden.Scripts.Story.StoryBlastVfx.Blast(transform.position, color);
+
+                    // STORY: stage 7 — the board's own reaction. Each surviving
+                    // neighbour gets a small spring, falling off with distance.
+                    // Fire-and-forget by contract: it must NOT be yielded on,
+                    // because everything below this line in the kit's destroy
+                    // path is synchronous and the cascade waits on it.
+                    JellyGarden.Scripts.Story.StoryPunchVfx.Punch(this);
                     //   Destroy(partcl, 1f);
                 }
                 if (explEffect)
@@ -1084,6 +1200,12 @@ namespace JellyGarden.Scripts
                 i.SetColor(color);
                 i.ChangeType();
             }
+
+            // STORY: put the Animator's speed back. The gem is usually destroyed
+            // on the next line, but a gem that carries a NextType is REUSED by
+            // square.GenItem above rather than thrown away, and one left at 4x
+            // would play every later animation at four times the pace.
+            if (anim != null) anim.speed = popFadeSpeed;
 
             if (destroying)
             {
@@ -1156,6 +1278,18 @@ namespace JellyGarden.Scripts
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.destroyPackage);
 
+            // STORY: the explosion, fired ONCE here rather than from DestroyCor.
+            //
+            // Two reasons, both structural. This method sets currentType to NONE
+            // below before calling DestroyItem, so by the time the destroy
+            // coroutine runs the bomb no longer identifies as a package and a
+            // hook there cannot tell a bomb from an ordinary gem. And the clears
+            // this method starts are ordinary clears — Glass Burst's job — so an
+            // explosion per cleared cell would draw nine of them.
+            JellyGarden.Scripts.Story.StoryBombVfx.Blow(
+                transform.position,
+                JellyGarden.Scripts.Story.StoryBombVfx.TintFor(color, 0f));
+
             List<Item> itemsList = LevelManager.THIS.GetItemsAround(square);
             foreach (Item item in itemsList)
             {
@@ -1176,6 +1310,37 @@ namespace JellyGarden.Scripts
             SoundBase.Instance.PlaySound(SoundBase.Instance.colorBombExpl);
 
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+
+            // STORY: the charge-mark-wave sequence, started BEFORE the clear.
+            //
+            // The positions have to be read while the gems are still on the
+            // board: the loop below destroys every one of them in this frame,
+            // and a transform read afterwards is a transform of something that
+            // no longer exists.
+            //
+            // The wave then pops them one at a time as it reaches them, over
+            // about a second. The gems themselves are already gone by then —
+            // that mismatch is deliberate, and the alternative is staggering the
+            // kit's own destroys, which hung the board when the rocket tried it.
+            // See StoryColorBombVfx's header.
+            var targets = new List<Vector3>(32);
+            for (int i = 0; i < items.Length; i++)
+            {
+                Item other = items[i].GetComponent<Item>();
+                if (other == null || other.color != p) continue;
+                // The SQUARE, not the gem: Item.Switching lerps a gem's
+                // transform mid-swap and a colour bomb fires from such a swap.
+                targets.Add(other.square != null
+                    ? other.square.transform.position
+                    : other.transform.position);
+            }
+
+            JellyGarden.Scripts.Story.StoryColorBombVfx.Fire(
+                square != null ? square.transform.position : transform.position,
+                JellyGarden.Scripts.Story.StoryBombVfx.TintFor(p, 0f),
+                targets,
+                sprRenderer != null ? sprRenderer.sprite : null);
+
             foreach (GameObject item in items)
             {
                 if (item.GetComponent<Item>().color == p)

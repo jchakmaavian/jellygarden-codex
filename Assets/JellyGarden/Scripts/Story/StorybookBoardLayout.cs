@@ -87,8 +87,20 @@ namespace JellyGarden.Scripts.Story
                 if (renderer == null || !renderer.enabled) continue;
                 field = square.transform.parent;
                 renderer.sprite = Cell();
+                // The board's ground, as a two-tone checker.
+                //
+                // These were 220,232,235 / 232,240,240 — luminance 229 and 238,
+                // which is brighter than the room behind the board (134 after
+                // the wash was taken down) and brighter than the gems drawn on
+                // top of them. A ground that outshines both reads as a white
+                // slab laid over the page, and every piece has to carry its own
+                // separation. Royal indigo at 78 puts the ground under the room
+                // instead: the board stays a distinct object, and all six gem
+                // hues lift off it rather than competing with it. The step
+                // between the two tones is kept at the same ~9 luminance, so
+                // the checker still reads as grain rather than as tiles.
                 renderer.color = (square.row + square.col) % 2 == 0
-                    ? new Color32(220, 232, 235, 255) : new Color32(232, 240, 240, 255);
+                    ? new Color32(64, 72, 112, 255) : new Color32(78, 87, 130, 255);
                 Transform oldEdge = square.transform.Find("~StoryBoardEdge");
                 if (oldEdge != null) oldEdge.gameObject.SetActive(false);
                 // Only the kit's ice layers change; stone, chains and other blockers retain their behaviour/art.
@@ -370,16 +382,26 @@ namespace JellyGarden.Scripts.Story
             Canvas canvas = image.GetComponentInParent<Canvas>();
             if (canvas != null) { canvas.overrideSorting = true; canvas.sortingOrder = -10; }
             if (image.transform.Find("StorybookWash") != null) return;
-            // Keep the painting at its own aspect; the cream wash is anchored to the viewport.
+            // Keep the painting at its own aspect; the wash is anchored to the viewport.
+            //
+            // The wash is what the player reads as "the room", and its job is to
+            // hold the room BEHIND the board rather than beside it. The original
+            // cream (255,250,231 / 255,245,221) sat at roughly the same value as
+            // the board's own ivory cells, so the two competed and the pieces had
+            // to carry the whole separation themselves. These are the same two
+            // gradients at the same alphas — the veil is unchanged, so the
+            // painting is no more and no less visible than before — shifted down
+            // in value and a little toward the room's own warm shadow. The board
+            // keeps its ivory; the room gives it somewhere to sit.
             Image wash = StoryUi.CreateImage("StorybookWash", image.transform, null, Color.white);
             StoryUi.Stretch(wash.rectTransform);
             wash.rectTransform.anchorMin = new Vector2(0, .66f);
-            StoryCastleUi.Gradient(wash, new Color32(255, 250, 231, 118), new Color32(255, 245, 221, 240));
+            StoryCastleUi.Gradient(wash, new Color32(150, 141, 122, 118), new Color32(140, 130, 111, 240));
             wash.raycastTarget = false;
             Image floor = StoryUi.CreateImage("StorybookFloorWash", image.transform, null, Color.white);
             StoryUi.Stretch(floor.rectTransform);
             floor.rectTransform.anchorMax = new Vector2(1, .66f);
-            StoryCastleUi.Gradient(floor, new Color32(255, 245, 221, 240), new Color32(249, 238, 217, 255));
+            StoryCastleUi.Gradient(floor, new Color32(140, 130, 111, 240), new Color32(128, 119, 102, 255));
             floor.raycastTarget = false;
         }
     }

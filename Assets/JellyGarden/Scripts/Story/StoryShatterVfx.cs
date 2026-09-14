@@ -60,16 +60,17 @@ namespace JellyGarden.Scripts.Story
     {
         /// <summary>
         /// Off unless a launch asks for it, so the board behaves exactly as the
-        /// kit does by default. Flipped by <c>-storyshatter</c>.
+        /// kit does by default. Flipped by <c>-storyshatter</c>, by the <c>StoryVfx.Shatter</c> pref,
+        /// or on by default in a development build. See StoryVfxFlags.
         /// </summary>
         public static bool Enabled
         {
             get
             {
+                // Cached, because every clear reads this and the answer
+                // cannot change inside one run.
                 if (_enabled.HasValue) return _enabled.Value;
-                _enabled = false;
-                foreach (string arg in global::System.Environment.GetCommandLineArgs())
-                    if (arg == "-storyshatter") { _enabled = true; break; }
+                _enabled = StoryVfxFlags.On("-storyshatter", "StoryVfx.Shatter");
                 return _enabled.Value;
             }
             set { _enabled = value; }
@@ -129,6 +130,16 @@ namespace JellyGarden.Scripts.Story
             // the mote's own starting size rather than from last frame's,
             // which would compound and collapse it to nothing.
             public float BaseScale;
+
+            // Per mote, not per file. The five fall-out variants differ mostly
+            // in these two numbers — drag near zero lets gravity carry a piece
+            // off the board, drag high makes the cloud hang where the gem was —
+            // and a cascade can have two variants' pieces in flight at once
+            // when the choice changes mid-board, so a static would apply the
+            // wrong physics to whatever is already falling.
+            public float Drag;
+            public float Gravity;
+
             public bool Alive;
         }
 
@@ -146,6 +157,11 @@ namespace JellyGarden.Scripts.Story
         public static void Shatter(Item item)
         {
             if (!Enabled || !Application.isPlaying) return;
+
+            // Kit means untouched, so the lab's reference button really is the
+            // kit: no pieces at all, whatever the layer's own flag says.
+            if (StoryVfxVariant.Current == VfxVariant.Kit) return;
+
             if (item == null || item.sprRenderer == null) return;
 
             Sprite source = item.sprRenderer.sprite;
@@ -153,23 +169,64 @@ namespace JellyGarden.Scripts.Story
 
             EnsureRig();
 
-            Transform gem = item.transform;
-            Vector3 centre = gem.position;
-            // The gem's own on-screen size, so the cloud is a real fraction of
-            // the gem rather than a guess at the cell.
-            float span = source.bounds.size.x * gem.lossyScale.x;
+            // A gem cleared by a rocket bursts when the HEAD reaches it, not
+            // when the kit clears the line — the kit clears the whole row on
+            // one frame and cannot be made to wait (see StoryRocketSweep's
+            // header for what happens when it is). Zero for an ordinary match.
+            //
+            // Everything the burst needs is measured NOW and carried, because
+            // by the time the delay elapses this Item has been destroyed: its
+            // transform, its renderer and its sprite are all gone.
+            float delay = StoryRocketSweep.DelayFor(item);
+            if (delay > 0f)
+            {
+                _driver.Defer(
+                    Time.time + delay,
+                    item.transform.position,
+                    source.bounds.size.x * item.transform.lossyScale.x,
+                    ColourOf(item),
+                    item.sprRenderer.gameObject.layer,
+                    item.sprRenderer.sortingLayerID);
+                return;
+            }
 
-            // The gem's colour, taken from the board rather than from a table:
-            // Item.color indexes LevelManager.scoresColors, the same list the
-            // score popup uses, so a mote can never disagree with the gem it
-            // came from.
-            Color tint = ColourOf(item);
+            Transform gem = item.transform;
+
+            Burst(
+                gem.position,
+                // The gem's own on-screen size, so the cloud is a real fraction
+                // of the gem rather than a guess at the cell.
+                source.bounds.size.x * gem.lossyScale.x,
+                // The gem's colour, taken from the board rather than from a
+                // table: Item.color indexes LevelManager.scoresColors, the same
+                // list the score popup uses, so a mote can never disagree with
+                // the gem it came from.
+                ColourOf(item),
+                item.sprRenderer.gameObject.layer,
+                item.sprRenderer.sortingLayerID);
+        }
+
+        /// <summary>
+        /// Throw one cloud, from values rather than from an Item.
+        ///
+        /// Split out so a rocket-staggered burst can fire long after the gem
+        /// that produced it has been destroyed — everything the cloud needs is
+        /// five numbers, none of which have to outlive the gem.
+        /// </summary>
+        private static void Burst(Vector3 centre, float span, Color tint,
+                                  int layer, int sortingLayer)
+        {
+            EnsureRig();
 
             Sprite glow = Glow();
-            int layer = item.sprRenderer.gameObject.layer;
-            int sortingLayer = item.sprRenderer.sortingLayerID;
 
-            for (int i = 0; i < PerGem; i++)
+            // The chosen variant's physics, read once for the whole cloud. The
+            // file's own PerGem/Life/Gravity/BurstSpeed/Drag/MoteMin/MoteMax
+            // constants are the ORIGINAL dissolve-and-hang look and are kept as
+            // the fallback shape; these override them per variant.
+            ShatterPhysics physics = StoryVfxVariant.PhysicsOf(StoryVfxVariant.Current);
+
+            for (int i = 0; i < physics.Count; i++)
             {
                 Shard mote = Lease();
                 if (mote == null) return;   // pool exhausted; drop the rest
@@ -180,7 +237,7 @@ namespace JellyGarden.Scripts.Story
                 Vector2 inside = Random.insideUnitCircle * 0.42f;
                 Vector3 at = centre + new Vector3(inside.x * span, inside.y * span, -0.3f);
 
-                float size = span * Random.Range(MoteMin, MoteMax);
+                float size = span * Random.Range(physics.SizeMin, physics.SizeMax);
                 float scale = size / Mathf.Max(0.0001f, glow.bounds.size.x);
 
                 mote.T.position = at;
@@ -203,12 +260,23 @@ namespace JellyGarden.Scripts.Story
                     ? Random.insideUnitCircle.normalized
                     : inside.normalized;
 
+                // The upward lift is a FRACTION of the burst speed, not a fixed
+                // 0.6-2.1 as it was when this only had to make one cloud hang.
+                // StraightDrop throws at 0.9, and a fixed lift of up to 2.1
+                // would launch its pieces upward off the top of the cell —
+                // which is the opposite of a gem collapsing out of the board.
+                // Scaled, every variant keeps the same shape: a little rise,
+                // then gravity takes it.
+                float lift = physics.BurstSpeed * Random.Range(0.18f, 0.62f);
+
                 mote.Velocity = new Vector3(
-                    dir.x * BurstSpeed * Random.Range(0.35f, 1.15f),
-                    dir.y * BurstSpeed * Random.Range(0.3f, 0.95f) + Random.Range(0.6f, 2.1f),
+                    dir.x * physics.BurstSpeed * Random.Range(0.35f, 1.15f),
+                    dir.y * physics.BurstSpeed * Random.Range(0.3f, 0.95f) + lift,
                     0f);
                 mote.Born = Time.time;
-                mote.Life = Life * Random.Range(0.72f, 1.15f);
+                mote.Life = physics.Life * Random.Range(0.72f, 1.15f);
+                mote.Drag = physics.Drag;
+                mote.Gravity = physics.Gravity;
                 mote.Alive = true;
             }
         }
@@ -337,10 +405,53 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private sealed class Driver : MonoBehaviour
         {
+            /// <summary>
+            /// A cloud waiting for a rocket's head to reach its cell.
+            ///
+            /// Values, not a reference to the gem: the Item this came from is
+            /// destroyed on the frame the rocket clears the line, a third of a
+            /// second before the head gets here.
+            /// </summary>
+            private struct Waiting
+            {
+                public float At;
+                public Vector3 Centre;
+                public float Span;
+                public Color Tint;
+                public int Layer;
+                public int SortingLayer;
+            }
+
+            private readonly List<Waiting> _waiting = new List<Waiting>(16);
+
+            internal void Defer(float at, Vector3 centre, float span, Color tint,
+                                int layer, int sortingLayer)
+            {
+                _waiting.Add(new Waiting
+                {
+                    At = at,
+                    Centre = centre,
+                    Span = span,
+                    Tint = tint,
+                    Layer = layer,
+                    SortingLayer = sortingLayer,
+                });
+            }
+
             private void Update()
             {
                 float now = Time.time;
                 float dt = Time.deltaTime;
+
+                // Fire the clouds whose head has arrived. Backwards, so the
+                // splice cannot skip a neighbour.
+                for (int w = _waiting.Count - 1; w >= 0; w--)
+                {
+                    Waiting due = _waiting[w];
+                    if (now < due.At) continue;
+                    _waiting.RemoveAt(w);
+                    Burst(due.Centre, due.Span, due.Tint, due.Layer, due.SortingLayer);
+                }
 
                 for (int i = 0; i < Pool.Count; i++)
                 {
@@ -359,8 +470,8 @@ namespace JellyGarden.Scripts.Story
                     // of its life, so what the eye sees is a cloud blooming
                     // and then sinking — not gravel on a ballistic arc. This
                     // ordering is what separates the two.
-                    mote.Velocity -= mote.Velocity * Mathf.Min(1f, Drag * dt);
-                    mote.Velocity.y += Gravity * dt;
+                    mote.Velocity -= mote.Velocity * Mathf.Min(1f, mote.Drag * dt);
+                    mote.Velocity.y += mote.Gravity * dt;
                     mote.T.position += mote.Velocity * dt;
 
                     // Shrink as they go, so a mote thins out instead of

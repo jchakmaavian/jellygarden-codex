@@ -37,16 +37,17 @@ namespace JellyGarden.Scripts.Story
     {
         /// <summary>
         /// Off until it is asked for, so the board behaves exactly as the kit
-        /// does unless a launch opts in. Flipped by <c>-storyblastvfx</c>.
+        /// does unless a launch opts in. Flipped by <c>-storyblastvfx</c>, by the <c>StoryVfx.Blast</c> pref,
+        /// or on by default in a development build. See StoryVfxFlags.
         /// </summary>
         public static bool Enabled
         {
             get
             {
+                // Cached, because every clear reads this and the answer
+                // cannot change inside one run.
                 if (_enabled.HasValue) return _enabled.Value;
-                _enabled = false;
-                foreach (string arg in global::System.Environment.GetCommandLineArgs())
-                    if (arg == "-storyblastvfx") { _enabled = true; break; }
+                _enabled = StoryVfxFlags.On("-storyblastvfx", "StoryVfx.Blast");
                 return _enabled.Value;
             }
             set { _enabled = value; }
@@ -71,10 +72,27 @@ namespace JellyGarden.Scripts.Story
         // coming OUT of that cell without covering its neighbours. Measured
         // against StoryBoardScale.Pitch rather than hardcoded, so a change to
         // the board's pitch carries the effect with it.
-        private const float ShardSpeed = 3.2f;
-        private const float SparkSpeed = 2.1f;
-        private const float ShardLife = 0.42f;
-        private const float SparkLife = 0.62f;
+        // Speeds are raised as the lives are cut, because what reads as "thrown
+        // hard" is DISTANCE COVERED, not velocity: a shard living 100ms at the
+        // old 3.2 would travel a quarter of what it used to and read as the
+        // burst having lost its force.
+        private const float ShardSpeed = 5.4f;
+        private const float SparkSpeed = 3.4f;
+
+        // Stage 4 (POP) and stage 6 (secondary), at the durations chosen on the
+        // browser prototype: 100ms and 260ms.
+        //
+        // These were 0.42 and 0.62 — the values from before the seven-stage
+        // sequence existed, when the spray was the WHOLE effect and had to
+        // carry the clear on its own. It no longer does: stages 1-3 now spend
+        // 90ms winding up before any of this fires, so a 420ms shard throw
+        // pushed the visible end of a clear past half a second and the board
+        // read as sluggish during a cascade.
+        private const float ShardLife = 0.10f;
+        private const float SparkLife = 0.26f;
+
+        // Unchanged. The flash is stage 3's partner at the pop instant and 70ms
+        // is already about two frames; cutting it further loses it entirely.
         private const float FlashLife = 0.07f;
 
         // Above the gems (2) and the blockers (4). The kit's own
@@ -105,6 +123,55 @@ namespace JellyGarden.Scripts.Story
         private static Material _additive;
         private static Material _soft;
         private static Transform _parent;
+        private static Ticker _ticker;
+
+        private static void EnsureTicker()
+        {
+            if (_ticker != null) return;
+            EnsureParent();
+            if (_parent == null) return;
+            _ticker = _parent.gameObject.AddComponent<Ticker>();
+        }
+
+        /// <summary>
+        /// Holds the sprays that are waiting for a rocket's head to reach them.
+        ///
+        /// This class is otherwise entirely static — the particle rigs are
+        /// leased and play themselves, so nothing here needed a frame hook
+        /// until the stagger did. It lives on the same holder the rigs are
+        /// parented to rather than on one of its own.
+        /// </summary>
+        private sealed class Ticker : MonoBehaviour
+        {
+            private struct Waiting
+            {
+                public float At;
+                public Vector3 Where;
+                public int Colour;
+            }
+
+            private readonly List<Waiting> _waiting = new List<Waiting>(16);
+
+            internal void Defer(float at, Vector3 where, int colour)
+            {
+                _waiting.Add(new Waiting { At = at, Where = where, Colour = colour });
+            }
+
+            private void Update()
+            {
+                if (_waiting.Count == 0) return;
+
+                float now = Time.time;
+                // Backwards, so removing one cannot skip its neighbour.
+                for (int i = _waiting.Count - 1; i >= 0; i--)
+                {
+                    if (now < _waiting[i].At) continue;
+                    Waiting due = _waiting[i];
+                    _waiting.RemoveAt(i);
+                    Fire(due.Where, due.Colour);
+                }
+            }
+        }
 
         /// <summary>
         /// Throw the spray for one cleared gem.
@@ -118,6 +185,39 @@ namespace JellyGarden.Scripts.Story
             if (!Enabled) return;
             if (!Application.isPlaying) return;
 
+            // One effect per clear, not four. Shatter, the pop wind-up, this
+            // spray and the neighbour spring all fire from DestroyCor and every
+            // one of them defaults ON in a development build, so a cleared gem
+            // was drawing all four at once and no single variant could be
+            // judged. The variant registry is the arbiter: these five are
+            // fall-out-the-board looks, and the spray is not part of them.
+            if (StoryVfxVariant.Current != VfxVariant.Kit) return;
+
+            // A gem cleared by a rocket sprays when the HEAD reaches it, not
+            // when the kit clears the line. The kit clears the whole row on one
+            // frame and cannot be made to wait — see StoryRocketSweep's header
+            // for what happens when it is — so the picture waits instead.
+            // Zero for an ordinary match, which then behaves exactly as before.
+            float delay = StoryRocketSweep.DelayFor(at);
+            if (delay > 0f)
+            {
+                EnsureTicker();
+                if (_ticker != null)
+                {
+                    _ticker.Defer(Time.time + delay, at, colour);
+                    return;
+                }
+            }
+
+            Fire(at, colour);
+        }
+
+        /// <summary>
+        /// Throw the spray now. Split from <see cref="Blast"/> so a staggered
+        /// burst can reach the same code once its delay has run out.
+        /// </summary>
+        private static void Fire(Vector3 at, int colour)
+        {
             Rig rig = Lease();
             if (rig == null)
             {
@@ -306,13 +406,27 @@ namespace JellyGarden.Scripts.Story
             main.duration = ShardLife;
             main.startLifetime = new ParticleSystem.MinMaxCurve(ShardLife * 0.7f, ShardLife);
             main.startSpeed = new ParticleSystem.MinMaxCurve(ShardSpeed * 0.55f, ShardSpeed);
-            main.startSize = new ParticleSystem.MinMaxCurve(cell * 0.16f, cell * 0.30f);
+
+            // CHUNKY, which is a count-and-size decision rather than a texture
+            // one. The dot these draw has no edge at any size, so the only way a
+            // piece reads as a PIECE is for it to be big enough to have visible
+            // area — roughly a third of a cell at the top end, up from 0.30.
+            // Fewer and larger also stops the burst reading as a puff of dust,
+            // which is what 14 small motes at 100ms looked like.
+            main.startSize = new ParticleSystem.MinMaxCurve(cell * 0.24f, cell * 0.44f);
             main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
-            main.gravityModifier = 1.15f;
+
+            // Gravity raised with the speed. At 100ms a shard barely falls at
+            // all, and a burst with no droop reads as a flat ring rather than as
+            // pieces being thrown off something.
+            main.gravityModifier = 2.4f;
             main.maxParticles = 24;
 
             ParticleSystem.EmissionModule emission = system.emission;
-            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 8, 14) });
+
+            // 6-9, down from 8-14. The pieces are now nearly twice the area, so
+            // the old count at the new size covers the neighbouring cells.
+            emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 6, 9) });
 
             ParticleSystem.ShapeModule shape = system.shape;
             shape.shapeType = ParticleSystemShapeType.Circle;
@@ -357,6 +471,41 @@ namespace JellyGarden.Scripts.Story
             shape.shapeType = ParticleSystemShapeType.Circle;
             shape.radius = cell * 0.06f;
             shape.radiusThickness = 1f;
+
+            // THE CURVE. Stage 6 asks for sparks that curl outward rather than
+            // flying straight, and an orbital velocity about z is what bends a
+            // world-space particle's path without touching its speed: the
+            // particle keeps its outward velocity and gains a rotation about
+            // the burst's own centre, so the track is an arc.
+            //
+            // Signed range, so half the sparks curl each way — one direction
+            // for all of them reads as the whole burst being swept sideways by
+            // wind, which is a different effect entirely.
+            ParticleSystem.VelocityOverLifetimeModule swirl = system.velocityOverLifetime;
+            swirl.enabled = true;
+            swirl.space = ParticleSystemSimulationSpace.World;
+
+            // ALL THREE ORBITAL AXES, IN THE SAME MODE.
+            //
+            // Unity requires orbitalX/Y/Z to share one MinMaxCurve mode and
+            // logs "Particle Orbital Velocity curves must all be in the same
+            // mode" every time a system plays otherwise — which, on a board
+            // clearing gems, is a wall of red per cascade and a curl that never
+            // applies.
+            //
+            // Setting only Z left X and Y at their default single-constant mode
+            // against Z's TwoConstants. So X and Y are written explicitly, in
+            // the same two-constant form, pinned to zero: the curl is still
+            // only about Z, but the module is now internally consistent.
+            swirl.orbitalX = new ParticleSystem.MinMaxCurve(0f, 0f);
+            swirl.orbitalY = new ParticleSystem.MinMaxCurve(0f, 0f);
+            swirl.orbitalZ = new ParticleSystem.MinMaxCurve(-2.6f, 2.6f);
+
+            // The offset the orbit is measured from, in the same mode again for
+            // the same reason. Zero is deliberate rather than omitted: the
+            // system's own origin is the cell the gem died in, which is exactly
+            // the centre the sparks should curl around.
+            swirl.radial = new ParticleSystem.MinMaxCurve(0f, 0f);
 
             ParticleSystem.SizeOverLifetimeModule size = system.sizeOverLifetime;
             size.enabled = true;
