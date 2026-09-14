@@ -994,6 +994,11 @@ namespace JellyGarden.Scripts
 
         IEnumerator DestroyCor(bool showScore = false, string anim_name = "", bool explEffect = false)
         {
+            // STORY: break the gem into falling pieces. Called here, at the top,
+            // because it copies the gem's LIVE sprite and every branch below
+            // either swaps that sprite or switches the renderer off.
+            // No-op unless -storyshatter.
+            JellyGarden.Scripts.Story.StoryShatterVfx.Shatter(this);
             //if (anim_name == "")
             //{
             if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
@@ -1022,6 +1027,10 @@ namespace JellyGarden.Scripts
                     partcl.transform.position = transform.position;
                     partcl.GetComponent<Animator>().SetInteger("color", color);
                     SoundBase.Instance.PlaySound(SoundBase.Instance.destroy[Random.Range(0, SoundBase.Instance.destroy.Length)]);
+                    // STORY: the spray on top of the kit's flipbook. Additive
+                    // shards, sparks and a flash — the three things a baked
+                    // 4-frame sprite cannot do. No-op unless -storyblastvfx.
+                    JellyGarden.Scripts.Story.StoryBlastVfx.Blast(transform.position, color);
                     //   Destroy(partcl, 1f);
                 }
                 if (explEffect)
@@ -1086,6 +1095,19 @@ namespace JellyGarden.Scripts
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.strippedExplosion);
             LevelManager.THIS.StrippedShow(gameObject, true);
+
+            // STORY: the travelling head and its trail. Visual only — the kit's
+            // own clear below is untouched and still runs on this frame.
+            //
+            // An earlier version staggered the destroys so gems died as the
+            // head reached them. It hung the board: DestroyCor destroys the
+            // rocket gem the moment this method returns, so a sweep still
+            // walking the row left the cascade waiting on a clear that never
+            // finished and DragBlocked stuck true. The playtest caught it on
+            // level 1 as "move 1 never finished — the board stayed blocked for
+            // 20s". Timing here belongs to the kit; only the picture is ours.
+            JellyGarden.Scripts.Story.StoryRocketSweep.Show(this, true);
+
             List<Item> itemsList = LevelManager.THIS.GetRow(square.row);
             foreach (Item item in itemsList)
             {
@@ -1107,6 +1129,10 @@ namespace JellyGarden.Scripts
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.strippedExplosion);
             LevelManager.THIS.StrippedShow(gameObject, false);
+
+            // STORY: see DestroyHorizontal. Same head, other axis, visual only.
+            JellyGarden.Scripts.Story.StoryRocketSweep.Show(this, false);
+
             List<Item> itemsList = LevelManager.THIS.GetColumn(square.col);
             foreach (Item item in itemsList)
             {
