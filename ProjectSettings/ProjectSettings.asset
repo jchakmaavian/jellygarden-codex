@@ -850,7 +850,7 @@ PlayerSettings:
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
     Android: UNITY_ADS
-    Standalone: UNITY_INAPPS;SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY
+    Standalone: UNITY_INAPPS;SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY;UNITY_ADS
     Windows Store Apps: UNITY_ADS
     iPhone: SENTIS_ANALYTICS_ENABLED;UNITY_ADS;APP_UI_EDITOR_ONLY
   additionalCompilerArguments: {}

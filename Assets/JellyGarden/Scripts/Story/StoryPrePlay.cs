@@ -191,7 +191,12 @@ namespace JellyGarden.Scripts.Story
         /// arrow across the plate; the vertical one is the same power.</summary>
         private static Sprite Rocket(int color)
         {
-            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Get("rocket");
+            // The Layers sprite, not Board/rocket. StorybookBoardArt.Apply writes
+            // Layers/rocket into stripedItems, so Layers is the piece a match
+            // actually hands over; Board/rocket is only the loose board icon. A
+            // plate promising one and a grid delivering the other is the one thing
+            // this screen exists to prevent.
+            if (StorybookBoardArt.Enabled) return StorybookLayers.Get("rocket");
             Item item = ItemPrefab;
             if (item == null || item.stripedItems == null || item.stripedItems.Count == 0) return null;
             StripedItem striped = item.stripedItems[Mathf.Clamp(color, 0, item.stripedItems.Count - 1)];
@@ -201,7 +206,9 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The bomb of a colour — the kit calls it a package.</summary>
         private static Sprite Bomb(int color)
         {
-            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Get("area-bomb");
+            // Layers/bomb, for the reason given on Rocket: it is what Apply
+            // writes into every packageItems slot.
+            if (StorybookBoardArt.Enabled) return StorybookLayers.Get("bomb");
             Item item = ItemPrefab;
             if (item == null || item.packageItems == null || item.packageItems.Length == 0) return null;
             return item.packageItems[Mathf.Clamp(color, 0, item.packageItems.Length - 1)];
@@ -210,7 +217,8 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The rainbow ball. There is only ever one.</summary>
         private static Sprite Rainbow()
         {
-            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Get("rainbow-orb");
+            // Layers/color-ball, which is the single entry Apply puts in bombItems.
+            if (StorybookBoardArt.Enabled) return StorybookLayers.Get("color-ball");
             Item item = ItemPrefab;
             if (item == null || item.bombItems == null || item.bombItems.Length == 0) return null;
             return item.bombItems[0];

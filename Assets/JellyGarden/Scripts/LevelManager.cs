@@ -487,6 +487,12 @@ namespace JellyGarden.Scripts
             combineManager = new CombineManager();
             THIS = this;
             Instance = this;
+
+            // Point the match-3 VFX kit at this board and build its pools now,
+            // so the first clear of the level does not hitch while they are
+            // allocated. Must follow THIS being assigned: the host reads
+            // LevelManager.THIS for cell size and the board's bottom edge.
+            JellyGarden.Scripts.Story.KingLeoVfxHost.Configure();
             //        if (!LevelManager.THIS.enableInApps)
             //            GameObject.Find("CanvasMap/Gems").gameObject.SetActive(false);//2.1.2
 
@@ -787,10 +793,16 @@ namespace JellyGarden.Scripts
             MenuManager.Instance.ShowCompleteLabel(false);
             SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
 
-            MenuManager.Instance.ShowPreCompleteBanner(true);
-            yield return new WaitForSeconds(3);
-            MenuManager.Instance.ShowPreCompleteBanner(false);
-
+            // The three-second "Wonderful!" beat used to sit here:
+            //
+            //     ShowPreCompleteBanner(true);
+            //     yield return new WaitForSeconds(3);
+            //     ShowPreCompleteBanner(false);
+            //
+            // Removed deliberately. A level now goes straight from its last
+            // settle to the win panel. MenuManager.ShowPreCompleteBanner and
+            // the PreCompleteBanner object in the scene are both left alone, so
+            // putting those three lines back restores it exactly.
             gameStatus = GameState.Win;
             preWinAnimationRunning = false;
         }

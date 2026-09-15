@@ -5,7 +5,24 @@ namespace JellyGarden.Scripts.Story
 {
     public static class StorybookBoardLayout
     {
-        public const float HeaderBottom = 174;
+        /// <summary>
+        /// Where the board's field starts, under the HUD strip.
+        ///
+        /// 118, not 174. This is the strip's own bottom edge plus clearance, so
+        /// it is set by what the HUD draws rather than chosen: the card and the
+        /// crest end at 96 and the pause disc hangs half off the crest to 112,
+        /// which leaves 6 units of air before the board's gold outline. It was
+        /// 174 while the strip carried a separate header row above the card,
+        /// and 144 while the plates were still padded out to 96 tall.
+        ///
+        /// Lowering it makes FieldRect taller, which FitPitch spends on a bigger
+        /// cell — and every board in this game is width-limited, so on most
+        /// levels the extra height changes nothing and simply stops being empty.
+        /// Raising it again is the correct response to a taller HUD; nothing
+        /// here may be tuned to make a board look better, because the board is
+        /// what this reserves space AWAY from.
+        /// </summary>
+        public const float HeaderBottom = 118;
         public const float FooterTop = 128;
         public static float CellPixels { get; private set; }
         public static Rect Safe => Screen.safeArea.width > 0 ? Screen.safeArea : new Rect(0, 0, Screen.width, Screen.height);

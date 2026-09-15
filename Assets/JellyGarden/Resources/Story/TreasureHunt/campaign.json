@@ -12,10 +12,6 @@
       "source": "area_001_state0"
     },
     {
-      "key": "splash_background",
-      "source": "area_001_state0"
-    },
-    {
       "key": "clue_001",
       "source": "area_001_state4",
       "rect": [
@@ -121,6 +117,7 @@
     "portrait_freya",
     "portrait_alfred",
     "portrait_mimi",
+    "splash_background",
     "splash_logo",
     "win_button",
     "win_caption",

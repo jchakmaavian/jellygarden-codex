@@ -109,7 +109,7 @@
             },
             {
               "speaker": "Pip",
-              "text": "I’m Pip! Six keys lead to one royal surprise!",
+              "text": "I\u2019m Pip! Six keys lead to one royal surprise!",
               "cue": "map"
             }
           ]
@@ -125,7 +125,7 @@
             },
             {
               "speaker": "Freya",
-              "text": "Next, let’s restore the courtyard fountain!"
+              "text": "Next, let\u2019s restore the courtyard fountain!"
             }
           ]
         }
@@ -241,7 +241,7 @@
           "lines": [
             {
               "speaker": "Pip",
-              "text": "Look at the water — it's shaped like a horse!",
+              "text": "Look at the water \u2014 it's shaped like a horse!",
               "cue": "horse"
             },
             {
@@ -264,6 +264,7 @@
     "portrait_freya",
     "portrait_alfred",
     "portrait_mimi",
+    "splash_background",
     "splash_logo",
     "win_button",
     "win_caption",
@@ -288,10 +289,6 @@
   "artAliases": [
     {
       "key": "backdrop_castle",
-      "source": "area_001_state0"
-    },
-    {
-      "key": "splash_background",
       "source": "area_001_state0"
     },
     {

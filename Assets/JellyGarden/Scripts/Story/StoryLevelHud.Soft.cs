@@ -6,7 +6,23 @@ namespace JellyGarden.Scripts.Story
 {
     public sealed partial class StoryLevelHud
     {
-        RectTransform _softRoot, _softHeader, _softCard, _softTray;
+        RectTransform _softRoot, _softCard, _softTray;
+
+        /// <summary>
+        /// The blue plate on the right of the strip. It carries the level number
+        /// over the move count as one object, and the pause button hangs off its
+        /// bottom edge.
+        ///
+        /// The level used to sit in a header row of its own above the card, with
+        /// Moves inside the card. Two rows of chrome over a board that is already
+        /// width-limited is a row too many, and the header's other control was a
+        /// Settings button that called the pause button's own action — see the
+        /// note on <see cref="SoftControl"/>. Folding the level in here buys the
+        /// header's 52 units back and leaves the cream card to say only what the
+        /// level asks for.
+        /// </summary>
+        RectTransform _softCrest;
+
         Text _softLevel;
         Image _softProgress;
         readonly Button[] _softBoosts = new Button[4];
@@ -14,6 +30,28 @@ namespace JellyGarden.Scripts.Story
         readonly Text[] _softBoostCounts = new Text[4];
         readonly BoostType[] _softTypes = { BoostType.ExtraMoves, BoostType.Hand, BoostType.Bomb, BoostType.Random_color };
         static readonly Color SoftInk = new Color32(66, 86, 123, 255);
+
+        /// <summary>
+        /// The goal row's width, and the divisor every chip's slot is cut from.
+        ///
+        /// It is the cream card's inner width, so the slots add up to the row
+        /// exactly. Anything that changes the card's width changes this with it
+        /// — while the two disagreed, each chip was laid out wider than the room
+        /// it had and the last one ran off the plate.
+        /// </summary>
+        const float GoalRowWidth = 212f;
+
+        /// <summary>
+        /// How tall one chip is: its icon over its count, and nothing else.
+        ///
+        /// 58 = a 38-unit icon plus a 20-unit number. It was 66 around a 42-unit
+        /// icon, sized when the card had a header row above it to fill. The row
+        /// is the tallest thing the card holds, so this is what sets the card's
+        /// height, and through it StorybookBoardLayout.HeaderBottom — measure it
+        /// from the chip rather than padding it to fit the plate.
+        /// </summary>
+        const float GoalRowHeight = 58f;
+
         float _softUnit;
 
         void BuildSoftHud(Transform strip)
@@ -29,25 +67,44 @@ namespace JellyGarden.Scripts.Story
             if (boosterRow != null) Fade(boosterRow.parent);
             _softRoot = StoryUi.CreateRect("SoftStorybookBoardHud", canvas.transform);
             _softRoot.SetAsLastSibling();
-            _softHeader = StoryUi.CreateRect("Header", _softRoot);
-            _softLevel = SoftText("Level", _softHeader, "Level 1", 24);
-            _softLevel.font = StorybookArt.Font;
-            SoftControl("Pause", _softHeader, "Ⅱ", () => { if (nativePause != null) nativePause.onClick.Invoke(); });
-            SoftControl("Settings", _softHeader, "⚙", () =>
-            {
-                // Use the game's pause flow: it also suspends timed levels.
-                if (nativePause != null) nativePause.onClick.Invoke();
-            });
             _softCard = SoftPlate("TargetCard", _softRoot, 20, new Color32(255, 252, 242, 255)).rectTransform;
             AddSoftShadow(_softCard, new Color32(213, 200, 173, 255), 3);
             _targetTitle = SoftText("Title", _softCard, "TARGETS", 9);
             _targetRow = StoryUi.CreateRect("Goals", _softCard);
             _slots.Clear();
-            Image moves = SoftPlate("Moves", _softCard, 15, new Color32(208, 223, 241, 255));
-            AddSoftShadow(moves.rectTransform, new Color32(158, 189, 216, 255), 2);
-            _limitTitle = SoftText("Title", moves.transform, "MOVES", 9);
-            _limitValue = SoftText("Value", moves.transform, "0", 32);
+
+            // The crest, and the gold rim that separates it from the board.
+            //
+            // The board's own ground is indigo (see StorybookBoardLayout's
+            // checker, 64,72,112 / 78,87,130) and this plate is royal blue, so
+            // the two would read as one surface where they meet. The rim is a
+            // second plate drawn OVER the first at the same rect, carrying only
+            // an inner edge — the same two-nested-rects trick the Royal kit uses,
+            // rather than an Outline, which offsets the whole quad and squares
+            // off the corners.
+            _softCrest = SoftPlate("Crest", _softRoot, 20, StorybookUi.Blue).rectTransform;
+            AddSoftShadow(_softCrest, new Color32(9, 58, 130, 255), 3);
+            Image crestRim = SoftPlate("Rim", _softCrest, 20, StorybookUi.Gold);
+            Image crestFace = SoftPlate("Face", crestRim.transform, 18, StorybookUi.Blue);
+            StoryUi.Stretch(crestRim.rectTransform);
+            StoryUi.Stretch(crestFace.rectTransform, 2);
+
+            _softLevel = SoftText("Level", crestFace.transform, "Level 1", 15, StorybookUi.Paper);
+            _softLevel.font = StorybookArt.Font;
+            _limitTitle = SoftText("Title", crestFace.transform, "MOVES", 9, new Color32(255, 228, 159, 255));
+            _limitValue = SoftText("Value", crestFace.transform, "0", 34, Color.white);
             _limitValue.font = StorybookArt.Font;
+
+            // The hairline between the level and the count. A child of the face,
+            // so it is inside the rim rather than lying across it.
+            SoftPlate("Rule", crestFace.transform, 1, new Color32(255, 255, 255, 64));
+
+            // Pause hangs off the crest's bottom edge, half on and half off, so
+            // it reads as seated in the plate rather than floating beside it.
+            // It is the LAST child of the root so it draws over the crest, and
+            // it is built on the root rather than on the crest because the crest
+            // is what a level-open animation scales.
+            SoftControl("Pause", _softRoot, "Ⅱ", () => { if (nativePause != null) nativePause.onClick.Invoke(); });
             Image track = SoftPlate("ScoreProgress", _softCard, 3, new Color32(224, 226, 216, 255));
             _softProgress = SoftPlate("Fill", track.transform, 3, new Color32(127, 170, 141, 255));
             _softTray = SoftPlate("BoosterTray", _softRoot, 28, new Color32(229, 225, 238, 255)).rectTransform;
@@ -86,16 +143,27 @@ namespace JellyGarden.Scripts.Story
             shadow.effectDistance = new Vector2(0, -offset);
             shadow.useGraphicAlpha = false;
         }
+        /// <summary>
+        /// A round control seated in the crest: a gold ring around a cream face.
+        ///
+        /// There is only one of these now. The strip used to carry a Settings
+        /// gear beside the pause button whose action was, in full,
+        /// <c>nativePause.onClick.Invoke()</c> — the same pause flow, opening the
+        /// same kit panel, because that panel is where the game's settings are.
+        /// Two buttons one tap apart doing one thing is a choice the player has
+        /// to make and cannot get right, so the gear is gone and the pause button
+        /// is the way in. Do not re-add one without giving it somewhere else to
+        /// go: <see cref="StorySettings"/> is the shell's screen and deliberately
+        /// sorts BELOW the level popup, so it cannot open over a board.
+        /// </summary>
         void SoftControl(string name, Transform parent, string label, UnityEngine.Events.UnityAction action)
         {
-            Image face = StoryUi.CreateImage(name, parent, StoryUi.CircleSprite, new Color32(255, 253, 243, 255));
-            StoryCastleUi.Clickable(face, action);
-            if (name == "Settings")
-            {
-                Image gear = StoryUi.CreateImage("Label", face.transform, StoryUi.GearSprite, new Color32(115, 148, 176, 255));
-                gear.raycastTarget = false;
-            }
-            else SoftText("Label", face.transform, label, 16, new Color32(115, 148, 176, 255));
+            Image ring = StoryUi.CreateImage(name, parent, StoryUi.CircleSprite, StorybookUi.Gold);
+            StoryCastleUi.Clickable(ring, action);
+            Image face = StoryUi.CreateImage("Face", ring.transform, StoryUi.CircleSprite,
+                new Color32(255, 253, 243, 255));
+            face.raycastTarget = false;
+            SoftText("Label", face.transform, label, 16, StorybookUi.Blue);
         }
         void PlaceSoft(RectTransform rect, float x, float y, float width, float height)
         {
@@ -110,19 +178,49 @@ namespace JellyGarden.Scripts.Story
             _softUnit = _softRoot.rect.width / 393f;
             if (_softUnit <= 0) _softUnit = 1;
             float height = _softRoot.rect.height / _softUnit;
-            PlaceSoft(_softHeader, 22, 18, 349, 34);
-            PlaceSoft(_softLevel.rectTransform, 45, 0, 259, 34);
-            PlaceSoft(_softHeader.Find("Pause") as RectTransform, 0, 0, 34, 34);
-            PlaceSoft(_softHeader.Find("Settings") as RectTransform, 315, 0, 34, 34);
-            foreach (string name in new[] { "Pause", "Settings" })
-                StoryUi.Stretch((_softHeader.Find(name + "/Label") as RectTransform), name == "Settings" ? 10 * _softUnit : 0);
-            PlaceSoft(_softCard, 22, 70, 349, 96);
-            PlaceSoft(_targetTitle.rectTransform, 12, 6, 233, 15);
-            PlaceSoft(_targetRow, 12, 22, 233, 66);
-            PlaceSoft(_limitValue.transform.parent as RectTransform, 266, 12, 71, 72);
-            PlaceSoft(_limitTitle.rectTransform, 0, 7, 71, 15);
-            PlaceSoft(_limitValue.rectTransform, 0, 23, 71, 44);
-            PlaceSoft(_softProgress.transform.parent as RectTransform, 16, 80, 225, 6);
+
+            // The cream card and the crest stand on one top edge at y24 and one
+            // bottom edge at y120, so the strip reads as a pair rather than as
+            // two plates that happen to be near each other.
+            //
+            // 96 tall, not 120. The plates were sized to the room the old
+            // two-row header left rather than to what they hold: the card is a
+            // 15-unit title over a 66-unit goal row, and the crest is an
+            // 18-unit level over a 15-unit label and a 44-unit count. Both come
+            // to about 90, so a 120-unit plate carried 30 units of empty cream
+            // under its last chip — which on a SCORE level, where the card
+            // draws ONE chip, was most of the plate. The strip now ends at 120
+            // and StorybookBoardLayout.HeaderBottom comes down with it; the
+            // board is width-limited on every phone this ships to, so the 44
+            // units this frees go to the board's own top edge rather than to
+            // the gap above it.
+            // 78 tall, and every number in it is measured from the content
+            // rather than chosen: the card is a 12-unit title over a
+            // GoalRowHeight chip, and the crest is a 15-unit level over a
+            // 12-unit label and a 34-unit count. The plates ended at 120 while
+            // they were 96, and the band of empty cream under the last chip was
+            // still most of the plate on a SCORE level, which draws one chip.
+            PlaceSoft(_softCard, 22, 18, 236, 78);
+            PlaceSoft(_targetTitle.rectTransform, 12, 4, GoalRowWidth, 12);
+            _targetTitle.alignment = TextAnchor.MiddleLeft;
+            PlaceSoft(_targetRow, 12, 16, GoalRowWidth, GoalRowHeight);
+            // The score track sits inside the card, which now has 204 units of
+            // width to give it rather than the 225 it borrowed from the old
+            // full-width plate.
+            PlaceSoft(_softProgress.transform.parent as RectTransform, 16, 68, 204, 5);
+
+            PlaceSoft(_softCrest, 268, 18, 103, 78);
+            PlaceSoft(_softLevel.rectTransform, 0, 5, 99, 15);
+            PlaceSoft(_softCrest.Find("Rim/Face/Rule") as RectTransform, 18, 21, 63, 1);
+            PlaceSoft(_limitTitle.rectTransform, 0, 24, 99, 12);
+            PlaceSoft(_limitValue.rectTransform, 0, 37, 99, 34);
+
+            // Half on the crest and half off it: the disc's centre sits on the
+            // crest's bottom edge (96), so its top half overlaps the plate and
+            // its lower half hangs into the gap above the board.
+            PlaceSoft(_softRoot.Find("Pause") as RectTransform, 304, 80, 32, 32);
+            StoryUi.Stretch(_softRoot.Find("Pause/Face") as RectTransform, 3 * _softUnit);
+            StoryUi.Stretch(_softRoot.Find("Pause/Face/Label") as RectTransform);
             PlaceSoft(_softTray, 19, height - 103, 355, 75);
             for (int i = 0; i < 4; i++)
             {
@@ -133,9 +231,12 @@ namespace JellyGarden.Scripts.Story
             }
             foreach (Text text in _softRoot.GetComponentsInChildren<Text>(true))
             {
-                float size = text == _softLevel ? 24 : text == _limitValue ? 32 :
+                // Each of these is a point or two under the box it draws in, so
+                // a descender or a tall digit does not clip: the count is 30 in
+                // a 34-unit box, the level 13 in 15.
+                float size = text == _softLevel ? 13 : text == _limitValue ? 30 :
                     text == _targetTitle || text == _limitTitle ? 9 :
-                    text.transform.parent.name == "CountBadge" ? 12 : 16;
+                    text.transform.parent.name == "CountBadge" ? 12 : 15;
                 text.fontSize = Mathf.Max(8, Mathf.RoundToInt(size * _softUnit));
             }
             foreach (Shadow shadow in _softRoot.GetComponentsInChildren<Shadow>())
@@ -150,8 +251,14 @@ namespace JellyGarden.Scripts.Story
             SetText(_softLevel, "Level " + (manager == null ? 1 : manager.currentLevel));
             SetText(_limitTitle, model.LimitTitle.ToUpperInvariant());
             SetText(_limitValue, model.LimitValue);
+            // The count sits on the crest's royal blue now, not on the cream
+            // card's pale plate, so both of these moved up in value: navy on
+            // blue is unreadable, and the old warning red (193,89,75) is darker
+            // than the plate it would warn on. Warm coral carries on blue, and
+            // the level number above it stays paper so the warning is the only
+            // thing on the crest that changes colour.
             _limitValue.color = model.LimitLeft <= (model.LimitTitle == "Time" ? 10 : 3)
-                ? new Color32(193, 89, 75, 255) : SoftInk;
+                ? new Color32(255, 173, 145, 255) : Color.white;
             int count = Mathf.Min(MaxTargets, model.Targets.Count);
             _visibleSlots = count;
             bool single = count == 1 && model.Targets[0].IsScore;
@@ -172,10 +279,15 @@ namespace JellyGarden.Scripts.Story
                 slot.Root.gameObject.SetActive(i < count);
                 if (i >= count) continue;
                 HudTarget target = model.Targets[i];
-                float width = 233f / count;
-                PlaceSoft(slot.Root, i * width, 0, width, 66);
-                float icon = count == 4 ? 34 : 42;
-                PlaceSoft(slot.Icon.rectTransform, single ? 2 : (width - icon) / 2, single ? 5 : 0, icon, icon);
+                // 212, not 233: the row is as wide as the card the card was
+                // narrowed to. While this said 233 every chip was laid out a
+                // tenth wider than the room it had, so the rightmost one ran
+                // off the plate — the divisor has to be the row's own width or
+                // the slots do not add up to it.
+                float width = GoalRowWidth / count;
+                PlaceSoft(slot.Root, i * width, 0, width, GoalRowHeight);
+                float icon = count == 4 ? 30 : 38;
+                PlaceSoft(slot.Icon.rectTransform, single ? 2 : (width - icon) / 2, single ? 3 : 0, icon, icon);
                 slot.Backing.rectTransform.anchorMin = slot.Icon.rectTransform.anchorMin;
                 slot.Backing.rectTransform.anchorMax = slot.Icon.rectTransform.anchorMax;
                 slot.Backing.rectTransform.pivot = slot.Icon.rectTransform.pivot;
@@ -185,9 +297,14 @@ namespace JellyGarden.Scripts.Story
                 slot.Backing.enabled = target.Backing != null;
                 slot.Icon.sprite = target.Icon;
                 slot.Icon.raycastTarget = slot.Backing.raycastTarget = false;
-                PlaceSoft(slot.Count.rectTransform, single ? 52 : 0, single ? 6 : icon, single ? width - 52 : width, 23);
+                PlaceSoft(slot.Count.rectTransform, single ? 48 : 0, single ? 4 : icon, single ? width - 48 : width, 20);
                 slot.Count.alignment = single ? TextAnchor.MiddleLeft : TextAnchor.MiddleCenter;
-                slot.Count.fontSize = Mathf.RoundToInt(16 * _softUnit);
+                // Set here rather than left to the size table in LayoutSoft,
+                // which runs before the slots exist on the first pass. 15, to
+                // match what that table gives every other chip-sized string —
+                // the count's box is 20 units now and 16 left nothing for a
+                // descender or for the "pts" run a score chip appends.
+                slot.Count.fontSize = Mathf.RoundToInt(15 * _softUnit);
                 slot.Count.color = target.Done ? new Color32(79, 132, 99, 255) : SoftInk;
                 SetText(slot.Count, target.Done ? "✓" : single ? target.Display.Replace("/", " / ") :
                     target.Remaining.ToString("N0") + (target.IsScore ? "<size=" + Mathf.RoundToInt(8 * _softUnit) + "> pts</size>" : ""));

@@ -34,11 +34,30 @@ namespace JellyGarden.Scripts.Story
             new Dictionary<string, string>
             {
                 { "logo", "splash_logo" },
-                // The splash has a picture of its own rather than borrowing the
-                // arc's board backdrop, which was only ever standing in: that one
-                // is the ground a board is played on and is painted dark to suit
-                // it, which is the opposite of what a title screen wants.
-                { "main_menu_banner", "splash_background" },
+
+                // main_menu_banner is NOT swapped, and that is the fix.
+                //
+                // It used to map to "splash_background", which went through
+                // StoryCampaign.LoadArt — and on Treasure Hunt that resolver
+                // checks campaign.json's artAliases FIRST, where an alias
+                // pointed "splash_background" at "area_001_state0": the area 1
+                // room painting, a vine archway with a fountain. So the splash
+                // dutifully replaced the title art with a picture of a level's
+                // room, reported "splash dressed", and every check passed. The
+                // alias is gone now, but the swap goes with it, because there
+                // is nothing left for it to do:
+                //
+                // Textures/menu/main_menu/main_menu_banner.png IS the castle.
+                // The kit's own banner texture was replaced on disk long ago —
+                // same trick the six wordmarks in Textures/text use — so the
+                // scene already draws the right picture before any code runs.
+                // Swapping it for a Resources copy of the same image only adds
+                // a resolver that can point somewhere else, which is precisely
+                // what went wrong.
+                //
+                // Resources/Story/Art/splash_background.jpg is kept: it is the
+                // same castle at 1152x2048 against the texture's 800x1280, and
+                // DressLoadingScreen still loads it for the wait after Play.
             };
 
         private static bool _reported;
@@ -67,18 +86,9 @@ namespace JellyGarden.Scripts.Story
                 // be stretched to whatever rect the kit's logo happened to use.
                 // The banner behind it is a backdrop and is meant to fill.
                 if (image.sprite.name == "splash_logo" || story == "splash_logo")
-                    {
+                {
                     image.preserveAspect = true;
-                    if (StorybookUi.Enabled && image.transform.Find("AdventureTitle") == null)
-                    {
-                        image.enabled = false;
-                        Text title = StoryUi.CreateText("AdventureTitle", image.transform, "Adventure of\nKing Leo", 72, StorybookUi.Ink, TextAnchor.MiddleCenter);
-                        title.font = StorybookArt.Font;
-                        StoryUi.Stretch(title.rectTransform);
-                        title.resizeTextForBestFit = true;
-                        title.resizeTextMinSize = 24;
-                        title.resizeTextMaxSize = 72;
-                    }
+                    DressTitle(image);
                 }
 
                 swapped.Add(story);
@@ -93,6 +103,62 @@ namespace JellyGarden.Scripts.Story
                 Debug.Log("[Story] splash dressed: " + string.Join(", ", swapped.ToArray()) +
                           " — the game opens on King Leo.");
             }
+        }
+
+        /// <summary>The eyebrow above the wordmark, and the marker that it is there.</summary>
+        private const string TitleMarker = "StoryAdventureLine";
+
+        /// <summary>
+        /// Puts "Adventure of" over the gold KING LEO wordmark.
+        ///
+        /// The painted logo DRAWS. A previous pass switched it off
+        /// (<c>image.enabled = false</c>) and wrote the whole title as flat Text
+        /// reading "Adventure of King Leo" across the same rect — which threw
+        /// away splash_logo.png, a gold cutout with a crowned jewel in it, and
+        /// replaced it with two lines of font. The art is the title; the product
+        /// name simply grew a few words in front of it, and those few words are
+        /// all that needs setting in type.
+        ///
+        /// So the line is an eyebrow ABOVE the wordmark rather than a caption
+        /// over it: its own rect anchored to the logo's top edge and pushed
+        /// clear, not a child stretched across the logo, which would lay it on
+        /// the letters. It is sized against the logo's own height so it holds
+        /// its proportion on any screen — the splash canvas is authored for a
+        /// 9:19.5 phone and hands a 4:3 view far less height, so a fixed point
+        /// size that sits right on one is wrong on the other.
+        /// </summary>
+        private static void DressTitle(Image logo)
+        {
+            if (!StorybookUi.Enabled) return;
+            if (logo.transform.Find(TitleMarker) != null) return;
+
+            // Height, not width: the wordmark is preserveAspect inside a rect
+            // that is usually wider than the art, so the rect's width says
+            // nothing about how big the letters actually came out.
+            float logoHeight = logo.rectTransform.rect.height;
+            if (logoHeight <= 1f) logoHeight = 220f;
+
+            Text line = StoryUi.CreateText(TitleMarker, logo.rectTransform,
+                "Adventure of", Mathf.RoundToInt(logoHeight * 0.20f),
+                StorybookUi.Paper, TextAnchor.LowerCenter);
+            line.font = StorybookArt.Font;
+            line.raycastTarget = false;
+
+            // Ink behind paper: the castle's sky is bright and its towers are
+            // pale, so cream letters need their own edge to sit on rather than
+            // relying on whatever is behind them.
+            var edge = line.gameObject.AddComponent<Outline>();
+            edge.effectColor = StorybookUi.Ink;
+            edge.effectDistance = new Vector2(2f, -2f);
+
+            // Anchored across the logo's top edge and lifted by its own height,
+            // so the two read as one stacked title with the art carrying it.
+            RectTransform rect = line.rectTransform;
+            rect.anchorMin = new Vector2(0f, 1f);
+            rect.anchorMax = new Vector2(1f, 1f);
+            rect.pivot = new Vector2(0.5f, 0f);
+            rect.sizeDelta = new Vector2(0f, logoHeight * 0.26f);
+            rect.anchoredPosition = new Vector2(0f, logoHeight * 0.02f);
         }
 
         /// <summary>The kit sprite the splash's Play button wears.</summary>

@@ -15,6 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JellyGarden.Scripts.GUI;
+using RoyalThrone.Match3Vfx;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -943,6 +944,35 @@ namespace JellyGarden.Scripts
         /// </summary>
         private bool _popOwned;
 
+        /// <summary>
+        /// Take the transform for an effect that writes localScale ITSELF,
+        /// rather than through PopScale.
+        ///
+        /// The VFX kit's Match3PieceMotion.Pop animates root.localScale
+        /// directly, which is the one thing AnimIdleStart will not tolerate: it
+        /// reassigns localScale from xScale/yScale every fixed update, forever,
+        /// and DestroyItem's StopCoroutine(AnimIdleStart()) does not stop it
+        /// (Unity matches by reference and that is a fresh enumerator). An
+        /// ungated pop is therefore erased within 20ms and reads as a one-frame
+        /// flicker. This sets the same flag PopScale sets, so the idle loop
+        /// stands aside and the kit's curve is what actually reaches the screen.
+        ///
+        /// Returns the scale the gem was resting at, which is what the kit's
+        /// Match3PopOptions.restScale wants to animate around.
+        /// </summary>
+        public Vector3 PopClaimForKit()
+        {
+            if (!_popBaseTaken)
+            {
+                _popBaseX = xScale;
+                _popBaseY = yScale;
+                _popBaseTaken = true;
+            }
+
+            _popOwned = true;
+            return new Vector3(_popBaseX, _popBaseY, 1);
+        }
+
         #region Universal powerups   // STORY: added
 
         /// <summary>
@@ -1077,36 +1107,19 @@ namespace JellyGarden.Scripts
 
         IEnumerator DestroyCor(bool showScore = false, string anim_name = "", bool explEffect = false)
         {
-            // STORY: break the gem into falling pieces. Called here, at the top,
-            // because it copies the gem's LIVE sprite and every branch below
-            // either swaps that sprite or switches the renderer off.
-            // No-op unless -storyshatter.
-            JellyGarden.Scripts.Story.StoryShatterVfx.Shatter(this);
-
-            // STORY: the wind-up before the gem is allowed to die — squash,
-            // snap, flash, 143ms in total on this gem's own root transform.
-            // It sits ABOVE the kit's clip trigger and far above
-            // square.DestroyBlock(), so the synchronous contract everything
-            // downstream relies on is untouched; see StoryRocketSweep's header
-            // for what breaking that looks like. No-op unless -storypop.
-            yield return JellyGarden.Scripts.Story.StoryPopVfx.PreRoll(this);
-
-            // STORY: the kit fades a gem out over 250ms (destroy.anim, the
-            // Sprite child's scale curve 1 -> 0). That is longer than any of the
-            // six variants, so whatever is drawn on top is followed by a quarter
-            // second of the gem melting — which is what makes a clear read as
-            // soft however good the effect over it is.
+            // The gem's clear is the VFX kit's Match3PieceMotion.Pop, and only
+            // that. It replaces the four layers that used to stack here —
+            // StoryShatterVfx (chips), StoryPopVfx (the squash/snap wind-up),
+            // the pooled ItemExpl flipbook with destroy.anim, and StoryBlastVfx
+            // (the burst) — because the kit's single Pop does all four itself:
+            // anticipation, squash and rebound on the transform, a sparkle
+            // burst, a shine, and a sprite shatter into pooled chips. Running
+            // both gave every gem two shatters, two squashes and two bursts.
             //
-            // The CLIP is not edited: anim.speed is a playback multiplier, so
-            // destroy.anim stays byte-identical and check_vfx_intact stays
-            // green. The clip's own event at 0.25s (SetAnimationDestroyingFinished,
-            // which DestroyCor waits on below) simply arrives sooner, which is
-            // exactly what is wanted. Kit alone keeps the original pace.
+            // StoryPunchVfx below is deliberately KEPT: it springs the
+            // surviving NEIGHBOURS, which is the one thing the kit's pop does
+            // not do and does not conflict with.
             float popFadeSpeed = anim == null ? 1f : anim.speed;
-            if (anim != null &&
-                JellyGarden.Scripts.Story.StoryVfxVariant.WantsFastFade(
-                    JellyGarden.Scripts.Story.StoryVfxVariant.Current))
-                anim.speed = 4f;
 
             //if (anim_name == "")
             //{
@@ -1126,29 +1139,51 @@ namespace JellyGarden.Scripts
             }
             else if (currentType != ItemsTypes.INGREDIENT && currentType != ItemsTypes.BOMB)
             {
-                PlayDestroyAnimation("destroy");
-                // GameObject partcl = Instantiate(Resources.Load("Prefabs/Effects/ItemExpl"), transform.position, Quaternion.identity) as GameObject;
-                var partcl = LevelManager.THIS.GetExplFromPool();
-                if (partcl != null)
-                {
-                    partcl.GetComponent<ItemAnimEvents>().item = this;
-                    partcl.transform.localScale = Vector3.one * 0.5f;
-                    partcl.transform.position = transform.position;
-                    partcl.GetComponent<Animator>().SetInteger("color", color);
-                    SoundBase.Instance.PlaySound(SoundBase.Instance.destroy[Random.Range(0, SoundBase.Instance.destroy.Length)]);
-                    // STORY: the spray on top of the kit's flipbook. Additive
-                    // shards, sparks and a flash — the three things a baked
-                    // 4-frame sprite cannot do. No-op unless -storyblastvfx.
-                    JellyGarden.Scripts.Story.StoryBlastVfx.Blast(transform.position, color);
+                SoundBase.Instance.PlaySound(SoundBase.Instance.destroy[Random.Range(0, SoundBase.Instance.destroy.Length)]);
 
-                    // STORY: stage 7 — the board's own reaction. Each surviving
-                    // neighbour gets a small spring, falling off with distance.
-                    // Fire-and-forget by contract: it must NOT be yielded on,
-                    // because everything below this line in the kit's destroy
-                    // path is synchronous and the cascade waits on it.
-                    JellyGarden.Scripts.Story.StoryPunchVfx.Punch(this);
-                    //   Destroy(partcl, 1f);
-                }
+                // The clear itself. Three things about how this is started
+                // matter, and each one is a hang or a dropped frame if changed:
+                //
+                // 1. It runs on LevelManager, NOT on this gem. The last line of
+                //    DestroyCor destroys this GameObject, and a coroutine
+                //    started on a destroyed object stops where it stands — the
+                //    pop would be cut off partway and onFinished would never
+                //    fire, which is the silent truncation that leaves a board
+                //    frozen mid-cascade.
+                //
+                // 2. It is NOT yielded on. onFinished sets animationFinished,
+                //    and the wait further down this method is what actually
+                //    blocks on it — exactly as it blocked on the ItemExpl
+                //    animation event before. Yielding here as well would wait
+                //    for a flag that this method is itself responsible for
+                //    reaching.
+                //
+                // 3. restScale comes from PopClaimForKit rather than
+                //    transform.localScale, which both reads the gem's RESTING
+                //    size (the idle breathing is mid-cycle at any given moment)
+                //    and tells AnimIdleStart to stop overwriting the transform.
+                LevelManager.THIS.StartCoroutine(Match3PieceMotion.Pop(
+                    transform,
+                    sprRenderer,
+                    new Match3PopOptions
+                    {
+                        kind = Match3PopKind.Match,
+                        burstColor = color >= 0 && color < LevelManager.THIS.scoresColors.Length
+                            ? LevelManager.THIS.scoresColors[color]
+                            : Color.white,
+                        colorIndex = color,
+                        restScale = PopClaimForKit(),
+                        // The cascade's only unblock now that the ItemExpl
+                        // clip's animation event is gone.
+                        onFinished = SetAnimationDestroyingFinished
+                    }));
+
+                // STORY: stage 7 — the board's own reaction. Each surviving
+                // neighbour gets a small spring, falling off with distance.
+                // Fire-and-forget by contract: it must NOT be yielded on,
+                // because everything below this line in the destroy path is
+                // synchronous and the cascade waits on it.
+                JellyGarden.Scripts.Story.StoryPunchVfx.Punch(this);
                 if (explEffect)
                 {
                     GameObject partcl1 = Instantiate(Resources.Load("Prefabs/Effects/Replace"), transform.position, Quaternion.identity) as GameObject;
