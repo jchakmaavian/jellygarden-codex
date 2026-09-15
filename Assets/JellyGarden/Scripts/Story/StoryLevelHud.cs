@@ -1024,13 +1024,15 @@ namespace JellyGarden.Scripts.Story
                 return new HudTarget
                 {
                     Icon = StorybookBoardArt.Goal(target),
-                    // The board never shows an empty block. `CreateSquare`
-                    // instantiates blockPrefab as a child of a square that still
-                    // holds an item, at z -0.01 in front of it, and the sprite is
-                    // 55% opaque — so what the player breaks is a gem under ice.
-                    // The chip drew the ice on its own and read as a blank box
-                    // with a number beside it, on 508 of the 1208 levels.
-                    Backing = target.type == Target.BLOCKS ? (StorybookBoardArt.Enabled ? StorybookBoardArt.Piece(0) : BlockBacking) : null,
+                    // The KIT's block sprite is 55% opaque frost, so drawn alone
+                    // on cream it read as a blank box with a number beside it —
+                    // hence the gem behind it, the way `CreateSquare` stacks them
+                    // on the board. The storybook `ice` is an opaque cyan frame
+                    // with its own navy outline and needs no such help; a gem
+                    // behind it also names a COLOUR the goal does not have, since
+                    // a BLOCKS target counts a crate clearing whatever sits under
+                    // it (`Square.DestroyBlock`). Backing is for the kit art only.
+                    Backing = target.type == Target.BLOCKS && !StorybookBoardArt.Enabled ? BlockBacking : null,
                     Remaining = Mathf.Max(0, target.GetCount()),
                     Done = target.Done()
                 };

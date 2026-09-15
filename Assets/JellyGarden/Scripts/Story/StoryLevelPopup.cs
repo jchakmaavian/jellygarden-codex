@@ -314,7 +314,12 @@ namespace JellyGarden.Scripts.Story
                 slot.Icon.rectTransform.anchoredPosition=new Vector2(width*.5f,-38);
                 StoryCastleUi.Place(slot.Backing.rectTransform,(width-icon)*.5f,-(76-icon)*.5f,icon,icon);
                 StoryCastleUi.Place(slot.Vfx.rectTransform,(width-Mathf.Min(110,width))*.5f,0,Mathf.Min(110,width),76);
-                slot.Icon.sprite=target.IsScore?(StorybookUi.Enabled ? StorybookLayers.Get("score-token") : StoryUi.StarSprite):(target.Icon!=null?target.Icon:StoryUi.StarSprite);
+                // `target.Icon` already carries the score sprite the in-level HUD
+                // draws (`ScoreSlot`), so the popup states a goal with the same
+                // art the player is about to read over the board. It used to cut
+                // its own `score-token` from the concept sheet — a blue droplet,
+                // which is nothing the board contains.
+                slot.Icon.sprite=target.Icon!=null?target.Icon:StoryUi.StarSprite;
                 slot.Icon.enabled=slot.Icon.sprite!=null;
                 slot.Backing.sprite=target.Backing;
                 slot.Backing.enabled=target.Backing!=null;

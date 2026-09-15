@@ -74,9 +74,17 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>The gem's localScale, in the kit's own units.</summary>
+        /// <remarks>
+        /// The Storybook share is .60, not .64. It is the gem's width as a
+        /// fraction of its CELL, so the remainder is the tile showing around it:
+        /// at a 52px cell .64 drew a 33.3px gem with 9.0px of tile a side, and
+        /// .60 draws 31.2px with 10.0px. The tile is what separates one gem from
+        /// the next now that the seam between tiles is down to .78px, so the
+        /// padding inside the cell is doing the work the gap used to.
+        /// </remarks>
         public static float ItemScale
         {
-            get { return (StorybookBoardArt.Enabled ? .64f : ItemShare) * Factor; }
+            get { return (StorybookBoardArt.Enabled ? .60f : ItemShare) * Factor; }
         }
 
         /// <summary>

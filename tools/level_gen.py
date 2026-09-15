@@ -109,6 +109,127 @@ def flip_grid(grid):
     return [list(row) for row in reversed(grid)]
 
 
+# The board the story plays on. The kit ships eleven sizes, 9x11 being 862 of
+# the 1208 levels, and every one of them is cropped to this on the way out.
+#
+# Seven columns rather than nine is the whole point: the width is what sets the
+# cell size on screen (StoryBoardScale puts nine columns at 98% of a 393pt
+# phone), so only dropping columns makes a cell bigger. Nine rows rather than
+# eleven keeps the board from crowding the HUD.
+BOARD_COLS = 7
+BOARD_ROWS = 9
+
+# MODE_NAMES in level_templates: 0 SCORE, 1 COLLECT, 2 INGREDIENT, 3 BLOCKS.
+# Only BLOCKS reads its goal off the board's own contents, so only BLOCKS can
+# have that goal cropped away.
+MODE_BLOCKS = 3
+
+
+def crop_window(grid, top, left, cols=BOARD_COLS, rows=BOARD_ROWS):
+    """One window out of a board, clamped to what the board actually has."""
+    take_rows = min(rows, len(grid))
+    take_cols = min(cols, len(grid[0]) if grid else 0)
+    return [list(row[left:left + take_cols]) for row in grid[top:top + take_rows]]
+
+
+def crop_grid(grid, cols=BOARD_COLS, rows=BOARD_ROWS):
+    """
+    Cut a board down to cols x rows, keeping as much of the design as the new
+    frame can hold.
+
+    Centred is the DEFAULT, and for most boards it is also the answer: these
+    layouts are hand drawn and mirrored about their middle -- level 500 is a
+    plus sign, level 7 a frame with notched sides -- so a centred window keeps
+    the symmetry that a corner window would slice off one side of.
+
+    But centred is not always best, and on two of the kit's hundred it is
+    actively wrong. A match is three in a line, so a region only two cells long
+    can never host one: `seal_unmatchable_cells` fills such a region with holes.
+    Level 31 is a comb whose teeth are single columns exactly three cells tall,
+    and a centred crop leaves the upper teeth two tall -- six cells that the
+    sealer then turns into holes, taking the board from 51% open to 41%.
+
+    So every window is scored and the best one wins:
+
+      1. fewest cells the sealer would kill, because those become holes;
+      2. then most open, because an open cell is a cell the player can use;
+      3. then closest to centred, so a board with nothing to gain keeps its
+         symmetry and the rule stays predictable.
+
+    A board already at or under the target in a dimension keeps it: eleven of
+    the kit's sizes are narrower than seven or shorter than nine, and widening
+    one would mean inventing cells no designer drew.
+    """
+    have_rows = len(grid)
+    have_cols = len(grid[0]) if grid else 0
+
+    take_rows = min(rows, have_rows)
+    take_cols = min(cols, have_cols)
+
+    mid_top = (have_rows - take_rows) / 2.0
+    mid_left = (have_cols - take_cols) / 2.0
+
+    best = None
+    for top in range(have_rows - take_rows + 1):
+        for left in range(have_cols - take_cols + 1):
+            window = crop_window(grid, top, left, cols, rows)
+            dead = sum(len(region) for region in unmatchable_regions(window))
+            key = (
+                dead,
+                -open_ratio(window),
+                abs(top - mid_top) + abs(left - mid_left),
+                top,
+                left,
+            )
+            if best is None or key < best[0]:
+                best = (key, window)
+
+    return best[1]
+
+
+def fit_board(grid, floor, mode=None):
+    """
+    The board as it ships: cropped to 7x9 where that survives, left alone where
+    it does not.
+
+    Some boards cannot be made smaller without being made worse, and there are
+    two ways a crop ruins one.
+
+    IT THINS THE BOARD OUT. Level 31's comb is the case that forced this: its
+    teeth are single columns three cells tall, three being the match length, so
+    ANY window that shortens them strands them -- the best 7x9 crop of it is 44%
+    open against the kit's 55% floor, and the centred one is 41%.
+
+    IT TAKES THE GOAL AWAY. Level 63 is a BLOCKS level whose only blocks are
+    four double blocks in the four CORNERS of a 9x10 board. No 7x9 window holds
+    two opposite corners of that board, so every crop of it scores zero blocks
+    and the level's whole objective -- eight of them -- has nothing to stand on.
+    Eleven levels draw on that template.
+
+    So the crop is offered, not imposed. A board that would lose either way
+    keeps the size its designer drew. That costs the game a second board size on
+    a handful of levels, which is a smaller price than a level that cannot be
+    played or cannot be won.
+
+    Both tests read the SEALED window, because sealing is what the emitted board
+    goes through: an unsealed grid would promise open cells that are about to
+    become holes.
+    """
+    cropped = seal_unmatchable_cells(crop_grid(grid))
+
+    if open_ratio(cropped) < floor - 1e-9:
+        return [list(row) for row in grid]
+
+    # A BLOCKS level (MODE 3) whose crop keeps no blocks has no goal left. The
+    # count itself is clamped downstream in target_gen; what cannot be repaired
+    # there is a board with nothing to clear at all.
+    if mode == MODE_BLOCKS and block_target_count(cropped) <= 0:
+        if block_target_count(grid) > 0:
+            return [list(row) for row in grid]
+
+    return crop_grid(grid)
+
+
 # A LIMIT is a number in a unit, and the unit decides the clamp. Type 0 counts
 # moves, type 1 counts seconds, and the two shipped sets do not overlap: the
 # kit's 89 move levels run 6..61 and its 11 time levels are 60 (nine of them),
@@ -302,6 +423,13 @@ def generate(template, entry, min_open=0.0):
     if rng.random() < 0.25:
         grid = flip_grid(grid)
 
+    # Cropped BEFORE the blockers are thickened and before the seal, so both
+    # read the shape that actually ships: thickening a blocker on a column the
+    # crop is about to cut off would spend the difficulty budget on cells no
+    # player sees, and sealing before the crop would miss the regions the crop
+    # itself strands.
+    grid = fit_board(grid, min_open, template["mode"])
+
     grid = thicken_blockers(grid, difficulty, rng)
     grid = strip_self_acting(grid)
 
@@ -328,8 +456,11 @@ def generate(template, entry, min_open=0.0):
 
     return {
         "mode": template["mode"],
-        "cols": template["cols"],
-        "rows": template["rows"],
+        # Read off the CROPPED grid, never off the template: parse_level asserts
+        # the header against the rows it can count, so a stale SIZE here is a
+        # hard failure on the next read rather than a quiet mismatch.
+        "cols": len(grid[0]) if grid else 0,
+        "rows": len(grid),
         "limitType": template["limitType"],
         "limit": scale_limit(
             template["limit"], template["limitType"], difficulty, rng),
@@ -361,6 +492,12 @@ def main():
     #
     # Recomputed from the grids rather than read from the stored field, which is
     # rounded to four places and would sit fractionally above the real value.
+    # Measured on the templates AS THE KIT DREW THEM, uncropped. The floor says
+    # "no board the story emits is less open than the worst board the kit
+    # shipped", which is a fact about the kit and cannot be read off boards this
+    # script has already cut down -- `fit_board` consults the floor to decide
+    # whether a crop is allowed at all, so deriving the floor from cropped
+    # boards would let the crop lower its own bar until anything passed.
     min_open = min(open_ratio(t["grid"]) for t in templates)
 
     ensure_dir(LEVELS_RES)
@@ -391,6 +528,21 @@ def main():
             if stripped != level["grid"]:
                 level["grid"] = stripped
                 destaticed += 1
+
+            # ...and one more, added when the board was cropped to 7x9: the
+            # kit's hundred are cropped with the rest. A board that kept nine
+            # columns here would be a different SIZE from every level after it
+            # and would change size under the player at level 101.
+            #
+            # tools/shipped_levels is NOT touched -- the crop happens on the way
+            # out, so the template library still round-trips byte-for-byte
+            # against the originals and this is undone by deleting the call.
+            level["grid"] = seal_unmatchable_cells(
+                fit_board(level["grid"], min_open, level["mode"])
+            )
+            level["cols"] = len(level["grid"][0]) if level["grid"] else 0
+            level["rows"] = len(level["grid"])
+
             text = format_level(level)
             provenance[str(number)] = {
                 "template": number,

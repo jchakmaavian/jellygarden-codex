@@ -306,7 +306,12 @@ def difficulty_of(level):
 
     # Fewer moves for a bigger board is harder.
     moves = max(1, level["limit"])
-    pressure = min(1.0, (area / 40.0) / moves)
+    # The divisor is a reference AREA, so it moves with the board. It was 40 for
+    # the kit's 9x11 (99 cells); the story crops every board to 7x9 (63 cells),
+    # and leaving 40 here would have made every level score as easier than the
+    # shipped set it is ranked against -- which silently re-deals which template
+    # dresses which level across all 1208.
+    pressure = min(1.0, (area / 25.0) / moves)
 
     # More colours means fewer accidental matches.
     colour = (level["colorLimit"] - 4) / 3.0  # 4..7 -> 0..1

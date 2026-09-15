@@ -16,13 +16,18 @@ namespace JellyGarden.Scripts.Story
             bool horizontal = _item.currentType == ItemsTypes.HORIZONTAL_STRIPPED;
             if (vertical || horizontal)
             {
-                // The sprite is drawn TILTED: its nose points up and to the
-                // right, about 45 degrees off vertical. Both turns cancel that
-                // baked angle first, then aim the axis -- so vertical is -45
-                // (nose straight up) and horizontal another quarter turn past
-                // it (nose right). Rotating by 0/-90 leaves the baked tilt in
-                // and is what made the rocket sit at 45 degrees on the board.
-                _item.sprRenderer.transform.localRotation = Quaternion.Euler(0, 0, vertical ? -45 : -135);
+                // The sprite is drawn UPRIGHT, nose pointing right, exactly like
+                // every other piece on the board. So a horizontal rocket needs
+                // no rotation at all and a vertical one is a plain quarter turn.
+                //
+                // It used to be drawn tilted at 45 degrees, and this method
+                // cancelled that tilt with -45 / -135. Every bug the rocket had
+                // came out of that one decision: a residual angle when the bake
+                // was not exactly 45, art that overflowed its cell because a
+                // turned sprite sweeps its diagonal rather than its width, and
+                // a pair of angles attached to the wrong cases. Drawing it
+                // straight, like its neighbours, removed all three at once.
+                _item.sprRenderer.transform.localRotation = Quaternion.Euler(0, 0, vertical ? -90 : 0);
                 _turned = true;
             }
             else if (_turned)

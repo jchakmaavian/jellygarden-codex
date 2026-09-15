@@ -160,14 +160,41 @@ def repair_dead_targets(entries, level, steepest):
     out = []
     for entry in entries:
         entry = dict(entry)
-        if entry["type"] == TARGET_SCORE or entry["count"] > 0:
+        if entry["type"] == TARGET_SCORE:
             out.append(entry)
             continue
 
         if entry["type"] != TARGET_BLOCKS:
+            if entry["count"] > 0:
+                out.append(entry)
             continue
 
         available = block_target_count(level["grid"])
+
+        # A count that is already set is kept -- UNLESS the board cannot meet
+        # it. It always could until the boards were cropped to 7x9: a target
+        # inherited its template's count and the template's board came with it,
+        # so the two agreed by construction. A cropped board holds fewer blocks
+        # than the board the count was written for, and 193 levels came out of
+        # the crop asking for blocks that are no longer there -- level 136 asks
+        # 23 of a board holding 14. Unwinnable, and `validate_story` says so.
+        #
+        # Clamping DOWN is the only honest repair here: the goal becomes "clear
+        # what this board has", which is what the kit's own BLOCKS levels ask
+        # (32 of its 38 ask for exactly their board's count).
+        if entry["count"] > 0:
+            # A board with no blocks left cannot carry a BLOCKS goal at all.
+            # `fit_board` keeps such a level uncropped precisely so this does
+            # not happen, so reaching here means a board genuinely ships with no
+            # blocks and the inherited goal is a lie either way -- dropping it
+            # is caught downstream as "MODE 3 with no type-3 entry", which is
+            # the honest error rather than an unwinnable level.
+            if available <= 0:
+                continue
+            if entry["count"] > available:
+                entry["count"] = available
+            out.append(entry)
+            continue
         if available <= 0:
             continue
         if steepest and level["limitType"] == LIMIT_MOVES and level["limit"] > 0:

@@ -101,14 +101,15 @@ namespace JellyGarden.Scripts.Story
         //
         // Doubled from 0.055-0.185, which was measured too small to see. The
         // arithmetic: the gem sprite is 128px at 100 PPU = 1.28 world units,
-        // drawn at ItemScale (0.64 * Factor 1.427), so it spans 1.169 units.
-        // AspectCamera puts ortho at 12.92 for a nine-wide board at pitch
-        // 1.17, which is 33 points per world unit on an 852-point window — so
-        // the gem itself is only about 39 points across. At the old values a
-        // mote was 2.1 to 7.1 points, and more than half of a mote's alpha is
-        // a soft skirt that falls to nothing at its rim, so the part that
-        // actually reads was around a third of that. These give 4.2 to 14.2
-        // points, average about 9.
+        // drawn at ItemScale (0.60 * Factor 1.427), so it spans 1.096 units.
+        //
+        // Storybook fits the camera itself — StorybookBoardLayout.FitCamera,
+        // not AspectCamera, which StoryPixelSnap skips in this mode. A 52px
+        // cell at pitch 1.17 is 44.4 points per world unit and ortho 9.585, so
+        // the gem is about 49 points across. More than half of a mote's alpha
+        // is a soft skirt that falls to nothing at its rim, so the part that
+        // actually reads is around a third of its nominal size. These give 5.4
+        // to 18.0 points, average about 12.
         private const float MoteMin = 0.11f;
         private const float MoteMax = 0.37f;
 

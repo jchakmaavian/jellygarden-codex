@@ -21,6 +21,43 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public const float SidePadding = 3;
 
+        /// <summary>
+        /// Room reserved beyond the grid itself, in cells, for the gold outline.
+        ///
+        /// The outline stands <c>Gap</c> (.07 of a cell) clear of the tiles and
+        /// is <c>Thickness</c> (.12) thick, so it reaches .19 of a cell past the
+        /// grid on each side -- .38 across both. This is that, plus a little.
+        ///
+        /// It was .52, which is .14 of a cell of slack the board never used. On
+        /// a seven-column board that slack is what stands between the cells and
+        /// the field they were given: at .52 a 393-point screen draws a 51px
+        /// cell, at .42 it draws 53px. Lower than .38 and the frame is cut.
+        ///
+        /// Read by FitPitch, by the backdrop that has to cover the frame, and by
+        /// the test that asserts the fitted board still fits -- all three take
+        /// it from here so they cannot drift apart.
+        /// </summary>
+        public const float Allowance = .42f;
+
+        /// <summary>
+        /// How far the ice block is scaled past its cell so its ART fills it.
+        ///
+        /// The transform is already right: StoryBoardScale.FitToCell puts the
+        /// block sprite at exactly one Pitch, so at a 52px cell the sprite IS
+        /// 52px. The padding is painted into ice.png instead -- its opaque
+        /// pixels run x 14..241 of 256, a 14px transparent margin each side, so
+        /// the visible ice covered 46.3px and left 2.8px of ground showing on
+        /// every side of a block that is meant to be the cell's lid.
+        ///
+        /// 256/228 = 1.1228 cancels exactly that margin. It scales the whole
+        /// block transform, so DestroyBlock's BrickRotate plays 12% bigger on
+        /// the same transform -- no animation, sprite or sorting order changes.
+        ///
+        /// The honest fix is cropping the margin out of the PNG and re-importing
+        /// at PPU 350.4; this is the one-line version that leaves the asset be.
+        /// </summary>
+        public const float IceFill = 1.1228f;
+
         public static Rect FieldRect(Rect safe)
         {
             float unit = safe.width / 393f;
@@ -32,8 +69,22 @@ namespace JellyGarden.Scripts.Story
         {
             Rect field = FieldRect(safe);
             // Padding is proportional to a cell, so it also shrinks on short phones.
-            return Mathf.Max(1, Mathf.Floor(Mathf.Min(45.7f * safe.width / 393f,
-                field.width / (Mathf.Max(1, cols) + .52f), field.height / (Mathf.Max(1, rows) + .52f))));
+            //
+            // The first term is a ceiling on how big one cell may get, and it
+            // exists so a SMALL board (five or six columns) does not blow itself
+            // up to fill a phone. It was 45.7, which never bound anything while
+            // every board was nine wide -- at nine columns the width term is
+            // 40.7 and wins on its own.
+            //
+            // Cropping the boards to 7x9 made it bind: seven columns want 51.5
+            // and the ceiling held them at 45.7, so the board covered 81% of the
+            // screen and the rest read as empty margin. 58 puts the ceiling back
+            // above the seven-column width term, so WIDTH decides the cell again
+            // and the board grows to the field it was given -- while a five-wide
+            // board still stops at 58 rather than sprawling.
+            return Mathf.Max(1, Mathf.Floor(Mathf.Min(58f * safe.width / 393f,
+                field.width / (Mathf.Max(1, cols) + Allowance),
+                field.height / (Mathf.Max(1, rows) + Allowance))));
         }
         public static void FitCamera(LevelManager manager)
         {
@@ -71,8 +122,19 @@ namespace JellyGarden.Scripts.Story
                 }
             texture.SetPixels32(pixels);
             texture.Apply();
+            // .985, not .955. The divisor is what the tile DRAWS as a fraction
+            // of its cell, so the remainder is the seam the player sees between
+            // two tiles: .955 left 4.5% of a cell of dark ground showing, which
+            // at a 52px cell is over two pixels a side and read as a grid of
+            // separate tiles rather than as one board. At .985 the seam is 1.5%
+            // -- still enough for the two-tone checker to register as grain,
+            // which is what DressCells' colours are for.
+            //
+            // NOT the .955 on the outline bar below: that one is the gold
+            // frame's own sprite, and moving it would rescale the frame rather
+            // than close a gap.
             _cell = Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(.5f, .5f),
-                size / (StoryBoardScale.KitPitch * .955f), 0, SpriteMeshType.FullRect);
+                size / (StoryBoardScale.KitPitch * .985f), 0, SpriteMeshType.FullRect);
             _cell.name = "storybook_soft_cell";
             return _cell;
         }
@@ -104,12 +166,28 @@ namespace JellyGarden.Scripts.Story
                 Transform oldEdge = square.transform.Find("~StoryBoardEdge");
                 if (oldEdge != null) oldEdge.gameObject.SetActive(false);
                 // Only the kit's ice layers change; stone, chains and other blockers retain their behaviour/art.
+                //
+                // square.type, NOT the block list: CreateObstacles adds wire,
+                // stone, undestroyable and thriving prefabs to that same list,
+                // so walking it would repaint every one of them as ice.
+                //
+                // The cost is that a cell carrying ice AND an obstacle has its
+                // type overwritten by the obstacle branch, so it is skipped --
+                // 1422 cells across 213 levels, nearly all "23", ice under a
+                // wire. Those keep the ice art's own baked-in margin. Closing
+                // that needs a per-block test of which prefab a block came
+                // from, which this does not have.
                 if (square.type == SquareTypes.BLOCK && square.block != null)
                     foreach (GameObject block in square.block)
                     {
                         if (block == null) continue;
                         var ice = block.GetComponent<SpriteRenderer>();
-                        if (ice != null) { ice.sprite = StorybookBoardArt.Get("ice"); ice.color = Color.white; }
+                        if (ice != null)
+                        {
+                            ice.sprite = StorybookBoardArt.Get("ice");
+                            ice.color = Color.white;
+                            block.transform.localScale = Vector3.one * IceFill;
+                        }
                     }
             }
             if (field == null) return;
@@ -118,8 +196,8 @@ namespace JellyGarden.Scripts.Story
             // Squares are generated at world positions; use their local origin for the moving tray.
             Square first = manager.squaresArray[0];
             if (first != null) centre += first.transform.localPosition;
-            Vector2 size = new Vector2((manager.maxCols + .52f) * manager.squareWidth,
-                (manager.maxRows + .52f) * manager.squareHeight);
+            Vector2 size = new Vector2((manager.maxCols + Allowance) * manager.squareWidth,
+                (manager.maxRows + Allowance) * manager.squareHeight);
             // No tray behind the cells: the arc's room is what the board sits on.
             // The per-cell tiles still carry the grid, so a hole and a blocked
             // cell read exactly as before. Hidden rather than skipped, because

@@ -108,6 +108,12 @@ namespace JellyGarden.Scripts.Story
                 root.sizeDelta = new Vector2(RibbonWidth, 180);
                 root.anchoredPosition = new Vector2(0, RibbonRise);
                 root.SetSiblingIndex(0);
+
+                // The rest of the celebration hangs off the same object: drops,
+                // trumpets, light and confetti, all staged around this ribbon.
+                // It is handed the ribbon rather than finding it, because the
+                // banner is INACTIVE here and a Find would skip its children.
+                StoryWinCelebration.Install(banner, root);
                 return;
             }
             Image royal = StoryUi.CreateImage(RibbonName, banner, art, Color.white);

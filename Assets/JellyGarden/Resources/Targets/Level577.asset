@@ -25,7 +25,7 @@ MonoBehaviour:
     - type: 3
       icon: {fileID: 21300000, guid: 5696fba72c2ed154ba8f6211ae4539d9, type: 3}
       color: 0
-      targetCount: 62
+      targetCount: 59
       countCollected: 0
       guiObj: {fileID: 0}
       blockSprites:

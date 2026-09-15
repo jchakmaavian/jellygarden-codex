@@ -1,0 +1,19 @@
+{
+    "name": "RoyalThrone.Match3Vfx.Demo.Editor",
+    "rootNamespace": "RoyalThrone.Match3Vfx.Demo",
+    "references": [
+        "RoyalThrone.Match3Vfx",
+        "RoyalThrone.Match3Vfx.Demo"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -46,7 +46,8 @@ namespace JellyGarden.Scripts.Story.Editor
                     {
                         Rect field = StorybookBoardLayout.FieldRect(safe);
                         float pitch = StorybookBoardLayout.FitPitch(safe, cols, rows);
-                        Require((cols + .52f) * pitch <= field.width + .01f && (rows + .52f) * pitch <= field.height + .01f,
+                        float allow = StorybookBoardLayout.Allowance;
+                        Require((cols + allow) * pitch <= field.width + .01f && (rows + allow) * pitch <= field.height + .01f,
                             "Board overlaps fixed controls: " + level + " at " + safe.size);
                         layouts++;
                     }
