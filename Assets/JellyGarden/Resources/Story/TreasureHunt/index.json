@@ -1,7 +1,7 @@
 {
   "totalAreas": 150,
-  "totalTasks": 4,
-  "totalStars": 4,
+  "totalTasks": 8,
+  "totalStars": 8,
   "arcs": [
     {
       "arc": 1,
@@ -9,8 +9,8 @@
       "firstArea": 1,
       "lastArea": 25,
       "areaCount": 25,
-      "taskCount": 4,
-      "starCount": 4,
+      "taskCount": 8,
+      "starCount": 8,
       "themeKey": "castle"
     },
     {

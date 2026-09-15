@@ -53,7 +53,20 @@ def compile_campaign(source):
             tasks = area["tasks"]
             assert [t["index"] for t in tasks] == list(range(1, len(tasks) + 1)), "Task order"
             assert all(t["stars"] > 0 and t["label"] for t in tasks)
-            assert len(area["boardNumbers"]) == sum(t["stars"] for t in tasks), "Unfunded tasks"
+            # Boards may OUTNUMBER stars, but never fall short of them.
+            #
+            # This was ==, which tied an area's playable content to its repair
+            # list: four repairs meant exactly four boards, so shipping 100
+            # levels would have meant authoring 100 repairs against five room
+            # states — 95 purchases that change nothing on screen.
+            #
+            # >= lets an area carry levels beyond what its repairs cost. The
+            # surplus boards still enter the level plan and still pay a star
+            # each (StoryProgress._areaStars is an uncapped per-area counter),
+            # so the stars bank against repairs authored later rather than
+            # being refused at the door. Short of the star total is still a
+            # fault: a task nothing can fund is unreachable.
+            assert len(area["boardNumbers"]) >= sum(t["stars"] for t in tasks), "Unfunded tasks"
             assert len(set(area["boardNumbers"])) == len(area["boardNumbers"]), "Duplicate rewardable level"
             assert set(area.get("minimumMoves", {})) <= {str(n) for n in area["boardNumbers"]}, "Move tuning for unassigned board"
             assert all(isinstance(n, int) and n > 0 for n in area.get("minimumMoves", {}).values()), "Invalid move floor"
@@ -86,6 +99,27 @@ def compile_campaign(source):
                                     "starIndexWithinArea": offset, "difficulty": 0,
                                     "themeKey": THEMES[area["arc"] - 1], "sabotage": False,
                                     "minimumMoves": area.get("minimumMoves", {}).get(str(level), 0)})
+            # Boards past the last repair's star.
+            #
+            # The loop above walks one board per star, so with the >= rule a
+            # longer boardNumbers list would simply stop being read and those
+            # levels would reach the plan for NO area — StoryLevelPlan.AreaOf
+            # returns 0 for them and StoryFlow.LaunchLevel refuses to open one.
+            # They are emitted here instead, with taskIndex 0: they belong to
+            # the area, they pay their star into it, and they fund no repair of
+            # their own. starIndexWithinArea keeps counting so the plan still
+            # reads as one ordered run.
+            for level in area["boardNumbers"][offset:]:
+                assert level not in used_levels, f"Duplicate rewardable level {level}"
+                assert (ROOT / f"Assets/JellyGarden/Resources/Levels/{level}.txt").exists()
+                assert (ROOT / f"Assets/JellyGarden/Resources/Targets/Level{level}.asset").exists()
+                used_levels.add(level)
+                offset += 1
+                entries.append({"levelNumber": level, "areaId": number,
+                                "arc": area["arc"], "taskIndex": 0,
+                                "starIndexWithinArea": offset, "difficulty": 0,
+                                "themeKey": THEMES[area["arc"] - 1], "sabotage": False,
+                                "minimumMoves": area.get("minimumMoves", {}).get(str(level), 0)})
             for scene in area.pop("scenes", []):
                 assert scene["id"] not in scene_ids, "Duplicate scene ID"
                 assert scene["lines"], "Empty scene"

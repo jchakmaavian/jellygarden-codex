@@ -31,6 +31,22 @@
         }
       ],
       "areaId": 1
+    },
+    {
+      "id": "A002-DISCOVERY",
+      "trigger": "area-complete",
+      "lines": [
+        {
+          "speaker": "Pip",
+          "text": "Look at the water — it's shaped like a horse!",
+          "cue": "horse"
+        },
+        {
+          "speaker": "Freya",
+          "text": "A horse means the stables. That's where we go next!"
+        }
+      ],
+      "areaId": 2
     }
   ]
 }

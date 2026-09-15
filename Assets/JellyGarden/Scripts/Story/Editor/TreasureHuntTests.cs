@@ -33,7 +33,12 @@ namespace JellyGarden.Scripts.Story.Editor
                 expect(StoryCampaign.IsTreasureHunt, "Treasure Hunt must be selected");
                 expect(StoryDatabase.AreaCount == 150, "150 new catalogue entries");
                 expect(StoryDatabase.GetArea(1).Name == "Castle Gates", "new first area name");
-                expect(StoryDatabase.TotalStars == 4 && StoryLevelPlan.LevelCount == 4, "four funded tasks");
+                // Two authored areas fund four repairs each; the plan carries
+                // levels 1-100, the surplus banking its stars for repairs
+                // authored later. Stars counts repairs, LevelCount counts
+                // playable boards, and the two deliberately no longer match.
+                expect(StoryDatabase.TotalStars == 8 && StoryLevelPlan.LevelCount == 100,
+                    "eight funded repairs across one hundred boards");
                 var opening = TreasureHuntPresentation.LinesFor("OPEN-01");
                 var ending = TreasureHuntPresentation.LinesFor("A001-DISCOVERY");
                 expect(opening.Count == 2 && ending.Count == 2, "Area 1 has only four dialogue cards");
@@ -77,14 +82,28 @@ namespace JellyGarden.Scripts.Story.Editor
                     expect(StoryRepairVideo.Load(1, task) == null,
                         "new campaign must not reuse a legacy repair movie: " + task);
                 expect(!StoryProgress.OpeningSeen && StoryProgress.LevelsBeatenCount == 0, "fresh campaign ignores old progress");
-                for (int area = 2; area <= 150; area++)
+                // Area 2 (Outer Courtyard) was authored on 2026-09-14, so the
+                // frontier moved: it owns boards 5-8 and is enterable once area
+                // 1 is complete. Everything from 3 up is still catalogue only.
+                // This bound tracks readyAreas in the compiled manifest — raise
+                // it as areas are authored, rather than dropping the check.
+                // Areas 1 and 2 carry levels 1-50 and 51-100. Only four boards
+                // each fund a repair; the rest bank their star for repairs
+                // authored later, which is why this counts boards rather than
+                // tasks.
+                expect(StoryLevelPlan.LevelsFor(1).Count == 50, "area 1 owns levels 1-50");
+                expect(StoryLevelPlan.LevelsFor(2).Count == 50, "area 2 owns levels 51-100");
+                for (int area = 3; area <= 150; area++)
                 {
                     expect(!StoryCampaign.CanEnter(area), "unfinished area entered: " + area);
                     expect(StoryLevelPlan.LevelsFor(area).Count == 0, "unfinished area assigned boards: " + area);
                 }
                 expect(!StoryProgress.CompleteTask(1, 1), "no repair without a star");
                 expect(!StoryProgress.RecordLevelWin(1, 2), "wrong area cannot receive reward");
-                expect(!StoryProgress.RecordLevelWin(5, 1), "unmapped board cannot receive reward");
+                // 101 is past the end of the plan. Level 5 used to serve here,
+                // but it belongs to area 1 now that the areas carry 1-50 and
+                // 51-100, so it would be paid rather than refused.
+                expect(!StoryProgress.RecordLevelWin(101, 1), "unmapped board cannot receive reward");
                 expect(StoryCampaign.ProtectFirstPuzzle(1), "first puzzle retry protection");
                 expect(StoryProgress.RecordLevelWin(1, 1), "first real win pays");
                 expect(!StoryProgress.RecordLevelWin(1, 1), "replay must not pay twice");
@@ -128,8 +147,14 @@ namespace JellyGarden.Scripts.Story.Editor
                     expect(StoryArt.AreaAtProgress(1) == StoryArt.AreaState(1, task), "correct saved room state " + task);
                 }
                 expect(StoryProgress.IsAreaComplete(1), "last task completes area");
-                expect(!StoryProgress.IsAreaUnlocked(2), "completion does not unlock unfinished area");
-                StoryProgress.CurrentArea = 2;
+                // Area 2 was authored on 2026-09-14, so finishing area 1 now
+                // opens it rather than stopping at the frontier. Area 3 is the
+                // first unfinished one, and it is what the old assertions here
+                // were really about: completing an area must not reach past
+                // the authored content.
+                expect(StoryProgress.IsAreaUnlocked(2), "completion unlocks the next authored area");
+                expect(!StoryProgress.IsAreaUnlocked(3), "completion does not unlock unfinished area");
+                StoryProgress.CurrentArea = 3;
                 expect(StoryProgress.CurrentArea == 1, "current area rejects unavailable content");
                 expect(TreasureHuntPresentation.PlayPending(1, null), "interrupted final discovery resumes");
                 Tap("Skip");
