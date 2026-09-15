@@ -1,0 +1,154 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5039c68959df8814380630e8c3e94fb0, type: 3}
+  m_Name: RoyalThroneArtSettings
+  m_EditorClassIdentifier: RoyalThrone.Match3Vfx::RoyalThrone.Match3Vfx.Match3VfxSettings
+  enableEffects: 1
+  swapDuration: 0.13
+  invalidSwapDuration: 0.22
+  invalidSwapPushFraction: 0.42
+  invalidSwapOvershoot: 3
+  matchPop:
+    anticipation: 0.03
+    squash: 0.045
+    rebound: 0.045
+    disappear: 0.09
+    squashAmount: 0.045
+    anticipationScale: 0.05
+    reboundAmount: 0.065
+    smooth: 1
+  powerClearPop:
+    anticipation: 0.015
+    squash: 0.03
+    rebound: 0.02
+    disappear: 0.05
+    squashAmount: 0.07
+    anticipationScale: 0.05
+    reboundAmount: 0.12
+    smooth: 0
+  matchStagger: 0.012
+  groupAccentDelay: 0.12
+  shineDuration: 0.09
+  shineStrength: 0.85
+  fallSpeed: 12
+  fallAcceleration: 55
+  fallMaxSpeed: 32
+  minimumAnimatedDrop: 0.5
+  landingSquash: 0.075
+  landingSquashDuration: 0.1
+  flashDuration: 0.065
+  flashStartScale: 0.8
+  flashEndScale: 1.25
+  starCount: 6
+  particleVelocity: 4.8
+  particleDrag: 3
+  particleLifetime: 0.34
+  starSize: 0.26
+  microCount: 8
+  microLifetime: 0.38
+  microSize: 0.09
+  fragmentCount: 1
+  fragmentLifetime: 0.3
+  fragmentSize: 0.12
+  starDelay: 0.01
+  microDelay: 0.035
+  fragmentDelay: 0.02
+  fragmentColorBlend: 0.8
+  powerClearBurstIntensity: 0.3
+  enableCenterAccent: 1
+  centerRingDuration: 0.24
+  centerRingEndScale: 1.15
+  centerStarCount: 5
+  fourMatchBonus: 0.18
+  fiveMatchBonus: 0.36
+  cascadeBonusPerStep: 0.14
+  intensityMax: 1.55
+  accentSoundIntensity: 1.17
+  enableHitStop: 0
+  hitStopDuration: 0.045
+  hitStopScale: 0.12
+  hitStopIntensityBonus: 0.025
+  enableShatter: 1
+  shatterPoolSize: 240
+  shatterBurstSpeed: 2.2
+  shatterUpwardBias: 0.65
+  shatterDirectionJitter: 0.85
+  shatterGravity: -34
+  shatterDrag: 1.1
+  shatterSpinMin: 110
+  shatterSpinMax: 460
+  shatterLifetime: 1.8
+  burstLibrary: {fileID: 11400000, guid: 5da552f2aad0b7f4882a6297c13b623c, type: 2}
+  rocketAnticipation: 0.22
+  rocketCellsPerSecond: 8
+  rocketMinSweep: 0.8
+  rocketMaxSweep: 1.2
+  rocketContactHold: 0.055
+  tntAnticipation: 0.16
+  blastWavePerCell: 0.025
+  helicopterLift: 0.22
+  helicopterFlight: 0.48
+  orbCharge: 0.16
+  orbConvertHold: 0.18
+  smokeLifetime: 0.36
+  impactShake: 0.035
+  projectilePool: 32
+  sparkleBudget: 480
+  rocketSprite: {fileID: 21300000, guid: e129d5aff5069044fa03600861fa1282, type: 3}
+  tntSprite: {fileID: 21300000, guid: 28dfa7af1e1e19c4d958af4996df4cdc, type: 3}
+  helicopterSprite: {fileID: 21300000, guid: 66337ec0707e38a4e969d1becf735e8e, type: 3}
+  smokeTexture: {fileID: 2800000, guid: b849cb2799a2b5544ac0e5c340492b8c, type: 3}
+  matchImpactPrefab: {fileID: 0}
+  matchImpactScale: 1.1
+  matchImpactLifetime: 0.9
+  matchImpactPool: 4
+  blastImpactPrefab: {fileID: 0}
+  blastImpactScale: 3.2
+  blastImpactLifetime: 1.5
+  blastImpactPool: 2
+  matchClips:
+  - {fileID: 8300000, guid: a160dc5dbe51ff74683577a9564295cc, type: 3}
+  - {fileID: 8300000, guid: 5240a489bad869b458919aa8deae6bfd, type: 3}
+  landClip: {fileID: 8300000, guid: 419939098df915740b9206a3a4e8d681, type: 3}
+  rocketClip: {fileID: 8300000, guid: cf0c42d0701285b489fb130d606c98a3, type: 3}
+  tntClip: {fileID: 8300000, guid: 162309118094d1545850eab87e76abd7, type: 3}
+  helicopterClip: {fileID: 8300000, guid: 64bd4eab5bb4e1f42b57d873e939c274, type: 3}
+  createClip: {fileID: 8300000, guid: 48adfbf8e5507fa43b9e42de1011aada, type: 3}
+  clickClip: {fileID: 8300000, guid: 84837c1932b66d84b8ef3ff39327a1b1, type: 3}
+  fireworkClip: {fileID: 8300000, guid: f655180f57b80184ebe969dd65c647b0, type: 3}
+  celebrateClip: {fileID: 8300000, guid: 140dff7bc26e6c54abd253d13efae72a, type: 3}
+  effectsVolume: 0.68
+  soundVoices: 12
+  mixHeadroom: 0.68
+  enableComboBanner: 1
+  bannerMinCascade: 3
+  bannerTexts:
+  - GREAT!
+  - BRAVO!
+  - FANTASTIC!
+  - BRILLIANT!
+  bannerFont: {fileID: 0}
+  bannerCooldown: 2.4
+  bannerCanvasOrder: 24
+  bannerHeight: 0.735
+  bannerTopColor: {r: 1, g: 1, b: 0.9, a: 1}
+  bannerBottomColor: {r: 1, g: 0.7, b: 0.17, a: 1}
+  bannerOutlineColor: {r: 0.12, g: 0.2, b: 0.41, a: 1}
+  sortingLayerName: Default
+  shatterSortingOrder: 20
+  burstSortingOrder: 25
+  powerupSortingOrder: 26
+  hdrBoost: 1.55
+  enableUrpBloom: 0
+  bloomThreshold: 1.05
+  bloomIntensity: 0.62
+  bloomScatter: 0.58

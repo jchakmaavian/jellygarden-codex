@@ -1,0 +1,16 @@
+{
+    "name": "RoyalThrone.Match3Vfx",
+    "rootNamespace": "RoyalThrone.Match3Vfx",
+    "references": [
+        "UnityEngine.UI"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,40 @@
+{
+  "name": "com.royalthrone.match3-vfx",
+  "version": "1.0.0",
+  "displayName": "Royal Throne Match-3 VFX Kit",
+  "description": "Pooled match-3 feedback extracted from Royal Throne: swap, invalid-swap, fall and landing motion; staged match pops with sparkle bursts and sprite shatter; rocket, TNT, helicopter and colour-orb sequences with per-cell hit callbacks; camera shake, hit-stop, capped SFX and a combo banner. Game rules stay in your project through IMatch3VfxHost and IMatch3Board.",
+  "unity": "6000.0",
+  "dependencies": {
+    "com.unity.ugui": "2.0.0",
+    "com.unity.modules.particlesystem": "1.0.0",
+    "com.unity.modules.audio": "1.0.0"
+  },
+  "keywords": [
+    "match3",
+    "vfx",
+    "juice",
+    "particles",
+    "animation",
+    "royal-throne"
+  ],
+  "author": {
+    "name": "Royal Throne team"
+  },
+  "samples": [
+    {
+      "displayName": "Demo Board",
+      "description": "Self-contained 8x8 board that previews every effect. No art or game code required.",
+      "path": "Samples~/Demo"
+    },
+    {
+      "displayName": "Royal Throne Art and SFX Pack",
+      "description": "Royal Throne power-up sprites, painted burst chips, smoke puff, mastered SFX and a preconfigured settings asset.",
+      "path": "Samples~/RoyalThroneArtPack"
+    },
+    {
+      "displayName": "JellyGarden Adapter",
+      "description": "Host, board and bridge for projects built on the JellyGarden match-3 code base (Item, Square, LevelManager).",
+      "path": "Samples~/JellyGardenAdapter"
+    }
+  ]
+}
