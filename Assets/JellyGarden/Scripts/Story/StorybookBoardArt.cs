@@ -50,13 +50,22 @@ namespace JellyGarden.Scripts.Story
             item.items = new Sprite[6];
             item.stripedItems = new List<StripedItem>();
             item.packageItems = new Sprite[6];
+            // The three specials wear the Royal plates. They were chosen on the
+            // level popup and carried onto the board so the piece the player is
+            // promised is the piece the board hands over.
+            // The striped rocket from the UI layer set, not the Royal plate and
+            // not Board/rocket: this is the one that was picked for the grid.
+            Sprite rocket = Resources.Load<Sprite>("Story/TreasureHunt/UI/Layers/rocket");
+            Sprite areaBomb = Resources.Load<Sprite>("Story/TreasureHunt/UI/Layers/bomb");
+            Sprite rainbow = Resources.Load<Sprite>("Story/TreasureHunt/UI/Layers/color-ball");
+
             for (int i = 0; i < 6; i++)
             {
                 item.items[i] = Piece(i);
-                item.stripedItems.Add(new StripedItem { horizontal = Get("rocket"), vertical = Get("rocket") });
-                item.packageItems[i] = Get("area-bomb");
+                item.stripedItems.Add(new StripedItem { horizontal = rocket, vertical = rocket });
+                item.packageItems[i] = areaBomb;
             }
-            item.bombItems = new[] { Get("rainbow-orb") };
+            item.bombItems = new[] { rainbow };
             item.ingredientItems = new[] { Get("locket"), Get("ring") };
             item.gameObject.AddComponent<StorybookRocketFacing>();
         }

@@ -401,20 +401,26 @@ namespace JellyGarden.Scripts.Story
             plate = new Plate { RecipeCount = 1, Foot = "Already on your board" };
             plate.Recipe = StoryBoosters.IconOf(boost);
 
+            // The Royal plates, not the board gem. This plate says what is
+            // ALREADY waiting on the board rather than teaching what a match
+            // makes, so it reads as the booster button the player just pressed.
+            // The teaching plates above keep the board art on purpose: they
+            // promise what a match will put in the grid, and a Royal plate there
+            // would promise a piece the board never hands over.
             if (boost == BoostType.Stripes)
             {
                 plate.Title = "Rocket";
-                plate.Result = Rocket(0);
+                plate.Result = StoryUi.LoadSprite("booster_stripes");
             }
             else if (boost == BoostType.Packages)
             {
                 plate.Title = "Bomb";
-                plate.Result = Bomb(0);
+                plate.Result = StoryUi.LoadSprite("booster_packages");
             }
             else if (boost == BoostType.Colorful_bomb)
             {
                 plate.Title = "Rainbow Ball";
-                plate.Result = Rainbow();
+                plate.Result = StoryUi.LoadSprite("booster_colorbomb");
             }
             else
             {

@@ -417,9 +417,9 @@ namespace JellyGarden.Scripts.Story
 
             for (int row = 0; row < count; row++)
             {
-                // Row 0 is the LAST area: the reference reads downward into the
-                // past, and the player opens on their own frontier.
-                int areaId = StorybookUi.Enabled ? row + 1 : count - row;
+                // Row 0 is the LAST area: the map is a tower the player climbs,
+                // so area 1 sits at the bottom and the frontier is above it.
+                int areaId = count - row;
                 _cards.Add(BuildCard(row, areaId));
             }
         }
@@ -680,8 +680,10 @@ namespace JellyGarden.Scripts.Story
         #region Scrolling and artwork
 
         /// <summary>
-        /// Puts an area at the top of the viewport. The list is long enough that
-        /// this is the difference between a usable screen and 145 padlocks.
+        /// Puts an area at the bottom of the viewport. The list is long enough
+        /// that this is the difference between a usable screen and 145 padlocks,
+        /// and the map is a tower: the player's own area sits at the foot of the
+        /// screen with the climb ahead of them above it.
         /// </summary>
         public void ScrollTo(int areaId)
         {
@@ -689,7 +691,7 @@ namespace JellyGarden.Scripts.Story
             if (row < 0) row = 0;
 
             float span = Mathf.Max(0f, _content.sizeDelta.y - ViewportHeight);
-            float y = Mathf.Clamp(row * EntryHeight, 0f, span);
+            float y = Mathf.Clamp((row + 1) * EntryHeight - ViewportHeight, 0f, span);
             _content.anchoredPosition = new Vector2(_content.anchoredPosition.x, y);
 
             RefreshArt();

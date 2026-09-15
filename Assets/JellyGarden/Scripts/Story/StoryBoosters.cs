@@ -101,14 +101,20 @@ namespace JellyGarden.Scripts.Story
 
         public static Sprite IconOf(BoostType boost)
         {
-            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Booster(boost);
+            // The three PLAYABLE boosters keep the Royal plates in every style:
+            // they were picked on the level popup and the Storybook board art
+            // reads as the gem itself rather than as a button. The rest of the
+            // boosters have no Royal plate at all, so they still come from the
+            // board set when Storybook is on.
             switch (boost)
             {
                 case BoostType.Stripes: return StoryUi.LoadSprite("booster_stripes");
                 case BoostType.Packages: return StoryUi.LoadSprite("booster_packages");
                 case BoostType.Colorful_bomb: return StoryUi.LoadSprite("booster_colorbomb");
-                default: return null;
             }
+
+            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Booster(boost);
+            return null;
         }
 
         /// <summary>The kit's own locked-slot plate, so a locked slot is art

@@ -228,6 +228,14 @@ namespace JellyGarden.Scripts.Story
             public float Duration;
             public float NextPuff;
 
+            // Where the head was when it last laid smoke. An emission covers
+            // the SEGMENT from here to the head's current point rather than a
+            // single dot under the nose: PuffEvery is seconds of TRAVEL, and on
+            // a slow variant one interval can outlast a frame, so spawning only
+            // at the nose leaves gaps the eye reads as the trail lagging.
+            public Vector3 LastPuffAt;
+            public bool HasLastPuff;
+
             // The trail this head is laying, read once when it launched. See
             // Puff.Alpha for why it is carried rather than looked up per frame.
             public RocketPlume Plume;
@@ -597,11 +605,34 @@ namespace JellyGarden.Scripts.Story
 
                     // Two or three lobes per emission, on a fixed cadence so
                     // the plume has the same density whatever the frame rate.
+                    //
+                    // The lobes are laid ALONG the segment the head crossed
+                    // since the last emission, not all at the nose. Same count,
+                    // same density, same tuning — but a continuous line instead
+                    // of dots at the sampling points. HeavyExhaust emits every
+                    // 0.022s of travel, longer than a frame at 60fps, so
+                    // spawning at the nose alone left the head visibly ahead of
+                    // its own smoke between ticks.
                     if (now >= head.NextPuff)
                     {
                         head.NextPuff = now + head.Plume.PuffEvery;
                         int puffs = Random.value < 0.5f ? 3 : 2;
-                        for (int i = 0; i < puffs; i++) Spawn(at, head, now);
+
+                        // The first emission has no previous point to reach back
+                        // to, so it lays at the nose exactly as before.
+                        Vector3 since = head.HasLastPuff ? head.LastPuffAt : at;
+
+                        for (int i = 0; i < puffs; i++)
+                        {
+                            // Spread across the segment rather than bunched at
+                            // either end: (i + 1) / puffs walks the lobes up to
+                            // and including the nose.
+                            float along = (i + 1f) / puffs;
+                            Spawn(Vector3.Lerp(since, at, along), head, now);
+                        }
+
+                        head.LastPuffAt = at;
+                        head.HasLastPuff = true;
                     }
 
                     DrawHead(head, at);

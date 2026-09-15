@@ -16,7 +16,13 @@ namespace JellyGarden.Scripts.Story
             bool horizontal = _item.currentType == ItemsTypes.HORIZONTAL_STRIPPED;
             if (vertical || horizontal)
             {
-                _item.sprRenderer.transform.localRotation = Quaternion.Euler(0, 0, vertical ? 45 : -45);
+                // The sprite is drawn TILTED: its nose points up and to the
+                // right, about 45 degrees off vertical. Both turns cancel that
+                // baked angle first, then aim the axis -- so vertical is -45
+                // (nose straight up) and horizontal another quarter turn past
+                // it (nose right). Rotating by 0/-90 leaves the baked tilt in
+                // and is what made the rocket sit at 45 degrees on the board.
+                _item.sprRenderer.transform.localRotation = Quaternion.Euler(0, 0, vertical ? -45 : -135);
                 _turned = true;
             }
             else if (_turned)
