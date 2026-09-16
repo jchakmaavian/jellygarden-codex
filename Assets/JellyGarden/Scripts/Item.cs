@@ -53,6 +53,17 @@ namespace JellyGarden.Scripts
 
         public Vector3 mousePos;
         public Vector3 deltaPos;
+        // Where the finger went down, in SCREEN pixels. The drag used to be
+        // measured between two world points, but the camera is still settling
+        // when a level opens, so the same screen pixel maps to a world point
+        // that drifts upward by ~0.115 units between the press frame and the
+        // next one. That drift alone cleared the old 0.1 world-unit threshold
+        // and locked switchDirection to "down" before the finger had moved.
+        // Screen pixels do not move when the camera does. STORY: added.
+        private Vector2 pressScreenPos;
+        private bool hasPressScreenPos;
+        /// <summary>How far the finger must travel before a swipe is a swipe.</summary>
+        private const float DragThresholdPixels = 25f;
         public Vector3 switchDirection;
         private Square neighborSquare;
         private Item switchItem;
@@ -352,13 +363,27 @@ namespace JellyGarden.Scripts
         {
             dragThis = false;
             switchDirection = Vector3.zero;
+            hasPressScreenPos = false;
         }
 
         public void CheckItemDrag()
         {
             if (dragThis)
             {
-                deltaPos = mousePos - GetMousePosition();
+                if (!hasPressScreenPos)
+                    return;
+
+                Vector2 now = InputManager.Instance.TouchPosition;
+                Vector2 travelled = pressScreenPos - now;
+                if (travelled.magnitude < DragThresholdPixels)
+                    return;
+
+                // SwitchDirection reads the kit's convention — (where the finger
+                // started - where it is now) — and screen Y and world Y both grow
+                // upward, so the screen delta carries the same signs the world one
+                // did. Only the scale differs, and nothing here reads the scale:
+                // the four branches compare |x| against |y| and test sign.
+                deltaPos = new Vector3(travelled.x, travelled.y, 0f);
                 if (switchDirection == Vector3.zero)
                 {
                     SwitchDirection(deltaPos);
@@ -673,6 +698,18 @@ namespace JellyGarden.Scripts
         public Vector3 GetMousePosition()
         {
             return Camera.main.ScreenToWorldPoint(InputManager.Instance.TouchPosition);
+        }
+
+        /// <summary>
+        /// Anchor a drag that something other than this item's own Update began —
+        /// LevelManager starts one when it is the thing that hit-tested the touch.
+        /// Without the screen anchor CheckItemDrag has nothing to measure from and
+        /// the drag never resolves. STORY: added.
+        /// </summary>
+        public void BeginDragFromCurrentTouch()
+        {
+            pressScreenPos = InputManager.Instance.TouchPosition;
+            hasPressScreenPos = true;
         }
 
         public void CheckNeedToFall(Square _square)
@@ -1418,6 +1455,8 @@ namespace JellyGarden.Scripts
                         {
                             dragThis = true;
                             mousePos = GetMousePosition();
+                            pressScreenPos = InputManager.Instance.TouchPosition;
+                            hasPressScreenPos = true;
                         }
                     }
                 }
@@ -1426,9 +1465,18 @@ namespace JellyGarden.Scripts
                 {
                     if (dragThis)
                     {
+                        // A release that never picked a direction is a tap, not a
+                        // swipe. On a universal powerup that fires it where it
+                        // sits; on anything else TapActivate is a no-op and the
+                        // tap does nothing. STORY: added.
+                        bool wasTap = switchDirection == Vector3.zero;
+
                         dragThis = false;
+                        hasPressScreenPos = false;
                         if (switchDirection != Vector3.zero)
                             ResetDrag();
+                        else if (wasTap)
+                            TapActivate();
                     }
                 }
                 
@@ -1442,35 +1490,11 @@ namespace JellyGarden.Scripts
             }
         }
 
-        public void OnMouseDown()
-        {
-            if (!LevelManager.THIS.DragBlocked && !falling && !LevelManager.THIS.gameStatus.Equals(GameState.PreWinAnimations))
-            {
-                dragThis = true;
-                mousePos = GetMousePosition();
-            }
-        }
-
-        public void OnMouseUp()
-        {
-            // A mouse-up that never picked a direction is a tap, not a swipe.
-            // On a universal powerup that fires it where it sits. STORY: added.
-            bool wasTap = dragThis && switchDirection == Vector3.zero;
-
-            dragThis = false;
-            if (switchDirection != Vector3.zero)
-                ResetDrag();
-            else if (wasTap)
-                TapActivate();
-        }
-
-        public void OnMouseDrag()
-        {
-            if (dragThis && !LevelManager.THIS.DragBlocked && !falling && !LevelManager.THIS.gameStatus.Equals(GameState.PreWinAnimations))
-            {
-                CheckItemDrag();
-            }
-        }
+        // OnMouseDown/OnMouseUp/OnMouseDrag used to live here and are gone.
+        // ProjectSettings activeInputHandler is 1 — Input System only — and
+        // Unity drives those three from the old input manager, so they were
+        // never called on device or in the editor. Update() above is the one
+        // live input path; the tap branch in it is what OnMouseUp had.
     }
 
     [Serializable]

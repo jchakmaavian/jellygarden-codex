@@ -922,6 +922,7 @@ namespace JellyGarden.Scripts
                                 itemTouched.dragThis = true;
                                 itemTouched.mousePos = itemTouched.GetMousePosition();
                                 itemTouched.deltaPos = Vector3.zero;
+                                itemTouched.BeginDragFromCurrentTouch();
                             }
                         }
                     }

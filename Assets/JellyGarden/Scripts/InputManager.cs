@@ -241,6 +241,13 @@ public class InputManager : MonoBehaviour
     {
         isTouching = true;
         wasTouchPressed = true;
+        // The press and the position are separate actions and the Input System
+        // does not promise which one it dispatches first. When the press lands
+        // first, lastPosition is still the previous touch's — so whatever reads
+        // TouchPosition on the press frame anchors to the wrong point. Reading
+        // the position action here makes the press frame correct either way.
+        if (positionAction != null)
+            lastPosition = positionAction.ReadValue<Vector2>();
     }
     
     private void OnTouchCanceled(InputAction.CallbackContext context)
@@ -258,6 +265,9 @@ public class InputManager : MonoBehaviour
     {
         isTouching = true;
         wasTouchPressed = true;
+        // Same ordering problem as OnTouchPerformed, on the map's pan action.
+        if (panPositionAction != null)
+            lastPosition = panPositionAction.ReadValue<Vector2>();
     }
     
     private void OnPanCanceled(InputAction.CallbackContext context)
