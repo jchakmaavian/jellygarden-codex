@@ -4,11 +4,15 @@
 // anything — `StoryUi.TopBar` takes an `onSettings` and both screens passed
 // null. This is the panel behind it.
 //
-// It holds one option, because there is one thing worth doing here: wipe the
-// save and start the game over. Everything else a settings screen usually
-// carries — sound, music, language, support — belongs to the kit or does not
-// exist yet, and a panel of dead toggles is worse than a panel with one live
-// one.
+// It holds two options: wipe the save and start over, and leave the game.
+// Everything else a settings screen usually carries — sound, music, language,
+// support — belongs to the kit or does not exist yet, and a panel of dead
+// toggles is worse than a panel with two live ones.
+//
+// Exit is here rather than in the top bar because embedding made it necessary:
+// running as a UnityFramework inside VMP, the game otherwise has no way out
+// except the home button, which leaves the host app stranded behind a screen it
+// cannot reclaim. Standalone the same button quits. See StoryHostExit.
 //
 // Resetting is destructive and cannot be undone, so it asks first. The panel
 // swaps its own body rather than opening a second panel over itself: a
@@ -32,6 +36,7 @@ namespace JellyGarden.Scripts.Story
         private Text _blurb;
         private Button _action;
         private Text _actionLabel;
+        private Button _exit;
         private Action _onClose;
 
         /// <summary>True while the panel is asking whether the player means it.</summary>
@@ -120,11 +125,28 @@ namespace JellyGarden.Scripts.Story
 
             _action = StoryUi.GreenButton("Action", _panel.Content, "Reset Progress", 56, OnAction);
             RectTransform rect = _action.GetComponent<RectTransform>();
-            rect.anchorMin = new Vector2(0.5f, 0.10f);
-            rect.anchorMax = new Vector2(0.5f, 0.30f);
+            rect.anchorMin = new Vector2(0.5f, 0.30f);
+            rect.anchorMax = new Vector2(0.5f, 0.50f);
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.sizeDelta = new Vector2(620f, 0f);
             rect.anchoredPosition = Vector2.zero;
+
+            // Exit sits under Reset and uses the same builder, which is the only
+            // one of the two that survives the campaign switch: GreenButton
+            // delegates to StorybookUi.Primary while Treasure Hunt is active,
+            // where PaintedButton neither branches nor exists — it returns null
+            // when its sprite is missing, so an Exit built from it would simply
+            // not be on the panel and nothing would say so.
+            //
+            // Order carries the hierarchy instead of colour: the destructive
+            // action is on top and is the one that asks twice.
+            _exit = StoryUi.GreenButton("Exit", _panel.Content, ExitLabel(), 56, OnExit);
+            RectTransform exitRect = _exit.GetComponent<RectTransform>();
+            exitRect.anchorMin = new Vector2(0.5f, 0.06f);
+            exitRect.anchorMax = new Vector2(0.5f, 0.26f);
+            exitRect.pivot = new Vector2(0.5f, 0.5f);
+            exitRect.sizeDelta = new Vector2(620f, 0f);
+            exitRect.anchoredPosition = Vector2.zero;
 
             // The green button is three layers and its label is a child, so it is
             // found once here rather than looked up on every state change.
@@ -154,6 +176,28 @@ namespace JellyGarden.Scripts.Story
         private void SetActionLabel(string label)
         {
             if (_actionLabel != null) _actionLabel.text = label;
+        }
+
+        /// <summary>
+        /// "Exit to VMP" when a host embedded the game, "Quit" when it is the app.
+        /// Naming the host is the difference between a button whose destination the
+        /// player can predict and one they have to press to find out.
+        /// </summary>
+        private static string ExitLabel()
+        {
+            return StoryHostExit.IsEmbedded ? "Exit to VMP" : "Quit";
+        }
+
+        /// <summary>
+        /// Leaves immediately, with no confirmation. Nothing is lost by exiting —
+        /// progress is saved as it is earned — so a second tap would be ceremony
+        /// over a reversible action. Reset asks twice because it destroys; this
+        /// does not.
+        /// </summary>
+        private void OnExit()
+        {
+            Close();
+            StoryHostExit.Exit();
         }
 
         private void OnAction()
