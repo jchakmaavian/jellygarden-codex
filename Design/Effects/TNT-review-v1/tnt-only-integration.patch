@@ -1,0 +1,218 @@
+--- a/Assets/JellyGarden/Scripts/Item.cs
++++ b/Assets/JellyGarden/Scripts/Item.cs
+@@ -146,7 +146,7 @@
+             gameObject.name = "item " + GetEntityId();
+             // A Match-4 replacement starts its reveal in the spawn frame. Do not
+             // randomize it, make it fall, or cache its temporary pop scale next frame.
+-            if (RoyalRocketRevealing) { royalSkin?.ApplyNow(); return; }
++            if (RoyalRocketRevealing || royalTntRevealing) { royalSkin?.ApplyNow(); return; }
+             falling = true;
+             GenColor();
+             // sprRenderer = GetComponentInChildren<SpriteRenderer>();
+@@ -965,6 +965,15 @@
+                 currentType = createdType; debugType = createdType; NextType = ItemsTypes.NONE;
+                 if (currentType == ItemsTypes.BOMB) color = 555;
+                 appeared = true; sprRenderer.sprite = RoyalPieceSkin.For(currentType, color);
++                if (createdType == ItemsTypes.PACKAGE)
++                {
++                    royalTntRevealing = true; StopIdleAnim(); if(anim)anim.enabled=false;
++                    falling=false;justCreatedItem=false;
++                    if(square)transform.position=square.transform.position+Vector3.back*.2f;
++                    juiceBaseScale=transform.localScale;xScale=juiceBaseScale.x;yScale=juiceBaseScale.y;
++                    royalSkin?.ApplyNow();TNT3DAnimator.Attach(this,true);
++                    yield return new WaitForSeconds(.5f);royalTntRevealing=false;yield break;
++                }
+                 bool rocket = createdType == ItemsTypes.HORIZONTAL_STRIPPED || createdType == ItemsTypes.VERTICAL_STRIPPED;
+                 if (rocket)
+                 {
+@@ -1230,7 +1239,7 @@
+             if (NextType != ItemsTypes.NONE)
+             {
+                 bool rocket = RoyalEffectsProfile.Get && (NextType == ItemsTypes.HORIZONTAL_STRIPPED || NextType == ItemsTypes.VERTICAL_STRIPPED);
+-                Item i = square.GenItem(!rocket);
++                Item i = square.GenItem(!rocket && !(RoyalEffectsProfile.Get && NextType == ItemsTypes.PACKAGE));
+                 i.NextType = NextType;
+                 i.SetColor(color);
+                 i.ChangeType();
+@@ -1286,6 +1295,9 @@
+         /// resolves while the particles are still finishing on their own.
+         /// </summary>
+         [HideInInspector] public bool royalBlastClear;
++        bool royalTntRevealing;
++        [HideInInspector] public bool royalTntClear;
++        [HideInInspector] public Vector3 royalTntOrigin;
+         [HideInInspector] public bool royalRocketClear;
+         [HideInInspector] public int royalMatchSize;
+         IEnumerator JuiceDestroyCor()
+@@ -1298,6 +1310,17 @@
+             StopIdleAnim();
+             if (anim != null) anim.enabled = false;
+             royalSkin?.ApplyNow();
++
++            if (royalTntClear)
++            {
++                // Keep the source visible for the local impact, then release painted debris.
++                yield return new WaitForSeconds(.045f);
++                CandyShatterService.Instance.Shatter(sprRenderer,1f,true,false,true);
++                foreach(var renderer in GetComponentsInChildren<SpriteRenderer>(true))
++                    if(renderer&&!IsBonusFlyer(renderer.transform))renderer.enabled=false;
++                yield return new WaitForSeconds(.035f);
++                SetAnimationDestroyingFinished();yield break;
++            }
+ 
+             // The rocket has already arrived and held its local white impact before
+             // this call. Snapshot the painted chips before target collection hides it.
+--- a/Assets/JellyGarden/Scripts/Juice/RoyalPieceSkin.cs
++++ b/Assets/JellyGarden/Scripts/Juice/RoyalPieceSkin.cs
+@@ -52,6 +52,7 @@
+             if(item.currentType==ItemsTypes.INGREDIENT)sprite=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(item.sprRenderer.sprite,true);
+             if(!sprite)return;
+             item.sprRenderer.sprite=sprite;
++            if(item.currentType==ItemsTypes.PACKAGE&&!item.destroying)TNT3DAnimator.Attach(item);
+             // The legacy Animator keys Sprite.localScale to one. Keep the static
+             // art fit while the Item parent supplies the code-driven destroy pose.
+             bool codeDestroy=item.destroying&&item.currentType==ItemsTypes.NONE&&JuiceConfig.Instance.EnableJuice;
+--- a/Assets/JellyGarden/Scripts/Juice/RoyalPowerupDirector.cs
++++ b/Assets/JellyGarden/Scripts/Juice/RoyalPowerupDirector.cs
+@@ -48,6 +48,7 @@
+         void Awake()
+         {
+             instance=this;
++            TNT3DAnimator.Prewarm();
+             smoke=transform.Find("Smoke").GetComponent<ParticleSystem>(); sparks=transform.Find("Sparkles").GetComponent<ParticleSystem>();
+             embers=transform.Find("Embers").GetComponent<ParticleSystem>();flash=transform.Find("Impact").GetComponent<ParticleSystem>();ring=transform.Find("Shockwave").GetComponent<ParticleSystem>();
+             var rayObject=transform.Find("Aura rays");rays=rayObject?rayObject.GetComponent<ParticleSystem>():null;
+@@ -83,7 +84,7 @@
+         }
+         void StartOperation(IEnumerator sequence){pending++;StartCoroutine(Own(sequence));}
+         IEnumerator Own(IEnumerator sequence){try{yield return sequence;}finally{pending=Mathf.Max(0,pending-1);}}
+-        void OnDisable(){StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
++        void OnDisable(){TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
+         public void Cancel(){OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();RoyalToolkitImpact.Existing?.Clear();ClearRocketVfx();}
+         void Update()
+         {
+@@ -239,15 +240,25 @@
+         }
+         IEnumerator Explosion(Square origin,int radius)
+         {
+-            Vector3 p=origin.transform.position;var fuse=Take("tnt",p,.9f);
+-            float elapsed=0,duration=RoyalEffectsProfile.Get.tntAnticipation;
+-            while(elapsed<duration){if(!Paused)elapsed+=Time.deltaTime;if(fuse!=null)fuse.go.transform.localScale=Vector3.one*Cell*(.9f+(PlayerPrefs.GetInt("RoyalThrone.HomeMotion",1)!=0?.18f:0)*Mathf.Sin(elapsed/duration*Mathf.PI));yield return null;}
+-            if(fuse!=null)StartCoroutine(Retire(fuse));
+-            Burst(p,radius>2?1.45f:1);RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);
++            Vector3 p=origin.transform.position;var visual=TNT3DAnimator.ActivateAt(origin);
++            yield return Wait(.15f);
++            if(visual)visual.Explode(radius>2?1.45f:1);
++            RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);
++            yield return Wait(.07f);
+             var lm=LevelManager.THIS;
+             for(int distance=0;distance<=radius;distance++)
+             {
+-                for(int y=-distance;y<=distance;y++)for(int x=-distance;x<=distance;x++)if(Mathf.Max(Mathf.Abs(x),Mathf.Abs(y))==distance)Hit(lm.GetSquare(origin.col+x,origin.row+y));
++                for(int y=-distance;y<=distance;y++)for(int x=-distance;x<=distance;x++)if(Mathf.Max(Mathf.Abs(x),Mathf.Abs(y))==distance)
++                {
++                    var sq=lm.GetSquare(origin.col+x,origin.row+y);
++                    if(sq&&!sq.IsNone()&&sq.type!=SquareTypes.UNDESTROYABLE&&(!sq.item||sq.item.currentType!=ItemsTypes.INGREDIENT))
++                    {
++                        if(visual)visual.CellImpact(sq.transform.position);
++                        if(sq.item){sq.item.royalTntClear=true;sq.item.royalTntOrigin=p;}
++                        if(sq.block.Count>0&&sq.block[sq.block.Count-1])CandyShatterService.Instance.Shatter(sq.block[sq.block.Count-1].GetComponentInChildren<SpriteRenderer>(),1,true,false,true);
++                    }
++                    Hit(sq);
++                }
+                 yield return Wait(RoyalEffectsProfile.Get.blastWavePerCell);
+             }
+         }
+@@ -297,13 +308,18 @@
+         // Workshop calls the same visual paths, without touching the player's board or save.
+         public void Preview(string effect,Vector3 p)
+         {
+-            if(effect=="TNT") {Burst(p);RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);}
++            if(effect=="TNT") StartCoroutine(PreviewTnt(p));
+             else if(effect=="Match 3") {for(int i=-1;i<=1;i++)MatchVFXService.Instance.PlayMatchBurst(p+Vector3.right*i*Cell,new Color(.2f,.7f,1),1,i*.018f);MatchVFXService.Instance.PlayMatchCenter(p,Color.white,1);RoyalAudioDirector.Get?.Play(RoyalCue.Match);}
+             else if(effect=="Match 4"||effect=="Match 5") {MatchVFXService.Instance.PlayMatchCenter(p,Color.white,effect=="Match 5"?1.36f:1.18f);RoyalAudioDirector.Get?.Play(RoyalCue.Create);}
+             else if(effect=="Celebration")RoyalCelebration.Play(4);
+             else if(effect=="Rocket"||effect=="Rocket V")StartCoroutine(PreviewRocket(p,effect!="Rocket V"));
+             else StartCoroutine(PreviewFlight(effect,p));
+         }
++        IEnumerator PreviewTnt(Vector3 p)
++        {
++            var visual=TNT3DAnimator.PreviewAt(p);yield return Wait(.15f);
++            if(visual)visual.Explode();RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);
++        }
+         IEnumerator PreviewFlight(string effect,Vector3 p)
+         {
+             bool heli=effect=="Helicopter";var f=Take(heli?"helicopter":"rocket",p,.9f);RoyalAudioDirector.Get?.Play(heli?RoyalCue.Helicopter:RoyalCue.Rocket);
+--- a/Assets/JellyGarden/Scripts/Juice/CandyShatterService.cs
++++ b/Assets/JellyGarden/Scripts/Juice/CandyShatterService.cs
+@@ -349,7 +349,7 @@
+         /// Reads the sprite off the renderer, so it works for every candy colour and for
+         /// striped / wrapped variants without any per-candy configuration.
+         /// </summary>
+-        public void Shatter(SpriteRenderer source, float intensity,bool powerClear=false,bool rocketClear=false)
++        public void Shatter(SpriteRenderer source, float intensity,bool powerClear=false,bool rocketClear=false,bool tntClear=false)
+         {
+             var cfg = Cfg;
+             if (!cfg.EnableJuice || !cfg.EnableCandyShatter) return;
+@@ -376,6 +376,8 @@
+             }
+             bool reducedMotion = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0;
+             int wedges = rocketClear ? (reducedMotion ? 3 : Mathf.Min(meshes.Length, 3) * 2) : Mathf.Min(meshes.Length, reducedMotion ? 2 : powerClear ? 3 : MaxWedges);
++            // Eight small + two medium chips fit a full 24-gem TNT blast in 240 slots.
++            if(tntClear)wedges=reducedMotion?5:10;
+ 
+             // Use the last one to three slots for a smaller physical breakup instead
+             // of dropping the whole event. Never recycle a chunk that is still falling.
+@@ -475,6 +477,15 @@
+                     f.BaseScale = Mathf.Min(boardCell * .90f * variation, boardCell * MaxAuthoredChipCellFraction / diagonal);
+                 }
+                 if (rocketClear) f.BaseScale *= w % 2 == 0 ? .55f : .85f;
++                if(tntClear)
++                {
++                    Vector3 radial=item?(centre-item.royalTntOrigin):new Vector3(dir.x,dir.y,0);
++                    radial.z=0;radial=radial.normalized;
++                    f.Velocity=(radial*1.1f+new Vector3(dir.x*1.4f,Mathf.Abs(dir.y)*1.5f+.8f,0))*boardCell;
++                    f.Gravity=-12f*boardCell;f.SmoothMatch=true;f.Life=Mathf.Lerp(.62f,.85f,Hash(seed+w,151));
++                    float diagonal=Mathf.Max(.001f,meshes[pieceIndex].bounds.size.magnitude);
++                    f.BaseScale=Mathf.Min(f.BaseScale,boardCell*(w%5==0?.26f:.14f)/diagonal);
++                }
+                 f.Tr.localScale = new Vector3(f.BaseScale, f.BaseScale, 1f);
+ 
+                 f.Tint = source.color;
+--- a/Assets/JellyGarden/Scripts/Editor/RoyalEffectsChecks.cs
++++ b/Assets/JellyGarden/Scripts/Editor/RoyalEffectsChecks.cs
+@@ -35,8 +35,10 @@
+             File.WriteAllLines(Folder+"hierarchy.txt",lines);Capture("current-gameplay");Debug.Log("[Royal Effects] Board inspection saved.");
+         }
+         static readonly List<string> checks=new List<string>(),errors=new List<string>();
+-        static bool cellBreakOnly,rocketOnly;
+-        static string Folder=>rocketOnly?"Design/Effects/Rocket-review-v6/":cellBreakOnly?"Design/Effects/Unity-review-v6/":"Design/Effects/Unity-review-v4/";
++        static bool cellBreakOnly,rocketOnly,tntOnly;
++        static string Folder=>tntOnly?"Design/Effects/TNT-review-v1/":rocketOnly?"Design/Effects/Rocket-review-v6/":cellBreakOnly?"Design/Effects/Unity-review-v6/":"Design/Effects/Unity-review-v4/";
++        [MenuItem("Tools/Royal Throne/TNT/Verify TNT only at half and full speed %#F8")]
++        public static void RunTnt(){tntOnly=true;Run();}
+         [MenuItem("Tools/Royal Throne/Effects/Verify restored smooth match breaks %#F10")]
+         public static void RunCellBreaks(){cellBreakOnly=true;Run();}
+         [MenuItem("Tools/Royal Throne/Effects/Verify rocket travel at half and full speed %#F11")]
+@@ -83,6 +85,12 @@
+             bool completed=false;
+             try
+             {
++                if(tntOnly)
++                {
++                    yield return RoyalTNTChecks.Run(lm,Seed,SetColours,Check);
++                    Check(InitScript.Gems==money&&InitScript.lifes==lives,"TNT tests preserve coins and lives");
++                    Check(errors.Count==0,"No runtime errors during TNT tests");completed=true;yield break;
++                }
+                 if(rocketOnly)
+                 {
+                     yield return RoyalRocketChecks.Run(lm,Seed,SetColours,Check);
+@@ -289,7 +297,7 @@
+             lm.lastDraggedItem=lm.lastSwitchedItem=null;lm.DragBlocked=drag;UnityEngine.Random.state=random;Object.Destroy(testField.gameObject);originalField.gameObject.SetActive(true);
+             frames.Sort();string result="Checks completed: "+checks.Count+"\n"+string.Join("\n",checks)+"\nErrors: "+string.Join("\n",errors)+"\nEditor update p95 ms (not device GPU benchmark): "+(frames.Count>0?frames[(int)(frames.Count*.95f)]:0);
+             File.WriteAllText(Folder+"checks.txt",result);Debug.Log("[Royal Effects Checks] "+result);AI.THIS.StartCoroutine(AI.THIS.CheckPossibleCombines());
+-            cellBreakOnly=false;rocketOnly=false;
++            cellBreakOnly=false;rocketOnly=false;tntOnly=false;
+         }
+     }
+ }

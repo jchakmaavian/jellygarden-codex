@@ -1,0 +1,124 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace JellyGarden.Scripts.Juice
+{
+    // Cosmetic actors are pooled separately from Item: damage remains in the director.
+    public sealed class TNT3DAnimator : MonoBehaviour
+    {
+        public enum VisualState { Reveal, Idle, Activated, Ignition, Explosion, Debris, Complete }
+        public VisualState State { get; private set; }
+        public Item Owner { get; private set; }
+        public Transform model, body, head, fuse, flameSocket;
+        public Renderer[] flames, blast, stars;
+        public Renderer[] impacts;
+        readonly float[] impactBorn=new float[25];int impactCursor;
+        public float HeadLift => head.localPosition.y-.22f;
+        public float FlameIntensity { get; private set; }
+        public static int Reuses { get; private set; }
+        public static int ActiveCount { get { int n=0;foreach(var a in pool)if(a&&a.gameObject.activeSelf)n++;return n; } }
+        static readonly List<TNT3DAnimator> pool=new List<TNT3DAnimator>();
+        static Transform poolRoot;
+        MaterialPropertyBlock props;
+        float age, strength=1; bool detached; int uses;
+        readonly Color gold=new Color(1,.68f,.075f), warm=new Color(1,.97f,.78f);
+        public static float Cell { get {var l=LevelManager.THIS;return l&&l.GameField?Mathf.Min(l.squareWidth*Mathf.Abs(l.GameField.lossyScale.x),l.squareHeight*Mathf.Abs(l.GameField.lossyScale.y)):1;} }
+        public static void Prewarm()
+        {
+            if(poolRoot)return;pool.Clear();Reuses=0;
+            var prefab=Resources.Load<TNT3DAnimator>("RoyalTNT/TNT_3D");if(!prefab)return;
+            poolRoot=new GameObject("TNT visual pool").transform;
+            for(int i=0;i<32;i++){var a=Instantiate(prefab,poolRoot);a.gameObject.SetActive(false);pool.Add(a);}
+        }
+        public static TNT3DAnimator Find(Item item){foreach(var a in pool)if(a&&a.gameObject.activeSelf&&a.Owner==item&&!a.detached)return a;return null;}
+        static TNT3DAnimator Take(Vector3 position)
+        {
+            Prewarm();foreach(var a in pool)if(a&&!a.gameObject.activeSelf){a.gameObject.SetActive(true);a.ResetVisualState();a.transform.position=position+Vector3.back*.7f;a.transform.localScale=Vector3.one*Cell;if(a.uses++>0)Reuses++;return a;}return null;
+        }
+        public static TNT3DAnimator Attach(Item item,bool reveal=false)
+        {
+            if(!item||!item.square||item.destroying||!item.gameObject.activeInHierarchy)return null;
+            var a=Find(item)??Take(item.transform.position);if(!a)return null;
+            a.Owner=item;if(reveal)a.Reveal();item.sprRenderer.enabled=false;return a;
+        }
+        public static TNT3DAnimator ActivateAt(Square square)
+        {
+            TNT3DAnimator a=null;foreach(var candidate in pool)if(candidate&&candidate.gameObject.activeSelf&&candidate.Owner&&candidate.Owner.square==square&&!candidate.detached){a=candidate;break;}
+            if(!a)a=Take(square.transform.position);if(a){a.detached=true;a.Owner=null;a.transform.position=square.transform.position+Vector3.back*.7f;a.Activate();}return a;
+        }
+        public static TNT3DAnimator PreviewAt(Vector3 position){var a=Take(position);if(a)a.Activate();return a;}
+        public static void ClearAll(){foreach(var a in pool)if(a&&a.gameObject.activeSelf)a.Cleanup();}
+        public void ResetVisualState()
+        {
+            props=props??new MaterialPropertyBlock();Owner=null;detached=false;strength=1;age=0;
+            transform.rotation=Quaternion.identity;model.gameObject.SetActive(true);model.localScale=Vector3.one;
+            body.localScale=Vector3.one;body.localPosition=Vector3.zero;head.localPosition=new Vector3(0,.22f,0);head.localRotation=Quaternion.identity;head.localScale=Vector3.one;fuse.localRotation=Quaternion.identity;
+            foreach(var r in flames)r.enabled=false;foreach(var r in blast)r.enabled=false;foreach(var r in stars)r.enabled=false;FlameIntensity=0;State=VisualState.Idle;
+            impactCursor=0;if(impacts!=null)foreach(var r in impacts)r.enabled=false;
+        }
+        public void Reveal(){ResetVisualStateKeepingOwner();State=VisualState.Reveal;model.localScale=Vector3.one*.15f;}
+        void ResetVisualStateKeepingOwner(){var owner=Owner;ResetVisualState();Owner=owner;}
+        public void SetIdle(){ResetVisualStateKeepingOwner();}
+        public void Activate(){age=0;State=VisualState.Activated;detached=true;}
+        public void Explode(float intensity=1){age=0;strength=intensity;State=VisualState.Explosion;model.gameObject.SetActive(false);foreach(var r in flames)r.enabled=false;FlameIntensity=0;}
+        public void Cleanup(){ResetVisualState();State=VisualState.Complete;gameObject.SetActive(false);}
+        public void CellImpact(Vector3 position)
+        {
+            if(impacts==null||impacts.Length==0)return;int i=impactCursor++%impacts.Length;
+            impacts[i].transform.position=position+Vector3.back*1.3f;impactBorn[i]=age;impacts[i].enabled=true;
+        }
+        void LateUpdate()
+        {
+            if(!detached){if(!Owner||!Owner.gameObject.activeInHierarchy||Owner.currentType!=ItemsTypes.PACKAGE){Cleanup();return;}transform.position=Owner.transform.position+Vector3.back*.7f;Owner.sprRenderer.enabled=false;}
+            var l=LevelManager.THIS;if(l&&l.gameStatus==GameState.Pause)return;
+            age+=Time.deltaTime;
+            if(impacts!=null)for(int i=0;i<impacts.Length;i++)if(impacts[i].enabled){float t=age-impactBorn[i];Layer(impacts[i],.75f+2*t,warm,1-Mathf.Clamp01(t/.12f));}
+            if(State==VisualState.Reveal)
+            {
+                float t=age;
+                float pop=t<.16f?Mathf.Lerp(.15f,1.15f,Mathf.SmoothStep(0,1,t/.16f)):1+.15f*Mathf.Exp(-(t-.16f)*12)*Mathf.Cos((t-.16f)*29);
+                model.localScale=Vector3.one*pop;
+                float stretch=Mathf.Sin(Mathf.Clamp01(t/.30f)*Mathf.PI)*.17f;
+                body.localScale=new Vector3(1-stretch*.6f,1+stretch,1);body.localPosition=Vector3.up*stretch*.13f;
+                float lift=Mathf.Sin(Mathf.Clamp01((t-.06f)/.38f)*Mathf.PI)*.16f;
+                head.localPosition=new Vector3(0,.22f+lift,0);head.localRotation=Quaternion.Euler(0,0,Mathf.Sin(t*34)*8*Mathf.Sin(Mathf.Clamp01(t/.5f)*Mathf.PI));
+                fuse.localRotation=Quaternion.Euler(0,0,Mathf.Sin((t-.06f)*34)*12*Mathf.Sin(Mathf.Clamp01(t/.5f)*Mathf.PI));
+                HeadFlame(Mathf.Sin(Mathf.Clamp01((t-.12f)/.28f)*Mathf.PI));Sparkles(t-.15f,.34f,.65f,false);
+                if(t>=.5f)SetIdle();
+            }
+            else if(State==VisualState.Activated||State==VisualState.Ignition)
+            {
+                float k=Mathf.Clamp01(age/.15f);model.localScale=new Vector3(1+.14f*Mathf.Sin(k*Mathf.PI),1-.2f*Mathf.Sin(k*Mathf.PI),1);
+                head.localPosition=new Vector3(0,.22f+k*.07f,0);fuse.localRotation=Quaternion.Euler(0,0,Mathf.Sin(age*75)*8);
+                HeadFlame(k);if(age>=.1f)State=VisualState.Ignition;
+            }
+            else if(State==VisualState.Explosion||State==VisualState.Debris)
+            {
+                float t=age;if(t>.25f)State=VisualState.Debris;
+                Layer(blast[0],Mathf.Lerp(.25f,3.8f,Mathf.Clamp01(t/.09f))*strength,warm,1-Mathf.SmoothStep(0,1,t/.19f));
+                Layer(blast[1],Mathf.Lerp(.8f,5.5f,Mathf.Clamp01(t/.14f))*strength,gold,(1-Mathf.Clamp01(t/.34f))*1.7f);
+                Layer(blast[2],Mathf.Lerp(1,6,Mathf.Clamp01(t/.2f))*strength,gold,(1-Mathf.Clamp01(t/.34f))*2f);
+                Layer(blast[3],Mathf.Lerp(.5f,5.7f,Mathf.Clamp01(t/.32f))*strength,warm,(1-Mathf.Clamp01(t/.36f))*.65f);
+                Layer(blast[4],Mathf.Lerp(2,5.5f,Mathf.Clamp01(t/.8f))*strength,warm,Mathf.Sin(Mathf.Clamp01(t/.85f)*Mathf.PI)*.16f);
+                Sparkles(t,.8f,3.2f*strength,true);if(t>=.88f)Cleanup();
+            }
+        }
+        void HeadFlame(float k)
+        {
+            FlameIntensity=k;for(int i=0;i<flames.Length;i++){var r=flames[i];r.enabled=k>.001f;if(!r.enabled)continue;props.Clear();props.SetColor("_Color",new Color(1,i%2==0?.85f:1,i%2==0?.1f:.7f,k*(1.3f+.15f*Mathf.Sin(age*70+i))));props.SetFloat("_FxTime",age+i*.17f);r.SetPropertyBlock(props);}
+        }
+        void Layer(Renderer r,float size,Color color,float opacity)
+        {r.enabled=opacity>.001f;if(!r.enabled)return;r.transform.localScale=Vector3.one*size;props.Clear();color.a=opacity;props.SetColor("_Color",color);r.SetPropertyBlock(props);}
+        void Sparkles(float t,float life,float radius,bool explosion)
+        {
+            for(int i=0;i<stars.Length;i++)
+            {
+                float delay=(i%5)*.012f;float u=(t-delay)/life;var r=stars[i];r.enabled=u>0&&u<1;if(!r.enabled)continue;
+                float angle=i*2.39996f;Vector3 dir=new Vector3(Mathf.Cos(angle),Mathf.Sin(angle),0);
+                r.transform.localPosition=dir*(explosion?.2f+radius*u:radius*(.4f+u*.6f))+Vector3.up*(explosion?-u*u*.8f:.25f)+Vector3.back*.7f;
+                r.transform.localRotation=Quaternion.Euler(0,0,i*47+t*(i%2==0?70:-90));
+                float size=(i%6==0?.25f:.09f+(i%3)*.035f)*(1-u*.6f);Layer(r,size,i%3==0?gold:warm,Mathf.Sin(u*Mathf.PI)*1.5f);
+            }
+        }
+    }
+}

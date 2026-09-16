@@ -1,0 +1,23 @@
+Checks completed: 20
+tnt-0.5: real T-match creates TNT
+tnt-0.5: independent head lift, delayed fuse motion and head flame
+tnt-0.5: immediate reveal settles within 0.55 seconds
+tnt-0.5: mesh Idle replaces sprite and clears reveal effects
+tnt-0.5: idle body/head transforms reset
+tnt-0.5: ignition, white/gold blast and dense pooled cell fragments (peak 200)
+tnt-0.5: explosion and fragments clean up
+tnt-0.5: same pooled TNT reuses cleanly
+tnt-0.5: cancellation releases an igniting TNT without stale effects
+tnt-1.0: real T-match creates TNT
+tnt-1.0: independent head lift, delayed fuse motion and head flame
+tnt-1.0: immediate reveal settles within 0.55 seconds
+tnt-1.0: mesh Idle replaces sprite and clears reveal effects
+tnt-1.0: idle body/head transforms reset
+tnt-1.0: ignition, white/gold blast and dense pooled cell fragments (peak 200)
+tnt-1.0: explosion and fragments clean up
+tnt-1.0: same pooled TNT reuses cleanly
+tnt-1.0: cancellation releases an igniting TNT without stale effects
+TNT tests preserve coins and lives
+No runtime errors during TNT tests
+Errors: 
+Editor update p95 ms (not device GPU benchmark): 0
