@@ -1,0 +1,10 @@
+Checks completed: 7
+Original TNT sprite is visible after creation
+No mesh TNT is attached to the board sprite
+Activation does not show the rejected mesh model
+Expanded blast has yellow-white core and gold outer color
+Preserved explosion and debris clean up
+TNT tests preserve coins and lives
+No runtime errors during TNT tests
+Errors: 
+Editor update p95 ms (not device GPU benchmark): 0
