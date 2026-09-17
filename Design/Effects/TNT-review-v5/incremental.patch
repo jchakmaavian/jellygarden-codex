@@ -1,0 +1,169 @@
+--- a/Assets/JellyGarden/Scripts/Juice/TNT3DAnimator.cs
++++ b/Assets/JellyGarden/Scripts/Juice/TNT3DAnimator.cs
+@@ -93,7 +93,7 @@
+             if(!detached){if(!Owner||!Owner.gameObject.activeInHierarchy||Owner.currentType!=ItemsTypes.PACKAGE){Cleanup();return;}transform.position=Owner.transform.position+Vector3.back*.7f;Owner.sprRenderer.enabled=spriteReveal;}
+             var l=LevelManager.THIS;if(l&&l.gameStatus==GameState.Pause)return;
+             age+=Time.deltaTime;
+-            if(impacts!=null)for(int i=0;i<impacts.Length;i++)if(impacts[i].enabled){float t=age-impactBorn[i];Layer(impacts[i],1.10f+t*.65f,warm,t<.55f?1.15f:0,7,t);}
++            if(impacts!=null)for(int i=0;i<impacts.Length;i++)if(impacts[i].enabled){float t=age-impactBorn[i];Layer(impacts[i],1.22f+t*.65f,warm,t<.60f?1.45f:0,7,t,i*.731f);}
+             if(State==VisualState.Reveal && spriteReveal)
+             {
+                 float pop=spritePop.Evaluate(age);
+@@ -134,14 +134,14 @@
+                 // The compact flash opens into textured rays while the broken outer
+                 // wave is still expanding. Cell sparkles overlap the falling debris.
+                 float expand=Mathf.SmoothStep(0,1,t/.15f);
+-                float ballFade=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(.11f,.28f,t));
++                float ballFade=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(.075f,.19f,t));
+                 float rayFade=Mathf.SmoothStep(0,1,t/.09f)*(1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(.20f,.40f,t)));
+                 float waveFade=Mathf.SmoothStep(0,1,t/.10f)*(1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(.19f,.36f,t)));
+-                Layer(blast[0],Mathf.Lerp(.30f,4.55f,expand)*strength,new Color(1,.98f,.86f),ballFade*1.55f,5);
+-                Layer(blast[1],Mathf.Lerp(.55f,5.5f,expand)*strength,new Color(1,.72f,.025f),rayFade*.42f,0);
+-                Layer(blast[2],Mathf.Lerp(1.1f,6.6f,Mathf.Clamp01(t/.24f))*strength,new Color(1,.76f,.09f),rayFade*1.4f,4);
+-                Layer(blast[3],Mathf.Lerp(.45f,6.3f,Mathf.Clamp01(t/.23f))*strength,new Color(1,.84f,.40f),waveFade*1.25f,1);
+-                Layer(blast[4],Mathf.Lerp(2.3f,5.7f,Mathf.Clamp01(t/.64f))*strength,warm,Mathf.Sin(Mathf.Clamp01(t/.64f)*Mathf.PI)*.38f,8);
++                Layer(blast[0],Mathf.Lerp(.30f,4.55f,expand)*strength,new Color(1,.98f,.86f),ballFade*1.45f,5);
++                Layer(blast[1],Mathf.Lerp(.55f,5.9f,expand)*strength,new Color(1,.76f,.025f),rayFade*.62f,8);
++                Layer(blast[2],Mathf.Lerp(1.1f,6.6f,Mathf.Clamp01(t/.24f))*strength,new Color(1,.82f,.25f),rayFade*1.3f,4);
++                Layer(blast[3],Mathf.Lerp(.45f,6.3f,Mathf.Clamp01(t/.23f))*strength,new Color(1,.90f,.58f),waveFade*1.1f,1);
++                Layer(blast[4],Mathf.Lerp(2.3f,5.7f,Mathf.Clamp01(t/.35f))*strength,warm,Mathf.Sin(Mathf.Clamp01(t/.66f)*Mathf.PI)*.68f,8);
+                 Sparkles(t,.72f,3.0f*strength,true);if(t>=.86f)Cleanup();
+             }
+         }
+@@ -149,15 +149,15 @@
+         {
+             FlameIntensity=k;for(int i=0;i<flames.Length;i++){var r=flames[i];r.enabled=k>.001f;if(!r.enabled)continue;props.Clear();props.SetColor("_Color",new Color(1,i%2==0?.85f:1,i%2==0?.1f:.7f,k*(1.3f+.15f*Mathf.Sin(age*70+i))));props.SetFloat("_FxTime",age+i*.17f);r.SetPropertyBlock(props);}
+         }
+-        void Layer(Renderer r,float size,Color color,float opacity,float mode=-1,float localTime=-1)
+-        {r.enabled=opacity>.001f;if(!r.enabled)return;r.transform.localScale=Vector3.one*size;props.Clear();color.a=opacity;props.SetColor("_Color",color);props.SetFloat("_FxTime",localTime>=0?localTime:age);if(mode>=0)props.SetFloat("_Mode",mode);r.SetPropertyBlock(props);}
++        void Layer(Renderer r,float size,Color color,float opacity,float mode=-1,float localTime=-1,float seed=0)
++        {r.enabled=opacity>.001f;if(!r.enabled)return;r.transform.localScale=Vector3.one*size;props.Clear();color.a=opacity;props.SetColor("_Color",color);props.SetFloat("_FxTime",localTime>=0?localTime:age);props.SetFloat("_Seed",seed);if(mode>=0)props.SetFloat("_Mode",mode);r.SetPropertyBlock(props);}
+         void Sparkles(float t,float life,float radius,bool explosion)
+         {
+             for(int i=0;i<stars.Length;i++)
+             {
+                 float delay=(i%5)*(explosion?.028f:.012f);float u=(t-delay)/life;var r=stars[i];r.enabled=u>0&&u<1;if(!r.enabled)continue;
+                 float angle=i*2.39996f;Vector3 dir=new Vector3(Mathf.Cos(angle),Mathf.Sin(angle),0);
+-                r.transform.localPosition=dir*(explosion?radius*(.18f+.12f*(i%4)+u*.48f):radius*(.4f+u*.6f))+Vector3.up*(explosion?-u*u*.8f:.25f)+Vector3.back*.7f;
++                r.transform.localPosition=dir*(explosion?radius*(.04f+.11f*(i%5)+u*.32f):radius*(.4f+u*.6f))+Vector3.up*(explosion?-u*u*.8f:.25f)+Vector3.back*.7f;
+                 r.transform.localRotation=Quaternion.Euler(0,0,i*47+t*(i%2==0?70:-90));
+                 float size=(i%6==0?.25f:.09f+(i%3)*.035f)*(1-u*.6f);
+                 if(explosion)size*=1.55f;
+--- a/Assets/JellyGarden/Shaders/RoyalTNTGlow.shader
++++ b/Assets/JellyGarden/Shaders/RoyalTNTGlow.shader
+@@ -1,12 +1,12 @@
+ Shader "RoyalThrone/TNTGlow" {
+- Properties { _Color("Color",Color)=(1,1,1,1) _Mode("Shape",Float)=0 _FxTime("Time",Float)=0 }
++ Properties { _Color("Color",Color)=(1,1,1,1) _Mode("Shape",Float)=0 _FxTime("Time",Float)=0 _Seed("Variation",Float)=0 }
+  SubShader { Tags {"Queue"="Transparent+10" "RenderType"="Transparent"} Pass {
+  Blend One OneMinusSrcAlpha ZWrite Off Cull Off
+  CGPROGRAM
+  #pragma vertex vert
+  #pragma fragment frag
+  #include "UnityCG.cginc"
+- float4 _Color; float _Mode,_FxTime;
++ float4 _Color; float _Mode,_FxTime,_Seed;
+  struct v2f { float4 pos:SV_POSITION;float2 uv:TEXCOORD0; };
+  v2f vert(appdata_base v){v2f o;o.pos=UnityObjectToClipPos(v.vertex);o.uv=v.texcoord.xy;return o;}
+  float hash21(float2 p){return frac(sin(dot(p,float2(127.1,311.7)))*43758.5453);}
+@@ -14,15 +14,18 @@
+  float star(float2 p){float r=length(p);return pow(saturate(1-abs(p.x)*abs(p.y)*48-r*.8),4)*saturate(1-r);}
+  fixed4 frag(v2f i):SV_Target {float2 p=(i.uv-.5)*2;float r=length(p);float a=exp(-r*r*5)*smoothstep(1,.7,r);
+  float grain=noise(p*9+float2(_FxTime*3,-_FxTime*5));
+- if(_Mode>0.5&&_Mode<1.5){float angle=atan2(p.y,p.x);float rim=.74+.035*sin(angle*7+_FxTime*7)+.025*sin(angle*17-_FxTime*11);float width=lerp(.075,.15,noise(p*5));a=exp(-pow((r-rim)/width,2))*(.32+1.2*smoothstep(.22,.7,grain))*smoothstep(1,.87,r);}
++ // Disconnected luminous patches travel with the wave. There is no solid ring.
++ if(_Mode>0.5&&_Mode<1.5){float rim=.70+.09*(noise(p*4)-.5);float patch=smoothstep(.38,.70,noise(p*13-float2(_FxTime*2,0)));a=exp(-pow((r-rim)/.17,2))*patch*1.5*smoothstep(1,.84,r);}
+  if(_Mode>1.5&&_Mode<2.5)a=pow(saturate(1-abs(p.x)*abs(p.y)*35-r*.65),4)*saturate(1-r);
+  if(_Mode>2.5&&_Mode<3.5){float y=i.uv.y;float x=p.x+.12*sin(y*15+_FxTime*40);a=pow(saturate(1-abs(x)/(max(.03,(1-y)*.8))),1.5)*smoothstep(0,.12,y)*pow(1-y,.5);}
+- if(_Mode>3.5&&_Mode<4.5){float angle=atan2(p.y,p.x);float warp=angle+.12*sin(angle*5)+.04*sin(angle*11);float rays=pow(saturate(sin(warp*13+.7)),2.5)+.4*pow(saturate(sin(warp*23-1.8)),5);float reach=.66+.22*sin(angle*9+1.7);a=rays*smoothstep(.025,.16,r)*(1-smoothstep(reach-.28,reach+.12,r))*(.45+.55*grain);}
+- if(_Mode>4.5&&_Mode<5.5){float rim=.76+(grain-.5)*.13;float open=smoothstep(.07,.21,_FxTime);float holes=smoothstep(.28,.70,noise(p*6+float2(_FxTime*7,0)));a=(1-smoothstep(rim-.18,rim+.035,r))*lerp(1,holes,open)*(1-open*.85*(1-smoothstep(.15,.60,r)));}
++ // Layer broad streaks over an illuminated interior; suppress the pinwheel hub.
++ if(_Mode>3.5&&_Mode<4.5){float angle=atan2(p.y,p.x);float warp=angle+.17*sin(angle*5)+.10*noise(p*3);float rays=pow(saturate(sin(warp*11+.7)),1.6)+.3*pow(saturate(sin(warp*19-1.8)),3);float reach=.74+.14*sin(angle*9+1.7);a=(.13+rays*.56)*smoothstep(.08,.30,r)*(1-smoothstep(reach-.32,reach+.13,r))*(.30+.70*grain);}
++ if(_Mode>4.5&&_Mode<5.5){float rim=.76+(grain-.5)*.13;float open=smoothstep(.045,.14,_FxTime);float holes=smoothstep(.36,.75,noise(p*7+float2(_FxTime*3,0)));a=(1-smoothstep(rim-.22,rim+.035,r))*lerp(1,holes*.6,open)*(1-open*.92*(1-smoothstep(.10,.62,r)));}
+  if(_Mode>5.5&&_Mode<6.5){float angle=atan2(p.y,p.x);float rim=.68+.06*sin(angle*11+_FxTime*48)+.025*sin(angle*23-_FxTime*60);a=exp(-pow((r-rim)*13,2))*(.85+.15*sin(angle*19+_FxTime*70))*smoothstep(1,.86,r);}
+- // One pooled quad per cell carries the little break ring and four distinct stars.
+- if(_Mode>6.5&&_Mode<7.5){float t=saturate(_FxTime/.55);a=exp(-r*r*14)*(1-smoothstep(0,.22,t));a+=exp(-pow((r-(.25+t*.36))*15,2))*.32*(1-t);[unroll]for(int n=0;n<4;n++){float angle=n*1.5708+.4;float2 q=p-float2(cos(angle),sin(angle))*(.28+t*.35);float flash=.5+.5*sin(_FxTime*32+n*2);a+=star(q/(.18+.07*flash))*(.65+.55*flash);}a*=1-smoothstep(.45,1,t);}
+- if(_Mode>7.5){a=exp(-r*r*3.8)*(.25+.75*noise(p*5+float2(_FxTime,-_FxTime*2)))*smoothstep(1,.7,r);}
++ // Cell-local sparks vary between cells. The break arc lasts only the impact beat.
++ if(_Mode>6.5&&_Mode<7.5){float t=saturate(_FxTime/.60);a=exp(-r*r*12)*(1-smoothstep(0,.12,_FxTime));a+=exp(-pow((r-(.23+t*.6))*16,2))*.22*(1-smoothstep(.025,.085,_FxTime))*smoothstep(.25,.65,grain);[unroll]for(int n=0;n<6;n++){float h=hash21(float2(n+_Seed,7));float angle=n*2.39996+_Seed;float reach=.1+h*.42+t*.23;float2 q=p-float2(cos(angle),sin(angle))*reach-float2(0,-t*t*.14);float flash=pow(.5+.5*sin(_FxTime*(18+h*17)+h*30),2);a+=star(q/(.10+h*.14))*(.35+1.1*flash);}a*=1-smoothstep(.35,1,t);}
++ // An uneven soft light field fills the blast interior and persists into the fall.
++ if(_Mode>7.5){float cloud=noise(p*5/(1+_FxTime)+float2(_FxTime*.6,-_FxTime));float fine=noise(p*16+_FxTime);a=exp(-r*r*2.3)*(.14+.70*smoothstep(.22,.75,cloud)+.20*smoothstep(.65,.85,fine))*smoothstep(1,.78,r);}
+  // Gold rays/rings need slight coverage against the pale board; purely additive
+  // yellow over lavender clips to white before the gold edge can be read.
+  float3 tint=_Color.rgb;
+--- a/Assets/JellyGarden/Scripts/Juice/CandyShatterService.cs
++++ b/Assets/JellyGarden/Scripts/Juice/CandyShatterService.cs
+@@ -481,7 +481,10 @@
+                 {
+                     Vector3 radial=item?(centre-item.royalTntOrigin):new Vector3(dir.x,dir.y,0);
+                     radial.z=0;radial=radial.normalized;
+-                    f.Velocity=(radial*1.1f+new Vector3(dir.x*1.4f,Mathf.Abs(dir.y)*1.5f+.8f,0))*boardCell;
++                    // A slow/fast mix keeps chips throughout the blast, rather than
++                    // pushing every cell's debris into the same hollow perimeter.
++                    float impulse=Mathf.Lerp(.25f,1.3f,Hash(seed+w,163));
++                    f.Velocity=(radial*impulse+new Vector3(dir.x*1.1f,dir.y*.9f+.75f,0))*boardCell;
+                     f.Gravity=-12f*boardCell;f.SmoothMatch=true;f.Life=Mathf.Lerp(.62f,.85f,Hash(seed+w,151));
+                     float diagonal=Mathf.Max(.001f,meshes[pieceIndex].bounds.size.magnitude);
+                     f.BaseScale=boardCell*(w%5==0?.32f:.19f)/diagonal;
+--- a/Assets/JellyGarden/Scripts/Editor/RoyalTNTChecks.cs
++++ b/Assets/JellyGarden/Scripts/Editor/RoyalTNTChecks.cs
+@@ -10,12 +10,22 @@
+ {
+     public static class RoyalTNTChecks
+     {
+-        const string Folder="Design/Effects/TNT-review-v4/";
++        const string Folder="Design/Effects/TNT-review-v5/";
++        static IEnumerator RecordReplay()
++        {
++            const string frames="Temp/TNT-v5-replay/";Directory.CreateDirectory(frames);
++            for(int i=0;i<78;i++)
++            {
++                yield return new WaitForEndOfFrame();
++                var frame=ScreenCapture.CaptureScreenshotAsTexture();
++                File.WriteAllBytes(frames+i.ToString("D4")+".jpg",frame.EncodeToJPG(92));Object.Destroy(frame);
++            }
++        }
+         static void Capture(string name){var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+".png",t.EncodeToPNG());Object.Destroy(t);}
+         static IEnumerator Until(TNT3DAnimator actor,float age){while(actor&&actor.gameObject.activeSelf&&actor.VisualAge<age)yield return null;yield return new WaitForEndOfFrame();}
+         public static IEnumerator Run(LevelManager lm,Action seed,Action colours,Action<bool,string> check)
+         {
+-            Directory.CreateDirectory(Folder);float originalSpeed=Time.timeScale;
++            Directory.CreateDirectory(Folder);float originalSpeed=Time.timeScale,originalCapture=Time.captureDeltaTime;Coroutine recording=null;
+ #if !ROYAL_DISABLE_QA
+             var qa=RoyalThrone.Testing.RoyalQaService.Instance;bool enabled=qa&&qa.enabled;if(qa)qa.enabled=false;
+ #endif
+@@ -35,6 +45,7 @@
+                     check(reveal.FlameIntensity>.7f&&!item.falling,tag+": strong rim glow during elastic reveal, no replacement fall delay");Capture(tag+"-reveal-peak");
+                     yield return new WaitForSeconds(.30f);yield return new WaitForEndOfFrame();
+                     check(!TNT3DAnimator.Find(item)&&item.sprRenderer.enabled&&item.sprRenderer.sprite==RoyalPieceSkin.For(ItemsTypes.PACKAGE,0)&&item.sprRenderer.bounds.size.x<peak,tag+": reveal rebounds into original idle sprite");Capture(tag+"-idle");
++                    if(speed==1f){Time.captureDeltaTime=1f/60f;recording=lm.StartCoroutine(RecordReplay());}
+                     item.DestroyItem(true);yield return null;
+                     var actor=Object.FindObjectsByType<TNT3DAnimator>(FindObjectsSortMode.None).First(a=>a.gameObject.activeSelf);
+                     yield return Until(actor,.09f);Capture(tag+"-ignition");
+@@ -47,13 +58,14 @@
+                     check(CandyShatterService.Instance.ActiveFragments>0&&!actor.blast[0].enabled,tag+": colored debris remains visible after the center fades");Capture(tag+"-falling-debris");
+                     check(actor.blast[4].enabled&&actor.stars.Any(s=>s.enabled)&&actor.impacts.Any(s=>s.enabled),tag+": residual light, stars and local impacts overlap falling fragments");
+                     yield return new WaitForSeconds(1.2f);
++                    if(recording!=null){yield return recording;recording=null;}Time.captureDeltaTime=originalCapture;
+                     check(TNT3DAnimator.ActiveCount==0&&!RoyalPowerupDirector.Busy&&CandyShatterService.Instance.ActiveFragments==0,tag+": all pooled effects and debris finish");
+                 }
+                 check(TNT3DAnimator.Reuses>0,"Pooled TNT actors reset and replay without leftover reveal transforms");
+             }
+             finally
+             {
+-                Time.timeScale=originalSpeed;
++                if(recording!=null)lm.StopCoroutine(recording);Time.captureDeltaTime=originalCapture;Time.timeScale=originalSpeed;
+ #if !ROYAL_DISABLE_QA
+                 if(qa)qa.enabled=enabled;
+ #endif
+--- a/Assets/JellyGarden/Scripts/Editor/RoyalEffectsChecks.cs
++++ b/Assets/JellyGarden/Scripts/Editor/RoyalEffectsChecks.cs
+@@ -36,7 +36,7 @@
+         }
+         static readonly List<string> checks=new List<string>(),errors=new List<string>();
+         static bool cellBreakOnly,rocketOnly,tntOnly;
+-        static string Folder=>tntOnly?"Design/Effects/TNT-review-v4/":rocketOnly?"Design/Effects/Rocket-review-v6/":cellBreakOnly?"Design/Effects/Unity-review-v6/":"Design/Effects/Unity-review-v4/";
++        static string Folder=>tntOnly?"Design/Effects/TNT-review-v5/":rocketOnly?"Design/Effects/Rocket-review-v6/":cellBreakOnly?"Design/Effects/Unity-review-v6/":"Design/Effects/Unity-review-v4/";
+         [MenuItem("Tools/Royal Throne/TNT/Verify TNT only at quarter and full speed %#F8")]
+         public static void RunTnt(){tntOnly=true;Run();}
+         [MenuItem("Tools/Royal Throne/Effects/Verify restored smooth match breaks %#F10")]
