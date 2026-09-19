@@ -67,6 +67,12 @@ namespace JellyGarden.Scripts
                     GameObject obj = Instantiate(Resources.Load("Prefabs/arrow_ingredients")) as GameObject;
                     obj.transform.SetParent(transform);
                     obj.transform.localPosition = Vector3.zero + Vector3.down * 0.8f;
+                    if (Story.StorybookBoardArt.Enabled)
+                    {
+                        // Compact exit markers leave room for the lower controls.
+                        obj.transform.localScale *= .35f;
+                        obj.transform.localPosition = Vector3.down * .55f;
+                    }
                 }
             }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace JellyGarden.Scripts.Story
 {
-    // These are the exact PNGs used by the approved HTML, in the kit's colour order.
+    // Approved royal mockup sprites, kept in the kit's existing colour order.
     public static class StorybookBoardArt
     {
         public static bool Enabled => StorybookUi.Enabled;
@@ -14,7 +14,23 @@ namespace JellyGarden.Scripts.Story
         public static Sprite Get(string key)
         {
             if (!Cache.TryGetValue(key, out Sprite sprite))
-                Cache[key] = sprite = Resources.Load<Sprite>("Story/TreasureHunt/Board/" + key);
+            {
+                string royal = key;
+                switch (key)
+                {
+                    case "red": royal = "book"; break;
+                    case "orange": royal = "coin"; break;
+                    case "purple": royal = "gem"; break;
+                    case "blue": royal = "shield"; break;
+                    case "green": royal = "leaf"; break;
+                    case "yellow": royal = "crown"; break;
+                    case "area-bomb": royal = "tnt"; break;
+                    case "rainbow-orb": royal = "orb"; break;
+                    case "recolour": royal = "bomb"; break;
+                }
+                sprite = Resources.Load<Sprite>("Story/RoyalBoard/" + royal);
+                Cache[key] = sprite = sprite != null ? sprite : Resources.Load<Sprite>("Story/TreasureHunt/Board/" + key);
+            }
             return sprite;
         }
         public static Sprite Piece(int colour) => Get(Colours[Mathf.Clamp(colour, 0, 5)]);
@@ -50,14 +66,9 @@ namespace JellyGarden.Scripts.Story
             item.items = new Sprite[6];
             item.stripedItems = new List<StripedItem>();
             item.packageItems = new Sprite[6];
-            // The three specials wear the Royal plates. They were chosen on the
-            // level popup and carried onto the board so the piece the player is
-            // promised is the piece the board hands over.
-            // The striped rocket from the UI layer set, not the Royal plate and
-            // not Board/rocket: this is the one that was picked for the grid.
-            Sprite rocket = Resources.Load<Sprite>("Story/TreasureHunt/UI/Layers/rocket");
-            Sprite areaBomb = Resources.Load<Sprite>("Story/TreasureHunt/UI/Layers/bomb");
-            Sprite rainbow = Resources.Load<Sprite>("Story/TreasureHunt/UI/Layers/color-ball");
+            Sprite rocket = Get("rocket");
+            Sprite areaBomb = Get("area-bomb");
+            Sprite rainbow = Get("rainbow-orb");
 
             for (int i = 0; i < 6; i++)
             {

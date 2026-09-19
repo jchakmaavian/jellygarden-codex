@@ -6,53 +6,17 @@ namespace JellyGarden.Scripts.Story
 {
     public sealed partial class StoryLevelHud
     {
-        RectTransform _softRoot, _softCard, _softTray;
-
-        /// <summary>
-        /// The blue plate on the right of the strip. It carries the level number
-        /// over the move count as one object, and the pause button hangs off its
-        /// bottom edge.
-        ///
-        /// The level used to sit in a header row of its own above the card, with
-        /// Moves inside the card. Two rows of chrome over a board that is already
-        /// width-limited is a row too many, and the header's other control was a
-        /// Settings button that called the pause button's own action — see the
-        /// note on <see cref="SoftControl"/>. Folding the level in here buys the
-        /// header's 52 units back and leaves the cream card to say only what the
-        /// level asks for.
-        /// </summary>
-        RectTransform _softCrest;
-
-        Text _softLevel;
+        RectTransform _softRoot, _softCard, _softTray, _softCrest;
+        RectTransform _royalPause, _royalMovesInset;
+        Text _royalExtra;
         Image _softProgress;
         readonly Button[] _softBoosts = new Button[4];
         readonly Image[] _softBoostArt = new Image[4];
         readonly Text[] _softBoostCounts = new Text[4];
         readonly BoostType[] _softTypes = { BoostType.ExtraMoves, BoostType.Hand, BoostType.Bomb, BoostType.Random_color };
-        static readonly Color SoftInk = new Color32(66, 86, 123, 255);
-
-        /// <summary>
-        /// The goal row's width, and the divisor every chip's slot is cut from.
-        ///
-        /// It is the cream card's inner width, so the slots add up to the row
-        /// exactly. Anything that changes the card's width changes this with it
-        /// — while the two disagreed, each chip was laid out wider than the room
-        /// it had and the last one ran off the plate.
-        /// </summary>
-        const float GoalRowWidth = 212f;
-
-        /// <summary>
-        /// How tall one chip is: its icon over its count, and nothing else.
-        ///
-        /// 58 = a 38-unit icon plus a 20-unit number. It was 66 around a 42-unit
-        /// icon, sized when the card had a header row above it to fill. The row
-        /// is the tallest thing the card holds, so this is what sets the card's
-        /// height, and through it StorybookBoardLayout.HeaderBottom — measure it
-        /// from the chip rather than padding it to fit the plate.
-        /// </summary>
-        const float GoalRowHeight = 58f;
-
-        float _softUnit;
+        const float GoalRowWidth = 146;
+        const float GoalRowHeight = 53;
+        float _softUnit, _softInset;
 
         void BuildSoftHud(Transform strip)
         {
@@ -63,214 +27,145 @@ namespace JellyGarden.Scripts.Story
             RectTransform pause = FindPause(strip) ?? FindPause(FindBoosterRow(strip));
             Button nativePause = pause == null ? null : pause.GetComponent<Button>();
             Fade(strip);
-            RectTransform boosterRow = FindBoosterRow(strip);
-            if (boosterRow != null) Fade(boosterRow.parent);
-            _softRoot = StoryUi.CreateRect("SoftStorybookBoardHud", canvas.transform);
+            RectTransform boosters = FindBoosterRow(strip);
+            if (boosters != null) Fade(boosters.parent);
+
+            _softRoot = StoryUi.CreateRect("RoyalBoardHud", canvas.transform);
             _softRoot.SetAsLastSibling();
-            _softCard = SoftPlate("TargetCard", _softRoot, 20, new Color32(255, 252, 242, 255)).rectTransform;
-            AddSoftShadow(_softCard, new Color32(213, 200, 173, 255), 3);
-            _targetTitle = SoftText("Title", _softCard, "TARGETS", 9);
+            _softCard = StoryRoyalChrome.Plate("TargetCard", _softRoot).rectTransform;
+            _targetTitle = RoyalText("Title", _softCard, "TARGETS", 16, StoryRoyalChrome.Paper);
             _targetRow = StoryUi.CreateRect("Goals", _softCard);
             _slots.Clear();
+            var track = StoryCastleUi.Plate("ScoreProgress", _softCard, 3, new Color32(3, 31, 93, 255));
+            track.raycastTarget = false;
+            _softProgress = StoryCastleUi.Plate("Fill", track.transform, 3, new Color32(255, 210, 70, 255));
+            _softProgress.raycastTarget = false;
 
-            // The crest, and the gold rim that separates it from the board.
-            //
-            // The board's own ground is indigo (see StorybookBoardLayout's
-            // checker, 64,72,112 / 78,87,130) and this plate is royal blue, so
-            // the two would read as one surface where they meet. The rim is a
-            // second plate drawn OVER the first at the same rect, carrying only
-            // an inner edge — the same two-nested-rects trick the Royal kit uses,
-            // rather than an Outline, which offsets the whole quad and squares
-            // off the corners.
-            _softCrest = SoftPlate("Crest", _softRoot, 20, StorybookUi.Blue).rectTransform;
-            AddSoftShadow(_softCrest, new Color32(9, 58, 130, 255), 3);
-            Image crestRim = SoftPlate("Rim", _softCrest, 20, StorybookUi.Gold);
-            Image crestFace = SoftPlate("Face", crestRim.transform, 18, StorybookUi.Blue);
-            StoryUi.Stretch(crestRim.rectTransform);
-            StoryUi.Stretch(crestFace.rectTransform, 2);
-
-            _softLevel = SoftText("Level", crestFace.transform, "Level 1", 15, StorybookUi.Paper);
-            _softLevel.font = StorybookArt.Font;
-            _limitTitle = SoftText("Title", crestFace.transform, "MOVES", 9, new Color32(255, 228, 159, 255));
-            _limitValue = SoftText("Value", crestFace.transform, "0", 34, Color.white);
-            _limitValue.font = StorybookArt.Font;
-
-            // The hairline between the level and the count. A child of the face,
-            // so it is inside the rim rather than lying across it.
-            SoftPlate("Rule", crestFace.transform, 1, new Color32(255, 255, 255, 64));
-
-            // Pause hangs off the crest's bottom edge, half on and half off, so
-            // it reads as seated in the plate rather than floating beside it.
-            // It is the LAST child of the root so it draws over the crest, and
-            // it is built on the root rather than on the crest because the crest
-            // is what a level-open animation scales.
-            SoftControl("Pause", _softRoot, "Ⅱ", () => { if (nativePause != null) nativePause.onClick.Invoke(); });
-            Image track = SoftPlate("ScoreProgress", _softCard, 3, new Color32(224, 226, 216, 255));
-            _softProgress = SoftPlate("Fill", track.transform, 3, new Color32(127, 170, 141, 255));
-            _softTray = SoftPlate("BoosterTray", _softRoot, 28, new Color32(229, 225, 238, 255)).rectTransform;
-            AddSoftShadow(_softTray, new Color32(196, 188, 215, 255), 3);
+            _softCrest = StoryRoyalChrome.Plate("MovesCard", _softRoot).rectTransform;
+            _limitTitle = RoyalText("Title", _softCrest, "MOVES", 16, StoryRoyalChrome.Paper);
+            _royalMovesInset = StoryRoyalChrome.Plate("IvoryInset", _softCrest, StoryRoyalChrome.Finish.Ivory).rectTransform;
+            _limitValue = RoyalText("Value", _royalMovesInset, "0", 42, StoryRoyalChrome.Ink, false);
+            _softTray = StoryRoyalChrome.Plate("BoosterTray", _softRoot).rectTransform;
             for (int i = 0; i < 4; i++)
             {
                 int slot = i;
-                Image face = StoryUi.CreateImage("Booster" + i, _softTray, StoryUi.CircleSprite, new Color32(255, 254, 249, 255));
+                Image face = StoryRoyalChrome.Plate("Booster" + i, _softTray);
                 _softBoosts[i] = StoryCastleUi.Clickable(face, () => UseSoftBoost(slot));
+                var colors = _softBoosts[i].colors;
+                colors.pressedColor = new Color(.65f, .79f, 1f);
+                colors.disabledColor = new Color(.68f, .73f, .82f, 1f);
+                _softBoosts[i].colors = colors;
                 _softBoostArt[i] = StoryUi.CreateImage("Icon", face.transform, StorybookBoardArt.Booster(_softTypes[i]), Color.white);
                 _softBoostArt[i].preserveAspect = true;
-                Image count = StoryUi.CreateImage("CountBadge", face.transform, StoryUi.CircleSprite, new Color32(135, 157, 184, 255));
-                _softBoostCounts[i] = SoftText("Count", count.transform, "0", 12, Color.white);
+                _softBoostArt[i].raycastTarget = false;
+                if (i == 0) _royalExtra = RoyalText("Extra", face.transform, "+5", 42, new Color32(255, 225, 99, 255));
+                Image count = StoryRoyalChrome.Plate("CountBadge", face.transform, StoryRoyalChrome.Finish.Green, true);
+                _softBoostCounts[i] = RoyalText("Count", count.transform, "0", 18, Color.white);
             }
+            var pauseFace = StoryRoyalChrome.Plate("Pause", _softRoot, StoryRoyalChrome.Finish.Blue, true);
+            _royalPause = pauseFace.rectTransform;
+            StoryCastleUi.Clickable(pauseFace, () => { if (nativePause != null) nativePause.onClick.Invoke(); });
+            StoryCastleUi.Plate("LeftBar", _royalPause, 2, new Color32(255, 225, 99, 255)).raycastTarget = false;
+            StoryCastleUi.Plate("RightBar", _royalPause, 2, new Color32(255, 225, 99, 255)).raycastTarget = false;
             LayoutSoft();
         }
-        Image SoftPlate(string name, Transform parent, int radius, Color color)
+
+        static Text RoyalText(string name, Transform parent, string value, int size, Color color, bool shadow = true)
         {
-            Image image = StoryCastleUi.Plate(name, parent, radius, color);
-            image.raycastTarget = false;
-            return image;
-        }
-        static Text SoftText(string name, Transform parent, string value, int size, Color? color = null)
-        {
-            Text text = StoryUi.CreateText(name, parent, value, size, color ?? SoftInk, TextAnchor.MiddleCenter);
-            text.font = StoryUi.BodyFont;
-            text.horizontalOverflow = HorizontalWrapMode.Overflow;
-            text.verticalOverflow = VerticalWrapMode.Overflow;
+            Text text = StoryUi.CreateText(name, parent, value, size, color, TextAnchor.MiddleCenter);
+            text.font = StoryUi.DisplayFont;
+            text.horizontalOverflow = HorizontalWrapMode.Wrap;
+            text.verticalOverflow = VerticalWrapMode.Truncate;
             text.raycastTarget = false;
+            if (shadow)
+            {
+                var depth = text.gameObject.AddComponent<Shadow>();
+                depth.effectColor = new Color32(9, 31, 68, 220);
+                depth.effectDistance = new Vector2(0, -1.2f);
+            }
             return text;
         }
-        void AddSoftShadow(RectTransform host, Color color, float offset)
-        {
-            var shadow = host.gameObject.AddComponent<Shadow>();
-            shadow.effectColor = color;
-            shadow.effectDistance = new Vector2(0, -offset);
-            shadow.useGraphicAlpha = false;
-        }
-        /// <summary>
-        /// A round control seated in the crest: a gold ring around a cream face.
-        ///
-        /// There is only one of these now. The strip used to carry a Settings
-        /// gear beside the pause button whose action was, in full,
-        /// <c>nativePause.onClick.Invoke()</c> — the same pause flow, opening the
-        /// same kit panel, because that panel is where the game's settings are.
-        /// Two buttons one tap apart doing one thing is a choice the player has
-        /// to make and cannot get right, so the gear is gone and the pause button
-        /// is the way in. Do not re-add one without giving it somewhere else to
-        /// go: <see cref="StorySettings"/> is the shell's screen and deliberately
-        /// sorts BELOW the level popup, so it cannot open over a board.
-        /// </summary>
-        void SoftControl(string name, Transform parent, string label, UnityEngine.Events.UnityAction action)
-        {
-            Image ring = StoryUi.CreateImage(name, parent, StoryUi.CircleSprite, StorybookUi.Gold);
-            StoryCastleUi.Clickable(ring, action);
-            Image face = StoryUi.CreateImage("Face", ring.transform, StoryUi.CircleSprite,
-                new Color32(255, 253, 243, 255));
-            face.raycastTarget = false;
-            SoftText("Label", face.transform, label, 16, StorybookUi.Blue);
-        }
+
         void PlaceSoft(RectTransform rect, float x, float y, float width, float height)
         {
+            if (rect.parent == _softRoot) x += _softInset;
             StoryCastleUi.Place(rect, x * _softUnit, -y * _softUnit, width * _softUnit, height * _softUnit);
         }
+
+        void FontSize(Text text, float size, float minimum = 0)
+        {
+            text.fontSize = Mathf.Max(8, Mathf.RoundToInt(size * _softUnit));
+            text.resizeTextForBestFit = minimum > 0;
+            if (minimum > 0)
+            {
+                text.resizeTextMinSize = Mathf.Max(8, Mathf.RoundToInt(minimum * _softUnit));
+                text.resizeTextMaxSize = text.fontSize;
+            }
+        }
+
         void LayoutSoft()
         {
             Rect safe = StorybookBoardLayout.Safe;
             _softRoot.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
             _softRoot.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
             _softRoot.offsetMin = _softRoot.offsetMax = Vector2.zero;
-            _softUnit = _softRoot.rect.width / 393f;
-            if (_softUnit <= 0) _softUnit = 1;
+            _softUnit = Mathf.Max(.01f, Mathf.Min(_softRoot.rect.width / 393f, _softRoot.rect.height / 720f));
+            _softInset = (_softRoot.rect.width / _softUnit - 393f) * .5f;
             float height = _softRoot.rect.height / _softUnit;
-
-            // The cream card and the crest stand on one top edge at y24 and one
-            // bottom edge at y120, so the strip reads as a pair rather than as
-            // two plates that happen to be near each other.
-            //
-            // 96 tall, not 120. The plates were sized to the room the old
-            // two-row header left rather than to what they hold: the card is a
-            // 15-unit title over a 66-unit goal row, and the crest is an
-            // 18-unit level over a 15-unit label and a 44-unit count. Both come
-            // to about 90, so a 120-unit plate carried 30 units of empty cream
-            // under its last chip — which on a SCORE level, where the card
-            // draws ONE chip, was most of the plate. The strip now ends at 120
-            // and StorybookBoardLayout.HeaderBottom comes down with it; the
-            // board is width-limited on every phone this ships to, so the 44
-            // units this frees go to the board's own top edge rather than to
-            // the gap above it.
-            // 78 tall, and every number in it is measured from the content
-            // rather than chosen: the card is a 12-unit title over a
-            // GoalRowHeight chip, and the crest is a 15-unit level over a
-            // 12-unit label and a 34-unit count. The plates ended at 120 while
-            // they were 96, and the band of empty cream under the last chip was
-            // still most of the plate on a SCORE level, which draws one chip.
-            PlaceSoft(_softCard, 22, 18, 236, 78);
-            PlaceSoft(_targetTitle.rectTransform, 12, 4, GoalRowWidth, 12);
-            _targetTitle.alignment = TextAnchor.MiddleLeft;
-            PlaceSoft(_targetRow, 12, 16, GoalRowWidth, GoalRowHeight);
-            // The score track sits inside the card, which now has 204 units of
-            // width to give it rather than the 225 it borrowed from the old
-            // full-width plate.
-            PlaceSoft(_softProgress.transform.parent as RectTransform, 16, 68, 204, 5);
-
-            PlaceSoft(_softCrest, 268, 18, 103, 78);
-            PlaceSoft(_softLevel.rectTransform, 0, 5, 99, 15);
-            PlaceSoft(_softCrest.Find("Rim/Face/Rule") as RectTransform, 18, 21, 63, 1);
-            PlaceSoft(_limitTitle.rectTransform, 0, 24, 99, 12);
-            PlaceSoft(_limitValue.rectTransform, 0, 37, 99, 34);
-
-            // Half on the crest and half off it: the disc's centre sits on the
-            // crest's bottom edge (96), so its top half overlaps the plate and
-            // its lower half hangs into the gap above the board.
-            PlaceSoft(_softRoot.Find("Pause") as RectTransform, 304, 80, 32, 32);
-            StoryUi.Stretch(_softRoot.Find("Pause/Face") as RectTransform, 3 * _softUnit);
-            StoryUi.Stretch(_softRoot.Find("Pause/Face/Label") as RectTransform);
-            PlaceSoft(_softTray, 19, height - 103, 355, 75);
+            // The drawing and the reserved board field use the same header/footer.
+            float top = 28;
+            PlaceSoft(_softCard, 12, top + 10, 170, 96);
+            PlaceSoft(_targetTitle.rectTransform, 10, 5, 150, 23);
+            PlaceSoft(_targetRow, 12, 32, GoalRowWidth, GoalRowHeight);
+            PlaceSoft(_softProgress.transform.parent as RectTransform, 17, 83, 136, 4);
+            PlaceSoft(_softCrest, 211, top + 10, 170, 96);
+            PlaceSoft(_limitTitle.rectTransform, 10, 5, 150, 23);
+            PlaceSoft(_royalMovesInset, 11, 32, 148, 53);
+            StoryUi.Stretch(_limitValue.rectTransform, 5 * _softUnit);
+            PlaceSoft(_softTray, 12, height - 107, 369, 85);
             for (int i = 0; i < 4; i++)
             {
-                PlaceSoft(_softBoosts[i].transform as RectTransform, 25 + 79 * i, 8, 57, 57);
-                PlaceSoft(_softBoostArt[i].rectTransform, 3, 1, 51, 51);
-                PlaceSoft(_softBoostCounts[i].transform.parent as RectTransform, 39, 39, 21, 21);
-                StoryUi.Stretch(_softBoostCounts[i].rectTransform);
+                PlaceSoft(_softBoosts[i].transform as RectTransform, 6 + i * 90, -2, 87, 84);
+                PlaceSoft(_softBoostArt[i].rectTransform, 5, 4, 77, 73);
+                PlaceSoft(_softBoostCounts[i].transform.parent as RectTransform, 60, -7, 29, 29);
+                StoryUi.Stretch(_softBoostCounts[i].rectTransform, 2 * _softUnit);
+                FontSize(_softBoostCounts[i], 18);
             }
-            foreach (Text text in _softRoot.GetComponentsInChildren<Text>(true))
-            {
-                // Each of these is a point or two under the box it draws in, so
-                // a descender or a tall digit does not clip: the count is 30 in
-                // a 34-unit box, the level 13 in 15.
-                float size = text == _softLevel ? 13 : text == _limitValue ? 30 :
-                    text == _targetTitle || text == _limitTitle ? 9 :
-                    text.transform.parent.name == "CountBadge" ? 12 : 15;
-                text.fontSize = Mathf.Max(8, Mathf.RoundToInt(size * _softUnit));
-            }
+            PlaceSoft(_royalExtra.rectTransform, 5, 8, 77, 63);
+            PlaceSoft(_royalPause, 170.5f, top + 3, 52, 52);
+            PlaceSoft(_royalPause.Find("LeftBar") as RectTransform, 17, 15, 6, 22);
+            PlaceSoft(_royalPause.Find("RightBar") as RectTransform, 29, 15, 6, 22);
+            FontSize(_royalExtra, 42, 25);
+            FontSize(_limitTitle, 16, 13);
+            FontSize(_targetTitle, 16, 13);
+            FontSize(_limitValue, 42, 27);
             foreach (Shadow shadow in _softRoot.GetComponentsInChildren<Shadow>())
-                shadow.effectDistance = new Vector2(0, -2.5f * _softUnit);
-            foreach (Image plate in _softRoot.GetComponentsInChildren<Image>())
-                if (plate.type == Image.Type.Sliced) plate.pixelsPerUnitMultiplier = 1f / _softUnit;
+                shadow.effectDistance = new Vector2(0, -1.2f * _softUnit);
+            foreach (Image image in _softRoot.GetComponentsInChildren<Image>())
+                if (image.type == Image.Type.Sliced) image.pixelsPerUnitMultiplier = 2.5f / _softUnit;
         }
+
         void RefreshSoft(HudModel model)
         {
             LayoutSoft();
             LevelManager manager = LevelManager.THIS;
-            SetText(_softLevel, "Level " + (manager == null ? 1 : manager.currentLevel));
             SetText(_limitTitle, model.LimitTitle.ToUpperInvariant());
             SetText(_limitValue, model.LimitValue);
-            // The count sits on the crest's royal blue now, not on the cream
-            // card's pale plate, so both of these moved up in value: navy on
-            // blue is unreadable, and the old warning red (193,89,75) is darker
-            // than the plate it would warn on. Warm coral carries on blue, and
-            // the level number above it stays paper so the warning is the only
-            // thing on the crest that changes colour.
             _limitValue.color = model.LimitLeft <= (model.LimitTitle == "Time" ? 10 : 3)
-                ? new Color32(255, 173, 145, 255) : Color.white;
+                ? new Color32(189, 51, 36, 255) : StoryRoyalChrome.Ink;
             int count = Mathf.Min(MaxTargets, model.Targets.Count);
             _visibleSlots = count;
-            bool single = count == 1 && model.Targets[0].IsScore;
-            SetText(_targetTitle, single ? "SCORE" : "TARGETS");
-            _softProgress.transform.parent.gameObject.SetActive(single);
+            bool score = count == 1 && model.Targets[0].IsScore;
+            SetText(_targetTitle, score ? "SCORE" : "TARGETS");
+            _softProgress.transform.parent.gameObject.SetActive(score);
             while (_slots.Count < count)
             {
                 var slot = new Slot { Root = StoryUi.CreateRect("Goal" + _slots.Count, _targetRow) };
                 slot.Backing = StoryUi.CreateImage("Backing", slot.Root, null, Color.white);
                 slot.Icon = StoryUi.CreateImage("Icon", slot.Root, null, Color.white);
                 slot.Backing.preserveAspect = slot.Icon.preserveAspect = true;
-                slot.Count = SoftText("Count", slot.Root, "0", 16);
+                slot.Backing.raycastTarget = slot.Icon.raycastTarget = false;
+                slot.Count = RoyalText("Count", slot.Root, "0", 17, Color.white);
                 _slots.Add(slot);
             }
             for (int i = 0; i < _slots.Count; i++)
@@ -279,15 +174,10 @@ namespace JellyGarden.Scripts.Story
                 slot.Root.gameObject.SetActive(i < count);
                 if (i >= count) continue;
                 HudTarget target = model.Targets[i];
-                // 212, not 233: the row is as wide as the card the card was
-                // narrowed to. While this said 233 every chip was laid out a
-                // tenth wider than the room it had, so the rightmost one ran
-                // off the plate — the divisor has to be the row's own width or
-                // the slots do not add up to it.
                 float width = GoalRowWidth / count;
                 PlaceSoft(slot.Root, i * width, 0, width, GoalRowHeight);
-                float icon = count == 4 ? 30 : 38;
-                PlaceSoft(slot.Icon.rectTransform, single ? 2 : (width - icon) / 2, single ? 3 : 0, icon, icon);
+                float icon = count >= 3 ? 31 : 39;
+                PlaceSoft(slot.Icon.rectTransform, (width - icon) * .5f, -3, icon, icon);
                 slot.Backing.rectTransform.anchorMin = slot.Icon.rectTransform.anchorMin;
                 slot.Backing.rectTransform.anchorMax = slot.Icon.rectTransform.anchorMax;
                 slot.Backing.rectTransform.pivot = slot.Icon.rectTransform.pivot;
@@ -296,19 +186,11 @@ namespace JellyGarden.Scripts.Story
                 slot.Backing.sprite = target.Backing;
                 slot.Backing.enabled = target.Backing != null;
                 slot.Icon.sprite = target.Icon;
-                slot.Icon.raycastTarget = slot.Backing.raycastTarget = false;
-                PlaceSoft(slot.Count.rectTransform, single ? 48 : 0, single ? 4 : icon, single ? width - 48 : width, 20);
-                slot.Count.alignment = single ? TextAnchor.MiddleLeft : TextAnchor.MiddleCenter;
-                // Set here rather than left to the size table in LayoutSoft,
-                // which runs before the slots exist on the first pass. 15, to
-                // match what that table gives every other chip-sized string —
-                // the count's box is 20 units now and 16 left nothing for a
-                // descender or for the "pts" run a score chip appends.
-                slot.Count.fontSize = Mathf.RoundToInt(15 * _softUnit);
-                slot.Count.color = target.Done ? new Color32(79, 132, 99, 255) : SoftInk;
-                SetText(slot.Count, target.Done ? "✓" : single ? target.Display.Replace("/", " / ") :
-                    target.Remaining.ToString("N0") + (target.IsScore ? "<size=" + Mathf.RoundToInt(8 * _softUnit) + "> pts</size>" : ""));
-                if (single)
+                PlaceSoft(slot.Count.rectTransform, 1, score ? 32 : icon - 4, width - 2, 22);
+                FontSize(slot.Count, score ? 16 : 19, count >= 3 ? 12 : 13);
+                slot.Count.color = target.Done ? new Color32(167, 255, 121, 255) : Color.white;
+                SetText(slot.Count, target.Done ? "✓" : score ? target.Display : target.Remaining.ToString("N0"));
+                if (score)
                 {
                     float fraction = model.PassMark <= 0 ? 0 : 1f - (float)target.Remaining / model.PassMark;
                     _softProgress.rectTransform.anchorMin = Vector2.zero;
@@ -318,20 +200,25 @@ namespace JellyGarden.Scripts.Story
                 }
             }
             _softTypes[0] = model.LimitTitle == "Time" ? BoostType.ExtraTime : BoostType.ExtraMoves;
+            SetText(_royalExtra, _softTypes[0] == BoostType.ExtraTime ? "+30s" : "+5");
             for (int i = 0; i < 4; i++)
             {
                 int owned = StoryBoosters.Owned(_softTypes[i]);
                 _softBoostArt[i].sprite = StorybookBoardArt.Booster(_softTypes[i]);
+                _softBoostArt[i].enabled = i != 0;
                 SetText(_softBoostCounts[i], owned.ToString());
-                _softBoosts[i].interactable = owned > 0 && manager != null && manager.gameStatus == GameState.Playing;
+                _softBoosts[i].interactable = owned > 0 && manager != null && manager.gameStatus == GameState.Playing && !manager.DragBlocked;
                 bool selected = manager != null && manager.activatedBoost != null && manager.activatedBoost.type == _softTypes[i];
-                _softBoosts[i].GetComponent<Image>().color = selected ? new Color32(171, 214, 194, 255) : Color.white;
+                _softBoostArt[i].color = owned > 0 ? Color.white : new Color(.72f, .76f, .83f, 1);
+                _softBoostCounts[i].transform.parent.GetComponent<Image>().color = owned > 0 ? Color.white : new Color(.75f, .79f, .84f, 1);
+                _softBoosts[i].GetComponent<Image>().color = selected ? new Color(1f, .88f, .57f) : Color.white;
             }
         }
+
         void UseSoftBoost(int index)
         {
             LevelManager manager = LevelManager.THIS;
-            if (manager == null || StoryBoosters.Owned(_softTypes[index]) <= 0) return;
+            if (manager == null || manager.gameStatus != GameState.Playing || manager.DragBlocked || StoryBoosters.Owned(_softTypes[index]) <= 0) return;
             foreach (BoostIcon boost in manager.InGameBoosts)
                 if (boost != null && boost.type == _softTypes[index]) { boost.ActivateBoost(); Refresh(); return; }
         }

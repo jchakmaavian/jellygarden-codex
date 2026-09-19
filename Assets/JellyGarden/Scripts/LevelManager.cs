@@ -1540,7 +1540,8 @@ namespace JellyGarden.Scripts
 
         public int GetIngredientsCount(string spritename)
         {
-            return FindObjectsOfType<SpriteRenderer>().Count(i => i.sprite.name==spritename);
+            // Decorative renderers and newly spawned items can have no sprite yet.
+            return FindObjectsOfType<SpriteRenderer>().Count(i => i.sprite != null && i.sprite.name == spritename);
         }
 
 

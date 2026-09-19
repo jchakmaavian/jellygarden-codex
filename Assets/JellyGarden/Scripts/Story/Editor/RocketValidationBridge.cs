@@ -1,5 +1,6 @@
 // Local editor bridge for repeatable rocket and TNT integration checks.
 using System;
+using System.Collections;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -14,7 +15,8 @@ namespace JellyGarden.Scripts.Story.Editor
         const string Response = "Temp/rocket-validation-response.txt";
         static RocketValidationBridge() { EditorApplication.update += Tick; }
         static EditorWindow captureView;
-        static void PortraitGameView()
+        static bool previewingPopup;
+        static void PortraitGameView(int width = StoryWindow.Width, int height = StoryWindow.Height)
         {
             // The Device Simulator and a second Game view can compete for the
             // render target. Use one ordinary Game view for these captures.
@@ -27,13 +29,14 @@ namespace JellyGarden.Scripts.Story.Editor
             var groupType = assembly.GetType("UnityEditor.GameViewSizeGroupType");
             var group = sizesType.GetMethod("GetGroup").Invoke(sizes, new[] { Enum.Parse(groupType, "Standalone") });
             var labels = (string[])group.GetType().GetMethod("GetDisplayTexts").Invoke(group, null);
-            int index = Array.FindIndex(labels, text => text.Contains("King Leo VFX portrait"));
+            string label = "King Leo review " + width + "x" + height;
+            int index = Array.FindIndex(labels, text => text.Contains(label));
             if (index < 0)
             {
                 var sizeType = assembly.GetType("UnityEditor.GameViewSize");
                 var kind = assembly.GetType("UnityEditor.GameViewSizeType");
                 var size = Activator.CreateInstance(sizeType, new[] { Enum.Parse(kind, "FixedResolution"),
-                    (object)StoryWindow.Width, StoryWindow.Height, "King Leo VFX portrait" });
+                    (object)width, height, label });
                 group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
                 index = labels.Length;
             }
@@ -48,7 +51,8 @@ namespace JellyGarden.Scripts.Story.Editor
         static void Tick()
         {
             if (EditorApplication.isPlaying && captureView != null &&
-                UnityEngine.Object.FindAnyObjectByType<StoryRocketValidation>() != null)
+                (UnityEngine.Object.FindAnyObjectByType<StoryRocketValidation>() != null ||
+                 UnityEngine.Object.FindAnyObjectByType<StoryRoyalBoardValidation>() != null || previewingPopup))
             {
                 captureView.Repaint();
                 EditorApplication.QueuePlayerLoopUpdate();
@@ -65,12 +69,52 @@ namespace JellyGarden.Scripts.Story.Editor
                     PortraitGameView();
                     StoryRocketValidation.Run();
                 }
+                else if (command == "royal-board")
+                {
+                    PortraitGameView();
+                    StoryRoyalBoardValidation.Run(PortraitGameView);
+                }
+                else if (command == "popup-preview")
+                {
+                    if (!EditorApplication.isPlaying) throw new InvalidOperationException("Enter Play Mode first.");
+                    PortraitGameView();
+                    StoryHomeScreen.Open(1);
+                    StoryLevelPopup.Open(7, 1, null);
+                    StoryLevelPopup.Instance.StartCoroutine(CapturePopups());
+                }
                 File.WriteAllText(Response, "ok " + command + " playing=" + EditorApplication.isPlaying +
                     " scene=" + SceneManager.GetActiveScene().name +
                     " paused=" + EditorApplication.isPaused + " timeScale=" + Time.timeScale + " screen=" + Screen.width + "x" + Screen.height +
                     " state=" + (LevelManager.THIS != null ? LevelManager.THIS.gameStatus.ToString() : "no manager"));
             }
             catch (Exception e) { File.WriteAllText(Response, e.ToString()); }
+        }
+
+        static IEnumerator CapturePopups()
+        {
+            const string output = "art-review/gameplay-redesign-v1/implementation";
+            var owned = StoryBoosters.OwnedSource;
+            previewingPopup = true;
+            StoryBoosters.OwnedSource = boost => 3;
+            try
+            {
+                Directory.CreateDirectory(output);
+                foreach (int level in new[] { 7, 17 })
+                {
+                    StoryLevelPopup.Open(level, 1, null);
+                    yield return new WaitForSecondsRealtime(1);
+                    yield return new WaitForEndOfFrame();
+                    StoryWindow.Capture(output + "/level-start-" + level + "-393x852.png");
+                }
+                File.WriteAllText(output + "/popup-preview.txt", "Captured live level-start popups for levels 7 and 17. Inventory was previewed at three per booster without writing player preferences.\n");
+            }
+            finally
+            {
+                previewingPopup = false;
+                StoryBoosters.OwnedSource = owned;
+                StoryBoosters.ClearSelection();
+                StoryLevelPopup.Close();
+            }
         }
     }
 }

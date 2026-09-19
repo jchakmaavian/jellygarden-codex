@@ -1,0 +1,132 @@
+[
+  {
+    "name": "book",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. The red leather book match piece: thick rounded rectangular red book, slight three-quarter front view, a small simple embossed gold crown on the cover, visible cream page block and red bookmark. No elaborate clasps.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-11992d63-28c0-4724-9e94-e622760e4d83.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 922,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "coin",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. The golden coin match piece: one thick round honey-gold coin, nearly front-on with a slight dimensional edge, a large simple embossed crown in its center. Keep the coin circular, bright and readable.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-a3c2d733-83ad-4e78-b0d5-3dccf14b1881.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 940,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "gem",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. The purple faceted gemstone match piece: one chunky squat brilliant-cut amethyst with a broad hexagonal crown, symmetric pointed bottom, large simple facets, luminous pink-purple highlights.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-efa7aa7d-a624-4122-befb-c262ddd86482.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 901,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "shield",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. The blue shield match piece: one puffy sky-blue royal shield, straight-on symmetrical silhouette, curved pointed bottom, bright honey-gold beveled rim, one very subtle central ridge. No lettering or crest.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-c9838236-de87-42ba-8ef6-dc7411447b61.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 941,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "leaf",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. The green leaf match piece: one fresh glossy bright-green leaf, gently curved, tilted from lower-left stem toward upper-right pointed tip, thick puffy leaf with a single strong central vein.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-214f4815-3500-4adf-a7ba-377896e556cd.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 930,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "crown",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. The golden crown match piece: one chunky honey-gold open royal crown, three round-tipped points with center taller, puffy rounded base band, one small red oval jewel on the front. View slightly from above.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-fb595e72-a767-4b87-9513-3a3bda90c191.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 966,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "rocket",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. The horizontal rocket power-up from the board: a short red-and-ivory double-ended rocket pointing simultaneously left and right, a thick central honey-gold band with a simple crown emblem. Perfectly horizontal, symmetric opposing red pointed noses, no tilt, no fire or motion trail.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-e11c4bb8-1333-48fb-aa63-c99723885aa1.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 1005,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "tnt",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. The TNT power-up from the board: a compact standing bundle of THREE red dynamite sticks joined by one wide shiny honey-gold strap with a small crown emblem, short curved fuse and one tiny yellow ignition spark. Three-quarter view with visible circular red cylinder tops. No letters.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-eb29505f-172f-4518-bf46-e4356107aa0a.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 986,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "orb",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. \n\nICON TO PRODUCE: The rainbow color-bomb power-up from the board: one glossy deep-navy and purple spherical orb with sparse curved honey-gold cage bands, embedded large red, green, blue, yellow and purple jewel studs, tiny gold cap. No fuse.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-54382f02-df8e-446b-be9b-848bd573c062.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 1005,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "glove",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. \n\nICON TO PRODUCE: The glove booster icon from the bottom bar: a cheerful chunky gold glove with four fingers and thumb, palm facing viewer, tilted slightly right, a thick dark-blue cuff with thin gold edge. No button tile, no count badge.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-a65f303e-190b-4b55-9336-937642033a95.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 940,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "hammer",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. \n\nICON TO PRODUCE: The hammer booster icon from the bottom bar: a chunky diagonal royal mallet, large bright-blue cylindrical padded head with two honey-gold striking faces and a tiny gold crown emblem, short brown-and-gold handle pointing down-left. No button tile, no count badge.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-d6514295-9dab-49dc-ab56-63d2cb2a0716.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 912,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "bomb",
+    "prompt": "Use case: game UI icon. Extract/recreate ONE specified icon from the supplied approved King Leo gameplay mockup as a standalone production game sprite. Match the approved mockup's chunky polished toy-like 3D forms, soft bevels, vivid jewel colors, honey-gold metal, controlled highlights and consistent upper-left lighting. Preserve the icon's silhouette and color identity from the mockup. Square 1024\u00d71024 image. Center one large icon within about 80 percent of the canvas, with a generous transparent margin on every side; entire silhouette and tiny attached accents visible. Genuinely transparent RGBA background, no baked checkerboard, no ground, no board cell, no external cast shadow, no surrounding game UI, no text or numbers, no watermark. \n\nICON TO PRODUCE: The bomb booster icon from the bottom bar: one glossy dark-navy round cartoon bomb with a simple gold crown on the front, small honey-gold neck, short curved lit fuse with a small star spark, facing forward. No button tile, no count badge.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-fda6d7fd-6fad-4e66-b78e-79a1903ea1d4.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 1019,
+      "maxTextureSize": 512
+    }
+  },
+  {
+    "name": "courtyard",
+    "prompt": "Create a portrait 9:19.5 production game background using ONLY the sunny castle courtyard background of the approved supplied King Leo mockup. Remove ALL UI, board, icons, pieces, buttons, lettering and characters. Warm cream castle stone, blue roofs, gold royal accents and banners, distant lush greenery, cobblestone foreground. Soft illustrated toy-like 3D art, upper-left sunlight, gently defocused and low contrast in central and top regions behind the board and HUD. Full-bleed opaque background, no frame, no text.",
+    "source": "/Users/avian/.codex/generated_images/01a0b8ba-b014-7881-9bd7-82060a7cb5b6/exec-b5e56ed2-7a13-4485-a89b-98a1d429e70c.png",
+    "mode": "built-in image generation",
+    "import": {
+      "pixelsPerUnit": 100,
+      "maxTextureSize": 2048
+    }
+  }
+]

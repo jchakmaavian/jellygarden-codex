@@ -188,7 +188,7 @@ namespace JellyGarden.Scripts.Story
                 slot.Border.color = Color.white;
                 slot.Face.color = Color.clear;
                 slot.Button.targetGraphic = slot.Border;
-                slot.Icon.sprite = StorybookArt.Booster(i);
+                // Keep the shared board icon assigned by BuildBoosterRow.
                 slot.Icon.useSpriteMesh = true;
                 StoryCastleUi.Place(slot.Icon.rectTransform,10,-7,68,73);
                 StoryCastleUi.Place((RectTransform)root.Find("CountRim"),69,-72,23,23);

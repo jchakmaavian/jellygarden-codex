@@ -191,12 +191,7 @@ namespace JellyGarden.Scripts.Story
         /// arrow across the plate; the vertical one is the same power.</summary>
         private static Sprite Rocket(int color)
         {
-            // The Layers sprite, not Board/rocket. StorybookBoardArt.Apply writes
-            // Layers/rocket into stripedItems, so Layers is the piece a match
-            // actually hands over; Board/rocket is only the loose board icon. A
-            // plate promising one and a grid delivering the other is the one thing
-            // this screen exists to prevent.
-            if (StorybookBoardArt.Enabled) return StorybookLayers.Get("rocket");
+            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Booster(BoostType.Stripes);
             Item item = ItemPrefab;
             if (item == null || item.stripedItems == null || item.stripedItems.Count == 0) return null;
             StripedItem striped = item.stripedItems[Mathf.Clamp(color, 0, item.stripedItems.Count - 1)];
@@ -206,9 +201,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The bomb of a colour — the kit calls it a package.</summary>
         private static Sprite Bomb(int color)
         {
-            // Layers/bomb, for the reason given on Rocket: it is what Apply
-            // writes into every packageItems slot.
-            if (StorybookBoardArt.Enabled) return StorybookLayers.Get("bomb");
+            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Booster(BoostType.Packages);
             Item item = ItemPrefab;
             if (item == null || item.packageItems == null || item.packageItems.Length == 0) return null;
             return item.packageItems[Mathf.Clamp(color, 0, item.packageItems.Length - 1)];
@@ -217,8 +210,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>The rainbow ball. There is only ever one.</summary>
         private static Sprite Rainbow()
         {
-            // Layers/color-ball, which is the single entry Apply puts in bombItems.
-            if (StorybookBoardArt.Enabled) return StorybookLayers.Get("color-ball");
+            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Booster(BoostType.Colorful_bomb);
             Item item = ItemPrefab;
             if (item == null || item.bombItems == null || item.bombItems.Length == 0) return null;
             return item.bombItems[0];
@@ -409,26 +401,19 @@ namespace JellyGarden.Scripts.Story
             plate = new Plate { RecipeCount = 1, Foot = "Already on your board" };
             plate.Recipe = StoryBoosters.IconOf(boost);
 
-            // The Royal plates, not the board gem. This plate says what is
-            // ALREADY waiting on the board rather than teaching what a match
-            // makes, so it reads as the booster button the player just pressed.
-            // The teaching plates above keep the board art on purpose: they
-            // promise what a match will put in the grid, and a Royal plate there
-            // would promise a piece the board never hands over.
+            // Use the same artwork as the selected booster and the board.
+            plate.Result = plate.Recipe;
             if (boost == BoostType.Stripes)
             {
                 plate.Title = "Rocket";
-                plate.Result = StoryUi.LoadSprite("booster_stripes");
             }
             else if (boost == BoostType.Packages)
             {
                 plate.Title = "Bomb";
-                plate.Result = StoryUi.LoadSprite("booster_packages");
             }
             else if (boost == BoostType.Colorful_bomb)
             {
                 plate.Title = "Rainbow Ball";
-                plate.Result = StoryUi.LoadSprite("booster_colorbomb");
             }
             else
             {

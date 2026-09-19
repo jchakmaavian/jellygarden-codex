@@ -251,7 +251,8 @@ namespace JellyGarden.Scripts.Story
                 return;
             }
 
-            Sprite story = StoryArt.AreaAtProgress(areaId) ?? StoryArt.Load(theme.BoardBackdrop);
+            Sprite story = StorybookBoardArt.Enabled ? StorybookBoardArt.Get("courtyard") : null;
+            if (story == null) story = StoryArt.AreaAtProgress(areaId) ?? StoryArt.Load(theme.BoardBackdrop);
             if (story != null)
             {
                 ShowBackdrop(image, story);
