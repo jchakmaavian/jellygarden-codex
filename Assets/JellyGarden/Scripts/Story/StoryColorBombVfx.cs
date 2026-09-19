@@ -439,7 +439,8 @@ namespace JellyGarden.Scripts.Story
                             // each compounds into the board visibly zooming —
                             // the recoil is a full stop for one explosion, not a
                             // per-gem garnish.
-                            StoryBombVfx.Blow(target.At, run.Tint, false);
+                            StoryBombVfx.Blow(target.At, run.Tint,
+                                punchBoard: false, royal: false);
                         }
                     }
 

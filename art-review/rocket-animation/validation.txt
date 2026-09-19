@@ -1,0 +1,1 @@
+PASS 54 checks: timing, both axes, edge, pause, chain and refill.

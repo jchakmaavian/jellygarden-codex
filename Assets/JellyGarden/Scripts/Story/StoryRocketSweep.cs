@@ -1,44 +1,21 @@
-// Where a rocket's travelling head is fired from, and how far it has to go.
-//
-// This is the seam between the kit's rocket and the picture drawn over it. It
-// works out the axis, the reach and the colour from the gem being destroyed,
-// and hands those to StoryRocketVfx. It destroys nothing.
-//
-// WHY IT DESTROYS NOTHING — A REGRESSION WORTH RECORDING
-//
-// The first version of this staggered the kit's own clear so gems died as the
-// head reached them, which is what actually makes a rocket read as a shot
-// rather than a flash. It hung the board.
-//
-// The mechanism is in Item.DestroyCor:
-//
-//     square.DestroyBlock();
-//     if (currentType == HORIZONTAL_STRIPPED) DestroyHorizontal();
-//     ...
-//     if (destroying) Destroy(gameObject);
-//
-// DestroyHorizontal returns as soon as it has started a coroutine, so the kit
-// destroyed the rocket gem and carried on while the sweep was still walking the
-// row. The cascade then waited on a clear that never completed and DragBlocked
-// stayed true. StoryPlaytest caught it on the first move of level 1: "move 1
-// never finished — the board stayed blocked for 20s".
-//
-// The lesson generalises past this one method. The kit's destroy path is
-// SYNCHRONOUS by contract: everything downstream of it — the cascade, the
-// refill, the win check — assumes the line is clear by the time the call
-// returns. Anything additive here has to leave that contract alone and spend
-// its time on the picture instead.
-//
-// So the head travels and the row still clears on one frame. The head crosses
-// a nine-wide board in about 120ms, which is short enough that the eye reads
-// the direction without the board appearing to lag behind it.
+// Connects the rocket picture to the board clear. Items are reserved synchronously;
+// their own destroy coroutines wait for impact before hiding the sprite. Obstacle
+// contacts run on LevelManager and participate in its existing refill barrier, so
+// destroying the launching rocket cannot cancel a pending hit.
 
+using System.Collections;
 using UnityEngine;
 
 namespace JellyGarden.Scripts.Story
 {
     public static class StoryRocketSweep
     {
+        static LevelManager obstacleOwner;
+        static int pendingObstacles;
+
+        public static bool HasPendingHits => obstacleOwner != null &&
+            obstacleOwner == LevelManager.THIS && pendingObstacles > 0;
+
         /// <summary>
         /// Fire the visible head for a rocket clearing a row or column.
         ///
@@ -74,7 +51,10 @@ namespace JellyGarden.Scripts.Story
                 horizontal,
                 reach,
                 StoryBoardScale.Pitch,
-                ColourOf(origin, manager));
+                ColourOf(origin, manager),
+                origin.sprRenderer != null ? origin.sprRenderer.sprite : null,
+                horizontal ? from : cells - 1 - from,
+                horizontal ? cells - 1 - from : from);
 
             // Open the window the per-gem effects read to stagger themselves.
             // See OpenWindow: this is a PICTURE-ONLY stagger, and the kit's
@@ -85,7 +65,61 @@ namespace JellyGarden.Scripts.Story
             // The board's recoil, timed to land when the head does rather than
             // when the row clears — the two are the same frame for the kit and
             // a third of a second apart for the eye.
-            StoryFinishVfx.PunchAfter(StoryRocketVfx.ReachesAt(reach));
+            if (StoryRocketVariant.Current != RocketVariant.RoyalStreak)
+                StoryFinishVfx.PunchAfter(StoryRocketVfx.ReachesAt(reach));
+        }
+
+        /// <summary>
+        /// Reserve the item synchronously, but keep its sprite until this flight reaches it.
+        /// Explicit per-item timing also works for intersecting and chained rockets; a global
+        /// "last rocket" window cannot describe those. The item's own destroy coroutine owns
+        /// the wait, so destroying the launching rocket cannot interrupt the clear.
+        /// </summary>
+        public static void Hit(Item target, Item origin, bool horizontal)
+        {
+            if (StoryRocketVfx.Enabled && target != null && target.square != null &&
+                origin != null && origin.square != null)
+            {
+                int distance = horizontal
+                    ? target.square.col - origin.square.col
+                    : target.square.row - origin.square.row;
+                target.DestroyByRocket(StoryRocketVfx.ReachesAt(distance));
+            }
+            else if (target != null) target.DestroyItem(true);
+        }
+
+        public static void HitObstacle(Square target, Item origin, bool horizontal)
+        {
+            var manager = LevelManager.THIS;
+            if (!StoryRocketVfx.Enabled || manager == null || origin == null || origin.square == null)
+            {
+                if (target != null) target.DestroyBlock();
+                return;
+            }
+            if (obstacleOwner != manager) { obstacleOwner = manager; pendingObstacles = 0; }
+            int distance = horizontal ? target.col - origin.square.col : target.row - origin.square.row;
+            pendingObstacles++;
+            manager.StartCoroutine(ObstacleContact(target, StoryRocketVfx.ReachesAt(distance), manager));
+        }
+
+        static IEnumerator ObstacleContact(Square target, float delay, LevelManager manager)
+        {
+            try
+            {
+                float elapsed = 0f;
+                while (elapsed < delay)
+                {
+                    yield return null;
+                    if (manager == null || manager != LevelManager.THIS) yield break;
+                    if (manager.gameStatus != GameState.Pause) elapsed += Time.deltaTime;
+                }
+                if (target != null)
+                {
+                    StoryRocketVfx.Contact(target.transform.position, manager.squareWidth);
+                    target.DestroyBlock();
+                }
+            }
+            finally { if (obstacleOwner == manager) pendingObstacles = Mathf.Max(0, pendingObstacles - 1); }
         }
 
         /// <summary>

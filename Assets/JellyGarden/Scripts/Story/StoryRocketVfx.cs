@@ -177,6 +177,10 @@ namespace JellyGarden.Scripts.Story
             // before the sweep finished. That is precisely the drift the
             // comment above warns a second constant would cause; a stale
             // constant does it just as well.
+            // The ZIP owns flight tuning; derive contacts from that same profile.
+            if (StoryRocketVariant.Current == RocketVariant.RoyalStreak)
+                return StoryRoyalVfx.RocketReachesAt(distance);
+
             return Mathf.Abs(distance) *
                    StoryRocketVariant.PlumeOf(StoryRocketVariant.Current).PerCellSeconds;
         }
@@ -260,9 +264,24 @@ namespace JellyGarden.Scripts.Story
         /// height — so the head leaves the board rather than stopping short on
         /// a narrow level.
         /// </summary>
-        public static void Fire(Vector3 at, bool horizontal, int cellsEachWay, float cellSize, Color tint)
+        /// <remarks>
+        /// Negative and positive are the separate board reaches from this cell.
+        /// The imported player supplies directional artwork; sprite is retained
+        /// for the fallback when the package cannot be loaded.
+        /// </remarks>
+        public static void Fire(Vector3 at, bool horizontal, int cellsEachWay, float cellSize, Color tint,
+                                Sprite sprite, int negative, int positive)
         {
             if (!Enabled || !Application.isPlaying) return;
+
+            // Use the imported ZIP's artwork, flame, smoke and contact sparks.
+            // Older plume variants remain available in the VFX lab.
+            if (StoryRocketVariant.Current == RocketVariant.RoyalStreak)
+            {
+                if (!StoryRoyalVfx.FireRocket(at, horizontal, negative, positive, cellSize))
+                    StoryRocketFlight.Fire(at, horizontal, negative, positive, cellSize, sprite);
+                return;
+            }
 
             EnsureRig();
 
@@ -272,6 +291,14 @@ namespace JellyGarden.Scripts.Story
             LaunchHead(at, axis, distance, cellSize, tint);
             LaunchHead(at, -axis, distance, cellSize, tint);
 
+        }
+
+        public static void Contact(Vector3 at, float pitch)
+        {
+            // The ZIP player emits its own cell contacts. Only the missing-asset
+            // fallback needs a separate burst; otherwise every cell flashes twice.
+            if (StoryRocketVariant.Current == RocketVariant.RoyalStreak && !StoryRoyalVfx.RocketReady)
+                StoryRocketFlight.Contact(at, pitch);
         }
 
         private static void LaunchHead(Vector3 from, Vector3 direction, float distance,

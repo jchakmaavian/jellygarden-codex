@@ -49,11 +49,17 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>Thin, pale and lingering. Hangs rather than billows.</summary>
         SmokeTrail = 4,
+
+        /// <summary>
+        /// The imported RoyalRocketVFX package: directional rocket art, a short
+        /// ignition squeeze, gold flame ribbons, white smoke and contact stars.
+        /// </summary>
+        RoyalStreak = 5,
     }
 
     public static class StoryRocketVariant
     {
-        public const int Count = 5;
+        public const int Count = 6;
 
         private const string Pref = "StoryVfx.Rocket.Variant";
         private const string Flag = "-storyrocketvariant=";
@@ -95,12 +101,11 @@ namespace JellyGarden.Scripts.Story
                 if (saved >= 0 && saved < Count) return (RocketVariant)saved;
             }
 
-            // 3. Nothing chosen yet. HeavyExhaust on every build: the five were
-            //    compared on a real board and this one was chosen, so it is the
-            //    game's rocket trail rather than a debug default. Leaving this
-            //    on LaunchPlume would have shipped a trail nobody picked to
-            //    every player whose prefs were empty.
-            return RocketVariant.HeavyExhaust;
+            // 3. Nothing chosen yet. RoyalStreak on every build: it is the
+            //    shipping rocket, drawn by RoyalRocketVFX. The five plume
+            //    trails above stay reachable through -storyrocketvariant=0..4,
+            //    which is what art-review/rocket-animation/README.md records.
+            return RocketVariant.RoyalStreak;
         }
 
         public static void Save(RocketVariant variant)
@@ -119,6 +124,7 @@ namespace JellyGarden.Scripts.Story
                 case RocketVariant.HeavyExhaust: return "Heavy Exhaust";
                 case RocketVariant.QuickStreak: return "Quick Streak";
                 case RocketVariant.SmokeTrail: return "Smoke Trail";
+                case RocketVariant.RoyalStreak: return "Royal Streak";
                 default: return variant.ToString();
             }
         }
@@ -132,6 +138,7 @@ namespace JellyGarden.Scripts.Story
                 case RocketVariant.HeavyExhaust: return "Big lumpy smoke, expands hard";
                 case RocketVariant.QuickStreak: return "Short-lived, bright tip leads";
                 case RocketVariant.SmokeTrail: return "Thin, pale, lingering";
+                case RocketVariant.RoyalStreak: return "The shipping rocket: art, squeeze, gold exhaust";
                 default: return string.Empty;
             }
         }
@@ -169,6 +176,11 @@ namespace JellyGarden.Scripts.Story
 
                 case RocketVariant.SmokeTrail:
                     return new RocketPlume(0.008f, 1.20f, 0.60f, 2.2f, 1.2f, 0.34f, 0.30f, 0.018f);
+
+                case RocketVariant.RoyalStreak:
+                    // The ZIP profile owns this variant's tuning. Retain a
+                    // valid legacy plume for tools that enumerate every style.
+                    return new RocketPlume(0.022f, 1.00f, 0.50f, 4.5f, 2.5f, 0.55f, 0.50f, 0.055f);
 
                 default:
                     // The values StoryRocketVfx shipped with, between

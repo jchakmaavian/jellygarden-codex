@@ -25,6 +25,7 @@ namespace JellyGarden.Scripts.Story
         {
             Match3Vfx.Configure(null, new KingLeoVfxHost());
             Match3Vfx.Prewarm();
+            StoryRoyalVfx.Prewarm();
         }
 
         private static LevelManager L

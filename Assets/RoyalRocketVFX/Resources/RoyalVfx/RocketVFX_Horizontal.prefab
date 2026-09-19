@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8123738932847317058
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 52875032614465886}
+  - component: {fileID: 8814579817294680236}
+  m_Layer: 0
+  m_Name: RocketVFX_Horizontal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &52875032614465886
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123738932847317058}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8814579817294680236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8123738932847317058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89aa5446cdeef414faa2914f67d18258, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: RoyalRocketVFX::RoyalRocketVFX.RocketVFXPlayer
+  profile: {fileID: 0}
+  tuning:
+    travelSpeed: 15
+    cellSize: 1
+    anticipation: 0.12
+    rocketScale: 0.64
+    exhaustLengthInCells: 7
+    flameIntensity: 1
+    starDensity: 1
+    smokeAmount: 1
+    sortingLayer: Default
+    sortingOrder: 36
+    poolSize: 32
+    screenExitPadding: 2.2
+  left:
+    texture: {fileID: 2800000, guid: 54d7b3f1c542186448c4fadcecc4a3df, type: 3}
+    trimRect:
+      serializedVersion: 2
+      x: 27
+      y: 132
+      width: 456
+      height: 245
+    nozzlePivot: {x: 1, y: 0.5}
+  right:
+    texture: {fileID: 2800000, guid: 8cf487c679f49a44aa64bd28bc3d3d1a, type: 3}
+    trimRect:
+      serializedVersion: 2
+      x: 28
+      y: 139
+      width: 455
+      height: 231
+    nozzlePivot: {x: 0, y: 0.5}
+  down:
+    texture: {fileID: 2800000, guid: 2e6c58e92ba86bc428e6df8bfc689d6e, type: 3}
+    trimRect:
+      serializedVersion: 2
+      x: 110
+      y: 31
+      width: 294
+      height: 450
+    nozzlePivot: {x: 0.5, y: 1}
+  up:
+    texture: {fileID: 2800000, guid: 396b9d8aee06b3642a5fd62f5b87f83c, type: 3}
+    trimRect:
+      serializedVersion: 2
+      x: 107
+      y: 29
+      width: 300
+      height: 454
+    nozzlePivot: {x: 0.5, y: 0}
+  coreTrailMaterial: {fileID: 2100000, guid: ac4da57349972bb4fa3382ccaa9230a7, type: 2}
+  glowTrailMaterial: {fileID: 2100000, guid: f84cc5f24dacef749b5c3725aecd3cc2, type: 2}
+  flameRibbonMaterial: {fileID: 2100000, guid: 1520d35362f231b46940e35f3ef99420, type: 2}
+  nozzleFlameMaterial: {fileID: 2100000, guid: 79785f141c9fc5e4891ec53fe31965d1, type: 2}
+  starMaterial: {fileID: 2100000, guid: dc0aa9a33ba81ce409a00892c6386665, type: 2}
+  smokeMaterial: {fileID: 2100000, guid: 4920b49de40bb2f4a8cec7e525acd560, type: 2}
+  flashMaterial: {fileID: 2100000, guid: bbf2fed1ec6c3f84082d88fdf74d45d2, type: 2}
+  ringMaterial: {fileID: 2100000, guid: 32746171165d1064ca4c302d9da771b9, type: 2}
+  viewCamera: {fileID: 0}
+  defaultAxis: 0
+  registerAsDefault: 1

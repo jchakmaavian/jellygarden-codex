@@ -1121,6 +1121,16 @@ namespace JellyGarden.Scripts
 
         #region Destroying
 
+        private float _rocketHitDelay = -1f;
+
+        public void DestroyByRocket(float delay)
+        {
+            if (destroying) return;
+            animationFinished = false;
+            _rocketHitDelay = Mathf.Max(0f, delay);
+            DestroyItem(true);
+        }
+
         public void DestroyItem(bool showScore = false, string anim_name = "", bool explEffect = false)
         {
 
@@ -1144,6 +1154,23 @@ namespace JellyGarden.Scripts
 
         IEnumerator DestroyCor(bool showScore = false, string anim_name = "", bool explEffect = false)
         {
+            bool rocketHit = _rocketHitDelay >= 0f;
+            if (rocketHit)
+            {
+                // DestroyItem has already reserved this square and disabled input. Keep the
+                // intact piece visible until impact; the existing animationFinished wait
+                // prevents gravity from refilling it while this coroutine is still running.
+                PopClaimForKit();
+                float elapsed = 0f;
+                while (elapsed < _rocketHitDelay)
+                {
+                    yield return null;
+                    if (LevelManager.THIS != null && LevelManager.THIS.gameStatus != GameState.Pause)
+                        elapsed += Time.deltaTime;
+                }
+                JellyGarden.Scripts.Story.StoryRocketVfx.Contact(transform.position,
+                    JellyGarden.Scripts.Story.StoryBoardScale.Pitch);
+            }
             // The gem's clear is the VFX kit's Match3PieceMotion.Pop, and only
             // that. It replaces the four layers that used to stack here —
             // StoryShatterVfx (chips), StoryPopVfx (the squash/snap wind-up),
@@ -1166,13 +1193,21 @@ namespace JellyGarden.Scripts
                 PlayDestroyAnimation("destroy");
             else if (currentType == ItemsTypes.PACKAGE)
             {
-                PlayDestroyAnimation("destroy");
-                yield return new WaitForSeconds(0.1f);
-
-                GameObject partcl = Instantiate(Resources.Load("Prefabs/Effects/Firework"), transform.position, Quaternion.identity) as GameObject;
-                var main = partcl.GetComponent<ParticleSystem>().main;
-                main.startColor = LevelManager.THIS.scoresColors[color];
-                Destroy(partcl, 1f);
+                if (JellyGarden.Scripts.Story.StoryRoyalVfx.TntReady)
+                {
+                    // The ZIP supplies the TNT ignition sprite and explosion.
+                    // DestroyPackage below starts it once for the whole blast.
+                    sprRenderer.enabled = false;
+                }
+                else
+                {
+                    PlayDestroyAnimation("destroy");
+                    yield return new WaitForSeconds(0.1f);
+                    GameObject partcl = Instantiate(Resources.Load("Prefabs/Effects/Firework"), transform.position, Quaternion.identity) as GameObject;
+                    var main = partcl.GetComponent<ParticleSystem>().main;
+                    main.startColor = LevelManager.THIS.scoresColors[color];
+                    Destroy(partcl, 1f);
+                }
             }
             else if (currentType != ItemsTypes.INGREDIENT && currentType != ItemsTypes.BOMB)
             {
@@ -1204,7 +1239,7 @@ namespace JellyGarden.Scripts
                     sprRenderer,
                     new Match3PopOptions
                     {
-                        kind = Match3PopKind.Match,
+                        kind = rocketHit ? Match3PopKind.Rocket : Match3PopKind.Match,
                         burstColor = color >= 0 && color < LevelManager.THIS.scoresColors.Length
                             ? LevelManager.THIS.scoresColors[color]
                             : Color.white,
@@ -1288,18 +1323,11 @@ namespace JellyGarden.Scripts
         public void DestroyHorizontal()
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.strippedExplosion);
-            LevelManager.THIS.StrippedShow(gameObject, true);
+            if (!JellyGarden.Scripts.Story.StoryRocketVfx.Enabled)
+                LevelManager.THIS.StrippedShow(gameObject, true);
 
-            // STORY: the travelling head and its trail. Visual only — the kit's
-            // own clear below is untouched and still runs on this frame.
-            //
-            // An earlier version staggered the destroys so gems died as the
-            // head reached them. It hung the board: DestroyCor destroys the
-            // rocket gem the moment this method returns, so a sweep still
-            // walking the row left the cascade waiting on a clear that never
-            // finished and DragBlocked stuck true. The playtest caught it on
-            // level 1 as "move 1 never finished — the board stayed blocked for
-            // 20s". Timing here belongs to the kit; only the picture is ours.
+            // The effect owns the launch picture; each target owns its delayed hit.
+            // Reserving every target before returning keeps the refill barrier intact.
             JellyGarden.Scripts.Story.StoryRocketSweep.Show(this, true);
 
             List<Item> itemsList = LevelManager.THIS.GetRow(square.row);
@@ -1308,23 +1336,24 @@ namespace JellyGarden.Scripts
                 if (item != null)
                 {
                     if (item.currentType != ItemsTypes.BOMB && item.currentType != ItemsTypes.INGREDIENT)
-                        item.DestroyItem(true);
+                        JellyGarden.Scripts.Story.StoryRocketSweep.Hit(item, this, true);
                 }
             }
             List<Square> sqList = LevelManager.THIS.GetRowSquaresObstacles(square.row);
             foreach (Square item in sqList)
             {
                 if (item != null)
-                    item.DestroyBlock();
+                    JellyGarden.Scripts.Story.StoryRocketSweep.HitObstacle(item, this, true);
             }
         }
 
         public void DestroyVertical()
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.strippedExplosion);
-            LevelManager.THIS.StrippedShow(gameObject, false);
+            if (!JellyGarden.Scripts.Story.StoryRocketVfx.Enabled)
+                LevelManager.THIS.StrippedShow(gameObject, false);
 
-            // STORY: see DestroyHorizontal. Same head, other axis, visual only.
+            // Same reservation and impact timing as the horizontal rocket.
             JellyGarden.Scripts.Story.StoryRocketSweep.Show(this, false);
 
             List<Item> itemsList = LevelManager.THIS.GetColumn(square.col);
@@ -1333,14 +1362,14 @@ namespace JellyGarden.Scripts
                 if (item != null)
                 {
                     if (item.currentType != ItemsTypes.BOMB && item.currentType != ItemsTypes.INGREDIENT)
-                        item.DestroyItem(true);
+                        JellyGarden.Scripts.Story.StoryRocketSweep.Hit(item, this, false);
                 }
             }
             List<Square> sqList = LevelManager.THIS.GetColumnSquaresObstacles(square.col);
             foreach (Square item in sqList)
             {
                 if (item != null)
-                    item.DestroyBlock();
+                    JellyGarden.Scripts.Story.StoryRocketSweep.HitObstacle(item, this, false);
             }
 
 

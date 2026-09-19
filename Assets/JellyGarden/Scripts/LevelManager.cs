@@ -282,6 +282,7 @@ namespace JellyGarden.Scripts
             set
             {
                 GameStatus = value;
+                JellyGarden.Scripts.Story.StoryRoyalVfx.StateChanged(value);
                 InitScript.Instance.CheckAdsEvents(value);
 
                 if (value == GameState.PrepareGame)
@@ -2020,6 +2021,7 @@ namespace JellyGarden.Scripts
 
         bool IsAllDestoyFinished()
         {
+            if (JellyGarden.Scripts.Story.StoryRocketSweep.HasPendingHits) return false;
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
             foreach (GameObject item in items)
             {

@@ -64,6 +64,20 @@ namespace JellyGarden.Scripts.Story
 
         // Above the gems (2) and the blockers (4), like every other board
         // effect here. The core sits above its own ring and debris.
+        /// <summary>
+        /// The kit's package bomb clears GetItemsAround — a three by three — so
+        /// the RoyalTNTVFX blast that stands in for it is radius 1. The package
+        /// covers (2 * radius + 1) squared cells.
+        /// </summary>
+        private const int PackageRadius = 1;
+
+        /// <summary>
+        /// Board recoil for a royal blast, on StoryFinishVfx's damped spring.
+        /// The same 1.4 the sprite blast used, so swapping the picture did not
+        /// quietly change how hard the board kicks.
+        /// </summary>
+        private const float RoyalPunch = 1.4f;
+
         private const int DebrisOrder = 5;
         private const int RingOrder = 6;
         private const int CoreOrder = 7;
@@ -169,9 +183,52 @@ namespace JellyGarden.Scripts.Story
         /// off on its own; FALSE for each target of a colour bomb, which would
         /// otherwise punch once per cleared gem. See the call site below.
         /// </param>
-        public static void Blow(Vector3 at, Color tint, bool punchBoard = true)
+        /// <param name="royal">
+        /// Whether this blast is drawn by the RoyalTNTVFX package. True for a
+        /// bomb that goes off on its own; FALSE for each target of a colour
+        /// bomb — see the branch below.
+        /// </param>
+        public static void Blow(Vector3 at, Color tint, bool punchBoard = true, bool royal = true)
         {
             if (!Enabled || !Application.isPlaying) return;
+
+            // The package bomb's explosion is RoyalTNTVFX's now: the ignition
+            // squash on the TNT art, a white-hot core into gold rays, a broken
+            // shockwave, and a spark wave that rolls out ring by ring over the
+            // blast area. It is 58 quads and no ParticleSystem at all, which is
+            // why it is safe on a board that has never rendered one.
+            //
+            // PackageRadius is 1, not the package README's 2: the kit's
+            // DestroyPackage clears GetItemsAround — a three by three — and the
+            // package sizes its blast as (2 * radius + 1) squared.
+            //
+            // A COLOUR BOMB DOES NOT COME THROUGH HERE. It calls this once per
+            // cleared gem, up to twenty-five times across one second, and each
+            // of those is a single cell rather than a bomb going off. Twenty-five
+            // TNT actors against a pool of thirty-two would starve the pool and
+            // read as the board detonating rather than as gems being picked off,
+            // so those keep the sprite blast below until they are judged on a
+            // real board. StoryColorBombVfx passes royal: false.
+            if (royal)
+            {
+                if (StoryRoyalVfx.Blast(at, PackageRadius))
+                {
+                    // The package draws no board recoil — deliberately, it is a
+                    // pure VFX package. The punch is still this layer's, on the
+                    // same damped spring every other blast uses.
+                    if (punchBoard) StoryFinishVfx.Punchit(RoyalPunch);
+
+                    _said++;
+                    Debug.Log(string.Format("[Bomb] #{0} royal TNT at {1} | radius {2}",
+                        _said, at.ToString("F2"), PackageRadius));
+                    return;
+                }
+
+                // The player prefab is missing or Resources could not find it.
+                // StoryRoyalVfx has already said so once; falling through to the
+                // sprite blast means a missing package costs the look, not the
+                // explosion.
+            }
 
             EnsureRig();
 
@@ -616,6 +673,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>Drop every blast. Called on a scene load.</summary>
         public static void Reset()
         {
+            StoryRoyalVfx.Clear();
             for (int i = 0; i < Blasts.Count; i++) Driver_Retire(Blasts[i]);
             Blasts.Clear();
         }
