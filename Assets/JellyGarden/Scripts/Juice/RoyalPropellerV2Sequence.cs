@@ -103,8 +103,10 @@ namespace JellyGarden.Scripts.Juice
         /// </summary>
         void TakeoffBurst(Vector3 p)
         {
-            Emit(flash, p, 1, .95f, 0, .13f, new Color(1, .99f, .92f, 1));
-            Emit(ring, p, 1, 1.35f, 0, .20f, new Color(1, .86f, .42f, 1));
+            // The white core used to be nearly as wide as the ring, which bleached the gold out
+            // of both bursts. Keep it small and hot, and let the gold ring carry the silhouette.
+            Emit(flash, p, 1, .62f, 0, .10f, new Color(1, .97f, .86f, 1));
+            Emit(ring, p, 1, 1.55f, 0, .26f, new Color(1, .82f, .32f, 1));
             Emit(sparks, p, 10, .30f, 3.4f, .26f, new Color(1, .93f, .62f, 1));
             Emit(embers, p, 5, .22f, 2.2f, .28f, new Color(1, .78f, .30f, 1));
             shakeEnergy = Mathf.Max(shakeEnergy, .55f);
@@ -117,8 +119,8 @@ namespace JellyGarden.Scripts.Juice
         /// </summary>
         void TargetImpact(Vector3 p)
         {
-            Emit(flash, p, 1, .82f, 0, .12f, new Color(1, 1, .96f, 1));
-            Emit(ring, p, 1, 1.15f, 0, .18f, new Color(1, .84f, .38f, 1));
+            Emit(flash, p, 1, .54f, 0, .09f, new Color(1, .98f, .88f, 1));
+            Emit(ring, p, 1, 1.42f, 0, .24f, new Color(1, .80f, .28f, 1));
             Emit(sparks, p, 12, .26f, 3.1f, .24f, new Color(1, .95f, .70f, 1));
             Emit(embers, p, 6, .20f, 2.0f, .24f, new Color(1, .74f, .26f, 1));
             Chip(p);

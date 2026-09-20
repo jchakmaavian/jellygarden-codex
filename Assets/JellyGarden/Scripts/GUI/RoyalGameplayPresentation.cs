@@ -22,6 +22,9 @@ namespace RoyalThrone.Presentation
         readonly List<Image> goalIcons=new List<Image>();readonly List<Text> goalNumbers=new List<Text>();
         Transform framedField;Square[] framedSquares;Vector2 framedScreen;Rect framedSafeArea;
         static Color Navy=>new Color(.025f,.12f,.32f);
+        // Booster rail metrics in canvas reference units (720x1280): the width and spacing the
+        // fractional anchors produced on a phone, now held constant across aspect ratios.
+        const float BoostSize=126f,BoostStride=169f;
         static Color Gold=>new Color(.96f,.74f,.22f);
         RectTransform Rect(string name,Transform parent,float x0,float y0,float x1,float y1)
         {var g=new GameObject(name,typeof(RectTransform));var r=g.GetComponent<RectTransform>();r.SetParent(parent,false);r.anchorMin=new Vector2(x0,y0);r.anchorMax=new Vector2(x1,y1);r.offsetMin=r.offsetMax=Vector2.zero;return r;}
@@ -79,7 +82,15 @@ namespace RoyalThrone.Presentation
                 for(int i=0;i<4;i++)
                 {
                     var boost=lm.GameField.parent.Find("Canvas/BottomPanel/Panel/"+boostNames[i]) as RectTransform;
-                    if(!boost)continue;boost.SetParent(content,false);boost.anchorMin=new Vector2(.06f+i*.235f,.009f);boost.anchorMax=new Vector2(.235f+i*.235f,.087f);boost.offsetMin=boost.offsetMax=Vector2.zero;boost.localScale=Vector3.one;
+                    if(!boost)continue;boost.SetParent(content,false);
+                    // Fractional anchors made each booster both wider and further from its
+                    // neighbours as the screen widened, so the rail sprawled on a tablet. Pin the
+                    // row to the bottom centre at the size it already had on the 720x1280
+                    // reference, and it keeps that shape on every aspect.
+                    boost.anchorMin=boost.anchorMax=new Vector2(.5f,.048f);
+                    boost.sizeDelta=new Vector2(BoostSize,BoostSize*.8f);
+                    boost.anchoredPosition=new Vector2((i-1.5f)*BoostStride,0);
+                    boost.localScale=Vector3.one;
                     var graphic=boost.GetComponent<Image>();if(graphic){graphic.sprite=RoyalGameplayArt.Art(artNames[i])??RoyalPieceSkin.Art(artNames[i]);graphic.preserveAspect=true;graphic.color=Color.white;}
                     foreach(var text in boost.GetComponentsInChildren<Text>(true)){text.font=display;text.color=new Color(1,.96f,.8f);}
                     RoyalMenuSkin.Boost(boost,true);
