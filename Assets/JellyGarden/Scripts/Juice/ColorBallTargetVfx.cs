@@ -8,6 +8,7 @@ namespace JellyGarden.Scripts.Juice
     {
         public enum Kind { Beam, TargetGlow, TargetImpact }
         public const float ArrivalTime=.12f;
+        public const float ContactHold=.13f, LinkFade=.15f;
         const int BeamCapacity=16, ParticleCapacity=192, Samples=18;
         static ColorBallTargetVfx instance;
         static readonly Color Gold=new Color(1,.72f,.16f), Warm=new Color(1,.96f,.76f);
@@ -16,7 +17,7 @@ namespace JellyGarden.Scripts.Juice
             public LineRenderer glow,core;
             public SpriteRenderer tip;
             public Vector3 from,to;
-            public float age,bend;
+            public float age,bend,sparkClock;
             public bool active;
         }
         sealed class Mote
@@ -33,7 +34,8 @@ namespace JellyGarden.Scripts.Juice
         readonly Mote[] motes=new Mote[ParticleCapacity];
         readonly global::System.Random random=new global::System.Random(38147);
         Sprite star,soft,ring;
-        Material material,haloMaterial,outlineMaterial;
+        Material material,haloMaterial,beamMaterial,outlineMaterial;
+        MaterialPropertyBlock beamProperties;
         int nextMote;
         public static bool Ready=>instance;
         public static int PoolSize=>instance?BeamCapacity+ParticleCapacity:0;
@@ -53,9 +55,14 @@ namespace JellyGarden.Scripts.Juice
         }
         void Build()
         {
+            beamProperties=new MaterialPropertyBlock();
             material=new Material(Shader.Find("Sprites/Default")){name="Color Ball pooled light"};
             star=Texture(0);soft=Texture(1);ring=Texture(2);
-            haloMaterial=new Material(material){name="Color Ball soft beam halo",mainTexture=soft.texture};
+            var beamShader=Resources.Load<Shader>("RoyalColorBall/ColorBallBeam");
+            haloMaterial=new Material(beamShader){name="Color Ball additive gold link"};
+            haloMaterial.SetFloat("_Sharpness",4.5f);
+            beamMaterial=new Material(beamShader){name="Color Ball white hot link"};
+            beamMaterial.SetFloat("_Sharpness",7f);
             outlineMaterial=new Material(Resources.Load<Shader>("RoyalColorBall/ColorBallOutline")){name="Color Ball gem contour"};
             for(int i=0;i<BeamCapacity;i++)
             {
@@ -96,9 +103,10 @@ namespace JellyGarden.Scripts.Juice
         LineRenderer Line(string name,int order,float width)
         {
             var r=new GameObject(name).AddComponent<LineRenderer>();r.transform.SetParent(transform,false);
-            r.sharedMaterial=order==39?haloMaterial:material;r.useWorldSpace=true;r.positionCount=Samples;r.sortingOrder=order;
+            r.sharedMaterial=order==39?haloMaterial:beamMaterial;r.useWorldSpace=true;r.positionCount=Samples;r.sortingOrder=order;
+            r.textureMode=LineTextureMode.Stretch;
             r.numCapVertices=4;r.numCornerVertices=2;r.widthMultiplier=width;r.enabled=false;
-            r.widthCurve=new AnimationCurve(new Keyframe(0,.1f),new Keyframe(.12f,1),new Keyframe(.85f,.8f),new Keyframe(1,.1f));
+            r.widthCurve=new AnimationCurve(new Keyframe(0,.65f),new Keyframe(.08f,1),new Keyframe(.92f,1),new Keyframe(1,.65f));
             return r;
         }
         static int BoardLayer=>LevelManager.THIS&&LevelManager.THIS.GameField?LevelManager.THIS.GameField.gameObject.layer:0;
@@ -109,7 +117,7 @@ namespace JellyGarden.Scripts.Juice
             {
                 foreach(var b in instance.beams)if(!b.active)
                 {
-                    b.active=true;b.age=0;b.from=position+Vector3.back*.32f;b.to=target+Vector3.back*.32f;
+                    b.active=true;b.age=0;b.sparkClock=0;b.from=position+Vector3.back*.32f;b.to=target+Vector3.back*.32f;
                     b.bend=0;
                     b.glow.gameObject.layer=b.core.gameObject.layer=BoardLayer;
                     b.glow.sortingLayerID=b.core.sortingLayerID=ColorBallFrameAnimator.SeatedSortingLayer;
@@ -121,7 +129,7 @@ namespace JellyGarden.Scripts.Juice
             {
                 if(targetSprite&&targetSprite.sprite)
                 {
-                    var outline=instance.Emit(false,targetSprite.transform.position,Vector3.zero,.20f,1,0,0,new Color(1,.88f,.42f,1),42);
+                    var outline=instance.Emit(false,targetSprite.transform.position,Vector3.zero,.24f,1,0,0,new Color(1,.92f,.52f,1),42);
                     if(outline!=null)
                     {
                         outline.outline=true;outline.fixedScale=targetSprite.transform.lossyScale;
@@ -133,8 +141,8 @@ namespace JellyGarden.Scripts.Juice
             }
             else
             {
-                instance.Emit(false,position,Vector3.zero,.10f,.46f,-.12f,0,new Color(1,1,.94f,1),42);
-                instance.Emit(true,position,Vector3.zero,.18f,.76f,-.36f,0,Color.white,43);
+                instance.Emit(false,position,Vector3.zero,.14f,.82f,-.28f,0,new Color(1,.85f,.28f,.85f),42);
+                instance.Emit(true,position,Vector3.zero,.19f,.93f,-.42f,0,Color.white,43);
                 for(int i=0;i<6;i++)
                 {
                     float a=instance.Range(0,Mathf.PI*2);var dir=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);
@@ -175,7 +183,7 @@ namespace JellyGarden.Scripts.Juice
         }
         void Draw(Beam b)
         {
-            float reach=Mathf.Clamp01(b.age/ArrivalTime),fade=1-Mathf.Clamp01((b.age-ArrivalTime)/.13f),cell=ColorBallFrameAnimator.Cell;
+            float reach=Mathf.Clamp01(b.age/ArrivalTime),fade=1-Mathf.SmoothStep(0,1,Mathf.Clamp01((b.age-ArrivalTime-ContactHold)/LinkFade)),cell=ColorBallFrameAnimator.Cell;
             var delta=b.to-b.from;var side=new Vector3(-delta.y,delta.x,0).normalized;
             for(int i=0;i<Samples;i++)
             {
@@ -183,12 +191,15 @@ namespace JellyGarden.Scripts.Juice
                 var p=Vector3.Lerp(b.from,b.to,t)+side*(Mathf.Sin(t*Mathf.PI)*b.bend);
                 b.glow.SetPosition(i,p);b.core.SetPosition(i,p);
             }
-            b.glow.widthMultiplier=cell*.105f*fade;b.core.widthMultiplier=cell*.027f*fade;
-            b.glow.startColor=b.glow.endColor=new Color(1,.90f,.52f,.85f*fade);
-            b.core.startColor=b.core.endColor=new Color(1,1,.90f,fade);
+            b.glow.widthMultiplier=cell*.20f;b.core.widthMultiplier=cell*.060f;
+            b.glow.startColor=b.glow.endColor=new Color(1,.76f,.19f,.70f*fade);
+            b.core.startColor=b.core.endColor=new Color(1,1,.97f,fade);
+            beamProperties.Clear();beamProperties.SetFloat("_Age",b.age);
+            beamProperties.SetFloat("_LengthCells",delta.magnitude/cell);
+            b.glow.SetPropertyBlock(beamProperties);b.core.SetPropertyBlock(beamProperties);
             b.tip.enabled=true;b.tip.gameObject.layer=BoardLayer;b.tip.sortingLayerID=ColorBallFrameAnimator.SeatedSortingLayer;
             b.tip.transform.position=b.core.GetPosition(Samples-1)+Vector3.back*.02f;
-            b.tip.transform.localScale=Vector3.one*(cell*.25f*fade);
+            b.tip.transform.localScale=Vector3.one*(cell*Mathf.Lerp(.22f,.44f,reach)*fade);
             b.tip.transform.rotation=Quaternion.Euler(0,0,b.age*180);b.tip.color=new Color(1,1,.85f,fade);
         }
         void LateUpdate()
@@ -197,8 +208,17 @@ namespace JellyGarden.Scripts.Juice
             foreach(var b in beams)
             {
                 if(!b.active)continue;b.age+=Time.deltaTime;
-                if(b.age>=ArrivalTime+.13f){b.active=false;b.glow.enabled=b.core.enabled=b.tip.enabled=false;continue;}
+                if(b.age>=ArrivalTime+ContactHold+LinkFade){b.active=false;b.glow.enabled=b.core.enabled=b.tip.enabled=false;continue;}
                 Draw(b);
+                b.sparkClock+=Time.deltaTime;
+                if(b.sparkClock>=.035f&&b.age<ArrivalTime+ContactHold)
+                {
+                    b.sparkClock%=.035f;
+                    float progress=b.age<ArrivalTime?Mathf.Clamp01(b.age/ArrivalTime):Range(.15f,.95f);
+                    var p=Vector3.Lerp(b.from,b.to,progress);
+                    Emit(true,p,new Vector3(Range(-.08f,.08f),Range(-.12f,.12f),0)*ColorBallFrameAnimator.Cell,
+                        .10f,Range(.07f,.13f),-.05f,0,Warm,42);
+                }
             }
             foreach(var m in motes)
             {
@@ -207,7 +227,7 @@ namespace JellyGarden.Scripts.Juice
                 m.view.transform.position=m.start+m.velocity*m.age;
                 if(!m.outline)m.view.transform.Rotate(0,0,m.spin*Time.deltaTime);
                 m.view.transform.localScale=m.outline?m.fixedScale:Vector3.one*(Mathf.Max(.01f,m.size+m.growth*t)*ColorBallFrameAnimator.Cell);
-                var c=m.tint;c.a*=Mathf.Pow(1-t,1.5f);m.view.color=c;
+                var c=m.tint;c.a*=m.outline?1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(.22f,1,t)):Mathf.Pow(1-t,1.5f);m.view.color=c;
             }
         }
         public static void ClearAll()
@@ -220,7 +240,7 @@ namespace JellyGarden.Scripts.Juice
         void OnDestroy()
         {
             foreach(var sprite in new[]{star,soft,ring})if(sprite){Destroy(sprite.texture);Destroy(sprite);}
-            if(material)Destroy(material);if(haloMaterial)Destroy(haloMaterial);if(outlineMaterial)Destroy(outlineMaterial);if(instance==this)instance=null;
+            if(material)Destroy(material);if(haloMaterial)Destroy(haloMaterial);if(beamMaterial)Destroy(beamMaterial);if(outlineMaterial)Destroy(outlineMaterial);if(instance==this)instance=null;
         }
     }
 }

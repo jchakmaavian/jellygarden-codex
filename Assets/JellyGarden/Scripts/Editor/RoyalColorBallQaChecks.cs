@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
     // Tests the actual QA command entry points, with the real resolver/refill running.
     public static class RoyalColorBallQaChecks
     {
-        const string Folder="Design/Effects/ColorBall-live-v4/";
+        const string Folder="Design/Effects/ColorBall-live-v5/";
         static readonly List<string> checks=new List<string>(),errors=new List<string>();
         static RoyalQaService qa;
         static bool running;
@@ -54,7 +54,7 @@ namespace RoyalThrone.Editor
             bool idleExact=true,discThin=true,shaderReady=true,gotIntro=false;
             var presentation=new MaterialPropertyBlock();
             var timestamps=new List<string>();
-            string frames="Temp/ColorBall-live-v4-"+label+"/";if(record)Directory.CreateDirectory(frames);
+            string frames="Temp/ColorBall-live-v5-"+label+"/";if(record)Directory.CreateDirectory(frames);
             while(qa.Busy&&Time.realtimeSinceStartup<end)
             {
                 yield return new WaitForEndOfFrame();
