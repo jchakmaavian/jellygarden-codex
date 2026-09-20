@@ -1,0 +1,253 @@
+--- a/Assets/JellyGarden/Scripts/RoyalQaService.cs
++++ b/Assets/JellyGarden/Scripts/RoyalQaService.cs
+@@ -200,9 +200,10 @@
+             {
+                 var a=Selected().item;var b=Selected().GetNeighborRight()?.item;if(!a||!b)throw new InvalidOperationException("Choose a cell with an occupied right neighbor.");
+                 SetPiece(a,Powers[Mathf.Clamp(PowerA,0,4)],Gem);SetPiece(b,Powers[Mathf.Clamp(PowerB,0,4)],Gem);
++                yield return ColorBallReady(a);yield return ColorBallReady(b);
+                 if(!RoyalPowerupDirector.TrySwap(a,b))throw new InvalidOperationException("Combination rejected by the game.");LM.FindMatches();yield return Settled();yield break;
+             }
+-            if(command=="Activate selected"){if(!RoyalPowerupDirector.Tap(Selected().item))throw new InvalidOperationException("Select a power-up.");yield return Settled();yield break;}
++            if(command=="Activate selected"){var selected=Selected().item;yield return ColorBallReady(selected);if(!RoyalPowerupDirector.Tap(selected))throw new InvalidOperationException("Select a power-up.");yield return Settled();yield break;}
+             if(command=="Star reward"){ValidateLevel();InitScript.Instance.SaveLevelStarsCount(Level,Mathf.Min(3,RoyalSave.GetInt(StarKey)+1));RoyalSave.Save();Refresh();yield return RewardStars();yield break;}
+             if(command=="Star animation"||command=="Character / reward"||command=="Win effect"){yield return RewardStars();yield break;}
+             if(command=="Coin reward"){InitScript.Instance.AddGems(Mathf.Clamp(Amount,0,1000000));Refresh();RoyalPowerupDirector.Get.Firework(Center,1);RoyalAudioDirector.Get.Play(RoyalCue.Create);yield return GetComponent<RoyalQaMenu>().CoinReward();yield break;}
+@@ -225,7 +226,7 @@
+             if(command=="Invalid swap"){Swap(LM.GetSquare(0,0).item,LM.GetSquare(1,0).item);yield return new WaitForSeconds(.6f);yield break;}
+             if(command=="Fall"){var i=LM.GetSquare(3,3).item;i.transform.position+=Vector3.up*LM.squareHeight*3;i.justCreatedItem=true;i.StartFalling();yield return Settled();yield break;}
+             if(command=="Booster activation"||command=="TNT animation"||command=="Color-ball effect")
+-            {var item=LM.GetSquare(3,3).item;SetPiece(item,command=="Color-ball effect"?ItemsTypes.BOMB:command=="TNT animation"?ItemsTypes.PACKAGE:Powers[Mathf.Clamp(PowerA,0,4)],0);RoyalPowerupDirector.Tap(item);yield return Settled();yield break;}
++            {var item=LM.GetSquare(3,3).item;SetPiece(item,command=="Color-ball effect"?ItemsTypes.BOMB:command=="TNT animation"?ItemsTypes.PACKAGE:Powers[Mathf.Clamp(PowerA,0,4)],0);yield return ColorBallReady(item);RoyalPowerupDirector.Tap(item);yield return Settled();yield break;}
+             if(command=="Create special"||command=="Booster creation")
+             {foreach(var p in new[]{new Vector2Int(2,2),new Vector2Int(3,2),new Vector2Int(4,2),new Vector2Int(3,3),new Vector2Int(3,4)})LM.GetSquare(p.x,p.y).item.SetColor(0);}
+             else
+@@ -291,7 +292,25 @@
+         }
+         Square Selected(){var sq=LM.GetSquare(Column,Row,true);if(!sq||sq.type==SquareTypes.NONE||!sq.item)throw new InvalidOperationException("Select an occupied playable cell (column / row are zero-based).");return sq;}
+         Vector3 Center=>LM.GameField.position+new Vector3((LM.maxCols-1)*LM.squareWidth*.5f,-(LM.maxRows-1)*LM.squareHeight*.5f,-.2f);
+-        static void SetPiece(Item item,ItemsTypes type,int color){if(!item)throw new InvalidOperationException("Cell has no gem.");item.currentType=type;item.NextType=ItemsTypes.NONE;item.SetColor(Mathf.Clamp(color,0,5));item.GetComponent<RoyalPieceSkin>()?.ApplyNow();}
++        static void SetPiece(Item item,ItemsTypes type,int color)
++        {
++            if(!item)throw new InvalidOperationException("Cell has no gem.");
++            if(type==ItemsTypes.BOMB)
++            {
++                // Real creation sets Color Ball's sentinel color (555), positions it, and plays Reveal.
++                // Giving it the selected gem color let QA balls match and chain as ordinary gems.
++                item.NextType=ItemsTypes.BOMB;item.ChangeType();return;
++            }
++            item.currentType=type;item.NextType=ItemsTypes.NONE;item.SetColor(Mathf.Clamp(color,0,5));item.GetComponent<RoyalPieceSkin>()?.ApplyNow();
++        }
++        static IEnumerator ColorBallReady(Item item)
++        {
++            if(!item||item.currentType!=ItemsTypes.BOMB)yield break;
++            var visual=item.GetComponent<ColorBallFrameAnimator>();
++            bool revealing=visual&&visual.Current==ColorBallFrameAnimator.Phase.Reveal;
++            while(item&&visual&&visual.Current==ColorBallFrameAnimator.Phase.Reveal)yield return null;
++            if(revealing)yield return new WaitForSeconds(.2f);
++        }
+         static void Swap(Item a,Item b){a.SwitchDirection(a.transform.position-b.transform.position);}
+         void SetHintFixture(){LM.GetSquare(1,3).item.SetColor(0);LM.GetSquare(2,3).item.SetColor(0);LM.GetSquare(3,3).item.SetColor(2);LM.GetSquare(3,2).item.SetColor(0);}
+         IEnumerator RewardStars()
+--- a/Assets/JellyGarden/Scripts/Juice/RoyalColorBallSequence.cs
++++ b/Assets/JellyGarden/Scripts/Juice/RoyalColorBallSequence.cs
+@@ -11,11 +11,14 @@
+         public int ColorBallConversions { get; private set; }
+         public int ColorBallSelectedTargets { get; private set; }
+         public int ColorBallHandoffs { get; private set; }
++        public int ColorBallBeamArrivals { get; private set; }
+ 
+-        IEnumerator ConvertColorBallRockets(Square origin,List<Square> targets,ItemsTypes orientation)
++        IEnumerator AnimateColorBallTargets(Square origin,List<Square> targets,ItemsTypes payload)
+         {
+             ColorBallTargetVfx.Prewarm();
+-            ColorBallConversions=0;ColorBallSelectedTargets=targets.Count;
++            ColorBallConversions=0;ColorBallBeamArrivals=0;ColorBallSelectedTargets=targets.Count;
++            bool convert=payload!=ItemsTypes.NONE;
++            var deferred=new List<Square>();
+             var centre=origin.transform.position;
+             var boosting=ColorBallBoostView.Begin(centre);
+             ColorBallState=ColorBallPhase.SpinUp;
+@@ -33,16 +36,23 @@
+                     if(!sq || !selected || selected.destroying || sq.item!=selected)continue;
+                     ColorBallTargetVfx.Play(ColorBallTargetVfx.Kind.TargetGlow,sq.transform.position,sq.transform.position);
+                     ColorBallTargetVfx.Play(ColorBallTargetVfx.Kind.TargetImpact,sq.transform.position,sq.transform.position);
++                    ColorBallBeamArrivals++;
+                     yield return Wait(.055f);
+-                    if(selected && !selected.destroying && sq.item==selected && selected.currentType==ItemsTypes.NONE)
++                    if(!selected || selected.destroying || sq.item!=selected)continue;
++                    if(convert && selected.currentType==ItemsTypes.NONE)
+                     {
+                         // Preserve the existing payload orientation and the Item's creation path.
+-                        selected.NextType=orientation;
++                        selected.NextType=payload;
+                         selected.ChangeType();
+                         ColorBallConversions++;
+                     }
++                    // Standalone Color Ball clears each ordinary gem on its beam impact.
++                    // Existing/generated powerups wait until finish before they can chain.
++                    if(!convert && selected.currentType==ItemsTypes.NONE)Hit(sq);
++                    else deferred.Add(sq);
+                 }
+-                // No destruction during conversion. Let the last impact/reveal finish before exit.
++                // Keep the resolver busy through the final impact, authored finish and handoff.
++                // This also prevents gravity/refill from running underneath an unfinished ball.
+                 while(ColorBallTargetVfx.Active>0)yield return null;
+                 ColorBallState=ColorBallPhase.Finish;
+                 if(boosting)boosting.Finish();
+@@ -50,7 +60,7 @@
+                 ColorBallState=ColorBallPhase.Handoff;
+                 ColorBallHandoffs++;
+                 // Hit -> Item.DestroyItem -> Queue -> existing Rocket. It alone owns the clear/VFX.
+-                foreach(var sq in targets)Hit(sq);
++                foreach(var sq in deferred)Hit(sq);
+                 Reaction?.Invoke(1.4f);
+             }
+             finally
+--- a/Assets/JellyGarden/Scripts/Juice/RoyalPowerupDirector.cs
++++ b/Assets/JellyGarden/Scripts/Juice/RoyalPowerupDirector.cs
+@@ -298,8 +298,8 @@
+             var lm=LevelManager.THIS;
+             if(colour<0||colour>5){int[] counts=new int[6];foreach(var i in lm.GetItems())if(i&&i.color>=0&&i.color<6)counts[i.color]++;colour=0;for(int k=1;k<6;k++)if(counts[k]>counts[colour])colour=k;}
+             var targets=new List<Square>();for(int r=0;r<lm.maxRows;r++)for(int c=0;c<lm.maxCols;c++){var sq=lm.GetSquare(c,r);if(sq&&(all||sq.item&&sq.item.color==colour))targets.Add(sq);}
+-            if(payload==ItemsTypes.HORIZONTAL_STRIPPED||payload==ItemsTypes.VERTICAL_STRIPPED)
+-            {yield return ConvertColorBallRockets(origin,targets,payload);yield break;}
++            if(payload==ItemsTypes.NONE||payload==ItemsTypes.HORIZONTAL_STRIPPED||payload==ItemsTypes.VERTICAL_STRIPPED)
++            {yield return AnimateColorBallTargets(origin,targets,payload);yield break;}
+             Creation(origin.transform.position);RoyalAudioDirector.Get?.Play(RoyalCue.Create);
+             // The approved Boosting sequence grows out of the cell the ball fired from and holds its
+             // loop while the targets are marked. Target selection and destruction are untouched.
+--- a/Assets/JellyGarden/Scripts/Editor/RoyalColorBallQaChecks.cs
++++ b/Assets/JellyGarden/Scripts/Editor/RoyalColorBallQaChecks.cs
+@@ -0,0 +1,132 @@
++#if UNITY_EDITOR && !ROYAL_DISABLE_QA
++using System;
++using System.Collections;
++using System.Collections.Generic;
++using System.IO;
++using System.Linq;
++using JellyGarden.Scripts;
++using JellyGarden.Scripts.Juice;
++using RoyalThrone.Testing;
++using UnityEditor;
++using UnityEngine;
++using Object=UnityEngine.Object;
++
++namespace RoyalThrone.Editor
++{
++    // Tests the actual QA command entry points, with the real resolver/refill running.
++    public static class RoyalColorBallQaChecks
++    {
++        const string Folder="Design/Effects/ColorBall-live-v2/";
++        static readonly List<string> checks=new List<string>(),errors=new List<string>();
++        static RoyalQaService qa;
++        static bool running;
++        [MenuItem("Tools/Royal Throne/Color Ball/Verify QA activation and Rocket combo %#F5")]
++        public static void Run()
++        {
++            qa=RoyalQaService.Instance;
++            if(running||!EditorApplication.isPlaying||!qa||!qa.Ready)throw new InvalidOperationException("Open the game in Play Mode first.");
++            running=true;checks.Clear();errors.Clear();Directory.CreateDirectory(Folder);
++            RoyalRegressionRunner.Run(Suite());
++        }
++        static void Check(bool ok,string message)
++        { if(!ok)throw new Exception(message);checks.Add("PASS "+message); }
++        static void Log(string message,string stack,LogType type)
++        { if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)errors.Add(message); }
++        static IEnumerator Command(string name)
++        {
++            int done=qa.Completed,failed=qa.Failed;qa.Request(name);float end=Time.realtimeSinceStartup+35;
++            while(qa.Busy&&Time.realtimeSinceStartup<end)yield return null;
++            Check(!qa.Busy&&qa.Completed==done+1&&qa.Failed==failed,"QA control completes: "+name+" / "+qa.Status);
++        }
++        static void Capture(string name)
++        {
++            var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+".png",t.EncodeToPNG());Object.Destroy(t);
++        }
++        static IEnumerator Observe(string command,string label,bool convert,Item[] untouched=null,bool record=false)
++        {
++            var director=RoyalPowerupDirector.Get;int done=qa.Completed,failed=qa.Failed,launches=director.RocketLaunches;
++            qa.Visible=false;qa.Request(command);
++            float end=Time.realtimeSinceStartup+35,start=Time.realtimeSinceStartup,lastCapture=-1;
++            bool sawSpin=false,sawBeams=false,sawFinish=false,sawReveal=false,sawIdle=false;
++            bool noEarlyClear=true,noEarlyLaunch=true,noRefill=true,otherBallsStable=true;
++            bool settledCapture=false;int arrivals=0,peak=0,index=0;
++            var timestamps=new List<string>();
++            string frames="Temp/ColorBall-live-v2-"+label+"/";if(record)Directory.CreateDirectory(frames);
++            while(qa.Busy&&Time.realtimeSinceStartup<end)
++            {
++                yield return new WaitForEndOfFrame();
++                var balls=Object.FindObjectsByType<ColorBallFrameAnimator>(FindObjectsSortMode.None);
++                if(!sawReveal&&balls.Any(b=>b.Current==ColorBallFrameAnimator.Phase.Reveal&&b.Frame>=18)){Capture(label+"-reveal");sawReveal=true;}
++                if(!sawIdle&&balls.Any(b=>b.Current==ColorBallFrameAnimator.Phase.Idle)){Capture(label+"-idle");sawIdle=true;}
++                if(ColorBallBoostView.Active>0)
++                {
++                    peak=Mathf.Max(peak,ColorBallBoostView.Active);
++                    var boost=Object.FindObjectsByType<ColorBallBoostView>(FindObjectsSortMode.None).First(b=>b.Current!=ColorBallBoostView.Phase.Idle);
++                    bool intro=boost.Current==ColorBallBoostView.Phase.Intro;
++                    if(intro)noEarlyClear&=director.ColorBallBeamArrivals==0;
++                    if(boost.Current==ColorBallBoostView.Phase.Loop)sawSpin=true;
++                    noEarlyLaunch&=director.RocketLaunches==launches;
++                    noRefill&=!LevelManager.THIS.GetItems().Any(i=>i&&(i.falling||i.justCreatedItem));
++                    if(untouched!=null)otherBallsStable&=untouched.All(i=>i&&!i.destroying&&i.currentType==ItemsTypes.BOMB&&i.color==555);
++                    if(director.ColorBallBeamArrivals>=3&&!sawBeams){Capture(label+"-beams");sawBeams=true;}
++                    arrivals=Mathf.Max(arrivals,director.ColorBallBeamArrivals);
++                    if(boost.Current==ColorBallBoostView.Phase.Finish&&!sawFinish){Capture(label+"-finish");sawFinish=true;}
++                }
++                else if(sawFinish&&!settledCapture){Capture(label+"-handoff-refill");settledCapture=true;}
++                if(record&&Time.realtimeSinceStartup-lastCapture>=1f/15f)
++                {
++                    lastCapture=Time.realtimeSinceStartup;
++                    var t=ScreenCapture.CaptureScreenshotAsTexture();
++                    File.WriteAllBytes(frames+index.ToString("D4")+".jpg",t.EncodeToJPG(90));Object.Destroy(t);
++                    timestamps.Add((lastCapture-start).ToString("F5",System.Globalization.CultureInfo.InvariantCulture));index++;
++                }
++            }
++            if(record)File.WriteAllLines(frames+"timestamps.txt",timestamps);
++            Check(!qa.Busy&&qa.Completed==done+1&&qa.Failed==failed,label+": command finishes through real board resolver");
++            Check(sawSpin&&sawBeams&&sawFinish&&arrivals>=3,label+": charged loop, multiple beams, authored finish observed");
++            Check(noEarlyClear&&noEarlyLaunch,label+": no clear before beam arrival and no Rocket launch before finish");
++            Check(noRefill,label+": no falling/refill under the active Color Ball");
++            Check(peak==1&&otherBallsStable,label+": one activation visual; other spawned Color Balls are not color-matched/chained");
++            Check(ColorBallBoostView.Active==0&&ColorBallTargetVfx.Active==0&&!RoyalPowerupDirector.Busy,label+": all visual and gameplay work released");
++            Check(!LevelManager.THIS.DragBlocked&&!LevelManager.THIS.IsResolvingMatches,label+": board accepts input after refill");
++            Check(convert?director.ColorBallConversions>0&&director.RocketLaunches>launches:director.ColorBallConversions==0,label+": correct standalone / Rocket conversion behavior");
++            if(command=="Color-ball effect"||command=="Combine selected")Check(sawReveal&&sawIdle,label+": QA control includes Reveal then Idle before activation");
++            Capture(label+"-settled");
++        }
++        static IEnumerator Suite()
++        {
++            bool success=false;Application.logMessageReceived+=Log;
++            try
++            {
++                qa.Loop=false;if(RoyalSave.Testing)yield return qa.EndSession();
++                int coins=InitScript.Gems,lives=InitScript.lifes;
++                qa.StartSession();qa.Level=1;qa.Speed=.5f;
++                yield return Observe("Color-ball effect","effect-half",false);
++                qa.Speed=1;yield return Command("Practice board");
++                var others=new List<Item>();
++                foreach(var p in new[]{new Vector2Int(1,3),new Vector2Int(2,4),new Vector2Int(3,3)})
++                {
++                    qa.Column=p.x;qa.Row=p.y;qa.Gem=0;yield return Command("Spawn color ball");
++                    var item=LevelManager.THIS.GetSquare(p.x,p.y).item;
++                    Check(item.color==555&&item.currentType==ItemsTypes.BOMB,"QA spawn uses real Color Ball sentinel color");
++                    if(p.x!=3)others.Add(item);
++                }
++                yield return new WaitForSeconds(1.2f);
++                yield return Observe("Activate selected","spawn-activate-full",false,others.ToArray(),true);
++                yield return Command("Practice board");qa.PowerA=4;qa.PowerB=1;qa.Column=3;qa.Row=3;
++                yield return Observe("Combine selected","rocket-combo-full",true,null,true);
++                Check(errors.Count==0,"No new runtime errors through QA Color Ball controls");
++                yield return qa.EndSession();
++                Check(InitScript.Gems==coins&&InitScript.lifes==lives&&!RoyalSave.Testing,"Normal player profile restored");success=true;
++            }
++            finally
++            {
++                qa.Loop=false;if(RoyalSave.Testing)qa.StartCoroutine(qa.EndSession());
++                Application.logMessageReceived-=Log;running=false;
++                checks.Add(success?"ALL COLOR BALL QA PATHS PASSED":"FAILED - inspect Console");checks.AddRange(errors);
++                File.WriteAllLines(Folder+"checks.txt",checks);Debug.Log("[Color Ball QA paths] "+(success?"PASS":"FAIL"));
++            }
++        }
++    }
++}
++#endif
