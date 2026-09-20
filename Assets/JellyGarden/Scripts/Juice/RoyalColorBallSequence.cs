@@ -58,7 +58,7 @@ namespace JellyGarden.Scripts.Juice
                         if(!flight.arrived&&elapsed>=ColorBallTargetVfx.ArrivalTime)
                         {
                             flight.arrived=true;ColorBallBeamArrivals++;
-                            ColorBallTargetVfx.Play(ColorBallTargetVfx.Kind.TargetGlow,sq.transform.position,sq.transform.position);
+                            ColorBallTargetVfx.Play(ColorBallTargetVfx.Kind.TargetGlow,sq.transform.position,sq.transform.position,selected.sprRenderer);
                             ColorBallTargetVfx.Play(ColorBallTargetVfx.Kind.TargetImpact,sq.transform.position,sq.transform.position);
                         }
                         if(elapsed>=ColorBallTargetVfx.ArrivalTime+.045f)

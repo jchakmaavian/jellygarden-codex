@@ -17,9 +17,9 @@ namespace JellyGarden.Scripts.Juice
 
         public const int IntroLast = 18, LoopFirst = 19, LoopLast = 78, FinishFirst = 79, FinishLast = 108;
         public const float SourceFps = ColorBallFrameAnimator.SourceFps;
-        public const float IntroDuration = IntroLast / SourceFps;
-        public const float LoopDuration = (LoopLast - LoopFirst + 1) / SourceFps;
-        public const float FinishDuration = (FinishLast - FinishFirst + 1) / SourceFps;
+        public const float IntroDuration = .14f;
+        public const float LoopDuration = .72f;
+        public const float FinishDuration = .24f;
         /// <summary>The activation grows to this many times the seated board size and stays there.</summary>
         public const float BoostZoom = 3f;
 
@@ -152,7 +152,7 @@ namespace JellyGarden.Scripts.Juice
             if (age < IntroDuration)
             {
                 Current = Phase.Intro;
-                frame = Mathf.Min(IntroLast - 1, (int)(age * SourceFps + 1e-6));
+                frame = Mathf.Min(IntroLast - 1, (int)(age/IntroDuration*IntroLast));
                 Zoom = GrowthAt((float)(age / IntroDuration));
             }
             else
@@ -164,18 +164,26 @@ namespace JellyGarden.Scripts.Juice
                     Current = Phase.Finish;
                     double into = age - finishAt;
                     if (into >= FinishDuration) { Stop(); return; }
-                    frame = FinishFirst - 1 + Mathf.Min(FinishLast - FinishFirst, (int)(into * SourceFps + 1e-6));
+                    frame = FinishFirst - 1 + Mathf.Min(FinishLast - FinishFirst, (int)(into/FinishDuration*(FinishLast-FinishFirst+1)));
                 }
                 else
                 {
                     Current = Phase.Loop;
                     double into = age - IntroDuration;
                     int span = LoopLast - LoopFirst + 1;
-                    frame = LoopFirst - 1 + (int)(into * SourceFps + 1e-6) % span;
+                    frame = LoopFirst - 1 + (int)(into/LoopDuration*span) % span;
                 }
             }
             Frame = frame;
             view.sprite = ColorBallFrameAnimator.BoostFrame(frame);
+            float spin=Mathf.SmoothStep(0,1,Mathf.Clamp01((float)(age/IntroDuration)));
+            float fade=Current==Phase.Finish?1-Mathf.SmoothStep(0,1,(float)((age-finishAt)/FinishDuration)):1;
+            double cursor=Current==Phase.Intro?age/IntroDuration*IntroLast:
+                Current==Phase.Finish?(age-finishAt)/FinishDuration*(FinishLast-FinishFirst+1):
+                (age-IntroDuration)/LoopDuration*(LoopLast-LoopFirst+1);
+            int next=frame+1;if(Current==Phase.Loop&&next>=LoopLast)next=LoopFirst-1;
+            ColorBallPresentation.Apply(view,ColorBallFrameAnimator.BoostFrame(Mathf.Min(next,FinishLast-1)),
+                (float)(cursor-global::System.Math.Floor(cursor)),Mathf.Lerp(1,.72f,spin),Mathf.Lerp(1,.55f,spin),spin*fade);
             // The approved 512px frames contain the entire 1x -> 3x pose change.
             transform.localScale = Vector3.one * seatedScale;
         }

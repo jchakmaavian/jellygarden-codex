@@ -1,0 +1,66 @@
+[
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\RoyalRocketLaunch.cs",
+    "Hash": "C2496AE4CC605B1F9AE900CFD5822731BA71C08B60B1089417C4BE8AEAFDEB80"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\RoyalRocketLaunch.cs.meta",
+    "Hash": "05BFF00E1B790FAEA56324E57ADDBA3105E867D83C5B6C5DDBD3E15FDCAF7FBC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\RoyalRocketPieceAnimator.cs",
+    "Hash": "741437239D2D0741DB95624EDFE1AE3721AC53B9E996E64F38B8565126D74DAF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\RoyalRocketPieceAnimator.cs.meta",
+    "Hash": "86959FF97990EB9A09037CF553CB69EB4EEE62FA62B8E16514BC39E613AC2D83"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\RoyalRocketSequence.cs",
+    "Hash": "D0684CE4863F8A32CE4BA1C6EB8729815F1971204529E61B56A5E042BE1EB466"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\RoyalRocketSequence.cs.meta",
+    "Hash": "F4D32923820A684188A05C2E6BC3BB3C5414CFCEF7136059FD017D7F4F7F9CC0"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\TNT3DAnimator.cs",
+    "Hash": "CE5E26D7C0388BE13FA9D633D80B173EFD7B021CCD511965786998C3243D5812"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\TNT3DAnimator.cs.meta",
+    "Hash": "D35E944DEA87B6559F8936AF511C903BCE1FC1B2A3BB5EAA5FC975E4B4535347"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\TNTFrameAnimator.cs",
+    "Hash": "9487FB9EFBC080E4B7232DE4A87DA328CF59234E85FBAA6BF86FF14092D623B1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Scripts\\Juice\\TNTFrameAnimator.cs.meta",
+    "Hash": "C250DD7816655D744AE812EC5C4C1E37351145BECACAC460F9FEC02D8BB653BE"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Shaders\\RoyalRocketFire.shader",
+    "Hash": "E423E1DB4A46C88FEB2AD84C48A490ABBCDB7F33753572BD7B1A9D72141AD2DC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Shaders\\RoyalRocketFire.shader.meta",
+    "Hash": "E163B9D70617500F9DCD6EBB8B0F5450CA475694B8FD95C0575854A80CD35E3F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Shaders\\RoyalTNTBody.shader",
+    "Hash": "B221BC34B88F8011470568B5F9E881E85034FC79F351EC28D16D2FF87B4105E2"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Shaders\\RoyalTNTBody.shader.meta",
+    "Hash": "D085D63F411FE0DB901930A5F3AB8B2F98997763E9C984A867A2D630A8271582"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Shaders\\RoyalTNTGlow.shader",
+    "Hash": "A0E1A2734DC40EEB98D2E31E4E354418E9CACE1139E9FB4702B8B4729E29B3AD"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\JellyGarden\\Shaders\\RoyalTNTGlow.shader.meta",
+    "Hash": "BFB8BDED145FDCE8DA9C21AAE18EB0BD61622CF4F429BBA51EC4CE42FA859266"
+  }
+]

@@ -4,8 +4,8 @@ namespace JellyGarden.Scripts.Juice
 {
     /// <summary>
     /// Board Color Ball drawn from the approved frame sequences (Design/Animation/ColorBall-Reveal-v1,
-    /// ColorBall-Idle-v1 and ColorBall-Boosting-v1). The Reveal plays once at its authored 60 fps,
-    /// opening about three cells wide and easing into the cell, then the seamless Idle loops until the
+    /// ColorBall-Idle-v1 and ColorBall-Boosting-v1). Reveal retimes the locked frames into a compact
+    /// spinning disc which resolves into the original seated sphere, then subtle Idle loops until the
     /// ball is activated. Activation is drawn by <see cref="ColorBallBoostView"/>, because the Item
     /// itself is consumed the moment the power fires.
     /// The Item keeps its static sprite, hidden, for cell fit, target matching and hint geometry.
@@ -19,8 +19,8 @@ namespace JellyGarden.Scripts.Juice
         public const int IdleFrameCount = 120;
         public const int BoostFrameCount = 108;
         public const float SourceFps = 60f;
-        /// <summary>60 frames at the authored 60 fps: one sequence frame per rendered frame.</summary>
-        public const float RevealDuration = RevealFrameCount / SourceFps;
+        /// <summary>Interpolate the 60 authored frames across a responsive gameplay reveal.</summary>
+        public const float RevealDuration = .38f;
         public const float IdleDuration = IdleFrameCount / SourceFps;
         /// <summary>One board cell occupies 112 source pixels; runtime sprites use 100 PPU.</summary>
         public const float ContentScale = 1.12f; // 112 authored pixels per cell / 100 PPU.
@@ -167,6 +167,7 @@ namespace JellyGarden.Scripts.Juice
             age = 0;
             // Frame 001 is on screen for the first rendered frame; the clock starts on the next one.
             startFrame = Time.frameCount;
+            if(phase==Phase.Reveal)ColorBallTargetVfx.RevealSparkles(item.transform.position);
             Apply();
         }
 
@@ -199,14 +200,22 @@ namespace JellyGarden.Scripts.Juice
             }
             if (Current == Phase.Idle && age >= IdleDuration) age %= IdleDuration;
             bool revealing = Current == Phase.Reveal;
-            // Both sequences are authored at 60 fps, so the Reveal advances on the same clock as the Idle.
+            // Retimed Reveal blends adjacent source frames; Idle keeps the authored subtle highlights.
+            float cursor=revealing?(float)(age/RevealDuration)*(RevealFrameCount-1):0;
             Frame = revealing
-                ? Mathf.Min(RevealFrameCount - 1, (int)(age * SourceFps + 1e-6))
+                ? Mathf.Min(RevealFrameCount - 1, (int)cursor)
                 : (int)(age * SourceFps + 1e-6) % IdleFrameCount;
             // All growth/shrink is authored in the approved frames. Never scale it a second time.
             Zoom = 1f;
             var source = item.sprRenderer;
             view.sprite = revealing ? revealFrames[Frame] : idleFrames[Frame];
+            float t=revealing?Mathf.Clamp01((float)(age/RevealDuration)):1;
+            float settle=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.53f,1,t));
+            float appear=Mathf.SmoothStep(0,1,Mathf.Clamp01(t/.16f));
+            float width=Mathf.Lerp(Mathf.Lerp(.20f,.62f,appear),1,settle);
+            float height=Mathf.Lerp(.40f,1,settle);
+            ColorBallPresentation.Apply(view,revealing?revealFrames[Mathf.Min(Frame+1,RevealFrameCount-1)]:idleFrames[0],
+                revealing?cursor-Frame:0,width,height,revealing?appear*(1-settle):0);
             view.color = source.color;
             view.sortingLayerID = source.sortingLayerID;
             view.sortingOrder = revealing ? 40 : source.sortingOrder + 1;
@@ -217,7 +226,7 @@ namespace JellyGarden.Scripts.Juice
             // The frames are pivoted on the sphere centre, so scaling keeps the ball on its cell centre
             // and the seated pose is reached exactly at Zoom 1.
             var pose = view.transform;
-            pose.position = item.transform.position;
+            pose.position = item.transform.position+(revealing?Vector3.up*(Cell*.14f*(1-Mathf.SmoothStep(0,1,t))):Vector3.zero);
             pose.rotation = Quaternion.identity;
             float cell = Cell;
             float scale = cell / ContentScale;

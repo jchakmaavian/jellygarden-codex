@@ -1,0 +1,472 @@
+--- a/Assets/JellyGarden/Scripts/Juice/ColorBallFrameAnimator.cs
++++ b/Assets/JellyGarden/Scripts/Juice/ColorBallFrameAnimator.cs
+@@ -4,8 +4,8 @@
+ {
+     /// <summary>
+     /// Board Color Ball drawn from the approved frame sequences (Design/Animation/ColorBall-Reveal-v1,
+-    /// ColorBall-Idle-v1 and ColorBall-Boosting-v1). The Reveal plays once at its authored 60 fps,
+-    /// opening about three cells wide and easing into the cell, then the seamless Idle loops until the
++    /// ColorBall-Idle-v1 and ColorBall-Boosting-v1). Reveal retimes the locked frames into a compact
++    /// spinning disc which resolves into the original seated sphere, then subtle Idle loops until the
+     /// ball is activated. Activation is drawn by <see cref="ColorBallBoostView"/>, because the Item
+     /// itself is consumed the moment the power fires.
+     /// The Item keeps its static sprite, hidden, for cell fit, target matching and hint geometry.
+@@ -19,8 +19,8 @@
+         public const int IdleFrameCount = 120;
+         public const int BoostFrameCount = 108;
+         public const float SourceFps = 60f;
+-        /// <summary>60 frames at the authored 60 fps: one sequence frame per rendered frame.</summary>
+-        public const float RevealDuration = RevealFrameCount / SourceFps;
++        /// <summary>Interpolate the 60 authored frames across a responsive gameplay reveal.</summary>
++        public const float RevealDuration = .38f;
+         public const float IdleDuration = IdleFrameCount / SourceFps;
+         /// <summary>One board cell occupies 112 source pixels; runtime sprites use 100 PPU.</summary>
+         public const float ContentScale = 1.12f; // 112 authored pixels per cell / 100 PPU.
+@@ -167,6 +167,7 @@
+             age = 0;
+             // Frame 001 is on screen for the first rendered frame; the clock starts on the next one.
+             startFrame = Time.frameCount;
++            if(phase==Phase.Reveal)ColorBallTargetVfx.RevealSparkles(item.transform.position);
+             Apply();
+         }
+ 
+@@ -199,14 +200,22 @@
+             }
+             if (Current == Phase.Idle && age >= IdleDuration) age %= IdleDuration;
+             bool revealing = Current == Phase.Reveal;
+-            // Both sequences are authored at 60 fps, so the Reveal advances on the same clock as the Idle.
++            // Retimed Reveal blends adjacent source frames; Idle keeps the authored subtle highlights.
++            float cursor=revealing?(float)(age/RevealDuration)*(RevealFrameCount-1):0;
+             Frame = revealing
+-                ? Mathf.Min(RevealFrameCount - 1, (int)(age * SourceFps + 1e-6))
++                ? Mathf.Min(RevealFrameCount - 1, (int)cursor)
+                 : (int)(age * SourceFps + 1e-6) % IdleFrameCount;
+             // All growth/shrink is authored in the approved frames. Never scale it a second time.
+             Zoom = 1f;
+             var source = item.sprRenderer;
+             view.sprite = revealing ? revealFrames[Frame] : idleFrames[Frame];
++            float t=revealing?Mathf.Clamp01((float)(age/RevealDuration)):1;
++            float settle=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.53f,1,t));
++            float appear=Mathf.SmoothStep(0,1,Mathf.Clamp01(t/.16f));
++            float width=Mathf.Lerp(Mathf.Lerp(.20f,.62f,appear),1,settle);
++            float height=Mathf.Lerp(.40f,1,settle);
++            ColorBallPresentation.Apply(view,revealing?revealFrames[Mathf.Min(Frame+1,RevealFrameCount-1)]:idleFrames[0],
++                revealing?cursor-Frame:0,width,height,revealing?appear*(1-settle):0);
+             view.color = source.color;
+             view.sortingLayerID = source.sortingLayerID;
+             view.sortingOrder = revealing ? 40 : source.sortingOrder + 1;
+@@ -217,7 +226,7 @@
+             // The frames are pivoted on the sphere centre, so scaling keeps the ball on its cell centre
+             // and the seated pose is reached exactly at Zoom 1.
+             var pose = view.transform;
+-            pose.position = item.transform.position;
++            pose.position = item.transform.position+(revealing?Vector3.up*(Cell*.14f*(1-Mathf.SmoothStep(0,1,t))):Vector3.zero);
+             pose.rotation = Quaternion.identity;
+             float cell = Cell;
+             float scale = cell / ContentScale;
+--- a/Assets/JellyGarden/Scripts/Juice/ColorBallBoostView.cs
++++ b/Assets/JellyGarden/Scripts/Juice/ColorBallBoostView.cs
+@@ -17,9 +17,9 @@
+ 
+         public const int IntroLast = 18, LoopFirst = 19, LoopLast = 78, FinishFirst = 79, FinishLast = 108;
+         public const float SourceFps = ColorBallFrameAnimator.SourceFps;
+-        public const float IntroDuration = IntroLast / SourceFps;
+-        public const float LoopDuration = (LoopLast - LoopFirst + 1) / SourceFps;
+-        public const float FinishDuration = (FinishLast - FinishFirst + 1) / SourceFps;
++        public const float IntroDuration = .14f;
++        public const float LoopDuration = .72f;
++        public const float FinishDuration = .24f;
+         /// <summary>The activation grows to this many times the seated board size and stays there.</summary>
+         public const float BoostZoom = 3f;
+ 
+@@ -152,7 +152,7 @@
+             if (age < IntroDuration)
+             {
+                 Current = Phase.Intro;
+-                frame = Mathf.Min(IntroLast - 1, (int)(age * SourceFps + 1e-6));
++                frame = Mathf.Min(IntroLast - 1, (int)(age/IntroDuration*IntroLast));
+                 Zoom = GrowthAt((float)(age / IntroDuration));
+             }
+             else
+@@ -164,18 +164,26 @@
+                     Current = Phase.Finish;
+                     double into = age - finishAt;
+                     if (into >= FinishDuration) { Stop(); return; }
+-                    frame = FinishFirst - 1 + Mathf.Min(FinishLast - FinishFirst, (int)(into * SourceFps + 1e-6));
++                    frame = FinishFirst - 1 + Mathf.Min(FinishLast - FinishFirst, (int)(into/FinishDuration*(FinishLast-FinishFirst+1)));
+                 }
+                 else
+                 {
+                     Current = Phase.Loop;
+                     double into = age - IntroDuration;
+                     int span = LoopLast - LoopFirst + 1;
+-                    frame = LoopFirst - 1 + (int)(into * SourceFps + 1e-6) % span;
++                    frame = LoopFirst - 1 + (int)(into/LoopDuration*span) % span;
+                 }
+             }
+             Frame = frame;
+             view.sprite = ColorBallFrameAnimator.BoostFrame(frame);
++            float spin=Mathf.SmoothStep(0,1,Mathf.Clamp01((float)(age/IntroDuration)));
++            float fade=Current==Phase.Finish?1-Mathf.SmoothStep(0,1,(float)((age-finishAt)/FinishDuration)):1;
++            double cursor=Current==Phase.Intro?age/IntroDuration*IntroLast:
++                Current==Phase.Finish?(age-finishAt)/FinishDuration*(FinishLast-FinishFirst+1):
++                (age-IntroDuration)/LoopDuration*(LoopLast-LoopFirst+1);
++            int next=frame+1;if(Current==Phase.Loop&&next>=LoopLast)next=LoopFirst-1;
++            ColorBallPresentation.Apply(view,ColorBallFrameAnimator.BoostFrame(Mathf.Min(next,FinishLast-1)),
++                (float)(cursor-global::System.Math.Floor(cursor)),Mathf.Lerp(1,.72f,spin),Mathf.Lerp(1,.55f,spin),spin*fade);
+             // The approved 512px frames contain the entire 1x -> 3x pose change.
+             transform.localScale = Vector3.one * seatedScale;
+         }
+--- a/Assets/JellyGarden/Scripts/Juice/ColorBallTargetVfx.cs
++++ b/Assets/JellyGarden/Scripts/Juice/ColorBallTargetVfx.cs
+@@ -26,12 +26,14 @@
+             public Color tint;
+             public float age,life,size,growth,spin;
+             public bool active;
++            public bool outline;
++            public Vector3 fixedScale;
+         }
+         readonly Beam[] beams=new Beam[BeamCapacity];
+         readonly Mote[] motes=new Mote[ParticleCapacity];
+         readonly global::System.Random random=new global::System.Random(38147);
+         Sprite star,soft,ring;
+-        Material material,haloMaterial;
++        Material material,haloMaterial,outlineMaterial;
+         int nextMote;
+         public static bool Ready=>instance;
+         public static int PoolSize=>instance?BeamCapacity+ParticleCapacity:0;
+@@ -54,6 +56,7 @@
+             material=new Material(Shader.Find("Sprites/Default")){name="Color Ball pooled light"};
+             star=Texture(0);soft=Texture(1);ring=Texture(2);
+             haloMaterial=new Material(material){name="Color Ball soft beam halo",mainTexture=soft.texture};
++            outlineMaterial=new Material(Resources.Load<Shader>("RoyalColorBall/ColorBallOutline")){name="Color Ball gem contour"};
+             for(int i=0;i<BeamCapacity;i++)
+             {
+                 var tip=new GameObject("Moving beam star").AddComponent<SpriteRenderer>();
+@@ -99,7 +102,7 @@
+             return r;
+         }
+         static int BoardLayer=>LevelManager.THIS&&LevelManager.THIS.GameField?LevelManager.THIS.GameField.gameObject.layer:0;
+-        public static void Play(Kind kind,Vector3 position,Vector3 target)
++        public static void Play(Kind kind,Vector3 position,Vector3 target,SpriteRenderer targetSprite=null)
+         {
+             Prewarm();float cell=ColorBallFrameAnimator.Cell;
+             if(kind==Kind.Beam)
+@@ -107,7 +110,7 @@
+                 foreach(var b in instance.beams)if(!b.active)
+                 {
+                     b.active=true;b.age=0;b.from=position+Vector3.back*.32f;b.to=target+Vector3.back*.32f;
+-                    b.bend=instance.Range(-.13f,.13f)*cell;
++                    b.bend=0;
+                     b.glow.gameObject.layer=b.core.gameObject.layer=BoardLayer;
+                     b.glow.sortingLayerID=b.core.sortingLayerID=ColorBallFrameAnimator.SeatedSortingLayer;
+                     b.glow.enabled=b.core.enabled=true;instance.Draw(b);break;
+@@ -115,17 +118,27 @@
+                 instance.Emit(true,position,Vector3.zero,.19f,.35f,0,0,Warm,42);
+             }
+             else if(kind==Kind.TargetGlow)
+-                instance.Emit(false,position,Vector3.zero,.26f,1.05f,.3f,0,new Color(1,.75f,.2f,.42f),38);
++            {
++                if(targetSprite&&targetSprite.sprite)
++                {
++                    var outline=instance.Emit(false,targetSprite.transform.position,Vector3.zero,.20f,1,0,0,new Color(1,.88f,.42f,1),42);
++                    if(outline!=null)
++                    {
++                        outline.outline=true;outline.fixedScale=targetSprite.transform.lossyScale;
++                        outline.view.sprite=targetSprite.sprite;outline.view.sharedMaterial=instance.outlineMaterial;
++                        outline.view.transform.rotation=targetSprite.transform.rotation;
++                        outline.view.transform.localScale=outline.fixedScale;
++                    }
++                }
++            }
+             else
+             {
+-                instance.Emit(false,position,Vector3.zero,.16f,.65f,.20f,0,new Color(1,1,.88f,.85f),42);
+-                instance.Emit(true,position,Vector3.zero,.28f,1.05f,-.38f,30,Color.white,43);
+-                var wave=instance.Emit(false,position,Vector3.zero,.3f,.42f,1.7f,0,new Color(1,.84f,.38f,.68f),41);
+-                if(wave!=null)wave.view.sprite=instance.ring;
+-                for(int i=0;i<7;i++)
++                instance.Emit(false,position,Vector3.zero,.10f,.46f,-.12f,0,new Color(1,1,.94f,1),42);
++                instance.Emit(true,position,Vector3.zero,.18f,.76f,-.36f,0,Color.white,43);
++                for(int i=0;i<6;i++)
+                 {
+                     float a=instance.Range(0,Mathf.PI*2);var dir=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);
+-                    instance.Emit(true,position+dir*cell*.10f,dir*cell*instance.Range(.55f,1.5f),instance.Range(.25f,.43f),instance.Range(.20f,.4f),-.05f,instance.Range(-130,130),i%3==0?Gold:Warm,42);
++                    instance.Emit(true,position+dir*cell*.08f,dir*cell*instance.Range(.55f,1.3f),instance.Range(.16f,.28f),instance.Range(.13f,.24f),-.05f,instance.Range(-90,90),i%3==0?Gold:Warm,42);
+                 }
+             }
+         }
+@@ -134,23 +147,30 @@
+             Mote m=null;
+             for(int i=0;i<ParticleCapacity;i++){int k=(nextMote+i)%ParticleCapacity;if(!motes[k].active){m=motes[k];nextMote=(k+1)%ParticleCapacity;break;}}
+             if(m==null)return null;
+-            m.active=true;m.age=0;m.life=life;m.start=position+Vector3.back*.34f;m.velocity=velocity;
++            m.active=true;m.outline=false;m.age=0;m.life=life;m.start=position+Vector3.back*.34f;m.velocity=velocity;
+             m.size=size;m.growth=growth;m.spin=spin;m.tint=tint;
+             var r=m.view;r.gameObject.layer=BoardLayer;r.sortingLayerID=ColorBallFrameAnimator.SeatedSortingLayer;r.sortingOrder=order;
++            r.sharedMaterial=material;
+             r.sprite=isStar?star:soft;r.transform.position=m.start;r.transform.rotation=Quaternion.Euler(0,0,Range(-25,25));
+             r.transform.localScale=Vector3.one*(size*ColorBallFrameAnimator.Cell);r.color=tint;r.enabled=true;return m;
+         }
+-        // Elliptical orbits add stored energy without altering the authored ball's size/pose.
++        public static void RevealSparkles(Vector3 centre)
++        {
++            Prewarm();float cell=ColorBallFrameAnimator.Cell;
++            for(int i=0;i<5;i++)
++            {
++                float a=i*Mathf.PI*2/5;var offset=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0)*cell*.32f;
++                instance.Emit(true,centre+offset,offset*.5f,.20f,.23f,-.1f,0,Color.white,42);
++            }
++        }
++        // Sparse sparks around the spinning disc; no orbiting dots or idle motion.
+         public static void Charge(Vector3 centre,float progress,bool finishing)
+         {
+             Prewarm();float cell=ColorBallFrameAnimator.Cell;
+             for(int i=0;i<2;i++)
+             {
+-                float a=Time.time*8+i*Mathf.PI;
+-                float radius=Mathf.Lerp(.45f,1.25f,progress);
+-                var offset=new Vector3(Mathf.Cos(a)*radius,Mathf.Sin(a)*radius*.33f,0)*cell;
+-                var velocity=finishing?-offset*4:new Vector3(-Mathf.Sin(a),Mathf.Cos(a)*.33f,0)*cell*.45f;
+-                instance.Emit(true,centre+offset,velocity,.23f,instance.Range(.16f,.3f),-.05f,75,i==0?Warm:Gold,Mathf.Sin(a)<0?42:39);
++                var offset=new Vector3(instance.Range(-.85f,.85f),instance.Range(-.26f,.26f),0)*cell*progress;
++                instance.Emit(true,centre+offset,finishing?-offset:offset*.2f,.16f,instance.Range(.10f,.20f),-.05f,0,Warm,42);
+             }
+         }
+         void Draw(Beam b)
+@@ -163,12 +183,12 @@
+                 var p=Vector3.Lerp(b.from,b.to,t)+side*(Mathf.Sin(t*Mathf.PI)*b.bend);
+                 b.glow.SetPosition(i,p);b.core.SetPosition(i,p);
+             }
+-            b.glow.widthMultiplier=cell*.24f*fade;b.core.widthMultiplier=cell*.045f*fade;
+-            b.glow.startColor=b.glow.endColor=new Color(1,.78f,.24f,.70f*fade);
++            b.glow.widthMultiplier=cell*.105f*fade;b.core.widthMultiplier=cell*.027f*fade;
++            b.glow.startColor=b.glow.endColor=new Color(1,.90f,.52f,.85f*fade);
+             b.core.startColor=b.core.endColor=new Color(1,1,.90f,fade);
+             b.tip.enabled=true;b.tip.gameObject.layer=BoardLayer;b.tip.sortingLayerID=ColorBallFrameAnimator.SeatedSortingLayer;
+             b.tip.transform.position=b.core.GetPosition(Samples-1)+Vector3.back*.02f;
+-            b.tip.transform.localScale=Vector3.one*(cell*.38f*fade);
++            b.tip.transform.localScale=Vector3.one*(cell*.25f*fade);
+             b.tip.transform.rotation=Quaternion.Euler(0,0,b.age*180);b.tip.color=new Color(1,1,.85f,fade);
+         }
+         void LateUpdate()
+@@ -185,9 +205,9 @@
+                 if(!m.active)continue;m.age+=Time.deltaTime;float t=m.age/m.life;
+                 if(t>=1){m.active=false;m.view.enabled=false;continue;}
+                 m.view.transform.position=m.start+m.velocity*m.age;
+-                m.view.transform.Rotate(0,0,m.spin*Time.deltaTime);
+-                m.view.transform.localScale=Vector3.one*(Mathf.Max(.01f,m.size+m.growth*t)*ColorBallFrameAnimator.Cell);
+-                var c=m.tint;c.a*=Mathf.Pow(1-t,1.5f)*Mathf.Min(1,t*14);m.view.color=c;
++                if(!m.outline)m.view.transform.Rotate(0,0,m.spin*Time.deltaTime);
++                m.view.transform.localScale=m.outline?m.fixedScale:Vector3.one*(Mathf.Max(.01f,m.size+m.growth*t)*ColorBallFrameAnimator.Cell);
++                var c=m.tint;c.a*=Mathf.Pow(1-t,1.5f);m.view.color=c;
+             }
+         }
+         public static void ClearAll()
+@@ -200,7 +220,7 @@
+         void OnDestroy()
+         {
+             foreach(var sprite in new[]{star,soft,ring})if(sprite){Destroy(sprite.texture);Destroy(sprite);}
+-            if(material)Destroy(material);if(haloMaterial)Destroy(haloMaterial);if(instance==this)instance=null;
++            if(material)Destroy(material);if(haloMaterial)Destroy(haloMaterial);if(outlineMaterial)Destroy(outlineMaterial);if(instance==this)instance=null;
+         }
+     }
+ }
+--- a/Assets/JellyGarden/Scripts/Juice/ColorBallPresentation.cs
++++ b/Assets/JellyGarden/Scripts/Juice/ColorBallPresentation.cs
+@@ -0,0 +1,20 @@
++using UnityEngine;
++
++namespace JellyGarden.Scripts.Juice
++{
++    // Runtime presentation of the locked artwork; no source-frame or gameplay mutations.
++    public static class ColorBallPresentation
++    {
++        static Material material;
++        static readonly MaterialPropertyBlock properties=new MaterialPropertyBlock();
++        public static void Apply(SpriteRenderer view,Sprite next,float blend,float width,float height,float energy,float envelope=1)
++        {
++            if(!material)material=new Material(Resources.Load<Shader>("RoyalColorBall/ColorBallPresentation")){name="Color Ball frame presentation"};
++            view.sharedMaterial=material;
++            properties.Clear();properties.SetTexture("_NextTex",next.texture);
++            properties.SetFloat("_FrameBlend",blend);properties.SetFloat("_DiscWidth",width);
++            properties.SetFloat("_DiscHeight",height);properties.SetFloat("_Energy",energy);
++            properties.SetFloat("_Envelope",envelope);view.SetPropertyBlock(properties);
++        }
++    }
++}
+--- a/Assets/JellyGarden/Scripts/Juice/RoyalColorBallSequence.cs
++++ b/Assets/JellyGarden/Scripts/Juice/RoyalColorBallSequence.cs
+@@ -58,7 +58,7 @@
+                         if(!flight.arrived&&elapsed>=ColorBallTargetVfx.ArrivalTime)
+                         {
+                             flight.arrived=true;ColorBallBeamArrivals++;
+-                            ColorBallTargetVfx.Play(ColorBallTargetVfx.Kind.TargetGlow,sq.transform.position,sq.transform.position);
++                            ColorBallTargetVfx.Play(ColorBallTargetVfx.Kind.TargetGlow,sq.transform.position,sq.transform.position,selected.sprRenderer);
+                             ColorBallTargetVfx.Play(ColorBallTargetVfx.Kind.TargetImpact,sq.transform.position,sq.transform.position);
+                         }
+                         if(elapsed>=ColorBallTargetVfx.ArrivalTime+.045f)
+--- a/Assets/JellyGarden/Scripts/Editor/RoyalColorBallQaChecks.cs
++++ b/Assets/JellyGarden/Scripts/Editor/RoyalColorBallQaChecks.cs
+@@ -16,7 +16,7 @@
+     // Tests the actual QA command entry points, with the real resolver/refill running.
+     public static class RoyalColorBallQaChecks
+     {
+-        const string Folder="Design/Effects/ColorBall-live-v3/";
++        const string Folder="Design/Effects/ColorBall-live-v4/";
+         static readonly List<string> checks=new List<string>(),errors=new List<string>();
+         static RoyalQaService qa;
+         static bool running;
+@@ -50,13 +50,25 @@
+             bool sawSpin=false,sawBeams=false,sawFinish=false,sawReveal=false,sawIdle=false;
+             bool noEarlyClear=true,noEarlyLaunch=true,noRefill=true,otherBallsStable=true;
+             bool settledCapture=false;int arrivals=0,peak=0,index=0,beamPeak=0;
+-            float boostStart=-1,boostEnd=-1;
++            float boostStart=-1,boostEnd=-1,revealStart=-1,revealEnd=-1;
++            bool idleExact=true,discThin=true,shaderReady=true,gotIntro=false;
++            var presentation=new MaterialPropertyBlock();
+             var timestamps=new List<string>();
+-            string frames="Temp/ColorBall-live-v3-"+label+"/";if(record)Directory.CreateDirectory(frames);
++            string frames="Temp/ColorBall-live-v4-"+label+"/";if(record)Directory.CreateDirectory(frames);
+             while(qa.Busy&&Time.realtimeSinceStartup<end)
+             {
+                 yield return new WaitForEndOfFrame();
+                 var balls=Object.FindObjectsByType<ColorBallFrameAnimator>(FindObjectsSortMode.None);
++                foreach(var ball in balls)
++                {
++                    if(ball.Current==ColorBallFrameAnimator.Phase.Reveal&&revealStart<0)revealStart=Time.time;
++                    if(ball.Current==ColorBallFrameAnimator.Phase.Idle)
++                    {
++                        if(revealStart>=0&&revealEnd<0)revealEnd=Time.time;
++                        ball.View.GetPropertyBlock(presentation);
++                        idleExact&=Mathf.Abs(presentation.GetFloat("_DiscWidth")-1)<.001f&&Mathf.Abs(presentation.GetFloat("_DiscHeight")-1)<.001f&&presentation.GetFloat("_Energy")==0;
++                    }
++                }
+                 if(!sawReveal&&balls.Any(b=>b.Current==ColorBallFrameAnimator.Phase.Reveal&&b.Frame>=18)){Capture(label+"-reveal");sawReveal=true;}
+                 if(!sawIdle&&balls.Any(b=>b.Current==ColorBallFrameAnimator.Phase.Idle)){Capture(label+"-idle");sawIdle=true;}
+                 if(ColorBallBoostView.Active>0)
+@@ -67,6 +79,13 @@
+                     peak=Mathf.Max(peak,ColorBallBoostView.Active);
+                     var boost=Object.FindObjectsByType<ColorBallBoostView>(FindObjectsSortMode.None).First(b=>b.Current!=ColorBallBoostView.Phase.Idle);
+                     bool intro=boost.Current==ColorBallBoostView.Phase.Intro;
++                    if(intro&&!gotIntro&&boost.Frame>=6){Capture(label+"-spinup");gotIntro=true;}
++                    shaderReady&=boost.View.sharedMaterial.shader.isSupported;
++                    if(boost.Current==ColorBallBoostView.Phase.Loop)
++                    {
++                        boost.View.GetPropertyBlock(presentation);
++                        discThin&=Mathf.Abs(presentation.GetFloat("_DiscWidth")-.72f)<.001f&&Mathf.Abs(presentation.GetFloat("_DiscHeight")-.55f)<.001f;
++                    }
+                     if(intro)noEarlyClear&=director.ColorBallBeamArrivals==0;
+                     if(boost.Current==ColorBallBoostView.Phase.Loop)sawSpin=true;
+                     noEarlyLaunch&=director.RocketLaunches==launches;
+@@ -77,7 +96,7 @@
+                     if(boost.Current==ColorBallBoostView.Phase.Finish&&!sawFinish){Capture(label+"-finish");sawFinish=true;}
+                 }
+                 else if(sawFinish&&!settledCapture){Capture(label+"-handoff-refill");settledCapture=true;}
+-                if(record&&Time.realtimeSinceStartup-lastCapture>=1f/15f)
++                if(record&&Time.realtimeSinceStartup-lastCapture>=1f/30f)
+                 {
+                     lastCapture=Time.realtimeSinceStartup;
+                     var t=ScreenCapture.CaptureScreenshotAsTexture();
+@@ -88,6 +107,8 @@
+             if(record)File.WriteAllLines(frames+"timestamps.txt",timestamps);
+             Check(!qa.Busy&&qa.Completed==done+1&&qa.Failed==failed,label+": command finishes through real board resolver");
+             Check(sawSpin&&sawBeams&&sawFinish&&arrivals>=3,label+": charged loop, multiple beams, authored finish observed");
++            Check(idleExact&&discThin&&shaderReady,label+": original 1x idle, thin stable charged pose and supported presentation shader");
++            if(revealEnd>=0){Check(revealEnd-revealStart<=.48f,label+": reveal settles within 0.48 game seconds");checks.Add("MEASURE reveal "+(revealEnd-revealStart).ToString("F3")+" seconds");}
+             Check(beamPeak>=2,label+": overlapping beam volley observed");
+             Check(arrivals==director.ColorBallSelectedTargets,label+": every selected target received exactly one impact");
+             Check(ColorBallTargetVfx.PoolSize==208,label+": fixed VFX pool reused without growth");
+@@ -109,7 +130,7 @@
+                 qa.Loop=false;if(RoyalSave.Testing)yield return qa.EndSession();
+                 int coins=InitScript.Gems,lives=InitScript.lifes;
+                 qa.StartSession();qa.Level=1;qa.Speed=.5f;
+-                yield return Observe("Color-ball effect","effect-half",false);
++                yield return Observe("Color-ball effect","effect-half",false,null,true);
+                 qa.Speed=1;yield return Command("Practice board");
+                 var others=new List<Item>();
+                 foreach(var p in new[]{new Vector2Int(1,3),new Vector2Int(2,4),new Vector2Int(3,3)})
+--- a/Assets/JellyGarden/Resources/RoyalColorBall/ColorBallPresentation.shader
++++ b/Assets/JellyGarden/Resources/RoyalColorBall/ColorBallPresentation.shader
+@@ -0,0 +1,49 @@
++Shader "RoyalThrone/Color Ball Presentation"
++{
++ Properties {
++  [PerRendererData] _MainTex("Frame",2D)="white"{}
++  _NextTex("Next frame",2D)="white"{}
++  _FrameBlend("Frame blend",Float)=0
++  _DiscWidth("Disc width",Float)=1
++  _DiscHeight("Disc height",Float)=1
++  _Energy("Spin energy",Float)=0
++  _Envelope("Envelope",Float)=1
++ }
++ SubShader {
++  Tags {"Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True" "CanUseSpriteAtlas"="False"}
++  Cull Off ZWrite Off Lighting Off Blend One OneMinusSrcAlpha
++  Pass {
++   CGPROGRAM
++   #pragma vertex vert
++   #pragma fragment frag
++   #include "UnityCG.cginc"
++   struct appdata {float4 vertex:POSITION;float2 uv:TEXCOORD0;fixed4 color:COLOR;};
++   struct v2f {float4 vertex:SV_POSITION;float2 uv:TEXCOORD0;fixed4 color:COLOR;};
++   sampler2D _MainTex,_NextTex;
++   float _FrameBlend,_DiscWidth,_DiscHeight,_Energy,_Envelope;
++   v2f vert(appdata v){v2f o;o.vertex=UnityObjectToClipPos(v.vertex);o.uv=v.uv;o.color=v.color;return o;}
++   fixed4 frame(float2 uv){return lerp(tex2D(_MainTex,uv),tex2D(_NextTex,uv),_FrameBlend);}
++   fixed4 frag(v2f i):SV_Target {
++    float2 q=i.uv-.5;
++    float2 uv=q/float2(max(.05,_DiscWidth),max(.05,_DiscHeight))+.5;
++    fixed4 c=frame(uv);
++    // Horizontal blur only: keep the original saturated bands and sphere/dots at rest.
++    fixed4 blur=(frame(uv+float2(.006,0))+frame(uv-float2(.006,0)))*.5;
++    c=lerp(c,blur,_Energy*.3);
++    c*=step(0,uv.x)*step(uv.x,1)*step(0,uv.y)*step(uv.y,1);
++    c.rgb=lerp(c.rgb,saturate(c.rgb*1.15+.06),_Energy);
++    c.a*=lerp(1,.72,_Energy);c.rgb*=c.a;
++    float halo=exp(-pow(q.x/.26,2)-pow(q.y/.10,2))*_Energy*.78;
++    c.rgb+=float3(1,1,.98)*halo*(1-c.a);c.a+=halo*(1-c.a);
++    float core=exp(-pow(q.y/.009,2)-pow(q.x/.205,4))*_Energy;
++    float star=exp(-abs(q.x)/.009-abs(q.y)/.075)*_Energy;
++    float ribbons=exp(-pow((abs(q.y)-.035)/.006,2)-pow(q.x/.16,4))*_Energy*.65;
++    float light=saturate(core+star+ribbons);
++    c.rgb=lerp(c.rgb,float3(1,1,1),light);c.a+=light*(1-c.a);
++    c*=i.color*_Envelope;
++    return c;
++   }
++   ENDCG
++  }
++ }
++}
+--- a/Assets/JellyGarden/Resources/RoyalColorBall/ColorBallOutline.shader
++++ b/Assets/JellyGarden/Resources/RoyalColorBall/ColorBallOutline.shader
+@@ -0,0 +1,29 @@
++Shader "RoyalThrone/Color Ball Target Outline"
++{
++ Properties {[PerRendererData] _MainTex("Gem",2D)="white"{}}
++ SubShader {
++  Tags {"Queue"="Transparent" "RenderType"="Transparent"}
++  Cull Off ZWrite Off Lighting Off Blend SrcAlpha One
++  Pass {CGPROGRAM
++   #pragma vertex vert
++   #pragma fragment frag
++   #include "UnityCG.cginc"
++   struct appdata {float4 vertex:POSITION;float2 uv:TEXCOORD0;fixed4 color:COLOR;};
++   struct v2f {float4 vertex:SV_POSITION;float2 uv:TEXCOORD0;fixed4 color:COLOR;};
++   sampler2D _MainTex;float4 _MainTex_TexelSize;
++   v2f vert(appdata v){v2f o;o.vertex=UnityObjectToClipPos(v.vertex);o.uv=v.uv;o.color=v.color;return o;}
++   fixed4 frag(v2f i):SV_Target {
++    float2 d=_MainTex_TexelSize.xy*4;
++    float outer=0;
++    outer=max(outer,tex2D(_MainTex,i.uv+float2(d.x,0)).a);
++    outer=max(outer,tex2D(_MainTex,i.uv-float2(d.x,0)).a);
++    outer=max(outer,tex2D(_MainTex,i.uv+float2(0,d.y)).a);
++    outer=max(outer,tex2D(_MainTex,i.uv-float2(0,d.y)).a);
++    outer=max(outer,tex2D(_MainTex,i.uv+d).a);
++    outer=max(outer,tex2D(_MainTex,i.uv-d).a);
++    float edge=saturate(outer-tex2D(_MainTex,i.uv).a);
++    return fixed4(i.color.rgb,edge*i.color.a);
++   }
++   ENDCG}
++ }
++}

@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
     // Tests the actual QA command entry points, with the real resolver/refill running.
     public static class RoyalColorBallQaChecks
     {
-        const string Folder="Design/Effects/ColorBall-live-v3/";
+        const string Folder="Design/Effects/ColorBall-live-v4/";
         static readonly List<string> checks=new List<string>(),errors=new List<string>();
         static RoyalQaService qa;
         static bool running;
@@ -50,13 +50,25 @@ namespace RoyalThrone.Editor
             bool sawSpin=false,sawBeams=false,sawFinish=false,sawReveal=false,sawIdle=false;
             bool noEarlyClear=true,noEarlyLaunch=true,noRefill=true,otherBallsStable=true;
             bool settledCapture=false;int arrivals=0,peak=0,index=0,beamPeak=0;
-            float boostStart=-1,boostEnd=-1;
+            float boostStart=-1,boostEnd=-1,revealStart=-1,revealEnd=-1;
+            bool idleExact=true,discThin=true,shaderReady=true,gotIntro=false;
+            var presentation=new MaterialPropertyBlock();
             var timestamps=new List<string>();
-            string frames="Temp/ColorBall-live-v3-"+label+"/";if(record)Directory.CreateDirectory(frames);
+            string frames="Temp/ColorBall-live-v4-"+label+"/";if(record)Directory.CreateDirectory(frames);
             while(qa.Busy&&Time.realtimeSinceStartup<end)
             {
                 yield return new WaitForEndOfFrame();
                 var balls=Object.FindObjectsByType<ColorBallFrameAnimator>(FindObjectsSortMode.None);
+                foreach(var ball in balls)
+                {
+                    if(ball.Current==ColorBallFrameAnimator.Phase.Reveal&&revealStart<0)revealStart=Time.time;
+                    if(ball.Current==ColorBallFrameAnimator.Phase.Idle)
+                    {
+                        if(revealStart>=0&&revealEnd<0)revealEnd=Time.time;
+                        ball.View.GetPropertyBlock(presentation);
+                        idleExact&=Mathf.Abs(presentation.GetFloat("_DiscWidth")-1)<.001f&&Mathf.Abs(presentation.GetFloat("_DiscHeight")-1)<.001f&&presentation.GetFloat("_Energy")==0;
+                    }
+                }
                 if(!sawReveal&&balls.Any(b=>b.Current==ColorBallFrameAnimator.Phase.Reveal&&b.Frame>=18)){Capture(label+"-reveal");sawReveal=true;}
                 if(!sawIdle&&balls.Any(b=>b.Current==ColorBallFrameAnimator.Phase.Idle)){Capture(label+"-idle");sawIdle=true;}
                 if(ColorBallBoostView.Active>0)
@@ -67,6 +79,13 @@ namespace RoyalThrone.Editor
                     peak=Mathf.Max(peak,ColorBallBoostView.Active);
                     var boost=Object.FindObjectsByType<ColorBallBoostView>(FindObjectsSortMode.None).First(b=>b.Current!=ColorBallBoostView.Phase.Idle);
                     bool intro=boost.Current==ColorBallBoostView.Phase.Intro;
+                    if(intro&&!gotIntro&&boost.Frame>=6){Capture(label+"-spinup");gotIntro=true;}
+                    shaderReady&=boost.View.sharedMaterial.shader.isSupported;
+                    if(boost.Current==ColorBallBoostView.Phase.Loop)
+                    {
+                        boost.View.GetPropertyBlock(presentation);
+                        discThin&=Mathf.Abs(presentation.GetFloat("_DiscWidth")-.72f)<.001f&&Mathf.Abs(presentation.GetFloat("_DiscHeight")-.55f)<.001f;
+                    }
                     if(intro)noEarlyClear&=director.ColorBallBeamArrivals==0;
                     if(boost.Current==ColorBallBoostView.Phase.Loop)sawSpin=true;
                     noEarlyLaunch&=director.RocketLaunches==launches;
@@ -77,7 +96,7 @@ namespace RoyalThrone.Editor
                     if(boost.Current==ColorBallBoostView.Phase.Finish&&!sawFinish){Capture(label+"-finish");sawFinish=true;}
                 }
                 else if(sawFinish&&!settledCapture){Capture(label+"-handoff-refill");settledCapture=true;}
-                if(record&&Time.realtimeSinceStartup-lastCapture>=1f/15f)
+                if(record&&Time.realtimeSinceStartup-lastCapture>=1f/30f)
                 {
                     lastCapture=Time.realtimeSinceStartup;
                     var t=ScreenCapture.CaptureScreenshotAsTexture();
@@ -88,6 +107,8 @@ namespace RoyalThrone.Editor
             if(record)File.WriteAllLines(frames+"timestamps.txt",timestamps);
             Check(!qa.Busy&&qa.Completed==done+1&&qa.Failed==failed,label+": command finishes through real board resolver");
             Check(sawSpin&&sawBeams&&sawFinish&&arrivals>=3,label+": charged loop, multiple beams, authored finish observed");
+            Check(idleExact&&discThin&&shaderReady,label+": original 1x idle, thin stable charged pose and supported presentation shader");
+            if(revealEnd>=0){Check(revealEnd-revealStart<=.48f,label+": reveal settles within 0.48 game seconds");checks.Add("MEASURE reveal "+(revealEnd-revealStart).ToString("F3")+" seconds");}
             Check(beamPeak>=2,label+": overlapping beam volley observed");
             Check(arrivals==director.ColorBallSelectedTargets,label+": every selected target received exactly one impact");
             Check(ColorBallTargetVfx.PoolSize==208,label+": fixed VFX pool reused without growth");
@@ -109,7 +130,7 @@ namespace RoyalThrone.Editor
                 qa.Loop=false;if(RoyalSave.Testing)yield return qa.EndSession();
                 int coins=InitScript.Gems,lives=InitScript.lifes;
                 qa.StartSession();qa.Level=1;qa.Speed=.5f;
-                yield return Observe("Color-ball effect","effect-half",false);
+                yield return Observe("Color-ball effect","effect-half",false,null,true);
                 qa.Speed=1;yield return Command("Practice board");
                 var others=new List<Item>();
                 foreach(var p in new[]{new Vector2Int(1,3),new Vector2Int(2,4),new Vector2Int(3,3)})
