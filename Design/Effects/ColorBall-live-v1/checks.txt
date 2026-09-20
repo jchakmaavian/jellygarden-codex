@@ -1,0 +1,3138 @@
+Checks completed: 3135
+Approved Color Ball frames and separate beam/glow/impact clips load
+Approved 60/120/108 frame contracts
+Creation begins Reveal immediately: horizontal-half
+Reveal has exactly one visible renderer sample 0: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 1: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 2: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 3: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 4: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 5: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 6: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 7: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 8: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 9: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 10: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 11: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 12: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 13: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 14: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 15: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 16: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 17: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 18: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 19: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 20: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 21: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 22: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 23: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 24: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 25: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 26: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 27: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 28: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 29: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 30: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 31: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 32: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 33: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 34: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 35: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 36: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 37: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 38: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 39: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 40: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 41: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 42: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 43: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 44: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 45: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 46: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 47: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 48: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 49: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 50: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 51: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 52: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 53: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 54: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 55: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 56: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 57: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 58: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 59: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 60: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 61: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 62: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 63: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 64: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 65: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 66: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 67: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 68: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 69: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 70: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 71: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 72: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 73: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 74: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 75: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 76: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 77: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 78: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 79: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 80: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 81: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 82: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 83: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 84: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 85: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 86: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 87: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 88: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 89: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 90: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 91: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 92: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 93: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 94: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 95: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 96: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 97: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 98: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 99: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 100: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 101: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 102: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 103: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 104: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 105: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 106: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 107: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 108: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 109: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 110: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 111: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 112: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 113: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal has exactly one visible renderer sample 114: horizontal-half
+Fixed padded canvas preserves authored 3x/1x size: horizontal-half
+Reveal ignores board/cell masks: horizontal-half
+Reveal enters approved 1-cell Idle: horizontal-half
+Idle loops without scale/pivot drift: horizontal-half
+Live Color Ball + Rocket combo accepted: horizontal-half
+Idle stops immediately on activation: horizontal-half
+Boosting is unmasked above pieces and below overlay HUD: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Conversions occur during Charged Spin: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Every selected gem converted exactly once: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 0: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 1: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 2: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 3: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 4: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 5: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 6: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 7: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 8: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 9: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 10: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 11: horizontal-half
+Correct cell, original Item, Rocket orientation, no premature destruction 12: horizontal-half
+Last beam/glow/impact finishes before handoff: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Boost never displays a missing frame: horizontal-half
+Boost stays on activation cell: horizontal-half
+No Rocket fires before Boosting finish: horizontal-half
+Observed conversion, finish and existing Rocket launch: horizontal-half
+Exactly one handoff: horizontal-half
+Every generated Rocket activates once: horizontal-half
+No stale ball/beam/glow or pooled scale: horizontal-half
+Pools remain bounded across live reuse: horizontal-half
+Creation begins Reveal immediately: vertical-full
+Reveal has exactly one visible renderer sample 0: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 1: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 2: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 3: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 4: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 5: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 6: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 7: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 8: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 9: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 10: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 11: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 12: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 13: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 14: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 15: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 16: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 17: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 18: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 19: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 20: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 21: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 22: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 23: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 24: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 25: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 26: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 27: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 28: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 29: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 30: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 31: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 32: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 33: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 34: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 35: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 36: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 37: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 38: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 39: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 40: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 41: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 42: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 43: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 44: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 45: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 46: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 47: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 48: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 49: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 50: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 51: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 52: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 53: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 54: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 55: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 56: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal has exactly one visible renderer sample 57: vertical-full
+Fixed padded canvas preserves authored 3x/1x size: vertical-full
+Reveal ignores board/cell masks: vertical-full
+Reveal enters approved 1-cell Idle: vertical-full
+Idle loops without scale/pivot drift: vertical-full
+Live Color Ball + Rocket combo accepted: vertical-full
+Boost animation object reused from pool
+Idle stops immediately on activation: vertical-full
+Boosting is unmasked above pieces and below overlay HUD: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Conversions occur during Charged Spin: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Every selected gem converted exactly once: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 0: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 1: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 2: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 3: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 4: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 5: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 6: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 7: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 8: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 9: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 10: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 11: vertical-full
+Correct cell, original Item, Rocket orientation, no premature destruction 12: vertical-full
+Last beam/glow/impact finishes before handoff: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Boost never displays a missing frame: vertical-full
+Boost stays on activation cell: vertical-full
+No Rocket fires before Boosting finish: vertical-full
+Observed conversion, finish and existing Rocket launch: vertical-full
+Exactly one handoff: vertical-full
+Every generated Rocket activates once: vertical-full
+No stale ball/beam/glow or pooled scale: vertical-full
+Pools remain bounded across live reuse: vertical-full
+Cancellation returns all Color Ball visuals to pools
+Color Ball tests preserve coins and lives
+No runtime errors during Color Ball tests
+Errors: 
+Editor update p95 ms (not device GPU benchmark): 0

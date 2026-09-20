@@ -1,0 +1,13 @@
+{
+  "approved_source_frames_unchanged": 378,
+  "runtime_copies_byte_identical": 378,
+  "compiled_in_unity": "6000.5.10f1",
+  "play_mode_cases": [
+    "horizontal rocket payload at 0.5x",
+    "vertical rocket payload at 1.0x"
+  ],
+  "test_errors": 0,
+  "captures": 14,
+  "normal_board_restored": true,
+  "archive_files": 779
+}
