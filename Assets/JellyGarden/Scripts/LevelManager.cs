@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 // // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
@@ -239,6 +240,15 @@ namespace JellyGarden.Scripts
             }
         }
 
+        /// <summary>
+        /// The single gate for board input. The board must only answer a touch while a level is
+        /// actually being played: not under a popup, not while the board resolves a move,
+        /// and not once the moves are spent (which previously drove the counter negative).
+        /// </summary>
+        public bool BoardInputAllowed =>
+            gameStatus == GameState.Playing && Limit > 0 && !DragBlocked &&
+            (MenuManager.Instance == null || !MenuManager.Instance.BlocksBoardInput);
+
         private GameState GameStatus;
         public bool itemsHided;
         public int moveID;
@@ -428,7 +438,7 @@ namespace JellyGarden.Scripts
             }
             else
             {
-                InitScript.DateOfExit = DateTime.Now.ToString();  //1.4
+                InitScript.DateOfExit = DateTime.UtcNow.ToString("o", global::System.Globalization.CultureInfo.InvariantCulture);  //1.4
 
                 LevelManager.THIS.latstMatchColor = -1;
 
@@ -522,6 +532,12 @@ namespace JellyGarden.Scripts
             Score = 0;
             stars = 0;
             moveID = 0;
+            // These survive a level otherwise: a win celebration interrupted by leaving the level
+            // leaves preWinAnimationRunning set, and every later win then hangs before the banner.
+            preWinAnimationRunning = false;
+            SkipWinCelebration = false;
+            ingredientFly = false;
+            DragBlocked = false;
 
 
             blocksObject.SetActive(false);
@@ -610,8 +626,15 @@ namespace JellyGarden.Scripts
         /// </summary>
         IEnumerator PlayMatchCenterDelayed(Vector3 center, Color color, float intensity, float delay)
         {
+            var sourceField = GameField;
+            int sourceLevel = currentLevel;
             if (delay > 0f)
                 yield return new WaitForSeconds(delay);
+            // A paused match can be abandoned before this accent's beat arrives.
+            // Do not let an old board's delayed effect appear over Home or a new level.
+            if (!sourceField || sourceField != GameField || !sourceField.gameObject.activeInHierarchy ||
+                currentLevel != sourceLevel || gameStatus == GameState.Map || gameStatus == GameState.PrepareGame)
+                yield break;
             var vfx = Juice.MatchVFXService.Instance;
             if (vfx != null)
                 vfx.PlayMatchCenter(center, color, intensity);
@@ -689,15 +712,28 @@ namespace JellyGarden.Scripts
             }
         }
 
+        /// <summary>Set by a tap during the win celebration: the reward still plays out, faster.</summary>
+        public bool SkipWinCelebration { get; private set; }
+
+        public void RequestSkipWinCelebration()
+        {
+            if (gameStatus == GameState.PreWinAnimations) SkipWinCelebration = true;
+        }
+
+        // A celebration the player cannot leave is dead time. Each leftover move still becomes a
+        // rocket and still detonates, but the gaps are short, and a tap collapses them further.
+        float CelebrationWait(float normal, float skipped) => SkipWinCelebration ? skipped : normal;
+
         IEnumerator PreWinAnimationsCor()
         {
             if (preWinAnimationRunning)
                 yield break;
 
             preWinAnimationRunning = true;
+            SkipWinCelebration = false;
 
             MenuManager.Instance.ShowCompleteLabel(true);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
 
             List<Item> items = GetRandomItems(Mathf.Clamp(limitType == LIMIT.MOVES ? Limit : 8, 0, 15)); //2.2.2
             foreach (Item item in items)
@@ -706,23 +742,23 @@ namespace JellyGarden.Scripts
                     Limit--;
                 item.NextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
                 item.ChangeType();
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(CelebrationWait(0.16f, 0.02f));
             }
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(CelebrationWait(0.2f, 0.05f));
             while (GetAllExtaItems().Count > 0 && gameStatus != GameState.Win)
             { //1.6
                 Item item = GetAllExtaItems()[0];
                 item.DestroyItem();
                 dragBlocked = true;
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(CelebrationWait(0.1f, 0.02f));
                 FindMatches();
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(CelebrationWait(0.35f, 0.05f));
 
                 //           GenerateNewItems();
                 while (dragBlocked)
                     yield return new WaitForFixedUpdate();
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(CelebrationWait(0.4f, 0.1f));
             while (dragBlocked || GetMatches().Count > 0)
                 yield return new WaitForSeconds(0.2f);
 
@@ -730,11 +766,12 @@ namespace JellyGarden.Scripts
             SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
 
             MenuManager.Instance.ShowPreCompleteBanner(true);
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(CelebrationWait(1.6f, 0.5f));
             MenuManager.Instance.ShowPreCompleteBanner(false);
 
             gameStatus = GameState.Win;
             preWinAnimationRunning = false;
+            SkipWinCelebration = false;
         }
 
         void Update()
@@ -806,28 +843,31 @@ namespace JellyGarden.Scripts
             }
 
 
-            if (LevelManager.THIS.gameStatus == GameState.Playing)
+            if (gameStatus == GameState.PreWinAnimations && InputManager.Instance != null &&
+                InputManager.Instance.WasTouchPressed)
+                RequestSkipWinCelebration();
+
+            if (LevelManager.THIS.gameStatus == GameState.Playing && InputManager.Instance != null)
             {
-                Vector3? pos = null;
-                if (InputManager.Instance != null)
+                // A release only ever ends the current drag. It used to fall through the same
+                // branch as a press with a zero position, which probed world origin (0,0).
+                if (InputManager.Instance.WasTouchReleased)
                 {
-                    if (InputManager.Instance.WasTouchPressed)
+                    if (itemTouched != null)
                     {
-                        pos = InputManager.Instance.TouchPosition;
+                        itemTouched.dragThis = false;
+                        itemTouched.switchDirection = Vector3.zero;
                     }
-                    else if (InputManager.Instance.WasTouchReleased)
-                    {
-                        pos = Vector3.zero;
-                    }
+                    itemTouched = null;
                 }
-                if (pos != null)
+                else if (InputManager.Instance.WasTouchPressed && LevelManager.THIS.BoardInputAllowed)
                 {
                     OnStartPlay();
-                    Collider2D hit = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint((Vector3) pos));
+                    Collider2D hit = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(InputManager.Instance.TouchPosition));
                     if (hit != null)
                     {
                         itemTouched = hit.gameObject.GetComponent<Item>();
-                        if (!LevelManager.THIS.DragBlocked && LevelManager.THIS.gameStatus == GameState.Playing && itemTouched != null)
+                        if (itemTouched != null)
                         {
                             if (LevelManager.THIS.ActivatedBoost.type == BoostType.Bomb && itemTouched.currentType != ItemsTypes.BOMB && itemTouched.currentType != ItemsTypes.INGREDIENT)
                             {
@@ -856,15 +896,6 @@ namespace JellyGarden.Scripts
                         }
                     }
 
-                }
-                else if (pos == Vector3.zero)
-                {
-                    if (itemTouched != null)
-                    {
-                        itemTouched.dragThis = false;
-                        itemTouched.switchDirection = Vector3.zero;
-
-                    }
                 }
             }
         }
@@ -1486,6 +1517,7 @@ namespace JellyGarden.Scripts
         }
 
         bool royalResolving;
+        public bool IsResolvingMatches => royalResolving;
         public void FindMatches()
         {
             if (royalResolving) return;
@@ -1666,13 +1698,9 @@ namespace JellyGarden.Scripts
                             var vfxService = Juice.MatchVFXService.Instance;
                             if (vfxService != null)
                             {
-                                // One shared accent so the individual pops read as a
-                                // single event rather than three unrelated ones.
-                                float centerDelay = juiceCfg.MatchAnticipation +
-                                                    juiceCfg.MatchSquashDuration +
-                                                    juiceCfg.MatchReboundDuration;
-                                StartCoroutine(PlayMatchCenterDelayed(matchCenter, centerColor,
-                                    groupIntensity, centerDelay));
+                                // One restored group accent, aligned with the gentler sprite pop.
+                                float centerDelay = .12f;
+                                StartCoroutine(PlayMatchCenterDelayed(matchCenter, centerColor, groupIntensity, centerDelay));
 
                                 // One micro-freeze for the whole group, timed to the pop.
                                 // Per-fruit would read as lag in a long cascade.
@@ -1695,6 +1723,8 @@ namespace JellyGarden.Scripts
                         // simultaneous, but gives the group a visual rhythm.
                         item.juiceStagger = juiceCfg.EnableJuice ? juiceIndex * juiceCfg.MatchStagger : 0f;
                         item.juiceIntensity = groupIntensity;
+                        if (item.currentType == ItemsTypes.NONE && !item.destroying)
+                            item.royalMatchSize = desrtoyItems.Count;
                         juiceIndex++;
                         item.DestroyItem(true);  //destroy items safely
                         if (item.currentType != ItemsTypes.NONE)

@@ -35,10 +35,10 @@ public class InputManager : MonoBehaviour
     private bool wasTouchReleased;
     private bool isTouching;
     
-    public bool IsTouching => isTouching;
+    public bool IsTouching => isTouching && !RoyalThrone.Testing.RoyalSave.BlockGameplayInput;
     public Vector2 TouchPosition => lastPosition;
-    public bool WasTouchPressed => wasTouchPressed;
-    public bool WasTouchReleased => wasTouchReleased;
+    public bool WasTouchPressed => wasTouchPressed && !RoyalThrone.Testing.RoyalSave.BlockGameplayInput;
+    public bool WasTouchReleased => wasTouchReleased && !RoyalThrone.Testing.RoyalSave.BlockGameplayInput;
     
     public class GameplayActions
     {
@@ -189,6 +189,13 @@ public class InputManager : MonoBehaviour
         panPositionAction.performed += OnPanPositionChanged;
     }
     
+    /// <summary>
+    /// The debug map wins and loses levels, shuffles the board and stars every level on a
+    /// Left Ctrl release. Those belong to development only: in a player build a stray keystroke
+    /// (or an attached keyboard) would otherwise hand out progress.
+    /// </summary>
+    public static bool DebugKeysEnabled => Application.isEditor || UnityEngine.Debug.isDebugBuild;
+
     private void OnEnable()
     {
         if (gameplayMap != null)
@@ -196,7 +203,10 @@ public class InputManager : MonoBehaviour
         if (mapMap != null)
             mapMap.Enable();
         if (debugMap != null)
-            debugMap.Enable();
+        {
+            if (DebugKeysEnabled) debugMap.Enable();
+            else debugMap.Disable();
+        }
     }
     
     private void OnDisable()

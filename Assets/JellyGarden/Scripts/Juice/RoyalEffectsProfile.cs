@@ -5,8 +5,8 @@ namespace JellyGarden.Scripts.Juice
     public sealed class RoyalEffectsProfile : ScriptableObject
     {
         [Header("Launch and impact — seconds")]
-        [Range(.03f,.3f)] public float rocketAnticipation=.10f;
-        [Range(8,50)] public float rocketCellsPerSecond=24;
+        [Range(.03f,.3f)] public float rocketAnticipation=.12f;
+        [Range(8,50)] public float rocketCellsPerSecond=15;
         [Range(.05f,.5f)] public float tntAnticipation=.16f;
         [Range(.005f,.10f)] public float blastWavePerCell=.025f;
         [Range(.1f,.6f)] public float helicopterLift=.22f;

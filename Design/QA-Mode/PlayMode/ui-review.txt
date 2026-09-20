@@ -1,0 +1,16 @@
+Unity 6000.5.10f1 Play Mode, 2026-09-15
+PASS Gameplay pause Settings opens GAME TESTING MODE.
+PASS Home Settings opens the same menu from the center of its button.
+FIXED Home entry originally overlapped the raised navigation icon; placed within the unused Settings panel gap and retested after compilation.
+PASS Opening the menu alone leaves QA profile inactive and commands disabled.
+PASS Start test profile enables controls and reports the isolated profile.
+PASS Typing Amount 17 and clicking Set gems updates the QA balance to 17.
+PASS VFX TEST LAB category presents the registered effect controls.
+PASS 0.5x control updates game speed and visible metrics.
+PASS Fire Impact opens the board preview and completes.
+PASS Replay displays Fire Impact again on the same board with 31 moves unchanged.
+PASS End test profile restores Home with 3 coins, 5 lives, 29 stars and level 13.
+PASS Fresh Play Mode starts outside QA; corrected Settings button remains functional.
+Evidence: ../qa-menu.png and ../settings-entry.png.
+Full command/isolation audit: checks.txt (323 passing assertions).
+Separate gameplay audit: ../../Effects/Unity-review-v4/checks.txt (495 checks, no runtime errors).

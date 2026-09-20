@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 using UnityEngine;
 
 namespace JellyGarden.Scripts.Juice
@@ -444,6 +445,11 @@ namespace JellyGarden.Scripts.Juice
             if (!cfg.EnableJuice || !cfg.EnableCenterEmphasis) return;
 
             float cell = CellSize();
+            if (RoyalToolkitImpact.TryPlayIce(position, cell, intensity))
+            {
+                RoyalPowerupDirector.Get?.MatchAccentSound(intensity);
+                return;
+            }
             position.z -= 0.55f;
             float sizeIntensity = Mathf.Lerp(1f, intensity, 0.35f);
 

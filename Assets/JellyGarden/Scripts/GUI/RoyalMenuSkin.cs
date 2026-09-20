@@ -65,6 +65,10 @@ namespace RoyalThrone.Presentation
         static void Base(Transform menu,Transform p,float h,string title)
         {
             foreach(var clamp in menu.GetComponentsInChildren<JellyGarden.Scripts.GUI.KeepUIInScreen>(true))clamp.enabled=false;
+            // Some inherited popup roots carry a horizontal authoring offset (the lives and gems
+            // shops sat 7 and 19 px left of centre), which reads as a crooked panel. Centre them.
+            var root=menu as RectTransform;
+            if(root&&Mathf.Abs(root.anchoredPosition.x)>0.01f)root.anchoredPosition=new Vector2(0,root.anchoredPosition.y);
             Place(p,0,0,620,h);Surface(p);Label(p,"Royal heading",title,p.Find("Close")?-24:0,h*.5f-65,430,70,36);Button(p.Find("Close"),"×",257,h*.5f-50,68,68,46);
             var backdrop=menu.GetComponent<Image>();if(backdrop)backdrop.color=new Color(.005f,.015f,.05f,.82f);HideVisual(menu.Find("Leadboard"));
         }
@@ -73,7 +77,10 @@ namespace RoyalThrone.Presentation
             if(!t)return;var indicator=t.Find("Indicator");if(!indicator)return;Place(indicator,0,0,100,100);
             float badgeY=compact?-24:-46;Button(indicator.Find("Plus"),"+",49,badgeY,48,48,33);
             var plate=indicator.Find("Image");if(plate){Place(plate,49,badgeY,48,48);Surface(plate,true);Field(plate,"Count",0,0,42,40,24);var check=plate.Find("Check");if(check){Place(check,0,0,38,38);var im=check.GetComponent<Image>();if(im)im.color=Color.clear;Label(check,"Royal check","✓",0,0,38,38,25);}}
-            var locked=t.Find("Lock");if(locked){var im=locked.GetComponent<Image>();if(im)im.color=new Color(.02f,.09f,.23f,.82f);Label(locked,"Royal lock","LOCKED",0,0,120,40,19);}
+            // The other boosters are only set aside while one is selected. Labelling that state
+            // "LOCKED" read as a permanent unlock requirement, even on boosters the player owns,
+            // so the dim alone now carries it.
+            var locked=t.Find("Lock");if(locked){var im=locked.GetComponent<Image>();if(im)im.color=new Color(.02f,.09f,.23f,.72f);Label(locked,"Royal lock","",0,0,120,40,19);}
         }
         public static void Apply(Transform root,Font display)
         {
@@ -103,6 +110,7 @@ namespace RoyalThrone.Presentation
                     case "LiveShop":
                         Base(menu,p,720,"MORE LIVES");foreach(Transform tr in p)if(tr.name=="Label")HideVisual(tr);
                         Art(p,"Royal heart","heart",0,105,220,210);Label(p,"Royal message","Refill your hearts and keep playing",0,-42,505,50,24);
+                        Label(p,"Royal next life","",0,-88,505,44,22);
                         var life=p.Find("BuyLife");Place(life,0,-147,380,96);Surface(life,true);HideVisual(life.Find("Text"));Label(life,"Royal refill","REFILL",-75,0,210,64,30);
                         Field(life,"Price",72,0,70,62,35);Art(life,"Royal gem","gem",135,0,55,55);Button(p.Find("Video"),"WATCH FOR A LIFE",0,-265,380,66,24);break;
                     case "MenuPause":case "Settings":

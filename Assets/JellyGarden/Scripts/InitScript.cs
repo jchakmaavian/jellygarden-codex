@@ -1,4 +1,5 @@
-﻿// // ©2015 - 2026 Candy Smith
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -12,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using JellyGarden.Scripts.GUI;
 using UnityEngine.Events;
 using JellyGarden.Scripts.Integrations;
@@ -85,6 +87,10 @@ using Facebook.Unity;
 
         public static float RestLifeTimer;
         public static string DateOfExit;
+        // The refill schedule is a single absolute UTC deadline so it survives scene loads,
+        // backgrounding and quitting, and so elapsed time is never counted twice or lost.
+        public const string NextLifeKey = "RoyalThrone.NextLifeUtc";
+        static DateTime nextLifeUtc;
         public static DateTime today;
         public static DateTime DateOfRestLife;
         public static string timeForReps;
@@ -102,8 +108,8 @@ using Facebook.Unity;
 
         public int CapOfLife = 5;
         public float TotalTimeForRestLifeHours = 0;
-        public float TotalTimeForRestLifeMin = 15;
-        public float TotalTimeForRestLifeSec = 60;
+        public float TotalTimeForRestLifeMin = 5;
+        public float TotalTimeForRestLifeSec = 0;
         public int FirstGems = 20;
         public static int Gems;
         public static int waitedPurchaseGems;
@@ -209,6 +215,8 @@ using Facebook.Unity;
                 PlayerPrefs.SetInt("Lauched", 1);
                 PlayerPrefs.Save();
             }
+
+            LoadLifeSchedule();
 
             if (gameObject.GetComponent<AspectCamera>() == null)
                 gameObject.AddComponent<AspectCamera>().map = FindObjectOfType<LevelsMap>().transform
@@ -331,19 +339,13 @@ using Facebook.Unity;
         {
             if (InputManager.Instance != null)
             {
+                // The inherited kit starred every level when Left Ctrl (or U) was released, so an
+                // ordinary Ctrl+S while the game had focus rewrote the player's whole progress.
+                // Star control now lives in Settings -> GAME TESTING MODE, which is save-isolated.
                 if (InputManager.Instance.Debug.DebugToggle.WasPressedThisFrame())
                     leftControl = true;
                 if (InputManager.Instance.Debug.DebugToggle.WasReleasedThisFrame())
                     leftControl = false;
-
-                if (InputManager.Instance.Debug.DebugToggle.WasReleasedThisFrame())
-                {
-                    print("11");
-                    for (int i = 1; i < GameObject.Find("Levels").transform.childCount; i++)
-                    {
-                        SaveLevelStarsCount(i, 1);
-                    }
-                }
             }
         }
 
@@ -586,10 +588,122 @@ using Facebook.Unity;
         }
 
 
+        /// <summary>Seconds one life takes to refill, as configured on this component.</summary>
+        public float LifeIntervalSeconds =>
+            Mathf.Max(1f, TotalTimeForRestLifeHours * 3600f + TotalTimeForRestLifeMin * 60f + TotalTimeForRestLifeSec);
+
+        /// <summary>
+        /// Grants every life whose interval has already elapsed and returns the seconds left
+        /// until the next one. Safe to call every frame: it only writes when something changed.
+        /// </summary>
+        public float UpdateLives()
+        {
+            float interval = LifeIntervalSeconds;
+            DateTime now = DateTime.UtcNow;
+
+            if (lifes >= CapOfLife)
+            {
+                if (lifes > CapOfLife) lifes = CapOfLife;
+                if (nextLifeUtc != DateTime.MinValue)
+                {
+                    nextLifeUtc = DateTime.MinValue;
+                    SaveLifeSchedule();
+                    PlayerPrefs.Save();
+                }
+                RestLifeTimer = 0;
+                return 0;
+            }
+
+            bool scheduleChanged = false;
+            // A missing deadline (or one further away than a full interval, which means the
+            // device clock moved backwards) restarts the countdown from now.
+            if (nextLifeUtc == DateTime.MinValue || (nextLifeUtc - now).TotalSeconds > interval)
+            {
+                nextLifeUtc = now.AddSeconds(interval);
+                scheduleChanged = true;
+            }
+
+            int granted = 0;
+            while (lifes < CapOfLife && now >= nextLifeUtc)
+            {
+                lifes++;
+                granted++;
+                nextLifeUtc = nextLifeUtc.AddSeconds(interval);
+            }
+            if (lifes >= CapOfLife) nextLifeUtc = DateTime.MinValue;
+
+            RestLifeTimer = nextLifeUtc == DateTime.MinValue
+                ? 0
+                : Mathf.Max(0f, (float)(nextLifeUtc - now).TotalSeconds);
+
+            if (granted > 0)
+            {
+                PlayerPrefs.SetInt("Lifes", lifes);
+                SaveLifeSchedule();
+                PlayerPrefs.Save();
+            }
+            else if (scheduleChanged)
+            {
+                SaveLifeSchedule();
+                PlayerPrefs.Save();
+            }
+            return RestLifeTimer;
+        }
+
+        /// <summary>Test hook: makes the next life arrive in <paramref name="seconds"/>.</summary>
+        public void SetRefillSeconds(float seconds)
+        {
+            if (lifes >= CapOfLife)
+            {
+                nextLifeUtc = DateTime.MinValue;
+                RestLifeTimer = 0;
+            }
+            else
+            {
+                RestLifeTimer = Mathf.Max(0, seconds);
+                nextLifeUtc = DateTime.UtcNow.AddSeconds(RestLifeTimer);
+            }
+            SaveLifeSchedule();
+            PlayerPrefs.Save();
+        }
+
+        public void SaveLifeSchedule()
+        {
+            PlayerPrefs.SetString(NextLifeKey, nextLifeUtc == DateTime.MinValue
+                ? string.Empty
+                : nextLifeUtc.ToString("o", CultureInfo.InvariantCulture));
+            PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
+        }
+
+        /// <summary>Reads the stored deadline, migrating saves written before this schedule existed.</summary>
+        void LoadLifeSchedule()
+        {
+            nextLifeUtc = DateTime.MinValue;
+            string saved = PlayerPrefs.GetString(NextLifeKey, string.Empty);
+            if (!string.IsNullOrEmpty(saved) &&
+                DateTime.TryParse(saved, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime parsed))
+            {
+                nextLifeUtc = parsed.ToUniversalTime();
+            }
+            else if (lifes < CapOfLife)
+            {
+                // Old saves kept "seconds left" plus a local-time exit stamp. Fold both into a deadline.
+                float remaining = RestLifeTimer > 0 ? RestLifeTimer : LifeIntervalSeconds;
+                double away = 0;
+                if (!string.IsNullOrEmpty(DateOfExit) && DateTime.TryParse(DateOfExit, out DateTime exit))
+                    away = Math.Max(0, (DateTime.Now - exit).TotalSeconds);
+                nextLifeUtc = DateTime.UtcNow.AddSeconds(remaining - away);
+            }
+            UpdateLives();
+        }
+
         public void RestoreLifes()
         {
             lifes = CapOfLife;
+            nextLifeUtc = DateTime.MinValue;
+            RestLifeTimer = 0;
             PlayerPrefs.SetInt("Lifes", lifes);
+            SaveLifeSchedule();
             PlayerPrefs.Save();
         }
 
@@ -598,7 +712,13 @@ using Facebook.Unity;
             lifes += count;
             if (lifes > CapOfLife)
                 lifes = CapOfLife;
+            if (lifes >= CapOfLife)
+            {
+                nextLifeUtc = DateTime.MinValue;
+                RestLifeTimer = 0;
+            }
             PlayerPrefs.SetInt("Lifes", lifes);
+            SaveLifeSchedule();
             PlayerPrefs.Save();
         }
 
@@ -624,8 +744,17 @@ using Facebook.Unity;
         {
             if (lifes > 0)
             {
+                bool wasFull = lifes >= CapOfLife;
                 lifes -= count;
                 PlayerPrefs.SetInt("Lifes", lifes);
+                // Only the drop from a full set starts a countdown. Spending a life while one is
+                // already pending must never push its deadline back, or the timer could be reset at will.
+                if (wasFull)
+                {
+                    nextLifeUtc = DateTime.UtcNow.AddSeconds(LifeIntervalSeconds);
+                    RestLifeTimer = LifeIntervalSeconds;
+                }
+                SaveLifeSchedule();
                 PlayerPrefs.Save();
             }
             //else
@@ -680,13 +809,10 @@ using Facebook.Unity;
         {
             if (pauseStatus)
             {
-                if (RestLifeTimer > 0)
-                {
-                    PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
-                }
-
+                UpdateLives();
                 PlayerPrefs.SetInt("Lifes", lifes);
-                PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
+                SaveLifeSchedule();
+                PlayerPrefs.SetString("DateOfExit", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture));
                 PlayerPrefs.Save();
             }
         }
@@ -694,13 +820,10 @@ using Facebook.Unity;
         void OnApplicationQuit()
         {
             //1.4  added
-            if (RestLifeTimer > 0)
-            {
-                PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
-            }
-
+            UpdateLives();
             PlayerPrefs.SetInt("Lifes", lifes);
-            PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
+            SaveLifeSchedule();
+            PlayerPrefs.SetString("DateOfExit", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture));
             PlayerPrefs.Save();
             //print(RestLifeTimer)
         }
@@ -743,11 +866,9 @@ using Facebook.Unity;
         {
             LevelsMap.LevelSelected -= OnLevelClicked;
 
-            //		if(RestLifeTimer>0){
-            PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
-            //		}
             PlayerPrefs.SetInt("Lifes", lifes);
-            PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
+            SaveLifeSchedule();
+            PlayerPrefs.SetString("DateOfExit", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture));
             PlayerPrefs.Save();
 
 /*#if GOOGLE_MOBILE_ADS

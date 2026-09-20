@@ -1,0 +1,10 @@
+{
+  "Assets\\JellyGarden\\Scripts\\Editor\\RoyalEffectsChecks.cs": "5ff5bfee1d5577f84392e3331ed42de86ce7f6fb7a5406072d5281932df6bf95",
+  "Assets\\JellyGarden\\Scripts\\Editor\\RoyalRocketChecks.cs": "6a53d92de7d4976e5a5b6bb046224f1abbe07709c9d35b17176ebe7d300ea964",
+  "Assets\\JellyGarden\\Scripts\\Juice\\RoyalPowerupDirector.cs": "62e5f405477f76501ea62fdb63b990f4b32c225f2b315f1e3aaddf522d6662d7",
+  "Assets\\JellyGarden\\Scripts\\Juice\\RoyalRocketSequence.cs": "922fc994843ac2e3b2625208e0ace57e294f13029ab2f353cc291faa9a1d81cc",
+  "Assets\\JellyGarden\\Scripts\\RoyalQaService.cs": "e72d93e32721dc9d0d1eb6cd5ec2bee1f8a2d75a825d7f2bea6236ef411c24b0",
+  "Assets\\JellyGarden\\Shaders\\RoyalRocketFire.shader": "ee4124309643bd067ade5e398eebc1a880b9c09992163af5a0478847720c908a",
+  "Assets\\JellyGarden\\Resources\\RoyalRocketFX\\FlameTrail.mat": "da7ed80d80ef8b73f9d903c0836463cdbceced724ba0573fd9ae2e2935d128ee",
+  "Assets\\JellyGarden\\Resources\\RoyalRocketFX\\FlameTrail.mat.meta": "681c2b00b0475ac624dc52c2a474c75b3e83d19cbe394b382c577de5a3e6cbd0"
+}

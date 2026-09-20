@@ -1,0 +1,1052 @@
+{
+  "scope": "Read-only audit of supplied toolkit prefabs and every GUID dependency; vendor unchanged",
+  "prefabs": [
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Prefabs/Ice Impact.prefab",
+      "sha256": "0ee607b237c2fd4c89d3577950f14c40e899db7d822b6f4e378a44cf870dcde2",
+      "systems": [
+        {
+          "name": "ImpactGlowLight",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.05",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "0.51",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "ImpactRing2",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.25",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "1.18",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "ImpactSparks",
+          "duration": "5",
+          "loop": "1",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1000",
+          "lifetime": {
+            "minMaxState": "3",
+            "scalar": "0.7",
+            "minScalar": "0.3"
+          },
+          "speed": {
+            "minMaxState": "3",
+            "scalar": "2.5",
+            "minScalar": "1"
+          },
+          "size": {
+            "minMaxState": "3",
+            "scalar": "0.7",
+            "minScalar": "0.3"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "3",
+            "scalar": "7",
+            "minScalar": "3"
+          }
+        },
+        {
+          "name": "ImpactGlow",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.3",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "3",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "ImpactRing",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.25",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "0.9",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "Impact",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "0",
+          "scalingMode": "0",
+          "maxParticles": "1000",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "5",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "5",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": null,
+            "scalar": null,
+            "minScalar": null
+          }
+        },
+        {
+          "name": "ImpactFlare",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.15",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "3",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "ImpactFlakes",
+          "duration": "5",
+          "loop": "1",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1000",
+          "lifetime": {
+            "minMaxState": "3",
+            "scalar": "0.6",
+            "minScalar": "0.2"
+          },
+          "speed": {
+            "minMaxState": "3",
+            "scalar": "1.5",
+            "minScalar": "0.7"
+          },
+          "size": {
+            "minMaxState": "3",
+            "scalar": "0.12",
+            "minScalar": "0.06"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "3",
+            "scalar": "7",
+            "minScalar": "3"
+          }
+        }
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Prefabs/Fire Impact.prefab",
+      "sha256": "4351489406f728a31d792502d6fc15a8af5c20142f8b087be21589002dd79701",
+      "systems": [
+        {
+          "name": "ImpactSparks",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "15",
+          "lifetime": {
+            "minMaxState": "3",
+            "scalar": "0.35",
+            "minScalar": "0.25"
+          },
+          "speed": {
+            "minMaxState": "3",
+            "scalar": "2",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "3",
+            "scalar": "0.12",
+            "minScalar": "0.05"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "7",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "ImpactGlow",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.3",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "3",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "ImpactGlowSphere",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.15",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "1.2",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "ImpactBigSparks",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "15",
+          "lifetime": {
+            "minMaxState": "3",
+            "scalar": "0.3",
+            "minScalar": "0.15"
+          },
+          "speed": {
+            "minMaxState": "3",
+            "scalar": "2",
+            "minScalar": "1"
+          },
+          "size": {
+            "minMaxState": "3",
+            "scalar": "0.2",
+            "minScalar": "0.1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "3",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "Parent",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "0",
+          "scalingMode": "0",
+          "maxParticles": "1000",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "5",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "5",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": null,
+            "scalar": null,
+            "minScalar": null
+          }
+        },
+        {
+          "name": "ImpactMark",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.08",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "0.63",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "ImpactFlare",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.12",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "1.3",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        },
+        {
+          "name": "ImpactGlowLight",
+          "duration": "1",
+          "loop": "0",
+          "spaceMoveWithTransform": "1",
+          "scalingMode": "0",
+          "maxParticles": "1",
+          "lifetime": {
+            "minMaxState": "0",
+            "scalar": "0.05",
+            "minScalar": "5"
+          },
+          "speed": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "5"
+          },
+          "size": {
+            "minMaxState": "0",
+            "scalar": "0.51",
+            "minScalar": "1"
+          },
+          "gravity": {
+            "minMaxState": "0",
+            "scalar": "0",
+            "minScalar": "0"
+          },
+          "burst": {
+            "minMaxState": "0",
+            "scalar": "1",
+            "minScalar": "30"
+          }
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/FireSparks2.mat",
+      "bytes": 7074,
+      "sha256": "e41302fe41babfca99d88b95cc649af4273bc4e0d9aed4ff2bd93ff130e33265",
+      "keywords": "ALPHAFADEINPUTSTREAM_ON ALPHAFADETRANSPARENCYTOO_ON ALPHAFADE_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise9.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1Vfx.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/FireEmbers.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/IceFlares.mat",
+      "bytes": 6887,
+      "sha256": "e7bdd0b35d64275513effa4228a728118079f5784a4da48114cdd7f32c235370",
+      "keywords": "ADDITIVECONFIG_ON GLOW_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Flare1.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise9.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1Vfx.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/ImpactCenterGlow.mat",
+      "bytes": 6966,
+      "sha256": "3882e464d95dc2f07446c591381a65240ac64128546c6b9cd5bba29992fb9aac",
+      "keywords": "ADDITIVECONFIG_ON GLOW_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise9.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1Vfx.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/ImpactFlareFire.mat",
+      "bytes": 9347,
+      "sha256": "a493ed236b75ac4c97e416907a4a9b1407045b7f4b1d4d522b2ec9b3d1bb0fff",
+      "keywords": "ADDITIVECONFIG_ON ALPHAFADEINPUTSTREAM_ON ALPHAFADE_ON COLORRAMPGRAD_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Impact13.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1Vfx.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow4.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/ImpactFlareIce.mat",
+      "bytes": 8929,
+      "sha256": "61e0b2c17b9597ecb4708b7de7e74a13425468125afb1ff719dcea91617e9f18",
+      "keywords": "ADDITIVECONFIG_ON ALPHAFADEINPUTSTREAM_ON ALPHAFADE_ON COLORRAMPGRAD_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Flare1.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow4.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1VfxBuiltIn.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/ImpactGlow.mat",
+      "bytes": 7449,
+      "sha256": "bb7cb1e1bcab9c853539eb7e8556fd70ff91f04a9a5bd2839d2bd63011a33c67",
+      "keywords": "ADDITIVECONFIG_ON SOFTPART_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow4.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1VfxBuiltIn.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/ImpactMark.mat",
+      "bytes": 9102,
+      "sha256": "9cd89afbc69e7d703e170072d088d968d021cf4444402d8a58a147d5271f7df6",
+      "keywords": "ADDITIVECONFIG_ON COLORRAMPGRAD_ON COLORRAMP_ON GLOW_ON PREMULTIPLYCOLOR_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise9.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1Vfx.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Impact2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/ImpactRing.mat",
+      "bytes": 7019,
+      "sha256": "845fceb9d86fb08ddf5211d9e31f905bf7d8036a2fcbc23d7fe465f410248604",
+      "keywords": "ADDITIVECONFIG_ON GLOW_ON SHAPE1CONTRAST_ON SOFTPART_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise9.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Ring3.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1VfxBuiltIn.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/ImpactRing2.mat",
+      "bytes": 7046,
+      "sha256": "1dbe8b97177d9c817d4c7e816af7308ce2f14a819e3351304292484eb52cdbf7",
+      "keywords": "ADDITIVECONFIG_ON ALPHAFADETRANSPARENCYTOO_ON GLOW_ON SOFTPART_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Circle17.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise9.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1VfxBuiltIn.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/RedFaintGlow.mat",
+      "bytes": 6943,
+      "sha256": "5c63bf8975ef2977e227f2801af5aa7cd702a53ce8e9b731b37b453ab1bb96c3",
+      "keywords": "ADDITIVECONFIG_ON GLOW_ON RIM_ON SOFTPART_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise9.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1VfxBuiltIn.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Materials/SnowFlakes.mat",
+      "bytes": 6871,
+      "sha256": "93db582234b32ba983d927118e16e65aeead6916ed50f110b18429d0beafe02d",
+      "keywords": "GLOW_ON",
+      "referencedAssets": [
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise9.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1Vfx.shader",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/SnowFlake.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+        "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png"
+      ]
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Prefabs/Fire Impact.prefab",
+      "bytes": 962837,
+      "sha256": "4351489406f728a31d792502d6fc15a8af5c20142f8b087be21589002dd79701"
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Prefabs/Ice Impact.prefab",
+      "bytes": 969727,
+      "sha256": "0ee607b237c2fd4c89d3577950f14c40e899db7d822b6f4e378a44cf870dcde2"
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Scripts/AllIn1VfxAutoDestroy.cs",
+      "bytes": 298,
+      "sha256": "06e6027b7387257e79c39bf452b437eac8d9d07be18f3897a12efdd07a90837e"
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Demo/Scripts/AllIn1VfxFadeLight.cs",
+      "bytes": 903,
+      "sha256": "4fe7a205da0e113918c3721d6f878f6e8ab21330ba2ff8442e23c10f510aa16b"
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Meshes/SphereVfx.mesh",
+      "bytes": 68425,
+      "sha256": "48443dc126e0a3be7bd4633ef990f44c57202e917040fb7c673ca3e6f9e8a228"
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Distortion Normal Maps/DistortionRing6.png",
+      "bytes": 209987,
+      "sha256": "9939ed337ed6d871d33f555bcc5e96637dfbc7484c4f0ed73ee474ce0c754985",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGB",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "1",
+        "sRGBTexture": "0",
+        "alphaIsTransparency": "0",
+        "textureType": "1",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Greyscale Gradients/Gradient2.png",
+      "bytes": 1282,
+      "sha256": "068884624a3e5cfe0f3ec097118f570060fbab370eb4c9409076a108a5f0f379",
+      "size": [
+        32,
+        128
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "1",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise7.png",
+      "bytes": 24420,
+      "sha256": "a4704c3c7555724728efdd2007f2e7d910255f097ac4e5f0cd11b8940eee42c0",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGB",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "0",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/Noise9.png",
+      "bytes": 8496,
+      "sha256": "5fabd7a34e36544b7b710dc34c4f300ba339bc4214d306b033a92e4bc84fda5c",
+      "size": [
+        64,
+        64
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "0",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Noise/PerlinNoise.png",
+      "bytes": 52101,
+      "sha256": "7a2555485e71a67e83e4d945f3fde875e5605b8654ed9983c5588429dfb56eeb",
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "0",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Circle17.png",
+      "bytes": 96112,
+      "sha256": "1f356a3fb81a9563e88b9e41f8348c11e2b4c40d8354b5626a41a61e9a96fe61",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "1",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/FireEmbers.png",
+      "bytes": 21592,
+      "sha256": "95c1facfcd88788e6590c965b2b4ce1f8f476a4c54ac5b7d152e1961dd634ef3",
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGB",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "0",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Flare1.png",
+      "bytes": 4970,
+      "sha256": "30d92491fae88caa2466ef7b8c5667740e0c45896705856044dc306137988048",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "1",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow.png",
+      "bytes": 7396,
+      "sha256": "30ff0ad6bc4996e826ece6c1f51d048aee7c365a3f0b0834a28483032459b705",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "0",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow2.png",
+      "bytes": 7778,
+      "sha256": "4128f10af24d728cc8015494a23cb00d254b207c26750c33c737da229529c947",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "0",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Glow4.png",
+      "bytes": 136731,
+      "sha256": "85dab5c6bda8c8e2a8414adf931bb7d64451ad670a54378899aff59b110466d3",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "1",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Impact13.png",
+      "bytes": 32725,
+      "sha256": "5574e5e97074f4888c0c6d6d3185775e080238f30d3d30f86a5beffcec72e45d",
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "1",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Impact2.png",
+      "bytes": 105003,
+      "sha256": "cc2ea0035e7e2e948d4aba9e25d2ea5353a708467860e4558b939f6a55d39aa5",
+      "size": [
+        512,
+        512
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "1",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "0",
+        "textureType": "0",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/Ring3.png",
+      "bytes": 19745,
+      "sha256": "8f175e87896b38897f81b780a1b670db84f5fd060a4fb36e5deb9b1738fe2b48",
+      "size": [
+        256,
+        256
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "0",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "1",
+        "textureType": "8",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Demo & Assets/Textures/Shapes/SnowFlake.png",
+      "bytes": 4698,
+      "sha256": "9c6ec2e19b6bddf10dc9d46e88391e99da0e34b3cb181e4ceb18b7a9229a6350",
+      "size": [
+        128,
+        128
+      ],
+      "mode": "RGBA",
+      "import": {
+        "isReadable": "0",
+        "enableMipMap": "0",
+        "sRGBTexture": "1",
+        "alphaIsTransparency": "1",
+        "textureType": "8",
+        "maxTextureSize": "2048",
+        "compressionQuality": "50"
+      }
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1Vfx.shader",
+      "bytes": 49086,
+      "sha256": "c47ca624f0d534f8ce4e35894e23aac89ae11f89f51bcde041c39885201cd12e"
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1VfxBuiltIn.shader",
+      "bytes": 53267,
+      "sha256": "81eaf988273c03aa2e643e4585846bd5b09dc1ddefbc4ee5773a4f54146756f0"
+    },
+    {
+      "path": "Assets/Plugins/AllIn1VfxToolkit/Shaders/AllIn1VfxFunctions.cginc",
+      "bytes": 1103,
+      "sha256": "a744befea59106cd230d070e95aede4513ef90d7394078c3534cbeb6fcc77e51"
+    }
+  ],
+  "findings": [
+    "Both source prefabs schedule Destroy after one scaled second; copied production wrappers remove the behaviour before any Start executes.",
+    "Both contain FadeLight that destroys its object. All point lights and demo behaviours removed only from derived wrappers.",
+    "Ice contains two looping five-second emitters with 1000-particle default caps; production wrappers make finite bounded bursts.",
+    "Source parent scale3 normalizes to1. Production cell factors Ice0.66/Fire1.18 preserve relative birth layout.",
+    "BuiltIn soft-particle depth code has no orthographic branch. Derived materials disable SOFTPART_ON and DEPTHGLOW_ON without changing vendor shaders.",
+    "Custom1 alpha vertex streams and source module curves remain on the corresponding renderers.",
+    "No component changes gameplay. Pool lifetime uses scaled deltaTime, pauses on gameplay Pause and clears on board exits.",
+    "Vendor shader include uses texture sampling/math only; no runtime MonoBehaviour dependency."
+  ]
+}

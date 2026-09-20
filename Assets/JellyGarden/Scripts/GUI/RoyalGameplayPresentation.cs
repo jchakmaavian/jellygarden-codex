@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 using System.Collections.Generic;
 using JellyGarden.Scripts;
 using JellyGarden.Scripts.GUI;
@@ -16,6 +17,8 @@ namespace RoyalThrone.Presentation
         readonly List<string> goalParts=new List<string>();float nextHudUpdate;
         Font display;
         Sprite tileSprite;
+        readonly Dictionary<string,Sprite> cellSprites=new Dictionary<string,Sprite>();
+        Vector2 cellSpriteSize;
         readonly List<Image> goalIcons=new List<Image>();readonly List<Text> goalNumbers=new List<Text>();
         Transform framedField;Square[] framedSquares;Vector2 framedScreen;Rect framedSafeArea;
         static Color Navy=>new Color(.025f,.12f,.32f);
@@ -77,7 +80,7 @@ namespace RoyalThrone.Presentation
                 {
                     var boost=lm.GameField.parent.Find("Canvas/BottomPanel/Panel/"+boostNames[i]) as RectTransform;
                     if(!boost)continue;boost.SetParent(content,false);boost.anchorMin=new Vector2(.06f+i*.235f,.009f);boost.anchorMax=new Vector2(.235f+i*.235f,.087f);boost.offsetMin=boost.offsetMax=Vector2.zero;boost.localScale=Vector3.one;
-                    var graphic=boost.GetComponent<Image>();if(graphic){graphic.sprite=RoyalPieceSkin.Art(artNames[i]);graphic.preserveAspect=true;graphic.color=Color.white;}
+                    var graphic=boost.GetComponent<Image>();if(graphic){graphic.sprite=RoyalGameplayArt.Art(artNames[i])??RoyalPieceSkin.Art(artNames[i]);graphic.preserveAspect=true;graphic.color=Color.white;}
                     foreach(var text in boost.GetComponentsInChildren<Text>(true)){text.font=display;text.color=new Color(1,.96f,.8f);}
                     RoyalMenuSkin.Boost(boost,true);
                 }
@@ -91,7 +94,7 @@ namespace RoyalThrone.Presentation
         void LateUpdate()
         {
             var lm=LevelManager.THIS;if(!lm)return;
-            bool show=lm.gameStatus!=GameState.Map&&lm.gameStatus!=GameState.WaitForPopup&&lm.GameField.gameObject.activeInHierarchy;
+            bool show=lm.GameField&&lm.gameStatus!=GameState.Map&&lm.gameStatus!=GameState.WaitForPopup&&lm.GameField.gameObject.activeInHierarchy;
             if(lm.gameStatus==GameState.Map){framedField=null;framedSquares=null;}
             group.alpha=show?1:0;group.blocksRaycasts=show;backdrop.enabled=show;
             if(lm.gameStatus==GameState.Pause||lm.gameStatus==GameState.GameOver||lm.gameStatus==GameState.Win||lm.gameStatus==GameState.PreFailed){group.alpha=0;group.blocksRaycasts=false;}
@@ -103,7 +106,7 @@ namespace RoyalThrone.Presentation
                 nextHudUpdate=Time.unscaledTime+.1f;moves.text=Mathf.Max(0,lm.Limit).ToString();level.text="LEVEL "+lm.currentLevel;
                 for(int i=0;i<goalIcons.Count;i++){
                     bool active=lm.targetObject!=null&&i<lm.targetObject.Length;goalIcons[i].gameObject.SetActive(active);goalNumbers[i].gameObject.SetActive(active);if(!active)continue;
-                    var target=lm.targetObject[i];goalIcons[i].sprite=RoyalVisualCatalog.Goal(target);goalNumbers[i].text=Mathf.Max(0,target.GetCount()).ToString();
+                    var target=lm.targetObject[i];goalIcons[i].sprite=RoyalVisualCatalog.Goal(target,true);goalNumbers[i].text=Mathf.Max(0,target.GetCount()).ToString();
                     float step=.342f/Mathf.Min(3,lm.targetObject.Length),left=.04f+i*step;
                     var ir=goalIcons[i].rectTransform;ir.anchorMin=new Vector2(left,.909f);ir.anchorMax=new Vector2(left+step,.944f);
                     var nr=goalNumbers[i].rectTransform;nr.anchorMin=new Vector2(left+.002f,.873f);nr.anchorMax=new Vector2(left+step-.002f,.911f);
@@ -144,14 +147,39 @@ namespace RoyalThrone.Presentation
             cam.transform.position=new Vector3(bounds.center.x-offset.x,bounds.center.y-offset.y,cam.transform.position.z);
             framedField=lm.GameField;framedSquares=lm.squaresArray;framedScreen=screen;framedSafeArea=safe;styled.Clear();
         }
-        void StyleBoard(LevelManager lm)
+        Sprite CellSprite(string key,Vector2 size)
         {
+            if(cellSpriteSize!=size)
+            {
+                foreach(var sprite in cellSprites.Values)if(sprite)Destroy(sprite);
+                cellSprites.Clear();styled.Clear();cellSpriteSize=size;
+            }
+            if(cellSprites.TryGetValue(key,out var cached)&&cached)return cached;
+            var source=RoyalGameplayArt.Art(key)??tileSprite;
+            if(!source)return null;
+            // The pack's full 512px cells have no slicing borders and are 5.12
+            // units at the catalog PPU. Give this renderer a native cell-sized
+            // view instead of relying on Sliced to shrink an unsliced sprite.
+            float ppu=source.rect.width/Mathf.Max(.001f,size.x);
+            float border=Mathf.Min(1,Mathf.Min(source.rect.width,source.rect.height)*.25f);
+            var pivot=source.pivot/new Vector2(source.rect.width,source.rect.height);
+            var result=Sprite.Create(source.texture,source.rect,pivot,ppu,0,SpriteMeshType.FullRect,new Vector4(border,border,border,border));
+            result.name="Royal cell - "+key;result.hideFlags=HideFlags.DontSave;cellSprites[key]=result;return result;
+        }
+        public void StyleBoard(LevelManager lm)
+        {
+            if(lm.GameField){var surface=lm.GameField.GetComponent<RoyalBoardSurface>();if(!surface)surface=lm.GameField.gameObject.AddComponent<RoyalBoardSurface>();surface.RebuildIfNeeded(lm);}
             if(lm.squaresArray!=null)foreach(var sq in lm.squaresArray)
             {
-                if(!sq||!styled.Add(sq))continue;
-                var sr=sq.GetComponent<SpriteRenderer>();if(sr){sr.sprite=tileSprite;sr.drawMode=SpriteDrawMode.Sliced;sr.size=new Vector2(lm.squareWidth,lm.squareHeight);sr.color=(sq.row+sq.col)%2==0?new Color(.23f,.59f,.9f):new Color(.16f,.48f,.8f);}
-                foreach(Transform tr in sq.transform)if(tr.name.ToLowerInvariant().Contains("outline")){var edge=tr.GetComponent<SpriteRenderer>();if(edge)edge.color=Gold;}
+                if(!sq)continue;var sr=sq.GetComponent<SpriteRenderer>();if(!sr)continue;
+                if(sq.type==SquareTypes.NONE){sr.enabled=false;styled.Remove(sq);continue;}
+                var size=new Vector2(lm.squareWidth,lm.squareHeight);
+                var sprite=CellSprite((sq.row+sq.col)%2==0?"cell-light":"cell-dark",size);
+                if(!styled.Add(sq)&&sr.sprite==sprite)continue;
+                sr.sprite=sprite;sr.drawMode=Mathf.Approximately(size.x,size.y)?SpriteDrawMode.Simple:SpriteDrawMode.Sliced;
+                sr.size=size;sr.color=Color.white;sr.enabled=true;
             }
         }
+        void OnDestroy(){foreach(var sprite in cellSprites.Values)if(sprite)Destroy(sprite);}
     }
 }

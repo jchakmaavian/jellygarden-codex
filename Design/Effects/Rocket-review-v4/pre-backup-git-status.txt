@@ -1,0 +1,115 @@
+ M Assets/JellyGarden/Resources/RoyalGameplay/EffectsProfile.asset
+ M Assets/JellyGarden/Scripts/AI.cs
+ M Assets/JellyGarden/Scripts/Editor/LevelMakerEditor.cs
+ M Assets/JellyGarden/Scripts/Editor/RoyalBoardPresentationChecks.cs
+ M Assets/JellyGarden/Scripts/Editor/RoyalEffectsChecks.cs
+ M Assets/JellyGarden/Scripts/Editor/RoyalHomeScreenChecks.cs
+ M Assets/JellyGarden/Scripts/Editor/RoyalInputRegression.cs
+ M Assets/JellyGarden/Scripts/Editor/RoyalPresentationChecks.cs
+ M Assets/JellyGarden/Scripts/GUI/AnimationManager.cs
+ M Assets/JellyGarden/Scripts/GUI/BoostIcon.cs
+ M Assets/JellyGarden/Scripts/GUI/Counter_.cs
+ M Assets/JellyGarden/Scripts/GUI/LIFESAddCounter.cs
+ M Assets/JellyGarden/Scripts/GUI/Level.cs
+ M Assets/JellyGarden/Scripts/GUI/Offlineleadboard.cs
+ M Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs
+ M Assets/JellyGarden/Scripts/GUI/RoyalHomeScreen.cs
+ M Assets/JellyGarden/Scripts/GUI/RoyalMenuPresenter.cs
+ M Assets/JellyGarden/Scripts/GUI/RoyalTitleScreen.cs
+ M Assets/JellyGarden/Scripts/GUI/RoyalVisualCatalog.cs
+ M Assets/JellyGarden/Scripts/InitScript.cs
+ M Assets/JellyGarden/Scripts/InputManager.cs
+ M Assets/JellyGarden/Scripts/Integrations/FacebookManager.cs
+ M Assets/JellyGarden/Scripts/Integrations/Network/NetworkDataManager.cs
+ M Assets/JellyGarden/Scripts/Integrations/Network/NetworkFriendsManager.cs
+ M Assets/JellyGarden/Scripts/Integrations/Network/NetworkManager.cs
+ M Assets/JellyGarden/Scripts/Integrations/Network/PlayFab/PlayFabDataManager.cs
+ M Assets/JellyGarden/Scripts/Item.cs
+ M Assets/JellyGarden/Scripts/Juice/CandyShatterService.cs
+ M Assets/JellyGarden/Scripts/Juice/MatchVFXService.cs
+ M Assets/JellyGarden/Scripts/Juice/RoyalAudioDirector.cs
+ M Assets/JellyGarden/Scripts/Juice/RoyalBlockSkin.cs
+ M Assets/JellyGarden/Scripts/Juice/RoyalCelebration.cs
+ M Assets/JellyGarden/Scripts/Juice/RoyalHintSettings.cs
+ M Assets/JellyGarden/Scripts/Juice/RoyalPieceSkin.cs
+ M Assets/JellyGarden/Scripts/Juice/RoyalPowerupDirector.cs
+ M Assets/JellyGarden/Scripts/Leadboard/LeadboardObject.cs
+ M Assets/JellyGarden/Scripts/LevelManager.cs
+ M Assets/JellyGarden/Scripts/MapScripts/ApiTest.cs
+ M Assets/JellyGarden/Scripts/MapScripts/PlayerPrefsMapProgressManager.cs
+ M Assets/JellyGarden/Scripts/Square.cs
+ M Assets/JellyGarden/Scripts/System/DateTimeManager.cs
+ M Assets/JellyGarden/Scripts/Targets/TargetsGroup.cs
+ M ProjectSettings/ProjectSettings.asset
+?? Assets/JellyGarden/Resources/RoyalGameplay/Toolkit.meta
+?? Assets/JellyGarden/Resources/RoyalGameplay/Toolkit/
+?? Assets/JellyGarden/Resources/RoyalGameplayV4.meta
+?? Assets/JellyGarden/Resources/RoyalGameplayV4/
+?? Assets/JellyGarden/Resources/RoyalMatchFragment.mat
+?? Assets/JellyGarden/Resources/RoyalMatchFragment.mat.meta
+?? Assets/JellyGarden/Resources/RoyalRocketFX.meta
+?? Assets/JellyGarden/Resources/RoyalRocketFX/
+?? Assets/JellyGarden/Scripts/Editor/RoyalBoardSurfaceChecks.cs
+?? Assets/JellyGarden/Scripts/Editor/RoyalBoardSurfaceChecks.cs.meta
+?? Assets/JellyGarden/Scripts/Editor/RoyalCellBreakChecks.cs
+?? Assets/JellyGarden/Scripts/Editor/RoyalCellBreakChecks.cs.meta
+?? Assets/JellyGarden/Scripts/Editor/RoyalGameplayArtImporter.cs
+?? Assets/JellyGarden/Scripts/Editor/RoyalGameplayArtImporter.cs.meta
+?? Assets/JellyGarden/Scripts/Editor/RoyalHintPresentationChecks.cs
+?? Assets/JellyGarden/Scripts/Editor/RoyalHintPresentationChecks.cs.meta
+?? Assets/JellyGarden/Scripts/Editor/RoyalQaChecks.cs
+?? Assets/JellyGarden/Scripts/Editor/RoyalQaChecks.cs.meta
+?? Assets/JellyGarden/Scripts/Editor/RoyalRocketChecks.cs
+?? Assets/JellyGarden/Scripts/Editor/RoyalRocketChecks.cs.meta
+?? Assets/JellyGarden/Scripts/Editor/RoyalToolkitBuilder.cs
+?? Assets/JellyGarden/Scripts/Editor/RoyalToolkitBuilder.cs.meta
+?? Assets/JellyGarden/Scripts/Editor/RoyalToolkitChecks.cs
+?? Assets/JellyGarden/Scripts/Editor/RoyalToolkitChecks.cs.meta
+?? Assets/JellyGarden/Scripts/Editor/RoyalVfxLab.cs
+?? Assets/JellyGarden/Scripts/Editor/RoyalVfxLab.cs.meta
+?? Assets/JellyGarden/Scripts/GUI/RoyalBoardSurface.cs
+?? Assets/JellyGarden/Scripts/GUI/RoyalBoardSurface.cs.meta
+?? Assets/JellyGarden/Scripts/Juice/RoyalBurstLibrary.cs
+?? Assets/JellyGarden/Scripts/Juice/RoyalBurstLibrary.cs.meta
+?? Assets/JellyGarden/Scripts/Juice/RoyalGameplayArt.cs
+?? Assets/JellyGarden/Scripts/Juice/RoyalGameplayArt.cs.meta
+?? Assets/JellyGarden/Scripts/Juice/RoyalHintContour.cs
+?? Assets/JellyGarden/Scripts/Juice/RoyalHintContour.cs.meta
+?? Assets/JellyGarden/Scripts/Juice/RoyalHintPresenter.cs
+?? Assets/JellyGarden/Scripts/Juice/RoyalHintPresenter.cs.meta
+?? Assets/JellyGarden/Scripts/Juice/RoyalHintSolver.cs
+?? Assets/JellyGarden/Scripts/Juice/RoyalHintSolver.cs.meta
+?? Assets/JellyGarden/Scripts/Juice/RoyalMatchBreakService.cs
+?? Assets/JellyGarden/Scripts/Juice/RoyalMatchBreakService.cs.meta
+?? Assets/JellyGarden/Scripts/Juice/RoyalRocketSequence.cs
+?? Assets/JellyGarden/Scripts/Juice/RoyalRocketSequence.cs.meta
+?? Assets/JellyGarden/Scripts/Juice/RoyalToolkitImpact.cs
+?? Assets/JellyGarden/Scripts/Juice/RoyalToolkitImpact.cs.meta
+?? Assets/JellyGarden/Scripts/Juice/RoyalToolkitLibrary.cs
+?? Assets/JellyGarden/Scripts/Juice/RoyalToolkitLibrary.cs.meta
+?? Assets/JellyGarden/Scripts/RoyalQaMenu.cs
+?? Assets/JellyGarden/Scripts/RoyalQaMenu.cs.meta
+?? Assets/JellyGarden/Scripts/RoyalQaService.cs
+?? Assets/JellyGarden/Scripts/RoyalQaService.cs.meta
+?? Assets/JellyGarden/Scripts/RoyalSave.cs
+?? Assets/JellyGarden/Scripts/RoyalSave.cs.meta
+?? Assets/JellyGarden/Shaders/RoyalMatchFragment.shader
+?? Assets/JellyGarden/Shaders/RoyalMatchFragment.shader.meta
+?? Assets/JellyGarden/Shaders/RoyalRocketFire.shader
+?? Assets/JellyGarden/Shaders/RoyalRocketFire.shader.meta
+?? Assets/Plugins.meta
+?? Assets/Plugins/
+?? Design/Effects/Rocket-review-v1/
+?? Design/Effects/Rocket-review-v2/
+?? Design/Effects/Rocket-review-v3/
+?? Design/Effects/Rocket-review-v4/
+?? Design/Effects/Toolkit-review/
+?? Design/Effects/Unity-review-v4/
+?? Design/Effects/Unity-review-v5/
+?? Design/Effects/Unity-review-v6/
+?? Design/Effects/finalize_rocket_v4_checks.py
+?? Design/Effects/update_rocket_v4.py
+?? Design/Effects/update_rocket_v4_checks.py
+?? Design/Effects/verify_rocket_v4.py
+?? Design/GameplayArt-v4/
+?? Design/QA-Mode/

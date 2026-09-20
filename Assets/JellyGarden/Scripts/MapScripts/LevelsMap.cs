@@ -140,12 +140,15 @@ namespace JellyGarden.Scripts.MapScripts
 			return _instance.StarsEnabled;
 		}
 
+		// Map levels query these from OnDisable, which also runs while the scene is being torn
+		// down and the map itself is already gone. That threw one NullReferenceException per
+		// level tile (about 110) every time play stopped.
 		public static bool GetIsClickEnabled () {
-			return _instance.IsClickEnabled;
+			return _instance != null && _instance.IsClickEnabled;
 		}
 
 		public static bool GetIsConfirmationEnabled () {
-			return _instance.IsConfirmationEnabled;
+			return _instance != null && _instance.IsConfirmationEnabled;
 		}
 
 		#endregion

@@ -1,0 +1,498 @@
+Checks completed: 495
+Authored particle rig loads
+WebP sprite loads: ruby
+WebP sprite loads: shield
+WebP sprite loads: crown
+WebP sprite loads: leaf
+WebP sprite loads: lily
+WebP sprite loads: vase
+WebP sprite loads: rocket
+WebP sprite loads: tnt
+WebP sprite loads: helicopter
+WebP sprite loads: orb
+WebP sprite loads: smoke
+WebP sprite loads: gem
+WebP sprite loads: heart
+WebP sprite loads: star
+WebP sprite loads: ice
+WebP sprite loads: key
+WebP sprite loads: chest
+WebP sprite loads: chains
+WebP sprite loads: stone
+Audio imports: match-a
+Audio imports: match-b
+Audio imports: rocket
+Audio imports: tnt
+Audio imports: helicopter
+Audio imports: create
+Audio imports: castle-theme
+Audio imports: land
+Audio imports: click
+Audio imports: firework
+Audio imports: celebrate
+Block has new art and preserves target identifier
+Block preserves board footprint
+SolidBlock has new art and preserves target identifier
+SolidBlock preserves board footprint
+ThrivingBlock has new art and preserves target identifier
+ThrivingBlock preserves board footprint
+UndestrBlock has new art and preserves target identifier
+UndestrBlock preserves board footprint
+WireBlock has new art and preserves target identifier
+WireBlock preserves board footprint
+New pieces show royal art before their first rendered frame
+Chain artwork retains trapped-piece rule
+Layered obstacle loses only one layer per direct hit
+Cleared obstacle releases its square
+Goal artwork retains live target data reference
+Ordinary matches do not change global timescale
+Board surface fixture is a complete 8x8 silhouette
+Gameplay NONE colour 0 fills 94% of its cell without crossing the cell bounds
+Gameplay NONE colour 1 fills 94% of its cell without crossing the cell bounds
+Gameplay NONE colour 2 fills 94% of its cell without crossing the cell bounds
+Gameplay NONE colour 3 fills 94% of its cell without crossing the cell bounds
+Gameplay NONE colour 4 fills 94% of its cell without crossing the cell bounds
+Gameplay NONE colour 5 fills 94% of its cell without crossing the cell bounds
+Gameplay HORIZONTAL_STRIPPED colour 0 fills 94% of its cell without crossing the cell bounds
+Gameplay VERTICAL_STRIPPED colour 0 fills 94% of its cell without crossing the cell bounds
+Gameplay PACKAGE colour 0 fills 94% of its cell without crossing the cell bounds
+Gameplay BOMB colour 0 fills 94% of its cell without crossing the cell bounds
+Gameplay HELICOPTER colour 0 fills 94% of its cell without crossing the cell bounds
+Vertical rocket renders the dedicated vertical artwork after the Animator and skin update
+Dedicated vertical rocket stays upright without applying a second 90-degree rotation
+Every cell background fits exactly one square instead of spilling its native512px bounds beyond the board
+Irregular-board NONE cells remain invisible even if an inherited renderer was enabled
+Restoring a playable fixture cell restores its fitted background without scaling its transform
+Board surface renders exactly the shadow and four gold edge layers
+Complete 8x8 board has exactly 32 exposed frame edges
+All five board layers have live textured materials and independent cached meshes
+Board shadow stays behind cells and gold edges remain visible above the board
+Surface geometry covers 64 cells and eight segments on each outside edge
+Repeated same-board rebuild checks reuse renderer, mesh and material IDs without duplication
+Surface renderer cleanup removes only decorative children and preserves the fixture board
+Same-field same-array rebuild recreates all five renderers after level cleanup
+Recovered renderers keep the original mesh and material IDs instead of allocating replacement assets
+Recovery followed by another rebuild creates no duplicate renderer or mesh geometry
+Surface lifecycle preserves every square and item ownership reference
+Board surface and native artwork checks leave moves, score, progression and lives unchanged
+Empty decorative sprite does not throw in ingredient counting
+Decorative sprite with a matching name is not counted as an ingredient
+Only the owned board ingredient contributes to the count
+Ordinary gem break emits recognisable supplied fracture pieces
+Chunks visibly fall more than half a gem height instead of disappearing on impact
+Falling chunks remain opaque after the former fade-out point
+Pause freezes falling debris
+Debris leaves below the board and returns to the pool
+Reduced motion uses a restrained two-chunk breakup
+Fragment pressure scenarios use the authored 240-slot pool
+Debris pressure fixture leaves 3 slots
+Low-capacity breakup uses the remaining 3 fragment slots
+Exhausted debris pool stays inside its renderer and activity cap
+Debris pressure fixture leaves 2 slots
+Low-capacity breakup uses the remaining 2 fragment slots
+Exhausted debris pool stays inside its renderer and activity cap
+Debris pressure fixture leaves 1 slots
+Low-capacity breakup uses the remaining 1 fragment slots
+Exhausted debris pool stays inside its renderer and activity cap
+Decorative TNT tail does not hold board input
+Leaving gameplay cancels finished TNT particles and delayed corona
+Effects Workshop preview still plays while already on Map
+Cascade achievement opens the native celebration
+Consecutive celebrations coalesce through the cooldown
+Celebration sparkles use a fixed 32-element pool
+Celebration never intercepts a swap or booster tap
+Celebration clears promptly without delaying input
+Toolkit derived Ice and Fire prefabs load in Resources
+Ice Impact has no demo self-destroy or camera scripts
+Ice Impact does not add realtime point lighting
+Ice Impact/Impact is finite, reusable and respects game speed
+Ice Impact/Impact has an explicit particle cap
+Ice Impact/ImpactGlow is finite, reusable and respects game speed
+Ice Impact/ImpactGlow has an explicit particle cap
+Ice Impact/ImpactGlowLight is finite, reusable and respects game speed
+Ice Impact/ImpactGlowLight has an explicit particle cap
+Ice Impact/ImpactFlare is finite, reusable and respects game speed
+Ice Impact/ImpactFlare has an explicit particle cap
+Ice Impact/ImpactRing is finite, reusable and respects game speed
+Ice Impact/ImpactRing has an explicit particle cap
+Ice Impact/ImpactRing2 is finite, reusable and respects game speed
+Ice Impact/ImpactRing2 has an explicit particle cap
+Ice Impact/ImpactSparks is finite, reusable and respects game speed
+Ice Impact/ImpactSparks has an explicit particle cap
+Ice Impact/ImpactFlakes is finite, reusable and respects game speed
+Ice Impact/ImpactFlakes has an explicit particle cap
+Default-ParticleSystem renders without orthographic camera depth fades
+ImpactGlow renders without orthographic camera depth fades
+ImpactCenterGlow renders without orthographic camera depth fades
+ImpactFlareIce renders without orthographic camera depth fades
+ImpactRing renders without orthographic camera depth fades
+ImpactRing2 renders without orthographic camera depth fades
+IceFlares renders without orthographic camera depth fades
+SnowFlakes renders without orthographic camera depth fades
+Fire Impact has no demo self-destroy or camera scripts
+Fire Impact does not add realtime point lighting
+Fire Impact/Parent is finite, reusable and respects game speed
+Fire Impact/Parent has an explicit particle cap
+Fire Impact/ImpactGlow is finite, reusable and respects game speed
+Fire Impact/ImpactGlow has an explicit particle cap
+Fire Impact/ImpactGlowLight is finite, reusable and respects game speed
+Fire Impact/ImpactGlowLight has an explicit particle cap
+Fire Impact/ImpactGlowSphere is finite, reusable and respects game speed
+Fire Impact/ImpactGlowSphere has an explicit particle cap
+Fire Impact/ImpactFlare is finite, reusable and respects game speed
+Fire Impact/ImpactFlare has an explicit particle cap
+Fire Impact/ImpactSparks is finite, reusable and respects game speed
+Fire Impact/ImpactSparks has an explicit particle cap
+Fire Impact/ImpactBigSparks is finite, reusable and respects game speed
+Fire Impact/ImpactBigSparks has an explicit particle cap
+Fire Impact/ImpactMark is finite, reusable and respects game speed
+Fire Impact/ImpactMark has an explicit particle cap
+Default-ParticleSystem renders without orthographic camera depth fades
+ImpactGlow renders without orthographic camera depth fades
+ImpactCenterGlow renders without orthographic camera depth fades
+RedFaintGlow renders without orthographic camera depth fades
+ImpactFlareFire renders without orthographic camera depth fades
+FireSparks2 renders without orthographic camera depth fades
+FireSparks2 renders without orthographic camera depth fades
+ImpactMark renders without orthographic camera depth fades
+Five supplied colored burst atlases are sliced into reusable pieces
+red breakup uses separate painted chip sprites rather than a whole burst card
+blue breakup uses separate painted chip sprites rather than a whole burst card
+gold breakup uses separate painted chip sprites rather than a whole burst card
+leaf breakup uses separate painted chip sprites rather than a whole burst card
+magenta breakup uses separate painted chip sprites rather than a whole burst card
+Toolkit prewarms six instances with no more than 176 total particle slots
+Decorative toolkit playback does not consume gameplay random state
+Repeated simultaneous impacts stay inside the prewarmed instance pool
+Toolkit tails never change moves, score or power-operation ownership
+Fire particles remain visible at 0.5 speed beyond the original one-scaled-second destroy window
+Pause freezes every toolkit particle layer and its pool timer
+Fire completes smoothly and returns to its pool after slow-motion review
+Leaving gameplay clears toolkit tails without waiting for gameplay operations
+An intentional toolkit preview is allowed while remaining on Map
+Director cancellation also clears independent toolkit instances
+Reduced motion falls back to the restrained existing native effects
+Physical fragment service prewarms all five supplied burst colors
+Color 0 breakup draws the supplied atlas components
+Color 0 chips stay below 0.40 cell despite an enlarged source pose
+Color 0 chip bounds remain restrained during rotation and gravity
+Color 1 breakup draws the supplied atlas components
+Color 1 chips stay below 0.40 cell despite an enlarged source pose
+Color 1 chip bounds remain restrained during rotation and gravity
+Color 2 breakup draws the supplied atlas components
+Color 2 chips stay below 0.40 cell despite an enlarged source pose
+Color 2 chip bounds remain restrained during rotation and gravity
+Color 3 breakup draws the supplied atlas components
+Color 3 chips stay below 0.40 cell despite an enlarged source pose
+Color 3 chip bounds remain restrained during rotation and gravity
+Color 4 breakup draws the supplied atlas components
+Color 4 chips stay below 0.40 cell despite an enlarged source pose
+Color 4 chip bounds remain restrained during rotation and gravity
+Production match accent schedules its anticipation beat
+Abandoning a board cancels its delayed Ice accent before it can spawn on Home
+Virtual pointer fixture isolates legacy camera mouse callbacks
+Virtual pointer routes through production InputManager: press expected=(108.40, 670.41) routed=(108.40, 670.41) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213270154 blocked=False status=Playing onlyFalling=False source=item 568105589213270154 cell=1,1 acquired=True falling=False destroying=False colour=3 direction=(0.00, 0.00, 0.00) pressWorld=(-2.05, 2.05, -10.00) delta=(0.00, 0.00, 0.00) root=(-2.05, 2.05, -0.20) collider=Center: (-2.05, 2.05, -0.20), Extents: (0.39, 0.39, 0.00) enabled=True
+Pointer press acquires the expected source Item before movement: item 568105589213270154 cell=1,1 acquired=True falling=False destroying=False colour=3 direction=(0.00, 0.00, 0.00) pressWorld=(-2.05, 2.05, -10.00) delta=(0.00, 0.00, 0.00) root=(-2.05, 2.05, -0.20) collider=Center: (-2.05, 2.05, -0.20), Extents: (0.39, 0.39, 0.00) enabled=True
+Virtual pointer routes through production InputManager: move expected=(172.24, 670.41) routed=(172.24, 670.41) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213270136 blocked=True status=Playing onlyFalling=False source=item 568105589213270154 cell=1,1 acquired=True falling=False destroying=False colour=3 direction=(-1.00, 0.00, 0.00) pressWorld=(-2.05, 2.05, -10.00) delta=(-0.82, 0.00, 0.00) root=(-1.73, 2.05, -0.24) collider=Center: (-1.73, 2.05, -0.24), Extents: (0.39, 0.39, 0.00) enabled=True
+Virtual pointer routes through production InputManager: release expected=(172.24, 670.41) routed=(172.24, 670.41) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=item 568105589213270136 blocked=True status=Playing onlyFalling=False source=item 568105589213270154 cell=1,1 acquired=False falling=False destroying=False colour=3 direction=(0.00, 0.00, 0.00) pressWorld=(-2.05, 2.05, -10.00) delta=(-0.82, 0.00, 0.00) root=(-1.71, 2.05, -0.24) collider=Center: (-1.71, 2.05, -0.24), Extents: (0.39, 0.39, 0.00) enabled=True
+Input event swap settles and returns control
+Mouse invalid drag returns both pieces and spends no move
+Virtual pointer routes through production InputManager: press expected=(172.24, 606.57) routed=(172.24, 606.57) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213268840 blocked=False status=Playing onlyFalling=False source=item 568105589213268840 cell=2,2 acquired=True falling=False destroying=False colour=0 direction=(0.00, 0.00, 0.00) pressWorld=(-1.23, 1.23, -10.00) delta=(0.00, 0.00, 0.00) root=(-1.23, 1.23, -0.20) collider=Center: (-1.23, 1.23, -0.20), Extents: (0.39, 0.39, 0.00) enabled=True
+Pointer press acquires the expected source Item before movement: item 568105589213268840 cell=2,2 acquired=True falling=False destroying=False colour=0 direction=(0.00, 0.00, 0.00) pressWorld=(-1.23, 1.23, -10.00) delta=(0.00, 0.00, 0.00) root=(-1.23, 1.23, -0.20) collider=Center: (-1.23, 1.23, -0.20), Extents: (0.39, 0.39, 0.00) enabled=True
+Virtual pointer routes through production InputManager: move expected=(236.08, 606.57) routed=(236.08, 606.57) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213268840 blocked=True status=Playing onlyFalling=False source=item 568105589213268840 cell=2,2 acquired=True falling=False destroying=False colour=0 direction=(-1.00, 0.00, 0.00) pressWorld=(-1.23, 1.23, -10.00) delta=(-0.82, 0.00, 0.00) root=(-0.51, 1.23, -0.29) collider=Center: (-0.51, 1.23, -0.29), Extents: (0.39, 0.39, 0.00) enabled=True
+Virtual pointer routes through production InputManager: release expected=(236.08, 606.57) routed=(236.08, 606.57) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=item 568105589213268840 blocked=True status=Playing onlyFalling=False source=item 568105589213268840 cell=2,2 acquired=False falling=False destroying=False colour=0 direction=(0.00, 0.00, 0.00) pressWorld=(-1.23, 1.23, -10.00) delta=(-0.82, 0.00, 0.00) root=(-0.45, 1.23, -0.30) collider=Center: (-0.45, 1.23, -0.30), Extents: (0.39, 0.39, 0.00) enabled=True
+Input event swap settles and returns control
+Mouse horizontal drag matches through production input and spends one move (moves 99 -> 98, score 0 -> 30)
+Virtual pointer routes through production InputManager: press expected=(199.69, 606.57) routed=(199.69, 606.57) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213267634 blocked=False status=Playing onlyFalling=False source=item 568105589213267634 cell=2,2 acquired=True falling=False destroying=False colour=0 direction=(0.00, 0.00, 0.00) pressWorld=(-0.88, 1.23, -10.00) delta=(0.00, 0.00, 0.00) root=(-1.23, 1.23, -0.20) collider=Center: (-1.23, 1.23, -0.20), Extents: (0.39, 0.39, 0.00) enabled=True
+Pointer press acquires the expected source Item before movement: item 568105589213267634 cell=2,2 acquired=True falling=False destroying=False colour=0 direction=(0.00, 0.00, 0.00) pressWorld=(-0.88, 1.23, -10.00) delta=(0.00, 0.00, 0.00) root=(-1.23, 1.23, -0.20) collider=Center: (-1.23, 1.23, -0.20), Extents: (0.39, 0.39, 0.00) enabled=True
+Virtual pointer routes through production InputManager: move expected=(236.08, 606.57) routed=(236.08, 606.57) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213267634 blocked=True status=Playing onlyFalling=False source=item 568105589213267634 cell=2,2 acquired=True falling=False destroying=False colour=0 direction=(-1.00, 0.00, 0.00) pressWorld=(-0.88, 1.23, -10.00) delta=(-0.47, 0.00, 0.00) root=(-0.50, 1.23, -0.29) collider=Center: (-0.50, 1.23, -0.29), Extents: (0.39, 0.39, 0.00) enabled=True
+Virtual pointer routes through production InputManager: release expected=(236.08, 606.57) routed=(236.08, 606.57) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=item 568105589213267634 blocked=True status=Playing onlyFalling=False source=item 568105589213267634 cell=2,2 acquired=False falling=False destroying=False colour=0 direction=(0.00, 0.00, 0.00) pressWorld=(-0.88, 1.23, -10.00) delta=(-0.47, 0.00, 0.00) root=(-0.45, 1.23, -0.30) collider=Center: (-0.45, 1.23, -0.30), Extents: (0.39, 0.39, 0.00) enabled=True
+Input event swap settles and returns control
+Mouse drag starting on visible gem edge matches and spends exactly one move (moves 99 -> 98, score 30 -> 60)
+Edge-start drag releases without a stuck pointer
+Virtual pointer routes through production InputManager: press expected=(236.08, 542.73) routed=(236.08, 542.73) held=True positionDevice=Royal QA virtual touch pressDevice=Royal QA virtual touch hit=item 568105589213266266 blocked=False status=Playing onlyFalling=False source=item 568105589213266266 cell=3,3 acquired=True falling=False destroying=False colour=1 direction=(0.00, 0.00, 0.00) pressWorld=(-0.41, 0.41, -10.00) delta=(0.00, 0.00, 0.00) root=(-0.41, 0.41, -0.20) collider=Center: (-0.41, 0.41, -0.20), Extents: (0.39, 0.39, 0.00) enabled=True
+Pointer press acquires the expected source Item before movement: item 568105589213266266 cell=3,3 acquired=True falling=False destroying=False colour=1 direction=(0.00, 0.00, 0.00) pressWorld=(-0.41, 0.41, -10.00) delta=(0.00, 0.00, 0.00) root=(-0.41, 0.41, -0.20) collider=Center: (-0.41, 0.41, -0.20), Extents: (0.39, 0.39, 0.00) enabled=True
+Virtual pointer routes through production InputManager: move expected=(236.08, 606.57) routed=(236.08, 606.57) held=True positionDevice=Royal QA virtual touch pressDevice=Royal QA virtual touch hit=item 568105589213266266 blocked=True status=Playing onlyFalling=False source=item 568105589213266266 cell=3,3 acquired=True falling=False destroying=False colour=1 direction=(0.00, -1.00, 0.00) pressWorld=(-0.41, 0.41, -10.00) delta=(0.00, -0.82, 0.00) root=(-0.41, 1.15, -0.29) collider=Center: (-0.41, 1.15, -0.29), Extents: (0.39, 0.39, 0.00) enabled=True
+Virtual pointer routes through production InputManager: release expected=(236.08, 606.57) routed=(236.08, 606.57) held=False positionDevice=Royal QA virtual touch pressDevice=none hit=item 568105589213266266 blocked=True status=Playing onlyFalling=False source=item 568105589213266266 cell=3,3 acquired=False falling=False destroying=False colour=1 direction=(0.00, 0.00, 0.00) pressWorld=(-0.41, 0.41, -10.00) delta=(0.00, -0.82, 0.00) root=(-0.41, 1.20, -0.30) collider=Center: (-0.41, 1.20, -0.30), Extents: (0.39, 0.39, 0.00) enabled=True
+Input event swap settles and returns control
+Touch vertical drag matches through production input and spends one move (moves 99 -> 98, score 60 -> 90)
+Virtual pointer routes through production InputManager: press expected=(172.24, 606.57) routed=(172.24, 606.57) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213265222 blocked=True status=Playing onlyFalling=False source=source missing
+Virtual pointer routes through production InputManager: move expected=(236.08, 606.57) routed=(236.08, 606.57) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=item 568105589213265204 blocked=True status=Playing onlyFalling=False source=source missing
+Virtual pointer routes through production InputManager: release expected=(236.08, 606.57) routed=(236.08, 606.57) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=item 568105589213265204 blocked=True status=Playing onlyFalling=False source=source missing
+Drag during input lock does not exchange pieces
+Virtual pointer routes through production InputManager: press expected=(-20.00, -20.00) routed=(-20.00, -20.00) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=none blocked=False status=Playing onlyFalling=False source=source missing
+Virtual pointer routes through production InputManager: move expected=(-80.00, -20.00) routed=(-80.00, -20.00) held=True positionDevice=Royal QA virtual mouse pressDevice=Royal QA virtual mouse hit=none blocked=False status=Playing onlyFalling=False source=source missing
+Virtual pointer routes through production InputManager: release expected=(-80.00, -20.00) routed=(-80.00, -20.00) held=False positionDevice=Royal QA virtual mouse pressDevice=none hit=none blocked=False status=Playing onlyFalling=False source=source missing
+Press outside board does not spend a move
+Releasing virtual inputs leaves no stuck drag state
+Input tests preserve one piece per owned square
+Input regression restores caller moves, score, move ID and input-lock state
+Pointer regression preserves gems and lives
+3-line detected
+3-line power-up rule
+3-match observes the actual visible anticipation and stagger frames
+3-match whole-piece animation remains below1.12cell before fracture (peak 1.053)
+3-match production resolver finishes without a VFX wait
+3-match emits Ice through production CombineManager and FallingDown
+4-line detected
+4-line power-up rule
+4-match observes the actual visible anticipation and stagger frames
+4-match whole-piece animation remains below1.12cell before fracture (peak 1.053)
+4-match production resolver finishes without a VFX wait
+4-match emits Ice through production CombineManager and FallingDown
+5-line detected
+5-line power-up rule
+5-match observes the actual visible anticipation and stagger frames
+5-match whole-piece animation remains below1.12cell before fracture (peak 1.053)
+5-match production resolver finishes without a VFX wait
+5-match emits Ice through production CombineManager and FallingDown
+2×2 square detected
+2×2 creates helicopter
+Impact queue settles within 10 seconds
+Helicopter survives match destruction as a playable piece
+T match creates TNT
+Impact queue settles within 10 seconds
+HORIZONTAL_STRIPPED removes additional targets on impact
+Impact queue settles within 10 seconds
+PACKAGE removes additional targets on impact
+Impact queue settles within 10 seconds
+HELICOPTER removes additional targets on impact
+Impact queue settles within 10 seconds
+BOMB removes additional targets on impact
+Combo accepted: HORIZONTAL_STRIPPED + HORIZONTAL_STRIPPED
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + HORIZONTAL_STRIPPED
+Combo accepted: HORIZONTAL_STRIPPED + PACKAGE
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + PACKAGE
+Combo accepted: HORIZONTAL_STRIPPED + HELICOPTER
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + HELICOPTER
+Combo accepted: HORIZONTAL_STRIPPED + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: HORIZONTAL_STRIPPED + BOMB
+Combo accepted: PACKAGE + PACKAGE
+Impact queue settles within 14 seconds
+Combo changes board: PACKAGE + PACKAGE
+Combo accepted: PACKAGE + HELICOPTER
+Impact queue settles within 14 seconds
+Combo changes board: PACKAGE + HELICOPTER
+Combo accepted: PACKAGE + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: PACKAGE + BOMB
+Combo accepted: HELICOPTER + HELICOPTER
+Impact queue settles within 14 seconds
+Combo changes board: HELICOPTER + HELICOPTER
+Combo accepted: HELICOPTER + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: HELICOPTER + BOMB
+Combo accepted: BOMB + BOMB
+Impact queue settles within 14 seconds
+Combo changes board: BOMB + BOMB
+Impact queue settles within 10 seconds
+TNT chains into rocket and reaches board edge
+Pause holds TNT impact
+Impact queue settles within 10 seconds
+Hint controller exists
+Hints ON reveals a legal candidate after the idle delay
+Hints OFF cancels the active visual immediately
+Hints OFF exits any current tip animation
+Hints OFF keeps move discovery active while suppressing automatic visuals
+Hints OFF is stored for scene and app reloads
+Hints ON resumes automatic assistance
+Opening pause cancels a visible board hint
+Piece fills its cell without crossing adjacent hit areas: 0,0
+Piece fills its cell without crossing adjacent hit areas: 1,0
+Piece fills its cell without crossing adjacent hit areas: 2,0
+Piece fills its cell without crossing adjacent hit areas: 3,0
+Piece fills its cell without crossing adjacent hit areas: 4,0
+Piece fills its cell without crossing adjacent hit areas: 5,0
+Piece fills its cell without crossing adjacent hit areas: 6,0
+Piece fills its cell without crossing adjacent hit areas: 7,0
+Piece fills its cell without crossing adjacent hit areas: 0,1
+Piece fills its cell without crossing adjacent hit areas: 1,1
+Piece fills its cell without crossing adjacent hit areas: 2,1
+Piece fills its cell without crossing adjacent hit areas: 3,1
+Piece fills its cell without crossing adjacent hit areas: 4,1
+Piece fills its cell without crossing adjacent hit areas: 5,1
+Piece fills its cell without crossing adjacent hit areas: 6,1
+Piece fills its cell without crossing adjacent hit areas: 7,1
+Piece fills its cell without crossing adjacent hit areas: 0,2
+Piece fills its cell without crossing adjacent hit areas: 1,2
+Piece fills its cell without crossing adjacent hit areas: 2,2
+Piece fills its cell without crossing adjacent hit areas: 3,2
+Piece fills its cell without crossing adjacent hit areas: 4,2
+Piece fills its cell without crossing adjacent hit areas: 5,2
+Piece fills its cell without crossing adjacent hit areas: 6,2
+Piece fills its cell without crossing adjacent hit areas: 7,2
+Piece fills its cell without crossing adjacent hit areas: 0,3
+Piece fills its cell without crossing adjacent hit areas: 1,3
+Piece fills its cell without crossing adjacent hit areas: 2,3
+Piece fills its cell without crossing adjacent hit areas: 3,3
+Piece fills its cell without crossing adjacent hit areas: 4,3
+Piece fills its cell without crossing adjacent hit areas: 5,3
+Piece fills its cell without crossing adjacent hit areas: 6,3
+Piece fills its cell without crossing adjacent hit areas: 7,3
+Piece fills its cell without crossing adjacent hit areas: 0,4
+Piece fills its cell without crossing adjacent hit areas: 1,4
+Piece fills its cell without crossing adjacent hit areas: 2,4
+Piece fills its cell without crossing adjacent hit areas: 3,4
+Piece fills its cell without crossing adjacent hit areas: 4,4
+Piece fills its cell without crossing adjacent hit areas: 5,4
+Piece fills its cell without crossing adjacent hit areas: 6,4
+Piece fills its cell without crossing adjacent hit areas: 7,4
+Piece fills its cell without crossing adjacent hit areas: 0,5
+Piece fills its cell without crossing adjacent hit areas: 1,5
+Piece fills its cell without crossing adjacent hit areas: 2,5
+Piece fills its cell without crossing adjacent hit areas: 3,5
+Piece fills its cell without crossing adjacent hit areas: 4,5
+Piece fills its cell without crossing adjacent hit areas: 5,5
+Piece fills its cell without crossing adjacent hit areas: 6,5
+Piece fills its cell without crossing adjacent hit areas: 7,5
+Piece fills its cell without crossing adjacent hit areas: 0,6
+Piece fills its cell without crossing adjacent hit areas: 1,6
+Piece fills its cell without crossing adjacent hit areas: 2,6
+Piece fills its cell without crossing adjacent hit areas: 3,6
+Piece fills its cell without crossing adjacent hit areas: 4,6
+Piece fills its cell without crossing adjacent hit areas: 5,6
+Piece fills its cell without crossing adjacent hit areas: 6,6
+Piece fills its cell without crossing adjacent hit areas: 7,6
+Piece fills its cell without crossing adjacent hit areas: 0,7
+Piece fills its cell without crossing adjacent hit areas: 1,7
+Piece fills its cell without crossing adjacent hit areas: 2,7
+Piece fills its cell without crossing adjacent hit areas: 3,7
+Piece fills its cell without crossing adjacent hit areas: 4,7
+Piece fills its cell without crossing adjacent hit areas: 5,7
+Piece fills its cell without crossing adjacent hit areas: 6,7
+Piece fills its cell without crossing adjacent hit areas: 7,7
+MenuPause includes an interactive matching-hints setting
+Settings includes an interactive matching-hints setting
+8x10 board fits safe area above boosters with readable cells at 360x640 (36.3 px/cell)
+9x11 board fits safe area above boosters with readable cells at 360x640 (33.2 px/cell)
+5x11 board fits safe area above boosters with readable cells at 360x640 (33.2 px/cell)
+9x5 board fits safe area above boosters with readable cells at 360x640 (38.1 px/cell)
+8x10 board fits safe area above boosters with readable cells at 390x844 (46.5 px/cell)
+9x11 board fits safe area above boosters with readable cells at 390x844 (41.3 px/cell)
+5x11 board fits safe area above boosters with readable cells at 390x844 (44.9 px/cell)
+9x5 board fits safe area above boosters with readable cells at 390x844 (41.3 px/cell)
+8x10 board fits safe area above boosters with readable cells at 412x915 (49.1 px/cell)
+9x11 board fits safe area above boosters with readable cells at 412x915 (43.7 px/cell)
+5x11 board fits safe area above boosters with readable cells at 412x915 (49.0 px/cell)
+9x5 board fits safe area above boosters with readable cells at 412x915 (43.7 px/cell)
+8x10 board fits safe area above boosters with readable cells at 768x1024 (60.6 px/cell)
+9x11 board fits safe area above boosters with readable cells at 768x1024 (55.3 px/cell)
+5x11 board fits safe area above boosters with readable cells at 768x1024 (55.3 px/cell)
+9x5 board fits safe area above boosters with readable cells at 768x1024 (81.4 px/cell)
+Hint and layout checks preserve moves, score, gems and lives
+hint-3 previews every resulting matched cell and excludes unrelated neighbours
+hint-3 identifies both actual exchange partners
+hint-3 full preview exactly matches the existing production match solver's consumed cells
+hint-3 has one closed full-shape boundary, with no internal or phantom edges
+hint-3 preview leaves ownership, power creation and RNG untouched
+hint-3 starts its native rendered hint
+hint-3 visibly moves the two rendered gems toward each other after Animator and skin updates (visible=True, first=0.02824287, second=-0.02824287)
+hint-3 leaves all other gem positions steady
+hint-3 keeps roots, hit areas and square ownership unchanged during motion
+hint-3 renders a closed rounded outline for all 3 future match cells
+hint-3 outline covers the full cell extents
+hint-3 light visibly travels along the contour between captured frames
+hint-3 cancellation restores both sprite positions immediately
+hint-4 previews every resulting matched cell and excludes unrelated neighbours
+hint-4 identifies both actual exchange partners
+hint-4 full preview exactly matches the existing production match solver's consumed cells
+hint-4 has one closed full-shape boundary, with no internal or phantom edges
+hint-4 preview leaves ownership, power creation and RNG untouched
+hint-4 starts its native rendered hint
+hint-4 visibly moves the two rendered gems toward each other after Animator and skin updates (visible=True, first=0.03176882, second=-0.03176882)
+hint-4 leaves all other gem positions steady
+hint-4 keeps roots, hit areas and square ownership unchanged during motion
+hint-4 renders a closed rounded outline for all 4 future match cells
+hint-4 outline covers the full cell extents
+hint-4 light visibly travels along the contour between captured frames
+hint-4 cancellation restores both sprite positions immediately
+hint-5 previews every resulting matched cell and excludes unrelated neighbours
+hint-5 identifies both actual exchange partners
+hint-5 full preview exactly matches the existing production match solver's consumed cells
+hint-5 has one closed full-shape boundary, with no internal or phantom edges
+hint-5 preview leaves ownership, power creation and RNG untouched
+hint-5 starts its native rendered hint
+hint-5 visibly moves the two rendered gems toward each other after Animator and skin updates (visible=True, first=0.03074416, second=-0.03074416)
+hint-5 leaves all other gem positions steady
+hint-5 keeps roots, hit areas and square ownership unchanged during motion
+hint-5 renders a closed rounded outline for all 5 future match cells
+hint-5 outline covers the full cell extents
+hint-5 light visibly travels along the contour between captured frames
+hint-5 cancellation restores both sprite positions immediately
+hint-L previews every resulting matched cell and excludes unrelated neighbours
+hint-L identifies both actual exchange partners
+hint-L full preview exactly matches the existing production match solver's consumed cells
+hint-L has one closed full-shape boundary, with no internal or phantom edges
+hint-L preview leaves ownership, power creation and RNG untouched
+hint-L starts its native rendered hint
+hint-L visibly moves the two rendered gems toward each other after Animator and skin updates (visible=True, first=0.03092059, second=-0.03092059)
+hint-L leaves all other gem positions steady
+hint-L keeps roots, hit areas and square ownership unchanged during motion
+hint-L renders a closed rounded outline for all 5 future match cells
+hint-L outline covers the full cell extents
+hint-L light visibly travels along the contour between captured frames
+hint-L cancellation restores both sprite positions immediately
+hint-T previews every resulting matched cell and excludes unrelated neighbours
+hint-T identifies both actual exchange partners
+hint-T full preview exactly matches the existing production match solver's consumed cells
+hint-T has one closed full-shape boundary, with no internal or phantom edges
+hint-T preview leaves ownership, power creation and RNG untouched
+hint-T starts its native rendered hint
+hint-T visibly moves the two rendered gems toward each other after Animator and skin updates (visible=True, first=0.03144873, second=-0.03144873)
+hint-T leaves all other gem positions steady
+hint-T keeps roots, hit areas and square ownership unchanged during motion
+hint-T renders a closed rounded outline for all 5 future match cells
+hint-T outline covers the full cell extents
+hint-T light visibly travels along the contour between captured frames
+hint-T cancellation restores both sprite positions immediately
+hint-square previews every resulting matched cell and excludes unrelated neighbours
+hint-square identifies both actual exchange partners
+hint-square full preview exactly matches the existing production match solver's consumed cells
+hint-square has one closed full-shape boundary, with no internal or phantom edges
+hint-square preview leaves ownership, power creation and RNG untouched
+hint-square starts its native rendered hint
+hint-square visibly moves the two rendered gems toward each other after Animator and skin updates (visible=True, first=0.03184425, second=-0.03184425)
+hint-square leaves all other gem positions steady
+hint-square keeps roots, hit areas and square ownership unchanged during motion
+hint-square renders a closed rounded outline for all 4 future match cells
+hint-square outline covers the full cell extents
+hint-square light visibly travels along the contour between captured frames
+hint-square cancellation restores both sprite positions immediately
+A line overlapping a 2x2 previews only the consumed line, matching the existing helicopter precedence rule
+Overlapping line/square preview matches the production solver exactly
+Contour builder retains separate diagonal outlines and a hollow union's inner boundary
+Contour builder retains separate diagonal outlines and a hollow union's inner boundary
+Input cancellation fixture starts a visible hint
+Pointer press removes the full hint during the input callback, before another rendered frame
+A held pointer suppresses a direct hint reveal
+Automatic idle hints stay hidden while the pointer remains held past the idle threshold
+Natural idle finder reveals a real two-gem swap only after the quiet-time delay
+Natural idle finder selects the complete match actually consumed by production gameplay
+Natural idle hint visibly nudges both rendered swap partners after Animator and LateUpdate
+Natural idle hint moves only the two child sprites while every board root and other gem stays steady
+Natural idle hint renders a closed outline for its complete predicted match
+Real pointer input immediately cancels the natural idle hint and restores both rendered gem positions
+Hints OFF removes flowing contours synchronously
+A changed matched gem invalidates the hint without waiting for the idle loop
+A newly trapped swap partner invalidates the hint immediately
+Pause clears native hint poses and contours
+Changing game fields clears the hint
+Reduced motion retains a readable full outline with no gem nudging or moving glint
+Rendered hint checks consume no moves, score, coins or lives
+Destroying a different matched gem clears the complete hint even before its stale cell reference is replaced
+Invalid swap returns pieces and spends no move
+Tap activates power-up
+Power-up tap spends exactly one move
+Live gravity/refill/cascade finishes and input returns
+Refill has valid square ownership and no falling leftovers
+Simultaneous audio stays within voice cap
+Projectiles stay within pool cap
+Falling fragments stay within their fixed pool
+Regression run preserves coins and lives
+No runtime errors during regression run
+Errors: 
+Editor update p95 ms (not device GPU benchmark): 7.6027

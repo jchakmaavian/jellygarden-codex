@@ -56,7 +56,9 @@ namespace JellyGarden.Scripts.GUI
             gameObject.SetActive( true );
             icon.sprite = boostProducts[(int)_boostType].icon;
             if(Juice.RoyalEffectsProfile.Get){
-                string art=_boostType==BoostType.ExtraMoves||_boostType==BoostType.ExtraTime?"crown":_boostType==BoostType.Packages?"tnt":_boostType==BoostType.Stripes?"rocket":_boostType==BoostType.Hand?"hammer":"orb";
+                // Bomb fell through to the orb, so opening the shop from the TNT barrel showed
+                // the magic orb over the text "Destroy the item". Each booster now shows its own art.
+                string art=_boostType==BoostType.ExtraMoves||_boostType==BoostType.ExtraTime?"crown":_boostType==BoostType.Packages||_boostType==BoostType.Bomb?"tnt":_boostType==BoostType.Stripes?"rocket":_boostType==BoostType.Hand?"hammer":"orb";
                 icon.sprite=Juice.RoyalPieceSkin.Art(art);icon.preserveAspect=true;
             }
             description.text = boostProducts[(int)_boostType].description;

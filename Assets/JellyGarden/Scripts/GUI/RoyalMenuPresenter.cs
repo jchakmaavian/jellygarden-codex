@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 using UnityEngine;
 using UnityEngine.UI;
 using JellyGarden.Scripts.Targets;

@@ -51,7 +51,8 @@ namespace JellyGarden.Scripts
 		readonly List<Item> visibleHintItems = new List<Item>();
 		Coroutine hintRoutine;
 		int visibleHintMove;
-		public int VisibleHintCount => visibleHintItems.Count;
+		Juice.RoyalHintPresenter hintPresenter;
+		public int VisibleHintCount => hintPresenter && hintPresenter.IsVisible ? hintPresenter.VisibleSwapCount : 0;
 		public const float HintIdleSeconds = 4f;
 		void OnEnable() { Juice.RoyalHintSettings.Changed += HintPreferenceChanged; }
 		void OnDisable()
@@ -71,6 +72,7 @@ namespace JellyGarden.Scripts
 		}
 		public void CancelVisibleHint()
 		{
+			if (hintPresenter) hintPresenter.Hide();
 			foreach (var item in visibleHintItems)
 			{
 				if (!item || !item.anim) continue;
@@ -133,7 +135,9 @@ namespace JellyGarden.Scripts
 
 		public List<Item> GetCombine()
 		{
-			return nextMoveItems;
+			// A level restart can retire these pieces before the next solver pass.
+			// Tutorial consumers must wait for a live candidate from the current board.
+			return nextMoveItems != null && HintCandidatesPresent(nextMoveItems) ? nextMoveItems : null;
 		}
 
 		/// <summary>
@@ -590,11 +594,18 @@ namespace JellyGarden.Scripts
 				allowShowTip && Juice.RoyalHintSettings.Enabled && idle >= HintIdleSeconds &&
 				!InputManager.Instance.IsTouching && HintCandidatesPresent(nextMoveItems))
 			{
-				visibleHintMove = tipID;
-				foreach (var item in nextMoveItems)
-					if (item && !item.destroying && !item.falling && item.anim)
-					{ item.anim.SetTrigger("tip"); visibleHintItems.Add(item); }
-				yield return new WaitForSeconds(1.5f);
+				// The legacy discovery sample omits the swap partner and longer runs.
+				// Preview the complete result without changing real cells or match state.
+				var plan = Juice.RoyalHintSolver.Find(lm);
+				if (!hintPresenter) hintPresenter = GetComponent<Juice.RoyalHintPresenter>() ?? gameObject.AddComponent<Juice.RoyalHintPresenter>();
+				if (hintPresenter.Show(plan))
+				{
+					visibleHintMove = tipID;
+					visibleHintItems.Add(plan.First);
+					if (plan.Second) visibleHintItems.Add(plan.Second);
+					float until = Time.unscaledTime + 2.4f;
+					while (hintPresenter.IsVisible && Time.unscaledTime < until) yield return null;
+				}
 			}
 			CancelVisibleHint();
 			corCount = 0; hintRoutine = null;

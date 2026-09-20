@@ -18,19 +18,30 @@ namespace JellyGarden.Scripts.GUI
 	public class LifeShop : MonoBehaviour
 	{
 		public int CostIfRefill = 12;
+		Text nextLife;
 		// Use this for initialization
 		void OnEnable ()
 		{
 			transform.Find ("Image/BuyLife/Price").GetComponent<Text> ().text = "" + CostIfRefill;
-			if (!LevelManager.THIS.enableInApps)
-				transform.Find ("Image/BuyLife").gameObject.SetActive (false);
-		
+			// A refill costs gems, not real money. Hiding it with the real-money packs left the
+			// out-of-lives popup with a heart, one line of text and no action at all.
+			transform.Find ("Image/BuyLife").gameObject.SetActive (true);
 		}
-	
-		// Update is called once per frame
+
 		void Update ()
 		{
-	
+			// The popup is the one place a player waits on the refill, so it shows the countdown.
+			if (nextLife == null)
+			{
+				Transform found = transform.Find ("Image/Royal next life");
+				if (found == null) return;
+				nextLife = found.GetComponent<Text> ();
+				if (nextLife == null) return;
+			}
+			InitScript.Instance.UpdateLives ();
+			nextLife.text = InitScript.lifes >= InitScript.Instance.CapOfLife
+				? "Your lives are full"
+				: "Next life in " + InitScript.timeForReps;
 		}
 	}
 }

@@ -7,6 +7,6 @@ namespace JellyGarden.Scripts.Juice
     {
         SpriteRenderer visual;
         void Awake(){visual=GetComponent<SpriteRenderer>();}
-        void LateUpdate(){if(visual&&visual.sprite)visual.sprite=RoyalVisualCatalog.Replace(visual.sprite);}
+        void LateUpdate(){if(visual&&visual.sprite)visual.sprite=RoyalVisualCatalog.Replace(visual.sprite,true);}
     }
 }

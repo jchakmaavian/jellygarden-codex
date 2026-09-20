@@ -1,45 +1,45 @@
 Checks completed: 812
 VFX Lab uses actual game speed 0.5
-length-4.5-horizontal-0.5: measured mature ribbon 4.500 actual gem cells, never exceeds budget
-length-4.5-horizontal-0.5: flame stays attached to nozzle every frame
-length-4.5-horizontal-0.5: measured speed times core/glow lifetime equals cell-length target
-length-4.5-horizontal-0.5: normalized plume shader supported
-length-4.5-horizontal-0.5: all trails and soft-tail particles fade and return to pool
-length-4.5-horizontal-0.5: no VFX object growth
-length-4.5-vertical-0.5: measured mature ribbon 4.500 actual gem cells, never exceeds budget
-length-4.5-vertical-0.5: flame stays attached to nozzle every frame
-length-4.5-vertical-0.5: measured speed times core/glow lifetime equals cell-length target
-length-4.5-vertical-0.5: normalized plume shader supported
-length-4.5-vertical-0.5: all trails and soft-tail particles fade and return to pool
-length-4.5-vertical-0.5: no VFX object growth
-length-5.0-horizontal-0.5: measured mature ribbon 5.000 actual gem cells, never exceeds budget
-length-5.0-horizontal-0.5: flame stays attached to nozzle every frame
-length-5.0-horizontal-0.5: measured speed times core/glow lifetime equals cell-length target
-length-5.0-horizontal-0.5: normalized plume shader supported
-length-5.0-horizontal-0.5: all trails and soft-tail particles fade and return to pool
-length-5.0-horizontal-0.5: no VFX object growth
-length-5.0-vertical-0.5: measured mature ribbon 5.000 actual gem cells, never exceeds budget
-length-5.0-vertical-0.5: flame stays attached to nozzle every frame
-length-5.0-vertical-0.5: measured speed times core/glow lifetime equals cell-length target
-length-5.0-vertical-0.5: normalized plume shader supported
-length-5.0-vertical-0.5: all trails and soft-tail particles fade and return to pool
-length-5.0-vertical-0.5: no VFX object growth
-length-5.5-horizontal-0.5: measured mature ribbon 5.500 actual gem cells, never exceeds budget
-length-5.5-horizontal-0.5: flame stays attached to nozzle every frame
-length-5.5-horizontal-0.5: measured speed times core/glow lifetime equals cell-length target
-length-5.5-horizontal-0.5: normalized plume shader supported
-length-5.5-horizontal-0.5: all trails and soft-tail particles fade and return to pool
-length-5.5-horizontal-0.5: no VFX object growth
-length-5.5-vertical-0.5: measured mature ribbon 5.500 actual gem cells, never exceeds budget
-length-5.5-vertical-0.5: flame stays attached to nozzle every frame
-length-5.5-vertical-0.5: measured speed times core/glow lifetime equals cell-length target
-length-5.5-vertical-0.5: normalized plume shader supported
-length-5.5-vertical-0.5: all trails and soft-tail particles fade and return to pool
-length-5.5-vertical-0.5: no VFX object growth
+length-6.5-horizontal-0.5: measured mature ribbon 6.500 actual gem cells, never exceeds budget
+length-6.5-horizontal-0.5: flame stays attached to nozzle every frame
+length-6.5-horizontal-0.5: measured speed times core/glow lifetime equals cell-length target
+length-6.5-horizontal-0.5: normalized plume shader supported
+length-6.5-horizontal-0.5: all trails and soft-tail particles fade and return to pool
+length-6.5-horizontal-0.5: no VFX object growth
+length-6.5-vertical-0.5: measured mature ribbon 6.500 actual gem cells, never exceeds budget
+length-6.5-vertical-0.5: flame stays attached to nozzle every frame
+length-6.5-vertical-0.5: measured speed times core/glow lifetime equals cell-length target
+length-6.5-vertical-0.5: normalized plume shader supported
+length-6.5-vertical-0.5: all trails and soft-tail particles fade and return to pool
+length-6.5-vertical-0.5: no VFX object growth
+length-7.0-horizontal-0.5: measured mature ribbon 7.000 actual gem cells, never exceeds budget
+length-7.0-horizontal-0.5: flame stays attached to nozzle every frame
+length-7.0-horizontal-0.5: measured speed times core/glow lifetime equals cell-length target
+length-7.0-horizontal-0.5: normalized plume shader supported
+length-7.0-horizontal-0.5: all trails and soft-tail particles fade and return to pool
+length-7.0-horizontal-0.5: no VFX object growth
+length-7.0-vertical-0.5: measured mature ribbon 7.000 actual gem cells, never exceeds budget
+length-7.0-vertical-0.5: flame stays attached to nozzle every frame
+length-7.0-vertical-0.5: measured speed times core/glow lifetime equals cell-length target
+length-7.0-vertical-0.5: normalized plume shader supported
+length-7.0-vertical-0.5: all trails and soft-tail particles fade and return to pool
+length-7.0-vertical-0.5: no VFX object growth
+length-7.5-horizontal-0.5: measured mature ribbon 7.500 actual gem cells, never exceeds budget
+length-7.5-horizontal-0.5: flame stays attached to nozzle every frame
+length-7.5-horizontal-0.5: measured speed times core/glow lifetime equals cell-length target
+length-7.5-horizontal-0.5: normalized plume shader supported
+length-7.5-horizontal-0.5: all trails and soft-tail particles fade and return to pool
+length-7.5-horizontal-0.5: no VFX object growth
+length-7.5-vertical-0.5: measured mature ribbon 7.500 actual gem cells, never exceeds budget
+length-7.5-vertical-0.5: flame stays attached to nozzle every frame
+length-7.5-vertical-0.5: measured speed times core/glow lifetime equals cell-length target
+length-7.5-vertical-0.5: normalized plume shader supported
+length-7.5-vertical-0.5: all trails and soft-tail particles fade and return to pool
+length-7.5-vertical-0.5: no VFX object growth
 horizontal-0.5: Lab speed remains correct throughout flight
-horizontal-0.5: exhaust remains within the five-cell budget throughout flight
+horizontal-0.5: exhaust remains within the seven-cell budget throughout flight
 horizontal-0.5: rocket/chains/cascades settle
-horizontal-0.5: sweep lasts0.8-1.2 game seconds
+horizontal-0.5: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 horizontal-0.5: visible launch before first contact
 horizontal-0.5: travel reaches every row/column cell
 horizontal-0.5: cell0 white impact precedes mutation
@@ -50,7 +50,7 @@ horizontal-0.5: cell4 white impact precedes mutation
 horizontal-0.5: cell5 white impact precedes mutation
 horizontal-0.5: cell6 white impact precedes mutation
 horizontal-0.5: cell7 white impact precedes mutation
-horizontal-0.5: physical rocket nose sweeps every contacted cell (max sample step 0.211 cells; max end distance 0.447)
+horizontal-0.5: physical rocket nose sweeps every contacted cell (max sample step 0.331 cells; max end distance 0.450)
 horizontal-0.5: cells remain intact until reached
 horizontal-0.5: intended cell cleared0
 horizontal-0.5: intended cell cleared1
@@ -81,9 +81,9 @@ horizontal-0.5: rocket container is outside all board/UI masks
 horizontal-0.5: HUD and boosters render above world VFX
 horizontal-0.5: pause/menu UI sorting layer exceeds rocket layer
 vertical-0.5: Lab speed remains correct throughout flight
-vertical-0.5: exhaust remains within the five-cell budget throughout flight
+vertical-0.5: exhaust remains within the seven-cell budget throughout flight
 vertical-0.5: rocket/chains/cascades settle
-vertical-0.5: sweep lasts0.8-1.2 game seconds
+vertical-0.5: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 vertical-0.5: visible launch before first contact
 vertical-0.5: travel reaches every row/column cell
 vertical-0.5: cell0 white impact precedes mutation
@@ -94,7 +94,7 @@ vertical-0.5: cell4 white impact precedes mutation
 vertical-0.5: cell5 white impact precedes mutation
 vertical-0.5: cell6 white impact precedes mutation
 vertical-0.5: cell7 white impact precedes mutation
-vertical-0.5: physical rocket nose sweeps every contacted cell (max sample step 0.238 cells; max end distance 0.421)
+vertical-0.5: physical rocket nose sweeps every contacted cell (max sample step 0.342 cells; max end distance 0.434)
 vertical-0.5: cells remain intact until reached
 vertical-0.5: intended cell cleared0
 vertical-0.5: intended cell cleared1
@@ -127,9 +127,9 @@ vertical-0.5: rocket container is outside all board/UI masks
 vertical-0.5: HUD and boosters render above world VFX
 vertical-0.5: pause/menu UI sorting layer exceeds rocket layer
 blockers-0.5: Lab speed remains correct throughout flight
-blockers-0.5: exhaust remains within the five-cell budget throughout flight
+blockers-0.5: exhaust remains within the seven-cell budget throughout flight
 blockers-0.5: rocket/chains/cascades settle
-blockers-0.5: sweep lasts0.8-1.2 game seconds
+blockers-0.5: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 blockers-0.5: visible launch before first contact
 blockers-0.5: travel reaches every row/column cell
 blockers-0.5: cell0 white impact precedes mutation
@@ -140,7 +140,7 @@ blockers-0.5: cell4 white impact precedes mutation
 blockers-0.5: cell5 white impact precedes mutation
 blockers-0.5: cell6 white impact precedes mutation
 blockers-0.5: cell7 white impact precedes mutation
-blockers-0.5: physical rocket nose sweeps every contacted cell (max sample step 0.240 cells; max end distance 0.440)
+blockers-0.5: physical rocket nose sweeps every contacted cell (max sample step 0.353 cells; max end distance 0.431)
 blockers-0.5: cells remain intact until reached
 blockers-0.5: crossed blocker removed by existing service
 blockers-0.5: custom rocket shader and six fixed pooled emitters
@@ -163,9 +163,9 @@ blockers-0.5: rocket container is outside all board/UI masks
 blockers-0.5: HUD and boosters render above world VFX
 blockers-0.5: pause/menu UI sorting layer exceeds rocket layer
 chain-0.5: Lab speed remains correct throughout flight
-chain-0.5: exhaust remains within the five-cell budget throughout flight
+chain-0.5: exhaust remains within the seven-cell budget throughout flight
 chain-0.5: rocket/chains/cascades settle
-chain-0.5: sweep lasts0.8-1.2 game seconds
+chain-0.5: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 chain-0.5: visible launch before first contact
 chain-0.5: travel reaches every row/column cell
 chain-0.5: cell0 white impact precedes mutation
@@ -206,9 +206,9 @@ chain-0.5: rocket container is outside all board/UI masks
 chain-0.5: HUD and boosters render above world VFX
 chain-0.5: pause/menu UI sorting layer exceeds rocket layer
 cascade-0.5: Lab speed remains correct throughout flight
-cascade-0.5: exhaust remains within the five-cell budget throughout flight
+cascade-0.5: exhaust remains within the seven-cell budget throughout flight
 cascade-0.5: rocket/chains/cascades settle
-cascade-0.5: sweep lasts0.8-1.2 game seconds
+cascade-0.5: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 cascade-0.5: visible launch before first contact
 cascade-0.5: travel reaches every row/column cell
 cascade-0.5: cell0 white impact precedes mutation
@@ -239,9 +239,9 @@ cascade-0.5: rocket container is outside all board/UI masks
 cascade-0.5: HUD and boosters render above world VFX
 cascade-0.5: pause/menu UI sorting layer exceeds rocket layer
 left-edge-0.5: Lab speed remains correct throughout flight
-left-edge-0.5: exhaust remains within the five-cell budget throughout flight
+left-edge-0.5: exhaust remains within the seven-cell budget throughout flight
 left-edge-0.5: rocket/chains/cascades settle
-left-edge-0.5: sweep lasts0.8-1.2 game seconds
+left-edge-0.5: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 left-edge-0.5: visible launch before first contact
 left-edge-0.5: travel reaches every row/column cell
 left-edge-0.5: cell0 white impact precedes mutation
@@ -272,9 +272,9 @@ left-edge-0.5: rocket container is outside all board/UI masks
 left-edge-0.5: HUD and boosters render above world VFX
 left-edge-0.5: pause/menu UI sorting layer exceeds rocket layer
 under-hud-0.5: Lab speed remains correct throughout flight
-under-hud-0.5: exhaust remains within the five-cell budget throughout flight
+under-hud-0.5: exhaust remains within the seven-cell budget throughout flight
 under-hud-0.5: rocket/chains/cascades settle
-under-hud-0.5: sweep lasts0.8-1.2 game seconds
+under-hud-0.5: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 under-hud-0.5: visible launch before first contact
 under-hud-0.5: travel reaches every row/column cell
 under-hud-0.5: cell0 white impact precedes mutation
@@ -307,9 +307,9 @@ under-hud-0.5: rocket container is outside all board/UI masks
 under-hud-0.5: HUD and boosters render above world VFX
 under-hud-0.5: pause/menu UI sorting layer exceeds rocket layer
 above-bottom-bar-0.5: Lab speed remains correct throughout flight
-above-bottom-bar-0.5: exhaust remains within the five-cell budget throughout flight
+above-bottom-bar-0.5: exhaust remains within the seven-cell budget throughout flight
 above-bottom-bar-0.5: rocket/chains/cascades settle
-above-bottom-bar-0.5: sweep lasts0.8-1.2 game seconds
+above-bottom-bar-0.5: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 above-bottom-bar-0.5: visible launch before first contact
 above-bottom-bar-0.5: travel reaches every row/column cell
 above-bottom-bar-0.5: cell0 white impact precedes mutation
@@ -342,9 +342,9 @@ above-bottom-bar-0.5: rocket container is outside all board/UI masks
 above-bottom-bar-0.5: HUD and boosters render above world VFX
 above-bottom-bar-0.5: pause/menu UI sorting layer exceeds rocket layer
 opposite-rockets-0.5: Lab speed remains correct throughout flight
-opposite-rockets-0.5: exhaust remains within the five-cell budget throughout flight
+opposite-rockets-0.5: exhaust remains within the seven-cell budget throughout flight
 opposite-rockets-0.5: rocket/chains/cascades settle
-opposite-rockets-0.5: sweep lasts0.8-1.2 game seconds
+opposite-rockets-0.5: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 opposite-rockets-0.5: visible launch before first contact
 opposite-rockets-0.5: travel reaches every row/column cell
 opposite-rockets-0.5: cell0 white impact precedes mutation
@@ -405,46 +405,46 @@ preview-1-0.5: preview grants no rewards or moves
 preview-1-0.5: replay returns all effects to pool
 preview-1-0.5: replay does not allocate new effect objects
 VFX Lab uses actual game speed 1
-length-4.5-horizontal-1: measured mature ribbon 4.500 actual gem cells, never exceeds budget
-length-4.5-horizontal-1: flame stays attached to nozzle every frame
-length-4.5-horizontal-1: measured speed times core/glow lifetime equals cell-length target
-length-4.5-horizontal-1: normalized plume shader supported
-length-4.5-horizontal-1: all trails and soft-tail particles fade and return to pool
-length-4.5-horizontal-1: no VFX object growth
-length-4.5-vertical-1: measured mature ribbon 4.500 actual gem cells, never exceeds budget
-length-4.5-vertical-1: flame stays attached to nozzle every frame
-length-4.5-vertical-1: measured speed times core/glow lifetime equals cell-length target
-length-4.5-vertical-1: normalized plume shader supported
-length-4.5-vertical-1: all trails and soft-tail particles fade and return to pool
-length-4.5-vertical-1: no VFX object growth
-length-5.0-horizontal-1: measured mature ribbon 5.000 actual gem cells, never exceeds budget
-length-5.0-horizontal-1: flame stays attached to nozzle every frame
-length-5.0-horizontal-1: measured speed times core/glow lifetime equals cell-length target
-length-5.0-horizontal-1: normalized plume shader supported
-length-5.0-horizontal-1: all trails and soft-tail particles fade and return to pool
-length-5.0-horizontal-1: no VFX object growth
-length-5.0-vertical-1: measured mature ribbon 5.000 actual gem cells, never exceeds budget
-length-5.0-vertical-1: flame stays attached to nozzle every frame
-length-5.0-vertical-1: measured speed times core/glow lifetime equals cell-length target
-length-5.0-vertical-1: normalized plume shader supported
-length-5.0-vertical-1: all trails and soft-tail particles fade and return to pool
-length-5.0-vertical-1: no VFX object growth
-length-5.5-horizontal-1: measured mature ribbon 5.500 actual gem cells, never exceeds budget
-length-5.5-horizontal-1: flame stays attached to nozzle every frame
-length-5.5-horizontal-1: measured speed times core/glow lifetime equals cell-length target
-length-5.5-horizontal-1: normalized plume shader supported
-length-5.5-horizontal-1: all trails and soft-tail particles fade and return to pool
-length-5.5-horizontal-1: no VFX object growth
-length-5.5-vertical-1: measured mature ribbon 5.500 actual gem cells, never exceeds budget
-length-5.5-vertical-1: flame stays attached to nozzle every frame
-length-5.5-vertical-1: measured speed times core/glow lifetime equals cell-length target
-length-5.5-vertical-1: normalized plume shader supported
-length-5.5-vertical-1: all trails and soft-tail particles fade and return to pool
-length-5.5-vertical-1: no VFX object growth
+length-6.5-horizontal-1: measured mature ribbon 6.500 actual gem cells, never exceeds budget
+length-6.5-horizontal-1: flame stays attached to nozzle every frame
+length-6.5-horizontal-1: measured speed times core/glow lifetime equals cell-length target
+length-6.5-horizontal-1: normalized plume shader supported
+length-6.5-horizontal-1: all trails and soft-tail particles fade and return to pool
+length-6.5-horizontal-1: no VFX object growth
+length-6.5-vertical-1: measured mature ribbon 6.500 actual gem cells, never exceeds budget
+length-6.5-vertical-1: flame stays attached to nozzle every frame
+length-6.5-vertical-1: measured speed times core/glow lifetime equals cell-length target
+length-6.5-vertical-1: normalized plume shader supported
+length-6.5-vertical-1: all trails and soft-tail particles fade and return to pool
+length-6.5-vertical-1: no VFX object growth
+length-7.0-horizontal-1: measured mature ribbon 7.000 actual gem cells, never exceeds budget
+length-7.0-horizontal-1: flame stays attached to nozzle every frame
+length-7.0-horizontal-1: measured speed times core/glow lifetime equals cell-length target
+length-7.0-horizontal-1: normalized plume shader supported
+length-7.0-horizontal-1: all trails and soft-tail particles fade and return to pool
+length-7.0-horizontal-1: no VFX object growth
+length-7.0-vertical-1: measured mature ribbon 7.000 actual gem cells, never exceeds budget
+length-7.0-vertical-1: flame stays attached to nozzle every frame
+length-7.0-vertical-1: measured speed times core/glow lifetime equals cell-length target
+length-7.0-vertical-1: normalized plume shader supported
+length-7.0-vertical-1: all trails and soft-tail particles fade and return to pool
+length-7.0-vertical-1: no VFX object growth
+length-7.5-horizontal-1: measured mature ribbon 7.500 actual gem cells, never exceeds budget
+length-7.5-horizontal-1: flame stays attached to nozzle every frame
+length-7.5-horizontal-1: measured speed times core/glow lifetime equals cell-length target
+length-7.5-horizontal-1: normalized plume shader supported
+length-7.5-horizontal-1: all trails and soft-tail particles fade and return to pool
+length-7.5-horizontal-1: no VFX object growth
+length-7.5-vertical-1: measured mature ribbon 7.500 actual gem cells, never exceeds budget
+length-7.5-vertical-1: flame stays attached to nozzle every frame
+length-7.5-vertical-1: measured speed times core/glow lifetime equals cell-length target
+length-7.5-vertical-1: normalized plume shader supported
+length-7.5-vertical-1: all trails and soft-tail particles fade and return to pool
+length-7.5-vertical-1: no VFX object growth
 horizontal-1: Lab speed remains correct throughout flight
-horizontal-1: exhaust remains within the five-cell budget throughout flight
+horizontal-1: exhaust remains within the seven-cell budget throughout flight
 horizontal-1: rocket/chains/cascades settle
-horizontal-1: sweep lasts0.8-1.2 game seconds
+horizontal-1: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 horizontal-1: visible launch before first contact
 horizontal-1: travel reaches every row/column cell
 horizontal-1: cell0 white impact precedes mutation
@@ -455,7 +455,7 @@ horizontal-1: cell4 white impact precedes mutation
 horizontal-1: cell5 white impact precedes mutation
 horizontal-1: cell6 white impact precedes mutation
 horizontal-1: cell7 white impact precedes mutation
-horizontal-1: physical rocket nose sweeps every contacted cell (max sample step 0.431 cells; max end distance 0.421)
+horizontal-1: physical rocket nose sweeps every contacted cell (max sample step 0.613 cells; max end distance 0.378)
 horizontal-1: cells remain intact until reached
 horizontal-1: intended cell cleared0
 horizontal-1: intended cell cleared1
@@ -486,9 +486,9 @@ horizontal-1: rocket container is outside all board/UI masks
 horizontal-1: HUD and boosters render above world VFX
 horizontal-1: pause/menu UI sorting layer exceeds rocket layer
 vertical-1: Lab speed remains correct throughout flight
-vertical-1: exhaust remains within the five-cell budget throughout flight
+vertical-1: exhaust remains within the seven-cell budget throughout flight
 vertical-1: rocket/chains/cascades settle
-vertical-1: sweep lasts0.8-1.2 game seconds
+vertical-1: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 vertical-1: visible launch before first contact
 vertical-1: travel reaches every row/column cell
 vertical-1: cell0 white impact precedes mutation
@@ -499,7 +499,7 @@ vertical-1: cell4 white impact precedes mutation
 vertical-1: cell5 white impact precedes mutation
 vertical-1: cell6 white impact precedes mutation
 vertical-1: cell7 white impact precedes mutation
-vertical-1: physical rocket nose sweeps every contacted cell (max sample step 0.513 cells; max end distance 0.406)
+vertical-1: physical rocket nose sweeps every contacted cell (max sample step 0.641 cells; max end distance 0.366)
 vertical-1: cells remain intact until reached
 vertical-1: intended cell cleared0
 vertical-1: intended cell cleared1
@@ -532,9 +532,9 @@ vertical-1: rocket container is outside all board/UI masks
 vertical-1: HUD and boosters render above world VFX
 vertical-1: pause/menu UI sorting layer exceeds rocket layer
 blockers-1: Lab speed remains correct throughout flight
-blockers-1: exhaust remains within the five-cell budget throughout flight
+blockers-1: exhaust remains within the seven-cell budget throughout flight
 blockers-1: rocket/chains/cascades settle
-blockers-1: sweep lasts0.8-1.2 game seconds
+blockers-1: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 blockers-1: visible launch before first contact
 blockers-1: travel reaches every row/column cell
 blockers-1: cell0 white impact precedes mutation
@@ -545,7 +545,7 @@ blockers-1: cell4 white impact precedes mutation
 blockers-1: cell5 white impact precedes mutation
 blockers-1: cell6 white impact precedes mutation
 blockers-1: cell7 white impact precedes mutation
-blockers-1: physical rocket nose sweeps every contacted cell (max sample step 0.383 cells; max end distance 0.392)
+blockers-1: physical rocket nose sweeps every contacted cell (max sample step 0.634 cells; max end distance 0.409)
 blockers-1: cells remain intact until reached
 blockers-1: crossed blocker removed by existing service
 blockers-1: custom rocket shader and six fixed pooled emitters
@@ -568,9 +568,9 @@ blockers-1: rocket container is outside all board/UI masks
 blockers-1: HUD and boosters render above world VFX
 blockers-1: pause/menu UI sorting layer exceeds rocket layer
 chain-1: Lab speed remains correct throughout flight
-chain-1: exhaust remains within the five-cell budget throughout flight
+chain-1: exhaust remains within the seven-cell budget throughout flight
 chain-1: rocket/chains/cascades settle
-chain-1: sweep lasts0.8-1.2 game seconds
+chain-1: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 chain-1: visible launch before first contact
 chain-1: travel reaches every row/column cell
 chain-1: cell0 white impact precedes mutation
@@ -611,9 +611,9 @@ chain-1: rocket container is outside all board/UI masks
 chain-1: HUD and boosters render above world VFX
 chain-1: pause/menu UI sorting layer exceeds rocket layer
 cascade-1: Lab speed remains correct throughout flight
-cascade-1: exhaust remains within the five-cell budget throughout flight
+cascade-1: exhaust remains within the seven-cell budget throughout flight
 cascade-1: rocket/chains/cascades settle
-cascade-1: sweep lasts0.8-1.2 game seconds
+cascade-1: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 cascade-1: visible launch before first contact
 cascade-1: travel reaches every row/column cell
 cascade-1: cell0 white impact precedes mutation
@@ -644,9 +644,9 @@ cascade-1: rocket container is outside all board/UI masks
 cascade-1: HUD and boosters render above world VFX
 cascade-1: pause/menu UI sorting layer exceeds rocket layer
 left-edge-1: Lab speed remains correct throughout flight
-left-edge-1: exhaust remains within the five-cell budget throughout flight
+left-edge-1: exhaust remains within the seven-cell budget throughout flight
 left-edge-1: rocket/chains/cascades settle
-left-edge-1: sweep lasts0.8-1.2 game seconds
+left-edge-1: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 left-edge-1: visible launch before first contact
 left-edge-1: travel reaches every row/column cell
 left-edge-1: cell0 white impact precedes mutation
@@ -677,9 +677,9 @@ left-edge-1: rocket container is outside all board/UI masks
 left-edge-1: HUD and boosters render above world VFX
 left-edge-1: pause/menu UI sorting layer exceeds rocket layer
 under-hud-1: Lab speed remains correct throughout flight
-under-hud-1: exhaust remains within the five-cell budget throughout flight
+under-hud-1: exhaust remains within the seven-cell budget throughout flight
 under-hud-1: rocket/chains/cascades settle
-under-hud-1: sweep lasts0.8-1.2 game seconds
+under-hud-1: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 under-hud-1: visible launch before first contact
 under-hud-1: travel reaches every row/column cell
 under-hud-1: cell0 white impact precedes mutation
@@ -712,9 +712,9 @@ under-hud-1: rocket container is outside all board/UI masks
 under-hud-1: HUD and boosters render above world VFX
 under-hud-1: pause/menu UI sorting layer exceeds rocket layer
 above-bottom-bar-1: Lab speed remains correct throughout flight
-above-bottom-bar-1: exhaust remains within the five-cell budget throughout flight
+above-bottom-bar-1: exhaust remains within the seven-cell budget throughout flight
 above-bottom-bar-1: rocket/chains/cascades settle
-above-bottom-bar-1: sweep lasts0.8-1.2 game seconds
+above-bottom-bar-1: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 above-bottom-bar-1: visible launch before first contact
 above-bottom-bar-1: travel reaches every row/column cell
 above-bottom-bar-1: cell0 white impact precedes mutation
@@ -747,9 +747,9 @@ above-bottom-bar-1: rocket container is outside all board/UI masks
 above-bottom-bar-1: HUD and boosters render above world VFX
 above-bottom-bar-1: pause/menu UI sorting layer exceeds rocket layer
 opposite-rockets-1: Lab speed remains correct throughout flight
-opposite-rockets-1: exhaust remains within the five-cell budget throughout flight
+opposite-rockets-1: exhaust remains within the seven-cell budget throughout flight
 opposite-rockets-1: rocket/chains/cascades settle
-opposite-rockets-1: sweep lasts0.8-1.2 game seconds
+opposite-rockets-1: sweep lasts 0.42-0.86 game seconds at one constant cells-per-second speed
 opposite-rockets-1: visible launch before first contact
 opposite-rockets-1: travel reaches every row/column cell
 opposite-rockets-1: cell0 white impact precedes mutation

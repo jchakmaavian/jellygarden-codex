@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -63,6 +64,7 @@ namespace JellyGarden.Scripts.Juice
         // ------------------------------------------------------------------
         private const int PatternCount = 4;   // shatter layouts, cycled so repeats are not obvious
         private const int MaxWedges = 7;
+        public const float MaxAuthoredChipCellFraction = .40f;
 
         private class Fragment
         {
@@ -80,6 +82,7 @@ namespace JellyGarden.Scripts.Juice
             public Color Tint;
             public float ExitY;
             public float Gravity;
+            public bool SmoothMatch;
         }
 
         private Fragment[] _pool;
@@ -88,6 +91,10 @@ namespace JellyGarden.Scripts.Juice
         // One pattern = one set of wedge meshes that together tile the candy silhouette.
         private Mesh[][] _patterns;
         private Vector2[][] _patternCentroids;
+        private RoyalBurstLibrary _burstLibrary;
+        private Mesh[][] _burstMeshes;
+        private Vector2[][] _burstOffsets;
+        public int AuthoredBurstColors => _burstMeshes == null ? 0 : _burstMeshes.Length;
 
         private Material _baseMaterial;
         private readonly Dictionary<Texture, Material> _materialsByTexture = new Dictionary<Texture, Material>(8);
@@ -125,6 +132,7 @@ namespace JellyGarden.Scripts.Juice
             }
 
             BuildPatterns();
+            BuildAuthoredBursts();
 
             int poolSize = Mathf.Clamp(cfg.ShatterPoolSize, 16, 256);
             _pool = new Fragment[poolSize];
@@ -155,6 +163,30 @@ namespace JellyGarden.Scripts.Juice
         }
 
         // ------------------------------------------------------------------
+        private void BuildAuthoredBursts()
+        {
+            _burstLibrary = Resources.Load<RoyalBurstLibrary>("RoyalGameplay/Toolkit/BurstPieces");
+            if (!_burstLibrary || _burstLibrary.bursts == null) return;
+            _burstMeshes = new Mesh[_burstLibrary.bursts.Length][];
+            _burstOffsets = new Vector2[_burstMeshes.Length][];
+            for (int color = 0; color < _burstMeshes.Length; color++)
+            {
+                var pieces = _burstLibrary.bursts[color].pieces;
+                _burstMeshes[color] = new Mesh[pieces.Length]; _burstOffsets[color] = new Vector2[pieces.Length];
+                for (int i = 0; i < pieces.Length; i++)
+                {
+                    var sprite = pieces[i].sprite; var rect = sprite.rect; var texture = sprite.texture;
+                    float x = rect.width / texture.width * .5f, y = rect.height / texture.height * .5f;
+                    var mesh = new Mesh { name = sprite.name, hideFlags = HideFlags.HideAndDontSave };
+                    mesh.vertices = new[] { new Vector3(-x, -y, 0), new Vector3(x, -y, 0), new Vector3(x, y, 0), new Vector3(-x, y, 0) };
+                    mesh.uv = new[] { new Vector2(rect.xMin / texture.width, rect.yMin / texture.height), new Vector2(rect.xMax / texture.width, rect.yMin / texture.height), new Vector2(rect.xMax / texture.width, rect.yMax / texture.height), new Vector2(rect.xMin / texture.width, rect.yMax / texture.height) };
+                    mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 }; mesh.RecalculateBounds();
+                    _burstMeshes[color][i] = mesh; _burstOffsets[color][i] = pieces[i].offset;
+                }
+                if (pieces.Length > 0) MaterialFor(pieces[0].sprite.texture);
+            }
+        }
+
         /// <summary>
         /// Carves a unit circle (radius 0.5, matching a sprite's local bounds) into
         /// irregular wedges. Deliberately NOT a clean radial pie: the centre is offset and
@@ -317,7 +349,7 @@ namespace JellyGarden.Scripts.Juice
         /// Reads the sprite off the renderer, so it works for every candy colour and for
         /// striped / wrapped variants without any per-candy configuration.
         /// </summary>
-        public void Shatter(SpriteRenderer source, float intensity,bool powerClear=false)
+        public void Shatter(SpriteRenderer source, float intensity,bool powerClear=false,bool rocketClear=false,bool tntClear=false)
         {
             var cfg = Cfg;
             if (!cfg.EnableJuice || !cfg.EnableCandyShatter) return;
@@ -332,8 +364,20 @@ namespace JellyGarden.Scripts.Juice
 
             Mesh[] meshes = _patterns[pattern];
             Vector2[] centroids = _patternCentroids[pattern];
+            // The supplied burst sheets contain separated painted chips. Cached
+            // component meshes preserve those UVs; no whole burst/glow card is drawn.
+            var item = source.GetComponentInParent<Item>();
+            int authoredColor = item && item.currentType != ItemsTypes.INGREDIENT ? item.color : -1;
+            bool authored = _burstMeshes != null && authoredColor >= 0 && authoredColor < _burstMeshes.Length && _burstMeshes[authoredColor].Length > 0;
+            if (authored)
+            {
+                meshes = _burstMeshes[authoredColor]; centroids = _burstOffsets[authoredColor];
+                tex = _burstLibrary.bursts[authoredColor].pieces[0].sprite.texture;
+            }
             bool reducedMotion = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0;
-            int wedges = Mathf.Min(meshes.Length, reducedMotion ? 2 : powerClear ? 3 : MaxWedges);
+            int wedges = rocketClear ? (reducedMotion ? 3 : Mathf.Min(meshes.Length, 3) * 2) : Mathf.Min(meshes.Length, reducedMotion ? 2 : powerClear ? 3 : MaxWedges);
+            // Eight small + two medium chips fit a full 24-gem TNT blast in 240 slots.
+            if(tntClear)wedges=reducedMotion?5:10;
 
             // Use the last one to three slots for a smaller physical breakup instead
             // of dropping the whole event. Never recycle a chunk that is still falling.
@@ -347,8 +391,13 @@ namespace JellyGarden.Scripts.Juice
             Vector3 centre = b.center;
             centre.z -= 0.45f;                       // sit in front of the board pieces
             float worldSize = Mathf.Max(b.size.x, b.size.y);
-            float exitY = centre.y - worldSize * 9f;
+            // Destroy anticipation can enlarge the source renderer. Piece size must
+            // follow the stable grid pitch, never that animated scale.
             var level = LevelManager.THIS;
+            float boardCell = level && level.GameField ? Mathf.Abs(level.squareWidth * level.GameField.lossyScale.x) : worldSize;
+            boardCell = Mathf.Max(.01f, boardCell);
+            if (authored) worldSize = Mathf.Min(worldSize, boardCell);
+            float exitY = centre.y - worldSize * 9f;
             if (level && level.squaresArray != null)
             {
                 float bottom = float.PositiveInfinity;
@@ -361,6 +410,7 @@ namespace JellyGarden.Scripts.Juice
             Rect tr = sprite.textureRect;
             Vector4 st = new Vector4(tr.width / tex.width, tr.height / tex.height,
                                      tr.x / tex.width, tr.y / tex.height);
+            if (authored) st = new Vector4(1, 1, 0, 0);
 
             int seed = _spawnCounter * 397;
 
@@ -369,11 +419,13 @@ namespace JellyGarden.Scripts.Juice
                 var f = Take();
                 if (f == null) return;
 
-                f.Filter.sharedMesh = meshes[w];
+                int pieceIndex = authored ? (w * meshes.Length / wedges + _spawnCounter) % meshes.Length : w % meshes.Length;
+                f.Filter.sharedMesh = meshes[pieceIndex];
                 f.Renderer.sharedMaterial = MaterialFor(tex);
 
-                Vector2 local = centroids[w];
-                f.Tr.position = centre + new Vector3(local.x * worldSize, local.y * worldSize, 0f);
+                Vector2 local = centroids[pieceIndex];
+                Vector2 birthOffset = authored ? Vector2.ClampMagnitude(local, .35f) * boardCell : local * worldSize;
+                f.Tr.position = centre + new Vector3(birthOffset.x, birthOffset.y, 0f);
                 f.Tr.rotation = Quaternion.identity;
                 f.BaseScale = worldSize;
                 f.Tr.localScale = new Vector3(worldSize, worldSize, 1f);
@@ -401,13 +453,43 @@ namespace JellyGarden.Scripts.Juice
 
                 // Recycle beyond the board boundary, not in mid-air. Life is a safety
                 // limit for destroyed boards; gravity is scaled to the piece footprint.
-                f.Life = Mathf.Max(1.8f, cfg.ShatterLifetime);
+                f.SmoothMatch = rocketClear || item && item.royalMatchSize >= 3 && !powerClear;
+                f.Life = f.SmoothMatch ? (rocketClear ? Mathf.Lerp(.65f,.85f,Hash(seed+w,151)) : .78f) : Mathf.Max(1.8f, cfg.ShatterLifetime);
                 f.ExitY = exitY;
                 f.Gravity = Mathf.Min(-30f, cfg.ShatterGravity) * worldSize;
+                if (f.SmoothMatch)
+                {
+                    f.Gravity = -9f * worldSize;
+                    f.Velocity *= .55f;
+                    f.SpinSpeed *= .55f;
+                }
                 f.Age = 0f;
 
                 // Slight per-chunk size variation so they do not read as a uniform set.
-                f.BaseScale = worldSize * Mathf.Lerp(0.92f, 1.10f, Hash(seed + w, 101));
+                float variation = Mathf.Lerp(0.92f, 1.10f, Hash(seed + w, 101));
+                f.BaseScale = worldSize * variation;
+                if (authored)
+                {
+                    Vector3 meshSize = meshes[pieceIndex].bounds.size;
+                    float diagonal = Mathf.Max(.001f, new Vector2(meshSize.x, meshSize.y).magnitude);
+                    // A diagonal bound remains valid throughout the tumble, including
+                    // a 45-degree frame where an axis-aligned bound would grow.
+                    f.BaseScale = Mathf.Min(boardCell * .90f * variation, boardCell * MaxAuthoredChipCellFraction / diagonal);
+                }
+                if (rocketClear) f.BaseScale *= w % 2 == 0 ? .55f : .85f;
+                if(tntClear)
+                {
+                    Vector3 radial=item?(centre-item.royalTntOrigin):new Vector3(dir.x,dir.y,0);
+                    radial.z=0;radial=radial.normalized;
+                    // A slow/fast mix keeps chips throughout the blast, rather than
+                    // pushing every cell's debris into the same hollow perimeter.
+                    float impulse=Mathf.Lerp(.25f,1.3f,Hash(seed+w,163));
+                    f.Velocity=(radial*impulse+new Vector3(dir.x*1.1f,dir.y*.9f+.75f,0))*boardCell;
+                    f.Gravity=-12f*boardCell;f.SmoothMatch=true;f.Life=Mathf.Lerp(.62f,.85f,Hash(seed+w,151));
+                    float diagonal=Mathf.Max(.001f,meshes[pieceIndex].bounds.size.magnitude);
+                    f.BaseScale=boardCell*(w%5==0?.32f:.19f)/diagonal;
+                }
+                f.Tr.localScale = new Vector3(f.BaseScale, f.BaseScale, 1f);
 
                 f.Tint = source.color;
                 f.Tint.a = 1f;
@@ -474,6 +556,7 @@ namespace JellyGarden.Scripts.Juice
                 }
 
                 // position += velocity * dt ; velocity.y += gravity * dt
+                if (f.SmoothMatch) f.Tr.position += new Vector3(0f, -.5f * f.Gravity * dt * dt, 0f);
                 f.Velocity.y += f.Gravity * dt;
                 f.Velocity.x *= 1f - drag; // air resistance slows sideways motion, gravity keeps its weight
                 f.Tr.position += f.Velocity * dt;
@@ -481,9 +564,17 @@ namespace JellyGarden.Scripts.Juice
                 f.Spin += f.SpinSpeed * dt;
                 f.Tr.rotation = Quaternion.Euler(0f, 0f, f.Spin);
 
-                // Preserve silhouette and opacity for the entire fall. Fragments have
-                // no collider and never participate in matching, collection or input.
-                f.Tr.localScale = new Vector3(f.BaseScale, f.BaseScale, 1f);
+                // Confirmed matches soften into a short fade; power clears retain their
+                // original full-opacity fall. Neither path participates in gameplay.
+                float fade = f.SmoothMatch ? Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(.5f, f.Life, f.Age)) : 0f;
+                float scale = f.BaseScale * Mathf.Lerp(1f, .65f, fade);
+                f.Tr.localScale = new Vector3(scale, scale, 1f);
+                if (f.SmoothMatch)
+                {
+                    var tint = f.Tint; tint.a *= 1f - fade;
+                    f.Props.SetColor("_Color", tint);
+                    f.Renderer.SetPropertyBlock(f.Props);
+                }
             }
         }
     }

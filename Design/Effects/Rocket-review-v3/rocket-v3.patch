@@ -1,0 +1,573 @@
+--- before/Assets\JellyGarden\Scripts\Editor\RoyalEffectsChecks.cs
++++ after/Assets\JellyGarden\Scripts\Editor\RoyalEffectsChecks.cs
+@@ -36,7 +36,7 @@
+         }
+         static readonly List<string> checks=new List<string>(),errors=new List<string>();
+         static bool cellBreakOnly,rocketOnly;
+-        static string Folder=>rocketOnly?"Design/Effects/Rocket-review-v2/":cellBreakOnly?"Design/Effects/Unity-review-v6/":"Design/Effects/Unity-review-v4/";
++        static string Folder=>rocketOnly?"Design/Effects/Rocket-review-v3/":cellBreakOnly?"Design/Effects/Unity-review-v6/":"Design/Effects/Unity-review-v4/";
+         [MenuItem("Tools/Royal Throne/Effects/Verify restored smooth match breaks %#F10")]
+         public static void RunCellBreaks(){cellBreakOnly=true;Run();}
+         [MenuItem("Tools/Royal Throne/Effects/Verify rocket travel at half and full speed %#F11")]
+--- before/Assets\JellyGarden\Scripts\Editor\RoyalRocketChecks.cs
++++ after/Assets\JellyGarden\Scripts\Editor\RoyalRocketChecks.cs
+@@ -6,27 +6,41 @@
+ using JellyGarden.Scripts;
+ using JellyGarden.Scripts.Juice;
+ using UnityEngine;
++using UnityEngine.UI;
+ using Object=UnityEngine.Object;
+ namespace RoyalThrone.Editor
+ {
+     public static class RoyalRocketChecks
+     {
+-        const string Folder="Design/Effects/Rocket-review-v2/";
++        const string Folder="Design/Effects/Rocket-review-v3/";
+         public static IEnumerator Run(LevelManager lm,Action seed,Action colours,Action<bool,string> check)
+         {
+-            yield return RoyalVfxLab.ReviewRocketSpeeds(speed=>AtSpeed(lm,seed,colours,check,speed));
++            // The internal QA menu also owns Time.timeScale in Update. Suspend that
++            // owner while the Lab drives this review, then restore its prior state.
++#if !ROYAL_DISABLE_QA
++            var qa=RoyalThrone.Testing.RoyalQaService.Instance;bool qaEnabled=qa&&qa.enabled;
++            if(qa)qa.enabled=false;
++#endif
++            try {yield return RoyalVfxLab.ReviewRocketSpeeds(speed=>AtSpeed(lm,seed,colours,check,speed));}
++            finally {
++#if !ROYAL_DISABLE_QA
++                if(qa)qa.enabled=qaEnabled;
++#endif
++            }
+         }
+         static IEnumerator AtSpeed(LevelManager lm,Action seed,Action colours,Action<bool,string> check,float speed)
+         {
+             Directory.CreateDirectory(Folder);
+             check(Mathf.Approximately(Time.timeScale,speed),"VFX Lab uses actual game speed "+speed);
+             var fx=RoyalPowerupDirector.Get;
+-            for(int scenario=0;scenario<5;scenario++)
++            for(int scenario=0;scenario<9;scenario++)
+             {
+                 fx.Cancel();lm.StopAllCoroutines();AI.THIS.StopAllCoroutines();AI.THIS.allowShowTip=false;lm.DragBlocked=true;CandyShatterService.Instance.Clear();seed();yield return null;colours();yield return null;
+-                bool vertical=scenario==1;string name=(vertical?"vertical":scenario==2?"blockers":scenario==3?"chain":scenario==4?"cascade":"horizontal")+"-"+speed;
++                bool vertical=scenario==1||scenario==6||scenario==7;
++                string name=new[]{"horizontal","vertical","blockers","chain","cascade","left-edge","under-hud","above-bottom-bar","opposite-rockets"}[scenario]+"-"+speed;
++                int originX=scenario==5||scenario==8?0:3,originY=scenario==6?0:scenario==7?7:3;
+                 Item At(int x,int y)=>lm.GetSquare(x,y).item;
+-                var origin=At(3,3);origin.currentType=vertical?ItemsTypes.VERTICAL_STRIPPED:ItemsTypes.HORIZONTAL_STRIPPED;
++                var origin=At(originX,originY);origin.currentType=vertical?ItemsTypes.VERTICAL_STRIPPED:ItemsTypes.HORIZONTAL_STRIPPED;
+                 Square blocked=null;
+                 if(scenario==2)
+                 {
+@@ -35,18 +49,56 @@
+                     go.transform.localPosition=Vector3.zero;blocked.block.Add(go);blocked.type=SquareTypes.WIREBLOCK;
+                 }
+                 if(scenario==3)At(5,3).currentType=ItemsTypes.VERTICAL_STRIPPED;
++                if(scenario==8)At(7,3).currentType=ItemsTypes.HORIZONTAL_STRIPPED;
+                 yield return null;
+                 var beforeItems=lm.squaresArray.Where(s=>s&&s.item).ToDictionary(s=>s,s=>s.item);
++                int exitStart=fx.RocketScreenExits;
+                 int sparkStart=fx.RocketSparkParticlesEmitted;
+                 int before=fx.RocketCellImpacts,launches=fx.RocketLaunches,objects=fx.GetComponentsInChildren<Transform>(true).Length;
+                 float started=Time.time,until=Time.realtimeSinceStartup+20,nextCapture=.10f;int frame=0,inspected=before,peakParticles=0,peakExhaust=0;bool leads=true,untouched=true,correctArt=true;
++                bool underTop=false,underBottom=false,outsideBoard=false,continuousFire=false;
++                float minVelocity=float.PositiveInfinity,maxVelocity=0;
++                var previousPositions=new Dictionary<SpriteRenderer,Vector3>();var previousTimes=new Dictionary<SpriteRenderer,float>();
++                var moving=new HashSet<SpriteRenderer>();
++                int[] colourRows={Mathf.RoundToInt(Screen.height*.993f),Mathf.RoundToInt(Screen.height*.099f)};
++                yield return new WaitForEndOfFrame();
++                var baseline=ScreenCapture.CaptureScreenshotAsTexture();
++                int screenX=Mathf.RoundToInt(Camera.main.WorldToViewportPoint(origin.transform.position).x*Screen.width);
++                var panelColours=colourRows.Select(y=>baseline.GetPixel(screenX,y)).ToArray();Object.Destroy(baseline);
++                bool protectedUi=true,speedStable=true,originHeld=true;
+                 origin.DestroyItem(true);
++                if(scenario==8)At(7,3).DestroyItem(true);
+                 if(scenario==4)lm.FindMatches();
+                 do
+                 {
+                     yield return new WaitForEndOfFrame();
++                    speedStable&=Mathf.Approximately(Time.timeScale,speed);
+                     peakParticles=Mathf.Max(peakParticles,fx.RocketParticleCount);
+                     peakExhaust=Mathf.Max(peakExhaust,fx.RocketExhaustCount);
++                    foreach(var head in fx.GetComponentsInChildren<SpriteRenderer>())
++                    {
++                        if(!head.enabled||!head.gameObject.name.StartsWith("Projectile"))continue;
++                        var view=Camera.main.WorldToViewportPoint(head.transform.position);
++                        underTop|=view.y>.94f;underBottom|=view.y<.06f;
++                        var first=lm.GetSquare(0,0).transform.position;var last=lm.GetSquare(7,7).transform.position;
++                        outsideBoard|=head.transform.position.x<first.x-lm.squareWidth||head.transform.position.x>last.x+lm.squareWidth||head.transform.position.y>first.y+lm.squareHeight||head.transform.position.y<last.y-lm.squareHeight;
++                        var id=head;
++                        if(previousPositions.TryGetValue(id,out var prev)&&Time.time>previousTimes[id])
++                        {
++                            float delta=Vector3.Distance(head.transform.position,prev);
++                            if(delta>.001f&&moving.Contains(id)&&scenario!=3&&scenario!=4)
++                            {float velocity=delta/(Time.time-previousTimes[id]);minVelocity=Mathf.Min(minVelocity,velocity);maxVelocity=Mathf.Max(maxVelocity,velocity);}
++                            if(delta>.001f)moving.Add(id);
++                        }
++                        previousPositions[id]=head.transform.position;previousTimes[id]=Time.time;
++                        var ribbon=head.transform.Find("Continuous flame ribbon").GetComponent<LineRenderer>();
++                        if(ribbon.enabled&&ribbon.positionCount==2)
++                        {
++                            var start=ribbon.GetPosition(0);var end=ribbon.GetPosition(ribbon.positionCount-1);
++                            continuousFire|=Vector3.Distance(start,end)>lm.squareWidth*2.5f && ribbon.widthMultiplier>=lm.squareWidth*.90f;
++                            originHeld&=ribbon.startColor.a>=.85f;
++                        }
++                    }
+                     foreach(var sr in fx.GetComponentsInChildren<SpriteRenderer>())
+                         if(sr.enabled&&sr.gameObject.name.StartsWith("Projectile"))
+                             correctArt &= sr.sprite&&sr.sprite.name.StartsWith("RoyalRocket_") &&
+@@ -64,14 +116,20 @@
+                         if(scenario<3)leads &= fx.GetComponentsInChildren<SpriteRenderer>().Any(sr=>sr.enabled&&sr.gameObject.name.StartsWith("Projectile")&&Vector2.Distance(sr.transform.position,pos)<cell*.8f);
+                     }
+                     inspected=fx.RocketCellImpacts;
+-                    if(Time.time-started>=nextCapture && frame<18)
+-                    {var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+"-"+frame.ToString("D2")+".png",tex.EncodeToPNG());Object.Destroy(tex);frame++;nextCapture+=.09f;}
+-                }while((RoyalPowerupDirector.Busy||lm.IsResolvingMatches)&&Time.realtimeSinceStartup<until);
++                    if(!RoyalPowerupDirector.Busy&&!lm.IsResolvingMatches){lm.DragBlocked=true;lm.StopAllCoroutines();AI.THIS.StopAllCoroutines();}
++                    if(Time.time-started>=nextCapture && frame<40)
++                    {var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+"-"+frame.ToString("D2")+".png",tex.EncodeToPNG());
++                        if(vertical)for(int y=0;y<colourRows.Length;y++)
++                        {var c=tex.GetPixel(screenX,colourRows[y]);var b=panelColours[y];protectedUi&=Mathf.Abs(c.r-b.r)+Mathf.Abs(c.g-b.g)+Mathf.Abs(c.b-b.b)<.025f;}
++                        Object.Destroy(tex);frame++;nextCapture+=.09f;}
++                }while((RoyalPowerupDirector.Busy||lm.IsResolvingMatches||fx.RocketVisualsActive)&&Time.realtimeSinceStartup<until);
+                 // The resolver restarts its idle checker. Hold this disposable board
+                 // while particle tails expire, so it cannot start a shuffle/banner.
+                 if(!RoyalPowerupDirector.Busy&&!lm.IsResolvingMatches)
+                 {lm.DragBlocked=true;lm.StopAllCoroutines();AI.THIS.StopAllCoroutines();}
+                 yield return new WaitForSeconds(1f);
++                check(speedStable,name+": Lab speed remains correct throughout flight");
++                check(originHeld,name+": flame at launch area stays fed until head exits");
+                 check(!RoyalPowerupDirector.Busy&&!lm.IsResolvingMatches,name+": rocket/chains/cascades settle");
+                 check(fx.LastRocketSweepDuration>=.8f&&fx.LastRocketSweepDuration<=1.2f,name+": sweep lasts0.8-1.2 game seconds");
+                 check(fx.RocketImpactTimes[before%512]-started>=.15f,name+": visible launch before first contact");
+@@ -96,6 +154,20 @@
+                 check(fx.GetComponentsInChildren<Transform>(true).Length==objects,name+": no additional projectile or VFX objects allocated");
+                 check(CandyShatterService.Instance.ActiveFragments==0,name+": debris pool cleans up");
+                 check(fx.RocketParticleCount==0,name+": trail sparks fade after exit");
++                int exits=fx.RocketScreenExits-exitStart;
++                check(exits>=2,name+": both projectiles retire past the screen, not the board");
++                for(int n=exitStart;n<fx.RocketScreenExits;n++)
++                {var vp=fx.RocketExitViewports[n%128];check(vp.x<0||vp.x>1||vp.y<0||vp.y>1,name+": exit "+(n-exitStart)+" lies outside camera viewport");}
++                check(outsideBoard,name+": rendered projectile crosses beyond board bounds");
++                check(continuousFire,name+": broad flame ribbon remains across several travelled cells");
++                if(scenario!=3&&scenario!=4)check(maxVelocity>0&&maxVelocity/minVelocity<1.12f,name+": steady velocity after launch");
++                if(vertical){check(underTop&&underBottom,name+": both heads travel underneath HUD and bottom bar");check(protectedUi,name+": opaque HUD and bottom rail pixels stay unchanged over rocket effects");}
++                var root=fx.transform.Find("GameplayVFX - unmasked rocket line clear");
++                check(root&&root.GetComponentInParent<Canvas>()==null&&root.GetComponentInParent<RectMask2D>()==null&&root.GetComponentInParent<Mask>()==null,name+": rocket container is outside all board/UI masks");
++                var hud=lm.transform.Find("Royal gameplay HUD").GetComponent<Canvas>();
++                check(hud.renderMode==RenderMode.ScreenSpaceOverlay&&hud.sortingOrder>=20,name+": HUD and boosters render above world VFX");
++                var popup=GameObject.Find("CanvasGlobal").GetComponent<Canvas>();
++                check(SortingLayer.GetLayerValueFromID(popup.sortingLayerID)>SortingLayer.GetLayerValueFromName("Default"),name+": pause/menu UI sorting layer exceeds rocket layer");
+             }
+             // Exercise the exact visual entry point used by QA and the Effects Workshop.
+             for(int direction=0;direction<2;direction++)
+@@ -110,7 +182,7 @@
+                 {
+                     int launch=fx.RocketLaunches;float start=Time.time;int exhaust=0;bool captured=false;
+                     fx.Preview(effect,lm.GetSquare(3,3).transform.position);
+-                    while(Time.time-start<2.1f)
++                    while((Time.time-start<.5f||fx.RocketVisualsActive)&&Time.time-start<8f)
+                     {
+                         yield return new WaitForEndOfFrame();exhaust=Mathf.Max(exhaust,fx.RocketExhaustCount);
+                         if(!captured&&Time.time-start>.68f)
+--- before/Assets\JellyGarden\Scripts\Juice\RoyalPowerupDirector.cs
++++ after/Assets\JellyGarden\Scripts\Juice\RoyalPowerupDirector.cs
+@@ -13,7 +13,7 @@
+         static RoyalPowerupDirector instance;
+         ParticleSystem smoke, sparks, embers, flash, ring, rays;
+         ParticleSystem[] systems;
+-        sealed class Flyer { public GameObject go,rotor; public SpriteRenderer sprite; public TrailRenderer trail, core; public MeshRenderer exhaust; public bool used, rocket; }
++        sealed class Flyer { public GameObject go,rotor; public SpriteRenderer sprite; public TrailRenderer trail, core; public LineRenderer flame; public MeshRenderer exhaust; public bool used, rocket; }
+         Flyer[] flyers;
+         readonly HashSet<Square> reserved=new HashSet<Square>();
+         int pending;
+@@ -66,7 +66,11 @@
+                 {var arm=new GameObject("Rotor blade").AddComponent<LineRenderer>();arm.transform.SetParent(rotor.transform,false);arm.useWorldSpace=false;arm.positionCount=2;arm.SetPosition(0,blade==0?Vector3.left*.55f:Vector3.down*.55f);arm.SetPosition(1,blade==0?Vector3.right*.55f:Vector3.up*.55f);arm.widthMultiplier=.045f;arm.numCapVertices=3;arm.sharedMaterial=trail.sharedMaterial;arm.sortingOrder=38;arm.startColor=arm.endColor=new Color(1,.92f,.55f,.65f);}
+                 var coreObject=new GameObject("White-hot rocket core");coreObject.transform.SetParent(go.transform,false);
+                 var core=coreObject.AddComponent<TrailRenderer>();core.sharedMaterial=rocketCoreMaterial;core.time=.3f;core.minVertexDistance=.025f;core.numCapVertices=4;core.sortingOrder=35;core.widthCurve=AnimationCurve.EaseInOut(0,1,1,0);core.startColor=Color.white;core.endColor=new Color(1,1,.85f,0);core.emitting=false;
+-                flyers[i]=new Flyer{go=go,rotor=rotor,sprite=sr,trail=trail,core=core,exhaust=CreateRocketExhaust(go.transform,i)};go.SetActive(false);
++                var fireObject=new GameObject("Continuous flame ribbon");fireObject.transform.SetParent(go.transform,false);
++                var flame=fireObject.AddComponent<LineRenderer>();flame.sharedMaterial=rocketRibbonMaterial;flame.sortingOrder=33;
++                flame.useWorldSpace=true;flame.numCapVertices=0;flame.numCornerVertices=3;flame.textureMode=LineTextureMode.Tile;
++                flame.widthCurve=AnimationCurve.Linear(0,1,1,1);flame.enabled=false;flame.positionCount=0;
++                flyers[i]=new Flyer{go=go,rotor=rotor,sprite=sr,trail=trail,core=core,flame=flame,exhaust=CreateRocketExhaust(go.transform,i)};go.SetActive(false);
+             }
+         }
+         float Cell => LevelManager.THIS ? LevelManager.THIS.squareWidth*LevelManager.THIS.GameField.lossyScale.x:1.2f;
+@@ -79,7 +83,7 @@
+         }
+         void StartOperation(IEnumerator sequence){pending++;StartCoroutine(Own(sequence));}
+         IEnumerator Own(IEnumerator sequence){try{yield return sequence;}finally{pending=Mathf.Max(0,pending-1);}}
+-        void OnDisable(){StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){f.used=false;f.go.SetActive(false);} }
++        void OnDisable(){StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
+         public void Cancel(){OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();RoyalToolkitImpact.Existing?.Clear();ClearRocketVfx();}
+         void Update()
+         {
+@@ -142,10 +146,30 @@
+         }
+         Flyer Take(string art,Vector3 p,float scale=1)
+         {
+-            foreach(var f in flyers)if(!f.used){f.used=true;f.rocket=false;f.exhaust.enabled=false;f.trail.sharedMaterial=Resources.Load<Material>("RoyalGameplay/Trail");f.core.Clear();f.core.emitting=false;f.trail.time=.16f;f.trail.widthMultiplier=.35f;f.trail.startColor=new Color(1,.95f,.6f,1);f.trail.endColor=new Color(1,.45f,.08f,0);f.go.transform.position=p+Vector3.back*.6f;f.go.transform.rotation=Quaternion.identity;f.go.transform.localScale=Vector3.one*Cell*scale;f.sprite.sprite=RoyalPieceSkin.Art(art);f.sprite.color=Color.white;f.sprite.enabled=true;f.rotor.SetActive(art=="helicopter");f.go.SetActive(true);f.trail.Clear();f.trail.emitting=true;int count=0;foreach(var t in flyers)if(t.used)count++;PeakProjectiles=Mathf.Max(PeakProjectiles,count);return f;}
++            foreach(var f in flyers)if(!f.used){f.used=true;f.rocket=false;f.go.transform.SetParent(transform,true);f.exhaust.enabled=false;f.flame.positionCount=0;f.flame.enabled=false;f.trail.widthCurve=AnimationCurve.EaseInOut(0,1,1,0);f.trail.sharedMaterial=Resources.Load<Material>("RoyalGameplay/Trail");f.core.Clear();f.core.emitting=false;f.trail.time=.16f;f.trail.widthMultiplier=.35f;f.trail.startColor=new Color(1,.95f,.6f,1);f.trail.endColor=new Color(1,.45f,.08f,0);f.go.transform.position=p+Vector3.back*.6f;f.go.transform.rotation=Quaternion.identity;f.go.transform.localScale=Vector3.one*Cell*scale;f.sprite.sprite=RoyalPieceSkin.Art(art);f.sprite.color=Color.white;f.sprite.enabled=true;f.rotor.SetActive(art=="helicopter");f.go.SetActive(true);f.trail.Clear();f.trail.emitting=true;int count=0;foreach(var t in flyers)if(t.used)count++;PeakProjectiles=Mathf.Max(PeakProjectiles,count);return f;}
+             return null;
+         }
+-        IEnumerator Retire(Flyer f){if(f==null)yield break;f.sprite.enabled=false;f.rotor.SetActive(false);f.exhaust.enabled=false;f.trail.emitting=false;f.core.emitting=false;yield return Wait(f.rocket?.46f:.17f);f.trail.Clear();f.core.Clear();f.go.SetActive(false);f.used=false;f.sprite.enabled=true;}
++        IEnumerator Retire(Flyer f)
++        {
++            if(f==null)yield break;
++            f.sprite.enabled=false;f.rotor.SetActive(false);f.exhaust.enabled=false;
++            f.trail.emitting=false;f.core.emitting=false;
++            if(f.rocket)
++            {
++                // Keep the entire travelled path fed until exit; then extinguish it smoothly.
++                float elapsed=0;
++                while(elapsed<.74f)
++                {
++                    if(!Paused)elapsed+=Time.deltaTime;
++                    float opacity=.88f*(1-Mathf.SmoothStep(0,1,Mathf.Clamp01(elapsed/.68f)));
++                    f.flame.startColor=f.flame.endColor=new Color(1,1,1,opacity);
++                    yield return null;
++                }
++            }
++            else yield return Wait(.17f);
++            f.trail.Clear();f.core.Clear();f.flame.enabled=false;f.flame.positionCount=0;
++            f.go.SetActive(false);f.used=false;f.sprite.enabled=true;
++        }
+         void Emit(ParticleSystem ps,Vector3 p,int n,float size,float speed,float life,Color tint)
+         {
+             if(!ps)return;
+--- before/Assets\JellyGarden\Scripts\Juice\RoyalRocketSequence.cs
++++ after/Assets\JellyGarden\Scripts\Juice\RoyalRocketSequence.cs
+@@ -6,7 +6,8 @@
+ {
+     public sealed partial class RoyalPowerupDirector
+     {
+-        Material rocketCoreMaterial, rocketTrailMaterial, rocketFireMaterial;
++        Material rocketCoreMaterial, rocketTrailMaterial, rocketFireMaterial, rocketRibbonMaterial;
++        Transform rocketVfxRoot;
+         ParticleSystem rocketImpact, rocketGlow, rocketStars, rocketEmbers;
+         ParticleSystem[] rocketSystems;
+         Sprite[] rocketHeads;
+@@ -18,6 +19,9 @@
+         public int RocketSparkParticlesEmitted { get; private set; }
+         public float LastRocketSweepDuration { get; private set; }
+         public float LastRocketAnticipation { get; private set; }
++        public int RocketScreenExits { get; private set; }
++        public readonly Vector3[] RocketExitViewports = new Vector3[128];
++        public bool RocketVisualsActive { get { if(RocketParticleCount>0)return true;if(flyers!=null)foreach(var f in flyers)if(f.used&&f.rocket)return true;return false; } }
+         public readonly Vector3[] RocketImpactPositions = new Vector3[512];
+         public readonly float[] RocketImpactTimes = new float[512];
+         public readonly float[] RocketBreakTimes = new float[512];
+@@ -27,10 +31,13 @@
+ 
+         void BuildRocketVfx()
+         {
++            rocketVfxRoot=new GameObject("GameplayVFX - unmasked rocket line clear").transform;
++            rocketVfxRoot.SetParent(transform,false);
+             rocketCoreMaterial=Resources.Load<Material>("RoyalRocketFX/CoreTrail");
+             rocketTrailMaterial=Resources.Load<Material>("RoyalRocketFX/GlowTrail");
+             // Only the time uniform is mutable; authored materials and source art stay unchanged.
+             rocketFireMaterial=new Material(Resources.Load<Material>("RoyalRocketFX/FireExhaust")){name="Rocket fire exhaust - scaled clock"};
++            rocketRibbonMaterial=new Material(Resources.Load<Material>("RoyalRocketFX/FlameTrail")){name="Rocket flame ribbon - scaled clock"};
+             rocketImpact=CreateRocketParticles("Rocket contact rings","Ring",128,true);
+             rocketGlow=CreateRocketParticles("Rocket launch and contact light","Flash",128,false);
+             rocketStars=CreateRocketParticles("Rocket white gold stars","Star",2048,false);
+@@ -46,13 +53,14 @@
+         }
+         ParticleSystem CreateRocketParticles(string name,string material,int capacity,bool expanding)
+         {
+-            var go=new GameObject(name);go.transform.SetParent(transform,false);
++            var go=new GameObject(name);go.transform.SetParent(rocketVfxRoot,false);
+             var ps=go.AddComponent<ParticleSystem>();ps.Stop(false,ParticleSystemStopBehavior.StopEmittingAndClear);
+             var main=ps.main;main.loop=true;main.playOnAwake=false;main.stopAction=ParticleSystemStopAction.None;
+             main.simulationSpace=ParticleSystemSimulationSpace.World;main.scalingMode=ParticleSystemScalingMode.Shape;
+             main.useUnscaledTime=false;main.startSpeed=0;main.startSize=1;main.gravityModifier=0;main.maxParticles=capacity;
+             var emission=ps.emission;emission.enabled=false;var shape=ps.shape;shape.enabled=false;
+             var renderer=go.GetComponent<ParticleSystemRenderer>();renderer.sharedMaterial=Resources.Load<Material>("RoyalRocketFX/"+material);
++            renderer.maskInteraction=SpriteMaskInteraction.None;renderer.sortingLayerName="Default";
+             renderer.renderMode=ParticleSystemRenderMode.Billboard;renderer.alignment=ParticleSystemRenderSpace.View;renderer.sortingOrder=38;
+             renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;renderer.receiveShadows=false;
+             var colour=ps.colorOverLifetime;colour.enabled=true;
+@@ -83,12 +91,12 @@
+         }
+         void OnDestroy()
+         {
+-            if(rocketFireMaterial)Destroy(rocketFireMaterial);if(rocketFlameMesh)Destroy(rocketFlameMesh);
++            if(rocketFireMaterial)Destroy(rocketFireMaterial);if(rocketRibbonMaterial)Destroy(rocketRibbonMaterial);if(rocketFlameMesh)Destroy(rocketFlameMesh);
+             if(rocketHeads!=null)foreach(var sprite in rocketHeads)if(sprite)Destroy(sprite);
+         }
+         void UpdateRocketVfx()
+         {
+-            if(!Paused){rocketClock+=Time.deltaTime;if(rocketFireMaterial)rocketFireMaterial.SetFloat("_FxTime",rocketClock);}
++            if(!Paused){rocketClock+=Time.deltaTime;if(rocketFireMaterial)rocketFireMaterial.SetFloat("_FxTime",rocketClock);if(rocketRibbonMaterial)rocketRibbonMaterial.SetFloat("_FxTime",rocketClock);}
+             if(rocketSystems==null)return;
+             foreach(var ps in rocketSystems){if(Paused&&!ps.isPaused)ps.Pause(false);else if(!Paused&&ps.isPaused)ps.Play(false);}
+         }
+@@ -106,18 +114,18 @@
+         void RocketExhaustSparks(Vector3 nozzle,Vector3 direction)
+         {
+             Vector3 across=new Vector3(-direction.y,direction.x,0);
+-            int count=RoyalThrone.Testing.RoyalSave.GetInt("RoyalThrone.HomeMotion",1)==0?1:3;
++            int count=RoyalThrone.Testing.RoyalSave.GetInt("RoyalThrone.HomeMotion",1)==0?1:4;
+             for(int i=0;i<count;i++)
+             {
+                 var e=new ParticleSystem.EmitParams{
+                     position=nozzle-direction*Cell*Range(.10f,.85f)+across*Cell*Range(-.18f,.18f)+Vector3.back*.5f,
+                     velocity=(-direction*Range(.3f,1.3f)+across*Range(-.6f,.6f))*Cell,
+-                    startSize=Cell*Range(.105f,.22f),startLifetime=Range(.30f,.52f),rotation=Range(0,90),
++                    startSize=Cell*Range(.105f,.22f),startLifetime=Range(.45f,.68f),rotation=Range(0,90),
+                     startColor=i==0?new Color(1,1,.92f,1):new Color(1,.82f,.35f,.95f),applyShapeToPosition=false};
+                 rocketStars.Emit(e,1);RocketSparkParticlesEmitted++;
+             }
+             if(!rocketStars.isPlaying)rocketStars.Play(false);
+-            Emit(rocketEmbers,nozzle-direction*Cell*.24f,1,.085f,1.4f,.32f,new Color(1,.42f,.055f,.72f));
++            Emit(rocketEmbers,nozzle-direction*Cell*.24f,2,.11f,1.1f,.52f,new Color(1,.42f,.055f,.72f));
+         }
+         IEnumerator RocketCell(Square sq)
+         {
+@@ -147,6 +155,25 @@
+                 if(sq&&!sq.IsNone())
+                 {float d=(sq.transform.position-position).sqrMagnitude;if(d<distance){nearest=sq;distance=d;}}
+             if(nearest)yield return Rocket(nearest,horizontal,1,false);
++        }
++        float RocketExitDistance(Vector3 origin,Vector3 direction,float pitch,float boardEdge)
++        {
++            var cam=Camera.main;if(!cam)return boardEdge+3f;
++            float depth=Vector3.Dot(origin-cam.transform.position,cam.transform.forward);
++            var min=cam.ViewportToWorldPoint(new Vector3(0,0,depth));
++            var max=cam.ViewportToWorldPoint(new Vector3(1,1,depth));
++            float boundary=direction.x!=0?(direction.x>0?max.x-origin.x:origin.x-min.x):(direction.y>0?max.y-origin.y:origin.y-min.y);
++            // Continue until the whole nozzle flame is outside the camera, then let trails age out.
++            return Mathf.Max(boardEdge+.8f,boundary/pitch+2.2f);
++        }
++        static Gradient RocketTrailGradient(Color tint,float hold)
++        {
++            var g=new Gradient();g.SetKeys(new[]{new GradientColorKey(tint,0),new GradientColorKey(tint,1)},
++                new[]{new GradientAlphaKey(tint.a,0),new GradientAlphaKey(tint.a,hold),new GradientAlphaKey(0,1)});return g;
++        }
++        void RecordRocketExit(Vector3 position)
++        {
++            RocketExitViewports[RocketScreenExits++%RocketExitViewports.Length]=Camera.main?Camera.main.WorldToViewportPoint(position):position;
+         }
+         IEnumerator Rocket(Square origin,bool horizontal,int lanes,bool clearCells=true)
+         {
+@@ -162,21 +189,30 @@
+             float duration=Mathf.Clamp(reach/Mathf.Max(1,RoyalEffectsProfile.Get.rocketCellsPerSecond),.8f,1.2f);
+             LastRocketSweepDuration=duration;LastRocketAnticipation=Mathf.Clamp(RoyalEffectsProfile.Get.rocketAnticipation,.15f,.3f);
+             RocketLaunches++;
+-            var active=new List<Flyer>(lanes*2);var hit=new HashSet<Square>();
++            var active=new List<Flyer>(lanes*2);var exits=new List<float>(lanes*2);var hit=new HashSet<Square>();
++            float speed=reach/duration,maxExit=0;
+             var source=RoyalGameplayArt.Art(horizontal?"rocket":"rocket-vertical");
+             float fit=pitch*.90f/Mathf.Max(source.bounds.size.x,source.bounds.size.y);
+             for(int lane=-lanes/2;lane<=lanes/2;lane++)for(int d=-1;d<=1;d+=2)
+             {
+-                var f=Take("rocket",p+across*lane*crossPitch,.72f);
++                var laneOrigin=p+across*lane*crossPitch;
++                float exit=RocketExitDistance(laneOrigin,axis*d,pitch,d<0?negative:positive);exits.Add(exit);maxExit=Mathf.Max(maxExit,exit);
++                var f=Take("rocket",laneOrigin,.72f);
+                 if(f!=null)
+                 {
+-                    f.rocket=true;f.sprite.sprite=rocketHeads[(horizontal?0:2)+(d>0?1:0)];
++                    f.rocket=true;f.go.transform.SetParent(rocketVfxRoot,true);f.sprite.maskInteraction=SpriteMaskInteraction.None;f.sprite.sprite=rocketHeads[(horizontal?0:2)+(d>0?1:0)];
+                     f.go.transform.rotation=Quaternion.identity;f.go.transform.localScale=Vector3.one*fit;
+                     f.exhaust.transform.localRotation=Quaternion.Euler(0,0,horizontal?(d<0?180:0):(d<0?-90:90));
+                     f.exhaust.transform.localScale=Vector3.one*(pitch/fit);
+-                    f.trail.sharedMaterial=rocketTrailMaterial;f.trail.emitting=false;f.trail.time=.42f;f.trail.widthMultiplier=.72f*pitch;
+-                    f.trail.startColor=new Color(1,.61f,.08f,.80f);f.trail.endColor=new Color(1,.22f,.015f,0);
+-                    f.core.time=.36f;f.core.widthMultiplier=.18f*pitch;
++                    f.trail.sharedMaterial=rocketTrailMaterial;f.trail.emitting=false;f.trail.time=.70f;f.trail.widthMultiplier=1.22f*pitch;
++                    f.trail.widthCurve=AnimationCurve.Linear(0,1,1,1);
++                    f.trail.colorGradient=RocketTrailGradient(new Color(1,.40f,.035f,.58f),.62f);
++                    f.flame.widthMultiplier=.94f*pitch;f.flame.enabled=false;
++                    f.flame.startColor=f.flame.endColor=new Color(1,1,1,.88f);
++                    f.flame.positionCount=2;f.flame.SetPosition(0,laneOrigin+Vector3.back*.6f);f.flame.SetPosition(1,laneOrigin+Vector3.back*.6f);
++                    f.core.time=.32f;f.core.widthMultiplier=.30f*pitch;
++                    f.core.widthCurve=AnimationCurve.Linear(0,1,1,.60f);
++                    f.core.colorGradient=RocketTrailGradient(new Color(1,.98f,.78f,.88f),.30f);
+                 }
+                 active.Add(f);
+             }
+@@ -189,25 +225,32 @@
+                 yield return null;
+             }
+             RocketImpact(p,true);RoyalAudioDirector.Get?.Play(RoyalCue.Rocket);
+-            foreach(var f in active)if(f!=null){f.go.transform.localScale=Vector3.one*fit;f.trail.Clear();f.core.Clear();f.trail.emitting=true;f.core.emitting=true;f.exhaust.enabled=true;}
+-            float t=0;int stepDone=-1,sparkStepDone=-1;
+-            while(t<duration)
++            foreach(var f in active)if(f!=null){f.go.transform.localScale=Vector3.one*fit;f.trail.Clear();f.core.Clear();f.trail.emitting=true;f.core.emitting=true;f.flame.enabled=true;f.exhaust.enabled=true;}
++            float distance=0,afterburn=0;int stepDone=-1,sparkStepDone=-1;
++            while(distance<maxExit)
+             {
+                 if(Paused){yield return null;continue;}
+-                // Ease ignition into travel; cap a hitch so a visible head cannot skip a cell.
+-                t=Mathf.Min(duration,t+Mathf.Min(Time.deltaTime,duration/reach*.30f));
+-                float u=t/duration;float distance=reach*(u*u*(2-u));int index=0;
++                // Anticipation owns ignition. Flight then keeps one constant velocity through board and screen.
++                distance=Mathf.Min(maxExit,distance+speed*Time.deltaTime);int index=0;
++                afterburn+=Time.deltaTime;bool feedPath=afterburn>=.06f;if(feedPath)afterburn%=.06f;
+                 // Each cut sprite extends 0.45 cell in front of the moving nozzle.
+                 float noseDistance=distance+.45f;
+                 for(int lane=-lanes/2;lane<=lanes/2;lane++)for(int d=-1;d<=1;d+=2)
+                 {
+-                    int edge=d<0?negative:positive;var f=active[index++];
+-                    Vector3 head=p+across*lane*crossPitch+axis*d*Mathf.Min(distance,edge+.8f)*pitch;
+-                    if(f!=null&&f.sprite.enabled)f.go.transform.position=head+Vector3.back*.6f;
+-                    for(int sample=sparkStepDone+1;sample<=Mathf.FloorToInt(Mathf.Min(distance,edge+.8f)/.10f);sample++)
++                    int edge=d<0?negative:positive;float exit=exits[index];var f=active[index++];
++                    Vector3 head=p+across*lane*crossPitch+axis*d*Mathf.Min(distance,exit)*pitch;
++                    if(f!=null&&f.sprite.enabled)
++                    {
++                        f.go.transform.position=head+Vector3.back*.6f;f.flame.SetPosition(1,head+Vector3.back*.6f);
++                        // Keep stars and burning flecks alive in the older cleared section too.
++                        if(feedPath&&distance>.6f)
++                            for(int n=0;n<Mathf.Clamp(Mathf.CeilToInt(distance/3f),1,3);n++)
++                                RocketExhaustSparks(p+across*lane*crossPitch+axis*d*Range(.5f,Mathf.Min(distance,exit))*pitch,axis*d);
++                    }
++                    for(int sample=sparkStepDone+1;sample<=Mathf.FloorToInt(Mathf.Min(distance,exit)/.10f);sample++)
+                         RocketExhaustSparks(p+across*lane*crossPitch+axis*d*(sample*.10f)*pitch,axis*d);
+-                    if(distance>=edge+.8f&&f!=null&&f.sprite.enabled)
+-                    {RocketImpact(head,true);StartCoroutine(Retire(f));active[index-1]=null;}
++                    if(distance>=exit)
++                    {if(f!=null&&f.sprite.enabled){RecordRocketExit(head);RocketImpact(head,true);StartCoroutine(Retire(f));}active[index-1]=null;}
+                     for(int step=stepDone+1;step<=Mathf.Min(edge,Mathf.FloorToInt(noseDistance));step++)
+                     {
+                         int col=origin.col+(horizontal?step*d:lane),row=origin.row+(horizontal?-lane:-step*d);
+@@ -219,7 +262,7 @@
+                 stepDone=Mathf.FloorToInt(noseDistance);sparkStepDone=Mathf.FloorToInt(distance/.10f);
+                 yield return null;
+             }
+-            foreach(var f in active)if(f!=null&&f.sprite.enabled){RocketImpact(f.go.transform.position,true);StartCoroutine(Retire(f));}
++            foreach(var f in active)if(f!=null&&f.sprite.enabled){RecordRocketExit(f.go.transform.position);RocketImpact(f.go.transform.position,true);StartCoroutine(Retire(f));}
+             Reaction?.Invoke(.8f);
+         }
+     }
+--- before/Assets\JellyGarden\Scripts\RoyalQaService.cs
++++ after/Assets\JellyGarden\Scripts\RoyalQaService.cs
+@@ -208,7 +208,7 @@
+             {if(command=="Ice Impact")RoyalToolkitImpact.TryPlayIce(Center,LM.squareWidth);else RoyalToolkitImpact.TryPlayFire(Center,LM.squareWidth);yield return new WaitForSeconds(1.6f);yield break;}
+             if(command=="Break particles"||command=="Falling fragments"){CandyShatterService.Instance.Shatter(Selected().item.sprRenderer,1);yield return new WaitForSeconds(1.8f);yield break;}
+             if(command.StartsWith("VFX Match")||command=="TNT explosion"||command=="Rocket trails"||command=="Propeller effect")
+-            {string effect=command.StartsWith("VFX ")?command.Substring(4):command=="TNT explosion"?"TNT":command=="Rocket trails"?(PowerA==2?"Rocket V":"Rocket"):"Helicopter";RoyalPowerupDirector.Get.Preview(effect,Center);yield return new WaitForSeconds(command=="Rocket trails"?2.1f:1.8f);yield break;}
++            {string effect=command.StartsWith("VFX ")?command.Substring(4):command=="TNT explosion"?"TNT":command=="Rocket trails"?(PowerA==2?"Rocket V":"Rocket"):"Helicopter";RoyalPowerupDirector.Get.Preview(effect,Center);if(command=="Rocket trails"){float until=Time.time+10;while(RoyalPowerupDirector.Get.RocketVisualsActive&&Time.time<until)yield return null;}else yield return new WaitForSeconds(1.8f);yield break;}
+             if(command=="Gem idle"){Selected().item.StartIdleAnim();yield return new WaitForSeconds(1.2f);Selected().item.StopIdleAnim();yield break;}
+             // Repeatable animation fixtures reuse the existing board; they do not reload a level.
+             yield return Practice();
+--- before/Assets\JellyGarden\Shaders\RoyalRocketFire.shader
++++ after/Assets\JellyGarden\Shaders\RoyalRocketFire.shader
+@@ -3,15 +3,16 @@
+ {
+     Properties
+     {
+-        _Shape ("0 trail, 1 flame, 2 star, 3 ring, 4 flash", Float) = 0
++        _Shape ("0 trail, 1 flame, 2 star, 3 ring, 4 flash, 5 flame ribbon", Float) = 0
+         _Boost ("Brightness", Float) = 1
++        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Destination blend", Float) = 1
+         _FxTime ("Scaled animation time", Float) = 0
+         _Phase ("Flame phase", Float) = 0
+     }
+     SubShader
+     {
+         Tags { "Queue"="Transparent" "RenderType"="Transparent" "IgnoreProjector"="True" }
+-        Blend One One
++        Blend One [_DstBlend]
+         ZWrite Off
+         Cull Off
+         Lighting Off
+@@ -36,7 +37,7 @@
+                 if(_Shape<.5)
+                 {
+                     // Soft width, continuous along the trail; the renderer controls its tail fade.
+-                    alpha=exp(-p.y*p.y*5.5)*smoothstep(1,.78,abs(p.y));
++                    alpha=exp(-p.y*p.y*3.2)*smoothstep(1,.78,abs(p.y));
+                 }
+                 else if(_Shape<1.5)
+                 {
+@@ -44,7 +45,7 @@
+                     float tail=1-i.uv.x;
+                     float clock=_FxTime+_Phase;
+                     float wave=sin(tail*19-clock*31)*.035*tail + sin(tail*37-clock*47)*.018*tail;
+-                    float width=(.28+.32*sin(tail*3.14159))*pow(saturate(1-tail),.72);
++                    float width=(.48+.28*sin(tail*3.14159))*pow(saturate(1-tail),.72);
+                     width*=.9+.10*sin(tail*24-clock*39)+.045*sin(tail*53-clock*63);
+                     float side=abs(p.y-wave)/max(.008,width);
+                     alpha=smoothstep(1.12,.64,side)*smoothstep(1,.88,tail);
+@@ -64,15 +65,29 @@
+                     float r=length(p);
+                     alpha=exp(-pow((r-.65)*13,2))*.82;
+                 }
+-                else
++                else if(_Shape<4.5)
+                 {
+                     float r=length(p);
+                     float rays=pow(abs(sin(atan2(p.y,p.x)*4)),14);
+                     alpha=exp(-r*r*7)+rays*exp(-r*r*3)*.24;
+                     alpha*=smoothstep(1,.80,r);
+                 }
++                if(_Shape>4.5)
++                {
++                    // A continuous turbulent flame field, not isolated puffs or a thin beam.
++                    float along=i.uv.x;
++                    float clock=_FxTime+_Phase;
++                    float edge=.78+.085*sin(along*16-clock*22)+.055*sin(along*31+clock*29);
++                    float side=abs(p.y+.022*sin(along*23-clock*34));
++                    alpha=smoothstep(edge+.16,edge-.15,side);
++                    float tongues=.045*sin(along*24-clock*35)+.025*sin(along*47+clock*41);
++                    float gold=smoothstep(edge,.35,side+tongues);
++                    float hot=smoothstep(.34,.08,side+tongues);
++                    tint=lerp(float3(1,.22,.015),float3(1,.79,.08),gold);
++                    tint=lerp(tint,float3(1,.98,.79),hot);
++                }
+                 float3 rgb=tint*i.color.rgb*saturate(alpha)*i.color.a*_Boost;
+-                return float4(rgb,0);
++                return float4(rgb,saturate(alpha)*i.color.a);
+             }
+             ENDCG
+         }
+--- /dev/null
++++ after/Assets\JellyGarden\Resources\RoyalRocketFX\FlameTrail.mat
+@@ -0,0 +1,34 @@
++%YAML 1.1
++%TAG !u! tag:unity3d.com,2011:
++--- !u!21 &2100000
++Material:
++  serializedVersion: 8
++  m_ObjectHideFlags: 0
++  m_CorrespondingSourceObject: {fileID: 0}
++  m_PrefabInstance: {fileID: 0}
++  m_PrefabAsset: {fileID: 0}
++  m_Name: FlameTrail
++  m_Shader: {fileID: 4800000, guid: c1829b9a478149d48878acf5ef587f55, type: 3}
++  m_Parent: {fileID: 0}
++  m_ModifiedSerializedProperties: 0
++  m_ValidKeywords: []
++  m_InvalidKeywords: []
++  m_LightmapFlags: 4
++  m_EnableInstancingVariants: 0
++  m_DoubleSidedGI: 0
++  m_CustomRenderQueue: -1
++  stringTagMap: {}
++  disabledShaderPasses: []
++  m_LockedProperties: 
++  m_SavedProperties:
++    serializedVersion: 3
++    m_TexEnvs: []
++    m_Ints: []
++    m_Floats:
++    - _Shape: 5
++    - _DstBlend: 10
++    - _Boost: 1
++    - _FxTime: 0
++    - _Phase: 0
++    m_Colors: []
++  m_BuildTextureStacks: []
+--- /dev/null
++++ after/Assets\JellyGarden\Resources\RoyalRocketFX\FlameTrail.mat.meta
+@@ -0,0 +1,8 @@
++fileFormatVersion: 2
++guid: 8afe75904d1643bcb40df1e7abeb2a6e
++NativeFormatImporter:
++  externalObjects: {}
++  mainObjectFileID: 2100000
++  userData: 
++  assetBundleName: 
++  assetBundleVariant: 

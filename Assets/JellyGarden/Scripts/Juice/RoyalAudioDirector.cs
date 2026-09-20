@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 using UnityEngine;
 
 namespace JellyGarden.Scripts.Juice

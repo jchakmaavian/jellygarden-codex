@@ -265,7 +265,7 @@ namespace JellyGarden.Scripts
             return type != SquareTypes.SOLIDBLOCK && type != SquareTypes.UNDESTROYABLE && type != SquareTypes.NONE && type != SquareTypes.THRIVING;
         }
 
-        public void DestroyBlock()
+        public void DestroyBlock(bool rocketClear = false)
         {
             if (type == SquareTypes.UNDESTROYABLE)
                 return;
@@ -282,6 +282,11 @@ namespace JellyGarden.Scripts
             {
                 Juice.RoyalPowerupDirector.Get?.Chip(transform.position);
                 var currentBlock = block[block.Count - 1];
+                if (rocketClear)
+                {
+                    var rocketVisual = currentBlock.GetComponent<SpriteRenderer>();
+                    Juice.CandyShatterService.Instance.Shatter(rocketVisual, 1f, true, true);
+                }
                 if (type == SquareTypes.WIREBLOCK)
                 {
                     LevelManager.THIS.PopupScore(LevelManager.THIS.scoreForWireBlock, transform.position, 0);
@@ -315,7 +320,7 @@ namespace JellyGarden.Scripts
 
                         if(Juice.RoyalEffectsProfile.Get){
                             var visual=currentBlock.GetComponent<SpriteRenderer>();
-                            Juice.CandyShatterService.Instance.Shatter(visual,.75f,true);visual.enabled=false;
+                            if (!rocketClear) Juice.CandyShatterService.Instance.Shatter(visual,.75f,true);visual.enabled=false;
                         }else{
                             currentBlock.GetComponent<Animation>().Play("BrickRotate");
                             currentBlock.GetComponent<SpriteRenderer>().sortingOrder = 4;

@@ -1,4 +1,5 @@
-﻿// // ©2015 - 2026 Candy Smith
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -418,7 +419,10 @@ namespace JellyGarden.Scripts.GUI
         public void BackToMap()
         {
             Time.timeScale = 1;
-            LevelManager.THIS.gameStatus = GameState.GameOver;
+            // Leaving from the pause menu is not a defeat. This used to enter GameOver, which
+            // opens the "try again" failed summary over the map; go straight to the map instead.
+            // The life stays spent, exactly as it was when the level was opened.
+            LevelManager.THIS.gameStatus = GameState.Map;
             CloseMenu();
         }
 
@@ -426,6 +430,29 @@ namespace JellyGarden.Scripts.GUI
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
             CloseMenu();
+        }
+
+        /// <summary>
+        /// "Try again" on the failed screen. It used to call <see cref="Next"/>, which only
+        /// returned to the map. This reopens the same level through the normal pre-level panel,
+        /// so the player can start it (spending a life, or being offered more) or close it.
+        /// </summary>
+        public void RetryLevel()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            int level = LevelManager.THIS.currentLevel;
+            CloseMenu();
+            // This panel is deactivated by CloseMenu, so the wait has to run on a live object.
+            LevelManager.THIS.StartCoroutine(ReopenLevel(level));
+        }
+
+        IEnumerator ReopenLevel(int level)
+        {
+            float deadline = Time.unscaledTime + 5f;
+            while (LevelManager.THIS.gameStatus != GameState.Map && Time.unscaledTime < deadline)
+                yield return null;
+            yield return null;
+            InitScript.Instance.TryOpenLevel(level);
         }
 
         public void Again()//2.2.2

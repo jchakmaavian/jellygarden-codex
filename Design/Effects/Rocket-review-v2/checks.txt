@@ -1,0 +1,327 @@
+Checks completed: 324
+VFX Lab uses actual game speed 0.5
+horizontal-0.5: rocket/chains/cascades settle
+horizontal-0.5: sweep lasts0.8-1.2 game seconds
+horizontal-0.5: visible launch before first contact
+horizontal-0.5: travel reaches every row/column cell
+horizontal-0.5: cell0 white impact precedes mutation
+horizontal-0.5: cell1 white impact precedes mutation
+horizontal-0.5: cell2 white impact precedes mutation
+horizontal-0.5: cell3 white impact precedes mutation
+horizontal-0.5: cell4 white impact precedes mutation
+horizontal-0.5: cell5 white impact precedes mutation
+horizontal-0.5: cell6 white impact precedes mutation
+horizontal-0.5: cell7 white impact precedes mutation
+horizontal-0.5: physical rocket head leads every crossed cell
+horizontal-0.5: cells remain intact until reached
+horizontal-0.5: intended cell cleared0
+horizontal-0.5: intended cell cleared1
+horizontal-0.5: intended cell cleared2
+horizontal-0.5: intended cell cleared3
+horizontal-0.5: intended cell cleared4
+horizontal-0.5: intended cell cleared5
+horizontal-0.5: intended cell cleared6
+horizontal-0.5: intended cell cleared7
+horizontal-0.5: unrelated cells stay intact
+horizontal-0.5: custom rocket shader and four fixed emitters replace toolkit effects
+horizontal-0.5: moving heads preserve supplied rocket textures
+horizontal-0.5: both heads show animated fire exhaust
+horizontal-0.5: fire exhaust releases with projectile pool
+horizontal-0.5: dense spatial star trail emits along travel
+horizontal-0.5: layered custom effects are visible during sweep
+horizontal-0.5: no additional projectile or VFX objects allocated
+horizontal-0.5: debris pool cleans up
+horizontal-0.5: trail sparks fade after exit
+vertical-0.5: rocket/chains/cascades settle
+vertical-0.5: sweep lasts0.8-1.2 game seconds
+vertical-0.5: visible launch before first contact
+vertical-0.5: travel reaches every row/column cell
+vertical-0.5: cell0 white impact precedes mutation
+vertical-0.5: cell1 white impact precedes mutation
+vertical-0.5: cell2 white impact precedes mutation
+vertical-0.5: cell3 white impact precedes mutation
+vertical-0.5: cell4 white impact precedes mutation
+vertical-0.5: cell5 white impact precedes mutation
+vertical-0.5: cell6 white impact precedes mutation
+vertical-0.5: cell7 white impact precedes mutation
+vertical-0.5: physical rocket head leads every crossed cell
+vertical-0.5: cells remain intact until reached
+vertical-0.5: intended cell cleared0
+vertical-0.5: intended cell cleared1
+vertical-0.5: intended cell cleared2
+vertical-0.5: intended cell cleared3
+vertical-0.5: intended cell cleared4
+vertical-0.5: intended cell cleared5
+vertical-0.5: intended cell cleared6
+vertical-0.5: intended cell cleared7
+vertical-0.5: unrelated cells stay intact
+vertical-0.5: custom rocket shader and four fixed emitters replace toolkit effects
+vertical-0.5: moving heads preserve supplied rocket textures
+vertical-0.5: both heads show animated fire exhaust
+vertical-0.5: fire exhaust releases with projectile pool
+vertical-0.5: dense spatial star trail emits along travel
+vertical-0.5: layered custom effects are visible during sweep
+vertical-0.5: no additional projectile or VFX objects allocated
+vertical-0.5: debris pool cleans up
+vertical-0.5: trail sparks fade after exit
+blockers-0.5: rocket/chains/cascades settle
+blockers-0.5: sweep lasts0.8-1.2 game seconds
+blockers-0.5: visible launch before first contact
+blockers-0.5: travel reaches every row/column cell
+blockers-0.5: cell0 white impact precedes mutation
+blockers-0.5: cell1 white impact precedes mutation
+blockers-0.5: cell2 white impact precedes mutation
+blockers-0.5: cell3 white impact precedes mutation
+blockers-0.5: cell4 white impact precedes mutation
+blockers-0.5: cell5 white impact precedes mutation
+blockers-0.5: cell6 white impact precedes mutation
+blockers-0.5: cell7 white impact precedes mutation
+blockers-0.5: physical rocket head leads every crossed cell
+blockers-0.5: cells remain intact until reached
+blockers-0.5: crossed blocker removed by existing service
+blockers-0.5: custom rocket shader and four fixed emitters replace toolkit effects
+blockers-0.5: moving heads preserve supplied rocket textures
+blockers-0.5: both heads show animated fire exhaust
+blockers-0.5: fire exhaust releases with projectile pool
+blockers-0.5: dense spatial star trail emits along travel
+blockers-0.5: layered custom effects are visible during sweep
+blockers-0.5: no additional projectile or VFX objects allocated
+blockers-0.5: debris pool cleans up
+blockers-0.5: trail sparks fade after exit
+chain-0.5: rocket/chains/cascades settle
+chain-0.5: sweep lasts0.8-1.2 game seconds
+chain-0.5: visible launch before first contact
+chain-0.5: travel reaches every row/column cell
+chain-0.5: cell0 white impact precedes mutation
+chain-0.5: cell1 white impact precedes mutation
+chain-0.5: cell2 white impact precedes mutation
+chain-0.5: cell3 white impact precedes mutation
+chain-0.5: cell4 white impact precedes mutation
+chain-0.5: cell5 white impact precedes mutation
+chain-0.5: cell6 white impact precedes mutation
+chain-0.5: cell7 white impact precedes mutation
+chain-0.5: cell8 white impact precedes mutation
+chain-0.5: cell9 white impact precedes mutation
+chain-0.5: cell10 white impact precedes mutation
+chain-0.5: cell11 white impact precedes mutation
+chain-0.5: cell12 white impact precedes mutation
+chain-0.5: cell13 white impact precedes mutation
+chain-0.5: cell14 white impact precedes mutation
+chain-0.5: cell15 white impact precedes mutation
+chain-0.5: chained rocket activates once
+chain-0.5: custom rocket shader and four fixed emitters replace toolkit effects
+chain-0.5: moving heads preserve supplied rocket textures
+chain-0.5: both heads show animated fire exhaust
+chain-0.5: fire exhaust releases with projectile pool
+chain-0.5: dense spatial star trail emits along travel
+chain-0.5: layered custom effects are visible during sweep
+chain-0.5: no additional projectile or VFX objects allocated
+chain-0.5: debris pool cleans up
+chain-0.5: trail sparks fade after exit
+cascade-0.5: rocket/chains/cascades settle
+cascade-0.5: sweep lasts0.8-1.2 game seconds
+cascade-0.5: visible launch before first contact
+cascade-0.5: travel reaches every row/column cell
+cascade-0.5: cell0 white impact precedes mutation
+cascade-0.5: cell1 white impact precedes mutation
+cascade-0.5: cell2 white impact precedes mutation
+cascade-0.5: cell3 white impact precedes mutation
+cascade-0.5: cell4 white impact precedes mutation
+cascade-0.5: cell5 white impact precedes mutation
+cascade-0.5: cell6 white impact precedes mutation
+cascade-0.5: cell7 white impact precedes mutation
+cascade-0.5: cascade restores valid ownership
+cascade-0.5: custom rocket shader and four fixed emitters replace toolkit effects
+cascade-0.5: moving heads preserve supplied rocket textures
+cascade-0.5: both heads show animated fire exhaust
+cascade-0.5: fire exhaust releases with projectile pool
+cascade-0.5: dense spatial star trail emits along travel
+cascade-0.5: layered custom effects are visible during sweep
+cascade-0.5: no additional projectile or VFX objects allocated
+cascade-0.5: debris pool cleans up
+cascade-0.5: trail sparks fade after exit
+preview-0-0.5: replay 0 uses the two-headed fire sequence
+preview-0-0.5: preview preserves every gem
+preview-0-0.5: preview grants no rewards or moves
+preview-0-0.5: replay returns all effects to pool
+preview-0-0.5: replay does not allocate new effect objects
+preview-0-0.5: replay 1 uses the two-headed fire sequence
+preview-0-0.5: preview preserves every gem
+preview-0-0.5: preview grants no rewards or moves
+preview-0-0.5: replay returns all effects to pool
+preview-0-0.5: replay does not allocate new effect objects
+preview-1-0.5: replay 0 uses the two-headed fire sequence
+preview-1-0.5: preview preserves every gem
+preview-1-0.5: preview grants no rewards or moves
+preview-1-0.5: replay returns all effects to pool
+preview-1-0.5: replay does not allocate new effect objects
+preview-1-0.5: replay 1 uses the two-headed fire sequence
+preview-1-0.5: preview preserves every gem
+preview-1-0.5: preview grants no rewards or moves
+preview-1-0.5: replay returns all effects to pool
+preview-1-0.5: replay does not allocate new effect objects
+VFX Lab uses actual game speed 1
+horizontal-1: rocket/chains/cascades settle
+horizontal-1: sweep lasts0.8-1.2 game seconds
+horizontal-1: visible launch before first contact
+horizontal-1: travel reaches every row/column cell
+horizontal-1: cell0 white impact precedes mutation
+horizontal-1: cell1 white impact precedes mutation
+horizontal-1: cell2 white impact precedes mutation
+horizontal-1: cell3 white impact precedes mutation
+horizontal-1: cell4 white impact precedes mutation
+horizontal-1: cell5 white impact precedes mutation
+horizontal-1: cell6 white impact precedes mutation
+horizontal-1: cell7 white impact precedes mutation
+horizontal-1: physical rocket head leads every crossed cell
+horizontal-1: cells remain intact until reached
+horizontal-1: intended cell cleared0
+horizontal-1: intended cell cleared1
+horizontal-1: intended cell cleared2
+horizontal-1: intended cell cleared3
+horizontal-1: intended cell cleared4
+horizontal-1: intended cell cleared5
+horizontal-1: intended cell cleared6
+horizontal-1: intended cell cleared7
+horizontal-1: unrelated cells stay intact
+horizontal-1: custom rocket shader and four fixed emitters replace toolkit effects
+horizontal-1: moving heads preserve supplied rocket textures
+horizontal-1: both heads show animated fire exhaust
+horizontal-1: fire exhaust releases with projectile pool
+horizontal-1: dense spatial star trail emits along travel
+horizontal-1: layered custom effects are visible during sweep
+horizontal-1: no additional projectile or VFX objects allocated
+horizontal-1: debris pool cleans up
+horizontal-1: trail sparks fade after exit
+vertical-1: rocket/chains/cascades settle
+vertical-1: sweep lasts0.8-1.2 game seconds
+vertical-1: visible launch before first contact
+vertical-1: travel reaches every row/column cell
+vertical-1: cell0 white impact precedes mutation
+vertical-1: cell1 white impact precedes mutation
+vertical-1: cell2 white impact precedes mutation
+vertical-1: cell3 white impact precedes mutation
+vertical-1: cell4 white impact precedes mutation
+vertical-1: cell5 white impact precedes mutation
+vertical-1: cell6 white impact precedes mutation
+vertical-1: cell7 white impact precedes mutation
+vertical-1: physical rocket head leads every crossed cell
+vertical-1: cells remain intact until reached
+vertical-1: intended cell cleared0
+vertical-1: intended cell cleared1
+vertical-1: intended cell cleared2
+vertical-1: intended cell cleared3
+vertical-1: intended cell cleared4
+vertical-1: intended cell cleared5
+vertical-1: intended cell cleared6
+vertical-1: intended cell cleared7
+vertical-1: unrelated cells stay intact
+vertical-1: custom rocket shader and four fixed emitters replace toolkit effects
+vertical-1: moving heads preserve supplied rocket textures
+vertical-1: both heads show animated fire exhaust
+vertical-1: fire exhaust releases with projectile pool
+vertical-1: dense spatial star trail emits along travel
+vertical-1: layered custom effects are visible during sweep
+vertical-1: no additional projectile or VFX objects allocated
+vertical-1: debris pool cleans up
+vertical-1: trail sparks fade after exit
+blockers-1: rocket/chains/cascades settle
+blockers-1: sweep lasts0.8-1.2 game seconds
+blockers-1: visible launch before first contact
+blockers-1: travel reaches every row/column cell
+blockers-1: cell0 white impact precedes mutation
+blockers-1: cell1 white impact precedes mutation
+blockers-1: cell2 white impact precedes mutation
+blockers-1: cell3 white impact precedes mutation
+blockers-1: cell4 white impact precedes mutation
+blockers-1: cell5 white impact precedes mutation
+blockers-1: cell6 white impact precedes mutation
+blockers-1: cell7 white impact precedes mutation
+blockers-1: physical rocket head leads every crossed cell
+blockers-1: cells remain intact until reached
+blockers-1: crossed blocker removed by existing service
+blockers-1: custom rocket shader and four fixed emitters replace toolkit effects
+blockers-1: moving heads preserve supplied rocket textures
+blockers-1: both heads show animated fire exhaust
+blockers-1: fire exhaust releases with projectile pool
+blockers-1: dense spatial star trail emits along travel
+blockers-1: layered custom effects are visible during sweep
+blockers-1: no additional projectile or VFX objects allocated
+blockers-1: debris pool cleans up
+blockers-1: trail sparks fade after exit
+chain-1: rocket/chains/cascades settle
+chain-1: sweep lasts0.8-1.2 game seconds
+chain-1: visible launch before first contact
+chain-1: travel reaches every row/column cell
+chain-1: cell0 white impact precedes mutation
+chain-1: cell1 white impact precedes mutation
+chain-1: cell2 white impact precedes mutation
+chain-1: cell3 white impact precedes mutation
+chain-1: cell4 white impact precedes mutation
+chain-1: cell5 white impact precedes mutation
+chain-1: cell6 white impact precedes mutation
+chain-1: cell7 white impact precedes mutation
+chain-1: cell8 white impact precedes mutation
+chain-1: cell9 white impact precedes mutation
+chain-1: cell10 white impact precedes mutation
+chain-1: cell11 white impact precedes mutation
+chain-1: cell12 white impact precedes mutation
+chain-1: cell13 white impact precedes mutation
+chain-1: cell14 white impact precedes mutation
+chain-1: cell15 white impact precedes mutation
+chain-1: chained rocket activates once
+chain-1: custom rocket shader and four fixed emitters replace toolkit effects
+chain-1: moving heads preserve supplied rocket textures
+chain-1: both heads show animated fire exhaust
+chain-1: fire exhaust releases with projectile pool
+chain-1: dense spatial star trail emits along travel
+chain-1: layered custom effects are visible during sweep
+chain-1: no additional projectile or VFX objects allocated
+chain-1: debris pool cleans up
+chain-1: trail sparks fade after exit
+cascade-1: rocket/chains/cascades settle
+cascade-1: sweep lasts0.8-1.2 game seconds
+cascade-1: visible launch before first contact
+cascade-1: travel reaches every row/column cell
+cascade-1: cell0 white impact precedes mutation
+cascade-1: cell1 white impact precedes mutation
+cascade-1: cell2 white impact precedes mutation
+cascade-1: cell3 white impact precedes mutation
+cascade-1: cell4 white impact precedes mutation
+cascade-1: cell5 white impact precedes mutation
+cascade-1: cell6 white impact precedes mutation
+cascade-1: cell7 white impact precedes mutation
+cascade-1: cascade restores valid ownership
+cascade-1: custom rocket shader and four fixed emitters replace toolkit effects
+cascade-1: moving heads preserve supplied rocket textures
+cascade-1: both heads show animated fire exhaust
+cascade-1: fire exhaust releases with projectile pool
+cascade-1: dense spatial star trail emits along travel
+cascade-1: layered custom effects are visible during sweep
+cascade-1: no additional projectile or VFX objects allocated
+cascade-1: debris pool cleans up
+cascade-1: trail sparks fade after exit
+preview-0-1: replay 0 uses the two-headed fire sequence
+preview-0-1: preview preserves every gem
+preview-0-1: preview grants no rewards or moves
+preview-0-1: replay returns all effects to pool
+preview-0-1: replay does not allocate new effect objects
+preview-0-1: replay 1 uses the two-headed fire sequence
+preview-0-1: preview preserves every gem
+preview-0-1: preview grants no rewards or moves
+preview-0-1: replay returns all effects to pool
+preview-0-1: replay does not allocate new effect objects
+preview-1-1: replay 0 uses the two-headed fire sequence
+preview-1-1: preview preserves every gem
+preview-1-1: preview grants no rewards or moves
+preview-1-1: replay returns all effects to pool
+preview-1-1: replay does not allocate new effect objects
+preview-1-1: replay 1 uses the two-headed fire sequence
+preview-1-1: preview preserves every gem
+preview-1-1: preview grants no rewards or moves
+preview-1-1: replay returns all effects to pool
+preview-1-1: replay does not allocate new effect objects
+Rocket tests preserve coins and lives
+No runtime errors during rocket tests
+Errors: 
+Editor update p95 ms (not device GPU benchmark): 0

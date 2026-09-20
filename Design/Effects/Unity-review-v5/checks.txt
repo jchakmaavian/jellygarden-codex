@@ -1,0 +1,110 @@
+Checks completed: 107
+Cell-local break service prewarms with toolkit and fragment assets
+All cells share a fixed number of Ice and fragment emitters (40)
+Gem snapshots prewarm in a fixed pool
+Per-cell particles use explicit independent world-space emission
+All fragment and toolkit shaders are supported
+horizontal-3 fixture contains a real matched shape
+horizontal-3 fixture is exactly three cells
+horizontal-3: every matched cell emits a break at its own grid position
+horizontal-3: one Ice Impact per destroyed matched gem (3)
+horizontal-3: no shared center Ice overlay
+horizontal-3: at least twice the former minimum fragment count
+horizontal-3: intact gem snapshots remain visibly animated before disappearing
+horizontal-3: visible particles and production resolver both complete
+horizontal-3: every tail cleans up without dropping a cell
+horizontal-3: cascades allocate no new effect objects
+horizontal-3: refill retains correct cell ownership
+vertical-3 fixture contains a real matched shape
+vertical-3 fixture is exactly three cells
+vertical-3: every matched cell emits a break at its own grid position
+vertical-3: one Ice Impact per destroyed matched gem (3)
+vertical-3: no shared center Ice overlay
+vertical-3: at least twice the former minimum fragment count
+vertical-3: intact gem snapshots remain visibly animated before disappearing
+vertical-3: visible particles and production resolver both complete
+vertical-3: every tail cleans up without dropping a cell
+vertical-3: cascades allocate no new effect objects
+vertical-3: refill retains correct cell ownership
+match-4 fixture contains a real matched shape
+match-4 fixture has the exact intended shape size
+match-4: every matched cell emits a break at its own grid position
+match-4: one Ice Impact per destroyed matched gem (4)
+match-4: no shared center Ice overlay
+match-4: at least twice the former minimum fragment count
+match-4: intact gem snapshots remain visibly animated before disappearing
+match-4: visible particles and production resolver both complete
+match-4: every tail cleans up without dropping a cell
+match-4: cascades allocate no new effect objects
+match-4: refill retains correct cell ownership
+match-5 fixture contains a real matched shape
+match-5 fixture has the exact intended shape size
+match-5: every matched cell emits a break at its own grid position
+match-5: one Ice Impact per destroyed matched gem (5)
+match-5: no shared center Ice overlay
+match-5: at least twice the former minimum fragment count
+match-5: intact gem snapshots remain visibly animated before disappearing
+match-5: visible particles and production resolver both complete
+match-5: every tail cleans up without dropping a cell
+match-5: cascades allocate no new effect objects
+match-5: refill retains correct cell ownership
+T-shape fixture contains a real matched shape
+T-shape fixture has the exact intended shape size
+T-shape: every matched cell emits a break at its own grid position
+T-shape: one Ice Impact per destroyed matched gem (5)
+T-shape: no shared center Ice overlay
+T-shape: at least twice the former minimum fragment count
+T-shape: intact gem snapshots remain visibly animated before disappearing
+T-shape: visible particles and production resolver both complete
+T-shape: every tail cleans up without dropping a cell
+T-shape: cascades allocate no new effect objects
+T-shape: refill retains correct cell ownership
+L-shape fixture contains a real matched shape
+L-shape fixture has the exact intended shape size
+L-shape: every matched cell emits a break at its own grid position
+L-shape: one Ice Impact per destroyed matched gem (8)
+L-shape: no shared center Ice overlay
+L-shape: at least twice the former minimum fragment count
+L-shape: intact gem snapshots remain visibly animated before disappearing
+L-shape: visible particles and production resolver both complete
+L-shape: every tail cleans up without dropping a cell
+L-shape: cascades allocate no new effect objects
+L-shape: refill retains correct cell ownership
+simultaneous fixture contains a real matched shape
+simultaneous: every matched cell emits a break at its own grid position
+simultaneous: one Ice Impact per destroyed matched gem (6)
+simultaneous: no shared center Ice overlay
+simultaneous: at least twice the former minimum fragment count
+simultaneous: intact gem snapshots remain visibly animated before disappearing
+simultaneous: visible particles and production resolver both complete
+simultaneous: every tail cleans up without dropping a cell
+simultaneous: cascades allocate no new effect objects
+simultaneous: refill retains correct cell ownership
+cascades fixture contains a real matched shape
+cascades: every matched cell emits a break at its own grid position
+cascades: one Ice Impact per destroyed matched gem (9)
+cascades: no shared center Ice overlay
+cascades: at least twice the former minimum fragment count
+cascades: intact gem snapshots remain visibly animated before disappearing
+cascades: visible particles and production resolver both complete
+cascades: every tail cleans up without dropping a cell
+cascades: cascades allocate no new effect objects
+cascades: refill retains correct cell ownership
+Constructed cascade produces a second matched wave
+Match decoration does not consume gameplay RNG
+Gem is still visible during the Ice impact
+AllIn1 ring particles exist at the gem cell
+Blue Match-3 emits eight authored fragments instead of four
+Gem disappears after the supporting pop, before the falling tail completes
+Pause freezes Ice and falling fragments
+Every fragment turns downward under gravity
+Falling fragments remain within local board bounds
+Fragments visibly fade and shrink near the end
+Break fully cleans up by 0.8 seconds
+All 64 simultaneous cells receive independent Ice impacts
+Large simultaneous wave retains rich per-cell fragments
+Board cancellation clears all pooled match effects
+Cell-break regression preserves coins and lives
+No runtime errors during cell-break regression
+Errors: 
+Editor update p95 ms (not device GPU benchmark): 0

@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,7 +35,16 @@ namespace RoyalThrone.Editor
             File.WriteAllLines(Folder+"hierarchy.txt",lines);Capture("current-gameplay");Debug.Log("[Royal Effects] Board inspection saved.");
         }
         static readonly List<string> checks=new List<string>(),errors=new List<string>();
-        const string Folder="Design/Effects/Unity-review/";
+        static bool cellBreakOnly,rocketOnly,tntOnly,colorBallOnly;
+        static string Folder=>colorBallOnly?"Design/Effects/ColorBall-live-v1/":tntOnly?"Design/Effects/TNT-review-v6/":rocketOnly?"Design/Effects/Rocket-review-v7/":cellBreakOnly?"Design/Effects/Unity-review-v6/":"Design/Effects/Unity-review-v4/";
+        [MenuItem("Tools/Royal Throne/Color Ball/Verify live Rocket conversion only %#F7")]
+        public static void RunColorBall(){colorBallOnly=true;Run();}
+        [MenuItem("Tools/Royal Throne/TNT/Verify TNT only at quarter and full speed %#F8")]
+        public static void RunTnt(){tntOnly=true;Run();}
+        [MenuItem("Tools/Royal Throne/Effects/Verify restored smooth match breaks %#F10")]
+        public static void RunCellBreaks(){cellBreakOnly=true;Run();}
+        [MenuItem("Tools/Royal Throne/Effects/Verify rocket travel at half and full speed %#F11")]
+        public static void RunRockets(){rocketOnly=true;Run();}
         static LevelManager lm;static Transform originalField,testField;static Square[] originalSquares;
         static TargetObject[] originalTargets;static int rows,cols,limit,score,move;static bool drag,showScores;
         static int money,lives;static UnityEngine.Random.State random;
@@ -77,12 +87,37 @@ namespace RoyalThrone.Editor
             bool completed=false;
             try
             {
+                if(colorBallOnly)
+                {
+                    yield return RoyalColorBallChecks.Run(lm,Seed,SetColours,Check);
+                    Check(InitScript.Gems==money&&InitScript.lifes==lives,"Color Ball tests preserve coins and lives");
+                    Check(errors.Count==0,"No runtime errors during Color Ball tests");completed=true;yield break;
+                }
+                if(tntOnly)
+                {
+                    yield return RoyalTNTChecks.Run(lm,Seed,SetColours,Check);
+                    Check(InitScript.Gems==money&&InitScript.lifes==lives,"TNT tests preserve coins and lives");
+                    Check(errors.Count==0,"No runtime errors during TNT tests");completed=true;yield break;
+                }
+                if(rocketOnly)
+                {
+                    yield return RoyalRocketChecks.Run(lm,Seed,SetColours,Check);
+                    Check(InitScript.Gems==money&&InitScript.lifes==lives,"Rocket tests preserve coins and lives");
+                    Check(errors.Count==0,"No runtime errors during rocket tests");completed=true;yield break;
+                }
+                if(cellBreakOnly)
+                {
+                    yield return RoyalCellBreakChecks.RunRestored(lm,Seed,SetColours,Check);
+                    Check(InitScript.Gems==money&&InitScript.lifes==lives,"Cell-break regression preserves coins and lives");
+                    Check(errors.Count==0,"No runtime errors during cell-break regression");
+                    completed=true;yield break;
+                }
                 Check(Resources.Load<GameObject>("RoyalGameplay/EffectsRig"),"Authored particle rig loads");
                 foreach(var name in RoyalPieceSkin.Colours.Concat(new[]{"rocket","tnt","helicopter","orb","smoke","gem","heart","star","ice","key","chest","chains","stone"}))Check(RoyalPieceSkin.Art(name),"WebP sprite loads: "+name);
                 foreach(var name in new[]{"match-a","match-b","rocket","tnt","helicopter","create","castle-theme","land","click","firework","celebrate"})Check(Resources.Load<AudioClip>("RoyalGameplay/Audio/"+name),"Audio imports: "+name);
                 foreach(var blockName in new[]{"Block","SolidBlock","ThrivingBlock","UndestrBlock","WireBlock"}){
                     var prefab=Resources.Load<GameObject>("Prefabs/"+blockName);var original=prefab.GetComponent<SpriteRenderer>().sprite;
-                    var styled=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(original);
+                    var styled=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(original,true);
                     Check(styled&&styled.texture!=original.texture&&styled.name==original.name,blockName+" has new art and preserves target identifier");
                     Check(Mathf.Abs(Mathf.Max(styled.bounds.size.x,styled.bounds.size.y)-Mathf.Max(original.bounds.size.x,original.bounds.size.y))<.01f,blockName+" preserves board footprint");
                 }
@@ -94,7 +129,9 @@ namespace RoyalThrone.Editor
                 var targetIcon=Object.Instantiate(Resources.Load<TargetIcon>("Targets/TargetBlocks"));targetIcon.SetTarget(lm.targetObject[0]);
                 Check(ReferenceEquals(targetIcon.target,lm.targetObject[0]),"Goal artwork retains live target data reference");Object.DestroyImmediate(targetIcon.gameObject);
                 Check(!JuiceConfig.Instance.EnableHitStop,"Ordinary matches do not change global timescale");
+                Seed();yield return null;SetColours();yield return RoyalBoardSurfaceChecks.Run(lm,Check);
                 yield return PresentationChecks();
+                yield return RoyalToolkitChecks.Run(lm,Check);
                 Seed();yield return null;SetColours();yield return RoyalInputRegression.Run(lm,Check);
                 capture=RoyalReviewAudioCapture.Begin();
                 for(int n=3;n<=5;n++)
@@ -102,7 +139,7 @@ namespace RoyalThrone.Editor
                     Seed();yield return null;SetColours();for(int x=1;x<=n;x++)At(x,3).SetColor(0);
                     var groups=Groups();Check(groups.Any(g=>g.Count>=n),n+"-line detected");
                     Check(n==3||lm.GetItems().Any(i=>i&&i.NextType==(n==5?ItemsTypes.BOMB:ItemsTypes.VERTICAL_STRIPPED)||i&&n==4&&i.NextType==ItemsTypes.HORIZONTAL_STRIPPED),n+"-line power-up rule");
-                    foreach(var g in groups)foreach(var i in g)i.DestroyItem(true);yield return Settled();
+                    yield return RoyalToolkitChecks.ResolveProductionMatch(lm,Check,n);
                 }
                 Seed();yield return null;SetColours();Paint(2,new Vector2Int(2,2),new Vector2Int(3,2),new Vector2Int(2,3),new Vector2Int(3,3));
                 At(1,3).SetColor(4); // Avoid an overlapping horizontal three in the deterministic base pattern.
@@ -125,6 +162,7 @@ namespace RoyalThrone.Editor
                 Seed();yield return null;SetColours();At(3,3).currentType=ItemsTypes.PACKAGE;At(3,3).DestroyItem(true);Time.timeScale=0;
                 int before=lm.GetItems().Count(i=>i);yield return new WaitForSecondsRealtime(.3f);Check(lm.GetItems().Count(i=>i)==before,"Pause holds TNT impact");Time.timeScale=1;yield return Settled();
                 Seed();yield return null;SetColours();yield return RoyalBoardPresentationChecks.Run(lm,Check);
+                Seed();yield return null;SetColours();yield return RoyalHintPresentationChecks.Run(lm,Check);
                 Seed();yield return null;SetColours();lm.lastDraggedItem=null;lm.lastSwitchedItem=null;
                 var aItem=At(1,1);var bItem=At(2,1);int oldLimit=lm.Limit;lm.DragBlocked=false;aItem.SwitchDirection(Vector3.left);
                 yield return new WaitForSeconds(.5f);Check(At(1,1)==aItem&&At(2,1)==bItem&&lm.Limit==oldLimit,"Invalid swap returns pieces and spends no move");
@@ -163,7 +201,7 @@ namespace RoyalThrone.Editor
             PlayerPrefs.SetInt("RoyalThrone.HomeMotion",1);
             var shatter=CandyShatterService.Instance;shatter.Clear();
             var source=At(3,1).sprRenderer;float startY=source.bounds.center.y,unit=Mathf.Max(source.bounds.size.x,source.bounds.size.y);
-            shatter.Shatter(source,1);Check(shatter.ActiveFragments>=5,"Ordinary gem break emits recognisable mesh chunks");
+            shatter.Shatter(source,1);Check(shatter.ActiveFragments>=4,"Ordinary gem break emits recognisable supplied fracture pieces");
             yield return new WaitForSeconds(.42f);
             var fragments=shatter.GetComponentsInChildren<MeshRenderer>().Where(r=>r.enabled).ToArray();
             Check(fragments.Length>0&&fragments.Average(r=>r.transform.position.y)<startY-unit*.6f,"Chunks visibly fall more than half a gem height instead of disappearing on impact");
@@ -205,9 +243,9 @@ namespace RoyalThrone.Editor
                 director.Cancel();yield return null;director.Burst(source.transform.position);
                 Check(director.ActiveOperations==0,"Decorative TNT tail does not hold board input");
                 stateField.SetValue(lm,GameState.Map);yield return null;yield return new WaitForSeconds(.14f);
-                Check(director.GetComponentsInChildren<ParticleSystem>().Sum(ps=>ps.particleCount)==0,"Leaving gameplay cancels finished TNT particles and delayed corona");
+                Check(VisibleImpactParticles(director)==0,"Leaving gameplay cancels finished TNT particles and delayed corona");
                 director.Preview("TNT",source.transform.position);yield return null;
-                Check(director.GetComponentsInChildren<ParticleSystem>().Sum(ps=>ps.particleCount)>0,"Effects Workshop preview still plays while already on Map");
+                Check(VisibleImpactParticles(director)>0,"Effects Workshop preview still plays while already on Map");
             }
             finally {stateField.SetValue(lm,beforeState);director.Cancel();}
 
@@ -225,6 +263,9 @@ namespace RoyalThrone.Editor
             yield return new WaitForSeconds(1.15f);Check(!celebration.IsShowing,"Celebration clears promptly without delaying input");
             PlayerPrefs.SetInt("RoyalThrone.HomeMotion",originalMotion);
         }
+        static int VisibleImpactParticles(RoyalPowerupDirector director)
+            =>director.GetComponentsInChildren<ParticleSystem>().Sum(ps=>ps.particleCount)+
+              (RoyalToolkitImpact.Existing?RoyalToolkitImpact.Existing.GetComponentsInChildren<ParticleSystem>(true).Sum(ps=>ps.particleCount):0);
         static double previous;
         static void Frame(){double now=EditorApplication.timeSinceStartup;if(recording&&previous>0)frames.Add((float)((now-previous)*1000));previous=now;}
         [MenuItem("Tools/Royal Throne/Effects/Capture current presentation #F4")]
@@ -258,11 +299,13 @@ namespace RoyalThrone.Editor
             recording=false;EditorApplication.update-=Frame;Application.logMessageReceived-=Log;Time.timeScale=1;
             if(hadMotion)PlayerPrefs.SetInt("RoyalThrone.HomeMotion",originalMotion);else PlayerPrefs.DeleteKey("RoyalThrone.HomeMotion");
             CandyShatterService.Instance.Clear();MatchVFXService.Instance.Clear();lm.GetComponent<RoyalCelebration>()?.Cancel();
+            RoyalMatchBreakService.Existing?.Clear();
             lm.StopAllCoroutines();RoyalPowerupDirector.Get.Cancel();lm.GameField=originalField;lm.squaresArray=originalSquares;lm.maxRows=rows;lm.maxCols=cols;lm.targetObject=originalTargets;lm.Limit=limit;LevelManager.Score=score;lm.moveID=move;lm.showPopupScores=showScores;lm.destroyAnyway.Clear();
             typeof(LevelManager).GetField("royalResolving",BindingFlags.Instance|BindingFlags.NonPublic)?.SetValue(lm,false);
             lm.lastDraggedItem=lm.lastSwitchedItem=null;lm.DragBlocked=drag;UnityEngine.Random.state=random;Object.Destroy(testField.gameObject);originalField.gameObject.SetActive(true);
             frames.Sort();string result="Checks completed: "+checks.Count+"\n"+string.Join("\n",checks)+"\nErrors: "+string.Join("\n",errors)+"\nEditor update p95 ms (not device GPU benchmark): "+(frames.Count>0?frames[(int)(frames.Count*.95f)]:0);
             File.WriteAllText(Folder+"checks.txt",result);Debug.Log("[Royal Effects Checks] "+result);AI.THIS.StartCoroutine(AI.THIS.CheckPossibleCombines());
+            cellBreakOnly=false;rocketOnly=false;tntOnly=false;colorBallOnly=false;
         }
     }
 }

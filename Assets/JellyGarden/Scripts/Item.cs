@@ -144,6 +144,9 @@ namespace JellyGarden.Scripts
         void Start()
         {
             gameObject.name = "item " + GetEntityId();
+            // A Match-4 replacement starts its reveal in the spawn frame. Do not
+            // randomize it, make it fall, or cache its temporary pop scale next frame.
+            if (RoyalRocketRevealing || (currentType == ItemsTypes.PACKAGE && TNT3DAnimator.Find(this))) { royalSkin?.ApplyNow(); return; }
             falling = true;
             GenColor();
             // sprRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -958,10 +961,35 @@ namespace JellyGarden.Scripts
         {
             if (RoyalEffectsProfile.Get && NextType != ItemsTypes.NONE)
             {
-                currentType = NextType; debugType = NextType; NextType = ItemsTypes.NONE;
+                ItemsTypes createdType = NextType;
+                currentType = createdType; debugType = createdType; NextType = ItemsTypes.NONE;
                 if (currentType == ItemsTypes.BOMB) color = 555;
                 appeared = true; sprRenderer.sprite = RoyalPieceSkin.For(currentType, color);
-                RoyalPowerupDirector.Get?.Creation(transform.position); yield break;
+                bool rocket = createdType == ItemsTypes.HORIZONTAL_STRIPPED || createdType == ItemsTypes.VERTICAL_STRIPPED;
+                bool tnt = createdType == ItemsTypes.PACKAGE;
+                // The Color Ball takes the same seat as a rocket or TNT: its Reveal has to play on the
+                // cell it was made in. Without this it began the sequence up to three cells above the
+                // board and fell through it, so the reward moment drifted down the screen.
+                bool orb = createdType == ItemsTypes.BOMB;
+                if (rocket || tnt || orb)
+                {
+                    StopIdleAnim(); if (anim) anim.enabled = false;
+                    falling = false; justCreatedItem = false;
+                    if (square) transform.position = square.transform.position + Vector3.back * .2f;
+                    juiceBaseScale = transform.localScale; xScale = juiceBaseScale.x; yScale = juiceBaseScale.y;
+                    sprRenderer.enabled = true; sprRenderer.color = Color.white;
+                    royalSkin?.ApplyNow();
+                }
+                if (tnt) TNT3DAnimator.RevealSprite(this);
+                else
+                {
+                    // The approved Color Ball Reveal replaces the static orb from its first frame.
+                    if (orb) ColorBallFrameAnimator.PlayReveal(this);
+                    RoyalPowerupDirector.Get?.Creation(transform.position);
+                }
+                if (rocket)
+                    yield return RoyalRocketCreation();
+                yield break;
             }
             if (NextType == ItemsTypes.HORIZONTAL_STRIPPED)
             {
@@ -1006,6 +1034,22 @@ namespace JellyGarden.Scripts
             currentType = NextType;
             NextType = ItemsTypes.NONE;
 
+        }
+
+        public bool RoyalRocketRevealing { get; private set; }
+        IEnumerator RoyalRocketCreation()
+        {
+            // Match-4 already routes through ChangeTypeCor. The piece animator poses this item's
+            // sprite in place, so no duplicate prefab, gameplay event, or serialized reference exists.
+            var reveal = RoyalRocketPieceAnimator.PlayReveal(this);
+            if (!reveal) yield break;
+            RoyalRocketRevealing = true;
+            try
+            {
+                while (reveal && reveal.Current == RoyalRocketPieceAnimator.Phase.Reveal && !destroying)
+                    yield return null;
+            }
+            finally { RoyalRocketRevealing = false; }
         }
 
         public void SetAnimationDestroyingFinished()
@@ -1137,7 +1181,7 @@ namespace JellyGarden.Scripts
             while (!animationFinished && currentType == ItemsTypes.NONE)
                 yield return new WaitForFixedUpdate();
 
-            square.DestroyBlock();
+            square.DestroyBlock(royalRocketClear);
             if (royalSpecial || royalConsumed) { }
             else if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
                 DestroyHorizontal();
@@ -1150,7 +1194,8 @@ namespace JellyGarden.Scripts
 
             if (NextType != ItemsTypes.NONE)
             {
-                Item i = square.GenItem();
+                bool rocket = RoyalEffectsProfile.Get && (NextType == ItemsTypes.HORIZONTAL_STRIPPED || NextType == ItemsTypes.VERTICAL_STRIPPED);
+                Item i = square.GenItem(!rocket && !(RoyalEffectsProfile.Get && NextType == ItemsTypes.PACKAGE));
                 i.NextType = NextType;
                 i.SetColor(color);
                 i.ChangeType();
@@ -1206,25 +1251,62 @@ namespace JellyGarden.Scripts
         /// resolves while the particles are still finishing on their own.
         /// </summary>
         [HideInInspector] public bool royalBlastClear;
+        [HideInInspector] public bool royalTntClear;
+        [HideInInspector] public Vector3 royalTntOrigin;
+        [HideInInspector] public bool royalRocketClear;
+        [HideInInspector] public int royalMatchSize;
         IEnumerator JuiceDestroyCor()
         {
             var cfg = JuiceConfig.Instance;
 
+            // Stop legacy Sprite-child scale keys before stagger or shine snapshots.
+            // The parent keeps the same timed anticipation/squash/rebound below.
+            suppressIdleScale = true;
+            StopIdleAnim();
+            if (anim != null) anim.enabled = false;
+            royalSkin?.ApplyNow();
+
+            if (royalTntClear)
+            {
+                // Keep the source visible for the local impact, then release painted debris.
+                yield return new WaitForSeconds(.018f);
+                CandyShatterService.Instance.Shatter(sprRenderer,1f,true,false,true);
+                foreach(var renderer in GetComponentsInChildren<SpriteRenderer>(true))
+                    if(renderer&&!IsBonusFlyer(renderer.transform))renderer.enabled=false;
+                yield return new WaitForSeconds(.035f);
+                SetAnimationDestroyingFinished();yield break;
+            }
+
+            // The rocket has already arrived and held its local white impact before
+            // this call. Snapshot the painted chips before target collection hides it.
+            if (royalRocketClear)
+            {
+                CandyShatterService.Instance.Shatter(sprRenderer, 1f, true, true);
+                foreach (var renderer in GetComponentsInChildren<SpriteRenderer>(true))
+                    if (renderer && !IsBonusFlyer(renderer.transform)) renderer.enabled = false;
+                yield return new WaitForSeconds(.065f);
+                SetAnimationDestroyingFinished();
+                yield break;
+            }
+
+            // Restore the original sprite-led pop; soften only confirmed matches.
+            bool smoothMatch = royalMatchSize >= 3 && !royalBlastClear;
+            float anticipationTime = smoothMatch ? .03f : cfg.MatchAnticipation;
+            float squashTime = smoothMatch ? .045f : cfg.MatchSquashDuration;
+            float reboundTime = smoothMatch ? .045f : cfg.MatchReboundDuration;
+            float destroyTime = smoothMatch ? .09f : cfg.MatchDestroyDuration;
+
             // Schedule the VFX UP FRONT, before any yield, and let the service play them
             // on its own clock. This coroutine only owns the fruit's squash/stretch.
             //
-            // Why: DestroyCor calls LevelManager.CheckCollectedTarget immediately after
-            // starting this coroutine, and on levels with a COLLECT target that leads to
-            // AnimateCollectedItem -> _item.SetActive(false) on this very GameObject.
-            // Deactivating a GameObject stops its coroutines permanently, so anything
-            // fired from later in this method would silently never happen for exactly the
-            // fruits that count toward the objective.
+            // Collection can hide the source renderer immediately after this starts.
+            // Schedule its shine and burst before the first yield so those still play.
             {
                 var svc = MatchVFXService.Instance;
                 if (svc != null)
                 {
-                    float toShine = juiceStagger + cfg.MatchAnticipation + cfg.MatchSquashDuration;
-                    float toBurst = toShine + cfg.MatchReboundDuration;
+                    float toShine = juiceStagger + anticipationTime + squashTime;
+                    float toBurst = toShine + reboundTime;
 
                     if (sprRenderer != null && sprRenderer.enabled)
                         svc.PlayFruitShine(sprRenderer, 0.09f, 0.85f, toShine);
@@ -1235,12 +1317,6 @@ namespace JellyGarden.Scripts
 
             if (juiceStagger > 0f)
                 yield return new WaitForSeconds(juiceStagger);
-
-            // Own the transform outright for the rest of this object's life.
-            suppressIdleScale = true;
-            StopIdleAnim();
-            if (anim != null)
-                anim.enabled = false;
 
             // Fade this fruit's own renderers, but NEVER the "5sec" time-bonus flyer:
             // on TIME levels DestroyCor unparents that child moments later so it can play
@@ -1254,16 +1330,16 @@ namespace JellyGarden.Scripts
             }
 
             Vector3 baseScale = juiceBaseScale;
-            float squash = cfg.MatchSquashAmount;
+            float squash = smoothMatch ? .045f : cfg.MatchSquashAmount;
 
             // --- 1. anticipation ------------------------------------------------
             float t = 0f;
-            float dur = Mathf.Max(0.0001f, cfg.MatchAnticipation);
+            float dur = Mathf.Max(0.0001f, anticipationTime);
             float anticip = cfg.MatchAnticipationScale;
             while (t < 1f)
             {
                 t += Time.deltaTime / dur;
-                float e = Easing.OutQuad(Mathf.Clamp01(t));
+                float e = smoothMatch ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t)) : Easing.OutQuad(Mathf.Clamp01(t));
                 float s = 1f - anticip * e;
                 transform.localScale = new Vector3(baseScale.x * s, baseScale.y * s, baseScale.z);
                 yield return null;
@@ -1271,12 +1347,12 @@ namespace JellyGarden.Scripts
 
             // --- 2. squash ------------------------------------------------------
             t = 0f;
-            dur = Mathf.Max(0.0001f, cfg.MatchSquashDuration);
+            dur = Mathf.Max(0.0001f, squashTime);
             float fromS = 1f - anticip;
             while (t < 1f)
             {
                 t += Time.deltaTime / dur;
-                float e = Easing.OutCubic(Mathf.Clamp01(t));
+                float e = smoothMatch ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t)) : Easing.OutCubic(Mathf.Clamp01(t));
                 float sx = Mathf.Lerp(fromS, 1f + squash, e);
                 float sy = Mathf.Lerp(fromS, 1f - squash * 1.15f, e);
                 transform.localScale = new Vector3(baseScale.x * sx, baseScale.y * sy, baseScale.z);
@@ -1285,12 +1361,12 @@ namespace JellyGarden.Scripts
 
             // --- 3. rebound (the shine was scheduled up front) ------------------
             t = 0f;
-            dur = Mathf.Max(0.0001f, cfg.MatchReboundDuration);
-            float reb = cfg.MatchReboundAmount;
+            dur = Mathf.Max(0.0001f, reboundTime);
+            float reb = smoothMatch ? .065f : cfg.MatchReboundAmount;
             while (t < 1f)
             {
                 t += Time.deltaTime / dur;
-                float e = Easing.OutQuad(Mathf.Clamp01(t));
+                float e = smoothMatch ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t)) : Easing.OutQuad(Mathf.Clamp01(t));
                 float sx = Mathf.Lerp(1f + squash, 1f - reb * 0.35f, e);
                 float sy = Mathf.Lerp(1f - squash * 1.15f, 1f + reb, e);
                 transform.localScale = new Vector3(baseScale.x * sx, baseScale.y * sy, baseScale.z);
@@ -1299,7 +1375,7 @@ namespace JellyGarden.Scripts
 
             // --- 4. break apart -------------------------------------------------
             t = 0f;
-            dur = Mathf.Max(0.0001f, cfg.MatchDestroyDuration);
+            dur = Mathf.Max(0.0001f, destroyTime);
             float startX = 1f - reb * 0.35f;
             float startY = 1f + reb;
 
@@ -1321,7 +1397,7 @@ namespace JellyGarden.Scripts
             }
 
             // Run out the remaining destroy time either way, so animationFinished is raised
-            // at exactly the same moment as before and the cascade's pacing is unchanged.
+            // after the visible pop; pooled fragments continue independently.
             while (t < 1f)
             {
                 t += Time.deltaTime / dur;
@@ -1459,7 +1535,7 @@ namespace JellyGarden.Scripts
             {
                 if (InputManager.Instance.WasTouchPressed)
                 {
-                    if (!LevelManager.THIS.DragBlocked && !falling && !LevelManager.THIS.gameStatus.Equals(GameState.PreWinAnimations))
+                    if (LevelManager.THIS.BoardInputAllowed && !falling)
                     {
                         Collider2D hit = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(InputManager.Instance.TouchPosition));
                         if (hit != null && hit.gameObject == gameObject)
@@ -1469,23 +1545,31 @@ namespace JellyGarden.Scripts
                         }
                     }
                 }
-                
+
                 if (InputManager.Instance.WasTouchReleased)
                 {
                     if (dragThis)
                     {
-                        if (switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
+                        if (LevelManager.THIS.BoardInputAllowed && switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
                         dragThis = false;
                         if (switchDirection != Vector3.zero)
                             ResetDrag();
                     }
                 }
-                
+
                 if (InputManager.Instance.IsTouching && dragThis)
                 {
-                    if (!LevelManager.THIS.DragBlocked && !falling && !LevelManager.THIS.gameStatus.Equals(GameState.PreWinAnimations))
+                    if (LevelManager.THIS.BoardInputAllowed && !falling)
                     {
                         CheckItemDrag();
+                    }
+                    else if (LevelManager.THIS.gameStatus != GameState.Playing ||
+                             (MenuManager.Instance != null && MenuManager.Instance.BlocksBoardInput))
+                    {
+                        // A popup opened or the level ended mid-drag: drop the drag instead of
+                        // leaving it armed to complete once play resumes. A drag held while the
+                        // board resolves its own move is left alone, as before.
+                        ResetDrag();
                     }
                 }
             }
@@ -1493,7 +1577,8 @@ namespace JellyGarden.Scripts
 
         public void OnMouseDown()
         {
-            if (!LevelManager.THIS.DragBlocked && !falling && !LevelManager.THIS.gameStatus.Equals(GameState.PreWinAnimations))
+            if (RoyalThrone.Testing.RoyalSave.BlockGameplayInput) return;
+            if (LevelManager.THIS.BoardInputAllowed && !falling)
             {
                 dragThis = true;
                 mousePos = GetMousePosition();
@@ -1502,7 +1587,8 @@ namespace JellyGarden.Scripts
 
         public void OnMouseUp()
         {
-            if (dragThis && switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
+            if (RoyalThrone.Testing.RoyalSave.BlockGameplayInput) { dragThis = false; return; }
+            if (dragThis && LevelManager.THIS.BoardInputAllowed && switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
             dragThis = false;
             if (switchDirection != Vector3.zero)
                 ResetDrag();
@@ -1510,7 +1596,8 @@ namespace JellyGarden.Scripts
 
         public void OnMouseDrag()
         {
-            if (dragThis && !LevelManager.THIS.DragBlocked && !falling && !LevelManager.THIS.gameStatus.Equals(GameState.PreWinAnimations))
+            if (RoyalThrone.Testing.RoyalSave.BlockGameplayInput) return;
+            if (dragThis && LevelManager.THIS.BoardInputAllowed && !falling)
             {
                 CheckItemDrag();
             }

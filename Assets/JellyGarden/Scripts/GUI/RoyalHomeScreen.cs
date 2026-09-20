@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 using System;
 using JellyGarden.Scripts;
 using JellyGarden.Scripts.GUI;
@@ -158,6 +159,8 @@ namespace RoyalThrone.Presentation
         void RefreshResources()
         {
             if (!InitScript.Instance || !coinLabel) return;
+            // Keeps the home HUD correct even when the legacy map counter is not running.
+            InitScript.Instance.UpdateLives();
             coinLabel.text = InitScript.Gems.ToString("N0");
             lifeLabel.text = InitScript.lifes.ToString();
             int seconds = Mathf.Max(0, Mathf.CeilToInt(InitScript.RestLifeTimer));

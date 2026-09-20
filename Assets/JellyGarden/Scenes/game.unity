@@ -9592,7 +9592,7 @@ MonoBehaviour:
   currentReward: 0
   CapOfLife: 5
   TotalTimeForRestLifeHours: 0
-  TotalTimeForRestLifeMin: 15
+  TotalTimeForRestLifeMin: 5
   TotalTimeForRestLifeSec: 0
   FirstGems: 5
   adsEvents:
@@ -11895,48 +11895,48 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 02e8c6e5d88c5ab47937cdd634eec522, type: 3}
   - {fileID: 21300000, guid: ddf0f87b35698434b8ef36dfb372019f, type: 3}
   descriptions:
-  - Gives you the 5 extra moves
-  - Place this special item in game
-  - Place this special item in game
-  - Gives you the 30 extra seconds
-  - Destroy the item
-  - Place this special item in game
-  - Switch to item that don't match
-  - Replace the near items color
+  - Adds 5 more moves
+  - Starts the level with 5 TNT barrels
+  - Starts the level with 5 rockets
+  - Adds 30 more seconds
+  - Smashes any single piece
+  - Starts the level with a magic orb
+  - Swaps any two neighbours, no move spent
+  - Recolours the pieces around your tap
   prices: 
   icon: {fileID: 215232628}
   description: {fileID: 1509741449}
   boostProducts:
   - icon: {fileID: 21300000, guid: f05d3e96f84118245a14cce07717dc89, type: 3}
-    description: Gives you the 5 extra moves
+    description: Adds 5 more moves
     count: 03000000050000000a000000
     GemPrices: 05000000060000000b000000
   - icon: {fileID: 21300000, guid: 0ebe6fb381765b14a80f8649d2ec4cda, type: 3}
-    description: Place this special item in game
+    description: Starts the level with 5 TNT barrels
     count: 03000000050000000a000000
     GemPrices: 05000000060000000b000000
   - icon: {fileID: 21300000, guid: 88d9e8950b09c454a9f5fc32ae67f293, type: 3}
-    description: Place this special item in game
+    description: Starts the level with 5 rockets
     count: 03000000050000000a000000
     GemPrices: 05000000060000000b000000
   - icon: {fileID: 21300000, guid: 36a51f94945ca7543a63a39573c1fb14, type: 3}
-    description: Gives you the 30 extra seconds
+    description: Adds 30 more seconds
     count: 03000000050000000a000000
     GemPrices: 05000000060000000b000000
   - icon: {fileID: 21300000, guid: fc01eb8796d12ea49a7cd9d5a96147d5, type: 3}
-    description: Destroy the item
+    description: Smashes any single piece
     count: 03000000050000000a000000
     GemPrices: 05000000060000000b000000
   - icon: {fileID: 21300000, guid: c41ac740895bba842bccf07cd8582fb9, type: 3}
-    description: Place this special item in game
+    description: Starts the level with a magic orb
     count: 03000000050000000a000000
     GemPrices: 05000000060000000b000000
   - icon: {fileID: 21300000, guid: 02e8c6e5d88c5ab47937cdd634eec522, type: 3}
-    description: Switch to item that don't match
+    description: Swaps any two neighbours, no move spent
     count: 03000000050000000a000000
     GemPrices: 05000000060000000b000000
   - icon: {fileID: 21300000, guid: ddf0f87b35698434b8ef36dfb372019f, type: 3}
-    description: Replace the near items color
+    description: Recolours the pieces around your tap
     count: 03000000050000000a000000
     GemPrices: 05000000060000000b000000
 --- !u!1 &641456704
@@ -32849,7 +32849,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1911521738}
         m_TargetAssemblyTypeName: 
-        m_MethodName: Next
+        m_MethodName: RetryLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

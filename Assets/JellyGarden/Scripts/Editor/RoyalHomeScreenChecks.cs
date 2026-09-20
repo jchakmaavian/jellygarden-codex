@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 using System;
 using System.Collections.Generic;
 using System.IO;
