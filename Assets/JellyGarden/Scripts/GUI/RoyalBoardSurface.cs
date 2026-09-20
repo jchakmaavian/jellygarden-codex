@@ -77,7 +77,13 @@ namespace RoyalThrone.Presentation
             foreach(var entry in layers){var layer=entry.Value;EnsureRenderer(entry.Key,layer);layer.vertices.Clear();layer.uv.Clear();layer.triangles.Clear();layer.mesh.Clear();}
             foreach(var square in squares)if(square&&square.type!=SquareTypes.NONE)occupied.Add(new Vector2Int(square.col,square.row));
             float w=lm.squareWidth,h=lm.squareHeight,thickness=Mathf.Min(w,h)*.16f;
-            var shadow=GetLayer("shadow",null,-1,new Color(.015f,.04f,.12f,.75f));
+            // The cell art is a rounded square, so four neighbouring corners leave a small
+            // concave gap. A square shadow quad showed through those gaps as dark specks over
+            // the whole board. Grout fills the gaps with a board tone and the shadow now takes
+            // the rounded cell silhouette, so it only reads along the board's outer edge.
+            var cell=RoyalGameplayArt.Art("cell-light");
+            var grout=GetLayer("grout",null,-2,new Color(.34f,.39f,.62f,1f));
+            var shadow=GetLayer("shadow",cell,-1,new Color(.015f,.04f,.12f,.75f));
             foreach(var square in squares)
             {
                 if(!square)continue;
@@ -86,8 +92,13 @@ namespace RoyalThrone.Presentation
                 {var old=child.GetComponent<SpriteRenderer>();if(old)old.enabled=false;}
                 if(square.type==SquareTypes.NONE)continue;
                 var p=transform.InverseTransformPoint(square.transform.position);p.z=-.04f;
-                Quad(shadow,p+new Vector3(.025f*w,-.065f*h,.1f),new Vector2(w,h),null);
-                int col=square.col,row=square.row;
+                int col0=square.col,row0=square.row;
+                Quad(grout,p+new Vector3(0,0,.12f),new Vector2(w*1.02f,h*1.02f),null);
+                // Only the board's bottom-right silhouette can ever show a drop shadow. Drawing it
+                // under interior cells put a dark dot in every corner gap instead.
+                if(!occupied.Contains(new Vector2Int(col0,row0+1))||!occupied.Contains(new Vector2Int(col0+1,row0))||!occupied.Contains(new Vector2Int(col0+1,row0+1)))
+                    Quad(shadow,p+new Vector3(.025f*w,-.065f*h,.1f),new Vector2(w*1.04f,h*1.04f),cell);
+                int col=col0,row=row0;
                 if(!occupied.Contains(new Vector2Int(col,row-1)))Edge("top",p+Vector3.up*h*.5f,new Vector2(w+thickness*.1f,thickness));
                 if(!occupied.Contains(new Vector2Int(col,row+1)))Edge("bottom",p+Vector3.down*h*.5f,new Vector2(w+thickness*.1f,thickness));
                 if(!occupied.Contains(new Vector2Int(col-1,row)))Edge("left",p+Vector3.left*w*.5f,new Vector2(thickness,h+thickness*.1f));
