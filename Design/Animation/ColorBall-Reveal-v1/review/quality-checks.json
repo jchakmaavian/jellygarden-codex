@@ -1,0 +1,72 @@
+{
+  "Reveal": {
+    "frames": 60,
+    "size": [
+      512,
+      512
+    ],
+    "source_fps": 60,
+    "max_border_alpha": 0,
+    "hidden_rgb": 0,
+    "webp_roundtrip": "exact"
+  },
+  "Idle": {
+    "frames": 120,
+    "size": [
+      512,
+      512
+    ],
+    "source_fps": 60,
+    "max_border_alpha": 0,
+    "hidden_rgb": 0,
+    "webp_roundtrip": "exact"
+  },
+  "Boosting": {
+    "frames": 108,
+    "size": [
+      512,
+      512
+    ],
+    "source_fps": 60,
+    "max_border_alpha": 0,
+    "hidden_rgb": 0,
+    "webp_roundtrip": "exact"
+  },
+  "handoffs": {
+    "reveal_to_idle": 0.0,
+    "idle_to_boost": 0.0,
+    "idle_wrap": 0.0,
+    "finish_entry": 0.0
+  },
+  "charged_loop": {
+    "first_frame": 19,
+    "last_frame": 78,
+    "seam_difference": 3.4384326934814453,
+    "median_step": 3.4008288383483887,
+    "largest_step": 3.5089797973632812
+  },
+  "finish_transparent": true,
+  "idle_alpha_bbox": [
+    199,
+    197,
+    311,
+    310
+  ],
+  "charged_color_span_pixels": [
+    333,
+    333,
+    333,
+    333,
+    333,
+    333
+  ],
+  "charged_span_in_cells": [
+    2.973,
+    2.973,
+    2.973,
+    2.973,
+    2.973,
+    2.973
+  ],
+  "source_art_unchanged": true
+}

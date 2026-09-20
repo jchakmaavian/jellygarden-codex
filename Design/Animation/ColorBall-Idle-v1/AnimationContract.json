@@ -1,0 +1,17 @@
+{
+  "group": "ColorBall-Idle-v1",
+  "fps": 60,
+  "frame_count": 120,
+  "size": [
+    512,
+    512
+  ],
+  "pivot": [
+    0.5,
+    0.5
+  ],
+  "pixels_per_cell": 112,
+  "trim": false,
+  "scale_in_texture": true,
+  "source_art_sha256": "765f826cdb5c23a3027d93f2218fbe3a6a1fe1b4a09bfdd4bacc74451bcc6f2d"
+}
