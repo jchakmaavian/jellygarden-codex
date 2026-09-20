@@ -985,6 +985,7 @@ namespace JellyGarden.Scripts
                 {
                     // The approved Color Ball Reveal replaces the static orb from its first frame.
                     if (orb) ColorBallFrameAnimator.PlayReveal(this);
+                    if (createdType == ItemsTypes.HELICOPTER) Juice.RoyalPropellerPieceV2.PlayReveal(this);
                     RoyalPowerupDirector.Get?.Creation(transform.position);
                 }
                 if (rocket)

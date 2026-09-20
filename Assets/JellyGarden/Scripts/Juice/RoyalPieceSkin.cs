@@ -11,6 +11,9 @@ namespace JellyGarden.Scripts.Juice
         static readonly Dictionary<string,Sprite> artCache=new Dictionary<string,Sprite>();
         Item item; Vector3 originalScale, itemRestScale; bool ready, scaleReady;
         BoxCollider2D hitBox;Vector2 fittedCell;
+        SpriteRenderer contactShadow;
+        // Sized against the cell, not the art, so every piece grounds the same way.
+        const float ShadowWidth=.66f,ShadowHeight=.22f,ShadowDrop=.40f,ShadowAlpha=.30f;
         bool hintPose;Vector3 hintRestPosition,hintOffset;float hintScale=1;
         // Combined with the wider camera framing, the visible pieces are about 1.5x
         // their previous screen size. Fit the cell instead of letting adjacent art overlap.
@@ -45,6 +48,36 @@ namespace JellyGarden.Scripts.Juice
             if(item&&item.sprRenderer)item.sprRenderer.transform.localPosition=hintRestPosition;
             hintOffset=Vector3.zero;hintScale=1;ApplyNow();
         }
+        /// <summary>
+        /// Keeps the piece's contact ellipse under it. Boosters run their own rigs above the
+        /// board and keep the shadow too: it is what reads as the cell they occupy.
+        /// </summary>
+        void PoseContactShadow(LevelManager lm)
+        {
+            if(!lm||!item||!item.sprRenderer)return;
+            bool wanted=!item.destroying&&item.currentType!=ItemsTypes.INGREDIENT;
+            if(!contactShadow)
+            {
+                if(!wanted)return;
+                var go=new GameObject("Royal contact shadow");
+                go.transform.SetParent(transform,false);
+                contactShadow=go.AddComponent<SpriteRenderer>();
+                contactShadow.sprite=RoyalContactShadow.Blob;
+                contactShadow.sharedMaterial=RoyalContactShadow.Material;
+            }
+            contactShadow.enabled=wanted;
+            if(!wanted)return;
+            var source=item.sprRenderer;
+            contactShadow.sortingLayerID=source.sortingLayerID;
+            contactShadow.sortingOrder=source.sortingOrder-1;
+            contactShadow.color=new Color(.02f,.05f,.16f,ShadowAlpha);
+            float scale=Mathf.Abs(transform.lossyScale.x)<.0001f?1:Mathf.Abs(transform.lossyScale.x);
+            var tr=contactShadow.transform;
+            tr.localRotation=Quaternion.identity;
+            tr.localPosition=new Vector3(0,-lm.squareHeight*ShadowDrop/scale,.05f);
+            tr.localScale=new Vector3(lm.squareWidth*ShadowWidth/scale,lm.squareHeight*ShadowHeight/scale,1);
+        }
+
         public void ApplyNow()
         {
             if(!ready){item=GetComponent<Item>();if(!item||!item.sprRenderer)return; originalScale=item.sprRenderer.transform.localScale;hitBox=GetComponent<BoxCollider2D>();ready=true;}
@@ -74,10 +107,12 @@ namespace JellyGarden.Scripts.Juice
                         hitBox.offset=Vector2.zero;fittedCell=cell;
                     }
                 }else tr.localScale=originalScale;
+                PoseContactShadow(lm);
                 tr.localRotation=Quaternion.Euler(0,0,item.currentType==ItemsTypes.VERTICAL_STRIPPED&&!RoyalGameplayArt.Art("rocket-vertical")?90:0);
                 if(!item.destroying&&hintPose){tr.localPosition=hintRestPosition+hintOffset;tr.localScale*=hintScale;}
                 if(item.currentType==ItemsTypes.PACKAGE&&!item.destroying){ TNT3DAnimator.Find(item)?.PoseSprite(tr); TNTFrameAnimator.Attach(item); }
                 if(item.currentType==ItemsTypes.BOMB&&!item.destroying) ColorBallFrameAnimator.Attach(item);
+                if(item.currentType==ItemsTypes.HELICOPTER&&!item.destroying) RoyalPropellerPieceV2.Attach(item);
                 if((item.currentType==ItemsTypes.HORIZONTAL_STRIPPED||item.currentType==ItemsTypes.VERTICAL_STRIPPED)&&!item.destroying) RoyalRocketPieceAnimator.Attach(item)?.Pose(tr);
                 if(codeDestroy&&lm&&lm.GameField)
                 {
@@ -88,6 +123,8 @@ namespace JellyGarden.Scripts.Juice
                     tr.localScale*=cap;
                 }
             }
+            // A piece on its way out drops its shadow with it, in the same frame.
+            else if(contactShadow)contactShadow.enabled=false;
         }
     }
 }
