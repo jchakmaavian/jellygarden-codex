@@ -112,7 +112,7 @@ namespace JellyGarden.Scripts.Juice
                 if(!item.destroying&&hintPose){tr.localPosition=hintRestPosition+hintOffset;tr.localScale*=hintScale;}
                 if(item.currentType==ItemsTypes.PACKAGE&&!item.destroying){ TNT3DAnimator.Find(item)?.PoseSprite(tr); TNTFrameAnimator.Attach(item); }
                 if(item.currentType==ItemsTypes.BOMB&&!item.destroying) ColorBallFrameAnimator.Attach(item);
-                if(item.currentType==ItemsTypes.HELICOPTER&&!item.destroying) RoyalThrone.Boosters.Propeller.V4.PropellerSeatV4.Attach(item);
+                if(item.currentType==ItemsTypes.HELICOPTER&&!item.destroying) RoyalThrone.Boosters.Propeller.V5.PropellerSeatV5.Attach(item);
                 if((item.currentType==ItemsTypes.HORIZONTAL_STRIPPED||item.currentType==ItemsTypes.VERTICAL_STRIPPED)&&!item.destroying) RoyalRocketPieceAnimator.Attach(item)?.Pose(tr);
                 if(codeDestroy&&lm&&lm.GameField)
                 {

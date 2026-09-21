@@ -1,0 +1,101 @@
+{
+  "square-match-create": {
+    "frames": 73,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 233472,
+    "peak": 0.12103639543056488,
+    "fps": 30
+  },
+  "short-flight": {
+    "frames": 112,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 358400,
+    "peak": 0.16773182153701782,
+    "fps": 30
+  },
+  "medium-flight": {
+    "frames": 116,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 370688,
+    "peak": 0.19035938382148743,
+    "fps": 30
+  },
+  "long-flight": {
+    "frames": 183,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 583680,
+    "peak": 0.13460102677345276,
+    "fps": 30
+  },
+  "edge-target": {
+    "frames": 119,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 378880,
+    "peak": 0.15216146409511566,
+    "fps": 30
+  },
+  "corner-target": {
+    "frames": 153,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 489472,
+    "peak": 0.14941516518592834,
+    "fps": 30
+  },
+  "3-propellers": {
+    "frames": 119,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 378880,
+    "peak": 0.13072025775909424,
+    "fps": 30
+  },
+  "5-propellers": {
+    "frames": 190,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 606208,
+    "peak": 0.1744758039712906,
+    "fps": 30
+  },
+  "propeller-plus-tnt": {
+    "frames": 116,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 370688,
+    "peak": 0.39585381746292114,
+    "fps": 30
+  },
+  "pooled-reuse": {
+    "frames": 115,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 366592,
+    "peak": 0.14036084711551666,
+    "fps": 30
+  },
+  "rotor-60fps": {
+    "frames": 234,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 372736,
+    "peak": 0.16153933107852936,
+    "fps": 60
+  }
+}
