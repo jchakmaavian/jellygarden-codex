@@ -11,16 +11,23 @@ namespace RoyalThrone.Boosters.ColorBall.V4
     {
         public enum Phase { Free,Reveal,Idle,Charge,Charged,Finish,PayoffHold }
         public const float RevealDuration=.76f,ChargeDuration=.62f,FinishDuration=.30f,HandoffPause=.16f;
-        // V3 held 7.8 rad/s with a .019 shutter: a slow sphere with barely a hint of smear. V4 runs
-        // about five times faster, paired with a full-frame shutter so the smear covers exactly the
-        // rotation of the frame and the motion stays continuous. The rate is set from the reference:
-        // there each dot stretches to roughly 2.5x its own length and stays a saturated colour, which
-        // is about 35 degrees of arc per frame - blur much wider than that averages the dots to grey.
-        public const float IdleSpin=.065f,ChargedSpin=37f,FinishSpin=52f;
+        // V3 held 7.8 rad/s with a .019 shutter: a slow sphere with barely a hint of smear.
+        // The reference blurred ball has an exact four-frame repeat cycle, so it turns 90 degrees per
+        // frame - 15 rev/s, 5400 deg/s, which is 94 rad/s. V4 matches that.
+        // The shutter is deliberately shorter than the step, at .60 of it. A full shutter would smear
+        // 90 degrees, and at ~36 degrees of gem spacing that averages three differently coloured beads
+        // into grey. The reference does the same thing: its dots stay saturated and stretch to roughly
+        // 2.5x their own length, which is about 50-55 degrees of arc, not a full frame.
+        public const float IdleSpin=.065f,ChargedSpin=94f,FinishSpin=126f;
         public const float IdleOrbit=.12f,ChargedOrbit=11f,FinishOrbit=16f;
         // The smear covers the rotation of the frame being drawn; capped so it never averages to mush.
-        public const float Shutter=1f,MaxShutterArc=2.6f;
-        public const float ChargedWiden=1.32f;
+        public const float Shutter=.60f,MaxShutterArc=2.6f;
+        // Never turn more than this in one drawn frame. At 60fps the charged rate lands at 90 deg a
+        // frame, matching the reference; at 30fps the same rate would be 180 deg, which aliases into
+        // mush however wide the shutter is, so the ball simply spins fewer revolutions per second
+        // instead. Motion stays readable at either refresh rate.
+        public const float MaxStepRad=1.75f;
+        public const float ChargedWiden=1.80f;
         public Transform bodyLayer,colorSurfaceLayer,vfxRoot,beamOrigin;
         public Renderer body,energy,halo,core,orbitBack,orbitFront,orbitGlint,originFlare;
         public Phase Current {get;private set;}
@@ -35,7 +42,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         public static ColorBallVisualV4 ClaimPending(Vector3 position){ColorBallVisualV4 best=null;float distance=float.MaxValue;foreach(var v in pool)if(v&&v.AwaitingClaim){float d=(v.Anchor-position).sqrMagnitude;if(d<distance){best=v;distance=d;}}if(best)best.AwaitingClaim=false;return best;}
         public static event Action<ColorBallEvent,ColorBallVisualV4,Vector3> Event;
         static readonly List<ColorBallVisualV4> pool=new List<ColorBallVisualV4>();static int serial;
-        MaterialPropertyBlock props;float sourceAge=1,lifeAge,idleClock,beamAngle,lastDt=1f/60f;bool finalFlash,revealSpark;
+        MaterialPropertyBlock props;float sourceAge=1,lifeAge,idleClock,beamAngle,lastDt=1f/60f,lastStep;bool finalFlash,revealSpark;
         /// <summary>The arc the surface shader is smearing this frame, in radians. Drives the spin SFX.</summary>
         public float ShutterArc {get;private set;}
         /// <summary>0 at rest, 1 once the charged high-speed state is established.</summary>
@@ -69,7 +76,8 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             Age+=dt;lifeAge+=dt;sourceAge+=dt;
             float target=Current==Phase.Charge?Mathf.Lerp(IdleSpin,ChargedSpin,Smooth(Age/ChargeDuration)):Current==Phase.Charged?ChargedSpin:Current==Phase.Finish?Mathf.Lerp(ChargedSpin,FinishSpin,Smooth(Age/FinishDuration)):Current==Phase.PayoffHold?FinishSpin:IdleSpin;
             float orbitTarget=Current==Phase.Charge?Mathf.Lerp(IdleOrbit,ChargedOrbit,Smooth(Age/ChargeDuration)):Current==Phase.Charged?ChargedOrbit:Current==Phase.Finish?Mathf.Lerp(ChargedOrbit,FinishOrbit,Smooth(Age/FinishDuration)):Current==Phase.PayoffHold?FinishOrbit:IdleOrbit;
-            Angle=Mathf.Repeat(Angle+(Speed+target)*.5f*dt,Mathf.PI*2);Speed=target;
+            float step=Mathf.Min((Speed+target)*.5f*dt,MaxStepRad);lastStep=step;
+            Angle=Mathf.Repeat(Angle+step,Mathf.PI*2);Speed=target;
             OrbitAngle=Mathf.Repeat(OrbitAngle+(OrbitSpeed+orbitTarget)*.5f*dt,Mathf.PI*2);OrbitSpeed=orbitTarget;
             if(Current==Phase.Reveal&&!revealSpark&&Age>=.21f){revealSpark=true;ColorBallVfxV4.Stars(Anchor,3,.30f);}
             if(Current==Phase.Reveal&&Age>=RevealDuration){Current=Phase.Idle;Age-=RevealDuration;Send(ColorBallEvent.ColorBallRevealFinished,Anchor);}
@@ -90,11 +98,15 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             else if(Current==Phase.PayoffHold)opacity=0;
             // Widen stretches the quad itself, so body and surface share one widened silhouette and
             // one pivot; the charged form spreads sideways the way the reference does.
-            float widen=Mathf.Lerp(1,ChargedWiden,Charge)*(Current==Phase.Finish?Mathf.Lerp(1,.72f,Smooth(Age/FinishDuration)):1);
+            // The reference blurs first and only then flattens: it is still round about eight frames
+            // after full blur and reaches its widest around thirteen. So the widen trails the charge
+            // rather than arriving with it.
+            float widenT=Smooth(Mathf.Clamp01((Charge-.35f)/.65f));
+            float widen=Mathf.Lerp(1,ChargedWiden,widenT)*(Current==Phase.Finish?Mathf.Lerp(1,.72f,Smooth(Age/FinishDuration)):1);
             var scale=new Vector3(.84f*x*widen,.84f*y,1);bodyLayer.localScale=colorSurfaceLayer.localScale=scale;bodyLayer.localPosition=colorSurfaceLayer.localPosition=Vector3.zero;
             // The shutter is the arc actually turned this frame, so the smear tiles frame to frame at
             // any refresh rate instead of being a fixed fraction that strobes when the speed rises.
-            ShutterArc=Mathf.Min(Speed*lastDt*Shutter,MaxShutterArc);
+            ShutterArc=Mathf.Min(lastStep*Shutter,MaxShutterArc);
             float samples=Mathf.Clamp(Mathf.Ceil(ShutterArc*Mathf.Rad2Deg/7f),6,24);
             props.Clear();props.SetFloat("_Opacity",opacity);props.SetFloat("_Charge",Charge);props.SetFloat("_Widen",widen);body.SetPropertyBlock(props);
             props.SetFloat("_Opacity",opacity*dots);props.SetFloat("_Angle",Angle);props.SetFloat("_Exposure",ShutterArc);

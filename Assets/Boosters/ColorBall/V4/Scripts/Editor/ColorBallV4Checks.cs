@@ -53,12 +53,14 @@ namespace RoyalThrone.Boosters.ColorBall.V4.Editor
                 if(v.Current==ColorBallVisualV4.Phase.Free)continue;
                 CheckAlignment(v);
                 if(angles.TryGetValue(v.Lease,out float previous)){float step=Mathf.Repeat(v.Angle-previous,Mathf.PI*2);
-                    // V3 guarded strobing by keeping the per-frame rotation under .36 rad, because it had
-                    // almost no shutter. V4 deliberately turns much further per frame, so the invariant
-                    // that actually matters is that the smear covers the step: if it does, consecutive
-                    // frames tile and the motion is continuous however fast the ball spins.
-                    if(step>.05f&&v.ShutterArc<step*.90f)throw new Exception("Rotation step "+step+" rad not covered by shutter arc "+v.ShutterArc+" rad");
-                    if(step>ColorBallVisualV4.MaxShutterArc)throw new Exception("Rotation step beyond the shutter cap: "+step);
+                    // V3 guarded strobing by keeping the per-frame rotation under .36 rad, because it
+                    // had almost no shutter. V4 turns 90 degrees a frame like the reference, so the
+                    // invariant is instead that the smear is the designed fraction of the step: enough
+                    // to elongate each bead and hide the aliasing, short enough that neighbouring beads
+                    // do not average to grey.
+                    float wanted=step*ColorBallVisualV4.Shutter;
+                    if(step>.05f&&v.ShutterArc<wanted*.90f)throw new Exception("Shutter arc "+v.ShutterArc+" rad is short of the "+wanted+" rad the "+step+" rad step needs");
+                    if(step>ColorBallVisualV4.MaxStepRad+.02f)throw new Exception("Rotation step "+step+" rad exceeds the per-frame cap");
                     phaseSamples++;}angles[v.Lease]=v.Angle;
                 if(activation>=0&&(RoyalPowerupDirector.Get.ColorBallState==RoyalPowerupDirector.ColorBallPhase.SpinUp||RoyalPowerupDirector.Get.ColorBallState==RoyalPowerupDirector.ColorBallPhase.Converting||RoyalPowerupDirector.Get.ColorBallState==RoyalPowerupDirector.ColorBallPhase.Finish)&&RoyalPowerupDirector.Get.RocketLaunches!=launches)throw new Exception("Rocket fired before Color Ball payoff");
                 if(capture){File.AppendAllText(Root+".Capture/"+label+"/motion.csv",frame+","+(Time.time-begin).ToString("F4")+","+v.Current+","+v.Age.ToString("F4")+","+v.Angle.ToString("F4")+","+v.Speed.ToString("F4")+","+v.Charge.ToString("F4")+","+v.Anchor.x.ToString("F4")+","+v.Anchor.y.ToString("F4")+","+v.bodyLayer.localScale.x.ToString("F4")+","+v.bodyLayer.localScale.y.ToString("F4")+","+ColorBallVfxV4.ActiveBeams+","+v.OrbitAngle.ToString("F4")+","+v.OrbitSpeed.ToString("F4")+","+v.SourcePulse.ToString("F4")+"\n");}
