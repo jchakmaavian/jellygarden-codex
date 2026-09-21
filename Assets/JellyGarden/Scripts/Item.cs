@@ -984,7 +984,7 @@ namespace JellyGarden.Scripts
                 else
                 {
                     // The approved Color Ball Reveal replaces the static orb from its first frame.
-                    if (orb) RoyalThrone.Boosters.ColorBall.V3.ColorBallSeatV3.Attach(this, true);
+                    if (orb) RoyalThrone.Boosters.ColorBall.V4.ColorBallSeatV4.Attach(this, true);
                     if (createdType == ItemsTypes.HELICOPTER) RoyalThrone.Boosters.Propeller.V5.PropellerSeatV5.Attach(this, true);
                     else if (!orb) RoyalPowerupDirector.Get?.Creation(transform.position);
                 }

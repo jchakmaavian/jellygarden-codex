@@ -79,13 +79,13 @@ namespace JellyGarden.Scripts.Juice
         IEnumerator Wait(float seconds){float t=0;while(t<seconds){if(!Paused)t+=Time.deltaTime;yield return null;}}
         public void Queue(Item item)
         {
-            RoyalThrone.Boosters.ColorBall.V3.ColorBallSeatV3.HideForActivation(item);
+            RoyalThrone.Boosters.ColorBall.V4.ColorBallSeatV4.HideForActivation(item);
             var sq=item.square;var type=item.currentType;int colour=item.color;
             StartOperation(Single(type,sq,colour));
         }
         void StartOperation(IEnumerator sequence){pending++;StartCoroutine(Own(sequence));}
         IEnumerator Own(IEnumerator sequence){try{yield return sequence;}finally{pending=Mathf.Max(0,pending-1);}}
-        void OnDisable(){RoyalThrone.Boosters.ColorBall.V3.ColorBallVisualV3.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
+        void OnDisable(){RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
         public void Cancel(){RoyalThrone.Boosters.Propeller.V5.PropellerVisualV5.Clear();RoyalThrone.Boosters.Propeller.V4.PropellerVisualV4.Clear();RoyalThrone.Boosters.Propeller.V3.PropellerVisualV3.Clear();RoyalThrone.Boosters.Propeller.V2.PropellerVisualV2.Clear();OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();RoyalToolkitImpact.Existing?.Clear();ClearRocketVfx();}
         void Update()
         {
@@ -123,7 +123,7 @@ namespace JellyGarden.Scripts.Juice
             {var power=IsPower(a.currentType)?a:b;var normal=power==a?b:a;var type=power.currentType;var origin=power.square;int col=normal.color;Consume(power);Get.StartOperation(Get.Single(type,origin,col));}
             return true;
         }
-        static void Consume(Item item){RoyalThrone.Boosters.ColorBall.V3.ColorBallSeatV3.HideForActivation(item);item.royalConsumed=true;item.NextType=ItemsTypes.NONE;item.DestroyItem(true);}
+        static void Consume(Item item){RoyalThrone.Boosters.ColorBall.V4.ColorBallSeatV4.HideForActivation(item);item.royalConsumed=true;item.NextType=ItemsTypes.NONE;item.DestroyItem(true);}
         public static bool Tap(Item item)
         {
             var lm=LevelManager.THIS;
@@ -298,7 +298,7 @@ namespace JellyGarden.Scripts.Juice
             if(colour<0||colour>5){int[] counts=new int[6];foreach(var i in lm.GetItems())if(i&&i.color>=0&&i.color<6)counts[i.color]++;colour=0;for(int k=1;k<6;k++)if(counts[k]>counts[colour])colour=k;}
             var targets=new List<Square>();for(int r=0;r<lm.maxRows;r++)for(int c=0;c<lm.maxCols;c++){var sq=lm.GetSquare(c,r);if(sq&&(all||sq.item&&sq.item.color==colour))targets.Add(sq);}
             if(payload==ItemsTypes.NONE||payload==ItemsTypes.HORIZONTAL_STRIPPED||payload==ItemsTypes.VERTICAL_STRIPPED)
-            {yield return AnimateColorBallV3Targets(origin,targets,payload);yield break;}
+            {yield return AnimateColorBallV4Targets(origin,targets,payload);yield break;}
             Creation(origin.transform.position);RoyalAudioDirector.Get?.Play(RoyalCue.Create);
             // The approved Boosting sequence grows out of the cell the ball fired from and holds its
             // loop while the targets are marked. Target selection and destruction are untouched.
