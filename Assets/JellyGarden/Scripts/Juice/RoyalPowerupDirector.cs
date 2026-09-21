@@ -86,7 +86,7 @@ namespace JellyGarden.Scripts.Juice
         void StartOperation(IEnumerator sequence){pending++;StartCoroutine(Own(sequence));}
         IEnumerator Own(IEnumerator sequence){try{yield return sequence;}finally{pending=Mathf.Max(0,pending-1);}}
         void OnDisable(){RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
-        public void Cancel(){OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();RoyalToolkitImpact.Existing?.Clear();ClearRocketVfx();}
+        public void Cancel(){RoyalThrone.Boosters.Propeller.V2.PropellerVisualV2.Clear();OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();RoyalToolkitImpact.Existing?.Clear();ClearRocketVfx();}
         void Update()
         {
             var level=LevelManager.THIS;
@@ -276,8 +276,7 @@ namespace JellyGarden.Scripts.Juice
         }
         IEnumerator Helicopter(Square origin,ItemsTypes payload,int count)
         {
-            foreach(var n in origin.GetAllNeghbors())Hit(n);
-            for(int i=0;i<count;i++){var target=Target(origin);if(target)StartOperation(FlightV2(origin,target,payload));yield return Wait(.08f);}
+            yield return PropellerSequenceV2(origin,payload,count);
         }
         IEnumerator Flight(Square origin,Square target,ItemsTypes payload)
         {

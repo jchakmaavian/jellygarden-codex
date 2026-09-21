@@ -971,7 +971,7 @@ namespace JellyGarden.Scripts
                 // cell it was made in. Without this it began the sequence up to three cells above the
                 // board and fell through it, so the reward moment drifted down the screen.
                 bool orb = createdType == ItemsTypes.BOMB;
-                if (rocket || tnt || orb)
+                if (rocket || tnt || orb || createdType == ItemsTypes.HELICOPTER)
                 {
                     StopIdleAnim(); if (anim) anim.enabled = false;
                     falling = false; justCreatedItem = false;
@@ -985,8 +985,8 @@ namespace JellyGarden.Scripts
                 {
                     // The approved Color Ball Reveal replaces the static orb from its first frame.
                     if (orb) ColorBallFrameAnimator.PlayReveal(this);
-                    if (createdType == ItemsTypes.HELICOPTER) Juice.RoyalPropellerPieceV2.PlayReveal(this);
-                    RoyalPowerupDirector.Get?.Creation(transform.position);
+                    if (createdType == ItemsTypes.HELICOPTER) RoyalThrone.Boosters.Propeller.V2.PropellerSeatV2.Attach(this, true);
+                    else RoyalPowerupDirector.Get?.Creation(transform.position);
                 }
                 if (rocket)
                     yield return RoyalRocketCreation();
