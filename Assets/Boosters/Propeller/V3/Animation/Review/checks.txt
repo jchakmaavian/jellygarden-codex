@@ -1,0 +1,79 @@
+PASS QA fixture: Practice board
+PASS Actual 2x2 gameplay rule selects Propeller creation
+PASS Gameplay handoff completes: square-match-create
+PASS V3 particles clean up: square-match-create
+PASS 2x2-created Propeller survives match resolution in Idle
+PASS QA fixture: Practice board
+PASS Reveal settles into independent Idle
+PASS Idle mesh fits within one actual cell
+PASS Idle has no position drift
+PASS Activation accepted through live gameplay
+PASS Gameplay handoff completes: half-speed
+PASS V3 particles clean up: half-speed
+PASS 0.5x PropellerRevealStarted
+PASS 0.5x PropellerRevealFinished
+PASS 0.5x PropellerActivationStarted
+PASS 0.5x PropellerRotorAccelerating
+PASS 0.5x PropellerNeighborHit
+PASS 0.5x PropellerTakeoff
+PASS 0.5x PropellerFlightReady
+PASS 0.5x PropellerTargetReached
+PASS 0.5x PropellerImpactStarted
+PASS 0.5x PropellerImpactFinished
+PASS 0.5x PropellerCompleted
+PASS One precise target impact per activation
+PASS QA fixture: Practice board
+PASS Reveal settles into independent Idle
+PASS Idle mesh fits within one actual cell
+PASS Idle has no position drift
+PASS Activation accepted through live gameplay
+PASS Gameplay handoff completes: normal-speed
+PASS V3 particles clean up: normal-speed
+PASS 1x PropellerRevealStarted
+PASS 1x PropellerRevealFinished
+PASS 1x PropellerActivationStarted
+PASS 1x PropellerRotorAccelerating
+PASS 1x PropellerNeighborHit
+PASS 1x PropellerTakeoff
+PASS 1x PropellerFlightReady
+PASS 1x PropellerTargetReached
+PASS 1x PropellerImpactStarted
+PASS 1x PropellerImpactFinished
+PASS 1x PropellerCompleted
+PASS One precise target impact per activation
+PASS QA fixture: Practice board
+PASS QA fixture: Spawn blocker
+PASS Target fixture activates
+PASS Gameplay handoff completes: corner-target
+PASS V3 particles clean up: corner-target
+PASS corner-target reached through existing target priority
+PASS QA fixture: Practice board
+PASS QA fixture: Spawn blocker
+PASS Target fixture activates
+PASS Gameplay handoff completes: edge-target
+PASS V3 particles clean up: edge-target
+PASS edge-target reached through existing target priority
+PASS QA fixture: Practice board
+PASS Gameplay handoff completes: five-simultaneous
+PASS V3 particles clean up: five-simultaneous
+PASS Five takeoffs are staggered, within rendered-frame precision
+PASS Five simultaneous live Propellers; corner and edge origins
+PASS Prewarmed rig pool reused without growth
+PASS QA fixture: Practice board
+PASS QA fixture: Spawn TNT
+PASS Gameplay handoff completes: propeller-plus-tnt
+PASS V3 particles clean up: propeller-plus-tnt
+PASS Repeated reuse and concurrent TNT finish
+PASS QA fixture: Practice board
+PASS Cancellation fixture activates
+PASS Cancellation releases active rigs and air/star pool immediately
+PASS QA fixture: Practice board
+PASS Cancelled pool can activate again
+PASS Gameplay handoff completes: cancel-and-reuse
+PASS V3 particles clean up: cancel-and-reuse
+PASS Fixed VFX capacity
+PASS No new console exceptions/errors
+VFX peak 102 / 240; live rigs peak 5
+PASS No pooled V3 objects remain active after cleanup
+PASS Normal player profile restored
+ALL PROPELLER V3 CHECKS PASSED
