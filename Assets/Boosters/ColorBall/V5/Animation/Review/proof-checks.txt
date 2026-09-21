@@ -1,0 +1,13 @@
+PASS Normal 1x TimeScale
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS V4 .62s charge preserved
+PASS Actual game audio capture has zero clipped samples
+Short-proof audio peak=0.255886
+Short-proof: targets=5; wall-frame mean FPS=19.40; median FPS=19.85; p95 ms=57.28
+PASS Normal player data restored
+PASS Pools clean on session exit
+PASS No new console errors
+PASS

@@ -6,6 +6,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4
     public sealed class ColorBallVfxV4 : MonoBehaviour
     {
         public Mesh quad;public Material glow,star,beam;
+        public bool referenceV5;public Material beamCore;
         public sealed class Flight { internal Renderer outer,inner,head;internal Vector3 from,to;internal float age,duration;internal Color tint;public bool Active {get;internal set;}public bool Arrived {get;internal set;}public int Lease {get;internal set;}public float Progress=>Mathf.Clamp01(age/duration); }
         sealed class Mote {public Renderer view;public bool active;public float age,life,size,angle;public Vector3 position,velocity;public Color tint;}
         const int BeamCapacity=32,MoteCapacity=192;Flight[] flights;Mote[] motes;int cursor;
@@ -17,9 +18,9 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         public static int ActiveBeams{get{int n=0;if(instance)foreach(var f in instance.flights)if(f.Active)n++;return n;}}
         public static int PoolSize=>BeamCapacity+MoteCapacity;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]static void Reset(){instance=null;Peak=0;}
-        public static void Prewarm(){if(instance)return;instance=Instantiate(Resources.Load<GameObject>("ColorBall-V4-VFX")).GetComponent<ColorBallVfxV4>();instance.Build();}
+        public static void Prewarm(){if(instance)return;var prefab=!ColorBallVisualV4.UseV4Baseline?Resources.Load<GameObject>("ColorBall-V5-VFX"):null;instance=Instantiate(prefab?prefab:Resources.Load<GameObject>("ColorBall-V4-VFX")).GetComponent<ColorBallVfxV4>();instance.Build();}
         Renderer Part(string name,Material mat,int order){var g=new GameObject(name);g.transform.SetParent(transform,false);g.AddComponent<MeshFilter>().sharedMesh=quad;var r=g.AddComponent<MeshRenderer>();r.sharedMaterial=mat;r.sortingOrder=order;r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;r.receiveShadows=false;r.enabled=false;return r;}
-        void Build(){flights=new Flight[BeamCapacity];for(int i=0;i<BeamCapacity;i++)flights[i]=new Flight{outer=Part("Colored moving tail",beam,41),inner=Part("White moving core",beam,42),head=Part("Traveling four point head",star,43)};motes=new Mote[MoteCapacity];for(int i=0;i<MoteCapacity;i++)motes[i]=new Mote{view=Part("Pooled Color Ball accent",star,44)};}
+        void Build(){flights=new Flight[BeamCapacity];for(int i=0;i<BeamCapacity;i++)flights[i]=new Flight{outer=Part("Colored moving tail",beam,41),inner=Part("White moving core",beamCore?beamCore:beam,42),head=Part("Traveling four point head",star,43)};motes=new Mote[MoteCapacity];for(int i=0;i<MoteCapacity;i++)motes[i]=new Mote{view=Part("Pooled Color Ball accent",star,44)};}
         float Range(float a,float b)=>Mathf.Lerp(a,b,(float)random.NextDouble());
         static Color Tint(int c){switch(c%6){case 0:return new Color(1,.39f,.38f);case 1:return new Color(.38f,.78f,1);case 2:return new Color(1,.82f,.23f);case 3:return new Color(.43f,1,.47f);case 4:return new Color(1,.44f,.92f);default:return new Color(.61f,.51f,1);}}
         public static Flight Launch(Vector3 from,Vector3 to,int color){Prewarm();foreach(var f in instance.flights)if(!f.Active){f.Lease++;f.Active=true;f.Arrived=false;f.age=0;f.from=from+Vector3.back*.9f;f.to=to+Vector3.back*.9f;f.tint=Tint(color);f.duration=Mathf.Clamp(Vector3.Distance(from,to)/ColorBallVisualV4.CellSize/17f,.14f,.37f);instance.Draw(f);return f;}return null;}
@@ -28,16 +29,16 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             float cell=ColorBallVisualV4.CellSize;var delta=f.to-f.from;float distance=delta.magnitude;
             float progress=Mathf.Clamp01(f.age/f.duration);float end=progress*distance;
             float tail=Mathf.Min(distance,cell*1.75f);float start=Mathf.Max(0,end-tail);
-            float after=Mathf.Max(0,f.age-f.duration);start=Mathf.Lerp(start,distance,Mathf.Clamp01(after/.12f));
+            float after=Mathf.Max(0,f.age-f.duration);start=referenceV5?0:Mathf.Lerp(start,distance,Mathf.Clamp01(after/.12f));
             float length=Mathf.Max(.001f,end-start),fade=1-Mathf.SmoothStep(0,1,after/.14f);
             Vector3 direction=delta.normalized,p=f.from+direction*((start+end)*.5f);float angle=Mathf.Atan2(delta.y,delta.x)*Mathf.Rad2Deg;
             // Measured off the reference: the saturated white core is about a tenth of a cell across
             // and the coloured glow a little over a fifth. V3 ran a 0.027 cell core, which reads as a
             // hairline over a bright board, so both layers are widened and the glow carries more alpha.
-            var tint=f.tint;tint.a=.82f*fade;
+            var tint=referenceV5?Color.Lerp(f.tint,new Color(1,.91f,.56f),.45f):f.tint;tint.a=(referenceV5?.72f:.82f)*fade;
             Paint(f.outer,p,new Vector3(length,.225f*cell,1),angle,tint);
             Paint(f.inner,p+Vector3.back*.01f,new Vector3(length,.095f*cell,1),angle,new Color(1,.99f,.95f,fade));
-            Paint(f.head,f.from+direction*end+Vector3.back*.02f,Vector3.one*(cell*.30f),angle+45,new Color(1,1,.94f,fade));
+            Paint(f.head,f.from+direction*end+Vector3.back*.02f,Vector3.one*(cell*(referenceV5?.38f:.30f)),angle+45,new Color(1,1,.94f,fade));
         }
         public static void Pulse(Vector3 p,float size,float life,Color tint){Prewarm();instance.Emit(p,Vector3.zero,size,life,tint,false);}
         public static void Spark(Vector3 p,float size,float life,Color tint){Prewarm();instance.Emit(p,Vector3.zero,size,life,tint,true);}
@@ -46,8 +47,14 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         }
         void Draw(Mote m){float t=Mathf.Clamp01(m.age/m.life),fade=1-Mathf.SmoothStep(0,1,t);var c=m.tint;c.a*=fade;Paint(m.view,m.position+m.velocity*m.age,Vector3.one*(ColorBallVisualV4.CellSize*m.size*Mathf.Lerp(1,.45f,t)),m.angle+t*18,c);}
         public static void Stars(Vector3 p,int count,float radius){Prewarm();float cell=ColorBallVisualV4.CellSize;for(int i=0;i<count;i++){float a=instance.Range(0,Mathf.PI*2);Vector3 dir=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);instance.Emit(p+dir*cell*radius,dir*cell*.22f,instance.Range(.10f,.18f),instance.Range(.18f,.32f),i%3==0?new Color(1,.84f,.34f):new Color(1,1,.90f),true);}}
-        public static void Contact(Vector3 p,int color){Spark(p,.19f,.085f,Color.white);}
-        public static void TargetFlash(Vector3 p){Pulse(p,.48f,.12f,new Color(1,.95f,.77f,.7f));Spark(p,.43f,.13f,Color.white);}
+        public static void Contact(Vector3 p,int color){
+            Prewarm();if(!instance.referenceV5){Spark(p,.19f,.085f,Color.white);return;}
+            Pulse(p,.40f,.10f,new Color(1,1,.94f));Spark(p,.50f,.12f,Color.white);
+            // Color remains a local visual parameter; authoritative target conversion stays in the director.
+            var tint=Color.Lerp(Tint(color),Color.white,.28f);tint.a=.80f;
+            Pulse(p,.68f,.20f,tint);
+        }
+        public static void TargetFlash(Vector3 p){Pulse(p,.48f,.12f,new Color(1,.95f,.77f,.7f));Spark(p,instance&&instance.referenceV5?.57f:.43f,.13f,Color.white);}
         public static void Converted(Vector3 p){Spark(p+Vector3.up*ColorBallVisualV4.CellSize*.25f,.26f,.19f,new Color(1,.92f,.56f));}
         void Update(){if(ColorBallVisualV4.Paused)return;foreach(var f in flights)if(f.Active){f.age+=Time.deltaTime;if(f.age>=f.duration)f.Arrived=true;if(f.age>=f.duration+.14f){f.Active=false;f.outer.enabled=f.inner.enabled=f.head.enabled=false;}else Draw(f);}foreach(var m in motes)if(m.active){m.age+=Time.deltaTime;if(m.age>=m.life){m.active=false;m.view.enabled=false;}else Draw(m);}Peak=Mathf.Max(Peak,Active);}
         public static void Clear(){if(!instance||instance.flights==null)return;foreach(var f in instance.flights){f.Active=false;f.Arrived=false;f.outer.enabled=f.inner.enabled=f.head.enabled=false;}foreach(var m in instance.motes){m.active=false;m.view.enabled=false;}}

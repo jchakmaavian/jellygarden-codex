@@ -28,6 +28,11 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         // instead. Motion stays readable at either refresh rate.
         public const float MaxStepRad=1.75f;
         public const float ChargedWiden=1.80f;
+        // Optional V5 prefab presentation. V4 prefab defaults remain unchanged.
+        public bool referenceV5;
+        public static bool UseV4Baseline;
+        public float FinishSeconds=>referenceV5?FinishDuration+HandoffPause:FinishDuration;
+        static GameObject Prefab=>!UseV4Baseline?Resources.Load<GameObject>("ColorBall-V5")??Resources.Load<GameObject>("ColorBall-V4"):Resources.Load<GameObject>("ColorBall-V4");
         public Transform bodyLayer,colorSurfaceLayer,vfxRoot,beamOrigin;
         public Renderer body,energy,halo,core,orbitBack,orbitFront,orbitGlint,originFlare;
         public Phase Current {get;private set;}
@@ -52,11 +57,11 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         public static int Active{get{int n=0;foreach(var v in pool)if(v&&v.Current!=Phase.Free)n++;return n;}}
         public static bool Paused=>LevelManager.THIS&&LevelManager.THIS.gameStatus==GameState.Pause;
         public static float CellSize=>ColorBallFrameAnimator.Cell;
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]static void Reset(){pool.Clear();serial=0;Event=null;}
-        public static void Prewarm(){if(pool.Count>0)return;var prefab=Resources.Load<GameObject>("ColorBall-V4");if(!prefab)throw new InvalidOperationException("ColorBall V4 prefab is missing.");for(int i=0;i<12;i++){var v=Instantiate(prefab).GetComponent<ColorBallVisualV4>();v.gameObject.SetActive(false);pool.Add(v);}ColorBallVfxV4.Prewarm();ColorBallAudioV4.Prewarm();}
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]static void Reset(){pool.Clear();serial=0;Event=null;UseV4Baseline=false;}
+        public static void Prewarm(){if(pool.Count>0)return;var prefab=Prefab;if(!prefab)throw new InvalidOperationException("ColorBall V4 prefab is missing.");for(int i=0;i<12;i++){var v=Instantiate(prefab).GetComponent<ColorBallVisualV4>();v.gameObject.SetActive(false);pool.Add(v);}ColorBallVfxV4.Prewarm();ColorBallAudioV4.Prewarm();}
         public static ColorBallVisualV4 Take(Vector3 position,bool reveal=false){
             Prewarm();ColorBallVisualV4 v=null;foreach(var c in pool)if(c&&c.Current==Phase.Free){v=c;break;}
-            if(!v){v=Instantiate(Resources.Load<GameObject>("ColorBall-V4")).GetComponent<ColorBallVisualV4>();pool.Add(v);}
+            if(!v){v=Instantiate(Prefab).GetComponent<ColorBallVisualV4>();pool.Add(v);}
             v.Lease=++serial;v.Cell=CellSize;v.Angle=v.OrbitAngle=0;v.Speed=.065f;v.OrbitSpeed=.12f;v.Charge=0;v.sourceAge=1;v.lifeAge=v.idleClock=0;v.finalFlash=false;v.AwaitingClaim=false;
             v.SetAnchor(position);v.gameObject.SetActive(true);
             int layer=LevelManager.THIS.GameField.gameObject.layer;
@@ -74,8 +79,8 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             if(Current==Phase.Free||Paused)return;
             float dt=Time.deltaTime;lastDt=Mathf.Clamp(dt,1f/240f,1f/20f);if(AwaitingClaim){claimAge+=dt;if(claimAge>.30f){Release();return;}}
             Age+=dt;lifeAge+=dt;sourceAge+=dt;
-            float target=Current==Phase.Charge?Mathf.Lerp(IdleSpin,ChargedSpin,Smooth(Age/ChargeDuration)):Current==Phase.Charged?ChargedSpin:Current==Phase.Finish?Mathf.Lerp(ChargedSpin,FinishSpin,Smooth(Age/FinishDuration)):Current==Phase.PayoffHold?FinishSpin:IdleSpin;
-            float orbitTarget=Current==Phase.Charge?Mathf.Lerp(IdleOrbit,ChargedOrbit,Smooth(Age/ChargeDuration)):Current==Phase.Charged?ChargedOrbit:Current==Phase.Finish?Mathf.Lerp(ChargedOrbit,FinishOrbit,Smooth(Age/FinishDuration)):Current==Phase.PayoffHold?FinishOrbit:IdleOrbit;
+            float target=Current==Phase.Charge?Mathf.Lerp(IdleSpin,ChargedSpin,Smooth(Age/ChargeDuration)):Current==Phase.Charged?ChargedSpin:Current==Phase.Finish?referenceV5?ChargedSpin:Mathf.Lerp(ChargedSpin,FinishSpin,Smooth(Age/FinishDuration)):Current==Phase.PayoffHold?FinishSpin:IdleSpin;
+            float orbitTarget=Current==Phase.Charge?Mathf.Lerp(IdleOrbit,ChargedOrbit,Smooth(Age/ChargeDuration)):Current==Phase.Charged?ChargedOrbit:Current==Phase.Finish?referenceV5?ChargedOrbit:Mathf.Lerp(ChargedOrbit,FinishOrbit,Smooth(Age/FinishDuration)):Current==Phase.PayoffHold?FinishOrbit:IdleOrbit;
             float step=Mathf.Min((Speed+target)*.5f*dt,MaxStepRad);lastStep=step;
             Angle=Mathf.Repeat(Angle+step,Mathf.PI*2);Speed=target;
             OrbitAngle=Mathf.Repeat(OrbitAngle+(OrbitSpeed+orbitTarget)*.5f*dt,Mathf.PI*2);OrbitSpeed=orbitTarget;
@@ -83,7 +88,16 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             if(Current==Phase.Reveal&&Age>=RevealDuration){Current=Phase.Idle;Age-=RevealDuration;Send(ColorBallEvent.ColorBallRevealFinished,Anchor);}
             if(Current==Phase.Charge){Charge=Smooth(Age/ChargeDuration);if(Age>=ChargeDuration){Current=Phase.Charged;Age-=ChargeDuration;Charge=1;Send(ColorBallEvent.ColorBallChargeComplete,Anchor);}}
             if(Current==Phase.Idle){Charge=0;idleClock+=dt;if(idleClock>6){idleClock=0;ColorBallVfxV4.Spark(Anchor+new Vector3(-.20f,.24f,0)*Cell,.075f,.42f,new Color(.7f,.86f,1,.3f));}}
-            if(Current==Phase.Finish){Charge=1;if(!finalFlash&&Age>=.21f){finalFlash=true;ColorBallVfxV4.Pulse(Anchor,.92f,.19f,new Color(.8f,.92f,1));ColorBallVfxV4.Spark(Anchor,.75f,.18f,Color.white);ColorBallVfxV4.Stars(Anchor,3,.20f);Send(ColorBallEvent.ColorBallFinalPulse,Anchor);}if(Age>=FinishDuration){Current=Phase.PayoffHold;Age=0;Send(ColorBallEvent.ColorBallResolved,Anchor);}}
+            if(Current==Phase.Finish){
+                Charge=1;
+                if(!finalFlash&&Age>=(referenceV5?.18f:.21f)){
+                    finalFlash=true;
+                    // V5's flash/rim is drawn by its presentation component, on the same pool lease.
+                    if(!referenceV5){ColorBallVfxV4.Pulse(Anchor,.92f,.19f,new Color(.8f,.92f,1));ColorBallVfxV4.Spark(Anchor,.75f,.18f,Color.white);ColorBallVfxV4.Stars(Anchor,3,.20f);}
+                    Send(ColorBallEvent.ColorBallFinalPulse,Anchor);
+                }
+                if(Age>=FinishSeconds){Send(ColorBallEvent.ColorBallResolved,Anchor);if(referenceV5){Send(ColorBallEvent.ColorBallCompleted,Anchor);Release();return;}Current=Phase.PayoffHold;Age=0;}
+            }
             if(Current==Phase.PayoffHold&&Age>=HandoffPause){Send(ColorBallEvent.ColorBallCompleted,Anchor);Release();return;}
             Draw();
         }
