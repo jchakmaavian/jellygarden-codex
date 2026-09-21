@@ -1,0 +1,96 @@
+PASS Normal 1x speed; no global slowdown
+PASS Existing 2x2 rule creates Propeller
+PASS Gameplay finishes square-match-create
+PASS No VFX/audio leftovers square-match-create
+PASS Audio mix has no clipped samples square-match-create
+PASS Created Propeller uses independent V4
+PASS Reveal settles to Idle short-flight
+PASS Stable Idle anchor short-flight
+PASS Live tap accepted short-flight
+PASS Flight audio stops at contact short-flight
+PASS Distance flight duration short-flight: 0.533 / 0.520
+PASS Gameplay finishes short-flight
+PASS No VFX/audio leftovers short-flight
+PASS Audio mix has no clipped samples short-flight
+PASS Existing target priority preserved short-flight
+PASS Reveal settles to Idle medium-flight
+PASS Stable Idle anchor medium-flight
+PASS Live tap accepted medium-flight
+PASS Flight audio stops at contact medium-flight
+PASS Distance flight duration medium-flight: 0.667 / 0.640
+PASS Gameplay finishes medium-flight
+PASS No VFX/audio leftovers medium-flight
+PASS Audio mix has no clipped samples medium-flight
+PASS Existing target priority preserved medium-flight
+PASS Reveal settles to Idle long-flight
+PASS Stable Idle anchor long-flight
+PASS Live tap accepted long-flight
+PASS Flight audio stops at contact long-flight
+PASS Distance flight duration long-flight: 0.900 / 0.900
+PASS Gameplay finishes long-flight
+PASS No VFX/audio leftovers long-flight
+PASS Audio mix has no clipped samples long-flight
+PASS Existing target priority preserved long-flight
+PASS Reveal settles to Idle edge-target
+PASS Stable Idle anchor edge-target
+PASS Live tap accepted edge-target
+PASS Flight audio stops at contact edge-target
+PASS Distance flight duration edge-target: 0.767 / 0.760
+PASS Gameplay finishes edge-target
+PASS No VFX/audio leftovers edge-target
+PASS Audio mix has no clipped samples edge-target
+PASS Existing target priority preserved edge-target
+PASS Reveal settles to Idle corner-target
+PASS Stable Idle anchor corner-target
+PASS Live tap accepted corner-target
+PASS Flight audio stops at contact corner-target
+PASS Distance flight duration corner-target: 0.800 / 0.784
+PASS Gameplay finishes corner-target
+PASS No VFX/audio leftovers corner-target
+PASS Audio mix has no clipped samples corner-target
+PASS Existing target priority preserved corner-target
+PASS Flight audio stops at contact 3-propellers
+PASS Distance flight duration 3-propellers: 0.900 / 0.900
+PASS Flight audio stops at contact 3-propellers
+PASS Distance flight duration 3-propellers: 0.900 / 0.900
+PASS Flight audio stops at contact 3-propellers
+PASS Distance flight duration 3-propellers: 0.900 / 0.900
+PASS Gameplay finishes 3-propellers
+PASS No VFX/audio leftovers 3-propellers
+PASS Audio mix has no clipped samples 3-propellers
+PASS All 3 Propellers launch
+PASS Staggered takeoffs 3
+PASS Rig pool reused 3
+PASS Flight audio stops at contact 5-propellers
+PASS Distance flight duration 5-propellers: 0.900 / 0.900
+PASS Flight audio stops at contact 5-propellers
+PASS Distance flight duration 5-propellers: 0.900 / 0.900
+PASS Flight audio stops at contact 5-propellers
+PASS Distance flight duration 5-propellers: 0.700 / 0.700
+PASS Flight audio stops at contact 5-propellers
+PASS Distance flight duration 5-propellers: 0.900 / 0.884
+PASS Flight audio stops at contact 5-propellers
+PASS Distance flight duration 5-propellers: 0.900 / 0.900
+PASS Gameplay finishes 5-propellers
+PASS No VFX/audio leftovers 5-propellers
+PASS Audio mix has no clipped samples 5-propellers
+PASS All 5 Propellers launch
+PASS Staggered takeoffs 5
+PASS Rig pool reused 5
+PASS Flight audio stops at contact propeller-plus-tnt
+PASS Distance flight duration propeller-plus-tnt: 0.900 / 0.900
+PASS Gameplay finishes propeller-plus-tnt
+PASS No VFX/audio leftovers propeller-plus-tnt
+PASS Audio mix has no clipped samples propeller-plus-tnt
+PASS Cancellation stops rotor audio and releases views
+PASS Reveal settles to Idle pooled-reuse
+PASS Stable Idle anchor pooled-reuse
+PASS Live tap accepted pooled-reuse
+PASS Flight audio stops at contact pooled-reuse
+PASS Distance flight duration pooled-reuse: 0.667 / 0.640
+PASS Gameplay finishes pooled-reuse
+PASS No VFX/audio leftovers pooled-reuse
+PASS Audio mix has no clipped samples pooled-reuse
+PASS Existing target priority preserved pooled-reuse
+PASS All pools clean
+FAILED - inspect Console
