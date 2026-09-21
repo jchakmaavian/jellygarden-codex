@@ -1,0 +1,98 @@
+{
+  "square-match-create": {
+    "frames": 73,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 233472,
+    "peak": 0.11795581132173538
+  },
+  "short-flight": {
+    "frames": 111,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 354304,
+    "peak": 0.1457376480102539
+  },
+  "medium-flight": {
+    "frames": 116,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 370688,
+    "peak": 0.16160979866981506
+  },
+  "long-flight": {
+    "frames": 183,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 583680,
+    "peak": 0.15696324408054352
+  },
+  "edge-target": {
+    "frames": 120,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 382976,
+    "peak": 0.14911149442195892
+  },
+  "corner-target": {
+    "frames": 152,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 485376,
+    "peak": 0.16255435347557068
+  },
+  "3-propellers": {
+    "frames": 119,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 378880,
+    "peak": 0.16301333904266357
+  },
+  "5-propellers": {
+    "frames": 185,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 591872,
+    "peak": 0.17866986989974976
+  },
+  "propeller-plus-tnt": {
+    "frames": 115,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 366592,
+    "peak": 0.35068008303642273
+  },
+  "pooled-reuse": {
+    "frames": 115,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 366592,
+    "peak": 0.22010913491249084
+  },
+  "tnt-before": {
+    "frames": 109,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 348160,
+    "peak": 0.3389275372028351
+  },
+  "tnt-after": {
+    "frames": 109,
+    "channels": 2,
+    "sampleRate": 48000,
+    "clipped": 0,
+    "samples": 348160,
+    "peak": 0.38043057918548584
+  }
+}
