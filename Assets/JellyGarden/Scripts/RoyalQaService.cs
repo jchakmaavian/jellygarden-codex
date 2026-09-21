@@ -306,9 +306,9 @@ namespace RoyalThrone.Testing
         static IEnumerator ColorBallReady(Item item)
         {
             if(!item||item.currentType!=ItemsTypes.BOMB)yield break;
-            var visual=item.GetComponent<RoyalThrone.Boosters.ColorBall.V2.ColorBallSeatV2>()?.View;
-            bool revealing=visual&&visual.Current==RoyalThrone.Boosters.ColorBall.V2.ColorBallVisualV2.Phase.Reveal;
-            while(item&&visual&&visual.Current==RoyalThrone.Boosters.ColorBall.V2.ColorBallVisualV2.Phase.Reveal)yield return null;
+            var visual=item.GetComponent<RoyalThrone.Boosters.ColorBall.V3.ColorBallSeatV3>()?.View;
+            bool revealing=visual&&visual.Current==RoyalThrone.Boosters.ColorBall.V3.ColorBallVisualV3.Phase.Reveal;
+            while(item&&visual&&visual.Current==RoyalThrone.Boosters.ColorBall.V3.ColorBallVisualV3.Phase.Reveal)yield return null;
             if(revealing)yield return new WaitForSeconds(.2f);
         }
         static void Swap(Item a,Item b){a.SwitchDirection(a.transform.position-b.transform.position);}
