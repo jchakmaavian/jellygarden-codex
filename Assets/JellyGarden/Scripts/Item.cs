@@ -985,7 +985,7 @@ namespace JellyGarden.Scripts
                 {
                     // The approved Color Ball Reveal replaces the static orb from its first frame.
                     if (orb) ColorBallFrameAnimator.PlayReveal(this);
-                    if (createdType == ItemsTypes.HELICOPTER) RoyalThrone.Boosters.Propeller.V2.PropellerSeatV2.Attach(this, true);
+                    if (createdType == ItemsTypes.HELICOPTER) RoyalThrone.Boosters.Propeller.V3.PropellerSeatV3.Attach(this, true);
                     else RoyalPowerupDirector.Get?.Creation(transform.position);
                 }
                 if (rocket)
@@ -1252,6 +1252,7 @@ namespace JellyGarden.Scripts
         /// resolves while the particles are still finishing on their own.
         /// </summary>
         [HideInInspector] public bool royalBlastClear;
+        [HideInInspector] public bool royalPropellerV3Clear;
         [HideInInspector] public bool royalTntClear;
         [HideInInspector] public Vector3 royalTntOrigin;
         [HideInInspector] public bool royalRocketClear;
@@ -1288,6 +1289,16 @@ namespace JellyGarden.Scripts
                 yield return new WaitForSeconds(.065f);
                 SetAnimationDestroyingFinished();
                 yield break;
+            }
+
+            // V3's precise air hit uses its own tiny chip pool. TNT/Rocket branches above are unchanged.
+            if (royalPropellerV3Clear)
+            {
+                RoyalThrone.Boosters.Propeller.V3.PropellerVfxV3.Break(sprRenderer, color);
+                foreach (var renderer in GetComponentsInChildren<SpriteRenderer>(true))
+                    if (renderer && !IsBonusFlyer(renderer.transform)) renderer.enabled = false;
+                yield return new WaitForSeconds(.065f);
+                SetAnimationDestroyingFinished(); yield break;
             }
 
             // Restore the original sprite-led pop; soften only confirmed matches.
