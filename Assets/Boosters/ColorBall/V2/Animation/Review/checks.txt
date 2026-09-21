@@ -1,0 +1,254 @@
+PASS Normal 1x speed
+PASS Reveal settles without extra hold reveal-idle-30fps
+PASS Idle stable for 15 seconds
+PASS Very slow independent spherical rotation
+PASS Idle is silent
+PASS Reveal settles without extra hold ColorBall-V2-Gameplay
+PASS Reveal ends on Idle ColorBall-V2-Gameplay
+PASS Cell-sized stable Idle ColorBall-V2-Gameplay
+PASS Idle visual retained through activation ColorBall-V2-Gameplay
+PASS Existing live combo accepted ColorBall-V2-Gameplay
+PASS Readable 0.60-second charge ColorBall-V2-Gameplay
+PASS First beam follows charge ColorBall-V2-Gameplay
+PASS One contact per target ColorBall-V2-Gameplay (-2.87, 2.87, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-2.87, 2.87, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-2.87, 2.87, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (1.23, 2.87, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (1.23, 2.87, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (1.23, 2.87, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (-0.41, 2.05, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-0.41, 2.05, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-0.41, 2.05, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (-2.05, 1.23, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-2.05, 1.23, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-2.05, 1.23, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (-0.41, 1.23, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-0.41, 1.23, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-0.41, 1.23, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (2.05, 1.23, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (2.05, 1.23, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (2.05, 1.23, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (-2.05, 0.41, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-2.05, 0.41, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-2.05, 0.41, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (-1.23, 0.41, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-1.23, 0.41, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-1.23, 0.41, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (-1.23, -0.41, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-1.23, -0.41, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-1.23, -0.41, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (2.87, -0.41, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (2.87, -0.41, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (2.87, -0.41, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (-2.87, -1.23, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-2.87, -1.23, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-2.87, -1.23, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (1.23, -1.23, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (1.23, -1.23, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (1.23, -1.23, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (-0.41, -2.05, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-0.41, -2.05, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-0.41, -2.05, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (-2.05, -2.87, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (-2.05, -2.87, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (-2.05, -2.87, 0.00)
+PASS One contact per target ColorBall-V2-Gameplay (2.05, -2.87, 0.00)
+PASS Conversion follows visible contact ColorBall-V2-Gameplay (2.05, -2.87, 0.00)
+PASS Correct gameplay booster/orientation ColorBall-V2-Gameplay (2.05, -2.87, 0.00)
+PASS Last moving beam fully finishes ColorBall-V2-Gameplay
+PASS Readable 0.18-second final payoff ColorBall-V2-Gameplay
+PASS Reveal settles without extra hold ColorBall-V2-Gameplay
+PASS Reveal settles without extra hold ColorBall-V2-Gameplay
+PASS Gameplay finishes ColorBall-V2-Gameplay
+PASS All selected targets contacted/converted exactly once ColorBall-V2-Gameplay: 15
+PASS Existing Rockets launch after payoff ColorBall-V2-Gameplay
+PASS Only legitimate cascade-created seated Color Balls remain ColorBall-V2-Gameplay
+PASS No beam/audio leftovers ColorBall-V2-Gameplay
+PASS Audio mix has zero clipped samples ColorBall-V2-Gameplay
+PASS Board input restored ColorBall-V2-Gameplay
+MEASURE ColorBall-V2-Gameplay: targets=15, charge=0.600, volley=1.733, final=0.200, audio peak=0.2187
+PASS Reveal settles without extra hold high-target-count
+PASS Reveal ends on Idle high-target-count
+PASS Cell-sized stable Idle high-target-count
+PASS Idle visual retained through activation high-target-count
+PASS Existing live combo accepted high-target-count
+PASS Readable 0.60-second charge high-target-count
+PASS First beam follows charge high-target-count
+PASS One contact per target high-target-count (-2.87, 2.87, 0.00)
+PASS Conversion follows visible contact high-target-count (-2.87, 2.87, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-2.87, 2.87, 0.00)
+PASS One contact per target high-target-count (-1.23, 2.87, 0.00)
+PASS Conversion follows visible contact high-target-count (-1.23, 2.87, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-1.23, 2.87, 0.00)
+PASS One contact per target high-target-count (0.41, 2.87, 0.00)
+PASS Conversion follows visible contact high-target-count (0.41, 2.87, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (0.41, 2.87, 0.00)
+PASS One contact per target high-target-count (2.05, 2.87, 0.00)
+PASS Conversion follows visible contact high-target-count (2.05, 2.87, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (2.05, 2.87, 0.00)
+PASS One contact per target high-target-count (-2.05, 2.05, 0.00)
+PASS Conversion follows visible contact high-target-count (-2.05, 2.05, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-2.05, 2.05, 0.00)
+PASS One contact per target high-target-count (-0.41, 2.05, 0.00)
+PASS Conversion follows visible contact high-target-count (-0.41, 2.05, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-0.41, 2.05, 0.00)
+PASS One contact per target high-target-count (1.23, 2.05, 0.00)
+PASS Conversion follows visible contact high-target-count (1.23, 2.05, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (1.23, 2.05, 0.00)
+PASS One contact per target high-target-count (2.87, 2.05, 0.00)
+PASS One contact per target high-target-count (-2.87, 1.23, 0.00)
+PASS Conversion follows visible contact high-target-count (2.87, 2.05, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (2.87, 2.05, 0.00)
+PASS Conversion follows visible contact high-target-count (-2.87, 1.23, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-2.87, 1.23, 0.00)
+PASS One contact per target high-target-count (-1.23, 1.23, 0.00)
+PASS Conversion follows visible contact high-target-count (-1.23, 1.23, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-1.23, 1.23, 0.00)
+PASS One contact per target high-target-count (0.41, 1.23, 0.00)
+PASS Conversion follows visible contact high-target-count (0.41, 1.23, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (0.41, 1.23, 0.00)
+PASS One contact per target high-target-count (-2.05, 0.41, 0.00)
+PASS One contact per target high-target-count (2.05, 1.23, 0.00)
+PASS Conversion follows visible contact high-target-count (-2.05, 0.41, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-2.05, 0.41, 0.00)
+PASS Conversion follows visible contact high-target-count (2.05, 1.23, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (2.05, 1.23, 0.00)
+PASS One contact per target high-target-count (-0.41, 0.41, 0.00)
+PASS Conversion follows visible contact high-target-count (-0.41, 0.41, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-0.41, 0.41, 0.00)
+PASS One contact per target high-target-count (1.23, 0.41, 0.00)
+PASS One contact per target high-target-count (-2.87, -0.41, 0.00)
+PASS Conversion follows visible contact high-target-count (1.23, 0.41, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (1.23, 0.41, 0.00)
+PASS Conversion follows visible contact high-target-count (-2.87, -0.41, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-2.87, -0.41, 0.00)
+PASS One contact per target high-target-count (2.87, 0.41, 0.00)
+PASS Conversion follows visible contact high-target-count (2.87, 0.41, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (2.87, 0.41, 0.00)
+PASS One contact per target high-target-count (-1.23, -0.41, 0.00)
+PASS Conversion follows visible contact high-target-count (-1.23, -0.41, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-1.23, -0.41, 0.00)
+PASS One contact per target high-target-count (0.41, -0.41, 0.00)
+PASS Conversion follows visible contact high-target-count (0.41, -0.41, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (0.41, -0.41, 0.00)
+PASS One contact per target high-target-count (-2.05, -1.23, 0.00)
+PASS Conversion follows visible contact high-target-count (-2.05, -1.23, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-2.05, -1.23, 0.00)
+PASS One contact per target high-target-count (2.05, -0.41, 0.00)
+PASS Conversion follows visible contact high-target-count (2.05, -0.41, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (2.05, -0.41, 0.00)
+PASS One contact per target high-target-count (-0.41, -1.23, 0.00)
+PASS Conversion follows visible contact high-target-count (-0.41, -1.23, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-0.41, -1.23, 0.00)
+PASS One contact per target high-target-count (1.23, -1.23, 0.00)
+PASS Conversion follows visible contact high-target-count (1.23, -1.23, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (1.23, -1.23, 0.00)
+PASS One contact per target high-target-count (-2.87, -2.05, 0.00)
+PASS Conversion follows visible contact high-target-count (-2.87, -2.05, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-2.87, -2.05, 0.00)
+PASS One contact per target high-target-count (-1.23, -2.05, 0.00)
+PASS One contact per target high-target-count (2.87, -1.23, 0.00)
+PASS Conversion follows visible contact high-target-count (-1.23, -2.05, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-1.23, -2.05, 0.00)
+PASS Conversion follows visible contact high-target-count (2.87, -1.23, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (2.87, -1.23, 0.00)
+PASS One contact per target high-target-count (0.41, -2.05, 0.00)
+PASS Conversion follows visible contact high-target-count (0.41, -2.05, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (0.41, -2.05, 0.00)
+PASS One contact per target high-target-count (-0.41, -2.87, 0.00)
+PASS Conversion follows visible contact high-target-count (-0.41, -2.87, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (-0.41, -2.87, 0.00)
+PASS One contact per target high-target-count (2.05, -2.05, 0.00)
+PASS Conversion follows visible contact high-target-count (2.05, -2.05, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (2.05, -2.05, 0.00)
+PASS One contact per target high-target-count (1.23, -2.87, 0.00)
+PASS Conversion follows visible contact high-target-count (1.23, -2.87, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (1.23, -2.87, 0.00)
+PASS One contact per target high-target-count (2.87, -2.87, 0.00)
+PASS Conversion follows visible contact high-target-count (2.87, -2.87, 0.00)
+PASS Correct gameplay booster/orientation high-target-count (2.87, -2.87, 0.00)
+PASS Last moving beam fully finishes high-target-count
+PASS Readable 0.18-second final payoff high-target-count
+PASS Gameplay finishes high-target-count
+PASS All selected targets contacted/converted exactly once high-target-count: 31
+PASS Existing Rockets launch after payoff high-target-count
+PASS Only legitimate cascade-created seated Color Balls remain high-target-count
+PASS No beam/audio leftovers high-target-count
+PASS Audio mix has zero clipped samples high-target-count
+PASS Board input restored high-target-count
+MEASURE high-target-count: targets=31, charge=0.600, volley=3.433, final=0.200, audio peak=0.2782
+PASS Reveal settles without extra hold combo-60fps-reuse
+PASS Reveal ends on Idle combo-60fps-reuse
+PASS Cell-sized stable Idle combo-60fps-reuse
+PASS Idle visual retained through activation combo-60fps-reuse
+PASS Existing live combo accepted combo-60fps-reuse
+PASS Readable 0.60-second charge combo-60fps-reuse
+PASS First beam follows charge combo-60fps-reuse
+PASS One contact per target combo-60fps-reuse (1.23, 2.87, 0.00)
+PASS One contact per target combo-60fps-reuse (-0.41, 2.05, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (1.23, 2.87, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (1.23, 2.87, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (-0.41, 2.05, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (-0.41, 2.05, 0.00)
+PASS One contact per target combo-60fps-reuse (-2.05, 1.23, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (-2.05, 1.23, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (-2.05, 1.23, 0.00)
+PASS One contact per target combo-60fps-reuse (-0.41, 1.23, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (-0.41, 1.23, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (-0.41, 1.23, 0.00)
+PASS One contact per target combo-60fps-reuse (-2.05, 0.41, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (-2.05, 0.41, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (-2.05, 0.41, 0.00)
+PASS One contact per target combo-60fps-reuse (2.05, 1.23, 0.00)
+PASS One contact per target combo-60fps-reuse (-1.23, 0.41, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (2.05, 1.23, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (2.05, 1.23, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (-1.23, 0.41, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (-1.23, 0.41, 0.00)
+PASS One contact per target combo-60fps-reuse (0.41, 0.41, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (0.41, 0.41, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (0.41, 0.41, 0.00)
+PASS One contact per target combo-60fps-reuse (-1.23, -0.41, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (-1.23, -0.41, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (-1.23, -0.41, 0.00)
+PASS One contact per target combo-60fps-reuse (2.87, -0.41, 0.00)
+PASS One contact per target combo-60fps-reuse (-2.87, -1.23, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (2.87, -0.41, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (2.87, -0.41, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (-2.87, -1.23, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (-2.87, -1.23, 0.00)
+PASS One contact per target combo-60fps-reuse (1.23, -1.23, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (1.23, -1.23, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (1.23, -1.23, 0.00)
+PASS One contact per target combo-60fps-reuse (-0.41, -2.05, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (-0.41, -2.05, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (-0.41, -2.05, 0.00)
+PASS One contact per target combo-60fps-reuse (-2.05, -2.87, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (-2.05, -2.87, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (-2.05, -2.87, 0.00)
+PASS One contact per target combo-60fps-reuse (2.05, -2.87, 0.00)
+PASS Conversion follows visible contact combo-60fps-reuse (2.05, -2.87, 0.00)
+PASS Correct gameplay booster/orientation combo-60fps-reuse (2.05, -2.87, 0.00)
+PASS Last moving beam fully finishes combo-60fps-reuse
+PASS Readable 0.18-second final payoff combo-60fps-reuse
+PASS Reveal settles without extra hold combo-60fps-reuse
+PASS Reveal settles without extra hold combo-60fps-reuse
+PASS Reveal settles without extra hold combo-60fps-reuse
+PASS Reveal settles without extra hold combo-60fps-reuse
+PASS Gameplay finishes combo-60fps-reuse
+PASS All selected targets contacted/converted exactly once combo-60fps-reuse: 15
+PASS Existing Rockets launch after payoff combo-60fps-reuse
+PASS Only legitimate cascade-created seated Color Balls remain combo-60fps-reuse
+PASS No beam/audio leftovers combo-60fps-reuse
+PASS Audio mix has zero clipped samples combo-60fps-reuse
+PASS Board input restored combo-60fps-reuse
+MEASURE combo-60fps-reuse: targets=15, charge=0.600, volley=1.833, final=0.183, audio peak=0.2515
+PASS Repeated use reuses pooled rig
+PASS Six original audio event cues played; Idle silent
+PASS 30/60 FPS continuous phase samples: 1287
+PASS No new console errors
+PASS TimeScale stayed at 1
+PEAK VFX 26/224; voices 9/24
+PASS All pools clean after test session
+PASS Normal player data restored
+ALL COLOR BALL V2 CHECKS PASSED
