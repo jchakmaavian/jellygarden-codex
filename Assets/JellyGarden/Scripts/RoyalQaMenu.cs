@@ -16,6 +16,8 @@ namespace RoyalThrone.Testing
     // Entire menu is runtime-created. No scene, prefab or player Settings edits.
     public sealed class RoyalQaMenu : MonoBehaviour
     {
+        /// <summary>Set by the Mod Menu, which replaces this screen but still needs CoinReward.</summary>
+        public static bool SuppressUi;
         RoyalQaService service;RectTransform root,panel,content,quick;Text status,metrics;Font font;
         readonly List<Button> commandButtons=new List<Button>();readonly HashSet<int> attached=new HashSet<int>();
         string category="Gems";float scanAt;bool shown;Text loopLabel;
@@ -51,11 +53,15 @@ namespace RoyalThrone.Testing
             SceneManager.sceneLoaded-=OnScene;SceneManager.sceneLoaded+=OnScene;OnScene(SceneManager.GetActiveScene(),LoadSceneMode.Single);
         }
         static void OnScene(Scene scene,LoadSceneMode mode)
-        {if(scene.name=="game"&&!FindAnyObjectByType<RoyalQaMenu>())new GameObject("GAME TESTING MODE — development only",typeof(RoyalQaService),typeof(RoyalQaMenu));}
+        {
+            // RoyalModMenu installs the shared object now. This stays only so the legacy screen can be
+            // restored by flipping SuppressUi, and so the service can still reach CoinReward.
+        }
         void Awake()
         {
             service=GetComponent<RoyalQaService>();font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            root=Rect("QA canvas",transform);var canvas=root.gameObject.AddComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=1000;
+            root=Rect("QA canvas",transform);
+            if(SuppressUi){var c=root.gameObject.AddComponent<Canvas>();c.renderMode=RenderMode.ScreenSpaceOverlay;c.sortingOrder=1000;root.gameObject.AddComponent<CanvasScaler>().uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;return;}var canvas=root.gameObject.AddComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=1000;
             var scaler=root.gameObject.AddComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(720,1280);scaler.matchWidthOrHeight=.5f;root.gameObject.AddComponent<GraphicRaycaster>();
             panel=Rect("Game testing mode",root);Bounds(panel,.025f,.07f,.975f,.95f);panel.gameObject.AddComponent<Image>().color=new Color(.025f,.065f,.14f,.985f);
             var heading=Label(panel,"GAME TESTING MODE",30);Bounds(heading.rectTransform,.04f,.935f,.96f,.985f);
@@ -101,6 +107,7 @@ namespace RoyalThrone.Testing
         }
         void Update()
         {
+            if(SuppressUi)return;
             bool visible=service.Visible;if(shown!=visible){shown=visible;panel.gameObject.SetActive(visible);}
             quick.gameObject.SetActive(RoyalSave.Testing&&!visible);status.text=service.Status;
             foreach(var b in commandButtons)if(b)b.interactable=RoyalSave.Testing&&!service.Busy;
