@@ -25,6 +25,7 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _DstBlend: 1
     - _Kind: 1
     - _OrbitPhase: 0
     m_Colors:

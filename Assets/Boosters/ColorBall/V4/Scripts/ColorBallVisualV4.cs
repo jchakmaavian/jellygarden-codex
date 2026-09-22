@@ -11,13 +11,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4
     {
         public enum Phase { Free,Reveal,Idle,Charge,Charged,Finish,PayoffHold }
         public const float RevealDuration=.76f,ChargeDuration=.62f,FinishDuration=.30f,HandoffPause=.16f;
-        // V3 held 7.8 rad/s with a .019 shutter: a slow sphere with barely a hint of smear.
-        // The reference blurred ball has an exact four-frame repeat cycle, so it turns 90 degrees per
-        // frame - 15 rev/s, 5400 deg/s, which is 94 rad/s. V4 matches that.
-        // The shutter is deliberately shorter than the step, at .60 of it. A full shutter would smear
-        // 90 degrees, and at ~36 degrees of gem spacing that averages three differently coloured beads
-        // into grey. The reference does the same thing: its dots stay saturated and stretch to roughly
-        // 2.5x their own length, which is about 50-55 degrees of arc, not a full frame.
+        // Artistic spin rate. Blurred footage does not establish a physical RPM.
         public const float IdleSpin=.065f,ChargedSpin=94f,FinishSpin=126f;
         public const float IdleOrbit=.12f,ChargedOrbit=11f,FinishOrbit=16f;
         // The smear covers the rotation of the frame being drawn; capped so it never averages to mush.
@@ -83,8 +77,9 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             float dt=Time.deltaTime;lastDt=Mathf.Clamp(dt,1f/240f,1f/20f);if(AwaitingClaim){claimAge+=dt;if(claimAge>.30f){Release();return;}}
             Age+=dt;lifeAge+=dt;sourceAge+=dt;
             float target=Current==Phase.Charge?Mathf.Lerp(IdleSpin,ChargedSpin,Smooth(Age/ChargeDuration)):Current==Phase.Charged?ChargedSpin:Current==Phase.Finish?referenceV5?ChargedSpin:Mathf.Lerp(ChargedSpin,FinishSpin,Smooth(Age/FinishDuration)):Current==Phase.PayoffHold?FinishSpin:IdleSpin;
+            if(referenceV5){if(Current==Phase.Reveal)target=Mathf.Lerp(ChargedSpin,IdleSpin,Smooth((Age-.24f)/.30f));else if(Current==Phase.Charge)target=Mathf.Lerp(IdleSpin,ChargedSpin,Smooth(Age/.15f));}
             float orbitTarget=Current==Phase.Charge?Mathf.Lerp(IdleOrbit,ChargedOrbit,Smooth(Age/ChargeDuration)):Current==Phase.Charged?ChargedOrbit:Current==Phase.Finish?referenceV5?ChargedOrbit:Mathf.Lerp(ChargedOrbit,FinishOrbit,Smooth(Age/FinishDuration)):Current==Phase.PayoffHold?FinishOrbit:IdleOrbit;
-            float step=Mathf.Min((Speed+target)*.5f*dt,MaxStepRad);lastStep=step;
+            float step=(Speed+target)*.5f*dt;if(!referenceV5)step=Mathf.Min(step,MaxStepRad);lastStep=step;
             Angle=Mathf.Repeat(Angle+step,Mathf.PI*2);Speed=target;
             OrbitAngle=Mathf.Repeat(OrbitAngle+(OrbitSpeed+orbitTarget)*.5f*dt,Mathf.PI*2);OrbitSpeed=orbitTarget;
             if(Current==Phase.Reveal&&!revealSpark&&Age>=.21f){revealSpark=true;ColorBallVfxV4.Stars(Anchor,3,.30f);}
@@ -120,7 +115,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             // rather than arriving with it.
             float widenT=Smooth(Mathf.Clamp01((Charge-.35f)/.65f));
             float widen=Mathf.Lerp(1,ChargedWiden,widenT)*(Current==Phase.Finish?Mathf.Lerp(1,.72f,Smooth(Age/FinishDuration)):1);
-            var scale=new Vector3(.84f*x*widen,.84f*y,1);bodyLayer.localScale=colorSurfaceLayer.localScale=scale;bodyLayer.localPosition=colorSurfaceLayer.localPosition=Vector3.zero;
+            var scale=referenceV5?new Vector3(.84f,.84f,1):new Vector3(.84f*x*widen,.84f*y,1);bodyLayer.localScale=colorSurfaceLayer.localScale=scale;bodyLayer.localPosition=colorSurfaceLayer.localPosition=Vector3.zero;
             // The shutter is the arc actually turned this frame, so the smear tiles frame to frame at
             // any refresh rate instead of being a fixed fraction that strobes when the speed rises.
             ShutterArc=Mathf.Min(lastStep*Shutter,MaxShutterArc);

@@ -315,6 +315,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoyalThrone.Boosters.ColorBall.V5.ColorBallV5Presentation
   finishRim: {fileID: 6639780000282879855}
   auraFront: {fileID: 5081354638333936991}
+  referenceMatch: {fileID: 11400000, guid: f1861fdf210914b47bc1acce0be359e8, type: 2}
+  enhanced: {fileID: 11400000, guid: 0fc0269ae457cac4f867a022a640850b, type: 2}
 --- !u!4 &4939414649804012850 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8057150314475214482, guid: 365f1dabd771fec45860463b7daf6960,

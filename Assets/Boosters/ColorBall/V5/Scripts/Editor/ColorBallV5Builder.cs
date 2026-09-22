@@ -9,7 +9,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
     {
         public const string Root="Assets/Boosters/ColorBall/V5/";
         const string Base="Assets/Boosters/ColorBall/V4/";
-        const string Revision="v5.1-local-motion-energy-1";
+        const string Revision="rigid-reference-profiles-1";
         [InitializeOnLoadMethod]static void Init(){EditorApplication.delayCall+=Ensure;}
         static void Ensure(){if(!EditorApplication.isPlayingOrWillChangePlaymode&&(!File.Exists(Root+"Assets/revision.txt")||File.ReadAllText(Root+"Assets/revision.txt")!=Revision))Build();}
         [MenuItem("Tools/Royal Throne/Color Ball V5/Build material and prefab variants")]
@@ -26,6 +26,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
             root.name="ColorBall-V5";var v=root.GetComponent<ColorBallVisualV4>();v.referenceV5=true;
             v.body.sharedMaterial=body;v.energy.sharedMaterial=energy;v.halo.sharedMaterial=halo;v.core.sharedMaterial=glow;v.originFlare.sharedMaterial=v.orbitGlint.sharedMaterial=star;
             var presentation=root.AddComponent<ColorBallV5Presentation>();
+            presentation.referenceMatch=Profile("ReferenceMatch");presentation.enhanced=Profile("Enhanced");
             var g=new GameObject("Final discharge rim");g.transform.SetParent(root.transform,false);g.AddComponent<MeshFilter>().sharedMesh=v.body.GetComponent<MeshFilter>().sharedMesh;
             presentation.finishRim=g.AddComponent<MeshRenderer>();presentation.finishRim.sharedMaterial=rim;presentation.finishRim.sortingOrder=40;presentation.finishRim.enabled=false;
             presentation.finishRim.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;presentation.finishRim.receiveShadows=false;
@@ -38,6 +39,13 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
             PrefabUtility.SaveAsPrefabAsset(fx,Root+"Prefabs/Resources/ColorBall-V5-VFX.prefab");Object.DestroyImmediate(fx);
             foreach(var m in new[]{body,energy,glow,star,rim,beam,beamCore,halo,aura}){EditorUtility.SetDirty(m);AssetDatabase.SaveAssetIfDirty(m);}
             File.WriteAllText(Root+"Assets/revision.txt",Revision);Debug.Log("[Color Ball V5] V4 prefab variants ready.");
+        }
+        static ColorBallPresentationSettings Profile(string name){
+            string dir=Root+"Assets/Resources";Directory.CreateDirectory(dir);AssetDatabase.Refresh();
+            string path=dir+"/ColorBall-"+name+".asset";
+            var p=AssetDatabase.LoadAssetAtPath<ColorBallPresentationSettings>(path);
+            if(!p){p=ScriptableObject.CreateInstance<ColorBallPresentationSettings>();AssetDatabase.CreateAsset(p,path);}
+            EditorUtility.SetDirty(p);AssetDatabase.SaveAssetIfDirty(p);return p;
         }
         static Material Mat(string name,Shader shader,float kind){var path=Root+"Materials/"+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);if(!m){m=new Material(shader);AssetDatabase.CreateAsset(m,path);}m.shader=shader;if(shader.name.EndsWith("Sphere"))m.SetFloat("_Layer",kind);else m.SetFloat("_Kind",kind);return m;}
     }

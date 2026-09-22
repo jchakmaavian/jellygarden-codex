@@ -11,8 +11,8 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
    #pragma target 3.0
    #include "UnityCG.cginc"
    struct v2f { float4 pos:SV_POSITION; float2 uv:TEXCOORD0; };
-   float _Layer,_Opacity,_Angle,_Exposure,_Charge,_Samples,_Widen,_Core,_Energy,_MotionPhase;
-   v2f vert(appdata_base v){v2f o;float morph=smoothstep(.35,1,_Charge);v.vertex.xy*=lerp(float2(1,1),float2(1.10,.81),morph);o.pos=UnityObjectToClipPos(v.vertex);o.uv=v.texcoord;return o;}
+   float _Layer,_Opacity,_Angle,_Exposure,_Charge,_Samples,_Widen,_Core,_Energy,_MotionPhase; float4x4 _RigidPose;
+   v2f vert(appdata_base v){v2f o;v.vertex.xy*=1.8;o.pos=UnityObjectToClipPos(v.vertex);o.uv=v.texcoord;return o;}
    float3 candy(float k){
     k=fmod(k,6);
     if(k<1)return float3(1,.045,.12); if(k<2)return float3(.01,.66,1);
@@ -21,19 +21,16 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
    }
    float4 dots(float3 n,float angle){
     // Inverse projection onto the sphere: circles foreshorten at the silhouette and wrap behind it.
-    float3 axis=normalize(lerp(float3(.22,1,.10),float3(.045,1,.045),_Charge));
-    float cs=cos(angle),sn=sin(angle);float3 surface=n*cs+cross(axis,n)*sn+axis*dot(axis,n)*(1-cs);
+    // Inverse rigid pose followed by a rigid spin. Mounted inserts never change latitude/size.
+    n=mul((float3x3)_RigidPose,n);
+    float cs=cos(angle),sn=sin(angle);
+    float3 surface=float3(n.x*cs+n.z*sn,n.y,-n.x*sn+n.z*cs);
     float latitude=asin(clamp(surface.y,-1,1)), longitude=atan2(surface.x,surface.z);
-    // Smooth latitude compression/expansion makes streaks bunch and spread over a curved body.
-    latitude+=_Charge*(.10*sin(latitude*4.4+_MotionPhase*12)*(.55+.45*cos(longitude))+.025*sin(longitude*2-_MotionPhase*9));
-    // Fewer, larger beads than V3. Once the surface smears, a dense grid closes into thin stripes;
-    // the reference keeps distinct fat blobs with lighter gaps between them.
     float row=floor((latitude+1.570796)/.60);
     float rows=5;float ly=(row+.5)*.60-1.570796;
     float columns=round(8.5*cos(ly));columns=max(3,columns);
     float u=longitude/6.283185*columns+fmod(row,2)*.5;
     float column=floor(u+.5);float2 q=float2((u-column)*6.283185/columns*cos(ly),latitude-ly)/.225;
-    q.y/=1+_Charge*(.20*sin(row*2.2+_MotionPhase*12)+.055*cos(longitude*2+_MotionPhase*9));
     float r=dot(q,q),aa=max(fwidth(r),.025);float a=1-smoothstep(1-aa,1+aa,r);
     float z=sqrt(saturate(1-r));
     float3 bump=normalize(n+float3(q.x,q.y,0)*.28+float3(0,0,z*.45));
@@ -45,16 +42,12 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
     return float4(rgb,a);
    }
    float4 frag(v2f i):SV_Target{
-    float2 p=(i.uv-.5)*2*(1+_Charge*.075);
-    // Both artwork layers receive the same deformation and pivot. Idle remains untouched.
-    p.x/=1+_Charge*.035*sin(p.y*8+_MotionPhase*14);
-    p.y-=_Charge*.065*sin(p.x*4.2+_MotionPhase*16)*(1-p.x*p.x);
-    // Widen is applied to the quad transform, not here: the sphere maths stays a unit sphere so the
-    // streaks keep curving along their own latitude instead of being a flat horizontal stretch.
-    float r=dot(p,p);float aa=max(fwidth(r),.004);
-    float edge=1-smoothstep(1-max(aa,_Charge*.065),1+aa,r);clip(edge-.001);
-    float3 n=normalize(float3(p.x*lerp(1,.80,_Charge),p.y*lerp(1,1.20,_Charge),sqrt(saturate(1-r))));
+    float2 p=(i.uv-.5)*3.6;
+    float r=dot(p,p),aa=max(fwidth(r),.004);
+    float edge=1-smoothstep(1-aa,1+aa,r);
+    float3 n=float3(p,sqrt(saturate(1-r)));
     if(_Layer<.5){
+     clip(edge-.001);
      float light=saturate(dot(n,normalize(float3(-.45,.6,1))));
      float spec=pow(saturate(dot(n,normalize(float3(-.27,.40,1)))),34);
      float rim=pow(1-n.z,3);
@@ -63,13 +56,24 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
      // While charged the body has to glow, not stay a dark sphere: otherwise the gaps between the
      // colour rows read as black bands instead of the luminous energy the reference shows.
      rgb+=_Charge*.12*pow(n.z,8)*float3(.8,.88,1);
-     rgb=lerp(rgb,float3(.34,.48,.68)*(.62+.38*n.z),_Charge);
-     rgb+=_Charge*pow(n.z,3)*.30;
+     rgb=lerp(rgb,float3(.36,.32,.23)*(.55+.45*n.z),_Charge*.88);
+     rgb+=_Charge*pow(n.z,3)*.16;
      return float4(rgb,edge*_Opacity);
     }
-    // The shutter spans the rotation of the frame being drawn and is sampled densely enough that
-    // consecutive frames tile with no gap. That is what lets the ball spin fast enough to become
-    // bands without strobing, at 30 or 60 FPS, since the arc comes from the real delta time.
+    // Optical streaks from the rotating coloured inserts can extend beyond the metal.
+    // The metal ray/silhouette and mounted detail coordinates remain strictly rigid.
+    float4 optical=0;
+    if(_Charge>.01){
+     [unroll]for(int k=0;k<9;k++){
+      float dx=(k-4)*.20;float2 sampleP=p-float2(dx,0);float sr=dot(sampleP,sampleP);
+      if(sr<1){float3 nn=float3(sampleP,sqrt(1-sr));float4 d=dots(nn,_Angle-(k/9.0)*_Exposure);
+       float w=exp(-dx*dx*3)*.10;optical+=float4(d.rgb*d.a,d.a)*w;}
+     }
+    }
+    if(r>1){
+     float a=(1-exp(-optical.a*7.0))*_Charge*smoothstep(1,1.08,r);
+     return float4(optical.rgb/max(.001,optical.a)*1.3,a*_Opacity);
+    }
     int count=(int)clamp(_Samples,1,24);
     float inv=1.0/count;
     float4 sum=0;
@@ -84,14 +88,14 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
     // White-hot core, kept inside the silhouette so it never becomes a bloom halo.
     float coreR=length(float2(p.x*1.15,p.y));
     float core=pow(saturate(1-smoothstep(0,.95,coreR)),1.35)*_Core;
-    rgb=lerp(rgb,float3(1,1,1),saturate(core*.85));
+    rgb=lerp(rgb,float3(1,1,1),saturate(core*.35));
     rgb+=core*.45;
     float a=saturate(sum.a*lerp(1,1.6,_Charge)+core*.85);
     // Exposure still follows V4 phase. A moving specular ridge restores depth through the streaks.
     float glint=pow(saturate(dot(n,normalize(float3(.40*sin(_MotionPhase*12),.48+.14*sin(_MotionPhase*17),1)))),30)*_Charge;
     rgb+=glint*.50;
     rgb+=float3(1,.96,.77)*pow(1-n.z,4)*_Charge*(.14+.12*sin(_MotionPhase*21+p.y*7));
-    return float4(rgb,a*edge*_Opacity);
+    rgb+=optical.rgb*_Charge*.14;return float4(rgb,a*edge*_Opacity);
    }
    ENDCG
   }

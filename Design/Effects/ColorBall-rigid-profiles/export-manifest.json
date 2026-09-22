@@ -1,0 +1,103 @@
+{
+  "reference": "J:\\Unity Projects\\Match3-Games_ArtSource\\Match-3-JC\\00_References\\ColorBall\\Colorball+finishing up.mp4",
+  "reference_first_discharge": 6.0333333333,
+  "reference_activation_estimate": 5.8333333333,
+  "reference_center": [
+    860.0,
+    1380.0
+  ],
+  "reference_cell_pixels": 234.0,
+  "windows": {
+    "Activation": {
+      "event": "activation",
+      "reference": 5.8333333333,
+      "before": 0.1,
+      "after": 1.1
+    },
+    "Discharge": {
+      "event": "fired",
+      "reference": 6.0333333333,
+      "before": 0.3,
+      "after": 0.7
+    }
+  },
+  "timing_note": "Activation-aligned view preserves the differing charge durations; discharge-aligned view compares energy transfer without changing either timeline.",
+  "profiles": [
+    {
+      "name": "ColorBall-ReferenceMatch-Gameplay",
+      "frames": 228,
+      "duration": 7.6,
+      "activation": 0.9667,
+      "charge_complete": 1.6,
+      "charge_seconds": 0.6333000000000001,
+      "fired": 1.6333,
+      "activation_to_first_discharge": 0.6666,
+      "center": [
+        475.68,
+        940.8
+      ],
+      "pitch": 128.6352,
+      "world_pitch": 0.8199999999999998,
+      "reveal": [
+        -0.41,
+        0.41,
+        -0.2
+      ],
+      "active": [
+        -0.41,
+        0.41,
+        0.0
+      ]
+    },
+    {
+      "name": "ColorBall-Enhanced-Gameplay",
+      "frames": 228,
+      "duration": 7.6,
+      "activation": 0.9667,
+      "charge_complete": 1.6,
+      "charge_seconds": 0.6333000000000001,
+      "fired": 1.6333,
+      "activation_to_first_discharge": 0.6666,
+      "center": [
+        475.68,
+        940.8
+      ],
+      "pitch": 128.6352,
+      "world_pitch": 0.8199999999999998,
+      "reveal": [
+        -0.41,
+        0.41,
+        -0.2
+      ],
+      "active": [
+        -0.41,
+        0.41,
+        0.0
+      ]
+    }
+  ],
+  "outputs": [
+    "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Effects\\ColorBall-rigid-profiles\\ColorBall-ReferenceMatch-Gameplay.mp4",
+    "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Effects\\ColorBall-rigid-profiles\\ColorBall-Enhanced-Gameplay.mp4",
+    "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Effects\\ColorBall-rigid-profiles\\RoyalMatch-ReferenceMatch-Enhanced-Activation-Normal.mp4",
+    "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Effects\\ColorBall-rigid-profiles\\RoyalMatch-ReferenceMatch-Enhanced-Activation-Closeup.mp4",
+    "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Effects\\ColorBall-rigid-profiles\\RoyalMatch-ReferenceMatch-Enhanced-Discharge-Normal.mp4",
+    "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Effects\\ColorBall-rigid-profiles\\RoyalMatch-ReferenceMatch-Enhanced-Discharge-Closeup.mp4",
+    "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Effects\\ColorBall-rigid-profiles\\RoyalMatch-ReferenceMatch-Enhanced-Comparison.mp4"
+  ],
+  "audio": "Captured Unity game audio; comparison uses Enhanced only",
+  "capture_audio": {
+    "ReferenceMatch": {
+      "peak": 0.2597537338733673,
+      "clipped": 0,
+      "sampleRate": 48000,
+      "channels": 2
+    },
+    "Enhanced": {
+      "peak": 0.25815507769584656,
+      "clipped": 0,
+      "sampleRate": 48000,
+      "channels": 2
+    }
+  }
+}
