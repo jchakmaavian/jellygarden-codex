@@ -29,7 +29,7 @@ namespace RoyalThrone.Testing
 
         enum Screen { Home, Game, Board, Boosters, Lab, Progress, Debug, TestMode }
 
-        static readonly Color Ink = new Color(.035f, .05f, .085f, .97f);
+        static readonly Color Ink = new Color(.035f, .05f, .085f, 1f);
         static readonly Color Card = new Color(.075f, .10f, .16f, 1f);
         static readonly Color CardHi = new Color(.10f, .15f, .24f, 1f);
         static readonly Color Accent = new Color(.24f, .62f, 1f);
@@ -109,30 +109,31 @@ namespace RoyalThrone.Testing
             shadeImage.color = new Color(0, 0, 0, .55f);
 
             panel = Rect("Panel", root);
-            Bounds(panel, .04f, .10f, .96f, .92f);
+            // Fullscreen page, not a dialog inside Settings.
+            Bounds(panel, 0f, 0f, 1f, 1f);
             panel.gameObject.AddComponent<Image>().color = Ink;
 
             // Header:  <   MOD MENU   x
             var back = Chip(panel, "‹", () => GoBack());
-            Bounds((RectTransform)back.transform, .03f, .938f, .12f, .985f);
+            Bounds((RectTransform)back.transform, .045f, .922f, .145f, .966f);
             title = Label(panel, "MOD MENU", 30, TextAnchor.MiddleCenter);
-            Bounds(title.rectTransform, .14f, .938f, .86f, .985f);
+            Bounds(title.rectTransform, .16f, .922f, .84f, .966f);
             var close = Chip(panel, "×", () => Close());
-            Bounds((RectTransform)close.transform, .88f, .938f, .97f, .985f);
+            Bounds((RectTransform)close.transform, .855f, .922f, .955f, .966f);
 
             crumb = Label(panel, "Game Tools & Testing", 17, TextAnchor.MiddleLeft);
             crumb.color = Dim;
-            Bounds(crumb.rectTransform, .045f, .905f, .60f, .936f);
+            Bounds(crumb.rectTransform, .055f, .885f, .60f, .917f);
             modified = Label(panel, "", 16, TextAnchor.MiddleRight);
             modified.color = Accent;
-            Bounds(modified.rectTransform, .60f, .905f, .955f, .936f);
+            Bounds(modified.rectTransform, .60f, .885f, .945f, .917f);
 
             body = Rect("Body", panel);
-            Bounds(body, .03f, .02f, .97f, .90f);
+            Bounds(body, .055f, .042f, .945f, .872f);
 
             statusLine = Label(panel, "", 15, TextAnchor.MiddleLeft);
             statusLine.color = Dim;
-            Bounds(statusLine.rectTransform, .045f, .0f, .955f, .022f);
+            Bounds(statusLine.rectTransform, .055f, .012f, .945f, .036f);
 
             panel.gameObject.SetActive(false);
             shade.gameObject.SetActive(false);
@@ -713,7 +714,7 @@ namespace RoyalThrone.Testing
 
         void Update()
         {
-            bool visible = service.Visible && ModsEnabled;
+            bool visible = service.Visible;
             if (shown != visible)
             {
                 shown = visible;
@@ -723,7 +724,7 @@ namespace RoyalThrone.Testing
                 else if (!Mathf.Approximately(Time.timeScale, 1f) && Mathf.Approximately(restoreSpeed, 1f)) Time.timeScale = 1f;
             }
             if (!visible) { AttachEntries(); return; }
-            modified.text = changes > 0 ? "Modified: " + changes : "MODS ON";
+            modified.text = changes > 0 ? "Modified: " + changes : "";
             statusLine.text = service.Status;
             AttachEntries();
         }
@@ -733,26 +734,30 @@ namespace RoyalThrone.Testing
         {
             foreach (var home in FindObjectsByType<RoyalHomeScreen>(FindObjectsInactive.Include))
             {
-                if (!home.settingsGroup || !attached.Add(home.GetHashCode())) continue;
-                var toggle = Chip(home.dialogRect, "", null);
-                var tRect = (RectTransform)toggle.transform;
-                // Below the dialog card, stacked above the MOD entry: the card itself is fully
-                // occupied by the shipped Settings buttons.
-                Bounds(tRect, .12f, .055f, .88f, .135f);
-                var tLabel = Label(toggle.transform, "", 18, TextAnchor.MiddleCenter, .04f, 0f, .96f, 1f);
-                toggle.onClick.AddListener(() =>
-                {
-                    ModsEnabled = !ModsEnabled;
-                    tLabel.text = "Mod Menu   " + (ModsEnabled ? "ON" : "OFF");
-                    toggle.targetGraphic.color = ModsEnabled ? Accent : CardHi;
-                });
-                tLabel.text = "Mod Menu   " + (ModsEnabled ? "ON" : "OFF");
-                toggle.targetGraphic.color = ModsEnabled ? Accent : CardHi;
-                toggle.gameObject.AddComponent<RoyalQaSettingsGate>().Settings = home.settingsGroup;
+                if (!home.settingsGroup || home.settingButtons == null || home.settingButtons.Length < 4) continue;
+                if (!attached.Add(home.GetHashCode())) continue;
 
-                var open = Chip(home.dialogRect, "MOD", () => { if (ModsEnabled) { service.Visible = true; home.ClosePanel(); } });
-                Bounds((RectTransform)open.transform, .12f, .145f, .88f, .225f);
-                open.gameObject.AddComponent<RoyalModEntryGate>().Settings = home.settingsGroup;
+                // Clone a shipped settings button so the style is identical by construction rather
+                // than by eye: same sprite, gradient, border, radius, font and pressed colours.
+                var source = home.settingButtons[home.settingButtons.Length - 1];
+                var entry = Instantiate(source, home.settingsGroup.transform);
+                entry.name = "Setting 4 Mod Menu";
+                var text = entry.GetComponentInChildren<Text>();
+                if (text) text.text = "Mod Menu";
+                entry.onClick.RemoveAllListeners();
+                entry.onClick.AddListener(() => { home.ClosePanel(); service.Visible = true; });
+
+                // Five rows now share the group, so every button is re-anchored to a fifth each.
+                var all = new List<RectTransform>();
+                foreach (var b in home.settingButtons) all.Add((RectTransform)b.transform);
+                all.Add((RectTransform)entry.transform);
+                float slice = 1f / all.Count;
+                for (int i = 0; i < all.Count; i++)
+                {
+                    all[i].anchorMin = new Vector2(0, 1 - (i + 1) * slice + .012f);
+                    all[i].anchorMax = new Vector2(1, 1 - i * slice - .012f);
+                    all[i].offsetMin = all[i].offsetMax = Vector2.zero;
+                }
             }
             if (!JellyGarden.Scripts.GUI.MenuManager.Instance) return;
             foreach (var menu in JellyGarden.Scripts.GUI.MenuManager.Instance.GetComponentsInChildren<JellyGarden.Scripts.GUI.AnimationManager>(true))
@@ -760,33 +765,12 @@ namespace RoyalThrone.Testing
                 if (menu.name != "Settings" && menu.name != "MenuPause" || !attached.Add(menu.GetHashCode())) continue;
                 var face = menu.transform.Find("Image");
                 if (!face) continue;
-                var b = Chip(face, "MOD", () => { if (ModsEnabled) service.Visible = true; });
+                var b = Chip(face, "Mod Menu", () => { service.Visible = true; });
                 var rect = (RectTransform)b.transform;
                 rect.anchorMin = rect.anchorMax = new Vector2(.5f, 0);
                 rect.sizeDelta = new Vector2(300, 52);
                 rect.anchoredPosition = new Vector2(0, -39);
-                b.gameObject.AddComponent<RoyalModEntryGate>();
             }
-        }
-    }
-
-    /// <summary>Hides the MOD entry whenever mods are switched off.</summary>
-    public sealed class RoyalModEntryGate : MonoBehaviour
-    {
-        /// <summary>Optional: the entry also hides whenever this panel is closed.</summary>
-        public GameObject Settings;
-        CanvasGroup group;
-        // One component owns the decision. Two gates sharing a CanvasGroup overwrote each other,
-        // which left the MOD entry on screen after mods were switched off.
-        void Update()
-        {
-            // Fetched lazily: these gates are attached to runtime-built buttons whose Awake ordering
-            // is not guaranteed, and a null group here used to throw once per frame.
-            if (!group) group = GetComponent<CanvasGroup>();
-            if (!group) group = gameObject.AddComponent<CanvasGroup>();
-            bool on = RoyalModMenu.ModsEnabled && (!Settings || Settings.activeInHierarchy);
-            group.alpha = on ? 1 : 0;
-            group.interactable = group.blocksRaycasts = on;
         }
     }
 
