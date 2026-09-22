@@ -20,7 +20,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5 {
    view.orbitBack.transform.localPosition=view.orbitFront.transform.localPosition=Vector3.zero;
   }
   static float Ease(float x)=>Mathf.SmoothStep(0,1,x);
-  void Light(Renderer r,Color tint,Vector3 scale){if(!r)return;block.Clear();block.SetColor("_Color",tint);block.SetFloat("_Phase",clock);block.SetFloat("_Pulse",view.SourcePulse);block.SetFloat("_Detail",Settings?Settings.detail:0);r.SetPropertyBlock(block);r.transform.localScale=scale;r.enabled=tint.a>.001f;}
+  void Light(Renderer r,Color tint,Vector3 scale){if(!r)return;block.Clear();block.SetColor("_Color",tint);block.SetFloat("_Phase",clock);block.SetFloat("_Pulse",view.SourcePulse);block.SetFloat("_Aim",view.beamOrigin.localEulerAngles.z*Mathf.Deg2Rad);block.SetFloat("_Detail",Settings?Settings.detail:0);r.SetPropertyBlock(block);r.transform.localScale=scale;r.enabled=tint.a>.001f;}
   void Surface(Renderer r,float charge,float opacity,Quaternion pose){r.GetPropertyBlock(block);block.SetFloat("_MotionPhase",clock);block.SetFloat("_Opacity",opacity);block.SetFloat("_Charge",charge);block.SetFloat("_Angle",view.Angle+charge*(.18f*Mathf.Sin(clock*9)+.07f*Mathf.Sin(clock*13)));block.SetFloat("_Exposure",Mathf.Lerp(.001f,1.28f,charge));block.SetFloat("_Samples",24);block.SetFloat("_Core",charge*.22f);block.SetFloat("_Energy",charge*.42f);block.SetMatrix("_RigidPose",Matrix4x4.Rotate(Quaternion.Inverse(pose)));r.SetPropertyBlock(block);}
   void LateUpdate(){
    if(!view||view.Current==ColorBallVisualV4.Phase.Free||ColorBallVisualV4.Paused)return;
@@ -32,7 +32,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5 {
    float alive=charge*(finish?1-Ease(view.Age/.20f):1);
    Vector3 offset=new Vector3(.014f*Mathf.Sin(clock*23)+.006f*Mathf.Sin(clock*13),.017f*Mathf.Sin(clock*19)+.005f*Mathf.Sin(clock*31),0)*alive;
    if(reveal)offset+=Vector3.up*(.10f*(1-Ease(view.Age/.43f)));
-   Quaternion pose=Quaternion.Euler((7+6*Mathf.Sin(clock*11))*alive,0,4*Mathf.Sin(clock*17)*alive);
+   Quaternion pose=Quaternion.Euler((7+6*Mathf.Sin(clock*11))*alive,0,(10.3f*Mathf.Sin(clock*17)+3.15f*Mathf.Sin(clock*9))*alive);
    // Rigid sphere: orientation cannot change the metal silhouette or radius.
    view.bodyLayer.localScale=view.colorSurfaceLayer.localScale=new Vector3(.84f,.84f,1);
    view.bodyLayer.localPosition=view.colorSurfaceLayer.localPosition=offset;
@@ -46,9 +46,9 @@ namespace RoyalThrone.Boosters.ColorBall.V5 {
    if(idle){view.halo.enabled=view.core.enabled=view.originFlare.enabled=false;return;}
    float aura=Settings?Settings.aura:1,discharge=Settings?Settings.discharge:1,source=view.SourcePulse;
    float intensity=charge*(.88f+.12f*Mathf.Sin(clock*14))*(1+source*.30f*discharge);
-   Light(view.halo,new Color(1,.89f,.60f,intensity*.88f*aura),new Vector3(2,1.82f,1));
-   Light(auraFront,new Color(1,.96f,.83f,intensity*.68f*aura),new Vector3(1.90f,1.62f,1));
-   Light(view.core,new Color(1,1,.96f,charge*(.10f+source*.25f)),new Vector3(.46f,.35f,1));
+   Light(view.halo,new Color(1,.90f,.64f,intensity*.88f*aura),new Vector3(2.35f,2.25f,1));
+   Light(auraFront,new Color(1,.97f,.86f,intensity*.40f*aura),new Vector3(2.25f,2.05f,1));
+   Light(view.core,new Color(1,1,.96f,charge*(.06f+source*.18f)),new Vector3(.46f,.35f,1));
    view.originFlare.transform.localPosition=Vector3.zero;
    Light(view.originFlare,new Color(1,.99f,.91f,source*.88f*discharge),new Vector3(.52f,.32f,1));
    if(!finish)return;

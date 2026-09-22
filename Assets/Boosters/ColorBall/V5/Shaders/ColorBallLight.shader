@@ -10,26 +10,30 @@ Shader "RoyalThrone/ColorBallV5/Light" {
    #pragma target 3.0
    #include "UnityCG.cginc"
    struct v2f{float4 pos:SV_POSITION;float2 uv:TEXCOORD0;};
-   float4 _Color;float _Kind,_OrbitPhase,_Phase,_Pulse,_Release,_Travel,_After,_LengthCells,_Contact,_ContactAge,_Detail;
+   float4 _Color;float _Kind,_OrbitPhase,_Phase,_Pulse,_Release,_Travel,_After,_LengthCells,_Contact,_ContactAge,_Detail,_Leading,_Aim;
    v2f vert(appdata_base v){v2f o;o.pos=UnityObjectToClipPos(v.vertex);o.uv=v.texcoord;return o;}
    float bell(float x,float w){return exp(-x*x/(w*w));}
    // Smooth, spatially coherent modulation. It changes energy, never the metal geometry.
    float flow(float2 p){return .5+.25*sin(p.x*7+p.y*3)+.16*sin(p.x*13-p.y*9)+.09*cos(p.x*23+p.y*5);}
    float4 frag(v2f i):SV_Target{
     float2 p=(i.uv-.5)*2;float r=length(p),a=0;
+    if(_Leading>.5){
+     float core=exp(-dot(p*float2(2.7,2.0),p*float2(2.7,2.0)));
+     float wake=bell(p.y,.38)*exp(-pow((p.x+.20)*1.6,2));
+     return float4(lerp(float3(1,.87,.43),float3(1,1,.98),core),_Color.a*(core+wake*.40)*saturate((1-r)*5));
+    }
     if(_Contact>.5){
-     float t=_ContactAge,opening=smoothstep(0,.07,t),fade=1-smoothstep(.07,.22,t);
-     float2 q=p/lerp(.20,.72,opening);
-     float center=exp(-dot(q,q)*7)*(1-smoothstep(.025,.12,t));
-     float cloud=exp(-dot(q*float2(.85,1.3),q*float2(.85,1.3))*3)*fade;
-     float flare=bell(q.y+.055*sin(q.x*9-t*32),.065)*exp(-abs(q.x)*2.2)*fade;
-     float wing=bell(q.x+.12*q.y,.10)*exp(-abs(q.y)*4)*fade*.40;
-     // The arriving channel opens into two unequal, curved shoulders, then a short residue.
-     float shoulder=bell(q.y-(.12+.16*q.x*q.x),.09)*exp(-abs(q.x)*2.4);
-     shoulder+=bell(q.y+(.10+.10*q.x*q.x),.07)*exp(-abs(q.x+.13)*3.3)*.65;
-     float residue=shoulder*smoothstep(.012,.055,t)*(1-smoothstep(.085,.22,t));
-     a=center*1.5+cloud*.70+flare*.8+wing+_Detail*(center*.32+residue*.60+flare*.22);
-     return float4(lerp(_Color.rgb,float3(1,1,.97),saturate(center+flare*.8+_Detail*residue*.15)),_Color.a*a*saturate((1-r)*7));
+     float t=_ContactAge,opening=smoothstep(0,.065,t),fade=1-smoothstep(.045,.22,t);
+     float2 q=p/lerp(.32,.90,opening);
+     float center=exp(-dot(q,q)*5.0)*(1-smoothstep(.045,.14,t));
+     // Incoming axial energy opens sideways into a soft petal-shaped contact, not a ring/bubble.
+     float cloud=exp(-dot(q*float2(1.25,.90),q*float2(1.25,.90))*3)*fade;
+     float channel=bell(q.y,.13)*exp(-abs(q.x)*2)*fade;
+     float shoulder=bell(q.x+.30*q.y*q.y-.06,.13)*exp(-abs(q.y)*2.5);
+     shoulder+=bell(q.x-.24*q.y*q.y+.08,.10)*exp(-abs(q.y)*3)*.55;
+     float residue=shoulder*smoothstep(0,.025,t)*(1-smoothstep(.08,.22,t));
+     a=center*1.25+cloud*(.78+_Detail*.16)+channel*.40+residue*(.6+_Detail*.35);
+     return float4(lerp(float3(1,.84,.38),float3(1,1,.98),saturate(center*1.5+channel*.65)),saturate(_Color.a*a)*saturate((1-r)*7));
     }
     if(_Kind<.5)a=lerp(exp(-r*r*6),exp(-r*r*r*r*4),_Release)*saturate((1-r)*5);
     else if(_Kind<1.5){a=pow(saturate(1-pow(abs(p.x),.55)-pow(abs(p.y),.55)),.55);a=max(a,exp(-r*r*80)*.65);}
@@ -44,51 +48,49 @@ Shader "RoyalThrone/ColorBallV5/Light" {
     else if(_Kind<3.5||(_Kind>4.5&&_Kind<5.5)){
      float x=i.uv.x,span=max(.01,_LengthCells*_Travel),behind=(1-x)*span;
      // Both beam layers share this support width and centerline. Endpoints are exactly pinned.
-     float anchor=sin(x*3.141593),path=anchor*(.16*sin(x*span*2.6-_Phase*20)+.075*sin(x*span*5+_Phase*13));
+     float anchor=sin(x*3.141593),path=anchor*(.21*sin(x*span*2.0-_Phase*14)+.065*sin(x*span*4+_Phase*9));
      float y=p.y-path;
      float front=bell(behind-.08,.23)*(1-smoothstep(0,.075,_After));
-     float packet=bell(frac(x*span*.75-_Phase*7)-.5,.15);
+     float packet=bell(frac(x*span*.48-_Phase*4.5)-.5,.23);
      float taper=lerp(.38,1,smoothstep(0,.25,x*span)*smoothstep(0,.18,behind));
-     float width=(.38+.09*sin(x*span*5-_Phase*24)+.08*packet+.08*front)*taper;
+     float width=(.44+.045*sin(x*span*4-_Phase*18)+.09*packet+.12*front)*taper;
      float ends=smoothstep(0,.009,x)*smoothstep(0,.01,1-x);
-     float pulse=.72+.28*sin(x*span*7-_Phase*29);
+     float pulse=.88+.12*sin(x*span*5-_Phase*19);
      if(_Kind<3.5){
-      float body=bell(y,width),warm=bell(y,width*1.95);
+      float body=bell(y,width),warm=bell(y,width*1.70);
       float channel=bell(y-width*.67,width*.24)+bell(y+width*.55,width*.32)*.65;
       float gathered=(front*.62+packet*.27)*body+channel*(.15+.20*packet);
-      a=((body*.84+warm*.20)*(pulse+front*.25)+_Detail*gathered)*ends*(1-smoothstep(.72,1,abs(p.y)));
-      return float4(lerp(_Color.rgb,float3(1,.96,.78),saturate(front*(.6+_Detail*.18)+packet*.2)),saturate(_Color.a*a));
+      a=((body*.88+warm*.38)*(pulse+front*.25)+_Detail*gathered*.5)*ends*(1-smoothstep(.80,1,abs(p.y)));
+      return float4(lerp(float3(1,.79,.30),float3(1,.96,.73),saturate(body*.65+front*.45+packet*.2)),saturate(_Color.a*a));
      }
-     a=bell(y,width*.40)*ends*(pulse+front*.48+packet*.12+_Detail*(front*.40+packet*.22));
+     a=bell(y,width*.30)*ends*(pulse+front*.38+packet*.12+_Detail*(front*.22+packet*.15));
      return float4(float3(1,1,.97),_Color.a*a);
     }
     else if(_Kind>5.5){
-     bool front=_Kind>6.5;
-     float2 q=p*float2(1,1.13);float angle=atan2(q.y,q.x),rr=length(q);
-     float ribbons=0,hot=0,shoulders=0;
-     // Unequal finite wisps, with tapered heads/tails, stream around the sphere. No complete hoop.
-     [unroll]for(int k=0;k<3;k++){
-      float seed=k*2.39996,head=_Phase*(3.7+k*.41)+seed;
-      float u=frac((angle-head)/6.283185),lengthArc=.13+.031*sin(seed);
-      float envelope=smoothstep(0,.018,u)*(1-smoothstep(lengthArc*.42,lengthArc,u));
-      float radius=.43+k*.051+.065*sin(angle*2+seed+_Phase*5)+.022*sin(angle*5-seed-_Phase*3);
-      float width=(.038+.020*flow(float2(angle+seed,_Phase*2)))*(.4+.6*envelope);
-      float trail=bell(rr-radius,width)*envelope;
-      float depth=front?smoothstep(.24,.68,abs(sin(angle))):1;
-      float variation=.74+.26*flow(float2(angle*2+_Phase*4,rr*10-seed));
-      ribbons+=trail*variation*depth*(.48+.10*k);
-      hot+=bell(rr-radius,width*.40)*envelope*depth*.55;
-      // Richer energy cross-section follows the same finite wisp, never a new static orbit.
-      shoulders+=bell(rr-radius-width*.65,width*1.7)*envelope*depth*variation*.38;
-      hot+=_Detail*bell(rr-radius+width*.18,width*.23)*envelope*depth*(.30+.20*variation);
+     bool front=_Kind>6.5;float ribbons=0,hot=0;
+     // Tangential streams unfurl from the source. Each bends and tapers outwards;
+     // none is a polar contour, closed hoop, or a repeated straight radial spoke.
+     [unroll]for(int k=0;k<5;k++){
+      float seed=k*2.39996,theta=seed+_Phase*(.75+.12*sin(seed))+.22*sin(_Phase*5+seed);
+      float cs=cos(theta),sn=sin(theta);float2 q=float2(p.x*cs+p.y*sn,-p.x*sn+p.y*cs);
+      float reach=.62+.11*sin(_Phase*7+seed),u=(q.x-.16)/reach;
+      float envelope=smoothstep(0,.16,u)*(1-smoothstep(.34,1,u));
+      float curve=.16+.21*u*u+.065*sin(u*5-_Phase*8+seed);
+      float width=lerp(.065,.012,saturate(u))*(1+.25*sin(_Phase*6+seed));
+      float depth=front?(k%2==0?.28:.62):1;
+      float d=q.y-curve;
+      ribbons+=bell(d,width*2.8)*envelope*depth*(.26+_Detail*.08);
+      hot+=bell(d,width)*envelope*depth*(.7+_Detail*.15);
      }
-     float drift=.10*sin(_Phase*8),upper=exp(-dot((p-float2(drift,.38))*float2(2.5,4.5),(p-float2(drift,.38))*float2(2.5,4.5)));
-     float lower=exp(-dot((p-float2(-drift,-.37))*float2(3.2,5.5),(p-float2(-drift,-.37))*float2(3.2,5.5)));
-     float soft=(upper+lower)*(1.12+.18*sin(_Phase*13))*(front?.27:1.05);
-     float side=exp(-dot(p*float2(1.9,2.8),p*float2(1.9,2.8)))*(front?0:.18);
-     float edge=saturate((1-r)*8);
-     a=(ribbons*.65+soft+side+_Detail*(shoulders+ribbons*.22+hot*.18))*edge*(1+_Pulse*(.22+_Detail*.13));
-     return float4(lerp(_Color.rgb,float3(1,1,.98),saturate(hot+soft*.78)),_Color.a*a);
+     float drift=.07*sin(_Phase*8);
+     float2 up=(p-float2(drift,.30))*float2(3.2,3.2),down=(p-float2(-drift,-.29))*float2(3.6,3.5);
+     float white=(exp(-dot(up,up))+exp(-dot(down,down)))*(front?.19:.95);
+     float warm=exp(-dot(p*float2(2.5,2),p*float2(2.5,2)))*(front?.025:.42);
+     float2 shot=float2(p.x*cos(_Aim)+p.y*sin(_Aim),-p.x*sin(_Aim)+p.y*cos(_Aim));
+     float gathered=bell(shot.y,.095)*exp(-pow((shot.x-.29)*3.6,2))*_Pulse;
+     float edge=1-smoothstep(.76,1,r);
+     a=(ribbons+hot*.62+white*(.86+.14*sin(_Phase*11))+warm+gathered*.6)*edge*(1+_Pulse*(.22+_Detail*.10));
+     return float4(lerp(_Color.rgb,float3(1,1,.97),saturate(hot+white)),saturate(_Color.a*a));
     }
     else {float q=i.uv.y*2-1,theta=i.uv.x*6.283185,d=frac((theta-_OrbitPhase)/6.283185);a=exp(-d*20)*exp(-q*q*9);}
     return float4(_Color.rgb,_Color.a*a);

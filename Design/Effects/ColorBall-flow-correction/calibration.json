@@ -1,0 +1,44 @@
+{
+  "before": {
+    "name": "ColorBall-Enhanced-Gameplay",
+    "frames": 228,
+    "duration": 7.6,
+    "center": [
+      475.68,
+      940.8
+    ],
+    "pitch": 128.6352,
+    "fired": 1.6333,
+    "activation": 0.9667,
+    "charge_complete": 1.6,
+    "info": {
+      "frames": 228,
+      "channels": 2,
+      "sampleRate": 48000,
+      "clipped": 0,
+      "samples": 729088,
+      "peak": 0.25815507769584656
+    }
+  },
+  "after": {
+    "name": "ColorBall-Enhanced-Proof",
+    "frames": 80,
+    "duration": 2.6666666666666665,
+    "center": [
+      475.68,
+      940.8
+    ],
+    "pitch": 128.6352,
+    "fired": 1.6333,
+    "activation": 0.9667,
+    "charge_complete": 1.6,
+    "info": {
+      "frames": 80,
+      "channels": 2,
+      "sampleRate": 48000,
+      "clipped": 0,
+      "samples": 256000,
+      "peak": 0.21704813838005066
+    }
+  }
+}

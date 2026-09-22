@@ -1,0 +1,51 @@
+Presentation profile: Enhanced; same live gameplay, target selection and Rocket handoff.
+PASS Normal 1x TimeScale
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Runtime V5 presentation and local materials connected
+PASS Runtime pooled actor captured Enhanced profile
+Runtime body=Assets/Boosters/ColorBall/V5/Materials/Luminous body.mat; halo=Assets/Boosters/ColorBall/V5/Materials/Charged white halo.mat
+PASS Runtime V5 beam pool uses the connected local shader
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS Short proof reaches multiple unique hit/conversion events
+PASS Proof ends before Rocket handoff
+PASS V4 .62s charge preserved
+PASS Rigid shared shell transforms and seconds-based charged rotation sampled throughout the proof
+PASS Actual game audio capture has zero clipped samples
+ColorBall-Enhanced-Proof audio peak=0.2170481
+ColorBall-Enhanced-Proof: targets=7; 30 FPS fixed-step recording (not a performance result); wall-frame mean FPS=18.32; median FPS=18.50; p95 ms=60.24; rigid samples=50; steady spin samples=31
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Runtime V5 presentation and local materials connected
+PASS Runtime pooled actor captured Enhanced profile
+Runtime body=Assets/Boosters/ColorBall/V5/Materials/Luminous body.mat; halo=Assets/Boosters/ColorBall/V5/Materials/Charged white halo.mat
+PASS Runtime V5 beam pool uses the connected local shader
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS Short proof reaches multiple unique hit/conversion events
+PASS Proof ends before Rocket handoff
+PASS V4 .62s charge preserved
+PASS Rigid shared shell transforms and seconds-based charged rotation sampled throughout the proof
+rigid-actual-30fps: targets=7; uncaptured actual 30 FPS check; wall-frame mean FPS=29.96; median FPS=29.99; p95 ms=34.38; rigid samples=51; steady spin samples=32
+PASS Actual 30 FPS median achieved
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Runtime V5 presentation and local materials connected
+PASS Runtime pooled actor captured Enhanced profile
+Runtime body=Assets/Boosters/ColorBall/V5/Materials/Luminous body.mat; halo=Assets/Boosters/ColorBall/V5/Materials/Charged white halo.mat
+PASS Runtime V5 beam pool uses the connected local shader
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS Short proof reaches multiple unique hit/conversion events
+PASS Proof ends before Rocket handoff
+PASS V4 .62s charge preserved
+PASS Rigid shared shell transforms and seconds-based charged rotation sampled throughout the proof
+rigid-actual-60fps: targets=7; uncaptured actual 60 FPS check; wall-frame mean FPS=59.98; median FPS=54.49; p95 ms=23.77; rigid samples=101; steady spin samples=63
+PASS Actual 60 FPS median achieved
+PASS Repeated short proof does not grow actor pool
+PASS Cancellation clears the operation and all local effects/audio
+PASS Normal player data restored
+PASS Pools clean on session exit
+PASS No new console errors
+PASS

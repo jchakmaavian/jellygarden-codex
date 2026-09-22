@@ -41,7 +41,8 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             var tint=referenceV5?new Color(1,.85f,.44f):f.tint;tint.a=(referenceV5?.94f:.82f)*fade;
             Paint(f.outer,p,new Vector3(length,(referenceV5?.34f:.225f)*cell,1),angle,tint);
             Paint(f.inner,p+Vector3.back*.01f,new Vector3(length,(referenceV5?.34f:.095f)*cell,1),angle,new Color(1,.99f,.95f,fade));
-            Paint(f.head,f.from+direction*end+Vector3.back*.02f,referenceV5?new Vector3(.30f,.16f,1)*cell:Vector3.one*(cell*.30f),referenceV5?angle:angle+45,new Color(1,.98f,.82f,fade));
+            Paint(f.head,f.from+direction*end+Vector3.back*.02f,referenceV5?new Vector3(.42f,.25f,1)*cell:Vector3.one*(cell*.30f),referenceV5?angle:angle+45,new Color(1,.98f,.82f,fade));
+            if(referenceV5){f.head.GetPropertyBlock(props);props.SetFloat("_Leading",1);f.head.SetPropertyBlock(props);}
             if(referenceV5)for(int layer=0;layer<2;layer++){var r=layer==0?f.outer:f.inner;r.GetPropertyBlock(props);props.SetFloat("_Phase",f.age);props.SetFloat("_Travel",progress);props.SetFloat("_After",after);props.SetFloat("_LengthCells",distance/cell);props.SetFloat("_Detail",f.settings?f.settings.detail:0);r.SetPropertyBlock(props);}
         }
         public static void Pulse(Vector3 p,float size,float life,Color tint){Prewarm();instance.Emit(p,Vector3.zero,size,life,tint,false);}
@@ -53,9 +54,9 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         public static void Stars(Vector3 p,int count,float radius){Prewarm();float cell=ColorBallVisualV4.CellSize;for(int i=0;i<count;i++){float a=instance.Range(0,Mathf.PI*2);Vector3 dir=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);instance.Emit(p+dir*cell*radius,dir*cell*.22f,instance.Range(.10f,.18f),instance.Range(.18f,.32f),i%3==0?new Color(1,.84f,.34f):new Color(1,1,.90f),true);}}
         public static void Contact(Vector3 p,int color){
             Prewarm();if(!instance.referenceV5){Spark(p,.19f,.085f,Color.white);return;}
-            Pulse(p,.38f,.085f,new Color(1,1,.94f,1.05f));Spark(p,.29f,.12f,new Color(1,1,.91f));
+            Pulse(p,.38f,.085f,new Color(1,1,.94f,.85f));Spark(p,.21f,.12f,new Color(1,1,.91f));
             // Color remains a local visual parameter; authoritative target conversion stays in the director.
-            instance.Emit(p,Vector3.zero,.62f,.22f,new Color(1,.86f,.44f,.95f),false,true);
+            instance.Emit(p,Vector3.zero,.85f,.22f,new Color(1,.86f,.44f,.95f),false,true);
         }
         public static void TargetFlash(Vector3 p){Pulse(p,.48f,.12f,new Color(1,.95f,.77f,.7f));Spark(p,instance&&instance.referenceV5?.31f:.43f,.13f,Color.white);}
         public static void Converted(Vector3 p){Spark(p+Vector3.up*ColorBallVisualV4.CellSize*.25f,.26f,.19f,new Color(1,.92f,.56f));}
