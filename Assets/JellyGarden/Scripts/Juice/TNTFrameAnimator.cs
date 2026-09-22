@@ -21,8 +21,12 @@ namespace JellyGarden.Scripts.Juice
         /// sequence frame and each beat (fuse, ignition, overshoot, rebound, settle) is legible.
         /// </summary>
         public const float RevealDuration = FrameCount / SourceFps;
-        /// <summary>The Reveal opens this many times the settled board size, then eases into the cell.</summary>
-        public const float RevealZoom = 3f;
+        /// <summary>
+        /// Peak size of the Reveal overshoot, as a multiple of the settled board size. Measured off the
+        /// Royal Match reference: its barrel settles at 106 px and peaks at 125 px, so 1.18. The TNT
+        /// never covers more than its own cell. This used to be 3, which towered over the board.
+        /// </summary>
+        public const float RevealZoom = 1.18f;
         /// <summary>
         /// Height of the settled TNT's visual centre above the barrel-base pivot, in sprite units:
         /// frames 117-120 span rows 139-484 of the 512 canvas, so the centre is 168.5 px up at 100 PPU.
@@ -37,24 +41,25 @@ namespace JellyGarden.Scripts.Juice
         const int RevealSortingBoost = 6;
 
         /// <summary>
-        /// 3.0 -> 2.2 -> 1.5 -> 1.1 -> 1.0 over the tail of the Reveal, on smooth (ease-in-out)
-        /// tangents and flat at both ends, so the TNT never snaps between sizes.
+        /// The reference overshoot, sampled from its frames and mapped onto this Reveal clock: the art
+        /// reaches full size, pops to 1.18, compresses to 0.88, rebounds once and is settled by 0.43 s.
+        /// The authored sequence already plays its own appearance in the first frames, so this only
+        /// adds the elastic response on top rather than a second growth.
         /// </summary>
         static readonly AnimationCurve zoomCurve = BuildZoomCurve();
 
         static AnimationCurve BuildZoomCurve()
         {
             var curve = new AnimationCurve(
-                new Keyframe(0f, RevealZoom), new Keyframe(.62f, RevealZoom),
-                new Keyframe(.74f, 2.2f), new Keyframe(.84f, 1.5f),
-                new Keyframe(.93f, 1.1f), new Keyframe(1f, 1f));
+                new Keyframe(0f, 1f), new Keyframe(.050f, RevealZoom), new Keyframe(.075f, 1.09f),
+                new Keyframe(.100f, .88f), new Keyframe(.130f, 1.05f), new Keyframe(.165f, .99f),
+                new Keyframe(.215f, 1f), new Keyframe(1f, 1f));
             for (int i = 0; i < curve.length; i++) curve.SmoothTangents(i, 0);
-            // The hold has to be flat at both of its keys. Smoothed tangents across two equal values
-            // bulge the segment between them, which pushed the opening size up to 3.3x before it fell.
-            Flatten(curve, 0, true, true);
-            Flatten(curve, 1, true, true);
-            // Settle into the cell without undershooting.
-            Flatten(curve, curve.length - 1, true, false);
+            // Smoothed tangents across two equal values bulge the segment between them, so both keys
+            // of the settled hold have to be flat or the TNT swells again after it has landed.
+            Flatten(curve, curve.length - 2, true, true);
+            Flatten(curve, curve.length - 1, true, true);
+            Flatten(curve, 0, true, false);
             return curve;
         }
 
@@ -67,7 +72,8 @@ namespace JellyGarden.Scripts.Juice
         }
 
         /// <summary>Size multiplier over the Reveal, where <paramref name="t"/> is 0 to 1. 1 is board size.</summary>
-        public static float ZoomAt(float t) => Mathf.Max(1f, zoomCurve.Evaluate(Mathf.Clamp01(t)));
+        /// <summary>Not clamped to 1: the reference compresses below board size on the rebound.</summary>
+        public static float ZoomAt(float t) => zoomCurve.Evaluate(Mathf.Clamp01(t));
         /// <summary>Frames draw the board art at 0.84 about its barrel base: art (256, 458) is frame (256, 480).</summary>
         public const float ContentScale = .84f;
         /// <summary>Sprite pivot on the barrel base (normalised, bottom-left origin).</summary>
@@ -223,7 +229,9 @@ namespace JellyGarden.Scripts.Juice
             // instead of towering out of it; both terms reach exactly the seated pose at Zoom 1.
             var pose = view.transform;
             pose.localScale = Vector3.one * (Zoom / ContentScale);
-            pose.localPosition = new Vector3(BaseOffset.x, BaseOffset.y - CentreBias * PivotToCentre * (Zoom - 1f), BaseOffset.z);
+            // Only an enlargement needs pulling back down. A squash keeps the barrel base planted, so
+            // the compression reads as weight instead of the whole TNT hopping up off the cell.
+            pose.localPosition = new Vector3(BaseOffset.x, BaseOffset.y - CentreBias * PivotToCentre * Mathf.Max(0f, Zoom - 1f), BaseOffset.z);
         }
 
         void Stop(bool showStaticArt)

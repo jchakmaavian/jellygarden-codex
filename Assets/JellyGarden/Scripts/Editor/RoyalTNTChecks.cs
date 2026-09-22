@@ -148,12 +148,14 @@ namespace RoyalThrone.Editor
                         tag+": all "+samples.Count+" rendered frames draw one TNT frame on the barrel-base pivot at the reported zoom: no static flash, missing sprite, pop or duplicate");
                     check(reveal.Zip(reveal.Skip(1),(a,b)=>b.Frame>=a.Frame).All(x=>x)&&Mathf.Abs(reveal.Count-expected)<=1&&reveal[reveal.Count-1].Frame>=110,
                         tag+": Reveal plays once, 001 to "+(reveal[reveal.Count-1].Frame+1).ToString("000")+" over "+reveal.Count+" rendered frames ("+TNTFrameAnimator.RevealDuration.ToString("0.00")+" s authored timing)");
-                    // The reward moment: open near 3x, come down without a step, and seat at exactly 1x.
+                    // The reward moment is now a restrained elastic pop, not a 3x opening: it must peak
+                    // inside the reference band, never cover a neighbouring cell, and seat at exactly 1x.
                     var zooms=reveal.Select(x=>x.Zoom).ToList();
                     float biggestStep=0;for(int i=1;i<zooms.Count;i++)biggestStep=Mathf.Max(biggestStep,Mathf.Abs(zooms[i]-zooms[i-1]));
-                    check(zooms.Count>0&&zooms[0]>=TNTFrameAnimator.RevealZoom-.01f&&zooms.Zip(zooms.Skip(1),(a,b)=>b<=a+1e-4f).All(x=>x)&&
+                    float zoomPeak=zooms.Count>0?zooms.Max():0, zoomTrough=zooms.Count>0?zooms.Min():0;
+                    check(zooms.Count>0&&zoomPeak<=1.20f&&zoomPeak>=1.10f&&zoomTrough>=.80f&&
                         biggestStep<=.12f*Mathf.Max(1,speed)&&idle.All(x=>Mathf.Abs(x.Zoom-1f)<1e-4f),
-                        tag+": Reveal opens at "+zooms[0].ToString("0.00")+"x, shrinks monotonically (largest step "+biggestStep.ToString("0.000")+") and Idle runs at exactly 1.00x");
+                        tag+": Reveal peaks at "+zoomPeak.ToString("0.00")+"x (reference 1.18x), compresses to "+zoomTrough.ToString("0.00")+"x, largest step "+biggestStep.ToString("0.000")+", Idle runs at exactly 1.00x");
                     check(idle.Count>0&&idle.All(x=>x.Phase==TNTFrameAnimator.Phase.Idle)&&idle[0].Frame==0,
                         tag+": Idle 001 directly follows the last Reveal frame, and the Reveal never replays");
                     var steps=idle.Zip(idle.Skip(1),(a,b)=>(b.Frame-a.Frame+TNTFrameAnimator.FrameCount)%TNTFrameAnimator.FrameCount).ToList();
