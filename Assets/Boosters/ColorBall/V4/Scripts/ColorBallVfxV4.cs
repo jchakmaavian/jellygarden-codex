@@ -9,7 +9,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         public Mesh quad;public Material glow,star,beam;
         public bool referenceV5;public Material beamCore;
         public sealed class Flight { internal Renderer outer,inner,head;internal Vector3 from,to,drawnSource;internal float age,duration;internal Color tint;internal ColorBallVisualV4 source;internal int sourceLease;public bool Active {get;internal set;}public bool Arrived {get;internal set;}public int Lease {get;internal set;}public float Progress=>Mathf.Clamp01(age/duration); }
-        sealed class Mote {public Renderer view;public bool active;public float age,life,size,angle;public Vector3 position,velocity;public Color tint;}
+        sealed class Mote {public Renderer view;public bool active,contact;public float age,life,size,angle;public Vector3 position,velocity;public Color tint;}
         const int BeamCapacity=32,MoteCapacity=192;Flight[] flights;Mote[] motes;int cursor;
         static ColorBallVfxV4 instance;MaterialPropertyBlock props;
         void Awake(){props=new MaterialPropertyBlock();}
@@ -40,24 +40,24 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             // Measured off the reference: the saturated white core is about a tenth of a cell across
             // and the coloured glow a little over a fifth. V3 ran a 0.027 cell core, which reads as a
             // hairline over a bright board, so both layers are widened and the glow carries more alpha.
-            var tint=referenceV5?new Color(1,.87f,.49f):f.tint;tint.a=(referenceV5?.94f:.82f)*fade;
+            var tint=referenceV5?new Color(1,.81f,.31f):f.tint;tint.a=(referenceV5?.94f:.82f)*fade;
             Paint(f.outer,p,new Vector3(length,.225f*cell,1),angle,tint);
             Paint(f.inner,p+Vector3.back*.01f,new Vector3(length,.095f*cell,1),angle,new Color(1,.99f,.95f,fade));
             Paint(f.head,f.from+direction*end+Vector3.back*.02f,referenceV5?new Vector3(.40f,.19f,1)*cell:Vector3.one*(cell*.30f),referenceV5?angle:angle+45,new Color(1,.98f,.82f,fade));
-            if(referenceV5){f.outer.GetPropertyBlock(props);props.SetFloat("_Phase",f.age);f.outer.SetPropertyBlock(props);f.inner.GetPropertyBlock(props);props.SetFloat("_Phase",f.age);f.inner.SetPropertyBlock(props);}
+            if(referenceV5)for(int layer=0;layer<2;layer++){var r=layer==0?f.outer:f.inner;r.GetPropertyBlock(props);props.SetFloat("_Phase",f.age);props.SetFloat("_Travel",progress);props.SetFloat("_After",after);props.SetFloat("_LengthCells",distance/cell);r.SetPropertyBlock(props);}
         }
         public static void Pulse(Vector3 p,float size,float life,Color tint){Prewarm();instance.Emit(p,Vector3.zero,size,life,tint,false);}
         public static void Spark(Vector3 p,float size,float life,Color tint){Prewarm();instance.Emit(p,Vector3.zero,size,life,tint,true);}
-        void Emit(Vector3 p,Vector3 velocity,float size,float life,Color tint,bool isStar){
-            for(int i=0;i<MoteCapacity;i++){var m=motes[(cursor+i)%MoteCapacity];if(m.active)continue;cursor=(cursor+i+1)%MoteCapacity;m.active=true;m.age=0;m.life=life;m.size=size;m.position=p+Vector3.back*.94f;m.velocity=velocity;m.tint=tint;m.angle=Range(-45,45);m.view.sharedMaterial=isStar?star:glow;Draw(m);return;}
+        void Emit(Vector3 p,Vector3 velocity,float size,float life,Color tint,bool isStar,bool contact=false){
+            for(int i=0;i<MoteCapacity;i++){var m=motes[(cursor+i)%MoteCapacity];if(m.active)continue;cursor=(cursor+i+1)%MoteCapacity;m.active=true;m.contact=contact;m.age=0;m.life=life;m.size=size;m.position=p+Vector3.back*.94f;m.velocity=velocity;m.tint=tint;m.angle=Range(-45,45);m.view.sharedMaterial=contact?beam:isStar?star:glow;Draw(m);return;}
         }
-        void Draw(Mote m){float t=Mathf.Clamp01(m.age/m.life),fade=1-Mathf.SmoothStep(0,1,t);var c=m.tint;c.a*=fade;Paint(m.view,m.position+m.velocity*m.age,Vector3.one*(ColorBallVisualV4.CellSize*m.size*Mathf.Lerp(1,.45f,t)),m.angle+t*18,c);}
+        void Draw(Mote m){float t=Mathf.Clamp01(m.age/m.life),fade=1-Mathf.SmoothStep(0,1,m.contact?(m.age-.055f)/(m.life-.055f):t);var c=m.tint;c.a*=fade;Paint(m.view,m.position+m.velocity*m.age,Vector3.one*(ColorBallVisualV4.CellSize*m.size*(m.contact?1:Mathf.Lerp(1,.45f,t))),m.angle+t*18,c);if(m.contact){m.view.GetPropertyBlock(props);props.SetFloat("_Contact",1);props.SetFloat("_ContactAge",m.age);m.view.SetPropertyBlock(props);}}
         public static void Stars(Vector3 p,int count,float radius){Prewarm();float cell=ColorBallVisualV4.CellSize;for(int i=0;i<count;i++){float a=instance.Range(0,Mathf.PI*2);Vector3 dir=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);instance.Emit(p+dir*cell*radius,dir*cell*.22f,instance.Range(.10f,.18f),instance.Range(.18f,.32f),i%3==0?new Color(1,.84f,.34f):new Color(1,1,.90f),true);}}
         public static void Contact(Vector3 p,int color){
             Prewarm();if(!instance.referenceV5){Spark(p,.19f,.085f,Color.white);return;}
-            Pulse(p,.40f,.10f,new Color(1,1,.94f,1.25f));Spark(p,.38f,.12f,new Color(1,1,.91f));
+            Pulse(p,.40f,.085f,new Color(1,1,.94f,1.15f));Spark(p,.38f,.12f,new Color(1,1,.91f));
             // Color remains a local visual parameter; authoritative target conversion stays in the director.
-            Pulse(p,.62f,.20f,new Color(1,.89f,.52f,.92f));
+            instance.Emit(p,Vector3.zero,.62f,.22f,new Color(1,.86f,.44f,.95f),false,true);
         }
         public static void TargetFlash(Vector3 p){Pulse(p,.48f,.12f,new Color(1,.95f,.77f,.7f));Spark(p,instance&&instance.referenceV5?.42f:.43f,.13f,Color.white);}
         public static void Converted(Vector3 p){Spark(p+Vector3.up*ColorBallVisualV4.CellSize*.25f,.26f,.19f,new Color(1,.92f,.56f));}

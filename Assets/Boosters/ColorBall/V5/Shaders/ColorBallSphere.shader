@@ -25,7 +25,7 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
     float cs=cos(angle),sn=sin(angle);float3 surface=n*cs+cross(axis,n)*sn+axis*dot(axis,n)*(1-cs);
     float latitude=asin(clamp(surface.y,-1,1)), longitude=atan2(surface.x,surface.z);
     // Smooth latitude compression/expansion makes streaks bunch and spread over a curved body.
-    latitude+=_Charge*.060*sin(latitude*5+_MotionPhase*19)*( .55+.45*cos(longitude));
+    latitude+=_Charge*(.10*sin(latitude*4.4+_MotionPhase*12)*(.55+.45*cos(longitude))+.025*sin(longitude*2-_MotionPhase*9));
     // Fewer, larger beads than V3. Once the surface smears, a dense grid closes into thin stripes;
     // the reference keeps distinct fat blobs with lighter gaps between them.
     float row=floor((latitude+1.570796)/.60);
@@ -33,7 +33,7 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
     float columns=round(8.5*cos(ly));columns=max(3,columns);
     float u=longitude/6.283185*columns+fmod(row,2)*.5;
     float column=floor(u+.5);float2 q=float2((u-column)*6.283185/columns*cos(ly),latitude-ly)/.225;
-    q.y/=1+_Charge*.13*sin(row*2.2+_MotionPhase*17);
+    q.y/=1+_Charge*(.20*sin(row*2.2+_MotionPhase*12)+.055*cos(longitude*2+_MotionPhase*9));
     float r=dot(q,q),aa=max(fwidth(r),.025);float a=1-smoothstep(1-aa,1+aa,r);
     float z=sqrt(saturate(1-r));
     float3 bump=normalize(n+float3(q.x,q.y,0)*.28+float3(0,0,z*.45));
@@ -45,9 +45,10 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
     return float4(rgb,a);
    }
    float4 frag(v2f i):SV_Target{
-    float2 p=(i.uv-.5)*2;
+    float2 p=(i.uv-.5)*2*(1+_Charge*.075);
     // Both artwork layers receive the same deformation and pivot. Idle remains untouched.
-    p.y-=_Charge*.040*sin(p.x*4.2+_MotionPhase*23)*(1-p.x*p.x);
+    p.x/=1+_Charge*.035*sin(p.y*8+_MotionPhase*14);
+    p.y-=_Charge*.065*sin(p.x*4.2+_MotionPhase*16)*(1-p.x*p.x);
     // Widen is applied to the quad transform, not here: the sphere maths stays a unit sphere so the
     // streaks keep curving along their own latitude instead of being a flat horizontal stretch.
     float r=dot(p,p);float aa=max(fwidth(r),.004);

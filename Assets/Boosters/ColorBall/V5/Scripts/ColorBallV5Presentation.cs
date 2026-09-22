@@ -36,8 +36,8 @@ namespace RoyalThrone.Boosters.ColorBall.V5
             float charge=view.Charge,source=view.SourcePulse;
             float alive=Ease(charge)*(view.Current==ColorBallVisualV4.Phase.Finish?1-Ease(view.Age/.20f):1);
             // Bounded, continuous waves in seconds; no random frame jitter or RPM changes.
-            Vector3 offset=new Vector3(.018f*Mathf.Sin(clock*37)+.009f*Mathf.Sin(clock*23),.025f*Mathf.Sin(clock*31)+.008f*Mathf.Sin(clock*19),0)*alive;
-            var tilt=Quaternion.Euler(0,0,(2.1f*Mathf.Sin(clock*29)+.8f*Mathf.Sin(clock*17))*alive);
+            Vector3 offset=new Vector3(.018f*Mathf.Sin(clock*24)+.009f*Mathf.Sin(clock*17),.024f*Mathf.Sin(clock*21)+.008f*Mathf.Sin(clock*13),0)*alive;
+            var tilt=Quaternion.Euler(0,0,(3.2f*Mathf.Sin(clock*16)+.8f*Mathf.Sin(clock*25))*alive);
             view.bodyLayer.localPosition=view.colorSurfaceLayer.localPosition=offset;
             view.bodyLayer.localRotation=view.colorSurfaceLayer.localRotation=tilt;
             view.vfxRoot.localPosition=view.beamOrigin.localPosition=view.core.transform.localPosition=offset;
@@ -50,12 +50,12 @@ namespace RoyalThrone.Boosters.ColorBall.V5
                 Light(view.originFlare,new Color(1,.97f,.84f,source*.90f),new Vector3(.64f,.34f,1));
             }
             var scale=view.bodyLayer.localScale;
-            scale.x*=1+.023f*alive*Mathf.Sin(clock*23);scale.y*=1+alive*(.10f+.060f*Mathf.Sin(clock*27));
+            scale.x*=1+.028f*alive*Mathf.Sin(clock*13);scale.y*=1+alive*(.22f+.095f*Mathf.Sin(clock*16)+.025f*Mathf.Sin(clock*25));
             view.bodyLayer.localScale=view.colorSurfaceLayer.localScale=scale;
             Surface(view.body);Surface(view.energy);
-            Light(view.halo,new Color(1,.94f,.73f,charge*(.96f+.24f*source)),new Vector3(2.20f,1.85f,1));
-            Light(auraFront,new Color(1,.98f,.87f,charge*(.64f+.30f*source)),new Vector3(1.93f,1.43f,1));
-            Light(view.core,new Color(1,1,.96f,charge*(.48f+.22f*source)),new Vector3(.68f,.36f,1));
+            Light(view.halo,new Color(1,.86f,.48f,charge*(.86f+.30f*source)),new Vector3(2.24f,1.92f+.10f*alive*Mathf.Sin(clock*16),1));
+            Light(auraFront,new Color(1,.96f,.77f,charge*(.60f+.27f*source)),new Vector3(2.04f,1.68f+.09f*alive*Mathf.Sin(clock*16),1));
+            Light(view.core,new Color(1,1,.96f,charge*(.36f+.28f*source)),new Vector3(.62f,.38f,1));
             if(view.Current!=ColorBallVisualV4.Phase.Finish)return;
             float t=view.Age;
             float contract=Ease(t/.18f),fade=1-Ease((t-.20f)/.065f);

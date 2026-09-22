@@ -19,6 +19,8 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
             var body=Mat("Luminous body",sphere,0);var energy=Mat("Rotating bands",sphere,1);
             var glow=Mat("Soft light",light,0);var star=Mat("Four point star",light,1);var rim=Mat("Finish rim",light,2);
             var beam=Mat("Connected beam glow",light,3);var beamCore=Mat("Connected white core",light,5);var halo=Mat("Charged white halo",light,6);
+            // Retain warm shoulders on the bright blue board. Core/aura still use additive light.
+            beam.SetFloat("_DstBlend",(float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
             var aura=Mat("Luminous aura edges",light,7);
             var root=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(Base+"Prefabs/Resources/ColorBall-V4.prefab"));
             root.name="ColorBall-V5";var v=root.GetComponent<ColorBallVisualV4>();v.referenceV5=true;
