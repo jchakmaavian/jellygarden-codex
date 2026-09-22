@@ -16,7 +16,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
 {
     public static class ColorBallV5Checks
     {
-        const string Root=ColorBallV5Builder.Root+"Animation/Review/";
+        const string Root=ColorBallV5Builder.Root+"Animation/Review/V5.1/";
         static bool running,record;static RoyalQaService qa;
         static int fired,hits,converted,expected,lease,launches,frames;
         static float begin,activation,chargeAt,firstContact,lastContact,finishAt,completed;
@@ -28,7 +28,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
         static void Proof()=>Run(true);
         [MenuItem("Tools/Royal Throne/Color Ball V5/Combo and actual frame rate checks")]
         static void Full()=>Run(false);
-        static void Run(bool proof){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready){Debug.LogError("Color Ball V5: enter the game before the focused test.");return;}running=true;notes.Clear();events.Clear();errors.Clear();RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite(proof));}
+        static void Run(bool proof){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready){Debug.LogError("Color Ball V5.1: enter the game before the focused test.");return;}Directory.CreateDirectory(Root);running=true;notes.Clear();events.Clear();errors.Clear();RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite(proof));}
         static void Check(bool condition,string message){if(!condition)throw new Exception("Color Ball V5: "+message);notes.Add("PASS "+message);}
         static void Error(string m,string stack,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)errors.Add(m+"\n"+stack);}
         static void Event(ColorBallEvent e,ColorBallVisualV4 v,Vector3 p){
@@ -45,8 +45,12 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
         static IEnumerator Practice(){qa.Request("Practice board");while(qa.Busy)yield return null;qa.Visible=false;Check(qa.Status.StartsWith("Completed"),"Disposable practice fixture opens");yield return new WaitForSeconds(.5f);}
         static void Sample(){
             frames++;frameTimes.Add(Time.unscaledDeltaTime);
+            if(ColorBallVfxV4.AttachmentError>ColorBallVisualV4.CellSize*.001f)throw new Exception("Beam detached from animated source");
             foreach(var v in Object.FindObjectsByType<ColorBallVisualV4>())if(v.Current!=ColorBallVisualV4.Phase.Free){
                 if(v.bodyLayer.localScale!=v.colorSurfaceLayer.localScale||v.bodyLayer.position!=v.colorSurfaceLayer.position)throw new Exception("Body/surface pivot mismatch");
+                if(v.bodyLayer.localRotation!=v.colorSurfaceLayer.localRotation)throw new Exception("Body/surface tilt mismatch");
+                if(v.bodyLayer.localPosition.magnitude>.05f)throw new Exception("Visual source drifts beyond bounded tremble");
+                if(Vector3.Distance(v.transform.position,v.Anchor+Vector3.back*.7f)>.001f)throw new Exception("Logical cell anchor moved");
                 if(!v.body.sharedMaterial.shader.isSupported||!v.energy.sharedMaterial.shader.isSupported)throw new Exception("Unsupported shader");
                 if(v.Current==ColorBallVisualV4.Phase.Charge||v.Current==ColorBallVisualV4.Phase.Charged||v.Current==ColorBallVisualV4.Phase.Finish){if(RoyalPowerupDirector.Get.RocketLaunches!=launches)throw new Exception("Premature Rocket launch");}
             }
@@ -88,8 +92,15 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
             Application.logMessageReceived+=Error;ColorBallVisualV4.Event+=Event;
             try{
                 Check(Mathf.Approximately(Time.timeScale,1),"Normal 1x TimeScale");if(RoyalSave.Testing)yield return qa.EndSession();qa.StartSession();qa.Visible=false;qa.Counters=false;qa.Loop=false;qa.Level=1;RoyalSave.SetInt("Sound",1);
-                Time.captureDeltaTime=1f/30;yield return Combo(proof?"Short-proof":"ColorBall-V5-Gameplay",proof,true,false,30);
-                if(!proof){int pool=ColorBallVisualV4.PoolSize;Time.captureDeltaTime=0;QualitySettings.vSyncCount=0;Application.targetFrameRate=30;yield return Combo("actual-30fps-high-target",false,false,true,30);Application.targetFrameRate=60;yield return Combo("actual-60fps-reuse",false,false,false,60);Check(ColorBallVisualV4.PoolSize==pool,"Repeated use does not grow visual pool");}
+                Time.captureDeltaTime=1f/30;yield return Combo(proof?"Short-proof":"ColorBall-V5.1-Gameplay",proof,true,false,30);
+                if(!proof){int pool=ColorBallVisualV4.PoolSize;Time.captureDeltaTime=0;QualitySettings.vSyncCount=0;
+                    foreach(int rate in new[]{30,60}){Application.targetFrameRate=rate;yield return Combo("actual-"+rate+"fps-reuse",false,false,false,rate);yield return Combo("actual-"+rate+"fps-high-target",false,false,true,rate);}
+                    Check(ColorBallVisualV4.PoolSize==pool,"Repeated use does not grow visual pool");
+                    var cancelled=ColorBallVisualV4.Take(LevelManager.THIS.GetSquare(3,3).transform.position);cancelled.Activate();yield return new WaitForSeconds(.7f);ColorBallVisualV4.Clear();yield return null;
+                    Check(ColorBallVfxV4.Active==0&&ColorBallAudioV4.Active==0,"Cancellation stops all local effects/audio");
+                    var reused=ColorBallVisualV4.Take(cancelled.Anchor,true);yield return new WaitForSeconds(.8f);
+                    Check(reused.bodyLayer.localPosition==Vector3.zero&&reused.bodyLayer.localRotation==Quaternion.identity&&reused.beamOrigin.localPosition==Vector3.zero,"Pooled reveal/Idle restores shared pivot and beam origin");reused.Release();
+                }
                 ColorBallVisualV4.Clear();yield return qa.EndSession();yield return null;
                 Check(!RoyalSave.Testing&&InitScript.Gems==coins&&InitScript.lifes==lives,"Normal player data restored");Check(ColorBallVisualV4.Active==0&&ColorBallVfxV4.Active==0&&ColorBallAudioV4.Active==0,"Pools clean on session exit");Check(errors.Count==0,"No new console errors");pass=true;
             }finally{

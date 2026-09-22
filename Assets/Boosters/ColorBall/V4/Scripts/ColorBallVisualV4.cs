@@ -41,6 +41,9 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         public float OrbitAngle {get;private set;} public float OrbitSpeed {get;private set;}
         public float Cell {get;private set;} public int Lease {get;private set;}
         public Vector3 Anchor {get;private set;}
+        // A read-only presentation anchor. Targeting continues to use Anchor.
+        public Vector3 VisibleOrigin=>beamOrigin?beamOrigin.position:Anchor;
+        public static ColorBallVisualV4 SourceAt(Vector3 anchor){foreach(var v in pool)if(v&&v.referenceV5&&(v.Current==Phase.Charge||v.Current==Phase.Charged)&&(v.Anchor-anchor).sqrMagnitude<.001f)return v;return null;}
         public bool AwaitingClaim {get;private set;} float claimAge;
         public float SourcePulse=>Mathf.Sin(Mathf.Clamp01(sourceAge/.14f)*Mathf.PI);
         public void HoldForClaim(){AwaitingClaim=true;claimAge=0;}

@@ -11,7 +11,7 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
    #pragma target 3.0
    #include "UnityCG.cginc"
    struct v2f { float4 pos:SV_POSITION; float2 uv:TEXCOORD0; };
-   float _Layer,_Opacity,_Angle,_Exposure,_Charge,_Samples,_Widen,_Core,_Energy;
+   float _Layer,_Opacity,_Angle,_Exposure,_Charge,_Samples,_Widen,_Core,_Energy,_MotionPhase;
    v2f vert(appdata_base v){v2f o;float morph=smoothstep(.35,1,_Charge);v.vertex.xy*=lerp(float2(1,1),float2(1.10,.81),morph);o.pos=UnityObjectToClipPos(v.vertex);o.uv=v.texcoord;return o;}
    float3 candy(float k){
     k=fmod(k,6);
@@ -23,7 +23,9 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
     // Inverse projection onto the sphere: circles foreshorten at the silhouette and wrap behind it.
     float3 axis=normalize(lerp(float3(.22,1,.10),float3(.045,1,.045),_Charge));
     float cs=cos(angle),sn=sin(angle);float3 surface=n*cs+cross(axis,n)*sn+axis*dot(axis,n)*(1-cs);
-    float latitude=asin(surface.y), longitude=atan2(surface.x,surface.z);
+    float latitude=asin(clamp(surface.y,-1,1)), longitude=atan2(surface.x,surface.z);
+    // Smooth latitude compression/expansion makes streaks bunch and spread over a curved body.
+    latitude+=_Charge*.060*sin(latitude*5+_MotionPhase*19)*( .55+.45*cos(longitude));
     // Fewer, larger beads than V3. Once the surface smears, a dense grid closes into thin stripes;
     // the reference keeps distinct fat blobs with lighter gaps between them.
     float row=floor((latitude+1.570796)/.60);
@@ -31,6 +33,7 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
     float columns=round(8.5*cos(ly));columns=max(3,columns);
     float u=longitude/6.283185*columns+fmod(row,2)*.5;
     float column=floor(u+.5);float2 q=float2((u-column)*6.283185/columns*cos(ly),latitude-ly)/.225;
+    q.y/=1+_Charge*.13*sin(row*2.2+_MotionPhase*17);
     float r=dot(q,q),aa=max(fwidth(r),.025);float a=1-smoothstep(1-aa,1+aa,r);
     float z=sqrt(saturate(1-r));
     float3 bump=normalize(n+float3(q.x,q.y,0)*.28+float3(0,0,z*.45));
@@ -43,6 +46,8 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
    }
    float4 frag(v2f i):SV_Target{
     float2 p=(i.uv-.5)*2;
+    // Both artwork layers receive the same deformation and pivot. Idle remains untouched.
+    p.y-=_Charge*.040*sin(p.x*4.2+_MotionPhase*23)*(1-p.x*p.x);
     // Widen is applied to the quad transform, not here: the sphere maths stays a unit sphere so the
     // streaks keep curving along their own latitude instead of being a flat horizontal stretch.
     float r=dot(p,p);float aa=max(fwidth(r),.004);
@@ -82,8 +87,9 @@ Shader "RoyalThrone/ColorBallV5/Sphere"
     rgb+=core*.45;
     float a=saturate(sum.a*lerp(1,1.6,_Charge)+core*.85);
     // Exposure still follows V4 phase. A moving specular ridge restores depth through the streaks.
-    float glint=pow(saturate(dot(n,normalize(float3(.35*sin(_Angle*.13),.55,1)))),30)*_Charge;
+    float glint=pow(saturate(dot(n,normalize(float3(.40*sin(_MotionPhase*12),.48+.14*sin(_MotionPhase*17),1)))),30)*_Charge;
     rgb+=glint*.50;
+    rgb+=float3(1,.96,.77)*pow(1-n.z,4)*_Charge*(.14+.12*sin(_MotionPhase*21+p.y*7));
     return float4(rgb,a*edge*_Opacity);
    }
    ENDCG

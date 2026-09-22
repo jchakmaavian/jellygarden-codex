@@ -1,0 +1,74 @@
+PASS Normal 1x TimeScale
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS Live combo and Rocket payoff finish
+PASS Every selected target converted once: 15
+PASS Existing Rockets launch after Color Ball finish
+PASS No beam/voice leftovers
+PASS Final .46s envelope preserves handoff time
+PASS Board input restored
+PASS V4 .62s charge preserved
+PASS Actual game audio capture has zero clipped samples
+ColorBall-V5.1-Gameplay audio peak=0.263245
+ColorBall-V5.1-Gameplay: targets=15; wall-frame mean FPS=18.96; median FPS=19.60; p95 ms=63.07
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS Live combo and Rocket payoff finish
+PASS Every selected target converted once: 15
+PASS Existing Rockets launch after Color Ball finish
+PASS No beam/voice leftovers
+PASS Final .46s envelope preserves handoff time
+PASS Board input restored
+PASS V4 .62s charge preserved
+actual-30fps-reuse: targets=15; wall-frame mean FPS=30.00; median FPS=29.97; p95 ms=35.71
+PASS Actual 30 FPS median achieved
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS Live combo and Rocket payoff finish
+PASS Every selected target converted once: 31
+PASS Existing Rockets launch after Color Ball finish
+PASS No beam/voice leftovers
+PASS Final .46s envelope preserves handoff time
+PASS Board input restored
+PASS V4 .62s charge preserved
+actual-30fps-high-target: targets=31; wall-frame mean FPS=29.98; median FPS=30.13; p95 ms=37.02
+PASS Actual 30 FPS median achieved
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS Live combo and Rocket payoff finish
+PASS Every selected target converted once: 15
+PASS Existing Rockets launch after Color Ball finish
+PASS No beam/voice leftovers
+PASS Final .46s envelope preserves handoff time
+PASS Board input restored
+PASS V4 .62s charge preserved
+actual-60fps-reuse: targets=15; wall-frame mean FPS=59.94; median FPS=59.37; p95 ms=22.15
+PASS Actual 60 FPS median achieved
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS Live combo and Rocket payoff finish
+PASS Every selected target converted once: 31
+PASS Existing Rockets launch after Color Ball finish
+PASS No beam/voice leftovers
+PASS Final .46s envelope preserves handoff time
+PASS Board input restored
+PASS V4 .62s charge preserved
+actual-60fps-high-target: targets=31; wall-frame mean FPS=59.63; median FPS=59.31; p95 ms=20.67
+PASS Actual 60 FPS median achieved
+PASS Repeated use does not grow visual pool
+PASS Cancellation stops all local effects/audio
+PASS Pooled reveal/Idle restores shared pivot and beam origin
+PASS Normal player data restored
+PASS Pools clean on session exit
+PASS No new console errors
+PASS
