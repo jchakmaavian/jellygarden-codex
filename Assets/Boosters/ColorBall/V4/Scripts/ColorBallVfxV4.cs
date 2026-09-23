@@ -9,24 +9,29 @@ namespace RoyalThrone.Boosters.ColorBall.V4
     {
         public Mesh quad;public Material glow,star,beam;
         public bool referenceV5;public Material beamCore;
-        public sealed class Flight { internal Renderer outer,inner,head;internal Vector3 from,to,drawnSource;internal float age,duration;internal Color tint;internal ColorBallVisualV4 source;internal int sourceLease;internal ColorBallPresentationSettings settings;public bool Active {get;internal set;}public bool Arrived {get;internal set;}public int Lease {get;internal set;}public float Progress=>Mathf.Clamp01(age/duration); }
+        public sealed class Flight { internal Renderer outer,inner,head,sourceFlare;internal bool visible;internal float opacity;internal Vector3 from,to,drawnSource;internal float age,duration;internal Color tint;internal ColorBallVisualV4 source;internal int sourceLease;internal ColorBallPresentationSettings settings;public bool Active {get;internal set;}public bool Arrived {get;internal set;}public int Lease {get;internal set;}public float Progress=>Mathf.Clamp01(age/duration); }
         sealed class Mote {public Renderer view;public bool active,contact;public float age,life,size,angle;public Vector3 position,velocity;public Color tint;public float detail;}
         const int BeamCapacity=32,MoteCapacity=192;Flight[] flights;Mote[] motes;int cursor;
         static ColorBallVfxV4 instance;MaterialPropertyBlock props;
         void Awake(){props=new MaterialPropertyBlock();}
         readonly System.Random random=new System.Random(72894);
         public static int Peak {get;private set;}
-        public static int Active{get{int n=0;if(instance){foreach(var f in instance.flights)if(f.Active)n++;foreach(var m in instance.motes)if(m.active)n++;}return n;}}
+        public static int Active{get{int n=0;if(instance){foreach(var f in instance.flights)if(f.visible)n++;foreach(var m in instance.motes)if(m.active)n++;}return n;}}
         public static int ActiveBeams{get{int n=0;if(instance)foreach(var f in instance.flights)if(f.Active)n++;return n;}}
+        // Logical ActiveBeams retains its original .14s retirement contract. Residual light
+        // has a separate pooled visual lifetime and cannot delay the director/Rocket handoff.
+        const float LinkResidue=.46f,BeamSupportCells=.68f;
+        public static int VisibleLinks{get{int n=0;if(instance)foreach(var f in instance.flights)if(f.visible&&f.opacity>.12f&&f.Progress>.2f)n++;return n;}}
+        public static bool RootsBehindBody{get{if(instance&&instance.referenceV5)foreach(var f in instance.flights)if(f.outer.sortingOrder>=35||f.inner.sortingOrder>=35||f.head.sortingOrder>=35||f.sourceFlare.sortingOrder>=35)return false;return true;}}
         public static int PoolSize=>BeamCapacity+MoteCapacity;
-        public static float AttachmentError{get{float error=0;if(instance)foreach(var f in instance.flights)if(f.Active&&f.source&&f.source.Lease==f.sourceLease){var d=f.drawnSource-f.source.VisibleOrigin;d.z=0;error=Mathf.Max(error,d.magnitude);}return error;}}
+        public static float AttachmentError{get{float error=0;if(instance)foreach(var f in instance.flights)if(f.visible&&f.source&&f.source.Lease==f.sourceLease){var d=f.drawnSource-f.source.VisibleOrigin;d.z=0;error=Mathf.Max(error,d.magnitude);}return error;}}
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]static void Reset(){instance=null;Peak=0;}
         public static void Prewarm(){if(instance)return;var prefab=!ColorBallVisualV4.UseV4Baseline?Resources.Load<GameObject>("ColorBall-V5-VFX"):null;instance=Instantiate(prefab?prefab:Resources.Load<GameObject>("ColorBall-V4-VFX")).GetComponent<ColorBallVfxV4>();instance.Build();}
         Renderer Part(string name,Material mat,int order){var g=new GameObject(name);g.transform.SetParent(transform,false);g.AddComponent<MeshFilter>().sharedMesh=quad;var r=g.AddComponent<MeshRenderer>();r.sharedMaterial=mat;r.sortingOrder=order;r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;r.receiveShadows=false;r.enabled=false;return r;}
-        void Build(){flights=new Flight[BeamCapacity];for(int i=0;i<BeamCapacity;i++)flights[i]=new Flight{outer=Part("Colored moving tail",beam,41),inner=Part("White moving core",beamCore?beamCore:beam,42),head=Part("Traveling four point head",star,43)};motes=new Mote[MoteCapacity];for(int i=0;i<MoteCapacity;i++)motes[i]=new Mote{view=Part("Pooled Color Ball accent",star,44)};}
+        void Build(){flights=new Flight[BeamCapacity];for(int i=0;i<BeamCapacity;i++)flights[i]=new Flight{outer=Part("Colored moving tail",beam,referenceV5?30:41),inner=Part("White moving core",beamCore?beamCore:beam,referenceV5?31:42),head=Part("Traveling four point head",star,referenceV5?32:43),sourceFlare=referenceV5?Part("Aura discharge",beam,34):null};motes=new Mote[MoteCapacity];for(int i=0;i<MoteCapacity;i++)motes[i]=new Mote{view=Part("Pooled Color Ball accent",star,44)};}
         float Range(float a,float b)=>Mathf.Lerp(a,b,(float)random.NextDouble());
         static Color Tint(int c){switch(c%6){case 0:return new Color(1,.39f,.38f);case 1:return new Color(.38f,.78f,1);case 2:return new Color(1,.82f,.23f);case 3:return new Color(.43f,1,.47f);case 4:return new Color(1,.44f,.92f);default:return new Color(.61f,.51f,1);}}
-        public static Flight Launch(Vector3 from,Vector3 to,int color){Prewarm();foreach(var f in instance.flights)if(!f.Active){f.Lease++;f.Active=true;f.Arrived=false;f.age=0;f.from=from+Vector3.back*.9f;f.to=to+Vector3.back*.9f;f.tint=Tint(color);f.source=instance.referenceV5?ColorBallVisualV4.SourceAt(from):null;f.sourceLease=f.source?f.source.Lease:0;f.settings=f.source?f.source.GetComponent<ColorBallV5Presentation>().Settings:null;f.duration=Mathf.Clamp(Vector3.Distance(from,to)/ColorBallVisualV4.CellSize/17f,.14f,.37f);instance.Draw(f);return f;}return null;}
+        public static Flight Launch(Vector3 from,Vector3 to,int color){Prewarm();foreach(var f in instance.flights)if(!f.visible){f.Lease++;f.Active=f.visible=true;f.Arrived=false;f.age=0;f.from=from+Vector3.back*.9f;f.to=to+Vector3.back*.9f;f.tint=Tint(color);f.source=instance.referenceV5?ColorBallVisualV4.SourceAt(from):null;f.sourceLease=f.source?f.source.Lease:0;f.settings=f.source?f.source.GetComponent<ColorBallV5Presentation>().Settings:null;f.duration=Mathf.Clamp(Vector3.Distance(from,to)/ColorBallVisualV4.CellSize/17f,.14f,.37f);instance.Draw(f);return f;}return null;}
         void Paint(Renderer r,Vector3 p,Vector3 size,float angle,Color color){r.gameObject.layer=LevelManager.THIS.GameField.gameObject.layer;r.enabled=true;r.transform.position=p;r.transform.localScale=size;r.transform.rotation=Quaternion.Euler(0,0,angle);props.Clear();props.SetColor("_Color",color);r.SetPropertyBlock(props);}
         void Draw(Flight f){
             // Follow only the animated source endpoint. Arrival duration and target never change.
@@ -36,13 +41,24 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             float progress=Mathf.Clamp01(f.age/f.duration);float end=progress*distance;
             float tail=Mathf.Min(distance,cell*1.75f);float start=Mathf.Max(0,end-tail);
             float after=Mathf.Max(0,f.age-f.duration);start=referenceV5?0:Mathf.Lerp(start,distance,Mathf.Clamp01(after/.12f));
-            float length=Mathf.Max(.001f,end-start),fade=1-Mathf.SmoothStep(0,1,after/.14f);
+            float length=Mathf.Max(.001f,end-start);
+            // Recent links stay warm while subsequent real targets launch. New travel is strongest.
+            float fade=referenceV5?(after<=0?1:Mathf.Lerp(.76f,0,Mathf.SmoothStep(0,1,after/LinkResidue))):1-Mathf.SmoothStep(0,1,after/.14f);
+            if(referenceV5&&f.source&&f.source.Current==ColorBallVisualV4.Phase.Finish)fade*=1-Mathf.SmoothStep(0,1,f.source.Age/.10f);
+            f.opacity=fade;
             Vector3 direction=delta.normalized,p=f.from+direction*((start+end)*.5f);float angle=Mathf.Atan2(delta.y,delta.x)*Mathf.Rad2Deg;
             var tint=referenceV5?new Color(1,.85f,.44f):f.tint;tint.a=(referenceV5?.94f:.82f)*fade;
-            Paint(f.outer,p,new Vector3(length,(referenceV5?.34f:.225f)*cell,1),angle,tint);
-            Paint(f.inner,p+Vector3.back*.01f,new Vector3(length,(referenceV5?.34f:.095f)*cell,1),angle,new Color(1,.99f,.95f,fade));
+            Paint(f.outer,p,new Vector3(length,(referenceV5?BeamSupportCells:.225f)*cell,1),angle,tint);
+            Paint(f.inner,p+Vector3.back*.01f,new Vector3(length,(referenceV5?BeamSupportCells:.095f)*cell,1),angle,new Color(1,.99f,.95f,fade));
             Paint(f.head,f.from+direction*end+Vector3.back*.02f,referenceV5?new Vector3(.42f,.25f,1)*cell:Vector3.one*(cell*.30f),referenceV5?angle:angle+45,new Color(1,.98f,.82f,fade));
-            if(referenceV5){f.head.GetPropertyBlock(props);props.SetFloat("_Leading",1);f.head.SetPropertyBlock(props);}
+            if(referenceV5){
+                f.head.GetPropertyBlock(props);props.SetFloat("_Leading",1);props.SetColor("_Color",new Color(1,.98f,.82f,fade*(1-Mathf.SmoothStep(0,1,after/.065f))));f.head.SetPropertyBlock(props);
+                // Position stays relative to the animated source, at its rim in the shot direction.
+                // The solid body conceals the beam root; this warm shoulder blends into its halo.
+                float pulse=Mathf.SmoothStep(0,1,f.age/.022f)*(1-Mathf.SmoothStep(0,1,f.age/.16f));
+                Paint(f.sourceFlare,f.from+direction*cell*.46f,new Vector3(.70f,.39f,1)*cell,angle,new Color(1,.91f,.61f,pulse*.72f));
+                f.sourceFlare.GetPropertyBlock(props);props.SetFloat("_SourceFlare",1);f.sourceFlare.SetPropertyBlock(props);
+            }
             if(referenceV5)for(int layer=0;layer<2;layer++){var r=layer==0?f.outer:f.inner;r.GetPropertyBlock(props);props.SetFloat("_Phase",f.age);props.SetFloat("_Travel",progress);props.SetFloat("_After",after);props.SetFloat("_LengthCells",distance/cell);props.SetFloat("_Detail",f.settings?f.settings.detail:0);r.SetPropertyBlock(props);}
         }
         public static void Pulse(Vector3 p,float size,float life,Color tint){Prewarm();instance.Emit(p,Vector3.zero,size,life,tint,false);}
@@ -58,12 +74,18 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             // Color remains a local visual parameter; authoritative target conversion stays in the director.
             instance.Emit(p,Vector3.zero,.85f,.22f,new Color(1,.86f,.44f,.95f),false,true);
         }
-        public static void TargetFlash(Vector3 p){Pulse(p,.48f,.12f,new Color(1,.95f,.77f,.7f));Spark(p,instance&&instance.referenceV5?.31f:.43f,.13f,Color.white);}
+        public static void TargetFlash(Vector3 p){Pulse(p,.48f,.12f,new Color(1,.95f,.77f,.7f));Spark(p,instance&&instance.referenceV5?.24f:.43f,.13f,Color.white);}
         public static void Converted(Vector3 p){Spark(p+Vector3.up*ColorBallVisualV4.CellSize*.25f,.26f,.19f,new Color(1,.92f,.56f));}
-        void Update(){if(ColorBallVisualV4.Paused||flights==null)return;foreach(var f in flights)if(f.Active){f.age+=Time.deltaTime;if(f.age>=f.duration)f.Arrived=true;if(f.age>=f.duration+.14f){f.Active=false;f.source=null;f.outer.enabled=f.inner.enabled=f.head.enabled=false;}else if(!referenceV5)Draw(f);}foreach(var m in motes)if(m.active){m.age+=Time.deltaTime;if(m.age>=m.life){m.active=false;m.view.enabled=false;}else Draw(m);}Peak=Mathf.Max(Peak,Active);}
+        void Retire(Flight f){f.visible=f.Active=false;f.source=null;f.opacity=0;f.outer.enabled=f.inner.enabled=f.head.enabled=false;if(f.sourceFlare)f.sourceFlare.enabled=false;}
+        void Update(){if(ColorBallVisualV4.Paused||flights==null)return;foreach(var f in flights)if(f.visible){
+            f.age+=Time.deltaTime;if(f.age>=f.duration)f.Arrived=true;
+            if(f.age>=f.duration+.14f)f.Active=false;
+            bool sourceGone=referenceV5&&f.source&&(f.source.Lease!=f.sourceLease||f.source.Current==ColorBallVisualV4.Phase.Free);
+            if(sourceGone||f.age>=f.duration+(referenceV5?LinkResidue:.14f))Retire(f);else if(!referenceV5)Draw(f);
+        }foreach(var m in motes)if(m.active){m.age+=Time.deltaTime;if(m.age>=m.life){m.active=false;m.view.enabled=false;}else Draw(m);}Peak=Mathf.Max(Peak,Active);}
         // Draw after the source's local pose; prevents a one-frame detached origin at 30 FPS.
-        void LateUpdate(){if(referenceV5&&flights!=null&&!ColorBallVisualV4.Paused)foreach(var f in flights)if(f.Active)Draw(f);}
-        public static void Clear(){if(!instance||instance.flights==null)return;foreach(var f in instance.flights){f.Active=false;f.Arrived=false;f.source=null;f.outer.enabled=f.inner.enabled=f.head.enabled=false;}foreach(var m in instance.motes){m.active=false;m.view.enabled=false;}}
+        void LateUpdate(){if(referenceV5&&flights!=null&&!ColorBallVisualV4.Paused)foreach(var f in flights)if(f.visible)Draw(f);}
+        public static void Clear(){if(!instance||instance.flights==null)return;foreach(var f in instance.flights){instance.Retire(f);f.Arrived=false;}foreach(var m in instance.motes){m.active=false;m.view.enabled=false;}}
         void OnDisable(){Clear();}
     }
 }

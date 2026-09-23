@@ -26,7 +26,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
         static readonly Dictionary<Vector3,float> contacts=new Dictionary<Vector3,float>();
         static readonly List<float> frameTimes=new List<float>();
         static int previousLease;static float previousTime,previousAngle;static ColorBallVisualV4.Phase previousPhase;
-        static int rigidSamples,spinSamples;
+        static int rigidSamples,spinSamples;static readonly List<int> linkCounts=new List<int>();
         [MenuItem("Tools/Royal Throne/Color Ball V5/Presentation/ReferenceMatch")]
         static void ReferenceProfile(){ColorBallV5Presentation.ActiveProfile=ColorBallPresentationProfile.ReferenceMatch;}
         [MenuItem("Tools/Royal Throne/Color Ball V5/Presentation/ReferenceMatch",true)]
@@ -41,7 +41,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
         static void SingleSequence(){Run(false,true);}
         [MenuItem("Tools/Royal Throne/Color Ball V5/Combo and actual frame rate checks")]
         static void Full(){Run(false);}
-        static void Run(bool proof,bool singleSequence=false){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready){Debug.LogError("Color Ball: enter the game before the focused test.");return;}testProfile=ColorBallV5Presentation.ActiveProfile;Root=ColorBallV5Builder.Root+"Animation/Review/Flow-"+testProfile+"/";Directory.CreateDirectory(Root);running=true;notes.Clear();events.Clear();errors.Clear();notes.Add("Presentation profile: "+testProfile+"; same live gameplay, target selection and Rocket handoff.");RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite(proof,singleSequence));}
+        static void Run(bool proof,bool singleSequence=false){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready){Debug.LogError("Color Ball: enter the game before the focused test.");return;}testProfile=ColorBallV5Presentation.ActiveProfile;Root=ColorBallV5Builder.Root+"Animation/Review/Links-"+testProfile+"/";Directory.CreateDirectory(Root);running=true;notes.Clear();events.Clear();errors.Clear();notes.Add("Presentation profile: "+testProfile+"; same live gameplay, target selection and Rocket handoff.");RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite(proof,singleSequence));}
         static void Check(bool condition,string message){if(!condition)throw new Exception("Color Ball V5: "+message);notes.Add("PASS "+message);}
         static void Error(string m,string stack,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)errors.Add(m+"\n"+stack);}
         static void Event(ColorBallEvent e,ColorBallVisualV4 v,Vector3 p){
@@ -58,6 +58,8 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
         static IEnumerator Practice(){qa.Request("Practice board");while(qa.Busy)yield return null;qa.Visible=false;Check(qa.Status.StartsWith("Completed"),"Disposable practice fixture opens");yield return new WaitForSeconds(.5f);}
         static void Sample(){
             frames++;frameTimes.Add(Time.unscaledDeltaTime);
+            if(hits>=3&&finishAt==0)linkCounts.Add(ColorBallVfxV4.VisibleLinks);
+            if(!ColorBallVfxV4.RootsBehindBody)throw new Exception("Beam renderer overlays solid body");
             if(ColorBallVfxV4.AttachmentError>ColorBallVisualV4.CellSize*.001f)throw new Exception("Beam detached from animated source");
             foreach(var v in Object.FindObjectsByType<ColorBallVisualV4>())if(v.Current!=ColorBallVisualV4.Phase.Free){
                 if(v.bodyLayer.localScale!=v.colorSurfaceLayer.localScale||v.bodyLayer.position!=v.colorSurfaceLayer.position)throw new Exception("Body/surface pivot mismatch");
@@ -88,7 +90,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
         }
         static IEnumerator Observe(float duration){float until=Time.time+duration;while(Time.time<until){yield return new WaitForEndOfFrame();Sample();}}
         static IEnumerator Combo(string name,bool proof,bool capture,bool high,int targetFps){
-            yield return Practice();label=name;frames=fired=hits=converted=0;rigidSamples=spinSamples=previousLease=0;contacts.Clear();frameTimes.Clear();activation=chargeAt=finishAt=completed=0;record=capture;
+            yield return Practice();label=name;frames=fired=hits=converted=0;rigidSamples=spinSamples=previousLease=0;contacts.Clear();frameTimes.Clear();linkCounts.Clear();activation=chargeAt=finishAt=completed=0;record=capture;
             if(high)foreach(var s in LevelManager.THIS.squaresArray)if(s&&s.item)s.item.SetColor((s.col+s.row)%2==0?0:(s.col+s.row*2)%4+1);
             payload=high?ItemsTypes.VERTICAL_STRIPPED:ItemsTypes.HORIZONTAL_STRIPPED;
             begin=Time.time;launches=RoyalPowerupDirector.Get.RocketLaunches;
@@ -119,6 +121,8 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
             }
             Check(chargeAt-activation>=.60f&&chargeAt-activation<.71f,"V4 .62s charge preserved");
             Check(rigidSamples>10&&spinSamples>5,"Rigid shared shell transforms and seconds-based charged rotation sampled throughout the proof");
+            if(linkCounts.Count>0){notes.Add(name+": visible links mean="+linkCounts.Average().ToString("F2")+"; range="+linkCounts.Min()+".."+linkCounts.Max());Check(linkCounts.Average()>=3&&linkCounts.Max()>=4,"Recent real links overlap without changing hits");}
+            if(!proof)Check(Mathf.Abs(finishAt-lastContact-.1667f)<.04f,"Original final-hit to finish interval retained");
             if(record){Check(ColorBallV4Capture.Clipped==0,"Actual game audio capture has zero clipped samples");notes.Add(name+" audio peak="+ColorBallV4Capture.Peak);ColorBallV4Capture.End();record=false;}
             var sorted=frameTimes.OrderBy(t=>t).ToArray();notes.Add(name+": targets="+converted+"; "+(capture?"30 FPS fixed-step recording (not a performance result)":"uncaptured actual "+targetFps+" FPS check")+"; wall-frame mean FPS="+(1f/frameTimes.Average()).ToString("F2")+"; median FPS="+(1f/sorted[sorted.Length/2]).ToString("F2")+"; p95 ms="+(1000*sorted[(int)(sorted.Length*.95f)]).ToString("F2")+"; rigid samples="+rigidSamples+"; steady spin samples="+spinSamples);
             if(!capture)Check(1f/sorted[sorted.Length/2]>=targetFps*.90f,"Actual "+targetFps+" FPS median achieved");

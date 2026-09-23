@@ -1,0 +1,28 @@
+Presentation profile: Enhanced; same live gameplay, target selection and Rocket handoff.
+PASS Normal 1x TimeScale
+PASS Disposable practice fixture opens
+PASS V5 reveal settles to pooled Idle
+PASS Runtime V5 presentation and local materials connected
+PASS Runtime pooled actor captured Enhanced profile
+Runtime body=Assets/Boosters/ColorBall/V5/Materials/Luminous body.mat; halo=Assets/Boosters/ColorBall/V5/Materials/Charged white halo.mat
+PASS Runtime V5 beam pool uses the connected local shader
+PASS Idle scale unchanged
+PASS Live Color Ball + Rocket combo starts
+PASS Live combo and Rocket payoff finish
+PASS Every selected target converted once: 15
+PASS Existing Rockets launch after Color Ball finish
+PASS No beam/voice leftovers
+PASS Final .46s envelope preserves handoff time
+PASS Board input restored
+PASS V4 .62s charge preserved
+PASS Rigid shared shell transforms and seconds-based charged rotation sampled throughout the proof
+ColorBall-Enhanced-Gameplay: visible links mean=3.61; range=2..5
+PASS Recent real links overlap without changing hits
+PASS Original final-hit to finish interval retained
+PASS Actual game audio capture has zero clipped samples
+ColorBall-Enhanced-Gameplay audio peak=0.2443529
+ColorBall-Enhanced-Gameplay: targets=15; 30 FPS fixed-step recording (not a performance result); wall-frame mean FPS=18.17; median FPS=19.81; p95 ms=65.64; rigid samples=100; steady spin samples=67
+PASS Normal player data restored
+PASS Pools clean on session exit
+PASS No new console errors
+PASS
