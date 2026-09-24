@@ -405,3 +405,21 @@ Throne's own implementation.
 - **Screenshots/evidence:** `kv/play/r14b_confirm.png`, `back_H_confirm.txt`
 - **Remaining risk:** the legacy Settings popup (unreachable) shares the skin path, but the card is built only for MenuPause.
 - **Next task:** P2/P3 review: R-17 small defects (Sound/Music default mismatch, `print(DateOfExit)` on every launch, plurals, timer formats), R-18 compile warnings in non-protected runtime code, then verification mode.
+
+### Iteration 14
+- **Date/time:** 2026-09-25 01:03-01:07 local
+- **Area inspected:** home panel copy (R-17, plurals)
+- **Issue:** the profile, coins and stars panels built counts by concatenation, so every new player saw "1 levels completed", "1 stars earned", "1 coins" and "1 stars".
+- **Severity:** P3 (visible copy error early in every playthrough)
+- **Reproduction:** QA profile with totals of 1 (level 1 = 1 star, all other levels 0, coins 1). Panels read exactly the strings above.
+- **Root cause:** `n + " stars"` style concatenation.
+- **Files changed:** `Assets/JellyGarden/Scripts/GUI/RoyalHomeScreen.cs` (a `Count` helper, used for the three panels)
+- **Fix:** singular or plural by count, keeping the existing `N0` number formatting.
+- **Tests executed:** recompile; fresh Play Mode; totals of 1, totals of 2, 0 coins.
+- **Result:** "1 level completed / 1 star earned", "1 coin", "1 star"; "2 levels ... / 2 stars", "2 coins"; "0 coins".
+- **Regression result:** panel layout and other copy unchanged. The QA session restored the real profile.
+- **Console result:** no errors
+- **Performance result:** n/a
+- **Screenshots/evidence:** driver log `kv/play/ralph-*.txt`
+- **Remaining risk:** the profile name is "King Vanguard" (`RoyalOfflineMode.KingName`) while the character assets are spelled "Venguard". This is a naming decision for the user, not changed.
+- **Next task:** verification mode. Lives and refill timer, settings persistence across a restart, then missing-reference and duplicate-manager scans, resolution check, performance sample.
