@@ -100,6 +100,19 @@ namespace JellyGarden.Scripts.GUI
                     transform.Find("Image/Pack" + i + "/Count").GetComponent<Text>().text = "" + LevelManager.THIS.gemsProducts[i - 1].count;
                     transform.Find("Image/Pack" + i + "/Buy/Price").GetComponent<Text>().text = "$" + LevelManager.THIS.gemsProducts[i - 1].price;
                 }
+                // With store services off (the offline build) Buy does nothing, so show the packs as unavailable
+                // instead of real-money prices on buttons that silently ignore the tap.
+                if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled)
+                {
+                    for (int i = 1; i <= 4; i++)
+                    {
+                        var buy = transform.Find("Image/Pack" + i + "/Buy");
+                        buy.GetComponent<Button>().interactable = false;
+                        buy.Find("Price").GetComponent<Text>().text = "Unavailable";
+                    }
+                    var subtitle = transform.Find("Image/Royal subtitle");
+                    if (subtitle) subtitle.GetComponent<Text>().text = "Gem packs are not available in this version";
+                }
             }
             if (name == "MenuComplete")
             {

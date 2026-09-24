@@ -204,3 +204,27 @@ Throne's own implementation.
   - The period checks still use the `Minutes`/`Hours` components rather than the totals (ad frequency only; ads are disabled offline).
   - The ad-quota counter still writes and saves on popup opens offline (P3).
 - **Next task:** R-07 (booster pack purchase overwrites stock).
+
+### Iteration 6
+- **Date/time:** 2026-09-25 00:12-00:17 local
+- **Area inspected:** pre-level booster purchase (R-07), offline gem shop (R-08)
+- **R-07 outcome:** not reachable, downgraded to P3 (latent).
+  - Every booster button in `game.unity` calls `BoostIcon.ActivateBoost`, which opens the booster shop only when the stock label reads 0. Setting the stock to the pack size is then identical to adding.
+  - The other `InitScript.BuyBoost` callers (in-level tool bar, QA "Set booster stock") rely on its set semantics.
+  - No change made.
+- **Issue (R-08):** players short of coins (lives refill, fail-screen continue, booster shop) are sent to the gem shop, which in the offline build shows $0.99-$14.99 packs whose Buy silently does nothing.
+- **Severity:** P1 (dead end with misleading UI, no feedback)
+- **Reproduction:** QA profile; gem shop opened; Buy on pack 1: shop stays open, no sound, no message, coins unchanged (`kv/play/r08_gemshop.png`, pre-fix run).
+- **Root cause:** `AnimationManager.Buy` returns early when store services are off, but the shop still presents live-looking prices and enabled buttons.
+- **Files changed:** `Assets/JellyGarden/Scripts/GUI/AnimationManager.cs` (GemsShop OnEnable)
+- **Fix:** with store services off, each pack's button is non-interactable and reads "Unavailable", and the subtitle says "Gem packs are not available in this version". With services on, the shop is unchanged. No prices or economy values changed.
+- **Tests executed:** recompile; fresh Play Mode; direct open; real path (0 lives, 3 coins -> PLAY -> lives shop -> REFILL -> gem shop -> x).
+- **Result:** all four packs show "Unavailable" and are disabled, the subtitle explains, and coins are unchanged. x returns to the lives shop.
+- **Regression result:** MenuPlay -> LiveShop -> GemsShop stacking and closing is unchanged. The QA session restored the real profile.
+- **Console result:** no errors
+- **Performance result:** n/a
+- **Screenshots/evidence:** `kv/play/r08b_gemshop.png`
+- **Remaining risk:**
+  - The disabled buttons keep their teal face; stronger disabled styling is P3.
+  - The offline economy still has no coin income (R-20, product decision).
+- **Next task:** R-09 (level-1 tutorial re-entry), then R-02 (booster loop reproduction).
