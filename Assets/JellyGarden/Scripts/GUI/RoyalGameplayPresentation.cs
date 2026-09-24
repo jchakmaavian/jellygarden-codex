@@ -24,7 +24,7 @@ namespace RoyalThrone.Presentation
         static Color Navy=>new Color(.025f,.12f,.32f);
         // Booster rail metrics in canvas reference units (720x1280): the width and spacing the
         // fractional anchors produced on a phone, now held constant across aspect ratios.
-        const float BoostSize=126f,BoostStride=169f;
+        const float BoostSize=114f,BoostStride=141f;
         static Color Gold=>new Color(.96f,.74f,.22f);
         RectTransform Rect(string name,Transform parent,float x0,float y0,float x1,float y1)
         {var g=new GameObject(name,typeof(RectTransform));var r=g.GetComponent<RectTransform>();r.SetParent(parent,false);r.anchorMin=new Vector2(x0,y0);r.anchorMax=new Vector2(x1,y1);r.offsetMin=r.offsetMax=Vector2.zero;return r;}
@@ -32,6 +32,24 @@ namespace RoyalThrone.Presentation
         {var r=Rect(name,parent,x0,y0,x1,y1);var g=r.gameObject.AddComponent<RoyalPanelGraphic>();g.topColor=a;g.bottomColor=b;g.cornerRadius=radius;g.raycastTarget=false;return g;}
         Text Label(string name,Transform parent,string text,int size,float x0,float y0,float x1,float y1)
         {var r=Rect(name,parent,x0,y0,x1,y1);var t=r.gameObject.AddComponent<Text>();t.font=display;t.fontSize=size;t.text=text;t.alignment=TextAnchor.MiddleCenter;t.color=new Color(1,.96f,.8f);t.raycastTarget=false;t.resizeTextForBestFit=true;t.resizeTextMinSize=16;t.resizeTextMaxSize=size;var s=r.gameObject.AddComponent<Shadow>();s.effectColor=Navy;s.effectDistance=new Vector2(0,-2);return t;}
+        // APK level2 UI sprites are authored as mirrored halves. Preserve their source
+        // artwork and slicing while adapting only anchoring to the existing overlay canvas.
+        Image Source(string name, Transform parent, string key, float x0,float y0,float x1,float y1, bool sliced=false)
+        {
+            var r=Rect(name,parent,x0,y0,x1,y1);var im=r.gameObject.AddComponent<Image>();
+            im.sprite=Resources.Load<Sprite>("ReferenceGameplay/Layout/"+key);im.raycastTarget=false;
+            im.type=sliced?Image.Type.Sliced:Image.Type.Simple;im.pixelsPerUnitMultiplier=1.3f;return im;
+        }
+        void Pair(string name,Transform parent,string key,float x0,float y0,float x1,float y1,bool sliced=false)
+        {
+            float mid=(x0+x1)*.5f;
+            Source(name+" left",parent,key,x0,y0,mid,y1,sliced);
+            var right=Source(name+" right",parent,key,mid,y0,x1,y1,sliced);right.rectTransform.localScale=new Vector3(-1,1,1);
+        }
+        RectTransform Fixed(string name,Transform parent,Vector2 anchor,Vector2 position,Vector2 size)
+        {
+            var r=Rect(name,parent,anchor.x,anchor.y,anchor.x,anchor.y);r.sizeDelta=size;r.anchoredPosition=position;return r;
+        }
         void Awake(){Build();}
         void OnEnable(){RoyalPowerupDirector.Reaction+=React;}
         void OnDisable(){RoyalPowerupDirector.Reaction-=React;}
@@ -48,27 +66,39 @@ namespace RoyalThrone.Presentation
             var scaler=root.gameObject.AddComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(720,1280);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
             root.gameObject.AddComponent<GraphicRaycaster>();group=root.gameObject.AddComponent<CanvasGroup>();group.alpha=0;group.blocksRaycasts=false;
             content=Rect("Safe area",root,0,0,1,1);
-            Panel("Header gold edge",content,Gold,new Color(.66f,.36f,.08f),0,.85f,1,1,0);
-            Panel("Header royal blue",content,new Color(.08f,.32f,.65f),Navy,0,.855f,1,1,0);
-            Panel("Goal gold",content,Gold,Gold,.025f,.866f,.395f,.982f,20);
-            Panel("Goal ivory",content,new Color(1,.98f,.88f),new Color(.91f,.85f,.66f),.032f,.871f,.388f,.977f,17);
-            Panel("Goal title bar",content,new Color(.075f,.32f,.64f),Navy,.033f,.944f,.388f,.977f,13);
-            Label("Goal heading",content,"GOALS",22,.04f,.945f,.38f,.976f);
-            goals=Label("Live goals",content,"",32,.025f,.871f,.395f,.944f);
-            goals.enabled=false;
-            for(int i=0;i<3;i++){
-                float left=.043f+i*.114f;var r=Rect("Goal icon "+i,content,left,.910f,left+.106f,.944f);var icon=r.gameObject.AddComponent<Image>();icon.preserveAspect=true;icon.raycastTarget=false;goalIcons.Add(icon);
-                var number=Label("Goal number "+i,content,"",27,left,.873f,left+.106f,.911f);number.resizeTextMinSize=11;number.color=Navy;number.GetComponent<Shadow>().enabled=false;goalNumbers.Add(number);
+            var header=Fixed("Imported gameplay header",content,new Vector2(.5f,1),new Vector2(0,-135),new Vector2(720,270));
+            var headerBack=Source("Packaged header background",content,"Game-top_background",0,1,1,1,true).rectTransform;
+            headerBack.sizeDelta=new Vector2(0,270);headerBack.anchoredPosition=new Vector2(0,-135);
+            header.SetAsLastSibling();
+            Pair("Goal container",header,"Game-goal_panel_container",.027f,.07f,.315f,.85f,true);
+            Pair("Goal banner",header,"Game-goal_panel_banner",.021f,.67f,.321f,.96f);
+            Label("Goal heading",header,"Goals",28,.03f,.744f,.312f,.92f);
+            var goalArea=Rect("Goal contents",header,.045f,.11f,.297f,.70f);
+            for(int i=0;i<4;i++){
+                var icon=Rect("Goal icon "+i,goalArea,0,.4f,1,.94f).gameObject.AddComponent<Image>();
+                icon.preserveAspect=true;icon.raycastTarget=false;goalIcons.Add(icon);
+                var number=Label("Goal number "+i,goalArea,"",30,0,0,1,.42f);number.resizeTextMinSize=11;number.color=Navy;number.GetComponent<Shadow>().enabled=false;goalNumbers.Add(number);
             }
-            Panel("Moves gold",content,Gold,Gold,.631f,.866f,.886f,.982f,20);
-            Panel("Moves ivory",content,new Color(1,.98f,.88f),new Color(.91f,.85f,.66f),.638f,.871f,.879f,.977f,17);
-            Panel("Moves title bar",content,new Color(.075f,.32f,.64f),Navy,.638f,.944f,.879f,.977f,13);
-            Label("Moves heading",content,"MOVES",22,.64f,.945f,.877f,.976f);moves=Label("Moves remaining",content,"24",58,.642f,.874f,.875f,.947f);moves.color=Navy;moves.GetComponent<Shadow>().enabled=false;
-            king=Rect("King reactions",content,.405f,.861f,.619f,.986f);kingImage=king.gameObject.AddComponent<Image>();kingImage.sprite=idle;kingImage.preserveAspect=true;kingImage.raycastTarget=false;
-            var pause=Rect("Pause game",content,.901f,.933f,.99f,.985f);var image=pause.gameObject.AddComponent<Image>();image.color=Navy;var button=pause.gameObject.AddComponent<Button>();button.onClick.AddListener(()=>{MenuManager.Instance.ShowMenuPause(true);});RoyalMenuSkin.Surface(pause,true);Label("Pause icon",pause,"II",28,0,0,1,1);
-            level=Label("Level",content,"LEVEL 1",22,.35f,.818f,.68f,.85f);
-            Panel("Booster rail",content,new Color(.045f,.24f,.53f),Navy,0,0,1,.106f,0);
-            Panel("Rail gold",content,Gold,Gold,0,.103f,1,.107f,0);
+            Pair("Moves container",header,"Game-goal_panel_container",.685f,.07f,.973f,.85f,true);
+            Pair("Moves banner",header,"Game-goal_panel_banner",.679f,.67f,.979f,.96f);
+            Label("Moves heading",header,"Moves",28,.685f,.744f,.973f,.92f);
+            moves=Label("Moves remaining",header,"24",65,.707f,.16f,.955f,.68f);moves.color=Navy;moves.GetComponent<Shadow>().enabled=false;
+            Source("Portrait background",header,"King-Frame",.348f,.08f,.652f,.865f);
+            king=Rect("King reactions",header,.364f,.095f,.636f,.9f);kingImage=king.gameObject.AddComponent<Image>();kingImage.sprite=idle;kingImage.preserveAspect=true;kingImage.raycastTarget=false;
+            Pair("Portrait frame",header,"King-Frame-Edge",.335f,.055f,.665f,.9f);
+            // Keep the live level label available to existing diagnostics, without adding
+            // a heading that is absent from the source gameplay hierarchy.
+            level=Label("Level",header,"",22,0,0,0,0);level.gameObject.SetActive(false);
+            var rail=Fixed("Imported booster rail",content,new Vector2(.5f,0),new Vector2(0,70),new Vector2(720,170));
+            for(int i=0;i<5;i++){
+                var socket=Fixed("Packaged rail slot "+i,rail,new Vector2(.5f,.5f),new Vector2((i-2)*BoostStride,0),new Vector2(BoostStride+1,170));
+                Pair("Rail background",socket,"Game-bottom_background_empty",0,-.63f,1,.73f,true);
+            }
+            var pause=Fixed("Pause game",rail,new Vector2(.5f,.5f),new Vector2(2*BoostStride,5),new Vector2(114,114));
+            Pair("Settings blue",pause,"Game-blue_circle_button",.07f,.07f,.93f,.93f);
+            Pair("Settings frame",pause,"Game-booster_button_frame",0,0,1,1);
+            Pair("Settings gear",pause,"Game-settings_button_gear",.22f,.22f,.78f,.78f);
+            var image=pause.gameObject.AddComponent<Image>();image.color=Color.clear;var button=pause.gameObject.AddComponent<Button>();button.onClick.AddListener(()=>{MenuManager.Instance.ShowMenuPause(true);});
             var lm=GetComponent<LevelManager>();
             if(lm)
             {
@@ -82,16 +112,17 @@ namespace RoyalThrone.Presentation
                 for(int i=0;i<4;i++)
                 {
                     var boost=lm.GameField.parent.Find("Canvas/BottomPanel/Panel/"+boostNames[i]) as RectTransform;
-                    if(!boost)continue;boost.SetParent(content,false);
-                    // Fractional anchors made each booster both wider and further from its
-                    // neighbours as the screen widened, so the rail sprawled on a tablet. Pin the
-                    // row to the bottom centre at the size it already had on the 720x1280
-                    // reference, and it keeps that shape on every aspect.
-                    boost.anchorMin=boost.anchorMax=new Vector2(.5f,.048f);
-                    boost.sizeDelta=new Vector2(BoostSize,BoostSize*.8f);
-                    boost.anchoredPosition=new Vector2((i-1.5f)*BoostStride,0);
+                    if(!boost)continue;boost.SetParent(rail,false);
+                    boost.anchorMin=boost.anchorMax=new Vector2(.5f,.5f);
+                    boost.sizeDelta=new Vector2(BoostSize,BoostSize);
+                    boost.anchoredPosition=new Vector2((i-2)*BoostStride,5);
                     boost.localScale=Vector3.one;
-                    var graphic=boost.GetComponent<Image>();if(graphic){graphic.sprite=RoyalGameplayArt.Art(artNames[i])??RoyalPieceSkin.Art(artNames[i]);graphic.preserveAspect=true;graphic.color=Color.white;}
+                    var graphic=boost.GetComponent<Image>();if(graphic)graphic.color=Color.clear;
+                    var face=Rect("Imported booster face",boost,0,0,1,1);face.SetAsFirstSibling();
+                    Pair("Green button",face,"Game-booster_button",.07f,.07f,.93f,.93f);
+                    Pair("Gold frame",face,"Game-booster_button_frame",0,0,1,1);
+                    var art=Rect("Existing booster action",face,.21f,.21f,.79f,.79f).gameObject.AddComponent<Image>();
+                    art.sprite=RoyalGameplayArt.Art(artNames[i])??RoyalPieceSkin.Art(artNames[i]);art.preserveAspect=true;art.raycastTarget=false;
                     foreach(var text in boost.GetComponentsInChildren<Text>(true)){text.font=display;text.color=new Color(1,.96f,.8f);}
                     RoyalMenuSkin.Boost(boost,true);
                 }
@@ -99,7 +130,8 @@ namespace RoyalThrone.Presentation
             // Retain the real boost buttons and their inventory/payment behaviour.
             var background=new GameObject("Royal gameplay backdrop");background.transform.SetParent(transform);backdrop=background.AddComponent<SpriteRenderer>();backdrop.sortingOrder=-50;
             var tex=new Texture2D(1,1);tex.SetPixel(0,0,Color.white);tex.Apply();tileSprite=Sprite.Create(tex,new Rect(0,0,1,1),new Vector2(.5f,.5f),1,0,SpriteMeshType.FullRect);backdrop.sprite=tileSprite;backdrop.color=new Color(.06f,.24f,.47f);
-            var castle=RoyalPieceSkin.Art("home-castle");if(castle){backdrop.sprite=castle;backdrop.color=new Color(.28f,.4f,.59f);}
+            // Packaged gameplay camera clear colour; do not reuse the unrelated homepage illustration.
+            backdrop.color=new Color(.19215687f,.3019608f,.4745098f);
             group.alpha=0;group.blocksRaycasts=false;
         }
         void LateUpdate()
@@ -118,9 +150,9 @@ namespace RoyalThrone.Presentation
                 for(int i=0;i<goalIcons.Count;i++){
                     bool active=lm.targetObject!=null&&i<lm.targetObject.Length;goalIcons[i].gameObject.SetActive(active);goalNumbers[i].gameObject.SetActive(active);if(!active)continue;
                     var target=lm.targetObject[i];goalIcons[i].sprite=RoyalVisualCatalog.Goal(target,true);goalNumbers[i].text=Mathf.Max(0,target.GetCount()).ToString();
-                    float step=.342f/Mathf.Min(3,lm.targetObject.Length),left=.04f+i*step;
-                    var ir=goalIcons[i].rectTransform;ir.anchorMin=new Vector2(left,.909f);ir.anchorMax=new Vector2(left+step,.944f);
-                    var nr=goalNumbers[i].rectTransform;nr.anchorMin=new Vector2(left+.002f,.873f);nr.anchorMax=new Vector2(left+step-.002f,.911f);
+                    float step=1f/Mathf.Min(goalIcons.Count,lm.targetObject.Length),left=i*step;
+                    var ir=goalIcons[i].rectTransform;ir.anchorMin=new Vector2(left,.4f);ir.anchorMax=new Vector2(left+step,.94f);
+                    var nr=goalNumbers[i].rectTransform;nr.anchorMin=new Vector2(left+.002f,0);nr.anchorMax=new Vector2(left+step-.002f,.42f);
                 }
             }
             excitement=Mathf.MoveTowards(excitement,0,Time.deltaTime*.8f);
@@ -132,8 +164,11 @@ namespace RoyalThrone.Presentation
         }
         public static Rect PlayableViewport(Rect safeNormalized)
         {
-            return UnityEngine.Rect.MinMaxRect(Mathf.Lerp(safeNormalized.xMin,safeNormalized.xMax,.02f),Mathf.Lerp(safeNormalized.yMin,safeNormalized.yMax,.145f),
-                Mathf.Lerp(safeNormalized.xMin,safeNormalized.xMax,.98f),Mathf.Lerp(safeNormalized.yMin,safeNormalized.yMax,.808f));
+            float scale=Mathf.Min(Screen.width/720f,Screen.height/1280f);
+            float safeHeight=Mathf.Max(1,Screen.height*safeNormalized.height);
+            float bottom=155*scale/safeHeight,top=285*scale/safeHeight;
+            return UnityEngine.Rect.MinMaxRect(Mathf.Lerp(safeNormalized.xMin,safeNormalized.xMax,.025f),Mathf.Lerp(safeNormalized.yMin,safeNormalized.yMax,bottom),
+                Mathf.Lerp(safeNormalized.xMin,safeNormalized.xMax,.975f),Mathf.Lerp(safeNormalized.yMin,safeNormalized.yMax,1-top));
         }
         public static float FitSize(Bounds bounds,float aspect,Rect viewport)
         {return Mathf.Max(bounds.extents.x/(Mathf.Max(.01f,aspect)*viewport.width),bounds.extents.y/viewport.height);}

@@ -51,11 +51,12 @@ namespace RoyalThrone.Presentation
             foreach(var layer in layers.Values)if(!layer.renderer)return false;
             return true;
         }
-        void Quad(Layer layer,Vector3 centre,Vector2 size,Sprite sprite)
+        void Quad(Layer layer,Vector3 centre,Vector2 size,Sprite sprite,float angle=0)
         {
             int first=layer.vertices.Count;float x=size.x*.5f,y=size.y*.5f;
             layer.vertices.Add(centre+new Vector3(-x,-y));layer.vertices.Add(centre+new Vector3(x,-y));
             layer.vertices.Add(centre+new Vector3(x,y));layer.vertices.Add(centre+new Vector3(-x,y));
+            if(angle!=0){var rotation=Quaternion.Euler(0,0,angle);for(int i=first;i<first+4;i++)layer.vertices[i]=centre+rotation*(layer.vertices[i]-centre);}
             Rect uv=new Rect(0,0,1,1);
             if(sprite){var r=sprite.textureRect;uv=new Rect(r.x/sprite.texture.width,r.y/sprite.texture.height,r.width/sprite.texture.width,r.height/sprite.texture.height);}
             layer.uv.Add(new Vector2(uv.xMin,uv.yMin));layer.uv.Add(new Vector2(uv.xMax,uv.yMin));
@@ -65,8 +66,10 @@ namespace RoyalThrone.Presentation
         }
         void Edge(string name,Vector3 centre,Vector2 size)
         {
-            var sprite=RoyalGameplayArt.Art("frame-edge-"+name);if(!sprite)return;
-            Quad(GetLayer(name,sprite,2,Color.white),centre,size,sprite);EdgeCount++;
+            var sprite=Resources.Load<Sprite>("ReferenceGameplay/Sprites/Border-side__17165");if(!sprite)return;
+            float angle=name=="bottom"?180:name=="left"?90:name=="right"?-90:0;
+            if(name=="left"||name=="right")size=new Vector2(size.y,size.x);
+            Quad(GetLayer(name,sprite,2,Color.white),centre,size,sprite,angle);EdgeCount++;
         }
         public void RebuildIfNeeded(LevelManager lm)
         {
@@ -76,7 +79,7 @@ namespace RoyalThrone.Presentation
             if(!white){white=new Texture2D(1,1);white.SetPixel(0,0,Color.white);white.Apply();}
             foreach(var entry in layers){var layer=entry.Value;EnsureRenderer(entry.Key,layer);layer.vertices.Clear();layer.uv.Clear();layer.triangles.Clear();layer.mesh.Clear();}
             foreach(var square in squares)if(square&&square.type!=SquareTypes.NONE)occupied.Add(new Vector2Int(square.col,square.row));
-            float w=lm.squareWidth,h=lm.squareHeight,thickness=Mathf.Min(w,h)*.16f;
+            float w=lm.squareWidth,h=lm.squareHeight,thickness=Mathf.Min(w,h)*(20f/140f);
             // The cell art is a rounded square, so four neighbouring corners leave a small
             // concave gap. A square shadow quad showed through those gaps as dark specks over
             // the whole board. Grout fills the gaps with a board tone and the shadow now takes
