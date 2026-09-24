@@ -272,3 +272,26 @@ Throne's own implementation.
 - **Screenshots/evidence:** `kv/play/r02_boosters.png`; harness output in this entry
 - **Remaining risk:** the dead catch -> `Win` branch is kept (now unreachable) to keep the diff minimal.
 - **Next task:** P2 batch. R-11 (timed levels: HUD label and hammer slot), R-10 (Back in pause and result cards), R-13 (auto-pause on app background), R-14 (quit-level confirmation), R-12 (PreFailed tap delay).
+
+### Iteration 9
+- **Date/time:** 2026-09-25 00:29-00:33 local
+- **Area inspected:** in-level HUD on timed levels (R-11); levels 20, 27 and 32 are within the protected 1-50
+- **Issue:** on timed levels the HUD header read "Moves" while showing the seconds left ("Moves 54"), and the first rail slot (the Royal Hammer) was empty.
+- **Severity:** P2 (wrong information; a tool missing on 11 levels)
+- **Reproduction:** QA profile, level 20 (`limitType=TIME`): heading 'Moves', value '56'; `BoostExtraMoves` (the rebound Hammer) hidden (`kv/play/r11_hud_level20.png`, pre-fix run). Level 12 (moves) correct.
+- **Root cause:**
+  - The Royal HUD formats `Limit` without checking `limitType`.
+  - `LevelManager.PrepareGame` still hides the legacy extra-moves booster on timed levels. The Royal HUD rebound that object as the Hammer tool.
+- **Files changed:** `Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs` (HUD only; `LevelManager` untouched)
+- **Fix:**
+  - On timed levels the header reads "Time" and the value shows m:ss; on moves levels "Moves" as before.
+  - The HUD keeps its four rebound rail tools active in its 10 Hz refresh.
+  - No gameplay rule or level data changed.
+- **Tests executed:** recompile; fresh Play Mode; level 20 (timed) and level 12 (moves).
+- **Result:** level 20: "Time 0:56", all four tools and the gear visible. Level 12: "Moves 18", unchanged.
+- **Regression result:** moves levels unchanged; the legacy extra-time booster stays on the hidden legacy panel as before.
+- **Console result:** no errors
+- **Performance result:** a 4-element loop at 10 Hz
+- **Screenshots/evidence:** `kv/play/r11_hud_level20.png` (post-fix), `r11_hud_level12.png`
+- **Remaining risk:** the PrePlay caption still says "Make every move count" on timed levels (P3 copy).
+- **Next task:** R-10 (Back in pause, result cards and tool selection).

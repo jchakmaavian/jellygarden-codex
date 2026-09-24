@@ -14,6 +14,9 @@ namespace RoyalThrone.Presentation
         SpriteRenderer backdrop; Sprite idle,cheer,think;float excitement,lastRefresh;bool built;
         readonly HashSet<Square> styled=new HashSet<Square>();
         readonly List<CanvasGroup> hidden=new List<CanvasGroup>();
+        // Timed levels: the limit header reads "Time" (m:ss) instead of "Moves"; the four rebound rail tools stay
+        // visible (the legacy code hides the old extra-moves booster on timed levels, which is now the Hammer slot).
+        Text movesHeading;readonly List<GameObject> railTools=new List<GameObject>();
         readonly List<string> goalParts=new List<string>();float nextHudUpdate;
         Font display;
         Sprite tileSprite;
@@ -81,7 +84,7 @@ namespace RoyalThrone.Presentation
             }
             Pair("Moves container",header,"Game-goal_panel_container",.685f,.07f,.973f,.85f,true);
             Pair("Moves banner",header,"Game-goal_panel_banner",.679f,.67f,.979f,.96f);
-            Label("Moves heading",header,"Moves",28,.685f,.744f,.973f,.92f);
+            movesHeading=Label("Moves heading",header,"Moves",28,.685f,.744f,.973f,.92f);
             moves=Label("Moves remaining",header,"24",65,.707f,.16f,.955f,.68f);moves.color=Navy;moves.GetComponent<Shadow>().enabled=false;
             Source("Portrait background",header,"King-Frame",.348f,.08f,.652f,.865f);
             king=Rect("King reactions",header,.364f,.095f,.636f,.9f);kingImage=king.gameObject.AddComponent<Image>();kingImage.sprite=idle;kingImage.preserveAspect=true;kingImage.raycastTarget=false;
@@ -128,7 +131,7 @@ namespace RoyalThrone.Presentation
                     var art=Rect("Existing booster action",face,.21f,.21f,.79f,.79f).gameObject.AddComponent<Image>();
                     art.sprite=RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Art(i);art.preserveAspect=true;art.raycastTarget=false;
                     foreach(var text in boost.GetComponentsInChildren<Text>(true)){text.font=display;text.color=new Color(1,.96f,.8f);}
-                    tools.Bind(boost.GetComponent<BoostIcon>(),i);
+                    tools.Bind(boost.GetComponent<BoostIcon>(),i);railTools.Add(boost.gameObject);
                 }
             }
             // Retain the real boost buttons and their inventory/payment behaviour.
@@ -152,7 +155,11 @@ namespace RoyalThrone.Presentation
             var safe=Screen.safeArea;content.anchorMin=safe.min/new Vector2(Screen.width,Screen.height);content.anchorMax=safe.max/new Vector2(Screen.width,Screen.height);
             if(Time.unscaledTime>=nextHudUpdate)
             {
-                nextHudUpdate=Time.unscaledTime+.1f;moves.text=Mathf.Max(0,lm.Limit).ToString();level.text="LEVEL "+lm.currentLevel;
+                nextHudUpdate=Time.unscaledTime+.1f;level.text="LEVEL "+lm.currentLevel;
+                bool timed=lm.limitType==LIMIT.TIME;int limit=Mathf.Max(0,lm.Limit);
+                if(movesHeading)movesHeading.text=timed?"Time":"Moves";
+                moves.text=timed?limit/60+":"+(limit%60).ToString("00"):limit.ToString();
+                foreach(var tool in railTools)if(tool&&!tool.activeSelf)tool.SetActive(true);
                 for(int i=0;i<goalIcons.Count;i++){
                     bool active=lm.targetObject!=null&&i<lm.targetObject.Length;goalIcons[i].gameObject.SetActive(active);goalNumbers[i].gameObject.SetActive(active);if(!active)continue;
                     var target=lm.targetObject[i];goalIcons[i].sprite=RoyalVisualCatalog.Goal(target,true);goalNumbers[i].text=Mathf.Max(0,target.GetCount()).ToString();
