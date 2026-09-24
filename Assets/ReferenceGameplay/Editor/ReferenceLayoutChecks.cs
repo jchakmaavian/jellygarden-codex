@@ -37,17 +37,21 @@ namespace RoyalThrone.ReferenceGameplay.Editor
                 yield return qa.Execute("Original levels");qa.Level=14;yield return qa.OpenLevel();qa.Visible=false;
                 yield return new WaitForSecondsRealtime(1);
                 var hud=lm.transform.Find("Royal gameplay HUD/Safe area");Check(hud,"Live gameplay HUD is active");
-                var imported=hud.GetComponentsInChildren<Image>(true).Where(i=>i.name.Contains(" left")||i.name.Contains(" right")||i.name.Contains("Packaged header")).ToArray();
+                // The imported tool bar adds its own "Native left/right" art from Tools/ (checked by ReferenceBoosterChecks), not layout art.
+                var imported=hud.GetComponentsInChildren<Image>(true).Where(i=>(i.name.Contains(" left")||i.name.Contains(" right")||i.name.Contains("Packaged header"))&&!i.name.StartsWith("Native ")).ToArray();
                 Check(imported.Length>=30&&imported.All(i=>i.sprite&&AssetDatabase.GetAssetPath(i.sprite).StartsWith("Assets/ReferenceGameplay/Layout/")),"Header, portrait frame and five rail slots use imported APK sprites");
                 Check(hud.GetComponentsInChildren<BoostIcon>(true).Length==4,"Four original boost controllers and inventory bindings retained");
                 yield return Capture("Gameplay-Level14-first");
                 Check(hud.GetComponentsInChildren<BoostIcon>(true).All(b=>b.boostCount&&b.transform.Find("Indicator/Plus")&&b.transform.Find("Lock")),"In-game booster count, plus and lock connections intact");
                 var hand=hud.GetComponentsInChildren<BoostIcon>(true).Single(b=>b.name=="BoostHand");
                 RoyalSave.SetInt(hand.type.ToString(),3);yield return null;
+                // The four rail tools belong to the imported tool bar (BoostIcon routes them there since the tool bar was connected),
+                // so a tap selects the tool in ReferenceBoosterBar rather than LevelManager.ActivatedBoost.
+                var bar=ReferenceBoosterBar.Instance;int handIndex=System.Array.IndexOf(ReferenceBoosterBar.Types,hand.type);
                 hand.GetComponent<Button>().onClick.Invoke();yield return null;
-                Check(lm.ActivatedBoost==hand,"Imported hand button selects its original action");
+                Check(bar&&handIndex>=0&&bar.Selected==handIndex&&lm.activatedBoost==null,"Imported hand button selects its original action");
                 hand.GetComponent<Button>().onClick.Invoke();yield return null;
-                Check(lm.activatedBoost==null,"Second button tap cancels selection");
+                Check(bar.Selected<0&&lm.activatedBoost==null,"Second button tap cancels selection");
                 Check(lm.GetItems().Where(i=>i).All(i=>i.square&&i.square.item==i),"Level 14 piece ownership intact");
                 Canvas.ForceUpdateCanvases();
                 var safe=Screen.safeArea;var screen=new Vector2(Screen.width,Screen.height);

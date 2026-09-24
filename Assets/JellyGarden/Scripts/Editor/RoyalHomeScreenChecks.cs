@@ -1,5 +1,6 @@
 using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,8 +23,10 @@ namespace RoyalThrone.Editor
         static RoyalHomeScreen home;
         static readonly List<string> checks = new List<string>();
         static readonly List<string> errors = new List<string>();
-        static int phase, openingCount, startingCoins, startingLives;
+        static int phase, openingCount, startingCoins, startingLives, startingOpenLevel;
         static double next;
+        static bool running;
+        static int runId;
         static string size;
 
         [MenuItem("Tools/Royal Throne/Home/Check and capture homepage (Play Mode) #F8")]
@@ -33,9 +36,21 @@ namespace RoyalThrone.Editor
             if (!EditorApplication.isPlaying || EditorApplication.isPaused) throw new InvalidOperationException("Run with the homepage visible in unpaused Play Mode.");
             home = UnityEngine.Object.FindAnyObjectByType<RoyalHomeScreen>();
             if (!home || !home.IsHomeVisible) throw new InvalidOperationException("Open the homepage before checking it.");
-            EditorApplication.update -= Tick; Application.logMessageReceived -= Log;
+            EditorApplication.update -= Watch; Application.logMessageReceived -= Log;
+            // Every step runs in the player loop. From an editor callback Screen can describe the editor window
+            // instead of the Game view, which misplaces these checks and the layout the Home buttons refresh.
+            RoyalRegressionRunner.Run(Drive(++runId));
+        }
+        static IEnumerator Drive(int id)
+        {
+            yield return null;
+            if (id != runId || !Begin()) yield break;
+            while (running && id == runId) { Tick(); yield return null; }
+        }
+        static bool Begin()
+        {
             checks.Clear(); errors.Clear(); size = Screen.width + "x" + Screen.height;
-            startingCoins = InitScript.Gems; startingLives = InitScript.lifes;
+            startingCoins = InitScript.Gems; startingLives = InitScript.lifes; startingOpenLevel = PlayerPrefs.GetInt("OpenLevel");
             Directory.CreateDirectory(Output);
             try
             {
@@ -57,10 +72,12 @@ namespace RoyalThrone.Editor
                 Check(!ScreenRect(homeIcon).Overlaps(left) && !ScreenRect(homeIcon).Overlaps(right), "Lifted Home icon leaves the primary actions clear");
                 Capture("home");
                 phase = 0; next = EditorApplication.timeSinceStartup + .6;
-                Application.logMessageReceived += Log; EditorApplication.update += Tick;
+                Application.logMessageReceived += Log; EditorApplication.update += Watch; running = true; return true;
             }
-            catch (Exception e) { Finish(e); }
+            catch (Exception e) { Finish(e); return false; }
         }
+        // The steps run in the player loop; this editor hook only reports a Play session that ends mid-suite.
+        static void Watch() { if (running && !EditorApplication.isPlaying) Finish(new InvalidOperationException("Play session remains available")); }
 
         static void Tick()
         {
@@ -89,8 +106,10 @@ namespace RoyalThrone.Editor
                         }
                         Capture("story"); break;
                     case 2:
-                        home.nextPage.onClick.Invoke(); Check(home.pageLabel.text.StartsWith("2 /"), "Story pagination advances");
-                        home.previousPage.onClick.Invoke();
+                        // Story opens on the page holding the next level, so pagination is checked relative to that page.
+                        int shownPage = int.Parse(home.pageLabel.text.Split('/')[0].Trim()); bool forward = home.nextPage.interactable;
+                        (forward ? home.nextPage : home.previousPage).onClick.Invoke(); Check(home.pageLabel.text.StartsWith((forward ? shownPage + 1 : shownPage - 1) + " /"), "Story pagination advances");
+                        (forward ? home.previousPage : home.nextPage).onClick.Invoke();
                         home.ClosePanel(); home.resourceButtons[4].onClick.Invoke();
                         Check(home.settingsGroup.activeSelf, "Settings opens real audio and motion controls");
                         int motion = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1);
@@ -195,7 +214,9 @@ namespace RoyalThrone.Editor
         { if (type == LogType.Error || type == LogType.Exception || type == LogType.Assert) errors.Add(message); }
         static void Finish(Exception failure)
         {
-            EditorApplication.update -= Tick; Application.logMessageReceived -= Log;
+            running = false; EditorApplication.update -= Watch; Application.logMessageReceived -= Log;
+            // Opening the next level's card writes OpenLevel on the active profile: put the player's selection back.
+            PlayerPrefs.SetInt("OpenLevel", startingOpenLevel); PlayerPrefs.Save();
             if (failure != null) checks.Add("FAIL " + failure.Message);
             checks.AddRange(errors.Select(e => "ERROR " + e));
             File.WriteAllLines(Output + "checks-" + size + ".txt", new[] { "Royal Throne Unity home checks", DateTime.UtcNow.ToString("O"), "Resolution: " + size }.Concat(checks));

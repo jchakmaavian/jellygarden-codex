@@ -50,7 +50,8 @@ namespace RoyalThrone.Editor
             try
             {
                 qa.StartSession();Check(RoyalSave.Testing,"QA session enters isolated save routing");qa.Level=1;qa.Amount=10;qa.Speed=1;qa.Loop=false;
-                Check(FindButtons().Any(b=>b.GetComponentInChildren<Text>()?.text=="GAME TESTING MODE"),"Settings exposes the internal menu entry");
+                // Since 2026-09-22 the Mod Menu replaces the Game Testing Mode screen; its Settings entry reads "Mod Menu".
+                Check(FindButtons().Any(b=>b.GetComponentInChildren<Text>()?.text=="Mod Menu"),"Settings exposes the internal menu entry");
                 // Save semantics: missing/delete tombstones must not fall back to the player's value.
                 int raw=UnityEngine.PlayerPrefs.GetInt("Gems");RoyalSave.SetInt("Gems",4321);Check(RoyalSave.GetInt("Gems")==4321&&UnityEngine.PlayerPrefs.GetInt("Gems")==raw,"Writes land only in QA keys");
                 RoyalSave.DeleteKey("Gems");Check(!RoyalSave.HasKey("Gems")&&RoyalSave.GetInt("Gems",-7)==-7,"Deleted QA key does not expose the player value");RoyalSave.SetInt("Gems",money);
@@ -60,7 +61,14 @@ namespace RoyalThrone.Editor
                 yield return Command("Add stars");Check(RoyalSave.GetInt("Level.001.StarsCount")==3,"Stars add clamps to three");yield return Command("Remove stars");Check(RoyalSave.GetInt("Level.001.StarsCount")==2,"Stars remove updates the same level");
                 qa.Amount=2;yield return Command("Set lives");Check(InitScript.lifes==2&&RoyalSave.GetInt("Lifes")==2,"Lives runtime and save agree");
                 yield return Command("Empty lives");Check(InitScript.lifes==0,"Empty lives reaches zero");yield return Command("Refill lives");Check(InitScript.lifes==InitScript.Instance.CapOfLife,"Refill reaches the authored cap");
-                yield return Command("Test refill timer");int before=InitScript.lifes;yield return new WaitForSeconds(3.2f);Check(InitScript.lifes==before+1,"Real life counter awards exactly one life at timer expiry");
+                yield return Command("Test refill timer");int before=InitScript.lifes;float realStart=Time.realtimeSinceStartup;
+                // The life schedule runs on the real (UTC) clock. A scaled WaitForSeconds counts from the start of a frame that
+                // can be long here (every check rewrites the report), so it ended before the 3 s deadline: wait on real time.
+                while(InitScript.lifes==before&&Time.realtimeSinceStartup-realStart<6f)yield return null;
+                float arrived=Time.realtimeSinceStartup-realStart;yield return new WaitForSecondsRealtime(.5f);
+                Check(InitScript.lifes==before+1&&arrived>=2.8f&&arrived<=4f,"Real life counter awards exactly one life at timer expiry (lives "+before+" -> "+InitScript.lifes+" after "+arrived.ToString("0.00")+" s)");
+                // Full lives have no next life to time (the UTC schedule clears the timer), so reset from a short timer below the cap.
+                qa.Amount=InitScript.Instance.CapOfLife-1;yield return Command("Set lives");yield return Command("Test refill timer");
                 yield return Command("Reset refill timer");Check(InitScript.RestLifeTimer>3,"Reset uses the authored refill duration");
                 qa.Amount=8;yield return Command("Set booster stock");foreach(BoostType boost in Enum.GetValues(typeof(BoostType)))if(boost!=BoostType.None)Check(RoyalSave.GetInt(boost.ToString())==8,"Booster stock uses existing key: "+boost);
                 yield return Command("Open level");yield return Command("Restart level");yield return Command("Practice board");
