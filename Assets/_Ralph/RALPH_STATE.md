@@ -380,3 +380,28 @@ Throne's own implementation.
 - **Screenshots/evidence:** `kv/play/prefailed_giveup.txt`, `prefailed_continue.txt`, `prefailed_giveup_late.txt`, `prefailed_continue_poor.txt`
 - **Remaining risk:** taps during the first 0.38 s (buttons still sliding in) are accepted too. That is intended, since the buttons are already visible.
 - **Next task:** R-14 (pause HOME abandons the level without confirmation).
+
+### Iteration 13
+- **Date/time:** 2026-09-25 00:54-01:01 local
+- **Area inspected:** pause menu HOME (R-14)
+- **Issue:** HOME left the level at once, and the life spent at PLAY was lost with no warning. This is a genre-standard confirmation that Royal Throne lacked.
+- **Severity:** P2 (irreversible loss on one tap)
+- **Reproduction:** real path, QA profile. Lives 5, PLAY -> 4, gear -> HOME: straight to the map, lives 4 (`kv/play/r14_pause.png`).
+- **Root cause:** `AnimationManager.BackToMap` leaves immediately. An earlier pass deliberately stopped leaving from opening the fail card, and never added a confirm.
+- **Files changed:** `RoyalMenuSkin.cs` (builds the confirm card in the pause menu); `AnimationManager.cs` (BackToMap asks first; Back and reopen handling).
+- **Fix:**
+  - HOME on the pause menu shows a card built with the menu's own style: "LEAVE LEVEL?", "You will lose the life used for this level.", LEAVE and STAY.
+  - LEAVE runs the unchanged leave path. STAY and Back return to the pause menu.
+  - A reopened pause menu never shows a stale card. The life rule is unchanged.
+- **Tests executed:** recompile; fresh Play Mode; real path HOME -> card, STAY, HOME -> Back, HOME -> LEAVE, reopen pause, CONTINUE.
+- **Result:**
+  - The card shows while paused (screenshot checked: legible and consistent with the menu).
+  - STAY and Back hide it and stay paused.
+  - LEAVE goes to the map (lives 4, as the rule says).
+  - Reopened pause: no card. CONTINUE resumes.
+- **Regression result:** pause menu Continue, Music, SFX and Hints are unchanged. Back on the pause menu without the card still resumes (iteration 10).
+- **Console result:** no errors
+- **Performance result:** n/a (one small UI card built once)
+- **Screenshots/evidence:** `kv/play/r14b_confirm.png`, `back_H_confirm.txt`
+- **Remaining risk:** the legacy Settings popup (unreachable) shares the skin path, but the card is built only for MenuPause.
+- **Next task:** P2/P3 review: R-17 small defects (Sound/Music default mismatch, `print(DateOfExit)` on every launch, plurals, timer formats), R-18 compile warnings in non-protected runtime code, then verification mode.

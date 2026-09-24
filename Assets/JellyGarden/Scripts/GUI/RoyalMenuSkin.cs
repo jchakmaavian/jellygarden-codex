@@ -82,6 +82,27 @@ namespace RoyalThrone.Presentation
             // so the dim alone now carries it.
             var locked=t.Find("Lock");if(locked){var im=locked.GetComponent<Image>();if(im)im.color=new Color(.02f,.09f,.23f,.72f);Label(locked,"Royal lock","",0,0,120,40,19);}
         }
+        // Pause -> HOME leaves the level and the life spent on it, so the pause menu asks first. The card covers the
+        // pause panel (its dimmer blocks the buttons underneath); LEAVE runs the existing BackToMap, STAY returns.
+        public const string LeaveConfirmName="Royal leave confirm";
+        static void LeaveConfirm(Transform menu,Transform p)
+        {
+            if(p.Find(LeaveConfirmName))return;
+            var dim=new GameObject(LeaveConfirmName,typeof(RectTransform),typeof(Image));dim.transform.SetParent(p,false);
+            var dr=(RectTransform)dim.transform;dr.anchorMin=Vector2.zero;dr.anchorMax=Vector2.one;dr.offsetMin=dr.offsetMax=Vector2.zero;
+            var shade=dim.GetComponent<Image>();shade.color=new Color(.005f,.02f,.07f,.78f);shade.raycastTarget=true;
+            var card=new GameObject("Card",typeof(RectTransform)).transform;card.SetParent(dim.transform,false);Place(card,0,0,540,340);Surface(card);
+            Label(card,"Royal confirm title","LEAVE LEVEL?",0,105,460,62,34);
+            Label(card,"Royal confirm text","You will lose the life used for this level.",0,32,470,56,22);
+            var manager=menu.GetComponent<JellyGarden.Scripts.GUI.AnimationManager>();
+            var leave=new GameObject("Leave",typeof(RectTransform),typeof(Image),typeof(UnityEngine.UI.Button));leave.transform.SetParent(card,false);
+            Button(leave.transform,"LEAVE",-118,-88,210,76,28);
+            leave.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{if(manager)manager.BackToMap();});
+            var stay=new GameObject("Stay",typeof(RectTransform),typeof(Image),typeof(UnityEngine.UI.Button));stay.transform.SetParent(card,false);
+            Button(stay.transform,"STAY",118,-88,210,76,28);
+            stay.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{dim.SetActive(false);RoyalAudioDirector.Get?.Play(RoyalCue.Click);});
+            dim.SetActive(false);
+        }
         public static void Apply(Transform root,Font display)
         {
             font=display;
@@ -126,6 +147,7 @@ namespace RoyalThrone.Presentation
                         hint.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{RoyalHintSettings.Enabled=!RoyalHintSettings.Enabled;RoyalAudioDirector.Get?.Play(RoyalCue.Click);});
                         Button(p.Find("Map"),"HOME",0,-241,280,68,24);Button(p.Find("Info"),"HELP",0,-189,280,68,24);
                         if(paused)Label(p,"Royal hint description","A gentle clue after a few quiet seconds",0,-303,510,38,19);
+                        if(paused)LeaveConfirm(menu,p);
                         break;
                     case "MenuComplete":case "MenuFailed":
                         bool win=menu.name=="MenuComplete";Base(menu,p,870,win?"WELL PLAYED!":"TRY AGAIN");Field(p,"Level",0,288,420,50,30);

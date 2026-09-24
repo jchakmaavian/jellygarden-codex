@@ -82,6 +82,8 @@ namespace JellyGarden.Scripts.GUI
 
             if (name == "Settings" || name == "MenuPause")
             {
+                var leaveConfirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
+                if (leaveConfirm) leaveConfirm.gameObject.SetActive(false);   // a reopened pause menu never shows a stale question
                 if (PlayerPrefs.GetInt("Sound") == 0)
                     transform.Find("Image/Sound/SoundOff").gameObject.SetActive(true);
                 else
@@ -168,8 +170,10 @@ namespace JellyGarden.Scripts.GUI
                 }
                 else if (name == "MenuPause")
                 {
-                    // Back on the pause menu resumes, exactly like its Continue button.
-                    Play();
+                    // Back first dismisses the leave question; otherwise it resumes, exactly like the Continue button.
+                    var leaveConfirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
+                    if (leaveConfirm && leaveConfirm.gameObject.activeSelf) leaveConfirm.gameObject.SetActive(false);
+                    else Play();
                     RoyalThrone.Presentation.RoyalBackButton.Consume();
                 }
             }
@@ -449,6 +453,18 @@ namespace JellyGarden.Scripts.GUI
 
         public void BackToMap()
         {
+            if (name == "MenuPause")
+            {
+                // Leaving costs the life spent on this level: the pause menu asks first (LEAVE calls back here).
+                var confirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
+                if (confirm && !confirm.gameObject.activeSelf)
+                {
+                    SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+                    confirm.gameObject.SetActive(true);
+                    return;
+                }
+                if (confirm) confirm.gameObject.SetActive(false);
+            }
             Time.timeScale = 1;
             // Leaving from the pause menu is not a defeat. This used to enter GameOver, which
             // opens the "try again" failed summary over the map; go straight to the map instead.
