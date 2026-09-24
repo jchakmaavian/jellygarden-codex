@@ -423,3 +423,78 @@ Throne's own implementation.
 - **Screenshots/evidence:** driver log `kv/play/ralph-*.txt`
 - **Remaining risk:** the profile name is "King Vanguard" (`RoyalOfflineMode.KingName`) while the character assets are spelled "Venguard". This is a naming decision for the user, not changed.
 - **Next task:** verification mode. Lives and refill timer, settings persistence across a restart, then missing-reference and duplicate-manager scans, resolution check, performance sample.
+
+### Iteration 15 (verification V-01)
+- **Date/time:** 2026-09-25 01:09-01:10 local
+- **Area inspected:** lives refill timer and home lives display
+- **Issue:** none found
+- **Severity:** n/a
+- **Reproduction:** QA profile, 2 lives. `InitScript.nextLifeUtc` was set directly to simulate three cases:
+  - (a) the deadline passed 11 min ago (a long offline gap);
+  - (b) the deadline is 3 min ahead (a normal wait);
+  - (c) the deadline is 60 min ahead (the device clock was moved back).
+- **Root cause:** n/a
+- **Files changed:** none
+- **Fix:** none
+- **Tests executed:** `UpdateLives()` and the home HUD for each case.
+- **Result:**
+  - (a) lives 5/5, no deadline, HUD "5 / Full". The gap refilled and capped at the maximum.
+  - (b) lives 2/5, 3.0 min left, HUD "2:58".
+  - (c) lives 2/5. The countdown restarted at 5.0 min (HUD "4:58") instead of waiting 60 min.
+- **Regression result:** n/a (read-only)
+- **Console result:** no entries
+- **Performance result:** n/a
+- **Screenshots/evidence:** driver log `kv/play/ralph-010953.txt`
+- **Remaining risk:** the refill uses UTC, so time-zone changes cannot move it. A device clock moved forward still refills early, as in every offline game without a server clock.
+- **Next task:** settings persistence across a restart.
+
+### Iteration 16 (verification V-02)
+- **Date/time:** 2026-09-25 01:11-01:12 local
+- **Area inspected:** settings persistence (home Settings dialog: Music, Sound, Motion, Hints)
+- **Issue:** none found
+- **Severity:** n/a
+- **Reproduction:** QA profile. Pressed all four toggles, then stopped and restarted Play Mode (a full app restart from the title screen).
+- **Root cause:** n/a
+- **Files changed:** none
+- **Fix:** none
+- **Tests executed:** toggle -> read back; restart -> read back; toggle back -> read back.
+- **Result:** all four went 1 -> 0, stayed 0 after the restart, and read 1 after toggling back. `ToggleSetting` calls `Save()` on each change.
+- **Regression result:** the settings were restored to On in the QA namespace. The real profile was never written.
+- **Console result:** no entries
+- **Performance result:** n/a
+- **Screenshots/evidence:** driver logs `kv/play/ralph-011106.txt`, `ralph-011146.txt`
+- **Remaining risk:** Windows editor PlayerPrefs live in the registry. A device check of the Android PlayerPrefs file is still open (with R-05).
+- **Next task:** missing-script, broken-reference and duplicate-manager scans.
+
+### Iteration 17 (verification V-03)
+- **Date/time:** 2026-09-25 01:13-01:22 local
+- **Area inspected:** missing scripts, broken serialized references and duplicate singletons/managers on home, in a level, and back on home
+- **Issue:** no defect. Three legacy Missing asset references exist, none visible (details below).
+- **Severity:** n/a (P3 at most, not player-visible)
+- **Reproduction:**
+  - Runtime scan: every component on every loaded object (inactive included) through `SerializedObject`.
+  - Offline scan: every `{fileID, guid}` in the two build scenes resolved against the 28,194 `.meta` GUIDs in Assets, Packages and PackageCache.
+- **Root cause:**
+  - The three Missing references are original JellyGarden assets that are not in the project (`game.unity`):
+    - the `Offline/Slot/Image` and `Offline/Slot/Button` sprites in MenuPlay. This is the old offline leaderboard, which is inactive, and `RoyalMenuSkin.HideVisual` sets it to alpha 0;
+    - the material of `CanvasTutorial/Label`. It is inactive until the tutorial runs, and UI then falls back to the default material, which is how it rendered in iteration 7.
+  - After leaving a level, `LevelManager.squaresArray` holds 81 references to the destroyed board squares. That is runtime state, rebuilt at the next level (`InitLevel` :585), and nothing reads it on the map.
+- **Files changed:** none. Clearing the three references would mean editing `game.unity`, which holds the protected board setup, for no visible gain.
+- **Fix:** none
+- **Tests executed:** the scan on home, in level 12, and on home again after leaving (pause -> HOME -> LEAVE). A detail probe gave the path, visibility and target of each dead reference. The offline scan covered `main.unity` and `game.unity`.
+- **Result:**
+  - Missing scripts: 0 in all three states.
+  - Managers: LevelManager, InitScript, MenuManager, SoundBase, MusicBase, InputManager, RoyalHomeScreen, RoyalGameplayPresentation, ReferenceBoosterBar, EventSystem and AudioListener are exactly 1 each in all three states.
+  - `main.unity`: 0 missing references. `game.unity`: the 3 above.
+- **Regression result:** n/a (read-only). The leave-confirm path from iteration 13 worked inside the scan run.
+- **Console result:** no entries
+- **Performance result:** n/a
+- **Resources prefabs (loaded at runtime, so not all instantiated during the scan):**
+  - All 85 prefabs under `Resources/` were loaded in the editor and checked with `GetMonoBehavioursWithMissingScriptCount` plus the same reference check: 0 missing scripts, 0 dead references.
+  - The offline scanner flagged `Particles/PopupScores.prefab`. It is a Unity 5-format prefab that references the pre-package `UnityEngine.UI.dll` GUID for `Text`/`Shadow`, which Unity remaps on load, so this was a false positive.
+- **Screenshots/evidence:**
+  - driver logs `kv/play/ralph-011606.txt`, `ralph-011733.txt`;
+  - scanners `kv/deadref_probe.cs`, `kv/scene_missing.py`, `kv/prefab_check.py`.
+- **Scene-dependency prefabs:** the 7 prefabs outside `Resources/` that the build scenes depend on (from `AssetDatabase.GetDependencies`, 377 dependencies) got the same editor check: 0 missing scripts, 0 dead references.
+- **Remaining risk:** none found for references. Assets loaded by path through Addressables or AssetBundles would not be covered, but the project uses neither for gameplay.
+- **Next task:** resolution/aspect check, then a performance sample.
