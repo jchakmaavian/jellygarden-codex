@@ -1,0 +1,228 @@
+export_anim_cannon_Material
+jester_hat_Material
+HammerAtlas
+cannon_250px
+royal_pass_claim_hammer
+royal_pass_claim_jester
+jester_hat
+cannon_250px_shadow
+jester_hat
+hammer_shadow
+royal_pass_claim_cannon
+export_anim_cannon
+cannon_ball
+jester_hat_shadow
+export_anim_cannon.skel
+./photoshop/images/'/Users/ikbalnamli/Desktop/cannon_spine
+jester_hat.atlas
+jester_hat.png
+{"remainingCannonCountForReward":10,"ballCountThresholds":[3,5],"itemsData":[{"id":1,"healths":[40,60,80]},{"id":2,"healths":[100,150,200]},{"id":3,"healths":[30,40,50]},{"id":4,"healths":[60,80,10
+export_anim_cannon.atlas
+export_anim_cannon.png
+jester_hat.skel
+./photoshop/images/N/Users/ikbalnamli/dev/repos/royal-match/External/Spine/jester_spine/photoshop
+HammerExplodeAnimation2
+jester_use_exit
+hammer_use_hit
+hammer_use_appear
+hammer_use_disappear
+jester_use_enter
+cannon_use
+cannon_explode
+cannon_move
+HammerAnimator
+HammerExplodeAnimation2
+Base Layer.HammerExplodeAnimation2
+add_hammer
+Hammer_animasyon.008
+Hammer_animasyon.003
+hammer_icon
+Hammer_animasyon.021
+Hammer_golge
+Hammer_animasyon.009
+TeamLogo-Logos-cannon01
+add_jester
+Hammer_animasyon.004
+add_cannon
+Hammer_animasyon.022
+Hammer_animasyon.007
+Hammer_animasyon.027
+Hammer_animasyon.005
+cannon_front
+cannon_back
+cannon_250px
+royal_pass_claim_hammer
+left_cannon_cap_shadow
+royal_pass_claim_jester
+cannon_250px_shadow
+jester_hat
+right_cannon_cap_shadow
+hammer_shadow
+royal_pass_claim_cannon
+cannon_cap
+left_cannon_shadow
+right_cannon_shadow
+cannon_ball
+jester_hat_shadow
+hammer_01_sap
+hammer_01_kafa
+cannon_icon
+Hammer_animasyon.016
+jester_hat_icon
+Hammer_animasyon.010
+Hammer_animasyon.020
+Hammer_animasyon.028
+Hammer_animasyon.023
+Hammer_animasyon.006
+TeamLogo-Logos-cannon02
+JesterHatAnimationParticle
+Cannon_Body_To_Left
+HammerReward
+HammerReward
+HammerParent
+Cannon_Particles_Left
+LadderOfferJester
+JesterHatBoosterInfo
+BuyBoosterHammer
+OfferJester
+jester_hat_spine
+Cannon_Body_To_Left
+LadderOfferTypeTwoJester
+LadderOfferHammer
+HammerReward
+Cannon_Body_To_Right
+Cannon_Ring_To_Left
+Cannon_Ring_To_Right
+RewardIconHammer
+HammerIconView
+cannon_fire02
+LadderOfferTypeTwoHammer
+Cannon_Particles_Front
+CannonBoosterInfo
+JesterHatPrefab
+BuyBoosterCannon
+HammerBoosterUnlock
+CannonBoosterUnlock
+JesterHatBoosterUnlock
+HammerBoosterInfo
+CannonBoosterParticles
+Cannon_Body_To_Left
+NewRoyalPassUnclaimedJester
+NewRoyalPassUnclaimedHammerWithRibbon
+NewRoyalPassUnclaimedCannonWithRibbon
+RoyalPassUnclaimedJesterWithRibbon
+RoyalPassUnclaimedJester
+NewRoyalPassUnclaimedHammer
+RoyalPassUnclaimedCannon
+NewRoyalPassUnclaimedCannon
+RoyalPassUnclaimedHammer
+RoyalPassUnclaimedHammerWithRibbon
+RoyalPassUnclaimedCannonWithRibbon
+NewRoyalPassUnclaimedJesterWithRibbon
+OfferHammer
+RewardIconCannon
+CannonBoosterPrefab
+HammerBoosterPrefab
+BarRewardJester
+BarRewardCannon
+BarRewardHammer
+JesterHatBoosterParticles
+CannonIconView
+JesterHatShuffleButtonPrefab
+cannon_spine_prefab
+Cannon_Particles_Right
+JesterHatIconView
+Cannon_Body_To_Right
+LadderOfferTypeTwoCannon
+HammerBoosterParticles
+Cannon_Ring_To_Right
+Cannon_Body_To_Right
+Cannon_Ring_To_Right
+Cannon_Ring_To_Left
+Cannon_Ring_To_Left (1)
+CannonBoosterBallPrefab
+OfferCannon
+BuyBoosterJesterHat
+RewardIconJester
+Cannon_Ring_To_Left
+LadderOfferCannon
+cannon_back
+cannon_cap
+left_cannon_cap_shadow
+right_cannon_shadow
+left_cannon_shadow
+right_cannon_cap_shadow
+cannon_front
+Put the cannon
+Colloca cannone
+Slam the hammer
+Schlag mit Hammer
+Clears all the objects in a row!%
+CannonBoosterUnlock
+CannonUseInfo
+Royal Hammer
+niglicher Hammer
+Royal Hammer!
+niglicher Hammer!
+HammerBoosterUnlock
+HammerUseInfo
+JesterHat!
+Jester Hat!
+JesterHatBoosterUnlock
+JesterUseInfo
+Jester Hat
+Use the hammer to rescue the king!
+Verwende den Hammer, um den K
+CANNON clears everything in a column!
+Il Cannone rimuove tutti gli oggetti in una colonna!)
+JESTER HAT shuffles
+Tap on ROYAL HAMMER to select it!
+NIGLICHEN HAMMER, um ihn anzuw
+Your remaining elixirs are converted to Royal Hammer!
+Your remaining elixirs are converted to Royal Hammers!
+OceanOdysseyCannonTooltip1
+OceanOdysseyCannonTooltip2
+ConfirmationDialogInJesterHatText
+You can use Jester Hat in levels to shuffle all the items on the board!
+ConfirmationDialogInHammerText
+You can use Hammer in levels to clear any object on the board!
+Verwende Hammer in Leveln, um ein Objekt auf dem Brett zu r
+ConfirmationDialogInCannonText
+You can use Cannon in levels to clear all the objects in a column!
+Puoi usare il Cannone per rimuovere tutti gli oggetti in una colonna!
+You can use Arrow in levels to clear all the objects in a row!
+Install cannon
+Installa cannone
+Bring cannonballs
+Porta palle cannone
+Your remaining tickets are converted to a Jester Hat!
+Your remaining tickets are converted to Jester Hats!;
+CannonBoosterAssets
+export_anim_cannon_Atlas
+export_anim_cannon_SkeletonData
+jester_hat_Atlas
+jester_hat_SkeletonData
+Royal Hammer!
+Jester Hat
+Royal Hammer
+JesterUseInfo
+Jester Hat
+JesterHat!
+Jester Hat!
+JesterHat!
+Royal Hammer!
+Jester Hat
+Royal Hammer!
+Jester Hat
+Royal Hammer
+CannonUseInfo
+Jester Hat!
+Jester Hat!
+JesterHat!
+Jester Hat!
+Royal Hammer
+Jester Hat
+JesterHat!
+Royal Hammer!
+Royal Hammer
+HammerUseInfo

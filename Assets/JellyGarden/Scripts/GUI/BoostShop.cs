@@ -26,7 +26,11 @@ namespace JellyGarden.Scripts.GUI
         Colorful_bomb,
         Hand,
         Random_color,
-        None
+        None,
+        RoyalHammer,
+        RoyalArrow,
+        RoyalCannon,
+        RoyalJester
     }
 
     public class BoostShop : MonoBehaviour {
@@ -52,6 +56,7 @@ namespace JellyGarden.Scripts.GUI
         // Update is called once per frame
         public void SetBoost (BoostType _boostType ) 
         {
+            if(RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.IsTool(_boostType)){RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Instance.OpenShop(_boostType);return;}
             boostType = _boostType;
             gameObject.SetActive( true );
             icon.sprite = boostProducts[(int)_boostType].icon;

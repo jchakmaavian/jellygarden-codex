@@ -99,6 +99,8 @@ namespace RoyalThrone.Presentation
             Pair("Settings frame",pause,"Game-booster_button_frame",0,0,1,1);
             Pair("Settings gear",pause,"Game-settings_button_gear",.22f,.22f,.78f,.78f);
             var image=pause.gameObject.AddComponent<Image>();image.color=Color.clear;var button=pause.gameObject.AddComponent<Button>();button.onClick.AddListener(()=>{MenuManager.Instance.ShowMenuPause(true);});
+            var tools=gameObject.AddComponent<RoyalThrone.ReferenceGameplay.ReferenceBoosterBar>();
+            tools.Attach(content,display);
             var lm=GetComponent<LevelManager>();
             if(lm)
             {
@@ -122,9 +124,9 @@ namespace RoyalThrone.Presentation
                     Pair("Green button",face,"Game-booster_button",.07f,.07f,.93f,.93f);
                     Pair("Gold frame",face,"Game-booster_button_frame",0,0,1,1);
                     var art=Rect("Existing booster action",face,.21f,.21f,.79f,.79f).gameObject.AddComponent<Image>();
-                    art.sprite=RoyalGameplayArt.Art(artNames[i])??RoyalPieceSkin.Art(artNames[i]);art.preserveAspect=true;art.raycastTarget=false;
+                    art.sprite=RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Art(i);art.preserveAspect=true;art.raycastTarget=false;
                     foreach(var text in boost.GetComponentsInChildren<Text>(true)){text.font=display;text.color=new Color(1,.96f,.8f);}
-                    RoyalMenuSkin.Boost(boost,true);
+                    tools.Bind(boost.GetComponent<BoostIcon>(),i);
                 }
             }
             // Retain the real boost buttons and their inventory/payment behaviour.

@@ -39,6 +39,7 @@ namespace JellyGarden.Scripts.GUI
 
 		public void ActivateBoost ()
 		{
+            if(RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.IsTool(type)){RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Instance.Choose(type);return;}
 			if (LevelManager.THIS.ActivatedBoost == this) {
 				UnCheckBoost ();
 				return;

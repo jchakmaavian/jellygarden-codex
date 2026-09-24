@@ -245,6 +245,7 @@ namespace JellyGarden.Scripts
         /// protects individual swaps, falling pieces and already selected matches.
         /// </summary>
         public bool BoardInputAllowed =>
+            !RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.OwnsInput &&
             gameStatus == GameState.Playing && Limit > 0 && (!DragBlocked || royalResolving || InputSwaps > 0) &&
             (MenuManager.Instance == null || !MenuManager.Instance.BlocksBoardInput);
 

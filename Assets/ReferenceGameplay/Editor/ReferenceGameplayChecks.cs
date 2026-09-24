@@ -114,6 +114,13 @@ namespace RoyalThrone.ReferenceGameplay.Editor
                         AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
                         SetResult("Refreshed edited scripts without rebuilding imported assets.");
                         break;
+                    case "tool-checks":
+#if !ROYAL_DISABLE_QA
+                        if (!EditorApplication.isPlaying || !RoyalQaService.Instance || !RoyalQaService.Instance.Ready || RoyalSave.Testing)
+                            throw new InvalidOperationException("Tool checks need gameplay ready without a QA session.");
+                        RoyalThrone.Editor.RoyalRegressionRunner.Run(ReferenceBoosterChecks.Run());
+#endif
+                        break;
                     case "layout-checks":
 #if !ROYAL_DISABLE_QA
                         if (!EditorApplication.isPlaying || !RoyalQaService.Instance || !RoyalQaService.Instance.Ready || RoyalSave.Testing)
