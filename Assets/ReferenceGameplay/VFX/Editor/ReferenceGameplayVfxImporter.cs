@@ -23,10 +23,11 @@ public static class ReferenceGameplayVfxImporter
     [Serializable] public class RectData {public float x,y,width,height;}
     static readonly Regex Ptr=new Regex(@"\{\s*""m_FileID""\s*:\s*(-?\d+)\s*,\s*""m_PathID""\s*:\s*(-?\d+)\s*\}");
     [MenuItem("Royal Throne/Reference Gameplay/Import Native VFX")]
-    public static void Build()
+    public static void Build() => BuildFile("Design/ReferenceGameplayImport/Media/NativeParticles.json");
+    public static void BuildFile(string sourceFile)
     {
         string project=Path.GetFullPath(Path.Combine(Application.dataPath,".."));
-        var source=JsonUtility.FromJson<Document>(File.ReadAllText(Path.Combine(project,"Design/ReferenceGameplayImport/Media/NativeParticles.json")));
+        var source=JsonUtility.FromJson<Document>(File.ReadAllText(Path.Combine(project,sourceFile)));
         var incomplete=new List<string>();
         Directory.CreateDirectory(Base+"AtlasSprites");Directory.CreateDirectory(Base+"Materials");Directory.CreateDirectory(Base+"Resources/ReferenceGameplay/VFX");AssetDatabase.Refresh();
         var references=new Dictionary<long,UnityEngine.Object>();
@@ -116,7 +117,7 @@ public static class ReferenceGameplayVfxImporter
             }
             finally{UnityEngine.Object.DestroyImmediate(root);}
         }
-        AssetDatabase.SaveAssets();AssetDatabase.Refresh();File.WriteAllLines(Path.Combine(project,"Design/ReferenceGameplayImport/Media/VfxIncomplete.txt"),incomplete);Debug.Log("REFERENCE_VFX_IMPORT_COMPLETE: "+source.prefabs.Length+" native particle/beam hierarchies; "+incomplete.Count+" explicitly disabled source templates.");
+        AssetDatabase.SaveAssets();AssetDatabase.Refresh();File.WriteAllLines(Path.Combine(project,sourceFile+".limitations.txt"),incomplete);Debug.Log("REFERENCE_VFX_IMPORT_COMPLETE: "+source.prefabs.Length+" native particle/beam hierarchies; "+incomplete.Count+" explicitly disabled source templates.");
     }
     [Serializable] public class VerifiedData {public List<VerifiedComponent> components=new List<VerifiedComponent>();}
     [Serializable] public class VerifiedComponent {public string prefab,path,type,json;public long sourcePathId;}

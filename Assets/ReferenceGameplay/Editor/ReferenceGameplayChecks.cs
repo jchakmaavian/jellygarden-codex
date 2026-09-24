@@ -114,6 +114,19 @@ namespace RoyalThrone.ReferenceGameplay.Editor
                         AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
                         SetResult("Refreshed edited scripts without rebuilding imported assets.");
                         break;
+                    case "import-finish":
+                        ReferenceGameplayVfxImporter.BuildFile("Design/ReferenceGameplayImport/Media/NativeFinishingParticles.json");
+                        break;
+                    case "home-only-checks":
+#if !ROYAL_DISABLE_QA
+                        RoyalThrone.Editor.RoyalRegressionRunner.Run(ReferenceHomeFinishChecks.Run(true));
+#endif
+                        break;
+                    case "home-finish-checks":
+#if !ROYAL_DISABLE_QA
+                        RoyalThrone.Editor.RoyalRegressionRunner.Run(ReferenceHomeFinishChecks.Run());
+#endif
+                        break;
                     case "tool-checks":
 #if !ROYAL_DISABLE_QA
                         if (!EditorApplication.isPlaying || !RoyalQaService.Instance || !RoyalQaService.Instance.Ready || RoyalSave.Testing)

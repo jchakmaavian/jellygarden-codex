@@ -1,0 +1,9 @@
+RUNNING homepage and finishing stage
+PASS Imported homepage adapter active on existing home
+PASS Homepage is visible and original level button remains connected
+PASS Resource controls and five navigation buttons retained
+PASS Background sprite unchanged
+PASS Existing Settings action still opens
+PASS Both recovered native finishing particle prefabs available
+PASS Normal save and currency restored
+ALL CHECKS PASSED
