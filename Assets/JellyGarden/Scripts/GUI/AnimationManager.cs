@@ -75,6 +75,7 @@ namespace JellyGarden.Scripts.GUI
                 SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
                 transform.Find("Video").gameObject.SetActive(true);
                 transform.Find("Buy").GetComponent<Button>().interactable = true;
+                failedChoiceMade = false;
 
                 GetComponent<Animation>().Play();
             }
@@ -278,7 +279,9 @@ namespace JellyGarden.Scripts.GUI
         {
             if (name == "PreFailed")
             {
-                GetComponent<Animation>()["bannerFailed"].speed = 0;
+                // Hold for the player's choice, unless it was already made while the banner was still arriving.
+                if (!failedChoiceMade)
+                    GetComponent<Animation>()["bannerFailed"].speed = 0;
                 #if UNITY_ADS
 
             if (InitScript.Instance.enableUnityAds)
@@ -585,9 +588,25 @@ namespace JellyGarden.Scripts.GUI
 
         }
 
+        // PreFailed: the buttons are in place about 0.4 s after the offer opens, but the clip only holds at its
+        // WaitForGiveUp event (2.05 s); CONTINUE used to require that hold and END LEVEL was re-held by it, so early
+        // taps were lost. A choice is now accepted as soon as it is made, once per showing.
+        bool failedChoiceMade;
+
+        void SkipFailedBannerHold()
+        {
+            // An early choice continues from the hold point, so the exit plays at once as it does after a late choice.
+            var animation = GetComponent<Animation>();
+            var state = animation ? animation["bannerFailed"] : null;
+            if (state == null || !state.clip) return;
+            foreach (var e in state.clip.events)
+                if (e.functionName == "WaitForGiveUp" && state.time < e.time)
+                    state.time = e.time + 0.01f;
+        }
+
         public void BuyFailed(GameObject button)
         {
-            if (GetComponent<Animation>()["bannerFailed"].speed == 0)
+            if (!failedChoiceMade)
             {
                 if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
                 {
@@ -604,6 +623,8 @@ namespace JellyGarden.Scripts.GUI
 
         public void GoOnFailed()
         {
+            failedChoiceMade = true;
+            SkipFailedBannerHold();
             if (LevelManager.THIS.limitType == LIMIT.MOVES)
                 LevelManager.THIS.Limit += LevelManager.THIS.ExtraFailedMoves;
             else
@@ -614,6 +635,9 @@ namespace JellyGarden.Scripts.GUI
 
         public void GiveUp()
         {
+            if (failedChoiceMade) return;
+            failedChoiceMade = true;
+            SkipFailedBannerHold();
             GetComponent<Animation>()["bannerFailed"].speed = 1;
         }
 

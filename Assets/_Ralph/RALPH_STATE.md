@@ -349,3 +349,34 @@ Throne's own implementation.
 - **Screenshots/evidence:** driver log `kv/play/ralph-004408.txt`
 - **Remaining risk:** real OS backgrounding and focus loss need a device check (Android notification shade, calls).
 - **Next task:** R-12 (PreFailed buttons ignore taps for about 2 s).
+
+### Iteration 12
+- **Date/time:** 2026-09-25 00:46-00:54 local
+- **Area inspected:** PreFailed ("so close") continue / end-level offer (R-12)
+- **Issue:** the offer's buttons are in place about 0.4 s after it opens, but choices made before 2.05 s were lost.
+  - CONTINUE required the clip to be held (`speed == 0`), which only happens at the `WaitForGiveUp` event (2.05 s).
+  - END LEVEL set speed 1, but the clip then held at 2.05 s anyway and waited for a second tap.
+- **Severity:** P2 (dropped input on a key decision screen)
+- **Reproduction:** exact-timing in-game coroutine (`kv/prefailed_probe.cs`), QA level 12, offer opened as the game does (0 moves -> PreFailed).
+  - END LEVEL at 0.6 s: the clip held at 2.05 s and the offer was still open at 6 s.
+  - CONTINUE at 0.6 s: ignored; moves 0; held open at 6 s.
+  - Late END LEVEL at 2.6 s: fail card at 3.6 s (works).
+- **Root cause:** the Royal presenter shortened the entrance, but the input gate and the hold event kept the original clip's 2.05 s timing.
+- **Files changed:** `Assets/JellyGarden/Scripts/GUI/AnimationManager.cs`
+- **Fix:**
+  - A per-showing `failedChoiceMade` flag, reset on open.
+  - CONTINUE and END LEVEL are accepted as soon as tapped, once.
+  - The hold event does not re-hold after a choice.
+  - An early choice jumps the clip just past the hold point, so the exit plays at once.
+  - Prices, extra moves and flow are unchanged.
+- **Tests executed:** recompile; fresh Play Mode; the same probe for early END LEVEL, early CONTINUE and late END LEVEL; edge r12c (early CONTINUE with 3 coins).
+- **Result:**
+  - Early END LEVEL: fail card at 1.58 s (1 s after the tap).
+  - Early CONTINUE: +5 moves and Playing; offer closed at 1.60 s.
+  - Late END LEVEL: fail card at 3.61 s, unchanged.
+- **Regression result:** with too few coins, CONTINUE opens the gem shop, the offer holds, and END LEVEL then shows the fail card.
+- **Console result:** no errors
+- **Performance result:** n/a
+- **Screenshots/evidence:** `kv/play/prefailed_giveup.txt`, `prefailed_continue.txt`, `prefailed_giveup_late.txt`, `prefailed_continue_poor.txt`
+- **Remaining risk:** taps during the first 0.38 s (buttons still sliding in) are accepted too. That is intended, since the buttons are already visible.
+- **Next task:** R-14 (pause HOME abandons the level without confirmation).
