@@ -20,7 +20,6 @@ namespace JellyGarden.Scripts.Editor
 {
 	public class PostImporting : AssetPostprocessor
 	{
-		static bool imported = false;
 
 		static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
 		{
@@ -138,13 +137,13 @@ namespace JellyGarden.Scripts.Editor
 			{
 				foreach (BuildTargetGroup _target in _buildTargets)
 				{
-					PlayerSettings.SetScriptingDefineSymbolsForGroup(_target, "");
+					PlayerSettings.SetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(_target), "");
 				}
 				EditorPrefs.SetBool(Application.dataPath+"Project_opened",true);
 			}
 			foreach (BuildTargetGroup _target in _buildTargets)
 			{
-				string defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(_target);
+				string defines = PlayerSettings.GetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(_target));
 				CheckDefines(ref defines,"Assets/GoogleMobileAds", "GOOGLE_MOBILE_ADS");
 				CheckDefines(ref defines,"Assets/Chartboost", "CHARTBOOST_ADS");
 				if (CheckDefines(ref defines, "Assets/FacebookSDK", "FACEBOOK"))
@@ -152,7 +151,7 @@ namespace JellyGarden.Scripts.Editor
 				CheckDefines(ref defines,"Assets/GameSparks", "GAMESPARKS");
 				// Royal Throne: UNITY_ADS is no longer forced on. The Ads SDK is not installed and the inherited IDs belong to the original game.
 
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(_target, defines);
+				PlayerSettings.SetScriptingDefineSymbols(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(_target), defines);
 			}
 		}
 

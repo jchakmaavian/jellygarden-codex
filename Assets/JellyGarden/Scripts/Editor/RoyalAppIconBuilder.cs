@@ -32,7 +32,11 @@ namespace RoyalThrone.Editor
             var icon=Load("royal-throne-icon");var foreground=Load("royal-throne-icon-foreground");var background=Load("royal-throne-icon-background");
             PlayerSettings.SetIcons(NamedBuildTarget.Unknown,new[]{icon},IconKind.Any);
             int slots=0;
+            // Legacy and Round are deprecated in 6000.5 but still filled: dropping them changes the APK's icon
+            // resources, which only a device build can verify. Revisit when Unity removes them (minSdk is 26).
+#pragma warning disable CS0618
             foreach(var kind in new[]{AndroidPlatformIconKind.Legacy,AndroidPlatformIconKind.Round,AndroidPlatformIconKind.Adaptive})
+#pragma warning restore CS0618
             {
                 var icons=PlayerSettings.GetPlatformIcons(NamedBuildTarget.Android,kind);
                 foreach(var slot in icons)slot.SetTextures(kind==AndroidPlatformIconKind.Adaptive?new[]{background,foreground}:new[]{icon});

@@ -23,7 +23,7 @@ namespace RoyalThrone.ReferenceGameplay.Editor
         public static IEnumerator Run(){Directory.CreateDirectory(Folder);File.WriteAllText(Folder+"/checks.txt","Homepage sky checks\n");var qa=RoyalQaService.Instance;var lm=LevelManager.THIS;int coins=InitScript.Gems;
             EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView")).Focus();
             try{qa.StartSession();qa.Visible=false;RoyalSave.SetInt("RoyalThrone.HomeMotion",1);yield return new WaitForSecondsRealtime(.6f);
-                var home=UnityEngine.Object.FindFirstObjectByType<RoyalHomeScreen>();var sky=home.GetComponent<ReferenceHomeSky>();
+                var home=UnityEngine.Object.FindAnyObjectByType<RoyalHomeScreen>();var sky=home.GetComponent<ReferenceHomeSky>();
                 var bg=home.transform.Find("Castle framing/Royal blue courtyard").GetComponent<Image>();
                 Check(home.IsHomeVisible&&bg.sprite==Resources.Load<Sprite>("ReferenceGameplay/Home/Sky/Homepage_bg"),"Supplied background appears on live homepage");
                 Check(sky&&sky.CloudCount==3,"Exactly three cloud sprites created");Check(bg.GetComponentsInChildren<Image>().Where(i=>i.name.StartsWith("Sky cloud ")).All(i=>!i.raycastTarget&&i.transform.parent==bg.transform),"Clouds render behind controls and never intercept taps");

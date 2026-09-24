@@ -46,7 +46,6 @@ namespace RoyalThrone.Presentation
         Vector2 lastSize;
         AsyncOperation loadOperation;
         float startedAt;
-        bool preview;
         bool journeyBuilt;
         RoyalPanelGraphic[] journeySparks;
         float loadingCycle;
@@ -316,7 +315,6 @@ namespace RoyalThrone.Presentation
         void RestoreTitle(string message)
         {
             IsLoading = false;
-            preview = false;
             titleGroup.alpha = 1;
             wholeScreen.alpha = 1;
             titleGroup.interactable = titleGroup.blocksRaycasts = true;
@@ -329,7 +327,7 @@ namespace RoyalThrone.Presentation
         public void PreviewLoadingAnimation()
         {
             if (!Application.isPlaying || IsLoading) return;
-            IsLoading = preview = true;
+            IsLoading = true;
             playButton.interactable = false;
             titleGroup.interactable = titleGroup.blocksRaycasts = false;
             StartCoroutine(Preview());

@@ -189,7 +189,6 @@ namespace JellyGarden.Scripts
         public GameObject ingrObject;
         public GameObject blocksObject;
         public GameObject scoreTargetObject;
-        private bool matchesGot;
         bool ingredientFly;
         public GameObject[] gratzWords;
 
@@ -267,11 +266,11 @@ namespace JellyGarden.Scripts
         public int lastRandColor;
         public bool onlyFalling;
         public bool levelLoaded;
-        public Hashtable countedSquares;
+        [global::System.NonSerialized] public Hashtable countedSquares;
         public Sprite doubleBlock;
         public bool FacebookEnable;
         internal int latstMatchColor;
-        public CombineManager combineManager;
+        [global::System.NonSerialized] public CombineManager combineManager;
         public TargetObject[] targetObject;
         Item itemTouched;
         [SerializeField]
@@ -1460,7 +1459,7 @@ namespace JellyGarden.Scripts
                         list2.Add(newItem);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     gameStatus = GameState.Win;
                 }
@@ -1580,7 +1579,6 @@ namespace JellyGarden.Scripts
                     }
                 }
             }
-            matchesGot = true;
             yield return new WaitForFixedUpdate();
 
         }

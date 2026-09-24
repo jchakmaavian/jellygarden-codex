@@ -137,7 +137,6 @@ using Facebook.Unity;
         public RewardedAdsTime dailyRewardedFrequencyTime; //2.2.3
         public int[] dailyRewardedShown;
         public DateTime[] dailyRewardedShownDate;
-        private bool leftControl;
         #if GOOGLE_MOBILE_ADS
     private InterstitialAd interstitial;
     private AdRequest requestAdmob;
@@ -334,19 +333,10 @@ using Facebook.Unity;
         #endif
 
 
-        void Update()
-        {
-            if (InputManager.Instance != null)
-            {
-                // The inherited kit starred every level when Left Ctrl (or U) was released, so an
-                // ordinary Ctrl+S while the game had focus rewrote the player's whole progress.
-                // Star control now lives in Settings -> GAME TESTING MODE, which is save-isolated.
-                if (InputManager.Instance.Debug.DebugToggle.WasPressedThisFrame())
-                    leftControl = true;
-                if (InputManager.Instance.Debug.DebugToggle.WasReleasedThisFrame())
-                    leftControl = false;
-            }
-        }
+        // The inherited kit starred every level when Left Ctrl (or U) was released, so an
+        // ordinary Ctrl+S while the game had focus rewrote the player's whole progress.
+        // Star control now lives in Settings -> Mod Menu, which is save-isolated.
+        // Update() then only tracked that key in a field nothing read, so it was removed.
 
         public void SaveLevelStarsCount(int level, int starsCount)
         {

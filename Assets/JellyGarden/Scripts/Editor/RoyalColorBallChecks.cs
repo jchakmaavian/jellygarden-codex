@@ -65,7 +65,7 @@ namespace RoyalThrone.Editor
                 int launches=director.RocketLaunches,handoffs=director.ColorBallHandoffs;
                 check(RoyalPowerupDirector.TrySwap(ball,partner),"Live Color Ball + Rocket combo accepted: "+label);
                 yield return new WaitForEndOfFrame();
-                var boost=Object.FindObjectsByType<ColorBallBoostView>(FindObjectsSortMode.None).First(v=>v.Current!=ColorBallBoostView.Phase.Idle);
+                var boost=Object.FindObjectsByType<ColorBallBoostView>().First(v=>v.Current!=ColorBallBoostView.Phase.Idle);
                 if(firstView)check(boost==firstView,"Boost animation object reused from pool");else firstView=boost;
                 check(!anim||!anim.View.enabled,"Idle stops immediately on activation: "+label);
                 check(boost.View.maskInteraction==SpriteMaskInteraction.None&&boost.View.sortingOrder==40,"Boosting is unmasked above pieces and below overlay HUD: "+label);

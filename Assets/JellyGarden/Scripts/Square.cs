@@ -121,10 +121,8 @@ namespace JellyGarden.Scripts
 
         Hashtable FindMoreMatches(int spr_COLOR, Hashtable countedSquares, FindSeparating separating, Hashtable countedSquaresGlobal = null)
         {
-            bool globalCounter = true;
             if (countedSquaresGlobal == null)
             {
-                globalCounter = false;
                 countedSquaresGlobal = new Hashtable();
             }
             ccc++;
@@ -165,11 +163,9 @@ namespace JellyGarden.Scripts
 
         public List<Item> FindMatchesAround(FindSeparating separating = FindSeparating.NONE, int matches = 3, Hashtable countedSquaresGlobal = null)
         {
-            bool globalCounter = true;
             List<Item> newList = new List<Item>();
             if (countedSquaresGlobal == null)
             {
-                globalCounter = false;
                 countedSquaresGlobal = new Hashtable();
             }
             Hashtable countedSquares = new Hashtable();

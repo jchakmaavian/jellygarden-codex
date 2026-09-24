@@ -40,7 +40,7 @@ namespace RoyalThrone.Boosters.Propeller.V5
         public bool UsesNative=>imported&&imported.Active;
         Vector3 startScale,startOffset;Quaternion startTurn;
         float alpha=1,lean,pitch,desiredLean,desiredPitch,startSpeed,impactAngle;
-        bool lifted,motorStarted,impactStarted,revealFlash;int flightAccents;
+        bool lifted,motorStarted,impactStarted,revealFlash;
         public static int Active {get{int n=0;foreach(var v in pool)if(v&&v.Current!=Phase.Free)n++;return n;}}
         public static int PoolSize=>pool.Count;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -60,7 +60,7 @@ namespace RoyalThrone.Boosters.Propeller.V5
             if(!v){Prewarm(pool.Count+4);foreach(var candidate in pool)if(candidate&&candidate.Current==Phase.Free){v=candidate;break;}}
             v.Lease=++leases;v.Cell=cell;v.transform.SetPositionAndRotation(p+Vector3.back*.8f,Quaternion.identity);v.transform.localScale=Vector3.one;
             v.PresentationSpeed=v.Blur=0;v.RotorAngle=v.RotorSpeed=v.lean=v.pitch=v.desiredLean=v.desiredPitch=0;v.alpha=1;v.lifted=v.motorStarted=v.impactStarted=v.revealFlash=false;
-            v.flightAccents=0;v.FlightDuration=0;v.FlightProgress=0;v.Current=Phase.Idle;v.Age=0;v.gameObject.SetActive(true);v.imported=ReferenceActivationVisual.Attach(v.gameObject,"Propeller",38);if(v.UsesNative){v.imported.Play("PropellerCreationAnimation",null,1);v.imported.Hold();}v.Pose(1,0,0,0,0);v.ApplyRotor();
+            v.FlightDuration=0;v.FlightProgress=0;v.Current=Phase.Idle;v.Age=0;v.gameObject.SetActive(true);v.imported=ReferenceActivationVisual.Attach(v.gameObject,"Propeller",38);if(v.UsesNative){v.imported.Play("PropellerCreationAnimation",null,1);v.imported.Hold();}v.Pose(1,0,0,0,0);v.ApplyRotor();
             if(reveal)v.Reveal();return v;
         }
         public void Reveal(){Age=0;Current=Phase.Reveal;RotorAngle=RotorSpeed=0;revealFlash=false;if(UsesNative)imported.Play("PropellerCreationAnimation");Pose(0,.28f,0,0,0);Emit(PropellerEvent.PropellerRevealStarted,Anchor);}

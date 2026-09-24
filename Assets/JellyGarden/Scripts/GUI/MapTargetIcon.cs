@@ -58,7 +58,6 @@ namespace JellyGarden.Scripts.GUI
                 string mapText = map.text;
                 string[] lines = mapText.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-                int mapLine = 0;
                 foreach (string line in lines)
                 {
                     //check if line is game mode line

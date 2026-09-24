@@ -28,10 +28,7 @@ namespace JellyGarden.Scripts.Editor
     [InitializeOnLoad]
     public class LevelMakerEditor : EditorWindow
     {
-        string myString = "Hello World";
         bool groupEnabled;
-        bool myBool = true;
-        float myFloat = 1.23f;
         int levelNumber = 1;
         int maxRows;
         int maxCols;
@@ -54,7 +51,6 @@ namespace JellyGarden.Scripts.Editor
         private Ingredients[] ingr = new Ingredients[2];
         private CollectItems[] collectItems = new CollectItems[2];
         private int limit;
-        private bool update;
         private LIMIT limitType;
         private int colorLimit;
         private static int selected;
@@ -1933,7 +1929,6 @@ namespace JellyGarden.Scripts.Editor
                 levelSquares[row * maxCols + col].block = squareType;
                 levelSquares[row * maxCols + col].obstacle = SquareTypes.NONE;
             }
-            update = true;
             SaveLevel();
             // GetSquare(col, row).type = (int) squareType;
         }
@@ -1998,8 +1993,6 @@ namespace JellyGarden.Scripts.Editor
             if (mapText == null)
             {
                 return false;
-                SaveLevel();
-                mapText = Resources.Load("Levels/" + currentLevel) as TextAsset;
             }
             ProcessGameDataFromString(mapText.text);
             return true;

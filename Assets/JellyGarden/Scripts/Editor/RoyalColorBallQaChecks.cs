@@ -58,7 +58,7 @@ namespace RoyalThrone.Editor
             while(qa.Busy&&Time.realtimeSinceStartup<end)
             {
                 yield return new WaitForEndOfFrame();
-                var balls=Object.FindObjectsByType<ColorBallFrameAnimator>(FindObjectsSortMode.None);
+                var balls=Object.FindObjectsByType<ColorBallFrameAnimator>();
                 foreach(var ball in balls)
                 {
                     if(ball.Current==ColorBallFrameAnimator.Phase.Reveal&&revealStart<0)revealStart=Time.time;
@@ -77,7 +77,7 @@ namespace RoyalThrone.Editor
                     boostEnd=Time.time;
                     beamPeak=Mathf.Max(beamPeak,ColorBallTargetVfx.ActiveBeams);
                     peak=Mathf.Max(peak,ColorBallBoostView.Active);
-                    var boost=Object.FindObjectsByType<ColorBallBoostView>(FindObjectsSortMode.None).First(b=>b.Current!=ColorBallBoostView.Phase.Idle);
+                    var boost=Object.FindObjectsByType<ColorBallBoostView>().First(b=>b.Current!=ColorBallBoostView.Phase.Idle);
                     bool intro=boost.Current==ColorBallBoostView.Phase.Intro;
                     if(intro&&!gotIntro&&boost.Frame>=6){Capture(label+"-spinup");gotIntro=true;}
                     shaderReady&=boost.View.sharedMaterial.shader.isSupported;

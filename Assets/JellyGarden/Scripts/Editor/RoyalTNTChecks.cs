@@ -169,11 +169,11 @@ namespace RoyalThrone.Editor
                     item.DestroyItem(true);
                     yield return new WaitForEndOfFrame();
                     // A royal TNT's destroy coroutine removes the piece within this frame, so inspect what is drawn.
-                    var fuseArt=RoyalPieceSkin.For(ItemsTypes.PACKAGE,0);var drawn=Object.FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None).Where(r=>r&&r.enabled).ToList();
+                    var fuseArt=RoyalPieceSkin.For(ItemsTypes.PACKAGE,0);var drawn=Object.FindObjectsByType<SpriteRenderer>().Where(r=>r&&r.enabled).ToList();
                     check(!drawn.Any(r=>sprites.Contains(r.sprite))&&(!anim||anim.Current==TNTFrameAnimator.Phase.Stopped)&&!(item&&item.sprRenderer&&item.sprRenderer.enabled),
                         tag+": activation stops Idle (at frame "+(stoppedAt+1).ToString("000")+"): the next rendered frame draws no TNT frame and no board TNT");
                     check(drawn.Count(r=>r.sprite==fuseArt)==1,tag+": the existing anticipation takes over with one static TNT sprite");
-                    var actor=Object.FindObjectsByType<TNT3DAnimator>(FindObjectsSortMode.None).First(a=>a.gameObject.activeSelf);
+                    var actor=Object.FindObjectsByType<TNT3DAnimator>().First(a=>a.gameObject.activeSelf);
                     yield return Until(actor,.09f);Capture(tag+"-ignition");
                     while(actor.State!=TNT3DAnimator.VisualState.Explosion&&actor.State!=TNT3DAnimator.VisualState.Debris)yield return null;
                     yield return Until(actor,.12f);

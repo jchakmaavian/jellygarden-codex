@@ -17,7 +17,7 @@ namespace RoyalThrone.Editor
         {
             // A level-one host can have a tutorial overlay. Hide only its graphics
             // during disposable Rocket captures and restore them without UI events.
-            var tutorial=Object.FindFirstObjectByType<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager>();
+            var tutorial=Object.FindAnyObjectByType<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager>();
             var overlay=tutorial&&tutorial.tutorial?tutorial.tutorial.GetComponentsInChildren<Graphic>(true).Where(g=>g.enabled).ToArray():Array.Empty<Graphic>();
             foreach(var graphic in overlay)graphic.enabled=false;
             // The internal QA menu also owns Time.timeScale in Update. Suspend that

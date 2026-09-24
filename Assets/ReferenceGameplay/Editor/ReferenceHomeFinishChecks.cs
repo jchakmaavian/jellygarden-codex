@@ -19,7 +19,7 @@ namespace RoyalThrone.ReferenceGameplay.Editor
         public static IEnumerator Run(bool homeOnly=false){File.WriteAllText(Folder+"/validation.txt","RUNNING homepage and finishing stage\n");var qa=RoyalQaService.Instance;var lm=LevelManager.THIS;int coins=InitScript.Gems;bool music=SoundBase.Instance.GetComponent<AudioSource>()?SoundBase.Instance.GetComponent<AudioSource>().isPlaying:false;
             EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView")).Focus();
             try{
-                qa.StartSession();yield return qa.Practice();qa.Visible=false;var home=UnityEngine.Object.FindFirstObjectByType<RoyalHomeScreen>();
+                qa.StartSession();yield return qa.Practice();qa.Visible=false;var home=UnityEngine.Object.FindAnyObjectByType<RoyalHomeScreen>();
                 Check(home&&home.GetComponent<ReferenceHomeLayout>(),"Imported homepage adapter active on existing home");
                 var bg=home.transform.Find("Castle framing/Royal blue courtyard").GetComponent<UnityEngine.UI.Image>().sprite;
                 lm.gameStatus=GameState.Map;yield return new WaitForSecondsRealtime(.6f);yield return Shot("Homepage");

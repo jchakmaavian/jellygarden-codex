@@ -30,8 +30,8 @@ namespace RoyalThrone.Editor
             var l=LevelManager.THIS;if(!l)return;Directory.CreateDirectory(Folder);
             string PathOf(Transform t)=>t.parent?PathOf(t.parent)+"/"+t.name:t.name;
             var lines=new List<string>{"LevelManager: "+PathOf(l.transform),"Field: "+PathOf(l.GameField),"Status: "+l.gameStatus+" blocked: "+l.DragBlocked};
-            foreach(var c in Object.FindObjectsByType<Canvas>(FindObjectsInactive.Include,FindObjectsSortMode.None))lines.Add("CANVAS "+PathOf(c.transform)+" mode="+c.renderMode+" sort="+c.sortingOrder);
-            foreach(var t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include,FindObjectsSortMode.None))if(t.name=="CanvasBack"||t.name=="BottomPanel"||t.name=="BoostBomb"||t.name=="Panel"&&t.GetComponent<UnityEngine.UI.Image>())lines.Add("NODE "+PathOf(t)+" active="+t.gameObject.activeInHierarchy);
+            foreach(var c in Object.FindObjectsByType<Canvas>(FindObjectsInactive.Include))lines.Add("CANVAS "+PathOf(c.transform)+" mode="+c.renderMode+" sort="+c.sortingOrder);
+            foreach(var t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Include))if(t.name=="CanvasBack"||t.name=="BottomPanel"||t.name=="BoostBomb"||t.name=="Panel"&&t.GetComponent<UnityEngine.UI.Image>())lines.Add("NODE "+PathOf(t)+" active="+t.gameObject.activeInHierarchy);
             File.WriteAllLines(Folder+"hierarchy.txt",lines);Capture("current-gameplay");Debug.Log("[Royal Effects] Board inspection saved.");
         }
         static readonly List<string> checks=new List<string>(),errors=new List<string>();

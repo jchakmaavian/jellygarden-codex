@@ -36,9 +36,6 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 			int posNum = 0;
 
 //		for (int i = 0; i < 2; i++) {
-			int i = 0;
-			if (AI.THIS.combineType == CombineType.VShape)
-				i = 1;
 			transform.position = AI.THIS.tipItem.transform.position;
 			posNum++;
 			Vector3 offset = new Vector3 (0.5f, -1f);
