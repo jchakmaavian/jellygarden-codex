@@ -26,7 +26,7 @@ Previous assets are retained. The imported level campaign uses separate QA progr
 - Cupboard-door debris needs unavailable custom shader behavior; mailbox activity playback, exact Grass2 composite state and coin reward particle choreography remain incomplete.
 - One Propeller active-object curve points to a child absent from its packaged hierarchy. Source identity is retained in the native animation notes.
 - Board background/border generation, ordinary swap/fall motion and code-controlled effect staging are not claimed to be imported native behavior.
-- Six-colour legacy practice boards can still use the retained sixth-piece fallback. The recovered first 50 levels use only the five packaged normal piece colours.
+- The retired sixth blue-crystal board piece is excluded from spawning. Old piece/collection-goal references migrate to the blue shield in runtime copies; saved level assets stay intact. The recovered first 50 levels already use only the five packaged normal colours.
 
 ## Imported assets
 
@@ -45,3 +45,4 @@ Two issues found during testing were fixed: native pooled visuals defer reparent
 The actual game recorded 13 successful cases at 60 captured frames per simulation second, 1.0× playback, with Unity audio: Match-3/4/5, cascade, both Rockets, TNT, Propeller, Color Ball and four combinations. `Validation/Gameplay-capture-report.tsv` lists them. Source frames/audio remain in `Gameplay-20260924-133720/`; encoded clips and the compact montage are under `Delivery/`. Reviewed screenshots are in `Validation/Gameplay-Screenshots/`. Existing UI/character art is visible because it was intentionally preserved.
 
 Final tracking has zero new console errors. Session cleanup reports zero native effects, particles, activation/board visuals or owned voices; the normal profile is restored and Unity returned to Edit Mode. Captured audio is non-silent without sample clipping. The 16 protected file hashes still match the checkpoint. These checks do not substitute for the incomplete native sequence/state work listed above.
+

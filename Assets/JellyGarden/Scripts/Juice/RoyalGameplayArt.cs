@@ -11,6 +11,10 @@ namespace JellyGarden.Scripts.Juice
     {
         public const string ResourceRoot = "RoyalGameplayV4/";
         public const int AssetCount = 77;
+        public const int BoardColorCount = 5;
+        // Retired sixth crystal: migrate old board/goal references to the blue shield.
+        // Special-piece sentinel IDs are deliberately left unchanged.
+        public static int BoardColor(int color) => color == 5 ? 1 : color;
 
         sealed class Entry
         {
@@ -47,6 +51,7 @@ namespace JellyGarden.Scripts.Juice
 
         public static Sprite For(ItemsTypes type, int color)
         {
+            color = BoardColor(color);
             var imported = RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.For(type, color);
             if (imported) return imported;
             switch (type)
