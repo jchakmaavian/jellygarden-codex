@@ -165,6 +165,12 @@ namespace JellyGarden.Scripts.GUI
                     CloseMenu();
                     RoyalThrone.Presentation.RoyalBackButton.Consume();
                 }
+                else if (name == "MenuPause")
+                {
+                    // Back on the pause menu resumes, exactly like its Continue button.
+                    Play();
+                    RoyalThrone.Presentation.RoyalBackButton.Consume();
+                }
             }
         }
 

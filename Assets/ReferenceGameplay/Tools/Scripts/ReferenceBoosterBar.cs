@@ -150,6 +150,12 @@ namespace RoyalThrone.ReferenceGameplay
             if(LM.gameStatus!=GameState.Playing||(currentBoard!=null&&currentBoard!=LM.squaresArray))
             {CancelSelection();CloseShop();if(Busy&&(LM.gameStatus==GameState.Map||LM.gameStatus==GameState.PrepareGame||currentBoard!=LM.squaresArray))CancelOperation();currentBoard=LM.squaresArray;return;}
             foreach(var b in buttons)if(b)b.transform.localScale=Vector3.one*(Selected==Array.IndexOf(Types,b.type)?1.06f:1);
+            // Back first closes this bar's shop or cancels a chosen tool, instead of also opening the pause menu.
+            if(InputManager.Instance&&InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
+            {
+                if(ShopOpen){CloseShop();RoyalThrone.Presentation.RoyalBackButton.Consume();return;}
+                if(Selected>=0&&!Busy){CancelSelection();RoyalThrone.Presentation.RoyalBackButton.Consume();return;}
+            }
             if(Selected<0||Busy||ShopOpen)return;
             if(MenuManager.Instance.BlocksBoardInput){CancelSelection();return;}
             if(InputManager.Instance&&InputManager.Instance.WasTouchPressed)

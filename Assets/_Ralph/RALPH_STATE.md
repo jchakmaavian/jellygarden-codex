@@ -295,3 +295,37 @@ Throne's own implementation.
 - **Screenshots/evidence:** `kv/play/r11_hud_level20.png` (post-fix), `r11_hud_level12.png`
 - **Remaining risk:** the PrePlay caption still says "Make every move count" on timed levels (P3 copy).
 - **Next task:** R-10 (Back in pause, result cards and tool selection).
+
+### Iteration 10
+- **Date/time:** 2026-09-25 00:33-00:42 local
+- **Area inspected:** Back / Android back inside a level (R-10)
+- **Issue:**
+  - (a) Back on the pause menu did nothing.
+  - (b) Back with a tool selected, or (c) with the tool shop open, opened the pause menu. The tool or shop was only cancelled as a side effect.
+- **Severity:** P2 (navigation friction)
+- **Reproduction:** real Escape press and release (probe), QA level 12.
+  - (a) Pause -> Back: still Pause, timeScale 0.
+  - (b) Hammer chosen -> Back: MenuPause opened.
+  - (c) Arrow shop open -> Back: MenuPause opened.
+- **Root cause:**
+  - MenuPause was not among AnimationManager's Back-closable popups.
+  - ReferenceBoosterBar never read Cancel.
+  - LevelManager's Playing branch opened pause regardless of what the gesture had already done.
+- **Files changed:**
+  - `AnimationManager.cs`: MenuPause Back -> `Play()` (the Continue handler) + consume
+  - `ReferenceBoosterBar.cs`: Back closes its shop or cancels the selection + consume
+  - `LevelManager.cs`: Playing branch requires `!RoyalBackButton.Consumed` (1 line, byte-level edit)
+- **Fix:** Back resolves the innermost thing first: tool shop, then tool selection, then pause resume. It opens pause only if nothing consumed the gesture.
+- **Tests executed:** recompile; fresh Play Mode; a, b and c; regression D (Back while playing opens pause); home suite A, B and C.
+- **Result:**
+  - (a) Back resumes Playing (timeScale 1).
+  - (b) the selection is cancelled and no pause opens.
+  - (c) the shop is closed and no pause opens.
+- **Regression result:**
+  - D: pause opens, Continue resumes.
+  - Home: the dialog and popup close with 0 quits; nothing open -> 1 quit.
+- **Console result:** no errors
+- **Performance result:** n/a
+- **Screenshots/evidence:** `kv/play/back_E_pause.txt`, `back_F_tool.txt`, `back_G_shop.txt`, `ralph-003820.txt`, `ralph-004047.txt`
+- **Remaining risk:** Back still does nothing on PrePlay, the win card, the fail card and the PreFailed offer. That is deliberate for now, because those need a product decision (e.g. Back = CONTINUE / TRY AGAIN).
+- **Next task:** R-13 (auto-pause when the app goes to background during a level).

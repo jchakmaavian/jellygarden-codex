@@ -831,7 +831,7 @@ namespace JellyGarden.Scripts
                     RoyalThrone.Presentation.RoyalBackButton.NotePress();
                 if (InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
                 {
-                    if (LevelManager.THIS.gameStatus == GameState.Playing)
+                    if (LevelManager.THIS.gameStatus == GameState.Playing && !RoyalThrone.Presentation.RoyalBackButton.Consumed)
                         MenuManager.Instance.ShowMenuPause(true);
                     // Back that closed a home dialog or popup (or with a popup still open) never also exits the game.
                     else if (LevelManager.THIS.gameStatus == GameState.Map && !RoyalThrone.Presentation.RoyalBackButton.Consumed && !MenuManager.Instance.BlocksBoardInput)
