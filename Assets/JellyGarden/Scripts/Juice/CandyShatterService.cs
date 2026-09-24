@@ -351,6 +351,19 @@ namespace JellyGarden.Scripts.Juice
         /// </summary>
         public void Shatter(SpriteRenderer source, float intensity,bool powerClear=false,bool rocketClear=false,bool tntClear=false)
         {
+            if (source && RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("MatchItemExplodeParticles"))
+            {
+                var owner = source.GetComponentInParent<Item>();
+                // Native special-item feedback is owned by its existing collection event;
+                // booster activation owns its own source particles. Do not overlay the
+                // previous generated gem fracture on those imported objects.
+                if (owner && (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(owner) || RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Has(owner.currentType))) return;
+                if (owner && owner.currentType == ItemsTypes.NONE && owner.color >= 0 && owner.color < 5)
+                {
+                    RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("MatchItemExplodeParticles", source.transform.position, owner.color);
+                    return;
+                }
+            }
             var cfg = Cfg;
             if (!cfg.EnableJuice || !cfg.EnableCandyShatter) return;
             if (source == null || source.sprite == null) return;

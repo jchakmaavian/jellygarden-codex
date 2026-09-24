@@ -43,10 +43,12 @@ namespace JellyGarden.Scripts.Juice
             if(Time.unscaledTime-last[k]<interval)return;
             last[k]=Time.unscaledTime;
             AudioClip clip=cue==RoyalCue.Match?clips[(variation++)%2]:cue==RoyalCue.Land?clips[7]:cue==RoyalCue.Click?clips[8]:cue==RoyalCue.Firework?clips[9]:cue==RoyalCue.Celebrate?clips[10]:clips[k];
+            var imported = RoyalThrone.ReferenceGameplay.ReferenceGameplayAudio.For(cue);
+            if (imported) clip = imported;
             float gain=cue==RoyalCue.Land?.16f:cue==RoyalCue.Match?.58f:cue==RoyalCue.Tnt?.95f:cue==RoyalCue.Click?.42f:cue==RoyalCue.Firework?.50f:cue==RoyalCue.Celebrate?.70f:.72f;
             int priority=cue==RoyalCue.Land?200:cue==RoyalCue.Match?160:cue==RoyalCue.Firework?90:60;
             // Restrained variation keeps repeated contacts organic without squeaky pitch climbs.
-            PlayClip(clip,gain*Mathf.Clamp(strength,.6f,1.2f),priority, cue==RoyalCue.Match?1+((variation%5)-2)*.012f:1);
+            PlayClip(clip,gain*Mathf.Clamp(strength,.6f,1.2f),priority, !imported&&cue==RoyalCue.Match?1+((variation%5)-2)*.012f:1);
             if(cue==RoyalCue.Tnt||cue==RoyalCue.Rocket||cue==RoyalCue.Celebrate) duck=.42f;
         }
         public void PlayClip(AudioClip clip,float gain=1,int priority=150,float pitch=1)
@@ -59,6 +61,16 @@ namespace JellyGarden.Scripts.Juice
             chosen.Stop(); chosen.clip=clip; chosen.priority=priority; chosen.pitch=pitch;
             voiceGains[global::System.Array.IndexOf(voices,chosen)]=gain*RoyalEffectsProfile.Get.effectsVolume;
             chosen.Play(); BalanceVoices();
+        }
+        public static void StopReferenceVoices()
+        {
+            if (!instance || instance.voices == null) return;
+            for (int i = 0; i < instance.voices.Length; i++)
+            {
+                var voice = instance.voices[i];
+                if (!voice || !RoyalThrone.ReferenceGameplay.ReferenceGameplayAudio.Owns(voice.clip)) continue;
+                voice.Stop(); voice.clip = null; instance.voiceGains[i] = 0;
+            }
         }
         void BalanceVoices()
         {

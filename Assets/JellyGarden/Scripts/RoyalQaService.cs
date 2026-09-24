@@ -48,6 +48,7 @@ namespace RoyalThrone.Testing
             Add("VFX TEST LAB","VFX Match 3","VFX Match 4","VFX Match 5","Ice Impact","Fire Impact","TNT explosion","Break particles","Falling fragments","Rocket trails","Propeller effect","Color-ball effect","Hint aura","Win effect","Reward effect");
             Add("ANIMATION TEST","Gem idle","Swap","Match animation","Hint animation","Invalid swap","Fall","Cascade animation","Booster creation","Booster activation","TNT animation","Character / reward");
             Add("LEVEL TESTING","Open level","Restart level","Practice board","Win instantly","Lose instantly","Set moves","Add moves","Remove moves","Complete targets","Spawn blocker","Clear board","Shuffle board");
+            Commands["LEVEL TESTING"].InsertRange(0,new[]{"Reference campaign 01–50","Original levels"});
             Add("DEBUG","Grid / cells","Gem IDs / types","Valid moves","Detected matches","Hint candidate","FPS / particles","Reset test data");
         }
         void Add(string category,params string[] labels)=>Commands[category]=new List<string>(labels);
@@ -77,6 +78,7 @@ namespace RoyalThrone.Testing
             while(Busy)yield return null;
             ToMap();yield return null; // retire old UI animation callbacks before switching profile
             RoyalSave.Save();RoyalSave.Testing=false;
+            RoyalThrone.Campaign.RoyalReferenceCampaign.Select(false);
             InitScript.Gems=normalMoney;InitScript.lifes=normalLives;InitScript.DateOfExit=normalDate;
             // Restore the remaining seconds captured at StartSession, not a stale exit stamp.
             InitScript.Instance.SetRefillSeconds(normalTimer);
@@ -145,6 +147,12 @@ namespace RoyalThrone.Testing
             if(!RoyalSave.Testing||!Ready)throw new InvalidOperationException("Start the isolated test profile first.");
             if(!Commands.Values.Any(list=>list.Contains(command)))throw new InvalidOperationException("Unknown QA control.");
             Status="Running: "+command;Changed?.Invoke();
+            if(command=="Reference campaign 01–50"||command=="Original levels")
+            {
+                ToMap();yield return null;RoyalThrone.Campaign.RoyalReferenceCampaign.Select(command=="Reference campaign 01–50");
+                Level=1;Hydrate();Status=RoyalThrone.Campaign.RoyalReferenceCampaign.Enabled?"Reference campaign selected in its own QA save. Set level 1–50 and Open level. Bonus outcome, refill weighting and blocker behavior are inspection adaptations.":"Original levels selected in the existing QA profile.";
+                Changed?.Invoke();yield break;
+            }
             if(command=="Reset test data"){ToMap();yield return null;RoyalSave.ResetTesting();Hydrate();yield break;}
             if(command=="Grid / cells"){Grid=!Grid;yield break;}if(command=="Gem IDs / types"){Ids=!Ids;yield break;}
             if(command=="Valid moves"){ValidMoves=!ValidMoves;yield break;}if(command=="Detected matches"){Matches=!Matches;yield break;}
@@ -249,7 +257,12 @@ namespace RoyalThrone.Testing
         void ValidateLevel(){if(Level<1||!Resources.Load<TextAsset>("Levels/"+Level))throw new InvalidOperationException("No authored level "+Level+".");}
         public IEnumerator OpenLevel()
         {
-            ValidateLevel();ToMap();yield return null;RoyalSave.SetInt("OpenLevel",Level);RoyalSave.Save();LM.LoadLevel();LM.gameStatus=GameState.PrepareGame;
+            RoyalThrone.Campaign.RoyalReferenceCampaign.RequirePlayable(Level);
+            ValidateLevel();ToMap();yield return null;
+            if(RoyalThrone.Campaign.RoyalReferenceCampaign.Enabled)
+                foreach(var tutorial in FindObjectsByType<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager>(FindObjectsInactive.Include))
+                    if(tutorial.enabled){suspendedTutorials.Add(tutorial);tutorial.enabled=false;}
+            RoyalSave.SetInt("OpenLevel",Level);RoyalSave.Save();LM.LoadLevel();LM.gameStatus=GameState.PrepareGame;
             float end=Time.realtimeSinceStartup+20;while(LM.gameStatus!=GameState.Playing&&Time.realtimeSinceStartup<end)yield return null;
             if(LM.gameStatus!=GameState.Playing)throw new InvalidOperationException("Level opening timed out.");yield return Settled();
         }

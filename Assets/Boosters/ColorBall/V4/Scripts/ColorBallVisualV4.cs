@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using JellyGarden.Scripts;
 using JellyGarden.Scripts.Juice;
+using RoyalThrone.ReferenceGameplay;
 namespace RoyalThrone.Boosters.ColorBall.V4
 {
     public enum ColorBallEvent { ColorBallRevealStarted,ColorBallRevealFinished,ColorBallActivationStarted,ColorBallChargeComplete,ColorBallBeamPrepared,ColorBallBeamFired,ColorBallBeamHit,ColorBallTargetFlash,ColorBallTargetConverted,ColorBallSequenceFinished,ColorBallFinalPulse,ColorBallResolved,ColorBallCompleted }
@@ -36,7 +37,10 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         public float Cell {get;private set;} public int Lease {get;private set;}
         public Vector3 Anchor {get;private set;}
         // A read-only presentation anchor. Targeting continues to use Anchor.
-        public Vector3 VisibleOrigin=>beamOrigin?beamOrigin.position:Anchor;
+        public Vector3 VisibleOrigin=>UsesNative?imported.SourceOrigin:beamOrigin?beamOrigin.position:Anchor;
+        ReferenceActivationVisual imported; ReferenceVfxPool.Handle nativeUse; int nativeRay;
+        static readonly string[] nativeRays={"lightball_ray1__15747","lightball_ray2__15961","lightball_ray3__15912"};
+        public bool UsesNative=>imported&&imported.Active;
         public static ColorBallVisualV4 SourceAt(Vector3 anchor){foreach(var v in pool)if(v&&v.referenceV5&&(v.Current==Phase.Charge||v.Current==Phase.Charged)&&(v.Anchor-anchor).sqrMagnitude<.001f)return v;return null;}
         public bool AwaitingClaim {get;private set;} float claimAge;
         public float SourcePulse=>Mathf.Sin(Mathf.Clamp01(sourceAge/.14f)*Mathf.PI);
@@ -63,13 +67,27 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             v.SetAnchor(position);v.gameObject.SetActive(true);
             int layer=LevelManager.THIS.GameField.gameObject.layer;
             foreach(var r in v.GetComponentsInChildren<Renderer>()){r.gameObject.layer=layer;r.sortingLayerID=SortingLayer.NameToID("Default");}
-            v.Current=Phase.Idle;v.Age=0;if(reveal)v.Reveal();else v.Draw();return v;
+            v.Current=Phase.Idle;v.Age=0;v.nativeRay=0;
+            v.imported=ReferenceActivationVisual.Attach(v.gameObject,"ColorBall",38,v.GetComponent<RoyalThrone.Boosters.ColorBall.V5.ColorBallV5Presentation>());
+            if(v.UsesNative)v.imported.Play("LightballDefaultAnimation");
+            if(reveal)v.Reveal();else v.Draw();return v;
         }
         public void SetAnchor(Vector3 position){Anchor=position;transform.position=position+Vector3.back*.7f;transform.rotation=Quaternion.identity;transform.localScale=Vector3.one*Cell;}
-        public void Reveal(){Current=Phase.Reveal;Age=0;Speed=.065f;OrbitSpeed=.12f;Charge=0;revealSpark=false;Send(ColorBallEvent.ColorBallRevealStarted,Anchor);Draw();}
-        public void Activate(){Current=Phase.Charge;Age=0;sourceAge=1;Send(ColorBallEvent.ColorBallActivationStarted,Anchor);Draw();}
+        public void Reveal(){Current=Phase.Reveal;Age=0;Speed=.065f;OrbitSpeed=.12f;Charge=0;revealSpark=false;if(UsesNative)imported.Play("LightballCreationAnimation");Send(ColorBallEvent.ColorBallRevealStarted,Anchor);Draw();}
+        public void Activate(){Current=Phase.Charge;Age=0;sourceAge=1;if(UsesNative){imported.Play("LightballUseAnimation");nativeUse=ReferenceVfxPool.Play("LightballUseParticles",VisibleOrigin,-1,Cell,true);}Send(ColorBallEvent.ColorBallActivationStarted,Anchor);Draw();}
         public void Finish(){if(Current==Phase.Finish||Current==Phase.PayoffHold||Current==Phase.Free)return;Current=Phase.Finish;Age=0;finalFlash=false;Send(ColorBallEvent.ColorBallSequenceFinished,Anchor);}
-        public void Send(ColorBallEvent e,Vector3 p){ColorBallAudioV4.OnEvent(e,this);Event?.Invoke(e,this,p);}
+        public void Send(ColorBallEvent e,Vector3 p){
+            if(UsesNative){
+                switch(e){
+                    case ColorBallEvent.ColorBallRevealStarted:ReferenceGameplayAudio.Play("lightball_creation__15586");break;
+                    case ColorBallEvent.ColorBallActivationStarted:imported.PlayOwned("lightball_start__15692");break;
+                    case ColorBallEvent.ColorBallBeamFired:ReferenceGameplayAudio.Play(nativeRays[nativeRay++%nativeRays.Length]);break;
+                    case ColorBallEvent.ColorBallFinalPulse:imported.StopOwned();nativeUse?.Stop();ReferenceVfxPool.Play("LightballItemExplodeParticles",VisibleOrigin,-1,Cell);ReferenceGameplayAudio.Play("lightball_explode__15567");break;
+                    case ColorBallEvent.ColorBallCompleted:imported.StopOwned();break;
+                }
+            }else ColorBallAudioV4.OnEvent(e,this);
+            Event?.Invoke(e,this,p);
+        }
         public void PrepareBeam(Vector3 target){sourceAge=0;var d=target-Anchor;beamAngle=Mathf.Atan2(d.y,d.x)*Mathf.Rad2Deg;Send(ColorBallEvent.ColorBallBeamPrepared,target);}
         public void BeamFired(Vector3 target){Send(ColorBallEvent.ColorBallBeamFired,target);}
         void Update(){
@@ -82,16 +100,16 @@ namespace RoyalThrone.Boosters.ColorBall.V4
             float step=(Speed+target)*.5f*dt;if(!referenceV5)step=Mathf.Min(step,MaxStepRad);lastStep=step;
             Angle=Mathf.Repeat(Angle+step,Mathf.PI*2);Speed=target;
             OrbitAngle=Mathf.Repeat(OrbitAngle+(OrbitSpeed+orbitTarget)*.5f*dt,Mathf.PI*2);OrbitSpeed=orbitTarget;
-            if(Current==Phase.Reveal&&!revealSpark&&Age>=.21f){revealSpark=true;ColorBallVfxV4.Stars(Anchor,3,.30f);}
-            if(Current==Phase.Reveal&&Age>=RevealDuration){Current=Phase.Idle;Age-=RevealDuration;Send(ColorBallEvent.ColorBallRevealFinished,Anchor);}
+            if(!UsesNative&&Current==Phase.Reveal&&!revealSpark&&Age>=.21f){revealSpark=true;ColorBallVfxV4.Stars(Anchor,3,.30f);}
+            if(Current==Phase.Reveal&&Age>=RevealDuration){Current=Phase.Idle;Age-=RevealDuration;if(UsesNative)imported.Play("LightballDefaultAnimation");Send(ColorBallEvent.ColorBallRevealFinished,Anchor);}
             if(Current==Phase.Charge){Charge=Smooth(Age/ChargeDuration);if(Age>=ChargeDuration){Current=Phase.Charged;Age-=ChargeDuration;Charge=1;Send(ColorBallEvent.ColorBallChargeComplete,Anchor);}}
-            if(Current==Phase.Idle){Charge=0;idleClock+=dt;if(idleClock>6){idleClock=0;ColorBallVfxV4.Spark(Anchor+new Vector3(-.20f,.24f,0)*Cell,.075f,.42f,new Color(.7f,.86f,1,.3f));}}
+            if(Current==Phase.Idle){Charge=0;idleClock+=dt;if(!UsesNative&&idleClock>6){idleClock=0;ColorBallVfxV4.Spark(Anchor+new Vector3(-.20f,.24f,0)*Cell,.075f,.42f,new Color(.7f,.86f,1,.3f));}}
             if(Current==Phase.Finish){
                 Charge=1;
                 if(!finalFlash&&Age>=(referenceV5?.18f:.21f)){
                     finalFlash=true;
                     // V5's flash/rim is drawn by its presentation component, on the same pool lease.
-                    if(!referenceV5){ColorBallVfxV4.Pulse(Anchor,.92f,.19f,new Color(.8f,.92f,1));ColorBallVfxV4.Spark(Anchor,.75f,.18f,Color.white);ColorBallVfxV4.Stars(Anchor,3,.20f);}
+                    if(!UsesNative&&!referenceV5){ColorBallVfxV4.Pulse(Anchor,.92f,.19f,new Color(.8f,.92f,1));ColorBallVfxV4.Spark(Anchor,.75f,.18f,Color.white);ColorBallVfxV4.Stars(Anchor,3,.20f);}
                     Send(ColorBallEvent.ColorBallFinalPulse,Anchor);
                 }
                 if(Age>=FinishSeconds){Send(ColorBallEvent.ColorBallResolved,Anchor);if(referenceV5){Send(ColorBallEvent.ColorBallCompleted,Anchor);Release();return;}Current=Phase.PayoffHold;Age=0;}
@@ -102,6 +120,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         static float Smooth(float t){t=Mathf.Clamp01(t);return t*t*(3-2*t);}
         static float RevealScale(float t){if(t<.11f)return Mathf.Lerp(.14f,.20f,Smooth(t/.11f));if(t<.60f)return Mathf.Lerp(.20f,1.11f,Smooth((t-.11f)/.49f));if(t<.82f)return Mathf.Lerp(1.11f,.985f,Smooth((t-.60f)/.22f));return Mathf.Lerp(.985f,1,Smooth((t-.82f)/.18f));}
         void Draw(){
+            if(UsesNative){if(nativeUse?.GameObject)nativeUse.GameObject.transform.position=VisibleOrigin;return;}
             float x=1,y=1,dots=1,opacity=1,flash=0,orbitScale=1;
             if(Current==Phase.Reveal){float t=Age/RevealDuration;x=RevealScale(t);y=x*Mathf.Lerp(.58f,1,Smooth(t/.55f));dots=Smooth((t-.18f)/.30f);flash=Mathf.Sin(Mathf.Clamp01((t-.20f)/.40f)*Mathf.PI)*.42f;}
             else if(Current==Phase.Charge){float t=Mathf.Clamp01(Age/ChargeDuration),compress=Mathf.Sin(Mathf.Clamp01(t/.35f)*Mathf.PI);x=1+.03f*compress+.035f*Charge;y=1-.075f*compress;}
@@ -136,8 +155,8 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         }
         void Orbit(Renderer r,float alpha,float scale){props.Clear();props.SetColor("_Color",new Color(.55f,.80f,1,alpha));props.SetFloat("_OrbitPhase",OrbitAngle);r.SetPropertyBlock(props);r.transform.localScale=Vector3.one*scale;r.transform.localRotation=Quaternion.Euler(0,0,12+5*Mathf.Sin(lifeAge*.8f));r.enabled=alpha>.001f;}
         void Light(Renderer r,Color c,Vector3 s){props.Clear();props.SetColor("_Color",c);r.SetPropertyBlock(props);r.transform.localScale=s;r.enabled=c.a>.001f;}
-        public void Release(){AwaitingClaim=false;ColorBallAudioV4.StopCharge(Lease);Current=Phase.Free;Age=0;Charge=0;Speed=OrbitSpeed=Angle=OrbitAngle=0;sourceAge=1;gameObject.SetActive(false);}
+        public void Release(){AwaitingClaim=false;nativeUse?.Stop();nativeUse=null;if(imported)imported.Release();ColorBallAudioV4.StopCharge(Lease);Current=Phase.Free;Age=0;Charge=0;Speed=OrbitSpeed=Angle=OrbitAngle=0;sourceAge=1;gameObject.SetActive(false);}
         public static void Clear(){foreach(var v in pool)if(v)v.Release();ColorBallVfxV4.Clear();ColorBallAudioV4.Clear();}
-        void OnDisable(){ColorBallAudioV4.StopCharge(Lease);Current=Phase.Free;}
+        void OnDisable(){nativeUse?.Stop();nativeUse=null;if(imported)imported.Release();ColorBallAudioV4.StopCharge(Lease);Current=Phase.Free;}
     }
 }

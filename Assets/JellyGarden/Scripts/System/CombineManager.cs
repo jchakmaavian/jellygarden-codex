@@ -209,6 +209,8 @@ namespace JellyGarden.Scripts.System
 				return false;
 			if (square.item == null)
 				return false;
+			if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(square.item))
+				return false;
 			return true;
 		}
 
@@ -241,6 +243,7 @@ namespace JellyGarden.Scripts.System
 
 		bool CheckColor (Item item, Item nextItem)
 		{
+			if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(item) || RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(nextItem)) return false;
 			if (Juice.RoyalEffectsProfile.Get && (item.currentType != ItemsTypes.NONE || nextItem && nextItem.currentType != ItemsTypes.NONE)) return false;
 			if (nextItem) {
 				if (nextItem.color == item.color && nextItem.currentType != ItemsTypes.BOMB && nextItem.currentType != ItemsTypes.INGREDIENT)//2.0

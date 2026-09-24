@@ -477,7 +477,7 @@ namespace JellyGarden.Scripts
         void Start()
         {
             #if FACEBOOK
-        FacebookEnable = true;//1.6.2
+        FacebookEnable = RoyalThrone.RoyalOfflineMode.ServicesEnabled;
         if (FacebookEnable)
             FacebookManager.THIS.CallFBInit();
             #else
@@ -486,8 +486,8 @@ namespace JellyGarden.Scripts
             #endif
             #if UNITY_INAPPS
 
-            gameObject.AddComponent<UnityInAppsIntegration>();
-            enableInApps = true;//1.6.1
+            enableInApps = RoyalThrone.RoyalOfflineMode.ServicesEnabled;
+            if (enableInApps) gameObject.AddComponent<UnityInAppsIntegration>();
             #else
         enableInApps = false;
 
@@ -513,6 +513,7 @@ namespace JellyGarden.Scripts
         {
 
             GenerateLevel();
+            RoyalThrone.Campaign.RoyalReferenceCampaign.Build(this);
             GenerateOutline();
             ReGenLevel();
             if (limitType == LIMIT.TIME)
@@ -687,6 +688,7 @@ namespace JellyGarden.Scripts
 
         public void CheckWinLose()
         {
+            if(RoyalThrone.Campaign.RoyalReferenceCampaign.CheckBonusOutcome(this))return;
             //		print ("check win lose");
             if (Limit <= 0)
             {
@@ -1329,6 +1331,11 @@ namespace JellyGarden.Scripts
 
         IEnumerator RegenMatches(bool onlyFalling = false)
         {
+            // Reference refill cascades resolve in FallingDown's next pass during play.
+            // Once won, retain the engine's existing stabilization below: otherwise
+            // the two-colour bonus refill keeps creating new celebration boosters.
+            if(onlyFalling&&RoyalThrone.Campaign.RoyalReferenceCampaign.Active&&gameStatus!=GameState.PreWinAnimations)
+            {yield return new WaitForFixedUpdate();yield break;}
             if (gameStatus == GameState.RegenLevel)
             {
                 //while (!itemsHided)
@@ -1431,6 +1438,14 @@ namespace JellyGarden.Scripts
 
         public List<Item> GetRandomItems(int count)
         {
+            if(RoyalThrone.Campaign.RoyalReferenceCampaign.Active)
+            {
+                var available=GetItems().Where(i=>i&&i.currentType==ItemsTypes.NONE&&i.NextType==ItemsTypes.NONE&&!i.destroying&&
+                    !RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(i)).ToList();
+                var selected=new List<Item>();count=Mathf.Clamp(count,0,available.Count);
+                while(selected.Count<count){int pick=UnityEngine.Random.Range(0,available.Count);selected.Add(available[pick]);available.RemoveAt(pick);}
+                return selected;
+            }
             List<Item> list = new List<Item>();
             List<Item> list2 = new List<Item>();
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
@@ -1497,6 +1512,8 @@ namespace JellyGarden.Scripts
             {
                 if (item != null)
                 {
+                    if(RoyalThrone.Campaign.RoyalReferenceCampaign.Active&&gameStatus==GameState.RegenLevel&&
+                        RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(item.GetComponent<Item>()))continue;
                     if (item.GetComponent<Item>().currentType != ItemsTypes.INGREDIENT && item.GetComponent<Item>().currentType == ItemsTypes.NONE)
                     {
                         if (!withoutEffects)
@@ -1652,6 +1669,7 @@ namespace JellyGarden.Scripts
 
                 if (combinedItems.Count > 0)
                     combo++;
+                if(RoyalThrone.Campaign.RoyalReferenceCampaign.Active)RoyalThrone.Campaign.RoyalCampaignBlockers.BeginMatchWave();
                 foreach (List<Item> desrtoyItems in combinedItems)
                 {
 
@@ -2322,6 +2340,8 @@ namespace JellyGarden.Scripts
         public void LoadDataFromLocal(int currentLevel)
         {
             levelLoaded = false;
+            if(RoyalThrone.Campaign.RoyalReferenceCampaign.TryLoad(this,currentLevel,out var referenceBoard))
+            {levelSquaresFile=referenceBoard;return;}
             //Read data from text file
             TextAsset mapText = Resources.Load("Levels/" + currentLevel) as TextAsset;
             if (mapText == null)

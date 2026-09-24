@@ -64,7 +64,7 @@ namespace JellyGarden.Scripts
 
         }
 
-        public Item GenItem(bool falling = true)
+        public Item GenItem(bool falling = true, bool campaignRefill = true)
         {
             if (IsNone() && !CanGoInto())
                 return null;
@@ -84,6 +84,10 @@ namespace JellyGarden.Scripts
                 itemInstance.transform.position = transform.position + Vector3.back * 0.2f;
 
             this.item = itemInstance;
+            // An earned power-up replaces its matched piece; it is not a refill and
+            // must not consume a queued egg/coin or inherit that item's identity.
+            if (campaignRefill)
+                RoyalThrone.Campaign.RoyalReferenceCampaign.ConfigureSpawn(itemInstance, falling);
             return this.item;
         }
 
@@ -125,6 +129,8 @@ namespace JellyGarden.Scripts
             }
             ccc++;
             if (this.item == null)
+                return countedSquares;
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(this.item))
                 return countedSquares;
             if (this.item.destroying)
                 return countedSquares;
@@ -257,6 +263,7 @@ namespace JellyGarden.Scripts
 
         public bool CanGoOut()
         {
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(item)) return false;
             return type != SquareTypes.WIREBLOCK;
         }
 
@@ -265,8 +272,9 @@ namespace JellyGarden.Scripts
             return type != SquareTypes.SOLIDBLOCK && type != SquareTypes.UNDESTROYABLE && type != SquareTypes.NONE && type != SquareTypes.THRIVING;
         }
 
-        public void DestroyBlock(bool rocketClear = false)
+        public void DestroyBlock(bool rocketClear = false, int campaignWave = 0, bool campaignMatchedItem = false)
         {
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.HandleHit(this, rocketClear, campaignWave, campaignMatchedItem)) return;
             if (type == SquareTypes.UNDESTROYABLE)
                 return;
             if (type != SquareTypes.SOLIDBLOCK && type != SquareTypes.THRIVING)

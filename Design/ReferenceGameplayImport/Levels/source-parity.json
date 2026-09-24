@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "levelCount": 50,
+  "cellCount": 3933,
+  "originalTextAssetsMatched": 50,
+  "exactProjectionMatched": 50,
+  "sourcePayloadHashesMatched": 50,
+  "runtimeSha256": "b2a5953c1137c3d4cda463d5871c5876304ab3bf1338ac1cc2aafad271d0aab6",
+  "apkModified": false,
+  "runtimeRuleEquivalenceVerified": false
+}

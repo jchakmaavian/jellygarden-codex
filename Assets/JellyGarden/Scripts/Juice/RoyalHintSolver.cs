@@ -69,7 +69,7 @@ namespace JellyGarden.Scripts.Juice
             if(Mathf.Abs(a.col-b.col)+Mathf.Abs(a.row-b.row)!=1)return null;
             var cells=new HashSet<Square>();int longest=0;
             Item At(int x,int y){var sq=lm.GetSquare(x,y);if(!sq)return null;return sq==a?second:sq==b?first:sq.item;}
-            bool Same(int x,int y,int colour,bool squareRule=false){var sq=lm.GetSquare(x,y);var item=At(x,y);return sq&&sq.CanGoInto()&&(!squareRule||sq.CanGoOut())&&item&&!item.destroying&&item.currentType==ItemsTypes.NONE&&item.color==colour;}
+            bool Same(int x,int y,int colour,bool squareRule=false){var sq=lm.GetSquare(x,y);var item=At(x,y);return sq&&sq.CanGoInto()&&(!squareRule||sq.CanGoOut())&&item&&!item.destroying&&!RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(item)&&item.currentType==ItemsTypes.NONE&&item.color==colour;}
             void CollectLines(Square origin)
             {
                 int colour=At(origin.col,origin.row).color;

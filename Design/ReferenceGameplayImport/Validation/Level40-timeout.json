@@ -1,0 +1,51 @@
+{
+    "utc": "2026-09-24T07:24:09.2836482Z",
+    "trackedSinceUtc": "2026-09-24T07:15:54.1563523Z",
+    "lastCommand": "campaign-checks",
+    "commandUtc": "2026-09-24T07:16:38.7341132Z",
+    "result": "Started existing isolated 50-level campaign checks. Read campaignStatus and its validation reports.",
+    "campaignStatus": "STOPPED after 3 batches; inspect the failed batch and Console",
+    "captureStatus": "idle",
+    "ioError": "Unable to remove the file to be replaced",
+    "playing": true,
+    "changingPlayMode": false,
+    "compiling": false,
+    "updating": false,
+    "paused": false,
+    "qaReady": true,
+    "testProfile": false,
+    "referenceCampaign": false,
+    "acceptedCommands": [
+        "import",
+        "enter-play",
+        "open-game",
+        "campaign-checks",
+        "capture-gameplay",
+        "exit-play",
+        "status",
+        "reset-tracking"
+    ],
+    "scenes": [
+        {
+            "path": "Assets/JellyGarden/Scenes/game.unity",
+            "loaded": true,
+            "dirty": false
+        }
+    ],
+    "scenesBeforePlay": [
+        {
+            "path": "Assets/JellyGarden/Scenes/main.unity",
+            "loaded": true,
+            "dirty": false
+        }
+    ],
+    "errorCount": 1,
+    "recentErrors": [
+        {
+            "utc": "2026-09-24T07:22:48.7884988Z",
+            "kind": "Exception",
+            "message": "InvalidOperationException: Level 40: production celebration reaches win screen",
+            "stack": "RoyalThrone.Editor.RoyalCampaignChecks.Check (System.Boolean condition, System.String message) (at Assets/JellyGarden/Scripts/Editor/RoyalCampaignChecks.cs:30)\nRoyalThrone.Editor.RoyalCampaignChecks+<Outcomes>d__23.MoveNext () (at Assets/JellyGarden/Scripts/Editor/RoyalCampaignChecks.cs:196)\nRoyalThrone.Editor.RoyalRegressionRunner+<Execute>d__2.MoveNext () (at Assets/JellyGarden/Scripts/Juice/RoyalRegressionRunner.cs:28)\nUnityEngine.Debug:LogException(Exception)\nRoyalThrone.Editor.<Execute>d__2:MoveNext() (at Assets/JellyGarden/Scripts/Juice/RoyalRegressionRunner.cs:29)\nUnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)\n"
+        }
+    ]
+}

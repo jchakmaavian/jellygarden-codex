@@ -118,6 +118,7 @@ namespace JellyGarden.Scripts
 		{
 			if (square == null)
 				return;
+			if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(square.item)) return;
 			if (square.item != null)
 			{
 				if (square.item.color == COLOR)
@@ -189,7 +190,7 @@ namespace JellyGarden.Scripts
 						for (int row = 0; row < LevelManager.THIS.maxRows; row++)
 						{
 							Square square = LevelManager.THIS.GetSquare(col, row);
-							if (square.type == SquareTypes.WIREBLOCK || square.item == null)
+							if (square.type == SquareTypes.WIREBLOCK || square.item == null || RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(square.item))
 								continue;
 							//current square called x
 							//o-o-x
@@ -438,7 +439,7 @@ namespace JellyGarden.Scripts
 								square = GetSquare(row + 1, col);
 								if (square)
 								{//1.6
-									if (square.item != null)
+									if (square.item != null && !RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(square.item))
 									{
 										if (square.item.color == COLOR)
 										{
@@ -454,7 +455,7 @@ namespace JellyGarden.Scripts
 								square = GetSquare(row - 1, col);
 								if (square)
 								{//1.6
-									if (square.item != null)
+									if (square.item != null && !RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(square.item))
 									{
 										if (square.item.color == COLOR)
 										{
@@ -470,7 +471,7 @@ namespace JellyGarden.Scripts
 								square = GetSquare(row, col - 1);
 								if (square)
 								{//1.6
-									if (square.item != null)
+									if (square.item != null && !RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(square.item))
 									{
 										if (square.item.color == COLOR)
 										{
@@ -486,7 +487,7 @@ namespace JellyGarden.Scripts
 								square = GetSquare(row, col + 1);
 								if (square)
 								{//1.6
-									if (square.item != null)
+									if (square.item != null && !RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(square.item))
 									{
 										if (square.item.color == COLOR)
 										{

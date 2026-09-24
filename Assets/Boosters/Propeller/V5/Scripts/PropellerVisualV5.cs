@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JellyGarden.Scripts;
 using JellyGarden.Scripts.Juice;
 using UnityEngine;
+using RoyalThrone.ReferenceGameplay;
 
 namespace RoyalThrone.Boosters.Propeller.V5
 {
@@ -35,6 +36,8 @@ namespace RoyalThrone.Boosters.Propeller.V5
         static readonly List<PropellerVisualV5> pool=new List<PropellerVisualV5>();
         static int leases;static float nextLaunch;
         MaterialPropertyBlock block;
+        ReferenceActivationVisual imported;
+        public bool UsesNative=>imported&&imported.Active;
         Vector3 startScale,startOffset;Quaternion startTurn;
         float alpha=1,lean,pitch,desiredLean,desiredPitch,startSpeed,impactAngle;
         bool lifted,motorStarted,impactStarted,revealFlash;int flightAccents;
@@ -57,36 +60,49 @@ namespace RoyalThrone.Boosters.Propeller.V5
             if(!v){Prewarm(pool.Count+4);foreach(var candidate in pool)if(candidate&&candidate.Current==Phase.Free){v=candidate;break;}}
             v.Lease=++leases;v.Cell=cell;v.transform.SetPositionAndRotation(p+Vector3.back*.8f,Quaternion.identity);v.transform.localScale=Vector3.one;
             v.PresentationSpeed=v.Blur=0;v.RotorAngle=v.RotorSpeed=v.lean=v.pitch=v.desiredLean=v.desiredPitch=0;v.alpha=1;v.lifted=v.motorStarted=v.impactStarted=v.revealFlash=false;
-            v.flightAccents=0;v.FlightDuration=0;v.FlightProgress=0;v.Current=Phase.Idle;v.Age=0;v.gameObject.SetActive(true);v.Pose(1,0,0,0,0);v.ApplyRotor();
+            v.flightAccents=0;v.FlightDuration=0;v.FlightProgress=0;v.Current=Phase.Idle;v.Age=0;v.gameObject.SetActive(true);v.imported=ReferenceActivationVisual.Attach(v.gameObject,"Propeller",38);if(v.UsesNative){v.imported.Play("PropellerCreationAnimation",null,1);v.imported.Hold();}v.Pose(1,0,0,0,0);v.ApplyRotor();
             if(reveal)v.Reveal();return v;
         }
-        public void Reveal(){Age=0;Current=Phase.Reveal;RotorAngle=RotorSpeed=0;revealFlash=false;Pose(0,.28f,0,0,0);Emit(PropellerEvent.PropellerRevealStarted,Anchor);}
-        public void SetIdle(){Current=Phase.Idle;Age=0;RotorAngle=RotorSpeed=lean=pitch=0;Pose(1,0,0,0,0);ApplyRotor();}
+        public void Reveal(){Age=0;Current=Phase.Reveal;RotorAngle=RotorSpeed=0;revealFlash=false;if(UsesNative)imported.Play("PropellerCreationAnimation");Pose(0,.28f,0,0,0);Emit(PropellerEvent.PropellerRevealStarted,Anchor);}
+        public void SetIdle(){Current=Phase.Idle;Age=0;RotorAngle=RotorSpeed=lean=pitch=0;if(UsesNative){imported.Play("PropellerCreationAnimation",null,1);imported.Hold();}Pose(1,0,0,0,0);ApplyRotor();}
         public void Activate(Vector3 target)
         {
             startScale=pose.localScale;startOffset=pose.localPosition;startTurn=pose.localRotation;
             desiredLean=Mathf.Clamp((target.x-Anchor.x)/Cell,-1,1)*-10;desiredPitch=4;
             startSpeed=RotorSpeed;Current=Phase.Activation;Age=0;lifted=motorStarted=false;
+            if(UsesNative)imported.Play("PropellerTapStartFlyAnimation","PropellerFlyAnimation");
             Emit(PropellerEvent.PropellerActivationStarted,Anchor);
         }
-        public Vector3 BeginFlightTranslation(){var p=FlightPosition;transform.position=p;pose.localPosition=Vector3.zero;return p;}
+        public Vector3 BeginFlightTranslation(){var p=FlightPosition;transform.position=p;pose.localPosition=Vector3.zero;if(UsesNative)imported.Offset(Vector3.zero);return p;}
         public void Place(Vector3 p,Vector3 tangent,float progress)
         {
             transform.position=p;FlightProgress=Mathf.Clamp01(progress);
             var direction=((Vector2)tangent).normalized;
             desiredLean=-direction.x*10;desiredPitch=Mathf.Lerp(4,-4,Mathf.Clamp01((progress-.45f)/.55f));
         }
-        public void NeighborHit(Vector3 p){PropellerVfxV5.Pressure(Anchor,p,Cell);Emit(PropellerEvent.PropellerNeighborHit,p);}
+        public void NeighborHit(Vector3 p){if(!UsesNative)PropellerVfxV5.Pressure(Anchor,p,Cell);Emit(PropellerEvent.PropellerNeighborHit,p);}
         public void Contact(Vector3 p)
         {
             transform.position=p+Vector3.back*.8f;pose.localPosition=Vector3.zero;
+            if(UsesNative)imported.Offset(Vector3.zero);
             startScale=pose.localScale;startTurn=pose.localRotation;Current=Phase.Impact;Age=0;impactStarted=false;
             impactAngle=lean;Emit(PropellerEvent.PropellerTargetReached,p);
         }
-        public void Release(){PropellerAudioV5.StopFlight(Lease);Current=Phase.Free;Age=0;RotorSpeed=RotorAngle=0;alpha=1;gameObject.SetActive(false);}
+        public void Release(){if(imported)imported.Release();PropellerAudioV5.StopFlight(Lease);Current=Phase.Free;Age=0;RotorSpeed=RotorAngle=0;alpha=1;gameObject.SetActive(false);}
         public static void Clear(){foreach(var v in pool)if(v)v.Release();nextLaunch=0;PropellerVfxV5.Clear();PropellerAudioV5.Clear();}
-        void OnDisable(){PropellerAudioV5.StopFlight(Lease);Current=Phase.Free;RotorSpeed=0;}
-        void Emit(PropellerEvent e,Vector3 p){PropellerAudioV5.OnEvent(e,this);Event?.Invoke(e,this,p);}
+        void OnDisable(){if(imported)imported.Release();PropellerAudioV5.StopFlight(Lease);Current=Phase.Free;RotorSpeed=0;}
+        void Emit(PropellerEvent e,Vector3 p){
+            if(UsesNative){
+                switch(e){
+                    case PropellerEvent.PropellerRevealStarted:ReferenceGameplayAudio.Play("propeller_creation__15500");break;
+                    case PropellerEvent.PropellerTakeoff:ReferenceGameplayAudio.Play("propeller_take_off__15745");break;
+                    case PropellerEvent.PropellerFlightReady:imported.PlayOwned("propeller_fly__15648");break;
+                    case PropellerEvent.PropellerTargetReached:imported.StopOwned();break;
+                    case PropellerEvent.PropellerImpactStarted:ReferenceGameplayAudio.Play("propeller_hit__15578");break;
+                }
+            }else PropellerAudioV5.OnEvent(e,this);
+            Event?.Invoke(e,this,p);
+        }
         void Update()
         {
             if(Current==Phase.Free||LevelManager.THIS&&LevelManager.THIS.gameStatus==GameState.Pause)return;
@@ -98,7 +114,7 @@ namespace RoyalThrone.Boosters.Propeller.V5
                     lean=4.5f*Mathf.Sin(r*Mathf.PI*3)*(1-r);pitch=0;
                     Pose(RevealScale.Evaluate(r),RevealSquash.Evaluate(r),.055f*Mathf.Sin(r*Mathf.PI),lean,0);
                     rotorPlane.localRotation=Quaternion.Euler(53+Mathf.Sin(r*Mathf.PI*3)*9*(1-r),0,0);
-                    if(!revealFlash&&Age>=.085f){revealFlash=true;PropellerVfxV5.Play(PropellerVfxV5.Kind.Reveal,Anchor,Cell);}
+                    if(!UsesNative&&!revealFlash&&Age>=.085f){revealFlash=true;PropellerVfxV5.Play(PropellerVfxV5.Kind.Reveal,Anchor,Cell);}
                     if(r>=1){SetIdle();Emit(PropellerEvent.PropellerRevealFinished,Anchor);}break;
                 case Phase.Idle:
                     float wave=Mathf.Sin(Age*1.55f);RotorAngle=2.6f*Mathf.Sin(Age*1.13f);
@@ -114,7 +130,7 @@ namespace RoyalThrone.Boosters.Propeller.V5
                     body.localRotation=Quaternion.Euler(-pitch*.5f,0,-lean*.33f-2.5f*Mathf.Sin(k*Mathf.PI));
                     float blend=Mathf.SmoothStep(0,1,Mathf.Clamp01(Age/.065f));
                     pose.localScale=Vector3.Lerp(startScale,pose.localScale,blend);pose.localPosition=Vector3.Lerp(startOffset,pose.localPosition,blend);pose.localRotation=Quaternion.Slerp(startTurn,pose.localRotation,blend);
-                    if(!lifted&&Age>=TakeoffAt){lifted=true;PropellerVfxV5.Play(PropellerVfxV5.Kind.Takeoff,Anchor+Vector3.down*Cell*.20f,Cell);Emit(PropellerEvent.PropellerTakeoff,Anchor);}
+                    if(!lifted&&Age>=TakeoffAt){lifted=true;if(UsesNative)ReferenceVfxPool.Play("PropellerItemExplodeParticles",Anchor,-1,Cell);else PropellerVfxV5.Play(PropellerVfxV5.Kind.Takeoff,Anchor+Vector3.down*Cell*.20f,Cell);Emit(PropellerEvent.PropellerTakeoff,Anchor);}
                     if(k>=1){Current=Phase.Flight;Age=0;FlightProgress=0;Emit(PropellerEvent.PropellerFlightReady,FlightPosition);}break;
                 case Phase.Flight:
                     RotorSpeed=FlightDegreesPerSecond;AdvanceRotor();
@@ -129,7 +145,7 @@ namespace RoyalThrone.Boosters.Propeller.V5
                     float disappear=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.045f,ImpactSeconds,Age));
                     pose.localScale=Vector3.Scale(startScale,new Vector3(1+compression*.55f,1-compression,1))*(1-.78f*disappear);
                     pose.localRotation=startTurn;body.localRotation=Quaternion.Euler(0,0,-impactAngle*.18f);
-                    if(!impactStarted&&Age>=.022f){impactStarted=true;PropellerVfxV5.Play(PropellerVfxV5.Kind.Impact,Anchor,Cell);Emit(PropellerEvent.PropellerImpactStarted,Anchor);}
+                    if(!impactStarted&&Age>=.022f){impactStarted=true;if(UsesNative){imported.Hide();ReferenceVfxPool.Play("PropellerTargetExplodeParticles",Anchor,-1,Cell);}else PropellerVfxV5.Play(PropellerVfxV5.Kind.Impact,Anchor,Cell);Emit(PropellerEvent.PropellerImpactStarted,Anchor);}
                     alpha=1-disappear;
                     if(q>=1){Emit(PropellerEvent.PropellerImpactFinished,Anchor);Emit(PropellerEvent.PropellerCompleted,Anchor);Release();return;}break;
             }
@@ -147,6 +163,7 @@ namespace RoyalThrone.Boosters.Propeller.V5
         void AdvanceRotor(){PresentationSpeed=VisibleRate(RotorSpeed);RotorAngle+=PresentationSpeed*Time.deltaTime;}
         void ApplyRotor()
         {
+            if(UsesNative){imported.Offset(Current==Phase.Reveal||Current==Phase.Idle?Vector3.zero:pose.localPosition);return;}
             rotor.localRotation=Quaternion.Euler(0,0,RotorAngle);
             Blur=Mathf.SmoothStep(0,1,Mathf.InverseLerp(450,2300,RotorSpeed));
             foreach(var view in solidViews)SetAlpha(view,alpha);

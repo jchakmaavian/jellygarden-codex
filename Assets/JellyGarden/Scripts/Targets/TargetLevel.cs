@@ -40,6 +40,8 @@ namespace JellyGarden.Scripts.Targets
         public Target type;
         public Sprite icon;
         public int color;
+        // Set only on runtime copies loaded by the isolated reference campaign.
+        [NonSerialized] public string referenceGoal;
         [FormerlySerializedAs("count")]public int targetCount;
         [HideInInspector] public int countCollected;
         [HideInInspector] public TargetIcon guiObj;
@@ -56,6 +58,7 @@ namespace JellyGarden.Scripts.Targets
 
         public bool SetOff(GameObject item, int c = 1)
         {
+            if(!string.IsNullOrEmpty(referenceGoal))return false;
             if (type == Target.COLLECT)
             {
                 if(item.GetComponent<Item>()?.color == color)

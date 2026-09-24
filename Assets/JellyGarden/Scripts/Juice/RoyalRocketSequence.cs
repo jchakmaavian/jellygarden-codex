@@ -99,12 +99,21 @@ namespace JellyGarden.Scripts.Juice
         }
         Sprite RocketDirection(string direction,Rect rect,Vector2 nozzlePivot)
         {
+            var imported = RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.Art("rocket-" + direction);
+            if (imported)
+            {
+                // Retain the imported Sprite asset's pivot. This transient flight view adapts
+                // that same unmodified artwork to the existing nozzle-position contract.
+                var flight = Sprite.Create(imported.texture, imported.rect, nozzlePivot, imported.pixelsPerUnit, 0, SpriteMeshType.FullRect);
+                flight.name = "ReferenceRocket_" + direction;
+                return flight;
+            }
             var texture=Resources.Load<Texture2D>(RoyalGameplayArt.ResourceRoot+"02_powerups/rocket_4_direction/rocket_"+direction);
             if(!texture){Debug.LogError("Missing Royal Rocket flight artwork: "+direction);return null;}
             var sprite=Sprite.Create(texture,rect,nozzlePivot,100f,0,SpriteMeshType.FullRect);
             sprite.name="RoyalRocket_"+char.ToUpperInvariant(direction[0])+direction.Substring(1);return sprite;
         }
-        static float RocketFlightScale(Sprite sprite,float pitch)=>sprite?pitch*RocketPassingCellLength/Mathf.Max(sprite.bounds.size.x,sprite.bounds.size.y):1f;
+        static float RocketFlightScale(Sprite sprite,float pitch)=>sprite?(sprite.name.StartsWith("ReferenceRocket_")?pitch:pitch*RocketPassingCellLength/Mathf.Max(sprite.bounds.size.x,sprite.bounds.size.y)):1f;
         MeshRenderer CreateRocketExhaust(Transform parent,int index)
         {
             var go=new GameObject("Fire exhaust");go.transform.SetParent(parent,false);
@@ -126,12 +135,16 @@ namespace JellyGarden.Scripts.Juice
         }
         void ClearRocketVfx()
         {
+            RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Clear();
             if(rocketSystems!=null)foreach(var ps in rocketSystems)ps.Stop(false,ParticleSystemStopBehavior.StopEmittingAndClear);
             if(flyers!=null)foreach(var f in flyers)f.exhaust.enabled=false;
             ClearRocketLaunchStandIns();
         }
         void RocketImpact(Vector3 position,bool end=false)
         {
+            // Native rocket emission accompanies the head; native matched-cell debris
+            // is emitted by each real Item destruction. Do not add the old custom ring.
+            if (RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("RocketItemParticles")) return;
             Emit(rocketGlow,position,1,end?1.15f:.70f,0,end?.20f:.13f,new Color(1,.96f,.70f,end?.85f:.72f));
             Emit(rocketImpact,position,1,end?1.32f:.83f,0,.28f,new Color(1,.70f,.19f,.85f));
             Emit(rocketStars,position,end?22:10,end?.22f:.17f,end?2.5f:1.6f,.43f,new Color(1,.96f,.75f,1));
@@ -302,6 +315,12 @@ namespace JellyGarden.Scripts.Juice
             if(standIn!=null){ReleaseRocketLaunchStandIn(standIn);foreach(var f in active)if(f!=null)f.sprite.enabled=true;}
             RocketImpact(p,true);RoyalAudioDirector.Get?.Play(RoyalCue.Rocket);
             foreach(var f in active)if(f!=null){f.go.transform.localScale=Vector3.one*RocketFlightScale(f.sprite.sprite,pitch);f.trail.Clear();f.core.Clear();f.trail.emitting=true;f.core.emitting=true;f.flame.enabled=true;f.exhaust.enabled=true;}
+            bool nativeTrail = RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("RocketItemParticles");
+            if (nativeTrail) foreach (var f in active) if (f != null)
+            {
+                f.trail.emitting = false; f.core.emitting = false; f.flame.enabled = false; f.exhaust.enabled = false;
+                f.nativeRocket = RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("RocketItemParticles",f.go.transform.position,worldCell:pitch,sustained:true);
+            }
             float distance=0;int stepDone=-1,sparkStepDone=-1;
             while(distance<maxExit)
             {
@@ -317,12 +336,19 @@ namespace JellyGarden.Scripts.Juice
                     if(f!=null&&f.sprite.enabled)
                     {
                         f.go.transform.position=head+Vector3.back*.6f;
+                        if (nativeTrail && f.nativeRocket?.GameObject)
+                        {
+                            var native = f.nativeRocket.GameObject.transform;
+                            native.position = f.go.transform.position;
+                            var tail = -axis * d;
+                            native.rotation = Quaternion.Euler(0,0,Mathf.Atan2(tail.y,tail.x)*Mathf.Rad2Deg-90);
+                        }
                         float visibleCells=Mathf.Min(Mathf.Min(distance,exit),exhaustLength);
                         f.flame.SetPosition(0,head-axis*d*visibleCells*pitch+Vector3.back*.6f);
                         f.flame.SetPosition(1,head+Vector3.back*.6f);
                         f.flameProperties.SetFloat("_TravelFraction",visibleCells/exhaustLength);f.flame.SetPropertyBlock(f.flameProperties);
                     }
-                    for(int sample=sparkStepDone+1;sample<=Mathf.FloorToInt(Mathf.Min(distance,exit)/RocketExhaustSampleCells);sample++)
+                    for(int sample=sparkStepDone+1;!nativeTrail&&sample<=Mathf.FloorToInt(Mathf.Min(distance,exit)/RocketExhaustSampleCells);sample++)
                         RocketExhaustSparks(p+across*lane*crossPitch+axis*d*(sample*RocketExhaustSampleCells)*pitch,axis*d,pitch,speed,exhaustLength,sample*RocketExhaustSampleCells);
                     if(distance>=exit)
                     {if(f!=null&&f.sprite.enabled){RecordRocketExit(head);RocketImpact(head,true);StartCoroutine(Retire(f));}active[index-1]=null;}

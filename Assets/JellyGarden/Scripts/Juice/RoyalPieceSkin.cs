@@ -9,6 +9,13 @@ namespace JellyGarden.Scripts.Juice
         public static readonly string[] Colours={"ruby","shield","crown","leaf","lily","vase"};
         static Sprite[] colours; static Sprite rocket,tnt,orb,heli;
         static readonly Dictionary<string,Sprite> artCache=new Dictionary<string,Sprite>();
+        public const string CampaignResourceRoot = "RoyalCampaignArt/";
+        public static readonly string[] CampaignKeys = {
+            "king-idle", "king-cheer", "king-think", "dog", "steward", "palace",
+            "ruby", "shield", "crown", "leaf", "lily", "gem", "coin",
+            "box1", "box2", "box3", "grass", "cupboard", "mailbox", "egg", "potion"
+        };
+        static readonly HashSet<string> campaignKeys = new HashSet<string>(CampaignKeys);
         Item item; Vector3 originalScale, itemRestScale; bool ready, scaleReady;
         BoxCollider2D hitBox;Vector2 fittedCell;
         SpriteRenderer contactShadow;
@@ -20,8 +27,41 @@ namespace JellyGarden.Scripts.Juice
         public const float CellFill = .94f;
         public const float RocketIdleCellFill = .78f;
         public const float MaxDestroyCellFill = 1.12f;
+        public static string CampaignResourcePath(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+            switch (name)
+            {
+                case "home-castle": name = "palace"; break;
+                case "avatar-king": name = "king-idle"; break;
+                case "vase": name = "gem"; break;
+                case "icon-coin": name = "coin"; break;
+                case "crate": name = "box1"; break;
+                case "grass-full": case "grass-partial": case "grass-border": name = "grass"; break;
+            }
+            bool optionalBooster = name == "rocket" || name == "rocket-vertical" || name == "tnt" || name == "orb" || name == "helicopter";
+            return campaignKeys.Contains(name) || optionalBooster ? CampaignResourceRoot + name : null;
+        }
+        public static Sprite CampaignArt(string name)
+        {
+            string path = CampaignResourcePath(name);
+            if (path == null) return null;
+            if (artCache.TryGetValue(path, out var sprite)) return sprite;
+            sprite = Resources.Load<Sprite>(path);
+            artCache[path] = sprite;
+            return sprite;
+        }
         public static Sprite Art(string name)
-        {if(artCache.TryGetValue(name,out var sprite)&&sprite)return sprite;sprite=Resources.Load<Sprite>("RoyalGameplay/"+name);artCache[name]=sprite;return sprite;}
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+            var campaign = CampaignArt(name); if (campaign) return campaign;
+            string path = "RoyalGameplay/" + name;
+            if (artCache.TryGetValue(path, out var sprite)) return sprite;
+            sprite = Resources.Load<Sprite>(path); artCache[path] = sprite; return sprite;
+        }
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        public static void ResetArtCache()
+        { artCache.Clear(); colours = null; rocket = tnt = orb = heli = null; }
         public static Sprite For(ItemsTypes type,int color)
         {return RoyalGameplayArt.For(type,color)??LegacyFor(type,color);}
         public static Sprite LegacyFor(ItemsTypes type,int color)
@@ -82,6 +122,8 @@ namespace JellyGarden.Scripts.Juice
         {
             if(!ready){item=GetComponent<Item>();if(!item||!item.sprRenderer)return; originalScale=item.sprRenderer.transform.localScale;hitBox=GetComponent<BoxCollider2D>();ready=true;}
             var sprite=For(item.currentType,item.color);
+            var campaignItem=item.GetComponent<RoyalThrone.Campaign.RoyalCampaignItem>();
+            if(campaignItem&&item.currentType==ItemsTypes.NONE)sprite=campaignItem.Visual;
             if(item.currentType==ItemsTypes.INGREDIENT)sprite=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(item.sprRenderer.sprite,true);
             if(!sprite)return;
             item.sprRenderer.sprite=sprite;
@@ -97,7 +139,9 @@ namespace JellyGarden.Scripts.Juice
                     var size=sprite.bounds.size;
                     bool idleRocket=item.currentType==ItemsTypes.HORIZONTAL_STRIPPED||item.currentType==ItemsTypes.VERTICAL_STRIPPED;
                     float fill=idleRocket?RocketIdleCellFill:CellFill;
-                    float fit=Mathf.Min(lm.squareWidth/Mathf.Max(.01f,size.x*Mathf.Abs(itemRestScale.x)),lm.squareHeight/Mathf.Max(.01f,size.y*Mathf.Abs(itemRestScale.y)))*fill;
+                    float fit=RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.IsNative(sprite)
+                        ? RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.CellScale(lm,tr.parent)
+                        : Mathf.Min(lm.squareWidth/Mathf.Max(.01f,size.x*Mathf.Abs(itemRestScale.x)),lm.squareHeight/Mathf.Max(.01f,size.y*Mathf.Abs(itemRestScale.y)))*fill;
                     tr.localScale=new Vector3(fit,fit,originalScale.z);
                     // The inherited collider covered only 73% of a cell. Keep the
                     // enlarged visible edges tappable while leaving a gap to neighbours.
@@ -110,10 +154,14 @@ namespace JellyGarden.Scripts.Juice
                 PoseContactShadow(lm);
                 tr.localRotation=Quaternion.Euler(0,0,item.currentType==ItemsTypes.VERTICAL_STRIPPED&&!RoyalGameplayArt.Art("rocket-vertical")?90:0);
                 if(!item.destroying&&hintPose){tr.localPosition=hintRestPosition+hintOffset;tr.localScale*=hintScale;}
-                if(item.currentType==ItemsTypes.PACKAGE&&!item.destroying){ TNT3DAnimator.Find(item)?.PoseSprite(tr); TNTFrameAnimator.Attach(item); }
-                if(item.currentType==ItemsTypes.BOMB&&!item.destroying) RoyalThrone.Boosters.ColorBall.V4.ColorBallSeatV4.Attach(item);
-                if(item.currentType==ItemsTypes.HELICOPTER&&!item.destroying) RoyalThrone.Boosters.Propeller.V5.PropellerSeatV5.Attach(item);
-                if((item.currentType==ItemsTypes.HORIZONTAL_STRIPPED||item.currentType==ItemsTypes.VERTICAL_STRIPPED)&&!item.destroying) RoyalRocketPieceAnimator.Attach(item)?.Pose(tr);
+                bool importedView = !item.destroying && RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Attach(item);
+                if(!importedView)
+                {
+                    if(item.currentType==ItemsTypes.PACKAGE&&!item.destroying){ TNT3DAnimator.Find(item)?.PoseSprite(tr); TNTFrameAnimator.Attach(item); }
+                    if(item.currentType==ItemsTypes.BOMB&&!item.destroying) RoyalThrone.Boosters.ColorBall.V4.ColorBallSeatV4.Attach(item);
+                    if(item.currentType==ItemsTypes.HELICOPTER&&!item.destroying) RoyalThrone.Boosters.Propeller.V5.PropellerSeatV5.Attach(item);
+                    if((item.currentType==ItemsTypes.HORIZONTAL_STRIPPED||item.currentType==ItemsTypes.VERTICAL_STRIPPED)&&!item.destroying) RoyalRocketPieceAnimator.Attach(item)?.Pose(tr);
+                }
                 if(codeDestroy&&lm&&lm.GameField)
                 {
                     Vector3 visible=item.sprRenderer.bounds.size;

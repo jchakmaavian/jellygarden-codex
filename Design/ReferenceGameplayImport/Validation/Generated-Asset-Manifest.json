@@ -1,0 +1,2075 @@
+{
+  "scope": "Generated native Unity assets, validated texture/audio importer settings, and missing dependency metadata; existing GUIDs preserved",
+  "guidRemap": {
+    "c46391c678a3f6744bc581646624636a": "78684dfe4a886db46a2d5c2a4a0b53f7",
+    "965997229ccd63f4995d829da57dbf17": "2963fea626e0f05448abae40d0ce8dcd",
+    "57d780706e382f440ab90d0dd825d999": "db492ba5f8175144eb8058fc04a48e72",
+    "c5e437e38bf47bd4788c8de875643768": "4755f740580b90b478c2a2826aa3863a",
+    "e960866e82324374d986853844666fad": "2f093a070abb03d45b28111be198e020",
+    "855bb4ae34e480449a01fac36c05bf85": "22117a9e82b0b1540a1da7f03cd1f51c",
+    "b937ff54cd5db84418fe221738de1a48": "ca01bac25adc38e449f9d59a9a068fea",
+    "935ef981f8073e049a97eeea8d407a3e": "eccdcf67f9c7e914b849fb1288ef4129",
+    "94fd476c04a41fe488b820bdca940f8a": "4852d69bad63c114fa7f9e7273980702",
+    "9ec214b2a502a55449dca6d68a5f242e": "df50285ba71966f4cb72c374f51d2da8",
+    "a9cb83823bc1e1b40870096793d26da4": "7e116e2873afa984a8681c82885c8e19",
+    "8536cb746c564bb4eb5ed584668190ae": "e4df3a3a2dc86f24d93371cc96010c95",
+    "4a5a8acc1c426a74cbce7fb456beb4e0": "3827c0d0bf8ac2641a2e7664e00c51c0",
+    "1548861540a38ad4ca9569e246c1c86c": "ecfae3aa5ae144f48862083945bce0c5",
+    "e036f619fe125184699757d08901ce44": "e39fb14dbff63574b84a2417b612f3ee",
+    "c49fb2785e4a28045bcdce08a95316df": "0c10ae1dcbaff70409a968ffb84d568b",
+    "51e6a218dd01c264c95a7312abca6508": "eadada09a11ec7a4ba583658098011c1",
+    "ff23489a5c35c2b45bc7a453856d58d5": "52467243b331a37459a6705fdbd41072",
+    "32a9fd1fdf6aced4fbf3c7528d11d093": "8f2ae00f74eebbf44b42f33f132d37f9",
+    "10be7341000abe741b07fccc229b766d": "e8671b18496a15a4b811577c4d72556f",
+    "ee1f7c663d9adde47830e5c5d5d056b5": "96a9df36f0cbdde46a2e89ee7a2a6950",
+    "e954f8502ba133b4190fac10cb383953": "d0ac1feb90009684e8d00be2d90e2445",
+    "9797df0240a16754faf9f285c0cff50f": "32b981d4e0154da4787000ed9c45ea82",
+    "c55b26423f1f78f489e82b0a4ad96e12": "59d49b394a742e049a9351125a9e306f",
+    "e4fd45e5e9baa494bade7704795b2bc5": "e25cc2c9992c67741bb2c3a1b562bc55",
+    "783ef9cd60050be4a88e2abc8865a1f3": "f69807115cef81f49bfa8a3f00b2bfc1",
+    "30c1024a9f9ab294e9505959e9f20725": "bd7b9391a57183c46afb1b101f7fb418",
+    "1081d76d171bc334b995dc36fa056c6b": "2815c69296de33142b064be2a19afef3",
+    "65d811f099820b64c8aa29824592da5f": "2db4a6c4217ca75408add3477dc5475c",
+    "98a367f19a0cda344add8ae2e38051c8": "fd8c3cc72d9ee104eb3ad725a9438ad2",
+    "dd5d2314ffe3a80449d0cc49648b5e08": "e8169f7da711bc542b322d3a30b64acd",
+    "23ca71d9ad4562645b891a60deaa737e": "d4dd0fae060bac64bb5f9a1485480140",
+    "0e45ecd3f135a424296114005f109399": "adf9ad3f78e853042ad4635f010a1913",
+    "983279ff5a168874396aca5714f12afb": "af52cb7b2b2afb147bc9bd22ffc3fd2f",
+    "775c856a64e93c343b4e748b7c301a03": "cbbffd2a09a893140bcf191479820603",
+    "bbffa0ccaae2f924eb6697211a38c980": "8dbab3b9179d8ba41a75c4b71aef0ed9",
+    "ab56c6003befc504db3b4d092337f2fd": "f23554b295640814bb51cfd3a55ea2d9",
+    "06df4ea586ea6c9468eb6fee721c71bb": "cec99b130ea1efb46a3c08aa0139a5df",
+    "0a4a20b7fa034104db791ae1734b30a0": "71d67e02c9ef41444b65a492b7d68bac",
+    "c2c34f43d1e537549b1d1300347c2e70": "7ab754165f9e54a4fb126dd8f8a4c50b",
+    "fca40728b0e917f45944121f6c42ff6a": "4a58a6de2d6b8aa4fbb3a6aa9dea3421",
+    "089019c15df65b34c9cade42a87d5e98": "00b24a30694575b44ab6c3fa32d4d1be",
+    "ae1712aabc0ee9e40b360e58345cf57c": "3bd33e2cb989d2b4da6b88fe6c768ff3",
+    "e7da4db52b72ee04caafad2e1768e85e": "3e5b70a2bd5dbe34ab497c49daadbd1d",
+    "918666f36e35f1a45804523ec19e2da9": "10938a9dfcdcdc8489257994e2678cc9",
+    "aa4061c194248094591a4f833f85bbcf": "4353b8d7e4fa8f544a6f721deaee9563",
+    "74c8e678de7551b43a40e9aa304cd561": "f9e07a5fc9f48b9439ea2973627222b5",
+    "7ccc8a56f11fb3740a9a318a630af0f6": "3021eb088e022b74abd93d5847f16186",
+    "2173598b8d8125b40af6bd4b7e39b2d1": "cefe58f021cac8f4eb81669a414b6e56",
+    "222b195218cc6df42b487eba838fe402": "90539a3a220352f4ebcd9749b7de2cea",
+    "79bd00672bc737c48950bde29988564b": "5b25a77caf31ad04bb46562e46f2f964",
+    "cd331a5a25758884a8396221ce678c64": "fd4dc290477a1fc43b31ddd20ad5843a",
+    "ad14a6db2dd9d0d48969a857798755e7": "eb9b82e8925aace49b7d859237d19c90",
+    "d43304094ae940f418ec8b28ef68ff9c": "479e59586283ef149b864ad235f10add",
+    "c52003b8ccec1fa4da14e44a30dcbe0e": "7c8757f13d7c9d44983d685d869c8c2e",
+    "2945e7600c9cdf94881a54dbf85417b3": "36fe8c32cdfdaea49a2d1a0cf4852d18",
+    "4c4db8feb21d14044b725fcfe98ec986": "b9c725b0067c737489623257c4e64cd3",
+    "87c384efd8e0dbb4eb2179adc2c5e36e": "8ca776772c81a234088cba34a762851d",
+    "ecc7cd13de9991a4ba925d63a156ad1e": "26fb1f2179f4b174ea239a75b069b1e4",
+    "617d6c80da96a7c469832b6d51d2ce98": "cb59d827fc18ba24a8156c2e3b4b9a98",
+    "374b9b15cbbfafd418a9d7b817192757": "41009b15b8be6d34bb453081661f4903"
+  },
+  "files": [
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips.meta",
+      "sha256": "71f3ffdc8bed6c345b83040e6bed1461f8b6961fab17cbf231e133b81ec2d8a3",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/BallBallExplodeAnimation.anim",
+      "sha256": "32747e3c8526a3b46a449b2c5a141819bb25b0dec190a4c320ebac13f3bb035f",
+      "bytes": 474818
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/BallBallExplodeAnimation.anim.meta",
+      "sha256": "4c637e6924f32112233bf1e36c8a3148a086a82ec356893e24033cfbeb0cf047",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/HorizontalRocketCreationAnimation.anim",
+      "sha256": "d152239f4543d9e8528fd7577a55db6ae563966ce531536abe22635efca00e09",
+      "bytes": 192392
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/HorizontalRocketCreationAnimation.anim.meta",
+      "sha256": "6892e95e4c7ffa2d32f5d9e34ab82b8615e55fcd550d75553a1fecb55a1cd220",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/LightballChargerLandAnimation.anim",
+      "sha256": "04b7195fc2c959c95c468c94df16caec35a7bf1773e7b43d71b3daa1e98837ad",
+      "bytes": 83354
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/LightballChargerLandAnimation.anim.meta",
+      "sha256": "56ca3f38af5c87e10b0b9078557dfb1a15fd3bc38cebd77ab476e7b47483ae48",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/LightballCreationAnimation.anim",
+      "sha256": "e48c6b63b8f9849abd68018c74e08e71f426186594f38d805cd098b4254985ab",
+      "bytes": 182529
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/LightballCreationAnimation.anim.meta",
+      "sha256": "f43c3d2c9e74b13bb61e762fb64250d7efd0a7d4f36024e663e6c5d8bf739809",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/LightballDefaultAnimation.anim",
+      "sha256": "dceb1a3f4fc09c6efa820958db0a5d9b2143923551d85d5d8f31646a6c81300b",
+      "bytes": 27441
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/LightballDefaultAnimation.anim.meta",
+      "sha256": "8b0b419ccdaa6d7262536c0c5be7ad4a86c7823eb2a260f35d50b2ca18f15b1a",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/LightballUseAnimation.anim",
+      "sha256": "3ec25803ae78c06e7053c4cb423546c4d3be16bc8e29f8d27d018081f26b3569",
+      "bytes": 329994
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/LightballUseAnimation.anim.meta",
+      "sha256": "a5489cbb09a51f2c631cd58cf5b87926ed6d6a31dd0374cf0d4cd05174f7b991",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerCreationAnimation.anim",
+      "sha256": "1e8f5eaa281cea30049d080a654e05582ddf7e540d32c25722943808df01fd97",
+      "bytes": 58221
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerCreationAnimation.anim.meta",
+      "sha256": "859ac7246b5156579de0b150962b695e9edc9a1623cb64ddaf3e0579245ec576",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerEndFallAltAnimation.anim",
+      "sha256": "3b852b6d816c13fb1813463eaae7499df7738f60ed98d4d152d2069912d39954",
+      "bytes": 38345
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerEndFallAltAnimation.anim.meta",
+      "sha256": "6abee33fd7f293e57d81fb028ce0f4e767319130e6c467a6df9ac10907868825",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerEndFallAnimation.anim",
+      "sha256": "89e82d7f5791bc9548e7efdfe90201546573527529ad871d56886627dc0afd9d",
+      "bytes": 38348
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerEndFallAnimation.anim.meta",
+      "sha256": "7858cebba31022304fde01a31622c569cad27748a6d599cab3d37cea2a3db8bf",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerFlyAnimation.anim",
+      "sha256": "6630ac6612c6902bd7e08020caf3e2a507354f0460abd724d5af850267aaa221",
+      "bytes": 34976
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerFlyAnimation.anim.meta",
+      "sha256": "14ca36faccc01523bd8426f35adfb7bc62fd71ad8142084632731023570260e5",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerStartFallAnimation.anim",
+      "sha256": "7fdd9da0a71f7ab1f0a74566121fbe13a5013bef32cbd5c5f36bedd10b684109",
+      "bytes": 30018
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerStartFallAnimation.anim.meta",
+      "sha256": "4811312332bcfe4fd7202104412eababcfa6ae1945b85d913899bf8b3a7bf7d8",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerSwipeStartFlyAnimation.anim",
+      "sha256": "dc47a472ac85b10a083f84ae0637cae957d912c42d5678311d5b396723fcfd6b",
+      "bytes": 42496
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerSwipeStartFlyAnimation.anim.meta",
+      "sha256": "10d70839285276cc868c1f2737a3baeb390d87dc2e7b39fd743925dbb522447d",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerTapStartFlyAnimation.anim",
+      "sha256": "6b5ba4edde53f4ddda28e324196df876c26d936d94d9cfbd255fdf08aa111c2b",
+      "bytes": 40384
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/PropellerTapStartFlyAnimation.anim.meta",
+      "sha256": "43fb710db95cd6016b58c47fc2a1cccf8c9f8c6ba9f49c722e436e7bbe85928c",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/TntBoosterAnimation.anim",
+      "sha256": "7496e32334834c2ae1a98ad5b5d7d2ce8405a13d9d98773c3e64a36e7ac40a3a",
+      "bytes": 516524
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/TntBoosterAnimation.anim.meta",
+      "sha256": "b7b84b96822175a25d205c7b2bcf30b123aa531183ca7701149e17451b1bdf71",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/TntCreationAnimation.anim",
+      "sha256": "cf195123b8c8de9e61804fb7812e8d253d24d2c4c6ed60603cb16649162996fc",
+      "bytes": 528267
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/TntCreationAnimation.anim.meta",
+      "sha256": "24ce88a8e388b01ac3dc1aaf24bcbb4fc7ab46484e772d07258724ddb630c784",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/TntLightballCreationAnimation.anim",
+      "sha256": "1332fb7324c3041d8650afa18daef0e69f16e7270a495727dedb36b9295def30",
+      "bytes": 96905
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/TntLightballCreationAnimation.anim.meta",
+      "sha256": "f29be62f03c598530c1db621edcb555aded18037c3df5e0579ba5325a0bf0754",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/TntTntComboExplodeAnimation.anim",
+      "sha256": "27198a8dd8fdf4b31a90cfe403c1d4d35b2e8a20b922af744910d2494b58482c",
+      "bytes": 364317
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/TntTntComboExplodeAnimation.anim.meta",
+      "sha256": "43879d9d46ae17493bf4ecfc7076522d53c49eb731afdb2cf3bc3f514023f9a9",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/VerticalRocketCreationAnimation.anim",
+      "sha256": "a8dc5acb89644b7d95e5b7eadca14446be0197556c5e47f3ae69c5d5d8045107",
+      "bytes": 195728
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Clips/VerticalRocketCreationAnimation.anim.meta",
+      "sha256": "16d9b04ebb9b128ed7ed83fb107242cd57f56821c3e30813b1f22e69768921d2",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers.meta",
+      "sha256": "209954afe4fc94df936ec053eb3edbd4da27fb2532f71458073925321c632e2f",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/BallBallComboAnimator.controller",
+      "sha256": "d5ca42dbf74a8901d019ba06af228aabfbf2a623a304b861f355a164dbe4694e",
+      "bytes": 2086
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/BallBallComboAnimator.controller.meta",
+      "sha256": "12912b771858b4f48b337213a585bc42fdc4750924abe28f90b185eb9dc50dd1",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/LightballAnimator.controller",
+      "sha256": "769996f74bc42758a2dd3deb54769ff2b0ca8a4c7f2b9597086d1bde4c845e8f",
+      "bytes": 4520
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/LightballAnimator.controller.meta",
+      "sha256": "9167048de236e18979d99b3517c3624848e9d2ea7cb802629d4b3d645fae3f20",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/PropellerAnimator.controller",
+      "sha256": "48d87fc17bc7f8d30e341f83258313e5deb869750723e698e00d7d09f50a5a1a",
+      "bytes": 8118
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/PropellerAnimator.controller.meta",
+      "sha256": "a25196425e21950e805bc94c85bbff108e31ceb34e726ca71b55bf5fc8d3d25d",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/RocketAnimator.controller",
+      "sha256": "19b4314394f2c64467274af36223776a2d474efaadc682102453e268d7e183af",
+      "bytes": 2905
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/RocketAnimator.controller.meta",
+      "sha256": "64d6fb3b903b6b566232da9c71438b762e5c0ffa882fedb82797933b1e86037c",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/TntItemAnimator.controller",
+      "sha256": "ff57436b94a4086c08ce9a49e723babb3aedc7722069f35e549b610c6f234170",
+      "bytes": 3702
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/TntItemAnimator.controller.meta",
+      "sha256": "04bd58bf7850953ab2102a092ba08c4de62a1989f889f80e627bc3e528e094d3",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/TntTntComboAnimator.controller",
+      "sha256": "fe0fc36a0a68e6ba8dda5e82a27f718b349e4c35343a2bc3050720d5d853a272",
+      "bytes": 2090
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Controllers/TntTntComboAnimator.controller.meta",
+      "sha256": "2a8226ef895c14963bd64f6ce0ffed7fc7c37076c3d4bf5554d3c58c6ec8f31e",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources.meta",
+      "sha256": "e9519a7f0dbece80c55fac1122bfe4e4cd55e27a2ebb40b625b4cba4f0dc1b80",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay.meta",
+      "sha256": "26924cf6060914ac96affde0691626692b215e57908129446ea6fb0cd05cdb3e",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals.meta",
+      "sha256": "980090c566412d5f7ad7304f884a7b693971c0d70bb442c8df741b3f6b067b75",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/ColorBall.prefab",
+      "sha256": "b5412c1d4bb4bc4ecd1603df5f7a164bab65bd3bb759017cff0caea34af40ef3",
+      "bytes": 16930
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/ColorBall.prefab.meta",
+      "sha256": "b5ba726093516265967d3432a0178b73a31add431763a77c209a963469832e05",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/ColorBallColorBallCombo.prefab",
+      "sha256": "87ebba1994e275791463a0a3bd2a264843178d2295b86d29645dd0daff4e1688",
+      "bytes": 15968
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/ColorBallColorBallCombo.prefab.meta",
+      "sha256": "90caa97038d85bd8ca30fb4ad7562d3b830148649baa3c21d96d27c4cd8399ea",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/Propeller.prefab",
+      "sha256": "07934b497ebeeda4813af4436aeceb9b9dfc2ddab20da37f6ec1e9812cd0ac26",
+      "bytes": 20470
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/Propeller.prefab.meta",
+      "sha256": "e53d7d3a220a854b8191d4e20ff138f2216352d3e68009eb62bb10cd0c41b5b0",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/Rocket.prefab",
+      "sha256": "848b0a1ae4572155baa88b5b5b8137db0d8c9d736522316522b77a52e0529934",
+      "bytes": 62300
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/Rocket.prefab.meta",
+      "sha256": "4fd8a925910940d222d80c450f9d5da34460a6a60ec85ec92d7d636a8033fb80",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/TNT.prefab",
+      "sha256": "73ee4250e78fad2b7aa790c93cedb419a090874f69a1862a764c2b3e73acad4b",
+      "bytes": 52018
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/TNT.prefab.meta",
+      "sha256": "f24f8b1ee146c1eb663f2ff9665c9e6c08730f3183c2e6dea59d9c992cf86210",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/TNTTNTCombo.prefab",
+      "sha256": "3a53b865ea9d06a87727fa4e3d9d43d388f7b02d46beffefbbbb788d4ca2b1c3",
+      "bytes": 24782
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/TNTTNTCombo.prefab.meta",
+      "sha256": "e3280d651c1f961cb064fb26459db9686d9e893b2c4388a3207be9a01ec4bd3c",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Atlases/mailbox.png.meta",
+      "sha256": "fc3dc21459dbdc4b2c7377bc7ced048c84712ff0658d09d3199f0033bcb363bc",
+      "bytes": 3363
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Materials/NativeMailboxPMA.mat",
+      "sha256": "2351fe5cc27abc32ad62a7db25e58aff4af4d18fe9dce727ce56ddaff67c14b6",
+      "bytes": 921
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Materials/NativeMailboxPMA.mat.meta",
+      "sha256": "40da9ecd78cf807741b7f994a404868f0e2fcb6efdc4b8467baffd2d97bfbacd",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Meshes.meta",
+      "sha256": "641be3c7fcef8c79e47c722d6bacbb05db9262b071ab45a17412e45ea1b50e62",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Meshes/mailbox-slot-0.asset",
+      "sha256": "7e044e15ec887c6ff94e677e29c4a8ef25b7e937c1ef56ea19114ac4eacf6140",
+      "bytes": 3756
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Meshes/mailbox-slot-0.asset.meta",
+      "sha256": "e550f02ca10ea4e1644fee0c81eeb21e5409d82599dc0b71a6d74cc1f23579ab",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Meshes/mailbox-slot-1.asset",
+      "sha256": "c46946ab32944b9f7622599d9b32bd2508dfb30a8fd3ab0a1135a70e20b58726",
+      "bytes": 3756
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Meshes/mailbox-slot-1.asset.meta",
+      "sha256": "fd0aed24e799dcee56880031c2dfaf7368142b5f10c5bd1b756a267fe90d68cf",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Meshes/mailbox-slot-2.asset",
+      "sha256": "458207f0c0e8743152f5e6c66014581aa9871c25d52b367dce50c4c4ace80526",
+      "bytes": 3758
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Meshes/mailbox-slot-2.asset.meta",
+      "sha256": "6f00f55dc08e780355a0450c54ed4bd2eb8e61aac2deafca9d9bc8846177057d",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Meshes/mailbox-slot-3.asset",
+      "sha256": "0b6a45848def0d3e8cebdea0527bdb23bf24508008f206739e26c2819aa5efd8",
+      "bytes": 6545
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Meshes/mailbox-slot-3.asset.meta",
+      "sha256": "25a39effa6e31396928fa989b06543d6306092f72b995af55e7e7944c3dfb519",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers.meta",
+      "sha256": "ab39e71c855a3c5cb4ac13ae40ec0917e280c023713f0437099cf5a13ec7324e",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/cupboard.prefab",
+      "sha256": "0e4a583ee49b06b775754c0245fd9ce2ec36f23b04dcf829a1866c2a4c02578f",
+      "bytes": 139482
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/cupboard.prefab.meta",
+      "sha256": "b152d7e7d2da87905aa1538f7d2c8179983fd8650c6763974e0f0ca8376a7f31",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/egg.prefab",
+      "sha256": "8ef10d7452e4d3cdaea3e2eada1057a177bbce100a55909e54f2a0d09894afcb",
+      "bytes": 9249
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/egg.prefab.meta",
+      "sha256": "488bc32e47ae049594235f4a57be0df930d7de81cea9629d3f09f218ce5f1778",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/grass.prefab",
+      "sha256": "2604f6d4c7a0fd925f1e32b90811f12c1636e75a9c931e215506930acb52c18d",
+      "bytes": 14417
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/grass.prefab.meta",
+      "sha256": "615d295f8e852bcc1edcd6e1475cf1f0e616d8365ccb1f431580afd0f4ac1544",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/mailbox.prefab",
+      "sha256": "eb81caec6fb41c141549da329ddca548a242fc1e5aee9115a6ec8680060c7a45",
+      "bytes": 16504
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/mailbox.prefab.meta",
+      "sha256": "6b7db618746d17cdc55e45fae088f8d59f0e6f8bbb4bb7e3ee0a775e55408bc5",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/potion-bottle.prefab",
+      "sha256": "1a47237b51bdf598ad5467111a4d3c83d37221c66147f082f80db4de1598570f",
+      "bytes": 26770
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/potion-bottle.prefab.meta",
+      "sha256": "2816947a9f6d3369aaf803af9843a25139dc2079c2ae5a36ecd6dab8e8bd92f5",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/potion.prefab",
+      "sha256": "c9545b0c69b76ff71443109c724637f9c92010d9aa62321ea920753a9e31799c",
+      "bytes": 13702
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/potion.prefab.meta",
+      "sha256": "e894282bb19bde27c456ca68c5d748d11030dbe57fd04bb0d30803d8111c0957",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/box_break1__15936.wav.meta",
+      "sha256": "c52984c52dbc181c0d1df39466e92bfb627d8507e1fb6496e26d3b858798e30c",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/box_layer_break1__15866.wav.meta",
+      "sha256": "a3871ccbc1cea12b595400a612d46727f41a9059eb48c5c7e3a75efbcfefe9cc",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_appear__15711.wav.meta",
+      "sha256": "974eecac0e5eaa72a04162325481b405f15f1509d285ba34ba0675aadd460cac",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_collect__15714.wav.meta",
+      "sha256": "3d857d03ca7abaa4bc34376429b675a59dd0367fb492488684e6e13743784a92",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_collect__15802.wav.meta",
+      "sha256": "52f95a703fc097ce250a7f9ad3a32650d14eac8535723ea8c3fe21175d64957f",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_counter__15677.wav.meta",
+      "sha256": "659bb31a3112d685b1a6f78c0639b236a5a8aa03792bb0267d9b76462a73f04c",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/cupboard_container_break__15639.wav.meta",
+      "sha256": "5bb02f2f19663194af67c7d30ccefd95cd2374cbf7b92d9580db63d224a418f8",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/cupboard_door_break__15898.wav.meta",
+      "sha256": "0426df0afde67fd842a2a0aa445af8f0b4891e74eb28b49bae4629d9538e61e4",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/cupboard_plate3__15718.wav.meta",
+      "sha256": "5dc5261e9c0208995e85d1b1f8b5084086ceb69a75be7db2036606e856baf1f7",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/cupboard_plate_1__15752.wav.meta",
+      "sha256": "6be28a86e7b6ed5226924a97909ce86ccbefb69f92183eabe45589c5093a3c01",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/cupboard_plate_2__16014.wav.meta",
+      "sha256": "9c04d35aaf2b139eee44876fe68a828a05b6547ce535fc5c6b5204230e13afe9",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/egg_break1__15847.wav.meta",
+      "sha256": "604bee03a49e88c3c07aa6605d01ee8a4e3ec12a081b07407c4d746989d37678",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/fall_hit_1__15531.wav.meta",
+      "sha256": "a9171e8c4ee7c2e1fa83385223fcb08ce184b3505c74aaa5fa8ae11aa32011e6",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/fall_hit_2__15974.wav.meta",
+      "sha256": "28ae9f24f5f7c58043c8060004136ecbf24bcf925a2375ecae7abb9833a9a02b",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/grass_clear__15953.wav.meta",
+      "sha256": "7fb5f3fca6939409e0ec959f2d78ee70676d348febb8e30c9a17db6e702e6f07",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/lightball_creation__15586.wav.meta",
+      "sha256": "193c1d7ba93d2a750f894e051b4daa643c522cdac984c66080431691b004c280",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/lightball_explode__15567.wav.meta",
+      "sha256": "16a16497997ff58ce9ffa1b20f48c25582ec506d65b54c74bab786dae9849b73",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/lightball_lightball_combo__15580.wav.meta",
+      "sha256": "5965781905259accc68369dbfcc18bc21b7501fbea091ddfe70451302d19be37",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/lightball_ray1__15747.wav.meta",
+      "sha256": "7383a722f40a5657f6a7ff4daff4ff5c96b0eee704dc43deee7c750eca9a3111",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/lightball_ray2__15961.wav.meta",
+      "sha256": "bdc5813be1bcfa40de73d0c9354f571caa0bc40899c67dd018f9e7101a0a0a68",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/lightball_ray3__15912.wav.meta",
+      "sha256": "70d1d50852c3ad9d99fa5ae0303a49c72f92ad709ecb0b474fa16f1d4357f78f",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/lightball_start__15692.wav.meta",
+      "sha256": "ecb6dfe896d79d438bf5c2d4c4c29deac1b0677e11c7015a0350f182d0e9b69c",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/mailbox_close__15545.wav.meta",
+      "sha256": "1d205b901dbb0e0f45f7537e98eda773b383a059d56c17febec08d61849e1c77",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/match_explode1__15971.wav.meta",
+      "sha256": "78a13e7e36807a757536608db79e44c99c78c27025849b10f77ab421f982558c",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/match_explode2__15612.wav.meta",
+      "sha256": "0944a92598c4b52a09dfd54eeae66b9a8c486fc8fc3164de96d60d6b7ff9b884",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/match_explode3__15652.wav.meta",
+      "sha256": "2e1d3922b9b5c1e8e8e95c76130d53c424a79d6ff36a6f8ee7ad9d0c3faa962f",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/match_explode4__15914.wav.meta",
+      "sha256": "7000efd99f59e58d4800dc1875454c8e6a297ebfa77ccff92d4485c2dd15ae54",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/match_explode5__15888.wav.meta",
+      "sha256": "6205dd070d9b3770d5bd447c9f5708abbadf64fd30b0938452dcc96c25d51bb0",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/match_explode6__15850.wav.meta",
+      "sha256": "ccfeda4dfb99bfe3a92660e9a334368a0ad953a18f6bf22449af1a955180d03a",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/match_item_collect__15511.wav.meta",
+      "sha256": "c8007281a18be9fa44972bbf63f1c2c8108879c30654f7bc7de7147c492d10c4",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/match_item_swipe__15655.wav.meta",
+      "sha256": "0c66efa8b087e8e315e4f0aa1ef853ef368871b1a148932f473eb222bc911696",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/potion_bottle_break__16031.wav.meta",
+      "sha256": "4841da478248cb552d100a49630546940b3dad4e0f80054d8f07d5acb317d162",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/potion_container_break__15636.wav.meta",
+      "sha256": "08ef62485e6d8bbeaaec7ebbc2e3611649e8c7396282f55bdf0057ff9078a2b5",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/propeller_creation__15500.wav.meta",
+      "sha256": "1ee3cbf888dbab8b364de87543fdb50d116d611ad1aeb2b4fe312f238219adae",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/propeller_fly__15648.wav.meta",
+      "sha256": "ee7f53320f683f03fc0796efca0e413b74779c6ec99ea340c91421bf1639fe1d",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/propeller_hit__15578.wav.meta",
+      "sha256": "2adf53289aa288be0888319a50428c2b81c89e3e3ef9e5bd3f3a4636bdf4de69",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/propeller_take_off__15745.wav.meta",
+      "sha256": "f280a00e5034b03caf1bb2dabb71a681d1edc4328787b498ec8139ddd904cb28",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/propeller_tnt_combo__15680.wav.meta",
+      "sha256": "af43b8ba11e50ecd8f79973aa497451c2aab16298eda35025d716fe22636d2a5",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/rocket_creation__15581.wav.meta",
+      "sha256": "296c60c8143e8a17e3ae04576f8d0f06eba38edc1e84f0bb3f420f26f45b7a52",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/rocket_explode__15712.wav.meta",
+      "sha256": "07fac76268ee4480ef955bfd19c94011606bb92ddcf1909e78c1434454f96a7c",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/rocket_tnt_combo__15488.wav.meta",
+      "sha256": "6d6c4ba98f786f5f3b938886df4bf64b13f8150ec9c7cb26bb162bd4aa66d5d1",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/tnt_creation__15882.wav.meta",
+      "sha256": "2666f1db3af3b719f851e4475f2e28385e7664d3342b5f3a0b54ee9aeaaf4a2a",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/tnt_explode__15838.wav.meta",
+      "sha256": "d9276400961b80aeb82c6856bc0d033a26ee765d210b1eddeb54c54deeee2d78",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/tnt_tnt_combo__15766.wav.meta",
+      "sha256": "bc03437e1a7ab98b7f076e6df71e34673be04785a40c6d2a84bf3f9f067c9c30",
+      "bytes": 485
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites.meta",
+      "sha256": "a4abad451b71a8d85916df9f26d0367df769e5c4e29fb6a3d9dd3fd631ce6c22",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16244.asset",
+      "sha256": "c2622b84d8cb25735c8ac1f1a122a7d77294faaf7f3b3415103702ccacb079d7",
+      "bytes": 5053
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16244.asset.meta",
+      "sha256": "8b01f7eaa0ea084ed9c2d0a5b816c842a7f10c21e90dad5817918ea7ea1694ca",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16247.asset",
+      "sha256": "c4670b5919c8c73476ac1a3e0b5916994690e87b62f35c905b2ac442fa185229",
+      "bytes": 5062
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16247.asset.meta",
+      "sha256": "301a0ed9d15bd5299128153c2effd6702afe38a98d77a86ed00e9b2ee2f00fe1",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16263.asset",
+      "sha256": "2c0a0930ec4ddb4aedc9b1133a6c9e140c01aa0b6af255d1ca41f77ae008a895",
+      "bytes": 5051
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16263.asset.meta",
+      "sha256": "d2bfc567326849635d4d3b006f08e5b665bb89527ba030241083872249ee3c1a",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16277.asset",
+      "sha256": "50c2a33158c409c69d5753d809b8977170988d615514dfb0300b7680ac7505bf",
+      "bytes": 5066
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16277.asset.meta",
+      "sha256": "116c8e3571d37d38eead7ab2d988490dd96b88dd623511cf25832a4ea7865a8f",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16319.asset",
+      "sha256": "d7259ccda93f03f01e4dfd6f92336a1078b83811be359feafcb262341eefd4cf",
+      "bytes": 5053
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16319.asset.meta",
+      "sha256": "61dd6e406409862a3dc9867ce299d7cb4652f6cb3f7375b85b057e911274f779",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16336.asset",
+      "sha256": "14890c466830565a1f86d15dd11f08c0dc31046d063fb360be61c52d69b7dbd4",
+      "bytes": 5053
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16336.asset.meta",
+      "sha256": "e1da8eaca4a8666dd6d3403456f2efac35c3a43c9b1b97a97fe4a3bd911f969c",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16351.asset",
+      "sha256": "5d2bd057616324be8d4a9e4b9a7eacb6294a3cefe9becb654bcde573e5b51808",
+      "bytes": 5039
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16351.asset.meta",
+      "sha256": "cfaa02ac3be1271a0e8987fc0ac8cc0fbcc8d49bd60ab5165041639e6cae2173",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16360.asset",
+      "sha256": "b0e2020d868336ddc1ee8522878768e7babf2dd3e31be42dd4358b7ed2d2a531",
+      "bytes": 5056
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16360.asset.meta",
+      "sha256": "095ae9c84c179288b04c4f0fd3b4c7c4ddd7d4780a420f5d45d51717828876cc",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16373.asset",
+      "sha256": "b1b7be1075b5570529130744117618b37d5df8b3236ea5c68b0a579b3df02383",
+      "bytes": 5057
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16373.asset.meta",
+      "sha256": "5ee9daae5328fa951758ac78b5a154cd353aaa043060a8cd702167d9b4cf2b75",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16380.asset",
+      "sha256": "e6f460b5c883b371c51dd035f8719bddc0ab5cb32932afa414a4f4b13b32eede",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16380.asset.meta",
+      "sha256": "67423883b6e6b724d4eb9e269eab8000e24c55dcb048900e56365109203e4de4",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16382.asset",
+      "sha256": "73494d8bd19da268b91b71af4a94bba01b843f5057f7f764f194e7ab6e4ebb86",
+      "bytes": 5051
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16382.asset.meta",
+      "sha256": "6afb861fa1779ff4f031d96e2ae190279150eb13e152a0cc276781eeb7746df3",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16386.asset",
+      "sha256": "13a48d76071b71c4bafe01946159c94a4b18812fd9b77485f5d238a1c31585c2",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16386.asset.meta",
+      "sha256": "6cb8521d4854d7689874c9a76422b6b66185ab48d9ebe4fce4bc3b62c813322f",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16418.asset",
+      "sha256": "045379a1ace37671f98393db0976d052d5bfa090f11dfe03983c84dda9aee3d1",
+      "bytes": 5045
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16418.asset.meta",
+      "sha256": "e32c1bf2c69b7bda51d4193f76681557427f259c79a4e09e1ce1baeb5d9237b4",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16463.asset",
+      "sha256": "49905b839c169a68f5ded162e0ffb60c475efe50a7109badb2485eaf5b655f20",
+      "bytes": 5048
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16463.asset.meta",
+      "sha256": "81e38226f5c616459e002a173f9d2fa185d1db8fc7d04a00e5573a2b3f22f8cc",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16484.asset",
+      "sha256": "cfbfd70c389ccd89505615ce7630f323bf1742b27e1473be8c9926ec055e283f",
+      "bytes": 5053
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16484.asset.meta",
+      "sha256": "cfc1377abaa8dc2ea0c9e14cf168d82b2927ac30f0652caec769e6464056702c",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16490.asset",
+      "sha256": "446d81f1ac33634198f1d65cfdc0eff3ed3eaf2666e9cad56f82fa1c0abd7f9c",
+      "bytes": 5051
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16490.asset.meta",
+      "sha256": "04d44653f9decefa6a5a03eaea7554a1963930c56d51af5c1170c2def800035b",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16540.asset",
+      "sha256": "f57e21041545eac263b83f7f7b57c945fce3fe21d14476290a6df277f1dfb3a4",
+      "bytes": 5057
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16540.asset.meta",
+      "sha256": "0870c9076508332e326e184514f24b915b42dd84678e58711db73613e83f4c88",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16582.asset",
+      "sha256": "603cc19d84aa6cf60ac329a70d3fb5c59b8f85496fcbaf52051d306b5eb5e229",
+      "bytes": 5039
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16582.asset.meta",
+      "sha256": "c12202db271262b49fedd0b14d03ce8c10cffe13f72a27b64cfc40bbc71290c6",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16596.asset",
+      "sha256": "c033ba9360b6144113f667912b5af93e079645154305a8c5470dd9bc005e95e7",
+      "bytes": 5046
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16596.asset.meta",
+      "sha256": "f1802979ea7935c5a9044916afa32aa4d84611f76c620bea30c54ba3c29f75a9",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16648.asset",
+      "sha256": "01151248c5f5b198969cbe92d55263f163bb73e43faad214f6358f1e9c83480a",
+      "bytes": 5067
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16648.asset.meta",
+      "sha256": "1a3d488bc5e4173ee01e09ccbf622b26a0ddc7f292d6a0f37dc3e850febf18e1",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16739.asset",
+      "sha256": "d654e6a7da7343e0a84d53d5a247750f0a35e6b9723992fc3e80e16021040084",
+      "bytes": 5063
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16739.asset.meta",
+      "sha256": "c2934662fdaf89963c0342c1e87f3150112fdc04508d961b42a5941b400771cf",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16763.asset",
+      "sha256": "4a890bfd12fe3e2961eae5d71cf1a9e1b4fb4041417f68e55dd7da6460f91f57",
+      "bytes": 5057
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16763.asset.meta",
+      "sha256": "21cb70b980b95e4845073de036d46967e68e4d51543bf29278b1ed51afbf1c1c",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16784.asset",
+      "sha256": "624280c21c8212bc8d801d60d26d4ee8748020bf046c1735f3efe620ae2635e3",
+      "bytes": 5047
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16784.asset.meta",
+      "sha256": "55dfd9ce1e79ce1dd6d6245ac768bf3c3b700b54a66a5f64130106d02a211e64",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16803.asset",
+      "sha256": "ed6a08eab3f47e9cbb189eae9d0e32dd27983fd93c062eb46e3351cb5f5d8bc4",
+      "bytes": 5074
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16803.asset.meta",
+      "sha256": "156b7c2fee4bb303365566a0d578fda990afdf6360e13d03622402310d4c20e8",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16814.asset",
+      "sha256": "dcd058c65cdcc39ec14e52a0db90fe9ad5633c881c3975d12aea010791ee7fd4",
+      "bytes": 5039
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16814.asset.meta",
+      "sha256": "558ef8548c8561989f0c97792293709b268b7406fff8073ad75b171d53899bbf",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16820.asset",
+      "sha256": "941e5862d886625b5b5aa2e2f63b48508883684467103015767748d6cec44b9c",
+      "bytes": 5058
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16820.asset.meta",
+      "sha256": "2a1cafab3b3b72ab697c785eb960b39fd305586bc05f8d887e2a1c5dc2a36ec7",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16846.asset",
+      "sha256": "438dddf7f50a666b82a46c8bb9c265e70a97de1be04e67d16767f93c80976082",
+      "bytes": 5067
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16846.asset.meta",
+      "sha256": "9c96cc2fc6f8c218fa4db0b6fc6e238d49c5be5dfa51217650bbd4024d7b5b08",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16863.asset",
+      "sha256": "d092881bb445c3b884aaa42c72911bb4359955328dd1c3663c8c824f45d65ccb",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16863.asset.meta",
+      "sha256": "ed11c57d11c1e02adbf2b325671042a9604c70afe5a7933da15fe8a7cb38d2cc",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16882.asset",
+      "sha256": "cee1c25003c4b0b568b3fef3a6deab91b3d66fbb2d7081f360360c66cce9f1aa",
+      "bytes": 5065
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16882.asset.meta",
+      "sha256": "de19236f1527258d442287b7dfbdad886e8d7d3fb6c3db7594e249c30e0c1512",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16889.asset",
+      "sha256": "f9836abf05acdef2009ffc3fa8718059bdd7906c4709de4a41de3470c05a3362",
+      "bytes": 5057
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16889.asset.meta",
+      "sha256": "66e8af43b52654d775d1bc282f54600918324967b2701d736f7a78cbe0be5149",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16901.asset",
+      "sha256": "b2afd894f7a94e6c65949ff031785b9fec813c1fee2ffd0cf8b6cfca7b3b9148",
+      "bytes": 5046
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16901.asset.meta",
+      "sha256": "7ea3792cdc65cd05a17323c29c2d63f286aed57fc272f7c8bcb773c4dcd16688",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16906.asset",
+      "sha256": "5f95c4cdf8b22cd6e939b1ac7ffa65eca7f0d2a0429ab59b289d4e8f3e7c451b",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16906.asset.meta",
+      "sha256": "b89c83fa886f6a438dff6d433abe41f4db993ac606fbab0384aee21f6dc9a5ed",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16925.asset",
+      "sha256": "b5f58ad575afca3da2e178481b3c49f5dc7148a16af87dcc6a8534c69c4e3943",
+      "bytes": 5064
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16925.asset.meta",
+      "sha256": "ee1a715819315d50a779c7f38922ea964dda09980c0acc0ee10590b84d2d2208",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16947.asset",
+      "sha256": "370b96f31a70721e95603f12d75a24d19a6567f89c0f70df4c08ec047f33bd17",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/16947.asset.meta",
+      "sha256": "6f68faf32fd9b8e54a8832d0ad91a69f14b5a421ff4055a60adeb43e4033e1b9",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17041.asset",
+      "sha256": "94784f0c232bd12341ea325a03737e69e7fdf6c4f61a0c0fc91e2be171f13c27",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17041.asset.meta",
+      "sha256": "2d4384ae210a9d2bcea142f90cd873f3f36c6e292e690b4732fb46efa30f8726",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17042.asset",
+      "sha256": "0b9c779ecbe5f24fefd833f53ae02908edc8df2b0985f13f9c7527c6ac62d345",
+      "bytes": 5062
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17042.asset.meta",
+      "sha256": "f6d8c299af7816e503df51cad829dff0c9ff59104ac9c8587f80429e0d5b38c5",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17061.asset",
+      "sha256": "9839281b62c46ed5f7fbcdc30df85dc01b6d03cc86741b895961b1b9879c24c6",
+      "bytes": 5062
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17061.asset.meta",
+      "sha256": "7c57e2bc89bf77a495ef4dff9c692968dcce1417b86f8d7ad6f897547b30a97c",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17121.asset",
+      "sha256": "0ae5804e0d30eb682a68f8f43e5cf86635506825b315d914945b9b91de88ccee",
+      "bytes": 5052
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17121.asset.meta",
+      "sha256": "fd38a7e8eedf47d6afbb80b4ea9b260a62f825cb03605a2cb6a0a917ce23c023",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17123.asset",
+      "sha256": "7df2eae9172eeb56fc52df7f82f9568426b3c202ad1d5e9a4761b309a24915ed",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17123.asset.meta",
+      "sha256": "be6f4ca5e4f56ffe8f4c5648380224828954fed8ca66a7915c2e2fdcf8fc1758",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17147.asset",
+      "sha256": "867c26b046cd669f94afd174e7ec27aaaaf0fa4e5226cf7836ff674e573c2ea7",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17147.asset.meta",
+      "sha256": "fa5d96e7ce7ec3042509d3598a21cd935363934adf94ca37c3e4bed71d1b7fb9",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17199.asset",
+      "sha256": "672db93ec8d1475285efaab2960ea4b48d4dd5e95c9ead72420730006814ba2d",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17199.asset.meta",
+      "sha256": "7e76cd8b067ba7062b7b3b8b0376b39c9c63ace9e64e402ac082374089f31e3b",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17204.asset",
+      "sha256": "671fc315d4326ce5db9d334e7184c577d1a8bf13ccdb13663b538042eef5b01d",
+      "bytes": 5051
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17204.asset.meta",
+      "sha256": "0df3098a02147343c562252efa8c7e4913a440eed2e48db9656ad83df6803eb0",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17217.asset",
+      "sha256": "dd289f51f4d218b680bf3857a390476065af61853fc8138479b70e4a8cb669bd",
+      "bytes": 5062
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/17217.asset.meta",
+      "sha256": "1d83d9ef1ecd5fba82f5df02e04aaca4cf676c0f48600af3548fbdff0696fadb",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21165.asset",
+      "sha256": "c0a87cf18ebfe144fadfbde48de05fe28d8a8e2d49bf889ab6fc97a14b83a39a",
+      "bytes": 5063
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21165.asset.meta",
+      "sha256": "92e80987bc40c802795c3b4a875fc3b491d4a46942460450ded3ada718c51206",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21171.asset",
+      "sha256": "b01c70a5b664ff416808b62a64482379415507d4203f1651993030069bdec351",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21171.asset.meta",
+      "sha256": "e79de70f8554bc47fa78ce572edb8dcf11e169727746a1d5cccb0291b180069a",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21211.asset",
+      "sha256": "d0ee32ddaacbcfd468fcb6b6755f1ae782289dbe101e42e92460ef5aac3e6e66",
+      "bytes": 5061
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21211.asset.meta",
+      "sha256": "0d4e23a73e70a731c03815e37ed44390331459571d6c882ced309185b77b7184",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21245.asset",
+      "sha256": "e0f3bb727d6376718b880e079f4423e8519cd151b042b65dd7b926f344faad34",
+      "bytes": 5052
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21245.asset.meta",
+      "sha256": "4c8ea3e894627f53fad7b109222270e98d0ed253d275e0aa6ed8cfe82f76b15b",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21266.asset",
+      "sha256": "d2dd509b390a2fa25fd4fd78ceee1063a69e7f9f701b8eee0da45158c93b505f",
+      "bytes": 5062
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21266.asset.meta",
+      "sha256": "1dd31ac0f5e0a11e7a7f54e0ea189d5a07fd46ed360fa42ce376f6378d468ee6",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21373.asset",
+      "sha256": "c19920dc78011facecda8f20ad7a076db8cfe1dde6f188685cf1c1664c920564",
+      "bytes": 5049
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21373.asset.meta",
+      "sha256": "a11543925ded50c6ccf55c1343b4b99f986ce424d81abb9371294b6fb6f6bdff",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21375.asset",
+      "sha256": "f9a59a482993ba51d4346b42d8240ecd9f4f686548ae87d959feba781f859feb",
+      "bytes": 5059
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21375.asset.meta",
+      "sha256": "9e536be42ec8626b3bc64ecf19ace3bd6e351920a414888c25c7d488e18018cf",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21388.asset",
+      "sha256": "9a7edf59f4ef36203899d78fe2ac5a57ca6388bc70b29b38847a109e2ba18f73",
+      "bytes": 5070
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21388.asset.meta",
+      "sha256": "7402e2c612fc33afac7d13058b8c42b877a032f8267bd2191e5419b543ecde0e",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21395.asset",
+      "sha256": "935d2f0f1c61b4ba9dafb13cb5c320dff34ebb8079b780c0a70c41bd78e47c3f",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21395.asset.meta",
+      "sha256": "1f7cf828bd74c801259ad1fb167c0272a3f0950a348b9bb229ffbb8ad54f956f",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21403.asset",
+      "sha256": "c18ae0dbcafc8d6c9c84e75ed8a1bd8d71e4c5de5c175997098c65e6d8bf2f8e",
+      "bytes": 5065
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21403.asset.meta",
+      "sha256": "2bd001f1e225e0ad2a096ed6a17e6fcf9fdf6c03ef850961cd7b8bb8702f4111",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21437.asset",
+      "sha256": "a05945d280b09014ae5c2b06f15c0401def5f23fd898174290abad06cb43239e",
+      "bytes": 5067
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21437.asset.meta",
+      "sha256": "8826fa2c8de160bb2cb246afde124b98a59c17cbe4a27e301a706146050e6c02",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21461.asset",
+      "sha256": "f46c90ad110c9f537f5f5f0bf786b2fc16c9a5dcbb71a917da41b4f6e2ce1e5b",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21461.asset.meta",
+      "sha256": "3b469572deea99ab087073cef3e592fca8711f5c6c7728585dcb4b5b5120e192",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21483.asset",
+      "sha256": "78833dc8b19c66d60423846321a0739f761a24abbd010cce47b95c0547accf2c",
+      "bytes": 5053
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21483.asset.meta",
+      "sha256": "e478964223e27364b6ea934099e05b12a2b477c0f3bbee727c07f1a409b6b8e9",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21527.asset",
+      "sha256": "7468fcb96bdbab54cce1e089f83b76c46fed74c1eb0825e53df83914209a72f5",
+      "bytes": 5052
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21527.asset.meta",
+      "sha256": "4cea65c6727803e83c5da56287405e09dbb903f7538b2414c3ff823df5a63a89",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21554.asset",
+      "sha256": "609cdd721fe501f81aeb825796fcdf25be0124be6fbac22274b08e1e17c3f40b",
+      "bytes": 5067
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21554.asset.meta",
+      "sha256": "19ecf616e82be92f207db91e4070b8c61ee81a9fa8312cd9a7e74807f395ddee",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21569.asset",
+      "sha256": "8baf8fbb2baac8dbab5ee607f29b5a12cca412810c19a550e34deda8b60d2b92",
+      "bytes": 5067
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21569.asset.meta",
+      "sha256": "22b1085bd709f2f57af4d7e12bbc2508777981147d1ce79e291b30b02aabbf52",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21582.asset",
+      "sha256": "080c5b14adc8325cc672777b884240b9f0c84966e5fdf1be417df4cfcc0cb6d2",
+      "bytes": 5069
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21582.asset.meta",
+      "sha256": "9c783e9c3d2f4c05667f729c1bbbfcf5fc9f0c992d1076537b171aad384afe41",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21609.asset",
+      "sha256": "745281d40100b97fce14b26701cd29b88e382566edb4aeb1d425f5069e936333",
+      "bytes": 5067
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21609.asset.meta",
+      "sha256": "262e06773cd4c77a2da4b589307df6c2ee01dc19810b27d85eece2c5c8614404",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21612.asset",
+      "sha256": "e4941009ae8a7ec503de4d3fe4987c1fc0556c0282a2af12f805dc2ecfe4e431",
+      "bytes": 5060
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21612.asset.meta",
+      "sha256": "1abd3a4b94a97d13e81cc435b8de212356675dcb579eaeae6a5b6f8707cf7048",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21636.asset",
+      "sha256": "c199c867235fd94318b0660234244f2271c262f7c1605651d02b2e39b5f66808",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21636.asset.meta",
+      "sha256": "81dd18174f09196fea321f40aa53f900bfbe71c811efa2f82027a5a3438ccc58",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21650.asset",
+      "sha256": "2c06abab359f3171e6a7fe69eab90374e491de8c1afeb2738c423c8c71599cbd",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21650.asset.meta",
+      "sha256": "8813def4425420ce65e8bc56f26a2eddab2c236ea992acf03089593b349bce75",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21696.asset",
+      "sha256": "d2d3e83d8f86c5d057cc6a87481c16c8003e3a1d1b91fe47b5a14e3de88771e1",
+      "bytes": 5065
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21696.asset.meta",
+      "sha256": "88b16e18242b804982cdeb7c4a8f264be14afa51f444226e4fb999d7aea683ed",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21708.asset",
+      "sha256": "d70b80dbf07c6a8c4e5b8468078ece85d917bdcfe4f70bf2c42a166b71b67a7d",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21708.asset.meta",
+      "sha256": "194bee2950fd4f2a3fe1f0b4b1adfe4d883440cdf604fe6a5709288dc6f2674e",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21721.asset",
+      "sha256": "a5777df1dce4c292e4b4ea24fcb69d9aaeb4814a1674334faf2d394f0879cc37",
+      "bytes": 5042
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21721.asset.meta",
+      "sha256": "b5cf48d6046045e847df22fccfb97119002092d32f4c9699d831b96b3fe95cb7",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21732.asset",
+      "sha256": "f4a4fa2cea04ae693061282dac11aa7c34f48aee91f1ba9a1a025af8111e4355",
+      "bytes": 5059
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21732.asset.meta",
+      "sha256": "b854e00dc2c09da2fb381133b1b8efdb7ba3ecedfa24d9515c83f369ff035fec",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21737.asset",
+      "sha256": "dd4da52c382ea35ce3b07fdc797d4bdba667b995b518d504d434d7da16162c5b",
+      "bytes": 5066
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21737.asset.meta",
+      "sha256": "c4cebcf98db96d85fde56c58150de0a058478275d1a4ada90d535918f5eb4263",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21738.asset",
+      "sha256": "2d75c3ced757a3f96c921dcd3fa953de513a439be2d93c742a15d00779290049",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21738.asset.meta",
+      "sha256": "ae54a181c414303ccba329e5f105801d5d4e6c6955d606b6c146ed550561864a",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21752.asset",
+      "sha256": "63b6dcee7a42ef2ad7123b77a4bb07574492dc60ba0c5f5febcdc27f090fb0cc",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21752.asset.meta",
+      "sha256": "6220fd57a44e5eb3ebd436b30574f12036ba1f463a01934d38a610c62a2b4785",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21792.asset",
+      "sha256": "894510d368f337777348f15e3d7030183945af03a17c7e27f94420e98ebb292d",
+      "bytes": 5057
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21792.asset.meta",
+      "sha256": "788854395b66a749971fa599d6bd088f4e4808b8b70cc901ae04f78ae70e77f8",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21795.asset",
+      "sha256": "e4ca19d341d531681adb0952f045fb66db9cefb7a86ba36845b618d92bb039fc",
+      "bytes": 5066
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21795.asset.meta",
+      "sha256": "2b33db811425b8d4ab373cc1c0ae66bb89388c9275d0c92abed9a98aff130212",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21804.asset",
+      "sha256": "038ca991620917a26d667c0563e9896283cc0e58d5f4624735fa3f9b92505406",
+      "bytes": 5052
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21804.asset.meta",
+      "sha256": "e763aacac74e4bc04693365b60907bd10c806bb314250ff4d52d34aa3ec536a9",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21820.asset",
+      "sha256": "4a9e6ed39ed3677c5643f8018863cc4f45f19e6de031dabaae656f39ebae85cf",
+      "bytes": 5053
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21820.asset.meta",
+      "sha256": "76616e84bdb8d95007fd0cd5411d32bdbc6cb3dff525224c762024fbe0d57d11",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21869.asset",
+      "sha256": "d6349e9fad0f37a4d756e2aa0e18e443e1c61f69048d4e3fa7495522588cceec",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21869.asset.meta",
+      "sha256": "97fb4d8ff4d141f51a3186bb7e0b7d2fe4d0352db59848b7fe55a3ca775fd3d7",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21919.asset",
+      "sha256": "e06e8933578650b8387e05fa2c4a79c9ccd692eeb950e5b56bef1ebaf07f0f53",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21919.asset.meta",
+      "sha256": "331d1dbe34409518d0b15459c043c797b5ccd02ddb200a6b5fc11f25c798e6ff",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21940.asset",
+      "sha256": "358ab7b1e8da6033e4cbf9daae8ac6651e6dfda88186246e1c67b1374ba5bc1d",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21940.asset.meta",
+      "sha256": "c6d94cbbf95604e9aba5e35cd4787ce795a026ee0fd0e78e2541a70b61cf9b49",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21951.asset",
+      "sha256": "dc710ec6df24671839a298b47ad999cccc6f5c46d8fdb702fa69ac66a1c4c398",
+      "bytes": 5039
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21951.asset.meta",
+      "sha256": "099bd9630901686ccdc73047c563877d6c82ec46e5baea10e08cb24b7ae7aab4",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21954.asset",
+      "sha256": "c854213c5d6669c8b8c574c7b10bbdba58797c2cb0cefaf64740cdb01e2dc5c7",
+      "bytes": 5067
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21954.asset.meta",
+      "sha256": "85c22e97db872ee1dd1eee5896f363d9df7cc3da2c564df9ed5b6063c52bc334",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21975.asset",
+      "sha256": "021d51c50f18d90c024eb2c7df50c62bf33755eb56dfddc3758a5b48b350cdf9",
+      "bytes": 5063
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21975.asset.meta",
+      "sha256": "898a345bc6a6731ec3f6ce2187664b2ff24be23de16aa42eca6b35561ff893cc",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21976.asset",
+      "sha256": "91f45a90b8a2be90bbd71af5ff37587be29c816d22197170c454dcf03da5c10f",
+      "bytes": 5057
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21976.asset.meta",
+      "sha256": "59402fc6cb35aa5b419e29b642177046be8c3c63499bf3b7943bd480c7e338d6",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21983.asset",
+      "sha256": "7b97ba77e81c93e36c9ea0593bb0daf9a17ca42aea5cf47787f993d8fff9d5db",
+      "bytes": 5056
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21983.asset.meta",
+      "sha256": "468f81201a1539e1bc24b4076073dfddc7db7cac40a211d35991b8d904f1dc2e",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21995.asset",
+      "sha256": "1ecdc600b17dc15d79ee5c55af5afea92f5fb0c6b3c387b922f8a7797c332ac7",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/21995.asset.meta",
+      "sha256": "2d88c47f07bfa557edb7cfee0c1804ebf326b74e16b24929b75a1cf12abd477e",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22023.asset",
+      "sha256": "35a5667d48a895802cd1d01bf709095c6ed441e079649dc4574bc4d12ce60586",
+      "bytes": 5055
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22023.asset.meta",
+      "sha256": "5a197c95e46087a2d2074f7a9e97796bac4a1fab7c4858d3be359a7919329c7a",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22024.asset",
+      "sha256": "db0426df36c3bde7f0c66f0cd29282bf11ef3cf3ae29c5fa502c17845f843a57",
+      "bytes": 5050
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22024.asset.meta",
+      "sha256": "a0aa147897bbd6230e3cc0d70b0de88eb88997d905aa9038336e9472556b9d17",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22032.asset",
+      "sha256": "a74591ff376b2eb083d3030e0ca5d8d525fdcc1df7d514267b1bcb2cb77e6808",
+      "bytes": 5074
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22032.asset.meta",
+      "sha256": "a2f4fe073cfb30d7f4fd1d0a3d63b2115ec223cfff34614e6580e993171da77d",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22034.asset",
+      "sha256": "4da359984375f2717dd1afdfc7254cc190a5c76d7d4253d50be51122ea704f6a",
+      "bytes": 5049
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22034.asset.meta",
+      "sha256": "7522d911376456695f7cff23350649dad96887fdb0bb41b2e040c8b0a423b5fb",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22043.asset",
+      "sha256": "12ec9d2faa92f15222cef75e4109976b8a37f987593c80622fc928f7a9eb2d77",
+      "bytes": 5054
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22043.asset.meta",
+      "sha256": "3fdd3040ccf0532be748aea4e2f2f6c26db192537fcd692d36ebdfd90d43680d",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22075.asset",
+      "sha256": "67e48782d7e42dd8473ae4de9a34ac17b6034decf025983cd923187557ec3261",
+      "bytes": 5056
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22075.asset.meta",
+      "sha256": "b1c00544985512d54faf4e62c829e20e3c07ad5bec9cad2d4eacba6cdd1d5907",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22101.asset",
+      "sha256": "581068aed1adbc819346e1d35263c415bde95523b6f61fc428f2b918475d1402",
+      "bytes": 5070
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22101.asset.meta",
+      "sha256": "d91ee9284b977bfa2f78194eaf969866c2439f2fa3dbf8201e472d225ebb7510",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22105.asset",
+      "sha256": "fe0a495e39bbcac11ec16145df6f3cb696a9dc7bea7ce30f6f50f609141039b1",
+      "bytes": 5068
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22105.asset.meta",
+      "sha256": "f92d0e79c95275e4d9ce2549bfa003937faf248ee32747fbcf5167c329681628",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22106.asset",
+      "sha256": "e13d385a03f9fe4d6d1d320e49c2e9a588915e7195621350cfa9c5f9bcba7363",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22106.asset.meta",
+      "sha256": "200de1631bee70360f7803306602165861e3ff5becfd91654ca75f549349108e",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22116.asset",
+      "sha256": "51e51e9b32594146393d57d425c3c4e6a3456ec75bc00564cf59151ef7badcbf",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22116.asset.meta",
+      "sha256": "a7c440707a14a80065586c2cfeb99db791feec3899fc1ca9a1ad84c3e175990b",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22129.asset",
+      "sha256": "5500e653a5d2cad2e810a595096fc79f511a8b240524143ee301be7ab76cdd32",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22129.asset.meta",
+      "sha256": "3fb11cd475fa9af7827a6d901ca97fb9173be2f5218bc7d6369afb55c302d50f",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22134.asset",
+      "sha256": "3d5f585ca64bdacda8c1f8a13f53c9b5ca5c86e06c657e055c2bdb2c2558793a",
+      "bytes": 5057
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22134.asset.meta",
+      "sha256": "403bb1bdb000a5b763e30b9d442b0ee13a3e4b5423ab0a72f518283942672fd6",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22145.asset",
+      "sha256": "81ec482f1a7cf8c6dfe7e496c58190fa10929aab9bb1eaea0676a74a7a05066f",
+      "bytes": 5044
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22145.asset.meta",
+      "sha256": "788c212b95ac09f5d98476258a6878b2dff3042f20b6c7bb546004cd6c80f849",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22177.asset",
+      "sha256": "dcace8a4bc2b87e175c093f6f8f49754d9287620eca3b9a863b7b7092054b920",
+      "bytes": 5057
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22177.asset.meta",
+      "sha256": "7b38312f31f8f4596d50845fe63f6d39d7d9fa65228c9df79dfe58d043844056",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22180.asset",
+      "sha256": "172e53477a6933708108f4cc84b879e9bb77e871414a5cb8d76f0a8b07c21326",
+      "bytes": 5053
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22180.asset.meta",
+      "sha256": "f88d3680e7e67bf1661e6eb65ccd0a303e33cf73532dae58872f9cc54e3a2037",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22205.asset",
+      "sha256": "9acfbd2b0c939c871c963f3f176d323df5bac80ecee952a272642287213d20a2",
+      "bytes": 5049
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22205.asset.meta",
+      "sha256": "b81bb2bea845662ea18e2471ee59a3b50bbef8939dc99e6ad4e972cb15b3bb4f",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22223.asset",
+      "sha256": "c7e1cdf7fdb7e1f76a2f59b53a1678c6e9a3baf8f72afa4bb3bccddefb084fd8",
+      "bytes": 5054
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/AtlasSprites/22223.asset.meta",
+      "sha256": "051b3d959bd9aef067542f5a8f648cbe783802a127fc13287bf629f350e59ece",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Materials.meta",
+      "sha256": "55a38cfe134ce77de13890edffacf09528702f92d2a4a19b1c59b43cc57a6601",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Materials/11.mat",
+      "sha256": "fb5defdc5d1d81f57060e115c00cd29a1f57ad94d043907145bbf33e08482949",
+      "bytes": 874
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Materials/11.mat.meta",
+      "sha256": "e8e3127968bae0082935ee9993c8ed1272a523bd6469abcf6907cb9c1140fdce",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Materials/3.mat",
+      "sha256": "4dc8f6162aeddc9a9f6c3b356666b23d358a915d6d4595fe7ce912953f4d4fb7",
+      "bytes": 1978
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Materials/3.mat.meta",
+      "sha256": "988e38f984b0767a72a7735e4e78f1c223dc3c6991005f57c81cbfc7842bc78f",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Materials/92.mat",
+      "sha256": "c19e1442a0ef4ef68c22e5a37218964328a58e07c848d483e638016416a10dd8",
+      "bytes": 924
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Materials/92.mat.meta",
+      "sha256": "c49dbfef31a18fa2ab79d88fabbdc434ed8ac51a88a98a5a6679822410823227",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources.meta",
+      "sha256": "edac59b6889e0cb3918af519e97baa00b25aaad276b9600d05e4fafbf916866b",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay.meta",
+      "sha256": "5246631d07ab12789528b8ece12b842819a1eb4a4c5a0ca86121c87e37a6edc1",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX.meta",
+      "sha256": "862ed2a96319babf586b50fb2f771c0bee35247e788a4b3ec74f4e8af06065a2",
+      "bytes": 172
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/BoxItemExplodeParticles.prefab",
+      "sha256": "47abe732667082afa81f0713adb3a1c8423109cba7039dde804b94a1c6fbe33b",
+      "bytes": 711047
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/BoxItemExplodeParticles.prefab.meta",
+      "sha256": "fc4bf355528312e1718586b8968c3e48cf5d6d0cb55d43341f77699e677e64f3",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/CupboardItemExplodeParticles.prefab",
+      "sha256": "7ab9b1f046cac8c1ccceeeab7059581cd7a24576fd800db7f8a8c4328d905ebb",
+      "bytes": 328590
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/CupboardItemExplodeParticles.prefab.meta",
+      "sha256": "d2ed28ac9825551a6a7fc01c1f6cb1028a9c9e13fb4d1b3700f841178c4727f4",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/CupboardItemSingleExplodeParticles.prefab",
+      "sha256": "d48baf4f24a6e13db7162bedb9918810a6ce16d2ed2bbfc755cc675602f0fd3f",
+      "bytes": 383523
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/CupboardItemSingleExplodeParticles.prefab.meta",
+      "sha256": "c3da58eaf561d8e0c7a09cd84513f35b8cad3ff439f2612f634a141ae743e57a",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/EggItemExplodeParticles.prefab",
+      "sha256": "3d72771ea2aae0028df73b74d8aa9ee25af4926564f5ccd67a2725c8b56f7ed0",
+      "bytes": 219443
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/EggItemExplodeParticles.prefab.meta",
+      "sha256": "7aac36e01ddbadbc0f052d78e67be3e05705e26fc650f2c74072f87deae6e096",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/GrassItemExplodeParticles.prefab",
+      "sha256": "44fc6f2d1f8088b5b502f28d0f007efd71207a1c5483b55da7073730d6fd8866",
+      "bytes": 327548
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/GrassItemExplodeParticles.prefab.meta",
+      "sha256": "ae504bab9c8ced1ea39bc0cbb112902e568c05ba2abddbf8a0846c5f10a26fb4",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/GrassItemTapParticles.prefab",
+      "sha256": "d3ae1e15f65d4d316e7a22d321f89671496b4e9f9fadb31c458ca191b5d701fa",
+      "bytes": 109806
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/GrassItemTapParticles.prefab.meta",
+      "sha256": "559b5a143f6da353cb450ba3335230dae554d50c9bcab9238e854b53aa71e34a",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/LightballEffectedItemExplodeParticles.prefab",
+      "sha256": "dae874dad7aa00aaaa56831651a5e4f05a0bfe3a16631b028b33a1d82d6dbaaa",
+      "bytes": 165546
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/LightballEffectedItemExplodeParticles.prefab.meta",
+      "sha256": "248791e583f6e73aaa90f58b3a33664548b02b504125d20f4b20c9e2f550af6f",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/LightballItemExplodeParticles.prefab",
+      "sha256": "dfa7f40f5e29f37db6d94b19641c405c1bfc48c3e70e4cd30cf1a83f6fa0c09d",
+      "bytes": 165636
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/LightballItemExplodeParticles.prefab.meta",
+      "sha256": "5c28063f4da7e57cc1b5f3fc2ff563e1d12e080c37e715b70421a80fa3069c5e",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/LightballRayPrefab.prefab",
+      "sha256": "695c182246acfcf1093e1adb7e6a5d1dd7b62bcacdeaa6b81f821be4f3122a3b",
+      "bytes": 8409
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/LightballRayPrefab.prefab.meta",
+      "sha256": "32f87763efff08babdcf2f3fffb049decb34a67f11b55a908171f68aa4ed2578",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/LightballUseParticles.prefab",
+      "sha256": "a3deed5035551890e46b5f2e12362f59a672e3526c1c5debb6799dc82022e76c",
+      "bytes": 221477
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/LightballUseParticles.prefab.meta",
+      "sha256": "a7a4f30d67292a2140e329f78de874f503304d19f47254585b2e923c7c8733a2",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/MatchItemExplodeParticles.prefab",
+      "sha256": "d86fe2c1a245a066ee47d75d19707cdc1ce0b93819737f89db0082b3e8bc707f",
+      "bytes": 386655
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/MatchItemExplodeParticles.prefab.meta",
+      "sha256": "94d313431309d841ce07810c8fd01b641390ec7efa3211f818668637ae7b83ce",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/MatchItemSwapParticles.prefab",
+      "sha256": "107c8772607a8f635e9eca0975727ff015e5a707a6b844a57de78351a68705e2",
+      "bytes": 658148
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/MatchItemSwapParticles.prefab.meta",
+      "sha256": "ed4ad78c441546208035dfc482a19be3109558c636b1c2e5a45ca2db4274d34c",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PotionItemExplodeParticles.prefab",
+      "sha256": "b3edd102befd76e7cd19ddeb0f5de461ad7b1a58ba495a9d5ca8bcb3cea059bb",
+      "bytes": 493016
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PotionItemExplodeParticles.prefab.meta",
+      "sha256": "34687229adaa28eb6da95d5d6e06b9c15d921895177cb59bbb6fbc63d97228d0",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PotionItemSingleExplodeParticles.prefab",
+      "sha256": "bbb652b25f870e839e6a7527cf8ef2c4a6880b612e367bcfce7011f6b3dcd5e7",
+      "bytes": 2021514
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PotionItemSingleExplodeParticles.prefab.meta",
+      "sha256": "02b15f6e0952743dbf731706300cca5d6ea4c04679052b3b5b80970bd37acf34",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PropellerItemExplodeParticles.prefab",
+      "sha256": "5ce7c2d50e8145bac4a7723b54d0fa83113821e61df7f58e3650faa674760095",
+      "bytes": 1315514
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PropellerItemExplodeParticles.prefab.meta",
+      "sha256": "13290cfb0114cd3cfae808a4d7a023db7ce17f6a9ed86eb68968278bb3f8ab02",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PropellerRocketComboParticles.prefab",
+      "sha256": "9894e95de03275c52522c8416a78e38459fbf0e1ed50e301b07c2c5c60d9297f",
+      "bytes": 384427
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PropellerRocketComboParticles.prefab.meta",
+      "sha256": "54f76e5be659883d3869ddf71fcbf0bb7268fd917e5bcae51ae2e7edb12a0e31",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PropellerTargetExplodeParticles.prefab",
+      "sha256": "31ee537cc3c6462b305f95b6ddb2e0c3865de449e688ae207b3213f617a3fe1c",
+      "bytes": 384440
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PropellerTargetExplodeParticles.prefab.meta",
+      "sha256": "4cebf0a2316d2cee2befa3bc6fff5f4efad2b96dbcdd4ba705d6fdce8bc0870c",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PurpleGrassItemExplodeParticles.prefab",
+      "sha256": "4542213650355bcad20e9449a9e784946cfc77c876a70f29c53559902a667376",
+      "bytes": 164254
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PurpleGrassItemExplodeParticles.prefab.meta",
+      "sha256": "546532372e52527ed73ab62bf2f84e540daed581c1e64e5a919ba1df1f9cef94",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PurpleGrassItemTapParticles.prefab",
+      "sha256": "1dcaaf36b5c2bee8d4638596739ba42ac13ad6ccaf9a06e1a02b7a6b92fbd4dc",
+      "bytes": 55280
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PurpleGrassItemTapParticles.prefab.meta",
+      "sha256": "1510750327f1d241d3624575ac38cc470c85fdbdf63817808dad9cae40e2829b",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/RocketItemParticles.prefab",
+      "sha256": "459a003587ac93a2367afafa8f33d1df87fdd611605f7ebe9d0d7656e424941c",
+      "bytes": 225815
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/RocketItemParticles.prefab.meta",
+      "sha256": "7253ee16b520580bf13dfdc9eda2101705cacf8eef5da2e120dfd826d832916d",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntItemExplodeParticles.prefab",
+      "sha256": "339af053611e8e8e9e930d81718e73a09344311487f6be08ac6b8d32fb3a4bb0",
+      "bytes": 438945
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntItemExplodeParticles.prefab.meta",
+      "sha256": "9a79d685e4d79796c20b24e7488f6443d78698b23815bb7c4117ba285eb5a2f1",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntItemFuseParticles.prefab",
+      "sha256": "9b4fc551787800944dadf4477544b17fdf97013ddc7daad4dfb142965fa807b2",
+      "bytes": 218680
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntItemFuseParticles.prefab.meta",
+      "sha256": "8219d1cca712d18712e9578f7074d9197c646cb07caa3503d194bc9ac66639f8",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntPropellerComboFuseParticles.prefab",
+      "sha256": "d92ba129c67fbffb627c1ec4d87f796c47052ea7c50db38e72368878f9a0d7e3",
+      "bytes": 275659
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntPropellerComboFuseParticles.prefab.meta",
+      "sha256": "8291eaecda5ba89527cf883cc76c757378bd25946661118aa592e1163c43d1ce",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntRocketComboParticles.prefab",
+      "sha256": "5a88c36afc465c75b696c450256aa64cd5e88c178f9f172db116fd4d6577be23",
+      "bytes": 275147
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntRocketComboParticles.prefab.meta",
+      "sha256": "5fdaf993ceb180d75e517ca74f3e0047c360b241e1300a89092e4028a93858c7",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntRocketComboUseParticles.prefab",
+      "sha256": "f8a4e7b8814fdbd3db113be6e1e4d4b9b31f8b50bb2059cc46f5d56fa4e52bbb",
+      "bytes": 220804
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntRocketComboUseParticles.prefab.meta",
+      "sha256": "d00ef731cd840eee7d20ca1460a54a2b6696c9a95fb21943ca21aaa932e5335d",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntTntComboExplodeParticles.prefab",
+      "sha256": "15e73d164071cd7bdcb22396042bcae96c20693edb6b47abfeb470732f43f1d5",
+      "bytes": 275116
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntTntComboExplodeParticles.prefab.meta",
+      "sha256": "81d049f72e87a66231930e8a38d634561171bd4549c3a34f965ae42d68471905",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Textures/433-Default-ParticleSystem.png.meta",
+      "sha256": "92a4fb5e5de03d46e75041218eb750826857aa10c6570ee336b96e99428381d9",
+      "bytes": 3364
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Textures/707-lightball_ray_1.png.meta",
+      "sha256": "07a0ab061144097946c982c044f5515a5363a99a854ef17753dc17a3f3249463",
+      "bytes": 3364
+    }
+  ],
+  "copiedFileCount": 401,
+  "mainGameplayVerified": false
+}

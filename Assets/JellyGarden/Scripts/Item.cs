@@ -176,6 +176,8 @@ namespace JellyGarden.Scripts
 
         public void GenColor(int exceptColor = -1, bool onlyNONEType = false)
         {
+            if(RoyalThrone.Campaign.RoyalReferenceCampaign.TryColor(this,exceptColor))
+            {StartCoroutine(FallingCor(square,true));return;}
             int row = square.row;
             int col = square.col;
 
@@ -394,6 +396,7 @@ namespace JellyGarden.Scripts
 
         public void SwitchDirection(Vector3 delta)
         {
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(this)) { ResetDrag(); return; }
             deltaPos = delta;
             if (Vector3.Magnitude(deltaPos) > 0.1f)
             {
@@ -425,6 +428,7 @@ namespace JellyGarden.Scripts
                     switchItem = neighborSquare.item;
                 if (switchItem != null)
                 {
+                    if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(switchItem)) { ResetDrag(); return; }
                     if (switchItem.square.type != SquareTypes.WIREBLOCK)
                         StartCoroutine(Switching());
                     else if ((currentType != ItemsTypes.NONE || switchItem.currentType != ItemsTypes.NONE) && switchItem.square.type != SquareTypes.WIREBLOCK)   //1.4.1   1.6.1
@@ -980,6 +984,7 @@ namespace JellyGarden.Scripts
                     sprRenderer.enabled = true; sprRenderer.color = Color.white;
                     royalSkin?.ApplyNow();
                 }
+                if (RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Attach(this, true)) yield break;
                 if (tnt) TNT3DAnimator.RevealSprite(this);
                 else
                 {
@@ -1085,6 +1090,8 @@ namespace JellyGarden.Scripts
                 return;
             StopIdleAnim();
             destroying = true;
+            royalCampaignHitWave = RoyalThrone.Campaign.RoyalCampaignBlockers.CurrentWave;
+            RoyalThrone.Campaign.RoyalCampaignBlockers.OnItemDestroying(this);
             square.item = null;
             _boxCollider2D.enabled = false;//2.1.5 prevents to early moving
 
@@ -1182,7 +1189,9 @@ namespace JellyGarden.Scripts
             while (!animationFinished && currentType == ItemsTypes.NONE)
                 yield return new WaitForFixedUpdate();
 
-            square.DestroyBlock(royalRocketClear);
+            bool campaignAdjacentMatch = royalMatchSize >= 3 && !royalBlastClear && !royalRocketClear &&
+                currentType == ItemsTypes.NONE && !RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(this);
+            square.DestroyBlock(royalRocketClear, royalCampaignHitWave, campaignAdjacentMatch);
             if (royalSpecial || royalConsumed) { }
             else if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
                 DestroyHorizontal();
@@ -1191,12 +1200,15 @@ namespace JellyGarden.Scripts
             else if (currentType == ItemsTypes.PACKAGE)
                 DestroyPackage();
             else if (currentType == ItemsTypes.BOMB && LevelManager.THIS.gameStatus == GameState.PreWinAnimations)
-                CheckChocoBomb(this, LevelManager.THIS.GetRandomItems(1)[0]);
+            {
+                var candidates = LevelManager.THIS.GetRandomItems(1);
+                if (candidates.Count > 0) CheckChocoBomb(this, candidates[0]);
+            }
 
             if (NextType != ItemsTypes.NONE)
             {
                 bool rocket = RoyalEffectsProfile.Get && (NextType == ItemsTypes.HORIZONTAL_STRIPPED || NextType == ItemsTypes.VERTICAL_STRIPPED);
-                Item i = square.GenItem(!rocket && !(RoyalEffectsProfile.Get && NextType == ItemsTypes.PACKAGE));
+                Item i = square.GenItem(!rocket && !(RoyalEffectsProfile.Get && NextType == ItemsTypes.PACKAGE), campaignRefill: false);
                 i.NextType = NextType;
                 i.SetColor(color);
                 i.ChangeType();
@@ -1258,6 +1270,7 @@ namespace JellyGarden.Scripts
         [HideInInspector] public bool royalTntClear;
         [HideInInspector] public Vector3 royalTntOrigin;
         [HideInInspector] public bool royalRocketClear;
+        [HideInInspector] public int royalCampaignHitWave;
         [HideInInspector] public int royalMatchSize;
         IEnumerator JuiceDestroyCor()
         {

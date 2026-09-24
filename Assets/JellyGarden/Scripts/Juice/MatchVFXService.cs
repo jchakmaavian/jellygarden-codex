@@ -375,6 +375,9 @@ namespace JellyGarden.Scripts.Juice
         /// </param>
         public void PlayMatchBurst(Vector3 position, Color fruitColor, float intensity, float delay = 0f)
         {
+            // The actual per-cell destruction event emits the complete native burst
+            // through CandyShatterService. Do not layer the previous custom preset over it.
+            if (RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("MatchItemExplodeParticles")) return;
             var cfg = Cfg;
             if (!cfg.EnableJuice) return;
 
@@ -441,6 +444,7 @@ namespace JellyGarden.Scripts.Juice
         /// </summary>
         public void PlayMatchCenter(Vector3 position, Color fruitColor, float intensity)
         {
+            if (RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("MatchItemExplodeParticles")) return;
             var cfg = Cfg;
             if (!cfg.EnableJuice || !cfg.EnableCenterEmphasis) return;
 
@@ -487,6 +491,7 @@ namespace JellyGarden.Scripts.Juice
         /// </summary>
         public void PlayFruitShine(SpriteRenderer source, float duration, float strength, float delay = 0f)
         {
+            if (RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("MatchItemExplodeParticles")) return;
             var cfg = Cfg;
             if (!cfg.EnableJuice || source == null || source.sprite == null) return;
             if (PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0) return;

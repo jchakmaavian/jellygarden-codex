@@ -13,7 +13,7 @@ namespace JellyGarden.Scripts.Juice
         static RoyalPowerupDirector instance;
         ParticleSystem smoke, sparks, embers, flash, ring, rays;
         ParticleSystem[] systems;
-        sealed class Flyer { public GameObject go,rotor; public SpriteRenderer sprite; public TrailRenderer trail, core; public LineRenderer flame; public MeshRenderer exhaust; public Gradient preRocketGradient; public readonly MaterialPropertyBlock flameProperties=new MaterialPropertyBlock(); public bool used, rocket; }
+        sealed class Flyer { public GameObject go,rotor; public SpriteRenderer sprite; public TrailRenderer trail, core; public LineRenderer flame; public MeshRenderer exhaust; public RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Handle nativeRocket; public Gradient preRocketGradient; public readonly MaterialPropertyBlock flameProperties=new MaterialPropertyBlock(); public bool used, rocket; }
         Flyer[] flyers;
         readonly HashSet<Square> reserved=new HashSet<Square>();
         int pending;
@@ -85,7 +85,7 @@ namespace JellyGarden.Scripts.Juice
         }
         void StartOperation(IEnumerator sequence){pending++;StartCoroutine(Own(sequence));}
         IEnumerator Own(IEnumerator sequence){try{yield return sequence;}finally{pending=Mathf.Max(0,pending-1);}}
-        void OnDisable(){RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
+        void OnDisable(){RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Clear();RoyalAudioDirector.StopReferenceVoices();RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
         public void Cancel(){RoyalThrone.Boosters.Propeller.V5.PropellerVisualV5.Clear();RoyalThrone.Boosters.Propeller.V4.PropellerVisualV4.Clear();RoyalThrone.Boosters.Propeller.V3.PropellerVisualV3.Clear();RoyalThrone.Boosters.Propeller.V2.PropellerVisualV2.Clear();OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();RoyalToolkitImpact.Existing?.Clear();ClearRocketVfx();}
         void Update()
         {
@@ -154,6 +154,7 @@ namespace JellyGarden.Scripts.Juice
         IEnumerator Retire(Flyer f)
         {
             if(f==null)yield break;
+            f.nativeRocket?.Stop(); f.nativeRocket = null;
             f.sprite.enabled=false;f.rotor.SetActive(false);f.exhaust.enabled=false;
             f.trail.emitting=false;f.core.emitting=false;
             if(f.rocket)
@@ -241,11 +242,15 @@ namespace JellyGarden.Scripts.Juice
         }
         IEnumerator Explosion(Square origin,int radius)
         {
-            Vector3 p=origin.transform.position;var visual=TNT3DAnimator.ActivateAt(origin);
+            bool native = RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("TntItemExplodeParticles");
+            Vector3 p=origin.transform.position;var visual=native?null:TNT3DAnimator.ActivateAt(origin);
+            var ignition = native ? RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("TntItemFuseParticles",p,worldCell:Cell,sustained:true) : null;
             var fuse=TakeTntSprite(p);
             yield return TntAnticipation(fuse);
+            ignition?.Stop();
             if(fuse!=null){fuse.go.SetActive(false);fuse.used=false;}
             if(visual)visual.Explode(radius>2?1.45f:1);
+            if(native)RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play(radius>2?"TntTntComboExplodeParticles":"TntItemExplodeParticles",p,worldCell:Cell);
             RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);
             yield return Wait(.012f);
             var lm=LevelManager.THIS;
@@ -336,7 +341,7 @@ namespace JellyGarden.Scripts.Juice
             while(t<TNT3DAnimator.IgnitionDuration){
                 if(!Paused)t+=Time.deltaTime;
                 float k=Mathf.Clamp01(t/TNT3DAnimator.IgnitionDuration),compress=Mathf.Sin(k*Mathf.PI);
-                if(f!=null){f.go.transform.localScale=Vector3.Scale(scale,new Vector3(1+.10f*compress,1-.12f*compress,1));f.sprite.color=Color.Lerp(Color.white,new Color(1,1,.55f),k*k*.6f);}
+                if(f!=null&&!RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.IsNative(f.sprite.sprite)){f.go.transform.localScale=Vector3.Scale(scale,new Vector3(1+.10f*compress,1-.12f*compress,1));f.sprite.color=Color.Lerp(Color.white,new Color(1,1,.55f),k*k*.6f);}
                 yield return null;
             }
         }
@@ -344,7 +349,7 @@ namespace JellyGarden.Scripts.Juice
         {
             var f=Take("tnt",p,.9f);if(f==null)return null;
             f.sprite.sprite=RoyalPieceSkin.For(ItemsTypes.PACKAGE,0);
-            if(f.sprite.sprite){var size=f.sprite.sprite.bounds.size;f.go.transform.localScale=Vector3.one*(Cell*.9f/Mathf.Max(size.x,size.y));}
+            if(f.sprite.sprite){var size=f.sprite.sprite.bounds.size;f.go.transform.localScale=Vector3.one*(RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.IsNative(f.sprite.sprite)?Cell:Cell*.9f/Mathf.Max(size.x,size.y));}
             f.trail.emitting=false;return f;
         }
         IEnumerator PreviewFlight(string effect,Vector3 p)

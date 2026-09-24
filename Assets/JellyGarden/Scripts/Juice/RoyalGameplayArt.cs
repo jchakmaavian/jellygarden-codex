@@ -4,9 +4,8 @@ using UnityEngine;
 namespace JellyGarden.Scripts.Juice
 {
     /// <summary>
-    /// Gameplay-only art from the approved Royal Throne pack. Source canvases remain
-    /// lossless; cached sprite views remove transparent padding while retaining the
-    /// original centered pivot. Home and splash continue using RoyalPieceSkin.Art.
+    /// Prefer original Royal Throne campaign art, then the existing gameplay pack.
+    /// Cached legacy sprite views preserve their audited bounds and centered pivots.
     /// </summary>
     public static class RoyalGameplayArt
     {
@@ -28,6 +27,14 @@ namespace JellyGarden.Scripts.Juice
         /// <summary>Load a gameplay sprite once. Unknown keys return null for legacy fallback.</summary>
         public static Sprite Art(string key)
         {
+            var campaign = RoyalPieceSkin.CampaignArt(key);
+            if (campaign) return campaign;
+            return LegacyArt(key);
+        }
+
+        /// <summary>Retain the previous pack for fallback and its own authoring checks.</summary>
+        public static Sprite LegacyArt(string key)
+        {
             if (string.IsNullOrEmpty(key) || !entries.TryGetValue(key, out var entry)) return null;
             if (entry.Sprite) return entry.Sprite;
             var texture = Resources.Load<Texture2D>(ResourceRoot + entry.Path);
@@ -40,6 +47,8 @@ namespace JellyGarden.Scripts.Juice
 
         public static Sprite For(ItemsTypes type, int color)
         {
+            var imported = RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.For(type, color);
+            if (imported) return imported;
             switch (type)
             {
                 case ItemsTypes.INGREDIENT: return null;
@@ -52,7 +61,7 @@ namespace JellyGarden.Scripts.Juice
             }
         }
 
-        /// <summary>Editor tools can read the corresponding PNG without enabling texture read/write.</summary>
+        /// <summary>Editor tools can read the legacy pack PNG without enabling texture read/write.</summary>
         public static string ResourcePath(string key)
         {
             return key != null && entries.TryGetValue(key, out var entry) ? ResourceRoot + entry.Path : null;

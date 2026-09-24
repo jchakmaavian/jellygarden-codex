@@ -1,0 +1,176 @@
+
+BLOCKER cupboard 52111 root 84753
+CupboardItemPrefab active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+CupboardItemPrefab/Root active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+CupboardItemPrefab/Root/View active True position {'x': 0.5, 'y': 0.574999988079071, 'z': 0.0} scale {'x': 1.0149999856948853, 'y': 1.0149999856948853, 'z': 1.0149999856948853}
+CupboardItemPrefab/Root/View/CupboardAnimator active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+CupboardItemPrefab/Root/View/CupboardAnimator/Container active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/Left active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  104711 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16483} materials [{'m_FileID': 1, 'm_PathID': 2}] order 50 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/Right active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  110230 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16483} materials [{'m_FileID': 1, 'm_PathID': 2}] order 50 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator active True position {'x': 0.0, 'y': 0.08699999004602432, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 1 active True position {'x': -0.48099997639656067, 'y': 0.26899999380111694, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  106762 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 34 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 1/Golge On 1 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  108485 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 35 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 1/Golge Alt 1 active True position {'x': 0.0, 'y': -0.26899996399879456, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  113866 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 33 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 1/Golge Arka 1 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  105209 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 33 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 3 active True position {'x': 0.4790000021457672, 'y': 0.26899999380111694, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  110949 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 34 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 3/Golge On 3 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  115758 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 35 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 3/Golge Alt 3 active True position {'x': 0.0, 'y': -0.26899996399879456, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  108315 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 33 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 3/Golge Arka 3 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  114022 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 33 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 5 active True position {'x': -0.2409999966621399, 'y': 0.26899999380111694, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  114132 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 36 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 5/Golge On 5 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  105507 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 37 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 5/Golge Alt 5 active True position {'x': 0.0, 'y': -0.26899996399879456, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  108133 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 35 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 5/Golge Arka 5 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  110618 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 35 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 7 active True position {'x': 0.2409999668598175, 'y': 0.2759999930858612, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  111165 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 38 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 7/Golge On 7 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  111923 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 39 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 7/Golge Alt 7 active True position {'x': 0.0, 'y': -0.2759999632835388, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  115435 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 37 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 7/Golge Arka 7 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  110475 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 37 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 9 active True position {'x': 0.0029999613761901855, 'y': 0.2540000081062317, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  109858 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 40 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 9/Golge On 9 active True position {'x': -1.2514857594680961e-08, 'y': 3.2708278308035688e-09, 'z': 5.202353214883715e-09} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  108422 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 41 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 9/Golge Alt 9 active True position {'x': 0.0, 'y': -0.2539999783039093, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  107781 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 39 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesUpAnimator/Plates/Plate 9/Golge Arka 9 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  112538 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 39 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator active True position {'x': 0.0, 'y': -0.7909999489784241, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 1 active True position {'x': -0.48099997639656067, 'y': 0.26899999380111694, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  105464 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 34 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 1/Golge On 1 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  113015 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 35 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 1/Golge Alt 1 active True position {'x': -0.008999999612569809, 'y': -0.2669999897480011, 'z': 0.0} scale {'x': 0.978939950466156, 'y': 0.9723331928253174, 'z': 1.0}
+  110169 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 33 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 1/Golge Arka 1 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  112993 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 33 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 3 active True position {'x': 0.4790000021457672, 'y': 0.26899999380111694, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  106820 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 34 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 3/Golge On 3 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  108703 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 35 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 3/Golge Alt 3 active True position {'x': 0.0, 'y': -0.26899996399879456, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  110497 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 33 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 3/Golge Arka 3 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  104572 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 33 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 5 active True position {'x': -0.2409999966621399, 'y': 0.26899999380111694, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  105898 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 36 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 5/Golge On 5 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  114235 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 37 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 5/Golge Alt 5 active True position {'x': 0.0, 'y': -0.26899996399879456, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  104540 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 35 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 5/Golge Arka 5 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  116623 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 35 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 7 active True position {'x': 0.2409999668598175, 'y': 0.2759999930858612, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  109174 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 38 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 7/Golge On 7 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  114996 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 39 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 7/Golge Alt 7 active True position {'x': 0.0, 'y': -0.2759999632835388, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  107570 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 37 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 7/Golge Arka 7 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  110707 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 37 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 9 active True position {'x': 0.0029999613761901855, 'y': 0.2540000081062317, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  106409 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21742} materials [{'m_FileID': 1, 'm_PathID': 2}] order 40 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 9/Golge On 9 active True position {'x': -1.2514857594680961e-08, 'y': 3.2708278308035688e-09, 'z': 5.202353214883715e-09} scale {'x': 0.8999999761581421, 'y': 0.8999999761581421, 'z': 0.8999999761581421}
+  107703 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 41 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 9/Golge Alt 9 active True position {'x': 0.0, 'y': -0.2539999783039093, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  110285 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16919} materials [{'m_FileID': 1, 'm_PathID': 2}] order 39 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/PlatesDownAnimator/Plates/Plate 9/Golge Arka 9 active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  109253 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16869} materials [{'m_FileID': 1, 'm_PathID': 2}] order 39 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/Raf active True position {'x': 0.0, 'y': -0.014999992214143276, 'z': 0.0} scale {'x': 1.2000000476837158, 'y': 1.0999999046325684, 'z': 1.0999999046325684}
+  110851 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 22037} materials [{'m_FileID': 1, 'm_PathID': 2}] order 25 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/Arka active True position {'x': 0.0, 'y': -0.07799998670816422, 'z': 0.0} scale {'x': 1.0999999046325684, 'y': 1.0999999046325684, 'z': 1.0999999046325684}
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/Arka/Left active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  105393 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16441} materials [{'m_FileID': 1, 'm_PathID': 2}] order 10 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/Arka/Right active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  116193 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16441} materials [{'m_FileID': 1, 'm_PathID': 2}] order 10 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/Kapak active False position {'x': 0.0, 'y': -0.10000000149011612, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/Kapak/Left active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  112803 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21490} materials [{'m_FileID': 1, 'm_PathID': 2}] order 60 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Container/Kapak/Right active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  113271 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21490} materials [{'m_FileID': 1, 'm_PathID': 2}] order 60 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/Shadow active True position {'x': 0.0, 'y': -1.0039997100830078, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  108427 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21506} materials [{'m_FileID': 1, 'm_PathID': 2}] order 45 enabled True
+CupboardItemPrefab/Root/View/CupboardAnimator/GameObject active True position {'x': 0.0, 'y': -0.034142713993787766, 'z': 0.0} scale {'x': 0.9852216243743896, 'y': 0.9852216243743896, 'z': 0.9852216243743896}
+CupboardItemPrefab/Root/View/CupboardMask active False position {'x': 0.0, 'y': 0.9509000182151794, 'z': 0.0} scale {'x': 280.0, 'y': 30.937145233154297, 'z': 1.0}
+
+BLOCKER potion 52083 root 84725
+PotionItemPrefab active True position {'x': 0.5, 'y': 0.5, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+PotionItemPrefab/Root active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+PotionItemPrefab/Root/View active True position {'x': 0.5, 'y': 0.5, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+PotionItemPrefab/Root/View/PotionsAnimator active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+PotionItemPrefab/Root/View/PotionsAnimator/Container active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+PotionItemPrefab/Root/View/PotionsAnimator/Container/Left active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  114332 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21399} materials [{'m_FileID': 1, 'm_PathID': 2}] order 5 enabled True
+PotionItemPrefab/Root/View/PotionsAnimator/Container/Right active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  104924 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21399} materials [{'m_FileID': 1, 'm_PathID': 2}] order 5 enabled True
+PotionItemPrefab/Root/View/PotionsAnimator/Shadow active True position {'x': 0.0, 'y': -0.9599999785423279, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  109810 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21506} materials [{'m_FileID': 1, 'm_PathID': 2}] order 0 enabled True
+
+BLOCKER potion-bottle 33182 root 61403
+PotionBottleView active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+PotionBottleView/Golge_A active True position {'x': 0.0, 'y': -0.4020000100135803, 'z': 0.0} scale {'x': 1.0, 'y': 1.064814805984497, 'z': 1.0}
+  110825 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16851} materials [{'m_FileID': 1, 'm_PathID': 2}] order 33 enabled True
+PotionBottleView/PotionAnimator active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+PotionBottleView/PotionAnimator/Sivi_B active True position {'x': 0.0, 'y': -0.1442999690771103, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  114192 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 22125} materials [{'m_FileID': 1, 'm_PathID': 2}] order 35 enabled True
+PotionBottleView/PotionAnimator/Sivi_A active True position {'x': -0.0, 'y': 0.10300000011920929, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  111691 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 22102} materials [{'m_FileID': 1, 'm_PathID': 2}] order 36 enabled True
+PotionBottleView/PotionAnimator/Damla active True position {'x': 0.0, 'y': 0.11500000208616257, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  106545 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21233} materials [{'m_FileID': 1, 'm_PathID': 2}] order 38 enabled False
+PotionBottleView/PotionAnimator/Sise_A active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  111598 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21889} materials [{'m_FileID': 1, 'm_PathID': 2}] order 39 enabled True
+PotionBottleView/PotionAnimator/Etiket_Golge active True position {'x': -0.13539999723434448, 'y': 0.07689999788999557, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  113058 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21897} materials [{'m_FileID': 1, 'm_PathID': 2}] order 40 enabled True
+PotionBottleView/PotionAnimator/Etiket_Halka active True position {'x': -0.10140000283718109, 'y': 0.19480000436306, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  114564 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16916} materials [{'m_FileID': 1, 'm_PathID': 2}] order 41 enabled True
+PotionBottleView/PotionAnimator/Etiket active True position {'x': -0.1379999965429306, 'y': 0.0885000005364418, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  105343 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16589} materials [{'m_FileID': 1, 'm_PathID': 2}] order 42 enabled True
+PotionBottleView/PotionAnimator/Golge_B active True position {'x': 0.0, 'y': 0.05999999865889549, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  111208 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 17136} materials [{'m_FileID': 1, 'm_PathID': 2}] order 32 enabled True
+
+BLOCKER mailbox 52138 root 84780
+MailBoxItemPrefab active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+MailBoxItemPrefab/Root active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+MailBoxItemPrefab/Root/View active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+MailBoxItemPrefab/Root/View/SpineHolder active True position {'x': 0.0, 'y': -0.5, 'z': 0.0} scale {'x': 0.7200000286102295, 'y': 0.7200000286102295, 'z': 1.0}
+MailBoxItemPrefab/Root/View/SpineHolder/MailboxSpinePrefab active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  88087 MeshRenderer sprite None materials [{'m_FileID': 0, 'm_PathID': 63}] order 0 enabled True
+
+BLOCKER egg 52129 root 84771
+EggItemPrefab active True position {'x': 0.5, 'y': 0.5, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+EggItemPrefab/Root active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+EggItemPrefab/Root/View active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+EggItemPrefab/Root/View/Base active True position {'x': 0.0, 'y': 0.014999985694885254, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  104507 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16331} materials [{'m_FileID': 1, 'm_PathID': 2}] order 10 enabled True
+EggItemPrefab/Root/View/Shadow active True position {'x': 0.0, 'y': -0.42500001192092896, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  116509 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21212} materials [{'m_FileID': 1, 'm_PathID': 2}] order 5 enabled True
+
+BLOCKER grass 33165 root 65165
+GrassItemPrefab active True position {'x': -0.1509999930858612, 'y': 1.7359999418258667, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+GrassItemPrefab/Root active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+GrassItemPrefab/Root/View active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+GrassItemPrefab/Root/View/Base active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  107941 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 16396} materials [{'m_FileID': 1, 'm_PathID': 2}] order 20 enabled True
+GrassItemPrefab/Root/View/Base/Shadow active True position {'x': 0.0, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  112031 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 21414} materials [{'m_FileID': 1, 'm_PathID': 2}] order 0 enabled True
+GrassItemPrefab/Root/View/Base/RightPatch active True position {'x': 0.5, 'y': 0.0, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  108706 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 22171} materials [{'m_FileID': 1, 'm_PathID': 2}] order 5 enabled False
+GrassItemPrefab/Root/View/Base/TopPatch active True position {'x': 0.0, 'y': 0.5, 'z': 0.0} scale {'x': 1.0, 'y': 1.0, 'z': 1.0}
+  110722 SpriteRenderer sprite {'m_FileID': 0, 'm_PathID': 0} materials [{'m_FileID': 1, 'm_PathID': 2}] order 5 enabled False
