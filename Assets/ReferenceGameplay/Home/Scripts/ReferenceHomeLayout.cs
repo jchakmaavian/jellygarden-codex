@@ -18,6 +18,7 @@ namespace RoyalThrone.ReferenceGameplay
         static void Hide(Transform t){foreach(var g in t.GetComponentsInChildren<Graphic>(true))if(!(g is Text))g.enabled=false;var hit=t.GetComponent<Image>();if(hit){hit.enabled=true;hit.color=Color.clear;}}
         static void TextPlace(Text t,float x0,float y0,float x1,float y1,int size){t.enabled=true;Bounds(t.rectTransform,x0,y0,x1,y1);t.transform.SetAsLastSibling();t.fontSize=t.resizeTextMaxSize=size;t.resizeTextMinSize=15;t.resizeTextForBestFit=true;}
         void Build(){if(built||!home)return;built=true;
+            ReferenceHomeSky.Attach(home);
             foreach(var b in home.resourceButtons)Hide(b.transform);
             // Keep the Royal Throne identity inside the profile; use reference resource artwork.
             var portrait=home.resourceButtons[0].transform.Find("King portrait").GetComponent<Image>();portrait.enabled=true;portrait.color=Color.white;

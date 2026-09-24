@@ -1,0 +1,26 @@
+[
+  {
+    "source": "Design\\Backup\\Reference-UI-Characters\\20260923-184326\\Homepage\\Homepage_bg.png",
+    "destination": "Assets\\ReferenceGameplay\\Home\\Resources\\ReferenceGameplay\\Home\\Sky\\Homepage_bg.png",
+    "sha256": "8d2327276b33108da09b3a40a576b9da9a215e0f20f2f7b78f85b7a5e408ddf0",
+    "exactCopy": true
+  },
+  {
+    "source": "Design\\Backup\\Reference-UI-Characters\\20260923-184326\\Homepage\\Cloud_Animation_Assets\\cloud_large.png",
+    "destination": "Assets\\ReferenceGameplay\\Home\\Resources\\ReferenceGameplay\\Home\\Sky\\cloud_large.png",
+    "sha256": "faa54a9fadb9da5eb42a2fbe348de0e0b66a9acba6734fb0ebb7092e7368f589",
+    "exactCopy": true
+  },
+  {
+    "source": "Design\\Backup\\Reference-UI-Characters\\20260923-184326\\Homepage\\Cloud_Animation_Assets\\cloud_medium.png",
+    "destination": "Assets\\ReferenceGameplay\\Home\\Resources\\ReferenceGameplay\\Home\\Sky\\cloud_medium.png",
+    "sha256": "b2e642b2298ec249c184c1a840233fef3cd5028dca4677ac5f996b459a1077c1",
+    "exactCopy": true
+  },
+  {
+    "source": "Design\\Backup\\Reference-UI-Characters\\20260923-184326\\Homepage\\Cloud_Animation_Assets\\cloud_small.png",
+    "destination": "Assets\\ReferenceGameplay\\Home\\Resources\\ReferenceGameplay\\Home\\Sky\\cloud_small.png",
+    "sha256": "913bb4c69e9a938516f1bc9f0e564a9a0a95d225f05a06be86ccc01e4041a625",
+    "exactCopy": true
+  }
+]
