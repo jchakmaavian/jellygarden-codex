@@ -1,0 +1,18 @@
+RUNNING homepage and finishing stage
+PASS Imported homepage adapter active on existing home
+PASS Homepage is visible and original level button remains connected
+PASS Resource controls and five navigation buttons retained
+PASS Background sprite unchanged
+PASS Existing Settings action still opens
+PASS Both recovered native finishing particle prefabs available
+PASS Finishing case 0 reaches Win without stall
+PASS Every remaining move converted exactly once (20)
+PASS Existing boosters complete and no finishing operation remains
+PASS Finishing case 1 reaches Win without stall
+PASS Every remaining move converted exactly once (0)
+PASS Existing boosters complete and no finishing operation remains
+PASS Finishing case 2 reaches Win without stall
+PASS Every remaining move converted exactly once (5)
+PASS Existing boosters complete and no finishing operation remains
+PASS Normal save and currency restored
+ALL CHECKS PASSED

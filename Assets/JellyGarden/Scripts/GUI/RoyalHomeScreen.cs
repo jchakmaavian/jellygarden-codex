@@ -58,6 +58,7 @@ namespace RoyalThrone.Presentation
             if (runtimeInitialized) return;
             runtimeInitialized = true;
             ApplyPresentationPolish();
+            RoyalThrone.ReferenceGameplay.ReferenceHomeLayout.Attach(this);
             legacyCanvas = globalMenus.GetComponent<Canvas>();
             levelButton.onClick.AddListener(OpenNextLevel);
             areaButton.onClick.AddListener(() => OpenPanel("area", areaButton.gameObject));

@@ -751,32 +751,8 @@ namespace JellyGarden.Scripts
             MenuManager.Instance.ShowCompleteLabel(true);
             yield return new WaitForSeconds(0.5f);
 
-            List<Item> items = GetRandomItems(Mathf.Clamp(limitType == LIMIT.MOVES ? Limit : 8, 0, 15)); //2.2.2
-            foreach (Item item in items)
-            {
-                if (limitType == LIMIT.MOVES)
-                    Limit--;
-                item.NextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
-                item.ChangeType();
-                yield return new WaitForSeconds(CelebrationWait(0.16f, 0.02f));
-            }
-            yield return new WaitForSeconds(CelebrationWait(0.2f, 0.05f));
-            while (GetAllExtaItems().Count > 0 && gameStatus != GameState.Win)
-            { //1.6
-                Item item = GetAllExtaItems()[0];
-                item.DestroyItem();
-                dragBlocked = true;
-                yield return new WaitForSeconds(CelebrationWait(0.1f, 0.02f));
-                FindMatches();
-                yield return new WaitForSeconds(CelebrationWait(0.35f, 0.05f));
-
-                //           GenerateNewItems();
-                while (dragBlocked)
-                    yield return new WaitForFixedUpdate();
-            }
-            yield return new WaitForSeconds(CelebrationWait(0.4f, 0.1f));
-            while (dragBlocked || GetMatches().Count > 0)
-                yield return new WaitForSeconds(0.2f);
+            yield return RoyalThrone.ReferenceGameplay.ReferenceWinFinish.Play(this);
+            if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
 
             MenuManager.Instance.ShowCompleteLabel(false);
             SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
