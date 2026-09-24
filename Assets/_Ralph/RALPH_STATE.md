@@ -88,6 +88,7 @@ Throne's own implementation.
 | R-18 | P3 | Project-code compile warnings (about 30 runtime, 40 editor); obsolete Find APIs | see compile log |
 | R-19 | P3 | Hidden HUD and home kings keep animating; AI hint coroutine pile-up | RoyalGameplayPresentation, AI |
 | R-20 | design | Offline economy has no coin income (5 coins lifetime). Product decision, not changed by the loop | LevelManager :371 (commented out) |
+| R-21 | P2 | Home profile avatar and area chest ignore real taps: their only hit area is disabled (found in verification, iteration 18) | ReferenceHomeLayout.Hide :18 |
 
 ## Iteration log
 
@@ -498,3 +499,43 @@ Throne's own implementation.
 - **Scene-dependency prefabs:** the 7 prefabs outside `Resources/` that the build scenes depend on (from `AssetDatabase.GetDependencies`, 377 dependencies) got the same editor check: 0 missing scripts, 0 dead references.
 - **Remaining risk:** none found for references. Assets loaded by path through Addressables or AssetBundles would not be covered, but the project uses neither for gameplay.
 - **Next task:** resolution/aspect check, then a performance sample.
+
+### Iteration 18 (verification V-04, fix)
+- **Date/time:** 2026-09-25 01:30-01:49 local
+- **Area inspected:** tap targets and layout at 1080x1920. Home, home Settings, pre-level card, level HUD, pause, leave confirm, win card, out-of-moves offer and fail card.
+- **Issue:** on home, the profile avatar and the area chest button did nothing when tapped. Calling `onClick` directly works, which is why earlier checks (and iteration 3) passed; a finger tap did not.
+- **Severity:** P2 (two visible home buttons dead to touch; the profile and area panels unreachable)
+- **Reproduction:** real taps queued through the Input System (Mouse state, in the player loop) at each button's centre:
+  - Coins opens the coins panel and Level 13 opens the pre-level card (controls);
+  - the avatar and the chest do nothing;
+  - `EventSystem.RaycastAll` at those centres returns `Castle framing/Royal blue courtyard`, the home background.
+- **Root cause:**
+  - `ReferenceHomeLayout.Hide` disables every non-Text graphic of a button it restyles, then re-enables only an `Image` on the button as a clear hit area.
+  - The profile and area buttons draw with a `RoyalPanelGraphic` rather than an `Image`, so they were left with no enabled graphic. `Graphic.Raycast` returns false while `isActiveAndEnabled` is false.
+  - The other restyled buttons (coins, lives, stars, settings, level, the five tabs) have `Image` hit areas and were unaffected.
+- **Files changed:** `Assets/ReferenceGameplay/Home/Scripts/ReferenceHomeLayout.cs` (the protected home layout: smallest fix only)
+- **Fix:** a restyled selectable without an `Image` keeps its own graphic enabled with a clear colour, the same treatment the `Image` hit areas get. Layout, artwork and callbacks are unchanged.
+- **Tests executed:**
+  - recompile (no errors); fresh Play Mode;
+  - real taps on the avatar, chest, coins and level;
+  - the layout probe on all nine screens (every visible control must be on screen and take a tap at its centre; text is checked for clipping and for spilling off screen);
+  - before/after home capture comparison.
+- **Result:**
+  - The avatar opens the "King Vanguard" profile panel and the chest opens the "Area 3" panel.
+  - Home: all 12 visible controls take a tap at their centre.
+  - HUD: 5/5 (four boosters and pause). Settings 7/7, pre-level 6/6, pause 6/6, leave confirm 2/2, win 1/1, out-of-moves offer 2/2, fail card 1/1.
+  - No clipped or off-screen text.
+- **Regression result:**
+  - Coins and Level taps are unchanged.
+  - The home action-button strip is pixel-identical before and after. The resource bar differs only by the animated king and the lives timer, with no panel showing behind the avatar.
+- **Console result:** no errors or warnings (info logs only)
+- **Performance result:** n/a (two clear graphics)
+- **Screenshots/evidence:**
+  - `kv/play/tap_*.txt`;
+  - `kv/play/res/1080x1920_*.png`, `res/_fix_compare.png` (pre-fix capture `res/prefix_1080x1920_1home.png`);
+  - probes `kv/layout_probe_loop.cs`, `kv/tap_loop.cs`, `kv/raywalk_loop.cs`.
+- **Method notes:**
+  - Probes that read `Screen.*` or use `GraphicRaycaster` must run inside the player loop. From the eval callback, `Screen.width/height` can report the editor window (846x1227).
+  - A forced `GameState.PreFailed` with moves left never reaches the fail card. The real trigger is `Limit=0` plus `CheckWinLose()`, the only place the game sets PreFailed.
+- **Remaining risk:** none known for the home. Other screens' buttons are covered by the probe above.
+- **Next task:** the same layout pass at 20:9 (1080x2400), 4:3 (1536x2048) and 720x1280.

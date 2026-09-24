@@ -15,7 +15,10 @@ namespace RoyalThrone.ReferenceGameplay
         static void Bounds(RectTransform r,float x0,float y0,float x1,float y1){r.anchorMin=new Vector2(x0,y0);r.anchorMax=new Vector2(x1,y1);r.offsetMin=r.offsetMax=Vector2.zero;r.localScale=Vector3.one;}
         static Image Pic(Transform parent,int id,float x0,float y0,float x1,float y1,bool sliced=false){var r=new GameObject("Imported "+id,typeof(RectTransform)).GetComponent<RectTransform>();r.SetParent(parent,false);Bounds(r,x0,y0,x1,y1);var im=r.gameObject.AddComponent<Image>();im.sprite=Art(id);im.raycastTarget=false;im.type=sliced?Image.Type.Sliced:Image.Type.Simple;im.pixelsPerUnitMultiplier=2;return im;}
         static void Pair(Transform p,int id,float x0,float y0,float x1,float y1,bool slice=false,bool rightHalf=false){float m=(x0+x1)*.5f;var a=Pic(p,id,x0,y0,m,y1,slice);var b=Pic(p,id,m,y0,x1,y1,slice);(rightHalf?a:b).rectTransform.localScale=new Vector3(-1,1,1);}
-        static void Hide(Transform t){foreach(var g in t.GetComponentsInChildren<Graphic>(true))if(!(g is Text))g.enabled=false;var hit=t.GetComponent<Image>();if(hit){hit.enabled=true;hit.color=Color.clear;}}
+        // A hidden button keeps its own graphic as a clear hit area: a disabled target graphic takes no taps, which left
+        // the profile and area buttons (panel graphics, not Images) dead to touch.
+        static void Hide(Transform t){foreach(var g in t.GetComponentsInChildren<Graphic>(true))if(!(g is Text))g.enabled=false;var hit=t.GetComponent<Image>();if(hit){hit.enabled=true;hit.color=Color.clear;}
+            else if(t.GetComponent<Selectable>()){var own=t.GetComponent<Graphic>();if(own&&!(own is Text)){own.enabled=true;own.color=Color.clear;}}}
         static void TextPlace(Text t,float x0,float y0,float x1,float y1,int size){t.enabled=true;Bounds(t.rectTransform,x0,y0,x1,y1);t.transform.SetAsLastSibling();t.fontSize=t.resizeTextMaxSize=size;t.resizeTextMinSize=15;t.resizeTextForBestFit=true;}
         static void ActionFace(Transform parent,int face){
             // Overlap the inset beneath the trim so packed sprite edges never leave a gap.
