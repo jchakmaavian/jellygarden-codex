@@ -44,7 +44,7 @@ namespace JellyGarden.Scripts.Juice
             for(int r=0;r<lm.maxRows;r++)for(int c=0;c<lm.maxCols;c++)
             {
                 var g=SquareAt(lm.GetSquare(c,r));if(g.Count!=4||g.Exists(used.Contains))continue;
-                Item host=g.Contains(lm.lastDraggedItem)?lm.lastDraggedItem:g.Contains(lm.lastSwitchedItem)?lm.lastSwitchedItem:g[0];
+                Item host=lm.PreferredMatchHost(g);if(!host)host=g[0];
                 host.NextType=ItemsTypes.HELICOPTER;groups.Add(g);foreach(var i in g)used.Add(i);
             }
         }

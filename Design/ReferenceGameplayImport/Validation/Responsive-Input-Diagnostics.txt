@@ -1,0 +1,106 @@
+RUNNING responsive board input
+PASS First Rocket accepts tap
+PASS Board input remains open during Rocket travel
+PASS Second Rocket and TNT accept taps in the same frame
+PASS Repeated tap cannot fire or charge the same booster twice
+PASS Three activations spend exactly three moves
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Normal matching swipe starts during TNT anticipation
+PASS Swap animation preserves committed cell ownership until arrival
+PASS Tap and valid swipe each cost one move
+PASS An overlapping hit waits for the moving pair, not the whole board
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Deferred hit completes after the swap without duplicate ownership
+PASS Two disjoint booster swipes animate concurrently
+PASS Moving pieces cannot start duplicate swaps
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Invalid swipe gives its existing return feedback
+PASS Invalid swap returns without charging a move
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Color Ball accepts the same tap path
+PASS Color Ball reserves selected targets while unrelated pieces stay interactive
+PASS TNT can activate during Color Ball processing
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Color Ball + Rocket swipe preserves one move and existing combo handoff
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Pause still blocks board actions
+PASS Popup still owns input above the board
+PASS Locked cells retain their blocker rule
+PASS A falling piece cannot be moved twice
+PASS Last move cannot be spent twice by rapid taps
+PASS Normal currency and progress preserved by isolated tests
+ALL RESPONSIVE INPUT CHECKS PASSED
+PASS Input System press selects the Rocket through the actual hit-test path
+PASS Input System release activates Rocket exactly once
+PASS A second real input press/release activates TNT during Rocket effects
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+FAIL Input System swipe starts a valid normal match while TNT is active
+PASS Input System press selects the Rocket through the actual hit-test path
+PASS Input System release activates Rocket exactly once
+PASS A second real input press/release activates TNT during Rocket effects
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+TRACE press: drag=True, allowed=True, input=True, cell=3,2, pointer=(2906.64, 1223.59), moves=98, busy=True
+FAIL Input System swipe starts a valid normal match while TNT is active (before=98, after=98, drag=True, swapping=0, direction=(0.00, 0.00, 0.00), delta=(0.00, 0.00, 0.00), pointer=(2906.64, 1223.59))
+PASS Input System receives the queued pointer event
+PASS Input System press selects the Rocket through the actual hit-test path
+PASS Input System receives the queued pointer event
+PASS Input System release activates Rocket exactly once
+PASS Input System receives the queued pointer event
+PASS Input System receives the queued pointer event
+PASS A second real input press/release activates TNT during Rocket effects
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Input System receives the queued pointer event
+TRACE press: drag=True, allowed=True, input=True, cell=3,2, pointer=(475.68, 1107.83), moves=98, busy=True
+PASS Input System receives the queued pointer event
+PASS Input System swipe starts a valid normal match while TNT is active (before=98, after=97, drag=False, swapping=1, direction=(0.00, 1.00, 0.00), delta=(0.00, 0.82, 0.00), pointer=(475.68, 979.20))
+PASS Input System receives the queued pointer event
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Normal swipe match resolves and refills during overlapping effects
+PASS Cancellation fixture has active Color Ball target leases
+FAIL Cancelling effects releases conversion target input leases
+RUNNING POINTER EVENT AND CANCELLATION CHECKS
+PASS Input System receives the queued pointer event
+PASS Input System press selects the Rocket through the actual hit-test path
+PASS Input System receives the queued pointer event
+PASS Input System release activates Rocket exactly once
+PASS Input System receives the queued pointer event
+PASS Input System receives the queued pointer event
+PASS A second real input press/release activates TNT during Rocket effects
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Input System receives the queued pointer event
+TRACE press: drag=True, allowed=True, input=True, cell=3,2, pointer=(475.68, 1107.83), moves=98, busy=True
+PASS Input System receives the queued pointer event
+PASS Input System swipe starts a valid normal match while TNT is active (before=98, after=97, drag=False, swapping=1, direction=(0.00, 1.00, 0.00), delta=(0.00, 0.82, 0.00), pointer=(475.68, 979.20))
+PASS Input System receives the queued pointer event
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+PASS Normal swipe match resolves and refills during overlapping effects
+PASS Cancellation fixture has active Color Ball target leases
+PASS Cancelling effects releases conversion target input leases
+PASS Settled pieces have unique cell ownership and no input leases
+PASS No duplicate cell occupants
+PASS Effects and resolver finish without a stuck board lock
+ALL POINTER EVENT AND CANCELLATION CHECKS PASSED

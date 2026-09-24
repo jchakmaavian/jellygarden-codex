@@ -241,13 +241,24 @@ namespace JellyGarden.Scripts
         }
 
         /// <summary>
-        /// The single gate for board input. The board must only answer a touch while a level is
-        /// actually being played: not under a popup, not while the board resolves a move,
-        /// and not once the moves are spent (which previously drove the counter negative).
+        /// Resolution locks board maintenance, not untouched pieces. Item.CanAcceptInput
+        /// protects individual swaps, falling pieces and already selected matches.
         /// </summary>
         public bool BoardInputAllowed =>
-            gameStatus == GameState.Playing && Limit > 0 && !DragBlocked &&
+            gameStatus == GameState.Playing && Limit > 0 && (!DragBlocked || royalResolving || InputSwaps > 0) &&
             (MenuManager.Instance == null || !MenuManager.Instance.BlocksBoardInput);
+
+        public int InputSwaps { get; private set; }
+        int inputRevision;
+        public void BeginInputSwap() { InputSwaps++; DragBlocked = true; }
+        public void EndInputSwap() { InputSwaps = Mathf.Max(0, InputSwaps - 1); if (InputSwaps == 0 && !royalResolving) DragBlocked = false; }
+        public Item PreferredMatchHost(List<Item> group)
+        {
+            Item host = null;
+            foreach (var piece in group)
+                if (piece && piece.inputMoveOrder > 0 && (!host || piece.inputMoveOrder > host.inputMoveOrder)) host = piece;
+            return host ? host : group.Contains(lastDraggedItem) ? lastDraggedItem : group.Contains(lastSwitchedItem) ? lastSwitchedItem : null;
+        }
 
         private GameState GameStatus;
         public bool itemsHided;
@@ -529,6 +540,8 @@ namespace JellyGarden.Scripts
         void PrepareGame()
         {
             royalResolving = false;
+            InputSwaps = 0;
+            inputRevision = 0;
             ActivatedBoost = null;
             Score = 0;
             stars = 0;
@@ -855,11 +868,7 @@ namespace JellyGarden.Scripts
                 // branch as a press with a zero position, which probed world origin (0,0).
                 if (InputManager.Instance.WasTouchReleased)
                 {
-                    if (itemTouched != null)
-                    {
-                        itemTouched.dragThis = false;
-                        itemTouched.switchDirection = Vector3.zero;
-                    }
+                    // Item owns press/drag/release; clearing it here raced its tap handler.
                     itemTouched = null;
                 }
                 else if (InputManager.Instance.WasTouchPressed && LevelManager.THIS.BoardInputAllowed)
@@ -869,7 +878,7 @@ namespace JellyGarden.Scripts
                     if (hit != null)
                     {
                         itemTouched = hit.gameObject.GetComponent<Item>();
-                        if (itemTouched != null)
+                        if (itemTouched != null && itemTouched.CanAcceptInput)
                         {
                             if (LevelManager.THIS.ActivatedBoost.type == BoostType.Bomb && itemTouched.currentType != ItemsTypes.BOMB && itemTouched.currentType != ItemsTypes.INGREDIENT)
                             {
@@ -888,12 +897,6 @@ namespace JellyGarden.Scripts
                                 obj.GetComponent<BoostAnimation>().square = itemTouched.square;
                                 obj.GetComponent<SpriteRenderer>().sortingOrder = 4;
                                 LevelManager.THIS.ActivatedBoost = null;
-                            }
-                            else if (itemTouched.square.type != SquareTypes.WIREBLOCK)
-                            {
-                                itemTouched.dragThis = true;
-                                itemTouched.mousePos = itemTouched.GetMousePosition();
-                                itemTouched.deltaPos = Vector3.zero;
                             }
                         }
                     }
@@ -1537,6 +1540,7 @@ namespace JellyGarden.Scripts
         public bool IsResolvingMatches => royalResolving;
         public void FindMatches()
         {
+            inputRevision++;
             if (royalResolving) return;
             royalResolving = true;
             StartCoroutine(FallingDown());
@@ -1648,8 +1652,14 @@ namespace JellyGarden.Scripts
                 //find matches
                 yield return new WaitForSeconds(0.1f);
 
+                while (InputSwaps > 0 || !IsAllItemsFallDown()) yield return null;
+                int waveRevision = inputRevision;
+                foreach (var piece in GetItems()) if (piece) piece.inputMatchPending = false;
+
                 combinedItems.Clear();
                 combinedItems = combineManager.GetCombine(); //GetMatches();  //1.6
+                foreach (var group in combinedItems) foreach (var piece in group) if (piece) piece.inputMatchPending = true;
+                foreach (var piece in GetItems()) if (piece) piece.inputMoveOrder = 0;
                 //StartCoroutine(GetMatchesCor());
                 //while (!matchesGot)
                 //    yield return new WaitForFixedUpdate();
@@ -1735,8 +1745,11 @@ namespace JellyGarden.Scripts
                     foreach (Item item in desrtoyItems)
                     {//TODO items not destroy
 
+                        if (!item || item.destroying) continue;
+
                         if (item.currentType != ItemsTypes.NONE)
                             yield return new WaitForSeconds(0.1f);
+                        if (!item || item.destroying) continue;
                         // Tiny controlled offset between neighbours - still reads as
                         // simultaneous, but gives the group a visual rhythm.
                         item.juiceStagger = juiceCfg.EnableJuice ? juiceIndex * juiceCfg.MatchStagger : 0f;
@@ -1788,8 +1801,12 @@ namespace JellyGarden.Scripts
 
                 while (!IsAllDestoyFinished())
                 {
+                    if (waveRevision != inputRevision && InputSwaps == 0) break;
                     yield return new WaitForSeconds(0.1f);
                 }
+
+                // A new move during the effects needs its matches resolved before gravity.
+                if (waveRevision != inputRevision) continue;
 
                 //falling down
                 for (int i = 0; i < 20; i++)
@@ -1806,6 +1823,8 @@ namespace JellyGarden.Scripts
                 }
                 if (!nearEmptySquareDetected)
                     yield return new WaitForSeconds(Juice.RoyalEffectsProfile.Get ? .035f : .2f);
+
+                while (InputSwaps > 0) yield return null;
 
                 CheckIngredient();
                 for (int col = 0; col < maxCols; col++)
@@ -1869,6 +1888,8 @@ namespace JellyGarden.Scripts
                 {//2.0
                     yield return new WaitForSeconds(0.1f);
                 }
+
+                if (waveRevision != inputRevision || Juice.RoyalPowerupDirector.Busy) continue;
 
                 if (destroyAnyway.Count > 0)
                     nearEmptySquareDetected = true;
@@ -2024,6 +2045,7 @@ namespace JellyGarden.Scripts
 
         bool IsAllDestoyFinished()
         {
+            if (InputSwaps > 0) return false;
             if (Juice.RoyalPowerupDirector.Busy) return false;
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
             foreach (GameObject item in items)
@@ -2059,6 +2081,7 @@ namespace JellyGarden.Scripts
 
         bool IsAllItemsFallDown()
         {
+            if (InputSwaps > 0) return false;
             if (gameStatus == GameState.PreWinAnimations)
                 return true;
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
