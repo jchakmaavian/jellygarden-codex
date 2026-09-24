@@ -34,6 +34,12 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 		{
 			LevelManager.OnLevelLoaded -= CheckNewTarget;
 			LevelManager.OnStartPlay -= DisableTutorial;
+			// Leaving the level (the Level object is deactivated) before the first touch left the hand active and
+			// bound to pieces that are then destroyed; re-entering level 1 re-enabled it with them and threw.
+			// Start clean: the tutorial is shown again for the new board, since the player never dismissed it.
+			if (tutorial)
+				tutorial.SetActive (false);
+			items.Clear ();
 		}
 
 		void DisableTutorial ()
