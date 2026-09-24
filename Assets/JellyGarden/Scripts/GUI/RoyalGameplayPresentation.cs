@@ -98,7 +98,9 @@ namespace RoyalThrone.Presentation
             Pair("Settings blue",pause,"Game-blue_circle_button",.07f,.07f,.93f,.93f);
             Pair("Settings frame",pause,"Game-booster_button_frame",0,0,1,1);
             Pair("Settings gear",pause,"Game-settings_button_gear",.22f,.22f,.78f,.78f);
-            var image=pause.gameObject.AddComponent<Image>();image.color=Color.clear;var button=pause.gameObject.AddComponent<Button>();button.onClick.AddListener(()=>{MenuManager.Instance.ShowMenuPause(true);});
+            // Pause only while the player is actually playing: not during the win celebration, the fail offer or over
+            // another popup (the legacy pause button had the same Playing check).
+            var image=pause.gameObject.AddComponent<Image>();image.color=Color.clear;var button=pause.gameObject.AddComponent<Button>();button.onClick.AddListener(()=>{var state=LevelManager.THIS;if(state&&state.gameStatus==GameState.Playing&&!MenuManager.Instance.BlocksBoardInput)MenuManager.Instance.ShowMenuPause(true);});
             var tools=gameObject.AddComponent<RoyalThrone.ReferenceGameplay.ReferenceBoosterBar>();
             tools.Attach(content,display);
             var lm=GetComponent<LevelManager>();
@@ -143,6 +145,8 @@ namespace RoyalThrone.Presentation
             if(lm.gameStatus==GameState.Map){framedField=null;framedSquares=null;}
             group.alpha=show?1:0;group.blocksRaycasts=show;backdrop.enabled=show;
             if(lm.gameStatus==GameState.Pause||lm.gameStatus==GameState.GameOver||lm.gameStatus==GameState.Win||lm.gameStatus==GameState.PreFailed){group.alpha=0;group.blocksRaycasts=false;}
+            // This overlay canvas sits above the popup canvas, so while any popup is open the HUD must not take its taps.
+            if(MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput)group.blocksRaycasts=false;
             if(!show)return;
             foreach(var old in hidden)if(old){old.alpha=0;old.blocksRaycasts=false;}
             var safe=Screen.safeArea;content.anchorMin=safe.min/new Vector2(Screen.width,Screen.height);content.anchorMax=safe.max/new Vector2(Screen.width,Screen.height);

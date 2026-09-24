@@ -137,3 +137,25 @@ Throne's own implementation.
   - Android predictive back (`androidPredictiveBackSupport: 1`) still needs a device check.
   - A quit confirmation dialog is not implemented (Back with nothing open exits immediately, as before).
 - **Next task:** R-04 (HUD pause gear usable in any state; HUD above in-level popups).
+
+### Iteration 3
+- **Date/time:** 2026-09-24 23:57 - 2026-09-25 00:01 local
+- **Area inspected:** in-level HUD pause gear and HUD input over popups (R-04)
+- **Issue:**
+  - (A) The HUD gear opened the pause menu in any state, including the win celebration; its HOME button then forfeits a completed win.
+  - (B) The HUD (overlay canvas, sort 20) kept taking taps while a popup (camera canvas, sort 2) was open during play.
+- **Severity:** P1 (can forfeit progress; input through modals)
+- **Reproduction:** QA profile, level 12.
+  - (A) Complete targets, start `PreWinAnimations` as the debug Win key does, press the gear: MenuPause opened over the celebration.
+  - (B) Open the gem shop while playing: HUD `blocksRaycasts=True`.
+- **Root cause:** the Royal HUD replaced the legacy pause button but dropped its `gameStatus == Playing` check. `LateUpdate` only hid the HUD for Pause, GameOver, Win and PreFailed, never for an open popup.
+- **Files changed:** `Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs` (gear listener; one line in LateUpdate)
+- **Fix:** the gear opens pause only while Playing with no popup open. The HUD stops blocking raycasts whenever `MenuManager.BlocksBoardInput` is true.
+- **Tests executed:** recompile; fresh Play Mode; A and B repeated; regression r04r (gear during normal play, Continue).
+- **Result:** (A) the gear does nothing during the celebration and the win reaches MenuComplete. (B) the HUD ignores taps with the gem shop open and takes them again after it closes.
+- **Regression result:** during play the gear opens pause (Pause, timeScale 0, HUD hidden); Continue resumes Playing with HUD taps restored.
+- **Console result:** no errors
+- **Performance result:** one extra property read per frame (`BlocksBoardInput` loops over about 12 popup children)
+- **Screenshots/evidence:** driver log `kv/play/ralph-235925.txt`
+- **Remaining risk:** the HUD is still drawn above popups visually (by design for the goal banners); only its input is gated.
+- **Next task:** R-05 (win progress not flushed to disk).
