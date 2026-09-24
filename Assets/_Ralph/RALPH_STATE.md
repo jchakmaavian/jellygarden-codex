@@ -89,6 +89,9 @@ Throne's own implementation.
 | R-19 | P3 | Hidden HUD and home kings keep animating; AI hint coroutine pile-up | RoyalGameplayPresentation, AI |
 | R-20 | design | Offline economy has no coin income (5 coins lifetime). Product decision, not changed by the loop | LevelManager :371 (commented out) |
 | R-21 | P2 | Home profile avatar and area chest ignore real taps: their only hit area is disabled (found in verification, iteration 18) | ReferenceHomeLayout.Hide :18 |
+| R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (layering is intentional; needs a size or layering decision) | RoyalHomeScreen / ReferenceHomeLayout (protected) |
+| R-23 | P3 | Out-of-moves CONTINUE shows a gem icon while home calls the balance coins | PreFailed prefab art; ties to R-20 |
+| R-24 | P2 | Per-frame garbage from `Counter_` (`Object.name` reads) and `BoostIcon` (strings) in normal play; incremental GC is off (fixed, iteration 20; the GC setting is a decision) | Counter_.cs, BoostIcon.cs; ProjectSettings `gcIncremental` |
 
 ## Iteration log
 
@@ -539,3 +542,79 @@ Throne's own implementation.
   - A forced `GameState.PreFailed` with moves left never reaches the fail card. The real trigger is `Limit=0` plus `CheckWinLose()`, the only place the game sets PreFailed.
 - **Remaining risk:** none known for the home. Other screens' buttons are covered by the probe above.
 - **Next task:** the same layout pass at 20:9 (1080x2400), 4:3 (1536x2048) and 720x1280.
+
+### Iteration 19 (verification V-05: other resolutions)
+- **Date/time:** 2026-09-25 01:49-01:58 local
+- **Area inspected:** the iteration-18 layout pass at 1080x2400 (20:9, a temporary Game view preset), 1536x2048 (4:3, the "QA tablet" preset) and 720x1280 (the "Portrait 720x1280" preset). The game is portrait-only (`defaultScreenOrientation: 0`, no landscape autorotation).
+- **Issue:**
+  - Probe: none.
+  - Visual review of the side-by-side sheets found three things:
+    - At 4:3 only, the raised Home tab icon (the castle) draws over the bottom of the home Settings dialog, across "Back to home". The button still takes taps, because the icon is not a raycast target.
+    - The out-of-moves CONTINUE button shows a blue gem, while home calls the same balance coins and shows a coin.
+    - The QA Mod Menu button sits below the pause card.
+- **Severity:**
+  - The tablet overlap is P3 (visual only, 4:3).
+  - The currency icon is P3 (consistency).
+  - The Mod Menu is n/a (QA tool, compiled only into editor and development builds, `#if (UNITY_EDITOR || DEVELOPMENT_BUILD) && !ROYAL_DISABLE_QA`).
+- **Reproduction:** `kv/play/res/<size>_<screen>.png` and the sheets `res/_sheet0-4.png`. The overlap is `res/_overlap_zoom.png`: at 16:9 the dialog clears the tab bar.
+- **Root cause (overlap):**
+  - `RoyalHomeScreen` deliberately keeps the navigation above the dialog veil ("navigation remains available above it so a tab can be changed directly without a second close tap").
+  - `ReferenceHomeLayout` raises the selected tab's art to 1.40x the bar height.
+  - On 4:3 the dialog is tall enough to reach it.
+- **Files changed:** none. The overlap sits in the protected home layout, and the fix is a layering or size decision. It is recorded for the user as R-22.
+- **Tests executed:** the full nine-screen probe at each size (fresh Play Mode per size, QA profile).
+- **Result:**
+  - 20:9, 4:3 and 720x1280: every visible control on all nine screens is on screen and takes a tap at its centre. No clipped or off-screen text.
+  - Smallest target: the pre-level "?" booster info button, 62x62 px at 1080 wide (41 px at 720). That is about half the usual 48 dp guideline (P3, noted).
+- **Regression result:** n/a (read-only)
+- **Console result:** no errors or warnings in any run
+- **Performance result:** n/a
+- **Screenshots/evidence:** `kv/play/res/`
+- **Remaining risk:**
+  - Safe-area insets (notches, cutouts) cannot be simulated in the Game view (`Screen.safeArea` is the full screen). Device check (with R-16).
+  - The Game view was restored to the user's "RoyalThrone 1080x1920" preset and the temporary 20:9 preset removed (22 presets, as before).
+- **Next task:** performance sample.
+
+### Iteration 20 (verification V-06: performance, fix)
+- **Date/time:** 2026-09-25 02:00-02:12 local
+- **Area inspected:** performance, home idle and level 12 idle, in editor Play Mode.
+  - Frame time and render counters come from `ProfilerRecorder`.
+  - Per-script time and GC come from the editor profiler's own frames, counted under `PlayerLoop` only, so editor work is excluded.
+  - Allocations per call come from the exact in-frame counter (`GC Allocated In Frame`). `GC.GetAllocatedBytesForCurrentThread` always reads 0 under Unity Mono.
+- **Issue:** two legacy UI scripts made garbage every frame in normal play:
+  - `Counter_` read `Object.name` about 12 times per counter per frame (44 B each): 2.8 KB/frame on home, 3.2 KB/frame in a level.
+  - `BoostIcon` rebuilt its pref key and label strings every frame (256 B/frame).
+  - Incremental GC is off (`gcIncremental: 0`), so this garbage is collected in stop-the-world pauses.
+- **Severity:** P2 (steady garbage leads to periodic GC hitches on devices). The fail card's "Best score:3800" missing space is P3, fixed in the same line.
+- **Reproduction:** `kv/play/perf_home.txt`, `perf_level.txt` (the profiler run was at 720x1280); `kv/alloc_bench.cs`, `kv/ui_alloc_bench.cs`.
+- **Measurements (editor, indicative only; not device numbers):**
+  - Home idle: main thread avg 16.7 ms (p95 23.3), PlayerLoop 5.9 ms, 28 SetPass calls, about 1.1k triangles.
+  - Level idle: avg 18.9 ms (p50 16.7, p95 21.8, one 556 ms outlier), PlayerLoop 6.0 ms, 36 SetPass calls, about 1.2k triangles.
+  - Top script time: `RoyalModMenu.Update` 1.1-1.3 ms (QA tool), `RoyalAudioDirector.Update` about 0.47 ms, `RoyalPieceSkin.LateUpdate` 0.46 ms (70 pieces), `RoyalHomeScreen.LateUpdate` 0.29-0.44 ms, `BoostIcon` x5 0.30 ms, `MapLevel.Update` x100 0.14 ms (the hidden legacy map).
+  - Game-code GC: 9.6 KB/frame on home, 57.5 KB/frame in a level. Most of it is not real:
+    - `RoyalPieceSkin` 45.7 KB/frame is `GetComponent<RoyalCampaignItem>()` missing on ordinary pieces. That is Unity's editor-only "fake null" allocation (654 B per miss; `TryGetComponent` 0; nothing in builds).
+    - During QA sessions `RoyalSave` builds read-key strings (QA only).
+- **Root cause:** string building in per-frame `Update`s (`Object.name` getter, `"" + enum`, `"" + int`).
+- **Files changed:** `Assets/JellyGarden/Scripts/GUI/Counter_.cs`, `Assets/JellyGarden/Scripts/GUI/BoostIcon.cs`
+- **Fix:**
+  - `Counter_` reads its name once. The fail card now reads "Best score: 3800".
+  - `BoostIcon` caches its pref key and rewrites the count label only when the count changes, or when other code has replaced the label.
+  - What each label shows is unchanged.
+- **Tests executed:** recompile; fresh Play Mode; per-call allocation after the fix; booster labels vs stock; label overwrite recovery; level counters vs Limit and Score; fail card.
+- **Result:**
+  - `Counter_` 2,798 -> 48 B/frame (home) and 3,200 -> 76 B/frame (level). The rest is the `"" + int` label text.
+  - `BoostIcon` 257 -> 1 B/frame.
+- **Regression result:**
+  - Booster labels follow the stock (0 -> 4 after "Set booster stock"). A label overwritten with "99" goes back to the stock value the next frame.
+  - Counters follow Limit (18 -> 7) and Score (0 -> 1234); the level number shows.
+  - Fail card: "Best score: 3800".
+- **Console result:** no entries
+- **Performance result:** about 3.3 KB/frame less garbage in levels in release builds, roughly 0.2 MB/s at 60 fps.
+- **Screenshots/evidence:** `kv/play/res/after_failed_bestscore.png`, driver logs `kv/play/ralph-0208*.txt`, `ralph-0210*.txt`
+- **Remaining risk / not changed (recorded for the report):**
+  - Enable incremental GC: a project setting and product decision.
+  - `RoyalHomeScreen` and `ReferenceHomeLayout` `LateUpdate`s keep running during levels (protected home code).
+  - `RoyalModMenu.AttachEntries` runs `FindObjectsByType` every frame (development builds only).
+  - `RoyalAudioDirector` reads the Sound pref once per voice per frame (cheap on devices).
+  - The hidden legacy map's 100 `MapLevel.Update` calls per frame.
+- **Next task:** texture import audit (report plus safe fixes), then R-18 compile warnings.

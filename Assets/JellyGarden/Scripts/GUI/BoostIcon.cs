@@ -152,10 +152,16 @@ namespace JellyGarden.Scripts.GUI
 		}
 
 
+		// The pref key and the count label were rebuilt every frame (three strings per icon per frame).
+		string countKey; BoostType keyType; int shownCount = int.MinValue; string shownText;
 		void Update ()
 		{
 			if (boostCount != null) {
-				boostCount.text = "" + PlayerPrefs.GetInt ("" + type);
+				if (countKey == null || keyType != type) { keyType = type; countKey = "" + type; }
+				int count = PlayerPrefs.GetInt (countKey);
+				// Rewrite the label when the count changes or other code replaced it. Text keeps its old string
+				// for equal content, so the reference is read back after setting.
+				if (count != shownCount || !ReferenceEquals (boostCount.text, shownText)) { shownCount = count; boostCount.text = "" + count; shownText = boostCount.text; }
 				if (!check) {
 					if (BoostCount () > 0)
 						ShowPlus (false);

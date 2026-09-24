@@ -25,6 +25,9 @@ namespace JellyGarden.Scripts.GUI
 
 		private int levelNum;
 		private TargetLevel targetLevel;
+		// The GameObject name picks what this counter shows. Object.name allocates a new string on every
+		// read (about 12 reads per counter per frame, roughly 3 KB of garbage a frame), so it is read once.
+		string id;
 
 		// Use this for initialization
 		void Start ()
@@ -43,14 +46,15 @@ namespace JellyGarden.Scripts.GUI
 		// Update is called once per frame
 		void Update ()
 		{
-			if (name == "Score") {
+			if (id == null) id = name;
+			if (id == "Score") {
 				txt.text = "" + LevelManager.Score;
 			}
-			if (name == "BestScore") {
-				txt.text = "Best score:" + PlayerPrefs.GetInt ("Score" + PlayerPrefs.GetInt ("OpenLevel"));
+			if (id == "BestScore") {
+				txt.text = "Best score: " + PlayerPrefs.GetInt ("Score" + PlayerPrefs.GetInt ("OpenLevel"));
 			}
 
-			if (name == "Limit") {
+			if (id == "Limit") {
 				if (LevelManager.Instance.limitType == LIMIT.MOVES) {
 					txt.text = "" + LevelManager.THIS.Limit;
 					txt.transform.localScale = Vector3.one;
@@ -88,30 +92,30 @@ namespace JellyGarden.Scripts.GUI
 
 				}
 			}
-			if (name == "TargetBlocks") {
+			if (id == "TargetBlocks") {
 				txt.text = "" + LevelManager.THIS.TargetBlocks;
 			}
-			if (name == "TargetIngr1") {
+			if (id == "TargetIngr1") {
 				txt.text = "" + LevelManager.THIS.ingrCountTarget [0];
 			}
-			if (name == "TargetIngr2") {
+			if (id == "TargetIngr2") {
 				txt.text = "" + LevelManager.THIS.ingrCountTarget [1];
 			}
-			if (name == "Lifes") {
+			if (id == "Lifes") {
 				txt.text = "" + InitScript.Instance.GetLife ();
 			}
 
-			if (name == "Gems") {
+			if (id == "Gems") {
 				txt.text = "" + InitScript.Gems;
 			}
-			if (name == "TargetScore") {
+			if (id == "TargetScore") {
 				txt.text = "" + LevelManager.THIS.star1;
 			}
-			if (name == "Level") {
+			if (id == "Level") {
 				txt.text = "" + levelNum;
 			}
 		
-			if (name == "TargetDescription1") {
+			if (id == "TargetDescription1") {
 				if (LevelManager.THIS.target == Target.SCORE)
 					txt.text = LevelManager.THIS.targetDiscriptions [0].Replace ("%n", "" + LevelManager.THIS.star1);
 				else if (LevelManager.THIS.target == Target.BLOCKS)
