@@ -17,12 +17,22 @@ namespace RoyalThrone.ReferenceGameplay
         static void Pair(Transform p,int id,float x0,float y0,float x1,float y1,bool slice=false,bool rightHalf=false){float m=(x0+x1)*.5f;var a=Pic(p,id,x0,y0,m,y1,slice);var b=Pic(p,id,m,y0,x1,y1,slice);(rightHalf?a:b).rectTransform.localScale=new Vector3(-1,1,1);}
         static void Hide(Transform t){foreach(var g in t.GetComponentsInChildren<Graphic>(true))if(!(g is Text))g.enabled=false;var hit=t.GetComponent<Image>();if(hit){hit.enabled=true;hit.color=Color.clear;}}
         static void TextPlace(Text t,float x0,float y0,float x1,float y1,int size){t.enabled=true;Bounds(t.rectTransform,x0,y0,x1,y1);t.transform.SetAsLastSibling();t.fontSize=t.resizeTextMaxSize=size;t.resizeTextMinSize=15;t.resizeTextForBestFit=true;}
+        static void ActionFace(Transform parent,int face){
+            // Overlap the inset beneath the trim so packed sprite edges never leave a gap.
+            Pair(parent,face,.016f,.045f,.984f,.98f,true);
+            Pair(parent,16521,0,0,1,1,true);
+        }
         void Build(){if(built||!home)return;built=true;
             ReferenceHomeSky.Attach(home);
+            if(home.logo)home.logo.gameObject.SetActive(false);
             foreach(var b in home.resourceButtons)Hide(b.transform);
             // Keep the Royal Throne identity inside the profile; use reference resource artwork.
             var portrait=home.resourceButtons[0].transform.Find("King portrait").GetComponent<Image>();portrait.enabled=true;portrait.color=Color.white;
-            Pair(home.resourceButtons[0].transform,16613,0,0,1,1,true);portrait.transform.SetAsLastSibling();Bounds(portrait.rectTransform,.08f,.08f,.92f,.92f);portrait.preserveAspect=true;
+            // The bust is framed inside the aperture; gold trim is drawn over the portrait.
+            var portraitBack=Pic(home.resourceButtons[0].transform,16613,.075f,.085f,.925f,.95f);
+            portraitBack.name="Portrait blue inset";portraitBack.sprite=null;portraitBack.color=new Color(.065f,.23f,.52f);portraitBack.transform.SetAsFirstSibling();
+            portrait.transform.SetAsLastSibling();Bounds(portrait.rectTransform,.13f,.12f,.87f,.91f);portrait.preserveAspect=true;
+            Pair(home.resourceButtons[0].transform,16613,0,0,1,1,true);
             int[] icons={22081,21591,16674};Text[] values={home.coinLabel,home.lifeStatus,home.starLabel};
             for(int i=1;i<=3;i++){var b=home.resourceButtons[i].transform;Pair(b,21706,.13f,.2f,1,.83f,true,true);var im=Pic(b,icons[i-1],-.07f,.04f,.43f,.97f);im.preserveAspect=true;TextPlace(values[i-1],.38f,.23f,.97f,.79f,30);}
             foreach(var t in home.resourceButtons[1].GetComponentsInChildren<Text>(true))if(t!=home.coinLabel)t.enabled=false;
@@ -30,9 +40,9 @@ namespace RoyalThrone.ReferenceGameplay
             TextPlace(home.lifeLabel,-.02f,.17f,.38f,.81f,30);
             Pair(home.resourceButtons[4].transform,17072,0,.10f,1,.90f,false,true);
             Hide(home.levelButton.transform);Hide(home.areaButton.transform);
-            Pair(home.levelButton.transform,16521,0,0,1,1,true);Pair(home.levelButton.transform,21955,.045f,.105f,.955f,.94f,true);
+            ActionFace(home.levelButton.transform,21955);
             TextPlace(home.levelLabel,.06f,.1f,.94f,.91f,45);
-            Pair(home.areaButton.transform,16521,0,0,1,1,true);Pair(home.areaButton.transform,17031,.045f,.105f,.955f,.94f,true);
+            ActionFace(home.areaButton.transform,17031);
             var chest=Pic(home.areaButton.transform,16593,.60f,.17f,.92f,.84f);chest.preserveAspect=true;
             Pair(home.areaButton.transform,17034,.10f,.24f,.61f,.47f,true);
             // Existing progress amount controls the imported green track.
