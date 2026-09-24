@@ -36,6 +36,14 @@ namespace JellyGarden.Scripts
     public class Item : MonoBehaviour
     {
         [NonSerialized] public bool royalConsumed;
+        [NonSerialized] public bool inputSwapLocked, inputMatchPending;
+        [NonSerialized] public int inputConversionLocks, inputMoveOrder;
+        bool deferredInputHit;
+        public bool CanAcceptInput => LevelManager.THIS && LevelManager.THIS.BoardInputAllowed &&
+            isActiveAndEnabled && !destroying && !falling && !royalConsumed && !inputSwapLocked &&
+            !inputMatchPending && !deferredInputHit && inputConversionLocks == 0 && square && square.item == this &&
+            square.CanGoOut() && ((Vector2)(transform.position - square.transform.position)).sqrMagnitude <
+            Mathf.Pow(LevelManager.THIS.squareWidth * LevelManager.THIS.GameField.lossyScale.x * .1f, 2);
         //items sprites array
         public Sprite[] items;
         public GameObject[] prefabs;
@@ -397,7 +405,11 @@ namespace JellyGarden.Scripts
 
         public void SwitchDirection(Vector3 delta)
         {
+            if (!CanAcceptInput) { ResetDrag(); return; }
             if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(this)) { ResetDrag(); return; }
+            neighborSquare = null;
+            switchItem = null;
+            switchDirection = Vector3.zero;
             deltaPos = delta;
             if (Vector3.Magnitude(deltaPos) > 0.1f)
             {
@@ -427,7 +439,7 @@ namespace JellyGarden.Scripts
                 }
                 if (neighborSquare != null)
                     switchItem = neighborSquare.item;
-                if (switchItem != null)
+                if (switchItem != null && switchItem.CanAcceptInput)
                 {
                     if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(switchItem)) { ResetDrag(); return; }
                     if (switchItem.square.type != SquareTypes.WIREBLOCK)
@@ -446,15 +458,41 @@ namespace JellyGarden.Scripts
 
         IEnumerator Switching()
         {
+            var lm = LevelManager.THIS;
+            var other = switchItem;
+            if (!CanAcceptInput || !other || !other.CanAcceptInput) { ResetDrag(); yield break; }
+            inputSwapLocked = other.inputSwapLocked = true;
+            lm.BeginInputSwap();
+            // Only these two pieces are leased. Hits wait for their atomic swap commit;
+            // the resolver waits before scanning/gravity, while other input stays live.
+            try { yield return SwitchingCore(); }
+            finally
+            {
+                inputSwapLocked = false;
+                if (other) other.inputSwapLocked = false;
+                if (lm) lm.EndInputSwap();
+                ResetDrag();
+            }
+        }
+
+        IEnumerator SwitchingCore()
+        {
             if (switchDirection != Vector3.zero && neighborSquare != null)
             {
                 bool backMove = false;
                 LevelManager.THIS.DragBlocked = true;
                 neighborSquare.item = this;
                 square.item = switchItem;
-                int matchesHere = neighborSquare.FindMatchesAround().Count;
+                var destinationMatches = neighborSquare.FindMatchesAround();
+                var sourceMatches = square.FindMatchesAround();
+                int matchesHere = destinationMatches.Count;
                 int matchesInThisItem = matchesHere;
-                int matchesInNeithborItem = square.FindMatchesAround().Count;
+                int matchesInNeithborItem = sourceMatches.Count;
+                // Validation must not expose provisional ownership during the animation.
+                neighborSquare.item = switchItem;
+                square.item = this;
+                if (destinationMatches.Concat(sourceMatches).Any(i => i && i != this && i != switchItem &&
+                    (i.inputSwapLocked || i.inputMatchPending || i.inputConversionLocks > 0 || i.falling))) yield break;
                 bool thisItemHaveMatch = false;
                 if (matchesInThisItem >= 4)
                     thisItemHaveMatch = true;
@@ -481,6 +519,21 @@ namespace JellyGarden.Scripts
                 bool rejectSwap = matchesHere <= 0 && matchesInNeithborItem <= 0 && LevelManager.THIS.ActivatedBoost.type != BoostType.Hand ||
                     ((currentType == ItemsTypes.BOMB || switchItem.currentType == ItemsTypes.BOMB) && (currentType == ItemsTypes.INGREDIENT || switchItem.currentType == ItemsTypes.INGREDIENT) && (matchesHere + matchesInNeithborItem <= 2)) ||
                     (((int)currentType >= 1 || (int)switchItem.currentType >= 1) && (currentType == ItemsTypes.INGREDIENT || switchItem.currentType == ItemsTypes.INGREDIENT) && (matchesHere + matchesInNeithborItem <= 2));
+
+                if (!rejectSwap)
+                {
+                    // Charge once before yielding so rapid actions cannot overspend the last move.
+                    if (LevelManager.THIS.ActivatedBoost.type != BoostType.Hand)
+                    {
+                        if (LevelManager.THIS.limitType == LIMIT.MOVES) LevelManager.THIS.Limit--;
+                        LevelManager.THIS.moveID++;
+                    }
+                    else LevelManager.THIS.ActivatedBoost = null;
+                    inputMoveOrder = LevelManager.THIS.moveID * 2 + 2;
+                    switchItem.inputMoveOrder = inputMoveOrder - 1;
+                    foreach (var piece in destinationMatches.Concat(sourceMatches)) if (piece) piece.inputMatchPending = true;
+                }
+                dragThis = false;
 
                 var juiceCfg = JuiceConfig.Instance;
                 Vector3 myTarget = neighborSquare.transform.position + Vector3.back * 0.3f;
@@ -533,16 +586,11 @@ namespace JellyGarden.Scripts
                 }
                 else
                 {
-                    if (LevelManager.THIS.ActivatedBoost.type != BoostType.Hand)
-                    {
-                        if (LevelManager.Instance.limitType == LIMIT.MOVES)
-                            LevelManager.THIS.Limit--;
-                        LevelManager.THIS.moveID++;
-                    }
-                    if (LevelManager.THIS.ActivatedBoost.type == BoostType.Hand)
-                        LevelManager.THIS.ActivatedBoost = null;
+                    neighborSquare.item = this;
+                    square.item = switchItem;
                     switchItem.square = square;
                     square = neighborSquare;
+                    inputSwapLocked = switchItem.inputSwapLocked = false;
                     LevelManager.THIS.lastDraggedItem = this;
                     LevelManager.THIS.lastSwitchedItem = switchItem;
                     if (RoyalPowerupDirector.TrySwap(this, switchItem))
@@ -643,8 +691,8 @@ namespace JellyGarden.Scripts
 
                 if (backMove)
                 {
-                    LevelManager.THIS.DragBlocked = false;
-                    StartCoroutine(AI.THIS.CheckPossibleCombines());//2.1.5 prevents early move
+                    if (!LevelManager.THIS.IsResolvingMatches && LevelManager.THIS.InputSwaps == 1)
+                        StartCoroutine(AI.THIS.CheckPossibleCombines());
                 }
             }
             ResetDrag();
@@ -1084,6 +1132,12 @@ namespace JellyGarden.Scripts
         public void DestroyItem(bool showScore = false, string anim_name = "", bool explEffect = false)
         {
 
+            if (inputSwapLocked)
+            {
+                if (!deferredInputHit) { deferredInputHit = true; StartCoroutine(DestroyAfterInputSwap(showScore, anim_name, explEffect)); }
+                return;
+            }
+
             if (destroying)
                 return;
             // if (nextType != ItemsTypes.NONE) return;
@@ -1102,6 +1156,16 @@ namespace JellyGarden.Scripts
             StartCoroutine(DestroyCor(showScore, anim_name, explEffect));
 
 
+        }
+
+        IEnumerator DestroyAfterInputSwap(bool showScore, string animationName, bool effect)
+        {
+            try
+            {
+                while (inputSwapLocked) yield return null;
+                if (!destroying && square && square.item == this) DestroyItem(showScore, animationName, effect);
+            }
+            finally { deferredInputHit = false; }
         }
 
         IEnumerator DestroyCor(bool showScore = false, string anim_name = "", bool explEffect = false)
@@ -1582,7 +1646,7 @@ namespace JellyGarden.Scripts
             {
                 if (InputManager.Instance.WasTouchPressed)
                 {
-                    if (LevelManager.THIS.BoardInputAllowed && !falling)
+                    if (CanAcceptInput)
                     {
                         Collider2D hit = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(InputManager.Instance.TouchPosition));
                         if (hit != null && hit.gameObject == gameObject)
@@ -1597,7 +1661,7 @@ namespace JellyGarden.Scripts
                 {
                     if (dragThis)
                     {
-                        if (LevelManager.THIS.BoardInputAllowed && switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
+                        if (CanAcceptInput && switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
                         dragThis = false;
                         if (switchDirection != Vector3.zero)
                             ResetDrag();
@@ -1606,7 +1670,7 @@ namespace JellyGarden.Scripts
 
                 if (InputManager.Instance.IsTouching && dragThis)
                 {
-                    if (LevelManager.THIS.BoardInputAllowed && !falling)
+                    if (CanAcceptInput)
                     {
                         CheckItemDrag();
                     }
@@ -1625,7 +1689,7 @@ namespace JellyGarden.Scripts
         public void OnMouseDown()
         {
             if (RoyalThrone.Testing.RoyalSave.BlockGameplayInput) return;
-            if (LevelManager.THIS.BoardInputAllowed && !falling)
+            if (CanAcceptInput)
             {
                 dragThis = true;
                 mousePos = GetMousePosition();
@@ -1635,7 +1699,7 @@ namespace JellyGarden.Scripts
         public void OnMouseUp()
         {
             if (RoyalThrone.Testing.RoyalSave.BlockGameplayInput) { dragThis = false; return; }
-            if (dragThis && LevelManager.THIS.BoardInputAllowed && switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
+            if (dragThis && CanAcceptInput && switchDirection == Vector3.zero && Vector3.Distance(GetMousePosition(), mousePos) < .25f) RoyalPowerupDirector.Tap(this);
             dragThis = false;
             if (switchDirection != Vector3.zero)
                 ResetDrag();
@@ -1644,7 +1708,7 @@ namespace JellyGarden.Scripts
         public void OnMouseDrag()
         {
             if (RoyalThrone.Testing.RoyalSave.BlockGameplayInput) return;
-            if (dragThis && LevelManager.THIS.BoardInputAllowed && !falling)
+            if (dragThis && CanAcceptInput)
             {
                 CheckItemDrag();
             }

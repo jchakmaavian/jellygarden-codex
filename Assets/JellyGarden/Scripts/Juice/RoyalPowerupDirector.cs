@@ -16,6 +16,7 @@ namespace JellyGarden.Scripts.Juice
         sealed class Flyer { public GameObject go,rotor; public SpriteRenderer sprite; public TrailRenderer trail, core; public LineRenderer flame; public MeshRenderer exhaust; public RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Handle nativeRocket; public Gradient preRocketGradient; public readonly MaterialPropertyBlock flameProperties=new MaterialPropertyBlock(); public bool used, rocket; }
         Flyer[] flyers;
         readonly HashSet<Square> reserved=new HashSet<Square>();
+        readonly HashSet<Item> conversionInputLeases=new HashSet<Item>();
         int pending;
         GameState previousState;
         bool observedState;
@@ -85,7 +86,13 @@ namespace JellyGarden.Scripts.Juice
         }
         void StartOperation(IEnumerator sequence){pending++;StartCoroutine(Own(sequence));}
         IEnumerator Own(IEnumerator sequence){try{yield return sequence;}finally{pending=Mathf.Max(0,pending-1);}}
-        void OnDisable(){RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Clear();RoyalAudioDirector.StopReferenceVoices();RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
+        void OnDisable(){ReleaseConversionInput();RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Clear();RoyalAudioDirector.StopReferenceVoices();RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
+        void ReleaseConversionInput()
+        {
+            // Unity stops nested coroutines without reliably disposing their iterators.
+            foreach(var item in conversionInputLeases)if(item)item.inputConversionLocks=0;
+            conversionInputLeases.Clear();
+        }
         public void Cancel(){RoyalThrone.Boosters.Propeller.V5.PropellerVisualV5.Clear();RoyalThrone.Boosters.Propeller.V4.PropellerVisualV4.Clear();RoyalThrone.Boosters.Propeller.V3.PropellerVisualV3.Clear();RoyalThrone.Boosters.Propeller.V2.PropellerVisualV2.Clear();OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();RoyalToolkitImpact.Existing?.Clear();ClearRocketVfx();}
         void Update()
         {
@@ -127,7 +134,7 @@ namespace JellyGarden.Scripts.Juice
         public static bool Tap(Item item)
         {
             var lm=LevelManager.THIS;
-            if(!Get||!item||!IsPower(item.currentType)||item.destroying||item.falling||!lm||lm.DragBlocked||!item.square.CanGoOut()||lm.gameStatus!=GameState.Playing||lm.Limit<=0)return false;
+            if(!Get||!item||!IsPower(item.currentType)||!lm||!item.CanAcceptInput)return false;
             lm.DragBlocked=true;if(lm.limitType==LIMIT.MOVES)lm.Limit--;lm.moveID++;item.DestroyItem(true);lm.FindMatches();return true;
         }
         IEnumerator Single(ItemsTypes type,Square origin,int colour)
@@ -300,8 +307,13 @@ namespace JellyGarden.Scripts.Juice
         IEnumerator Orb(Square origin,ItemsTypes payload,int colour,bool all)
         {
             var lm=LevelManager.THIS;
+            while(lm.InputSwaps>0)yield return null;
             if(colour<0||colour>5){int[] counts=new int[6];foreach(var i in lm.GetItems())if(i&&i.color>=0&&i.color<6)counts[i.color]++;colour=0;for(int k=1;k<6;k++)if(counts[k]>counts[colour])colour=k;}
             var targets=new List<Square>();for(int r=0;r<lm.maxRows;r++)for(int c=0;c<lm.maxCols;c++){var sq=lm.GetSquare(c,r);if(sq&&(all||sq.item&&sq.item.color==colour))targets.Add(sq);}
+            // Only selected pieces are reserved through conversion/handoff. Everything
+            // else remains interactive; overlapping Color Balls own separate leases.
+            var leased=new List<Item>();foreach(var sq in targets)if(sq.item){leased.Add(sq.item);conversionInputLeases.Add(sq.item);sq.item.inputConversionLocks++;}
+            try {
             if(payload==ItemsTypes.NONE||payload==ItemsTypes.HORIZONTAL_STRIPPED||payload==ItemsTypes.VERTICAL_STRIPPED)
             {yield return AnimateColorBallV4Targets(origin,targets,payload);yield break;}
             Creation(origin.transform.position);RoyalAudioDirector.Get?.Play(RoyalCue.Create);
@@ -318,6 +330,7 @@ namespace JellyGarden.Scripts.Juice
             yield return Wait(.18f);
             foreach(var sq in targets){Hit(sq);yield return Wait(all?.005f:.014f);}Reaction?.Invoke(1.4f);
             if(boosting)boosting.Finish();
+            } finally {foreach(var item in leased){if(item)item.inputConversionLocks=Mathf.Max(0,item.inputConversionLocks-1);if(!item||item.inputConversionLocks==0)conversionInputLeases.Remove(item);}}
         }
         // Workshop calls the same visual paths, without touching the player's board or save.
         public void Preview(string effect,Vector3 p)

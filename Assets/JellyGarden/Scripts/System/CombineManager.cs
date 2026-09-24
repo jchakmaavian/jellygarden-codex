@@ -74,7 +74,7 @@ namespace JellyGarden.Scripts.System
 				if (cmb.nextType != ItemsTypes.NONE) {
 					Item item = cmb.items [UnityEngine.Random.Range (0, cmb.items.Count)];
 
-					Item draggedItem = LevelManager.THIS.lastDraggedItem;
+					Item draggedItem = LevelManager.THIS.PreferredMatchHost(cmb.items);
 					if (draggedItem) {
 						if (draggedItem.color != item.color)
 							draggedItem = LevelManager.THIS.lastSwitchedItem;

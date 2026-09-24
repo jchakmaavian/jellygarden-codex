@@ -109,6 +109,19 @@ namespace RoyalThrone.ReferenceGameplay.Editor
             {
                 switch (command)
                 {
+                    case "refresh":
+                        if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Exit Play Mode before refresh.");
+                        AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+                        SetResult("Refreshed edited scripts without rebuilding imported assets.");
+                        break;
+                    case "input-checks":
+                    case "input-event-checks":
+#if !ROYAL_DISABLE_QA
+                        if (!EditorApplication.isPlaying || !RoyalQaService.Instance || !RoyalQaService.Instance.Ready || RoyalSave.Testing)
+                            throw new InvalidOperationException("Input checks need gameplay ready without an existing QA session.");
+                        RoyalThrone.Editor.RoyalRegressionRunner.Run(command == "input-checks" ? ResponsiveInputChecks.Run() : ResponsiveInputChecks.InputEvents());
+#endif
+                        break;
                     case "import":
                         if (EditorApplication.isPlayingOrWillChangePlaymode)
                             throw new InvalidOperationException("Exit Play Mode before importing.");
@@ -315,7 +328,7 @@ namespace RoyalThrone.ReferenceGameplay.Editor
                 playing = EditorApplication.isPlaying, changingPlayMode = EditorApplication.isPlayingOrWillChangePlaymode != EditorApplication.isPlaying,
                 compiling = EditorApplication.isCompiling, updating = EditorApplication.isUpdating, paused = EditorApplication.isPaused,
                 testProfile = RoyalSave.Testing, referenceCampaign = RoyalReferenceCampaign.Enabled,
-                acceptedCommands = new[] { "import", "enter-play", "open-game", "campaign-checks", "campaign-31-40", "campaign-41-50", "capture-gameplay", "exit-play", "status", "reset-tracking" },
+                acceptedCommands = new[] { "import", "refresh", "enter-play", "open-game", "input-checks", "input-event-checks", "palette-checks", "campaign-checks", "campaign-31-40", "campaign-41-50", "capture-gameplay", "exit-play", "status", "reset-tracking" },
                 scenes = Scenes(), scenesBeforePlay = before?.scenes ?? Array.Empty<SceneState>(),
                 errorCount = errors.total, recentErrors = errors.entries.ToArray(), ioError = ioError
             };
