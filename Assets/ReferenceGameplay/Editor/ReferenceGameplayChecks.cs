@@ -117,6 +117,14 @@ namespace RoyalThrone.ReferenceGameplay.Editor
                     case "import-finish":
                         ReferenceGameplayVfxImporter.BuildFile("Design/ReferenceGameplayImport/Media/NativeFinishingParticles.json");
                         break;
+                    case "tnt-sun-bake":
+                        TNTSunArt.Bake();
+                        break;
+                    case "tnt-sun-checks":
+#if !ROYAL_DISABLE_QA
+                        RoyalThrone.Editor.RoyalRegressionRunner.Run(TNTSunArt.Run());
+#endif
+                        break;
                     case "home-sky-fresh-play":
 #if !ROYAL_DISABLE_QA
                         ReferenceHomeSkyChecks.EnterFreshPlay();

@@ -44,6 +44,8 @@ namespace JellyGarden.Scripts.Juice
         }
         public static Sprite CampaignArt(string name)
         {
+            // Share the sun TNT artwork across board activation and menu icons.
+            if(name=="tnt"){var sun=RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.Art("tnt");if(sun)return sun;}
             string path = CampaignResourcePath(name);
             if (path == null) return null;
             if (artCache.TryGetValue(path, out var sprite)) return sprite;
