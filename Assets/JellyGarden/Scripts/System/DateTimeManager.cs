@@ -48,7 +48,8 @@ namespace JellyGarden.Scripts.System
         {
             if (TryRead(dateTime, out var d))
             {
-                if (DateTime.Now.Subtract(d).Minutes >= 1)
+                // TotalMinutes, not Minutes: the Minutes component is 0 again after each full hour.
+                if (DateTime.Now.Subtract(d).TotalMinutes >= 1)
                 {
                     PlayerPrefs.SetInt(dateTime, 0);
                     return true;
@@ -63,7 +64,8 @@ namespace JellyGarden.Scripts.System
         {
             if (TryRead(dateTime, out var d))
             {
-                if (DateTime.Now.Subtract(d).Hours >= 1)
+                // TotalHours, not Hours: the Hours component is 0 again after each full day.
+                if (DateTime.Now.Subtract(d).TotalHours >= 1)
                 {
                     PlayerPrefs.SetInt(dateTime, 0);
                     return true;
