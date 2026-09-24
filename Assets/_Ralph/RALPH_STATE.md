@@ -92,6 +92,9 @@ Throne's own implementation.
 | R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (layering is intentional; needs a size or layering decision) | RoyalHomeScreen / ReferenceHomeLayout (protected) |
 | R-23 | P3 | Out-of-moves CONTINUE shows a gem icon while home calls the balance coins | PreFailed prefab art; ties to R-20 |
 | R-24 | P2 | Per-frame garbage from `Counter_` (`Object.name` reads) and `BoostIcon` (strings) in normal play; incremental GC is off (fixed, iteration 20; the GC setting is a decision) | Counter_.cs, BoostIcon.cs; ProjectSettings `gcIncremental` |
+| R-25 | decision | The board, HUD, tool bar and home controls draw sprites and effects extracted from the Royal Match APK (reference-asset integration of 2026-09-24: `cdd68361`, then the imported `ReferencePieceVisual` prefabs and `ReferenceVfxPool`). Royal Throne's own piece art, piece animators and effects are bypassed, and 9 effect and booster suites fail for that reason. Legal and product decision; the loop changed neither the art nor the tests (found in review, iteration 25) | `RoyalGameplayArt` :55 -> `ReferenceGameplayCatalog.For`; `RoyalPieceSkin` :159; `ReferenceVfxPool.Has` early returns in `MatchVFXService` :380/:447/:494, `CandyShatterService` :354, `ColorBallVfxV4` :49, `RoyalPowerupDirector` :252, `RoyalRocketSequence` :147/:318 |
+| R-26 | decision | The QA-only reference campaign logs three "[Reference Gameplay incomplete]" warnings: cupboard door feedback, coin-collection particles and the mailbox lid animation were not recovered and have no substitute. Tied to R-25 | `RoyalCampaignBlockers` :380 |
+| R-27 | P1 (editor) | A script reload in the middle of Play, which Unity does by default when a script changes during Play, resets every static. `RoyalSave.Testing` then falls back to the player's own profile, the static `InitScript.lifes` reads 0 and is saved on exit, and the Input System, uGUI `Selectable` and QA menu references break. It zeroed the real save's lives on 2026-09-25 and killed a campaign run. Editor only: builds never reload. Fixed in iteration 26 with `RoyalPlayModeReloadGuard`, which holds reloads until Play stops | `InitScript` :103/:824 (static lives, quit save); `RoyalSave.Testing`; new `Editor/RoyalPlayModeReloadGuard.cs` |
 
 ## Iteration log
 
@@ -702,3 +705,156 @@ Throne's own implementation.
 - **Screenshots/evidence:** driver log `kv/play/ralph-022727.txt`
 - **Remaining risk:** none
 - **Next task:** final verification summary and `FINAL_QA_REPORT.md`.
+
+### Iteration 24 (verification V-08: Levels 1-50 regression)
+- **Date/time:** 2026-09-25 02:28-02:38 local
+- **Area inspected:** every protected level, after the loop's fixes that touch protected code:
+  - `LevelManager` R-02, R-03, R-05;
+  - `MatchVFXService` and `InitScript` R-18;
+  - the home layout R-21.
+- **Issue:** none found
+- **Severity:** n/a
+- **Reproduction:** QA profile. Each of levels 1-50 was opened with the QA "Open level" command (the real entry path without spending a real life) and checked:
+  - state Playing on the requested level;
+  - squares and pieces present;
+  - at least one target;
+  - the HUD limit equals `LevelManager.Limit` (moves, or m:ss on timed levels).
+- **Root cause:** n/a
+- **Files changed:** none
+- **Fix:** none
+- **Tests executed:** the sweep above (`kv/ralph_run.py` phases `v12a`/`v12b`).
+- **Result:**
+  - 50/50 OK.
+  - The timed levels 20, 27 and 32 show "0:57", "0:57" and "0:56" (the R-11 fix). Board sizes run from 45 to 99 squares.
+- **Regression result:** this is the regression. The QA session restored the real profile (`OpenLevel=14`).
+- **Console result:** no entries in either half
+- **Performance result:** n/a
+- **Screenshots/evidence:** driver logs `kv/play/ralph-022847.txt`, `ralph-023326.txt`
+- **Remaining risk:** opening a level is not playing it to the end. Wins and fails are covered by the campaign and QA suites (iteration 25).
+- **Next task:** review pass (re-read every change, then the project's full check suites, lint and type check).
+
+### Iteration 25 (review: re-read everything, full check suites, lint, type check)
+- **Date/time:** 2026-09-25 02:40-04:20 local
+- **Trigger:** the user asked for the previous output to be treated as unverified. In this order: re-read every change, run the full test suite, linter and type checker, read the real output, and fix every failure, including pre-existing and unrelated ones.
+- **Re-read:** the whole loop diff (20 commits, 19 C# files). Five risk points were checked against the code, and the committed hunks hold:
+  - **(a)** `RoyalBackButton.NotePress` runs in every state (`if (InputManager.Instance != null)` in `LevelManager.Update`).
+  - **(b)** `RoyalHintPresenter` only hides the hint on Back; it closes nothing.
+  - **(c)** The forced-active rail tools only undo the legacy moves/time toggle (`LevelManager` :598-607).
+  - **(d)** `GetRandomItems` terminates: the candidates are distinct, and the only rejection is a duplicate pick.
+  - **(e)** `bannerFailed` has exactly two events, so skipping the hold loses nothing.
+- **Defect found in touched code (pre-existing):** `DateTimeManager.IsMinutesPassed` / `IsHourPassed` compared the `TimeSpan.Minutes` / `.Hours` components instead of `TotalMinutes` / `TotalHours`, so 1 h 0 min read as "no minute passed". Fixed. 11 unit cases in the QA profile pass (fails=0), including 60 min 20 s and 24 h 10 min, which the old code got wrong.
+- **Type checker = the C# compiler.** A full clean rebuild (`CleanBuildCache`) of all 165 assemblies: 0 errors. Two of my intermediate warning fixes failed to compile and were caught by the rebuild before anything ran:
+  - `System` resolves to `JellyGarden.Scripts.System` inside `LevelManager`;
+  - locals still assigned later.
+- **Linter:** none is configured (no .editorconfig, ruleset, analyzer config, csc.rsp, CI, package.json or pyproject). The lint signal is compiler warnings plus Unity's serialization analyzer. **69 -> 0:**
+  - `Assembly-CSharp` 22 -> 0 and `Assembly-CSharp-Editor` 33 -> 0:
+    - obsolete APIs moved to their current forms;
+    - unused fields and locals removed (with their assignments);
+    - unreachable code after `return false;` removed;
+    - `[NonSerialized]` added where Unity never serialised the field;
+    - `[Obsolete]` added on the drawer override of an obsolete member.
+    - The Legacy/Round Android icons are kept, with the warning suppressed locally: dropping them changes APK icon resources, which only a device build can verify.
+  - Spine 14 -> 0 (vendor, untracked King Venguard work):
+    - 12 guarded patches (13 after iteration 26) (`UNITY_6000_5_OR_NEWER`, original code in `#else`) applied by `patch_spine_unity6_deprecations.py`, recorded in `UNITY6-COMPAT-PATCHES.md`.
+    - The sprite-slice inspector was ported to `ISpriteEditorDataProvider` (asmdef reference plus `SPINE_2D_SPRITE`). Tested on a temporary copy of the King atlas: all 48 regions exact, the second pass updates in place with stable sprite IDs, and the copy was deleted.
+    - The first script run stopped on its own count guard at a 3D `Rigidbody` site, whose `isKinematic` is not deprecated. The target was narrowed to the 2D chain, the files restored, the script dry-run on copies, then applied.
+- **Test suites:** the project has no Unity Test Framework tests. Its suites are editor check suites, run one per fresh Play session, with a real-profile snapshot before and after (`kv/suites.py`). Results:
+
+  | Suite | Result | Notes |
+  |---|---|---|
+  | `ReferenceLevelChecks.VerifyData` (edit) | PASS | 50 levels, 3933 cells |
+  | `RoyalCampaignChecks.Data` (edit) | PASS | 294 checks |
+  | `ReferenceHomeSkyChecks` | PASS | includes "Settings still opens above cloud layer", which failed on 09-24 11:23 UTC |
+  | `RoyalHomeScreenChecks` | FAIL -> PASS (167) | The pagination check assumed Story opens on page 1; it opens on the next level's page (page 2 on the real profile), so it is now relative. The suite also left the real `OpenLevel` at the next level (see below). |
+  | `ReferenceHomeFinishChecks` (3 finishes) | PASS | |
+  | `ReferenceBoosterChecks` | PASS | |
+  | `ReferenceLayoutChecks` | FAIL -> PASS | Two checks went stale when the tool bar was connected (`3f5def19`, 09-24 15:54): the name selector also caught the tool bar's "Native left/right" art, and the hand tap now selects the tool in `ReferenceBoosterBar` instead of `LevelManager.ActivatedBoost`. |
+  | `ResponsiveInputChecks.Run` / `InputEvents` | PASS / PASS | |
+  | `TNTSunArt.Run` (checks only) | PASS | |
+  | `CheckBoardPalette` | PASS | |
+  | Dialog review (`RoyalPresentationChecks`) | PASS (21) | |
+  | `RoyalCampaignChecks.RunAll` (reference campaign 01-50) | PASS | "ALL FIVE BATCHES PASSED" in one run (404 s); the runbook says it had never completed in one go before. Its 3 warnings are the reference import's own "[Reference Gameplay incomplete]" notices (R-26). |
+  | `RoyalQaChecks` | FAIL -> PASS (328) | (1) It looked for "GAME TESTING MODE", which the Mod Menu replaced on 09-22: now "Mod Menu". (2) The refill check waited a scaled 3.2 s, from the start of a long frame, for a 3.0 s real-time deadline (measured: real 2.92 s, scaled 3.21 s): it now waits on the real clock and checks that exactly one life arrives at 2.8-4 s. The game's refill itself works (4 -> 5 at 3.0 s). (3) "Reset refill timer" was checked at full lives, where the UTC schedule correctly has no timer: now checked one life below the cap. |
+  | `RoyalEffectsChecks.Run` | FAIL | "Gameplay NONE colour 0 fills 94% of its cell": every board piece is a sprite from the Royal Match APK (R-25). The suite stops at its first failure, after 52 passing checks. |
+  | `RunCellBreaks` (first run ever) | FAIL | 7 pass, then "3-match emits restored Ice accent": `MatchVFXService.PlayMatchCenter` returns early when the imported "MatchItemExplodeParticles" exist (R-25) |
+  | `RunTnt` / `RunRockets` / `RunColorBall` | FAIL | the imported piece visual replaces `TNTFrameAnimator`, the rocket renderer and `ColorBallFrameAnimator` (R-25) |
+  | `RoyalColorBallQaChecks` | FAIL | 1 pass, then the imported "LightballRayPrefab" rays replace the in-house beams (`ColorBallVfxV4` :49, R-25) |
+  | `ColorBallV4Checks` / `ColorBallV5Checks` | FAIL | NullReferenceException: `ColorBallSeatV4` is no longer attached (R-25). The V4 suite's last recorded run (09-21 18:54, before the import) had also failed, with an IndexOutOfRangeException. |
+  | `PropellerV5Checks` | FAIL | 5 pass (including the loop's `PropellerVisualV5` edit), then "Created Propeller uses independent V5" (R-25) |
+
+  The per-version booster suites write tracked evidence, so each run was bracketed by a backup and a byte-identical restore. Not run: the superseded Color Ball V2/V3 and Propeller V2-V4 suites (dead code; a run would overwrite their historical evidence), the recorders (`PropellerTntRegression.Before`, `RoyalEffectsChecks.Inspect`/`Capture*`, `KingVenguardRuntimeCheck.Render`) and the import/refresh/bake commands (they rewrite reference-derived assets). Every suite left the real profile unchanged, apart from the `OpenLevel` side effect below.
+- **Console errors reviewed** (buffer seq 238015-240014, 975 errors):
+  - 946 came from one 3-second burst (09-24 11:21 UTC, a recompile during Play).
+  - One `ReferenceHomeSkyChecks` failure, which passes now.
+  - Two `TNTSunArt.Bake` errors, logged five minutes before that tool's first commit. The committed version has neither defect.
+  - The R-09 reproduction before its fix.
+  - Tooling noise.
+  - The 7 compile errors from my own first attempts, since fixed.
+- **Side effect found and fixed:** `RoyalHomeScreenChecks` left the real `OpenLevel` at the next level (14 -> 23). The real value was restored to 14, and the suite now restores it in `Finish`.
+- **Files changed:**
+  - runtime: `PropellerVisualV5`, `MapTargetIcon`, `RoyalTitleScreen`, `HandTutorial`, `InitScript`, `LevelManager`, `MapCamera`, `Square`, `DateTimeManager`;
+  - editor: `LevelMakerEditor`, `PostImporting`, `RoyalAppIconBuilder`, `RoyalColorBallChecks`, `RoyalColorBallQaChecks`, `RoyalEffectsChecks`, `RoyalRocketChecks`, `RoyalTNTChecks`, `LevelsEditorBase`, `MapLevelEditor`, `ReorderableDrawer`, `ReferenceHomeFinishChecks`, `ReferenceHomeSkyChecks`, `RoyalHomeScreenChecks`, `ReferenceLayoutChecks`, `RoyalQaChecks`;
+  - vendor, working tree only (untracked King Venguard work): 7 Spine files, `spine-unity-editor.asmdef`, `UNITY6-COMPAT-PATCHES.md`, and the new patch script.
+- **Remaining risk:** the effect and booster suites cannot pass while the imported Royal Match visuals replace the in-house ones (R-25). Royal Throne's own board art, piece animators and effects have therefore not been exercised in game since 09-24 14:41. They need a full effect-suite run if they are restored.
+- **Next task:** commit the review edits, then `FINAL_QA_REPORT.md`.
+
+### Iteration 26 (second review: re-read, type check, lint, every suite again)
+- **Date/time:** 2026-09-25 04:20-05:50 local
+- **Trigger:** the user asked again (three more times during this iteration) for the previous output to be treated as unverified: re-read every change since the last verified checkpoint, run the full test suite, linter and type checker, read the real output, and fix every failure.
+- **Re-read:** every review edit (25 tracked files, `scratchpad/review_diff.txt`) and the Spine patch set against its pre-patch backup. This time each API migration was checked for behaviour, not only for compiling:
+  - **Spine defect found in my own patch (fixed).** `NamedBuildTarget.FromBuildTargetGroup` throws `ArgumentException` for 14 retired groups (WebPlayer, PS3, XBOX360, Tizen, PSP2, PSM, SamsungTV, N3DS, WiiU, Facebook, Lumin, Stadia, plus WP8 and BlackBerry, which Spine already skips). The old `...ForGroup` methods only logged a validation error for them. So the patched `SpineBuildEnvUtility.EnableBuildDefine` / `DisableBuildDefine` would have thrown at WebPlayer, the second group, and never reached Android. Latent: only the Spine Preferences TK2D toggle calls them, and this project never shows it.
+    - **Fix:** under the same `UNITY_6000_5_OR_NEWER` guard, `IsInvalidGroup` treats a group with no named target as invalid.
+    - **Consistency:** the fix was added to `patch_spine_unity6_deprecations.py`, which was re-run on a pristine copy. Seven files came out byte-identical to the working tree, and `BuildSettings.cs` and `UNITY6-COMPAT-PATCHES.md` were copied from the regenerated copy. A second run refuses the patched folder.
+    - **Test:** in the compiled editor, `IsInvalidGroup` classifies all 33 groups as expected (18 valid, 15 skipped), and the real `DisableBuildDefine` loop with an absent define walks every valid group without an exception and leaves the defines unchanged.
+    - `PostImporting` (same API change) uses only Android, iOS and WSA, which all have named targets.
+  - **`FindObjectOfType` / `FindFirstObjectByType` -> `FindAnyObjectByType`.** Unity 6.5 deprecates both older calls because they depend on instance-ID order, and names `FindAnyObjectByType` as the replacement. Every singular lookup the loop changed targets a singleton (`LevelsMap` and `Path`: one prefab; `MapCamera`, `RoyalHomeScreen`, `TutorialManager`: one each in `game.unity`). Every runtime scene load is single-mode, so there is one `AudioListener` at a time.
+  - **`FindObjectsOfType` -> `FindObjectsByType`** (unsorted): the `MapLevel` lists are re-sorted by number, and the other sites already used `SortMode.None`.
+  - **`[NonSerialized]`:** `CombineManager` is a plain class without `[Serializable]`, Unity cannot serialise `Hashtable`, and no scene or prefab YAML carries either field, so nothing changes.
+  - **Removed code:** `InitScript.Update` only set `leftControl`, which nothing read. `HandTutorial`'s removed block read a plain field (`AI.combineType`).
+  - **R-24 `Counter_` name cache:** no runtime code renames a counter object (the only rename of HUD objects, in `RoyalMenuSkin`, targets the `Targets` containers, which carry no `Counter_`).
+  - **Stale comment (fixed):** `InitScript` still pointed star control to "Settings -> GAME TESTING MODE". The Mod Menu replaced that screen on 09-22 and holds the star controls: the comment now says "Mod Menu".
+- **Type checker and lint:** a full clean rebuild (`CleanBuildCache`) of all 165 assemblies, with every compiler message captured per assembly (`kv/cs_warnings_final.tsv`): **0 errors, 0 warnings**. The same capture recorded the 69 warnings and 7 errors of the first review pass, so an empty file is a real pass. There is still no linter configuration in the repository.
+- **Test suites (final code):** two full runs of every runnable suite, each in a fresh Play session with the real profile compared before and after.
+  - **First run:** 12 pass. `RoyalHomeScreenChecks` and `RoyalCampaignChecks.RunAll` failed, both explained and fixed below. The 9 suites after the mid-Play reload are not valid results: the effects run met the corrupted `Selectable` table, and the other 8 were skipped when the runner's console query crashed.
+  - **Second run (final code, clean editor):**
+
+  | Suite | Result |
+  |---|---|
+  | `ReferenceLevelChecks.VerifyData` (edit) | PASS (50 levels, 3933 cells) |
+  | `RoyalCampaignChecks.Data` (edit) | PASS (294) |
+  | `ReferenceHomeSkyChecks` | PASS |
+  | `RoyalHomeScreenChecks` | PASS (167; also 3 of 3 in a row after the fix) |
+  | `ReferenceHomeFinishChecks` | PASS |
+  | `ReferenceBoosterChecks` | PASS |
+  | `ReferenceLayoutChecks` | PASS |
+  | `ResponsiveInputChecks.Run` / `InputEvents` | PASS / PASS |
+  | `TNTSunArt.Run` | PASS |
+  | `CheckBoardPalette` | PASS |
+  | Dialog review | PASS (21) |
+  | `RoyalQaChecks` | PASS ("ALL QA CONTROLS PASSED") |
+  | `RoyalCampaignChecks.RunAll` | PASS ("ALL FIVE BATCHES PASSED", 398 s) |
+  | `RoyalEffectsChecks.Run`, `RunCellBreaks`, `RunTnt`, `RunRockets`, `RunColorBall`, `RoyalColorBallQaChecks` | FAIL, each at the same check as in iteration 25 (R-25) |
+  | `ColorBallV4Checks`, `ColorBallV5Checks`, `PropellerV5Checks` | FAIL, same as iteration 25 (R-25); tracked evidence restored byte-identical |
+
+  The real profile was unchanged after every suite. The 9 failures cannot be fixed in the tests without certifying the copied Royal Match assets. Nor can they be fixed in the game without reversing the 09-24 import that the user asked for on 09-23. There is no switch: the imported visuals turn on whenever their `Resources` exist. So they stay a decision (R-25).
+- **Home suite failure (FAIL "Close stays on screen"):** FAIL "Close stays on screen" on the first full run (it passed with 167 checks in iteration 25).
+  - **Root cause (test harness):** the suite ran from `EditorApplication.update`, where `Screen` intermittently describes the editor window. A probe sampled `Screen` for 3 s on Home: `EditorApplication.update` read 846x1227 in 28 of 806 samples (3.5%); the player loop read 1080x1920 every time after its first step. The area dialog's Close button spans x 917-1065, so on a wrong read `xMax <= Screen.width` fails.
+  - **Not a game bug:** the dialog opened from either context lands in the same place, fully on screen. Its safe-area anchors stay (0,0)-(1,1), because `Screen.safeArea` and the size always come from the same context.
+  - **Fix:** `RoyalHomeScreenChecks` now runs every step in the player loop through `RoyalRegressionRunner`. The first step yields once, because a coroutine's first step runs synchronously in the calling eval. A run id stops overlapping runs, and a small editor hook still reports a Play session that ends mid-suite ("Play session remains available"), as before.
+  - **Test:** 3 runs in a row, each in a fresh Play session: PASS 167/167 each, real profile unchanged.
+- **Campaign failure and real-save damage (caused by my own pending edit):** on the first full run, `RoyalCampaignChecks.RunAll` stopped after 3 batches, and the player's real save went from `Lifes=5` to `Lifes=0`.
+  - **Chain:** at 04:32 I edited `InitScript.cs` (a comment), then requested the clean rebuild with `RequestScriptCompilation`, which compiles from disk but does not refresh the AssetDatabase. The edit therefore stayed pending. The first refresh after it was automatic (probably editor focus), at 04:50:39 in the middle of batch 31-40. `Logs/Editor.log` records: "Requested script compilation because: AssetDatabase observed changes in script compilation related files" (1 changed file), a 1-second build, then "Reloading assemblies after forced synchronous recompile" during Play.
+  - **Damage from the reload:** it killed the campaign coroutine, so the runner's cleanup wrote "BATCH FAILED" with no failed check, and the QA `EndSession` threw in `ToMap`. It reset every static: `RoyalSave.Testing` became false, and the static `InitScript.lifes` read 0, so the exit save wrote `Lifes=0` and a fresh refill deadline into the real profile. It also broke the Input System maps, `RoyalQaMenu.quick` and uGUI's static `Selectable` table. The `Selectable` errors carried into the next Play session (the effects run), because entering Play does not reload here.
+  - **Recovery:** I killed the job (the wrapper's children had survived TaskStop and started the sweep), ended the sweep's QA session through its normal path, and stopped Play. I then restored the real lives exactly as `InitScript.RestoreLifes` writes them (`Lifes=5`, `NextLifeUtc` empty, `RestLifeTimer=0`). The runner's snapshot (`OpenLevel`, coins, lives, audio, motion, hints, star and score totals) then matched the pre-run one. No other key can have been written: the QA cleanup died in its first step (`ToMap`) before writing anything, and after the reload the only automatic writers are the life schedule and the quit/pause save, which touch only the four life keys. Finally I ran an Edit Mode refresh (0 pending changes) and a forced script reload for clean statics.
+  - **Fix (R-27):** new editor-only `RoyalPlayModeReloadGuard` locks assembly reloads on entering Play and unlocks them on exit, so a mid-Play reload waits for Play to stop. Test: a reload requested mid-Play did not run (88 reloads before and 12 s later, game alive with lives 5); it ran right after Play stopped (89). Real profile unchanged, 0 console errors.
+  - **Process fix:** every edit is now followed by `unity command recompile`, which refreshes first. The suite runner's console query now retries instead of crashing: after the error flood it had failed with "list index out of range" and skipped 8 suites.
+- **Shared-package tests:** the shared Match-3 VFX kit's own Unity Test Framework tests, batch `-runTests` in the scratch project (`file:` dependency plus `testables`): EditMode 17/17 and PlayMode 22/22 passed, 0 failed or skipped. The package's runtime and editor assemblies were compiled fresh in this run with 0 warnings; its test assemblies came from the build cache.
+- **Levels 1-50:** 50/50 OK on the final code, in the QA profile. Every level opens to live play with squares, pieces, goals and the right HUD limit; the timed levels 20, 27 and 32 show "0:56". 0 console entries, and the real profile was identical before and after.
+- **Files changed:** committed as `adea09ff` (zero warnings: 21 files), `de45bc0d` (`DateTimeManager`), `77f78097` (`RoyalHomeScreenChecks`, `RoyalQaChecks`, `ReferenceLayoutChecks`) and `51e2e6af` (new `Editor/RoyalPlayModeReloadGuard.cs`). Before committing, a dry run of the commit helper diffed each file's exact commit content against HEAD: every hunk is the loop's. `InitScript` and `LevelMakerEditor` were three-way merged, so other sessions' uncommitted edits stay out, and the committed versions reference nothing removed.
+  - Working tree only (untracked King Venguard work): `Assets/Spine/.../BuildSettings.cs`, `UNITY6-COMPAT-PATCHES.md`, `Design/.../patch_spine_unity6_deprecations.py`.
+  - Tooling (scratchpad): `kv/ralph_run.py` `seq()` retries.
+- **Remaining risk:**
+  - The 9 effect and booster suites stay red until R-25 is decided. While the imported visuals replace Royal Throne's own, its piece art, animators and effects are not exercised in game.
+  - The reload guard changes editor behaviour for everyone using this editor: a script saved during Play now takes effect when Play stops. Delete the file to return to Unity's default.
+  - `DateOfExit` in the real profile was rewritten by the damaged exit. It is rewritten on every exit anyway, and only feeds the life schedule, which is now full.
+- **Next task:** R-19: measure whether the hidden Home and HUD Kings still animate (both screens hide with a `CanvasGroup` alpha of 0 and stay active), and the AI hint coroutine pile-up; then fix what is worth fixing.
