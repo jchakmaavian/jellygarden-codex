@@ -177,3 +177,30 @@ Throne's own implementation.
 - **Screenshots/evidence:** `kv/play/ralph-000239.txt` (pre-fix registry read), `ralph-000506.txt`
 - **Remaining risk:** **device verification pending** (Android kill on the win card). Not marked COMPLETE.
 - **Next task:** R-06 (locale-dependent DateTime.Parse at startup).
+
+### Iteration 5
+- **Date/time:** 2026-09-25 00:07-00:12 local
+- **Area inspected:** saved dates read at startup and by rewarded-button popups (R-06)
+- **Issue:** `DateTimeManager` stored `DateTime.Now.ToString()` in the device culture and parsed it with `DateTime.Parse` in the current culture. After a language or region change the stored string no longer parses, and `InitScript.Awake` (which calls `GetLastDateTime` for every rewarded type) throws on every launch, skipping the life-schedule load and the rest of Awake. The rewarded popups (PreFailed, LiveShop, GemsShop) throw the same way. The ad-quota code runs even in the offline build.
+- **Severity:** P1 (permanent broken startup after a locale change)
+- **Reproduction:** probe `kv/date_probe.cs` (QA keys only). Current culture en-US. A date stored in en-GB form, `24/09/2026 23:05:00`, makes `GetLastDateTime` and `IsPeriodPassed` throw `FormatException`.
+- **Root cause:** culture-dependent write and parse, with no failure handling.
+- **Files changed:** `Assets/JellyGarden/Scripts/System/DateTimeManager.cs`
+- **Fix:**
+  - `SetDateTimeNow` writes the invariant round-trip format (`"o"`).
+  - A shared `TryRead` parses the invariant form first, then the legacy current-culture form.
+  - An unreadable value counts as "no date" (period passed / now) instead of throwing.
+  - The period semantics are otherwise unchanged.
+- **Tests executed:** recompile; fresh Play Mode; same probe; legacy-format read; LiveShop opened with en-GB dates stored in all three rewarded keys.
+- **Result:**
+  - The mismatched date gives no exception (`GetLastDateTime` returns now; `IsPeriodPassed` returns true).
+  - New dates are stored as `2026-09-25T00:11:00.71...+06:00` and read back exactly.
+  - A legacy `9/24/2026 11:05:00 PM` reads back exactly.
+- **Regression result:** LiveShop opens normally; startup of the session was clean.
+- **Console result:** 0 entries during the popup test.
+- **Performance result:** n/a
+- **Screenshots/evidence:** probe output in this entry
+- **Remaining risk:**
+  - The period checks still use the `Minutes`/`Hours` components rather than the totals (ad frequency only; ads are disabled offline).
+  - The ad-quota counter still writes and saves on popup opens offline (P3).
+- **Next task:** R-07 (booster pack purchase overwrites stock).
