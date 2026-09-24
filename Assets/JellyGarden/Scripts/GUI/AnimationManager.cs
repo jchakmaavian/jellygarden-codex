@@ -148,7 +148,10 @@ namespace JellyGarden.Scripts.GUI
             if (InputManager.Instance != null && InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
             {
                 if (name == "MenuPlay" || name == "Settings" || name == "BoostInfo" || name == "GemsShop" || name == "LiveShop" || name == "BoostShop" || name == "Reward")
+                {
                     CloseMenu();
+                    RoyalThrone.Presentation.RoyalBackButton.Consume();
+                }
             }
         }
 

@@ -135,7 +135,7 @@ namespace RoyalThrone.Presentation
                 nextRefresh = Time.unscaledTime + .25f;
                 RefreshResources();
             }
-            if (map && dialog.activeSelf && InputManager.Instance.Gameplay.Cancel.WasPressedThisFrame()) ClosePanel();
+            if (map && dialog.activeSelf && InputManager.Instance.Gameplay.Cancel.WasPressedThisFrame()) { ClosePanel(); RoyalBackButton.Consume(); }
             float time = Time.unscaledTime;
             UpdateNavigation(false);
             if (waterGlow) waterGlow.color = new Color(.8f, .95f, 1, map && MotionEnabled ? .08f + .1f * (1 + Mathf.Sin(time * 1.8f)) : 0);

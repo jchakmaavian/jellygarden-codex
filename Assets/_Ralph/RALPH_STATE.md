@@ -108,3 +108,32 @@ Throne's own implementation.
 - **Screenshots/evidence:** scratchpad `kv/play/r01_after_continue.png` (post-fix), driver log `kv/play/ralph-*.txt`
 - **Remaining risk:** the reference-campaign QA mode caps at 50 and reopens level 50 (unchanged, QA only).
 - **Next task:** R-03 (Back on home quits the app after closing a popup).
+
+### Iteration 2
+- **Date/time:** 2026-09-24 23:49-23:54 local
+- **Area inspected:** Back / Android back on the home screen (R-03)
+- **Issue:** one Back gesture that closed a home dialog or a popup also quit the app.
+- **Severity:** P1 (unexpected app exit)
+- **Reproduction:** real Escape press and release queued through the Input System (probe `kv/back_probe.cs`), QA profile.
+  - (A) Profile dialog open: the dialog closed on the press frame; on the release frame the state was Map, so `LevelManager` reached `Application.Quit()`.
+  - (B) Level popup (MenuPlay) open: AnimationManager closed it on the release frame, then LevelManager quit in the same frame.
+- **Root cause:** three independent handlers. `RoyalHomeScreen` (execution order 0, on press) and `AnimationManager` (order 0, on release) close things before `LevelManager` (order 1000, on release) runs. LevelManager only checked `gameStatus == Map`, so it always quit.
+- **Files changed:**
+  - new `Assets/JellyGarden/Scripts/GUI/RoyalBackButton.cs`
+  - `RoyalHomeScreen.cs` (1 line)
+  - `AnimationManager.cs` (Back branch)
+  - `LevelManager.cs` (Back branch only)
+- **Fix:** `RoyalBackButton`. Handlers that close something because of Back call `Consume()`. LevelManager records the press frame and quits only if the gesture was not consumed and no popup is open. Quit goes through `RoyalBackButton.Quit()`, which counts requests so tests can observe them.
+- **Tests executed:** recompile; fresh Play Mode; the same probe for A, B and C (nothing open); regression D (Back while playing).
+- **Result:**
+  - A: dialog closed, `QuitRequests` 0.
+  - B: popup closed, `QuitRequests` 0.
+  - C: nothing open, `QuitRequests` 1 (intended exit).
+- **Regression result:** D: Back in level 12 opens MenuPause (Pause, timeScale 0), quits unchanged, and Continue resumes Playing.
+- **Console result:** no errors (only the Unity AI package's "Account API" warning).
+- **Performance result:** n/a
+- **Screenshots/evidence:** `kv/play/back_A_dialog.txt`, `back_B_menuplay.txt`, `back_C_nothing.txt`, `back_D_playing.txt`, driver log `kv/play/ralph-*.txt`
+- **Remaining risk:**
+  - Android predictive back (`androidPredictiveBackSupport: 1`) still needs a device check.
+  - A quit confirmation dialog is not implemented (Back with nothing open exits immediately, as before).
+- **Next task:** R-04 (HUD pause gear usable in any state; HUD above in-level popups).

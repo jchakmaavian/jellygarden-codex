@@ -824,12 +824,15 @@ namespace JellyGarden.Scripts
                 }
             }
 
+                if (InputManager.Instance.Gameplay.Cancel.WasPressedThisFrame())
+                    RoyalThrone.Presentation.RoyalBackButton.NotePress();
                 if (InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
                 {
                     if (LevelManager.THIS.gameStatus == GameState.Playing)
                         MenuManager.Instance.ShowMenuPause(true);
-                    else if (LevelManager.THIS.gameStatus == GameState.Map)
-                        Application.Quit();
+                    // Back that closed a home dialog or popup (or with a popup still open) never also exits the game.
+                    else if (LevelManager.THIS.gameStatus == GameState.Map && !RoyalThrone.Presentation.RoyalBackButton.Consumed && !MenuManager.Instance.BlocksBoardInput)
+                        RoyalThrone.Presentation.RoyalBackButton.Quit();
 
                 }
             }
