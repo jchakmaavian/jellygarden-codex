@@ -618,3 +618,63 @@ Throne's own implementation.
   - `RoyalAudioDirector` reads the Sound pref once per voice per frame (cheap on devices).
   - The hidden legacy map's 100 `MapLevel.Update` calls per frame.
 - **Next task:** texture import audit (report plus safe fixes), then R-18 compile warnings.
+
+### Iteration 21 (verification V-07: texture import audit, report only)
+- **Date/time:** 2026-09-25 02:13-02:25 local
+- **Area inspected:** import settings of every texture in the Android build: 2,353 textures.
+  - 212 are dependencies of `main.unity`/`game.unity`; 2,141 are under `Resources/`. Six could not be read by PIL and were not analysed.
+  - Android compression formats are `ETC` (no subtarget override).
+- **Issue:**
+  - 1,569 build textures are imported uncompressed (RGBA32) and 12 as RGB24.
+  - Loaded with the scenes: 211 textures, about 106.5 MB estimated on Android.
+  - Of those, 184 are uncompressed (105.7 MB). The 77 that are 256 px or larger hold 99.0 MB.
+  - At 8 bpp (ASTC 4x4 / ETC2 RGBA8) they would take about 29 MB, a saving of roughly 72-77 MB of resident memory.
+  - The largest are protected title and home art (logo 6 MB, title crown 6 MB, castle art 4.5 MB x2), legacy menu banners, tutorial art and the five level backgrounds. Several `Resources/` textures carry deliberate RGBA32 Android overrides (home sky, clouds, palace, coin).
+- **Severity:** P2 (resident memory on low-RAM Android devices; not a crash in the editor)
+- **Reproduction:** `kv/texture_audit.py` over `kv/build_textures.txt`. The report is `Assets/_Ralph/TEXTURE_AUDIT.md`.
+- **Root cause:** the inherited JellyGarden UI art uses "None" compression, a leftover from ETC1 having no alpha, and some newer art keeps explicit RGBA32 overrides.
+- **Files changed:** `Assets/_Ralph/TEXTURE_AUDIT.md` (report only). No import settings were changed.
+- **Fix:** none. Every compression change alters pixels, and the largest items are protected art. The report ranks the work: hidden legacy art first (no visual cost), then visible UI with a device check, protected art only with approval, and ASTC as the Android default.
+- **Tests executed:** static audit (import settings plus image headers); scene-resident vs on-demand split from `AssetDatabase.GetDependencies`.
+- **Result:** as above. Only 23 UI textures have mipmaps (0.8 MB) and none has Read/Write enabled. One source is larger than 2048 (the title crown, 2172x724).
+- **Regression result:** n/a
+- **Console result:** n/a
+- **Performance result:** estimated saving of about 72-77 MB resident on Android if the uncompressed scene art is compressed.
+- **Screenshots/evidence:** `Assets/_Ralph/TEXTURE_AUDIT.md`, `kv/texture_audit.md`, `kv/texture_split.txt`
+- **Remaining risk:** the estimates assume the effective formats computed from the `.meta` files. Verify with a device memory snapshot (Memory Profiler) before and after.
+- **Next task:** R-18 compile warnings.
+
+### Iteration 22 (R-18: obsolete Unity APIs in runtime code, fix)
+- **Date/time:** 2026-09-25 02:14-02:24 local
+- **Area inspected:** project compile warnings, captured from `CompilationPipeline.assemblyCompilationFinished` during a clean script rebuild. This editor writes no `Editor.log`.
+- **Issue:** 69 warnings.
+  - Runtime `Assembly-CSharp`: 22. Nine call sites (10 warnings) use APIs that Unity 6.5 has marked obsolete:
+    - `FindObjectOfType`, `FindObjectsOfType`;
+    - `FindFirstObjectByType`, and the `FindObjectsSortMode` overloads (both newly deprecated in 6.5);
+    - `ParticleSystem.startColor`.
+  - The rest are unused fields and variables (CS0414/CS0219/CS0168) and two serialization-analyzer notes.
+  - `Assembly-CSharp-Editor` has 33 and Spine 14 (third-party).
+- **Severity:** P3 (no player effect today). Unity has already turned one sibling API (`SerializedProperty.objectReferenceInstanceIDValue`) into an error in 6.5.
+- **Reproduction:** `kv/cs_warnings.tsv` (clean rebuild)
+- **Root cause:** code written against pre-6.5 APIs
+- **Files changed:** `InitScript.cs`, `MapScripts/LevelsMap.cs`, `Juice/MatchVFXService.cs`, `Juice/UrpBloomSetup.cs`, `Juice/RoyalReviewAudioCapture.cs`, `GUI/BoostAnimation.cs` (one hunk each; other sessions' uncommitted edits in `InitScript.cs` are not included)
+- **Fix:** each call moved to the current form with identical behaviour:
+  - single objects (`LevelsMap`, `MapCamera`, the one `AudioListener`) use `FindAnyObjectByType`;
+  - `GetMapLevels` re-sorts by level number, so the unsorted `FindObjectsByType` gives the same result;
+  - the two `FindObjectsSortMode.None` calls use the unsorted overload;
+  - `startColor` goes through `ParticleSystem.main`. `BoostAnimation` is not attached anywhere and nothing calls `ShowEffect`, so this path is dead code.
+  - Unused variables in protected files (`LevelManager`, `Square`) were left alone.
+- **Tests executed:**
+  - recompile with warning capture;
+  - fresh Play Mode: startup to home (the `InitScript` camera setup, the bloom camera scan);
+  - level 12 win -> CONTINUE (`GetMapLevels`);
+  - a TNT spawned at (4,4) and detonated (match VFX square lookup).
+- **Result:**
+  - Runtime warnings went from 22 to 12, with no obsolete-API warning left in runtime code.
+  - CONTINUE opened level 13's card. The TNT detonated: moves 18 -> 17, score 310.
+- **Regression result:** as above. The QA session restored the real profile (`OpenLevel=14`).
+- **Console result:** info logs only
+- **Performance result:** n/a
+- **Screenshots/evidence:** `kv/cs_warnings.tsv`, `kv/cs_warnings_after.tsv`, driver log `kv/play/ralph-022225.txt`
+- **Remaining risk:** the editor-only warnings (33) and Spine's (14) are unchanged. The editor tools compile and work, so these are out of scope for a player-facing pass.
+- **Next task:** R-17 leftovers (Sound/Music default mismatch, `print(DateOfExit)` each launch, timer formats), then the final report.

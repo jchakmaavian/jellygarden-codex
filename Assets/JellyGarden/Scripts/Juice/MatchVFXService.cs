@@ -327,7 +327,7 @@ namespace JellyGarden.Scripts.Juice
             // is also continuously animated by the idle breathing and the destroy pop, so
             // sampling it would cache a value that is a few percent wrong - and its parent
             // is unscaled, so that is not a substitute either.
-            var squares = FindObjectsByType<Square>(FindObjectsSortMode.None);
+            var squares = FindObjectsByType<Square>();
             if (squares != null && squares.Length >= 2)
             {
                 Vector3 p0 = squares[0].transform.position;

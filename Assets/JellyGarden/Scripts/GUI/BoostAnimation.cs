@@ -22,9 +22,10 @@ namespace JellyGarden.Scripts.GUI
 		public void ShowEffect ()
 		{
 			GameObject partcl = Instantiate (Resources.Load ("Prefabs/Effects/Firework"), transform.position, Quaternion.identity) as GameObject;
-			partcl.GetComponent<ParticleSystem> ().startColor = LevelManager.THIS.scoresColors [square.item.color];
+			var particleMain = partcl.GetComponent<ParticleSystem> ().main;
+			particleMain.startColor = LevelManager.THIS.scoresColors [square.item.color];
 			if (name.Contains ("random_color_item"))//1.6.1 new lollipop
-				partcl.GetComponent<ParticleSystem> ().startColor = Color.white;
+				particleMain.startColor = Color.white;
 			Destroy (partcl, 1f);
 
 			if (name.Contains ("random_color_item")) {//1.6.1 new lollipop

@@ -219,7 +219,7 @@ using Facebook.Unity;
             LoadLifeSchedule();
 
             if (gameObject.GetComponent<AspectCamera>() == null)
-                gameObject.AddComponent<AspectCamera>().map = FindObjectOfType<LevelsMap>().transform
+                gameObject.AddComponent<AspectCamera>().map = FindAnyObjectByType<LevelsMap>().transform
                     .Find("map_background_01").GetComponent<SpriteRenderer>()
                     .sprite;
 

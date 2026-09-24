@@ -93,7 +93,7 @@ namespace JellyGarden.Scripts.Juice
             var tData = FindType("UnityEngine.Rendering.Universal.UniversalAdditionalCameraData");
             if (tData == null) return;
 
-            var cams = UnityEngine.Object.FindObjectsByType<Camera>(FindObjectsSortMode.None);
+            var cams = UnityEngine.Object.FindObjectsByType<Camera>();
             for (int i = 0; i < cams.Length; i++)
             {
                 var cam = cams[i];

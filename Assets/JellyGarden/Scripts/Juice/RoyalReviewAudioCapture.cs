@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
         const string Folder="Library/RoyalEffectsCapture/";
         public static RoyalReviewAudioCapture Begin()
         {
-            var listener=UnityEngine.Object.FindFirstObjectByType<AudioListener>();if(!listener)return null;
+            var listener=UnityEngine.Object.FindAnyObjectByType<AudioListener>();if(!listener)return null;
             var capture=listener.gameObject.AddComponent<RoyalReviewAudioCapture>();capture.StartCapture();return capture;
         }
         void StartCapture()

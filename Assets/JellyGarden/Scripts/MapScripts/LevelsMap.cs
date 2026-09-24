@@ -56,7 +56,7 @@ namespace JellyGarden.Scripts.MapScripts
 		}
 
 		public List<MapLevel> GetMapLevels () {
-			return FindObjectsOfType<MapLevel> ().OrderBy (ml => ml.Number).ToList ();
+			return FindObjectsByType<MapLevel> ().OrderBy (ml => ml.Number).ToList ();
 		}
 
 		public void Reset () {
@@ -83,7 +83,7 @@ namespace JellyGarden.Scripts.MapScripts
 		}
 
 		private void SetCameraToCharacter () {
-			MapCamera mapCamera = FindObjectOfType<MapCamera> ();
+			MapCamera mapCamera = FindAnyObjectByType<MapCamera> ();
 			if (mapCamera != null)
 				mapCamera.SetPosition (WaypointsMover.transform.position);
 		}
