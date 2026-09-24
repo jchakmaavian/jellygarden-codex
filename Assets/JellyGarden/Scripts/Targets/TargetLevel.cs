@@ -50,6 +50,12 @@ namespace JellyGarden.Scripts.Targets
         public TargetObject DeepCopy()
         {
             TargetObject other = (TargetObject) MemberwiseClone();
+            // Migrate runtime copies only; retain authored assets and player progress.
+            if (other.type == Target.COLLECT && other.color == 5)
+            {
+                other.color = Juice.RoyalGameplayArt.BoardColor(other.color);
+                other.icon = Juice.RoyalGameplayArt.For(ItemsTypes.NONE, other.color) ?? other.icon;
+            }
             return other;
         }
 

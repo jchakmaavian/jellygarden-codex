@@ -176,6 +176,13 @@ namespace RoyalThrone.ReferenceGameplay.Editor
                         throw new InvalidOperationException("QA is disabled by ROYAL_DISABLE_QA.");
 #endif
                         break;
+                    case "palette-checks":
+#if !ROYAL_DISABLE_QA
+                        if (!EditorApplication.isPlaying || !RoyalQaService.Instance || !RoyalQaService.Instance.Ready || RoyalSave.Testing)
+                            throw new InvalidOperationException("Palette check requires gameplay ready without an active test session.");
+                        RoyalThrone.Editor.RoyalRegressionRunner.Run(CheckBoardPalette());
+#endif
+                        break;
                     case "exit-play":
                         SetResult("Exiting Play Mode; current edit-time scenes remain intact.");
                         WriteStatus();
@@ -206,6 +213,48 @@ namespace RoyalThrone.ReferenceGameplay.Editor
         static void SetResult(string value) { SessionState.SetString(Key + "result", value); }
 
 #if !ROYAL_DISABLE_QA
+        static System.Collections.IEnumerator CheckBoardPalette()
+        {
+            var qa = RoyalQaService.Instance;
+            string report = Path.Combine(Folder, "Validation/Board-Palette.txt");
+            File.WriteAllText(report, "RUNNING five-piece palette check\n");
+            void Check(bool valid, string label)
+            {
+                if (!valid) throw new InvalidOperationException(label);
+                File.AppendAllText(report, "PASS " + label + "\n");
+            }
+            try
+            {
+                qa.StartSession();
+                yield return qa.Practice();
+                var lm = JellyGarden.Scripts.LevelManager.THIS;
+                lm.colorLimit = 6; // Exercise an old six-colour level, without changing its saved asset.
+                foreach (var item in lm.GetItems().Where(i => i).ToArray())
+                {
+                    item.GenColor();
+                    Check(item.color >= 0 && item.color < 5, "Refill excludes retired crystal");
+                    yield return null;
+                }
+                yield return qa.Settled();
+                var piece = lm.GetSquare(3, 3).item;
+                piece.SetColor(5);
+                Check(piece.color == 1 && piece.sprRenderer.sprite == ReferenceGameplayCatalog.Art("shield"), "Old crystal ID becomes a matching blue shield");
+                var authored = new JellyGarden.Scripts.Targets.TargetObject { type = JellyGarden.Scripts.Target.COLLECT, color = 5, targetCount = 3 };
+                var runtime = authored.DeepCopy();
+                Check(authored.color == 5 && runtime.color == 1 && runtime.icon == ReferenceGameplayCatalog.Art("shield"), "Old collection goal migrates in runtime copy only");
+                Check(runtime.SetOff(piece.gameObject) && runtime.countCollected == 1, "Replacement shield credits the migrated goal once");
+                Check(JellyGarden.Scripts.Juice.RoyalGameplayArt.BoardColor(555) == 555 && JellyGarden.Scripts.Juice.RoyalGameplayArt.BoardColor(1000) == 1000, "Booster and ingredient sentinel IDs preserved");
+                yield return qa.Execute("Match 3");
+                yield return qa.Settled();
+                Check(JellyGarden.Scripts.LevelManager.Score > 0 && lm.GetItems().Where(i => i).All(i => i.color != 5), "Live match and refill settle without the crystal");
+                yield return qa.EndSession();
+                Check(!RoyalSave.Testing, "Normal player profile restored");
+                File.AppendAllText(report, "ALL PALETTE CHECKS PASSED\n");
+                SetResult("Five-piece palette, legacy goal compatibility and live match checks passed.");
+            }
+            finally { if (RoyalSave.Testing && qa) qa.StartCoroutine(qa.EndSession()); }
+        }
+
         static System.Collections.IEnumerator FinishCapture()
         {
             if (RoyalSave.Testing && RoyalQaService.Instance) yield return RoyalQaService.Instance.EndSession();

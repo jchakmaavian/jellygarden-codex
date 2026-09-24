@@ -68,7 +68,7 @@ namespace RoyalThrone.Testing
             var note=Label(panel,"INTERNAL QA  •  ISOLATED TEST PROFILE",18);note.color=new Color(1,.79f,.29f);Bounds(note.rectTransform,.04f,.899f,.96f,.935f);
             status=Label(panel,service.Status,19);Bounds(status.rectTransform,.04f,.80f,.96f,.895f);
             for(int i=0;i<9;i++){string name=RoyalQaService.Categories[i];var b=Button(panel,name,()=>{category=name;Populate();});int x=i%3,y=i/3;Bounds((RectTransform)b.transform,.035f+x*.315f,.744f-y*.05f,.335f+x*.315f,.785f-y*.05f);}
-            Field("Amount",.035f,.595f,()=>service.Amount,v=>service.Amount=v);Field("Level",.355f,.595f,()=>service.Level,v=>service.Level=v);Field("Gem 0–5",.675f,.595f,()=>service.Gem,v=>service.Gem=Mathf.Clamp(v,0,5));
+            Field("Amount",.035f,.595f,()=>service.Amount,v=>service.Amount=v);Field("Level",.355f,.595f,()=>service.Level,v=>service.Level=v);Field("Gem 0–4",.675f,.595f,()=>service.Gem,v=>service.Gem=Mathf.Clamp(v,0,4));
             Field("Column",.035f,.535f,()=>service.Column,v=>service.Column=v);Field("Row",.355f,.535f,()=>service.Row,v=>service.Row=v);
             var powers=Button(panel,"A: TNT",null);Bounds((RectTransform)powers.transform,.675f,.53f,.965f,.575f);
             parameters.Add(powers);
@@ -186,3 +186,4 @@ namespace RoyalThrone.Testing
     }
 }
 #endif
+

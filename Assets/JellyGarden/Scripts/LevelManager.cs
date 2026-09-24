@@ -2395,7 +2395,7 @@ namespace JellyGarden.Scripts
                 else if (line.StartsWith("COLOR LIMIT "))
                 {
                     string blocksString = line.Replace("COLOR LIMIT", string.Empty).Trim();
-                    colorLimit = int.Parse(blocksString);
+                    colorLimit = Mathf.Clamp(int.Parse(blocksString), 1, Juice.RoyalGameplayArt.BoardColorCount);
                 }
                 else if (line.StartsWith("STARS"))
                 {

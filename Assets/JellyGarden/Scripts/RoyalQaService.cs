@@ -201,7 +201,7 @@ namespace RoyalThrone.Testing
             }
             if(command=="Shuffle board"){LM.NoMatches();yield return Settled();yield break;}
             if(command=="Clear board"){foreach(var item in LM.GetItems().Where(i=>i).ToArray())item.DestroyItem();LM.FindMatches();yield return Settled();yield break;}
-            if(command=="Spawn selected gem"){var square=Selected();if(!square.item)square.GenItem(false);SetPiece(square.item,ItemsTypes.NONE,Mathf.Clamp(Gem,0,5));yield break;}
+            if(command=="Spawn selected gem"){var square=Selected();if(!square.item)square.GenItem(false);SetPiece(square.item,ItemsTypes.NONE,Mathf.Clamp(Gem,0,RoyalGameplayArt.BoardColorCount-1));yield break;}
             int spawn=Array.IndexOf(new[]{"Spawn TNT","Spawn rocket H","Spawn rocket V","Spawn propeller","Spawn color ball"},command);
             if(spawn>=0){SetPiece(Selected().item,Powers[spawn],Gem);yield break;}
             if(command=="Combine selected")
@@ -343,3 +343,4 @@ namespace RoyalThrone.Testing
     }
 }
 #endif
+

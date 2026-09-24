@@ -71,7 +71,7 @@ namespace JellyGarden.Scripts
             }
             set
             {
-                COLOR = value;
+                COLOR = RoyalGameplayArt.BoardColor(value);
             }
         }
 
@@ -182,7 +182,8 @@ namespace JellyGarden.Scripts
             int col = square.col;
 
             List<int> remainColors = new List<int>();
-            for (int i = 0; i < LevelManager.Instance.colorLimit; i++)
+            int paletteSize = Mathf.Clamp(LevelManager.Instance.colorLimit, 1, RoyalGameplayArt.BoardColorCount);
+            for (int i = 0; i < paletteSize; i++)
             {
                 bool canGen = true;
                 if (col > 1)
@@ -228,11 +229,11 @@ namespace JellyGarden.Scripts
             }
 
             //       print(remainColors.Count);
-            int randColor = Random.Range(0, LevelManager.Instance.colorLimit);
+            int randColor = Random.Range(0, paletteSize);
             if (remainColors.Count > 0)
                 randColor = remainColors[Random.Range(0, remainColors.Count)];
             if (exceptColor == randColor)
-                randColor = (randColor++) % items.Length;
+                randColor = (randColor + 1) % paletteSize;
             LevelManager.THIS.lastRandColor = randColor;
             sprRenderer.sprite = items[randColor];
             if (NextType == ItemsTypes.HORIZONTAL_STRIPPED)

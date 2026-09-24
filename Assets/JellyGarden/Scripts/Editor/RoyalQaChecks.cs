@@ -64,7 +64,7 @@ namespace RoyalThrone.Editor
                 yield return Command("Reset refill timer");Check(InitScript.RestLifeTimer>3,"Reset uses the authored refill duration");
                 qa.Amount=8;yield return Command("Set booster stock");foreach(BoostType boost in Enum.GetValues(typeof(BoostType)))if(boost!=BoostType.None)Check(RoyalSave.GetInt(boost.ToString())==8,"Booster stock uses existing key: "+boost);
                 yield return Command("Open level");yield return Command("Restart level");yield return Command("Practice board");
-                for(int color=0;color<6;color++){qa.Gem=color;yield return Command("Spawn selected gem");Check(LevelManager.THIS.GetSquare(3,3).item.color==color,"Spawned selected gem "+color);}
+                for(int color=0;color<RoyalGameplayArt.BoardColorCount;color++){qa.Gem=color;yield return Command("Spawn selected gem");Check(LevelManager.THIS.GetSquare(3,3).item.color==color,"Spawned selected gem "+color);}
                 string[] spawns={"Spawn TNT","Spawn rocket H","Spawn rocket V","Spawn propeller","Spawn color ball"};
                 ItemsTypes[] types={ItemsTypes.PACKAGE,ItemsTypes.HORIZONTAL_STRIPPED,ItemsTypes.VERTICAL_STRIPPED,ItemsTypes.HELICOPTER,ItemsTypes.BOMB};
                 for(int n=0;n<spawns.Length;n++){yield return Command(spawns[n]);Check(LevelManager.THIS.GetSquare(3,3).item.currentType==types[n],"Native power type: "+types[n]);}
@@ -100,3 +100,4 @@ namespace RoyalThrone.Editor
     }
 }
 #endif
+
