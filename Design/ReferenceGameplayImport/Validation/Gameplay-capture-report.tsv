@@ -1,0 +1,14 @@
+clip	frames	status
+Rocket	289	ok
+Rocket-Vertical	289	ok
+TNT	319	ok
+Propeller	309	ok
+ColorBall	421	ok
+Combo-Rocket-TNT	246	ok
+Combo-TNT-TNT	246	ok
+Combo-Propeller-Propeller	257	ok
+Combo-ColorBall-Rocket	448	ok
+Match-Match3	187	ok
+Match-Match4	186	ok
+Match-Match5	187	ok
+Match-Cascade	207	ok

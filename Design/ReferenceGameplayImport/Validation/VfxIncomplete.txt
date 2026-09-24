@@ -1,0 +1,1 @@
+PotionItemSingleExplodeParticles/Potion: source sprite entry is null; unconfigured template disabled, child effects retained.

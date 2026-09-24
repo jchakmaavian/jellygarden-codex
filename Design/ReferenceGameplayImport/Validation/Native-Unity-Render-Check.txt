@@ -1,0 +1,18 @@
+Unity 6000.5.10f1 native render smoke check; not gameplay verification.
+Each tile covers identical 3.2 native cell units, left to right and top to bottom. No exposure adjustment.
+1. Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/Rocket.prefab; sample 0.18 seconds; active particles=0
+2. Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/TNT.prefab; sample 0.18 seconds; active particles=0
+3. Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/ColorBall.prefab; sample 0.18 seconds; active particles=0
+4. Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/Propeller.prefab; sample 0.18 seconds; active particles=0
+5. Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/TNTTNTCombo.prefab; sample 0.18 seconds; active particles=0
+6. Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/ColorBallColorBallCombo.prefab; sample 0.18 seconds; active particles=0
+7. Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/TntItemExplodeParticles.prefab; sample 0.18 seconds; active particles=71
+8. Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/RocketItemParticles.prefab; sample 0.18 seconds; active particles=0
+9. Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/PropellerItemExplodeParticles.prefab; sample 0.18 seconds; active particles=145
+10. Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/LightballUseParticles.prefab; sample 0.18 seconds; active particles=20
+11. Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/BoxItemExplodeParticles.prefab; sample 0.18 seconds; active particles=88
+12. Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/GrassItemExplodeParticles.prefab; sample 0.18 seconds; active particles=35
+13. Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/cupboard.prefab; sample 0.18 seconds; active particles=0
+14. Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/potion.prefab; sample 0.18 seconds; active particles=0
+15. Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/mailbox.prefab; sample 0.18 seconds; active particles=0
+16. Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Blockers/egg.prefab; sample 0.18 seconds; active particles=0

@@ -1,0 +1,48 @@
+
+mailbox.png
+size: 329,140
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+delik
+  rotate: true
+  xy: 243, 51
+  size: 87, 46
+  orig: 103, 131
+  offset: 14, 47
+  index: -1
+govde
+  rotate: false
+  xy: 104, 4
+  size: 125, 134
+  orig: 128, 137
+  offset: 1, 2
+  index: -1
+govde_golge
+  rotate: true
+  xy: 231, 12
+  size: 126, 10
+  orig: 130, 12
+  offset: 2, 1
+  index: -1
+kapak_acik
+  rotate: true
+  xy: 291, 51
+  size: 87, 25
+  orig: 106, 131
+  offset: 15, 69
+  index: -1
+kapak_kapali
+  rotate: false
+  xy: 243, 12
+  size: 84, 37
+  orig: 105, 81
+  offset: 18, 9
+  index: -1
+zarf
+  rotate: true
+  xy: 2, 2
+  size: 136, 100
+  orig: 136, 101
+  offset: 0, 1
+  index: -1

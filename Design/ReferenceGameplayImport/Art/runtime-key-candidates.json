@@ -1,0 +1,451 @@
+{
+  "entries": [
+    {
+      "key": "ruby",
+      "name": "Items-MatchItem-book",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-book__22221",
+      "sourcePathId": 22221,
+      "width": 112,
+      "height": 125,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.47999998927116394
+      }
+    },
+    {
+      "key": "shield",
+      "name": "Items-MatchItem-shield",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-shield__21626",
+      "sourcePathId": 21626,
+      "width": 123,
+      "height": 127,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5153846144676208,
+        "y": 0.4736842215061188
+      }
+    },
+    {
+      "key": "crown",
+      "name": "Items-MatchItem-crown",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-crown__22208",
+      "sourcePathId": 22208,
+      "width": 130,
+      "height": 115,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5121951103210449
+      }
+    },
+    {
+      "key": "leaf",
+      "name": "Items-MatchItem-leaf",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-leaf__16451",
+      "sourcePathId": 16451,
+      "width": 123,
+      "height": 123,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5230769515037537,
+        "y": 0.4921875
+      }
+    },
+    {
+      "key": "lily",
+      "name": "Items-MatchItem-gem",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-gem__16466",
+      "sourcePathId": 16466,
+      "width": 123,
+      "height": 114,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "gem",
+      "name": "Items-MatchItem-gem",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-gem__16466",
+      "sourcePathId": 16466,
+      "width": 123,
+      "height": 114,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "rocket",
+      "name": "Items-SpecialItems-RocketItem-horizontal_rocket",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-horizontal_rocket__16419",
+      "sourcePathId": 16419,
+      "width": 134,
+      "height": 106,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.4962962865829468,
+        "y": 0.4661017060279846
+      }
+    },
+    {
+      "key": "rocket-vertical",
+      "name": "Items-SpecialItems-RocketItem-vertical_rocket",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-vertical_rocket__17198",
+      "sourcePathId": 17198,
+      "width": 106,
+      "height": 134,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5321100950241089,
+        "y": 0.5036496520042419
+      }
+    },
+    {
+      "key": "tnt",
+      "name": "Items-SpecialItems-TntItem-tnt",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-TntItem-tnt__16602",
+      "sourcePathId": 16602,
+      "width": 134,
+      "height": 127,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "orb",
+      "name": "Items-SpecialItems-LightballItem-default",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-LightballItem-default__16887",
+      "sourcePathId": 16887,
+      "width": 131,
+      "height": 132,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "propeller-blades-idle",
+      "name": "Items-SpecialItems-PropellerItem-01",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-PropellerItem-01__17013",
+      "sourcePathId": 17013,
+      "width": 140,
+      "height": 109,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5085754990577698,
+        "y": 0.6007052063941956
+      }
+    },
+    {
+      "key": "propeller-body",
+      "name": "Items-SpecialItems-PropellerItem-body",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-PropellerItem-body__16359",
+      "sourcePathId": 16359,
+      "width": 101,
+      "height": 96,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "propeller-pin",
+      "name": "Items-SpecialItems-PropellerItem-pin_01",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-PropellerItem-pin_01__17186",
+      "sourcePathId": 17186,
+      "width": 47,
+      "height": 34,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "propeller-rotor",
+      "name": "Items-SpecialItems-PropellerItem-2d_pervane _00000",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-PropellerItem-2d_pervane__00000__21239",
+      "sourcePathId": 21239,
+      "width": 150,
+      "height": 124,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "rocket-up",
+      "name": "Items-SpecialItems-RocketItem-vertical_rocket_part_top",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-vertical_rocket_part_top__16348",
+      "sourcePathId": 16348,
+      "width": 106,
+      "height": 128,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "rocket-down",
+      "name": "Items-SpecialItems-RocketItem-vertical_rocket_part_bottom",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-vertical_rocket_part_bottom__21611",
+      "sourcePathId": 21611,
+      "width": 106,
+      "height": 126,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "rocket-left",
+      "name": "Items-SpecialItems-RocketItem-horizontal_rocket_part_left",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-horizontal_rocket_part_left__16907",
+      "sourcePathId": 16907,
+      "width": 126,
+      "height": 108,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "rocket-right",
+      "name": "Items-SpecialItems-RocketItem-horizontal_rocket_part_right",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-horizontal_rocket_part_right__21917",
+      "sourcePathId": 21917,
+      "width": 126,
+      "height": 108,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "cell-front-effect",
+      "name": "cell_front",
+      "resourcesPath": "ReferenceGameplay/Sprites/cell_front__16827",
+      "sourcePathId": 16827,
+      "width": 36,
+      "height": 36,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "frame-side",
+      "name": "Border-side",
+      "resourcesPath": "ReferenceGameplay/Sprites/Border-side__17165",
+      "sourcePathId": 17165,
+      "width": 1,
+      "height": 20,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.0
+      }
+    },
+    {
+      "key": "frame-inner-corner",
+      "name": "Border-inner_corner",
+      "resourcesPath": "ReferenceGameplay/Sprites/Border-inner_corner__16836",
+      "sourcePathId": 16836,
+      "width": 70,
+      "height": 70,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.0,
+        "y": 1.0
+      }
+    },
+    {
+      "key": "frame-outer-corner",
+      "name": "Border-outer_corner",
+      "resourcesPath": "ReferenceGameplay/Sprites/Border-outer_corner__22020",
+      "sourcePathId": 22020,
+      "width": 28,
+      "height": 28,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.7142857313156128,
+        "y": 0.2857142984867096
+      }
+    },
+    {
+      "key": "frame-fill",
+      "name": "Border-fill",
+      "resourcesPath": "ReferenceGameplay/Sprites/Border-fill__21576",
+      "sourcePathId": 21576,
+      "width": 17,
+      "height": 17,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.0,
+        "y": 1.0
+      }
+    },
+    {
+      "key": "crate",
+      "name": "Items-BoxItem-box_1",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-BoxItem-box_1__16297",
+      "sourcePathId": 16297,
+      "width": 142,
+      "height": 142,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "box-2",
+      "name": "Items-BoxItem-box_2",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-BoxItem-box_2__16339",
+      "sourcePathId": 16339,
+      "width": 142,
+      "height": 142,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "box-3",
+      "name": "Items-BoxItem-box_3",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-BoxItem-box_3__16442",
+      "sourcePathId": 16442,
+      "width": 142,
+      "height": 142,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "grass-full",
+      "name": "StaticItems-Grass-light_base01",
+      "resourcesPath": "ReferenceGameplay/Sprites/StaticItems-Grass-light_base01__16396",
+      "sourcePathId": 16396,
+      "width": 153,
+      "height": 153,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "hit-flash",
+      "name": "add_hit_blast",
+      "resourcesPath": "ReferenceGameplay/Sprites/add_hit_blast__17147",
+      "sourcePathId": 17147,
+      "width": 250,
+      "height": 250,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "sparkle-01",
+      "name": "additive_star_01",
+      "resourcesPath": "ReferenceGameplay/Sprites/additive_star_01__21705",
+      "sourcePathId": 21705,
+      "width": 140,
+      "height": 140,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "clear-ring",
+      "name": "additive_ring_01",
+      "resourcesPath": "ReferenceGameplay/Sprites/additive_ring_01__16380",
+      "sourcePathId": 16380,
+      "width": 256,
+      "height": 256,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "glow",
+      "name": "additive_dot_01",
+      "resourcesPath": "ReferenceGameplay/Sprites/additive_dot_01__22024",
+      "sourcePathId": 22024,
+      "width": 140,
+      "height": 140,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "beam",
+      "name": "add_lightline",
+      "resourcesPath": "ReferenceGameplay/Sprites/add_lightline__17195",
+      "sourcePathId": 17195,
+      "width": 140,
+      "height": 140,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "smoke",
+      "name": "add_smoke_soft",
+      "resourcesPath": "ReferenceGameplay/Sprites/add_smoke_soft__21919",
+      "sourcePathId": 21919,
+      "width": 140,
+      "height": 140,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    {
+      "key": "coin",
+      "name": "Items-CoinItem-coin",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-CoinItem-coin__16660",
+      "sourcePathId": 16660,
+      "width": 132,
+      "height": 133,
+      "pixelsPerUnit": 140.0,
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  ],
+  "unavailable": [
+    "No sixth orange match piece appears in the recovered GameplayAtlas; reference normal set is five pieces.",
+    "Propeller is authored as body, rotor/blades and pin renderers; no single sprite is the complete idle propeller.",
+    "cell_front is a white effect dot, not a board tile. Native board tiles need native mesh/material/layout."
+  ]
+}

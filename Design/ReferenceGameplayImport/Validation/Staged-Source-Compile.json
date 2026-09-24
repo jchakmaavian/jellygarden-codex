@@ -1,0 +1,1419 @@
+{
+  "utc": "2026-09-24T07:34:27.0907156Z",
+  "head": "b3bb51d2c76a204dbd13cf06875093c2166e4811",
+  "indexSourceFingerprint": "04f6d866f90dde0f90404f66504ddfeedba9c32291cc8ff4c1d851b9baa9dd2b",
+  "status": "Passed",
+  "sourceSnapshot": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\ReferenceGameplayImport\\Compile\\StagedSnapshot-20260924-133426-ff5c5f\\Sources",
+  "rspDirectory": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Library\\Bee\\artifacts\\1300b0aE.dag",
+  "boundary": "Default runtime and Editor C# sources are exact Git index blobs. Unity SDK/reference assemblies and defines come from the current Editor RSP. No assets, serialization, runtime behavior, other custom assemblies or staged ProjectSettings are validated by this compile.",
+  "omittedUntrackedSources": [
+    "Assets/JellyGarden/Scripts/RoyalReferenceCampaignBootstrap.cs",
+    "Assets/JellyGarden/Scripts/Editor/RoyalCampaignArtImporter.cs",
+    "Assets/JellyGarden/Scripts/Editor/RoyalOfflineAndroidManifest.cs",
+    "Assets/JellyGarden/Scripts/Editor/RoyalOfflineBuildPolicy.cs"
+  ],
+  "sources": [
+    {
+      "path": "Assets/Boosters/ColorBall/V2/Scripts/ColorBallAudioV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "b1cb78838b3c37abc3b74f087064bf1952d20ace"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V2/Scripts/ColorBallSeatV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e29afa8486cf4660ff4fe41e9c4e95bc01cfef18"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V2/Scripts/ColorBallV2Sequence.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f2f65d374bcfa58ba075bbe67e0183a8a355288b"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V2/Scripts/ColorBallVfxV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4bc87a8762f1d4bf1dd89ce39a5ad7123d84029d"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V2/Scripts/ColorBallVisualV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "951f6d29c5da48843957bfe67afa6ee58a96a3e9"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V2/Scripts/Editor/ColorBallCapture.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "10b5d492a254877d8a713e5a879445423ef801c9"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V2/Scripts/Editor/ColorBallV2Builder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "88393dc65d9cc5b71be0f389b1fdb2fde4367284"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V2/Scripts/Editor/ColorBallV2Checks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "fdfd8c459513620d8f8b11c2f018049b88cbcf55"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V3/Scripts/ColorBallAudioV3.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "6e16a2a97bd3d112c2416edb2430e8629c2f481a"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V3/Scripts/ColorBallSeatV3.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "a62a3438c0f3d3ece72a30858736d29f0c26da46"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V3/Scripts/ColorBallV3Sequence.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "99387e8537cbc5bf658b8c3c93911c7ccc807d4c"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V3/Scripts/ColorBallVfxV3.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "2beda36beb32abed7a04ff2fb3685a0389c74ad9"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V3/Scripts/ColorBallVisualV3.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "d859e7c4677be9e8d0788095382f52fcabd9b627"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V3/Scripts/Editor/ColorBallCapture.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "efa8982c178d72145dc3b0a747ca1778a96100f7"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V3/Scripts/Editor/ColorBallV3Builder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "cae3b2b7de821f9cc6975319366783eab7ce7309"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V3/Scripts/Editor/ColorBallV3Checks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "c46cbec4c413252721a15c24ff4c9bf38ce68c1b"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V4/Scripts/ColorBallAudioV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "abcf5f0916a3afff5c40e3f021c2a615636ea792"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V4/Scripts/ColorBallSeatV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "ae128181401934db65b7d62859ec6336533ea8d6"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V4/Scripts/ColorBallV4Sequence.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "311d3f1010f07e7507d89e8e75a12d9361527ef2"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V4/Scripts/ColorBallVfxV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "56b9f2b852627265aaca030334fdd88760b3a1fd"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V4/Scripts/ColorBallVisualV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "45baa11faabaa164738a64f8441286eaa303d7f1"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V4/Scripts/Editor/ColorBallV4Builder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "8d6eb75bef918808d45dae05bd89bb1c711dcfba"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V4/Scripts/Editor/ColorBallV4Capture.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "d4c69b1498832699838ea9b6ebf79ee95ceda1c4"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V4/Scripts/Editor/ColorBallV4Checks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "362f67e1a41e59d4c8775b6a58d43988c520e52a"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V5/Scripts/ColorBallPresentationSettings.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e5541c6f11ca40524a2a564694411606d9bc0d3a"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V5/Scripts/ColorBallV5Presentation.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "5b4430ff3d23ca188ab74827e80c66718eab88ac"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V5/Scripts/Editor/ColorBallV5Builder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "62cbd9326d60869ab41196adcd59b7e23d37059d"
+    },
+    {
+      "path": "Assets/Boosters/ColorBall/V5/Scripts/Editor/ColorBallV5Checks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "d5e7b8dd8b1d586c298ebc71e748fdf51b2eb2e0"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V2/Scripts/Editor/PropellerV2Builder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "935c874a4f681ff71d41d97db126783402d8b011"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V2/Scripts/Editor/PropellerV2Checks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "daf1c0be10d730c5b01eb07e48acf24ada7fc976"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V2/Scripts/PropellerGameplayV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "a6a756b4c8c1deabf45dfdc492c735dbad55601c"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V2/Scripts/PropellerGeometry.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "aff251643bf92504716d78ccaff2f698622b617b"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V2/Scripts/PropellerSeatV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e1767364a1702cd1e73f00c568c912a780ff8cad"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V2/Scripts/PropellerVfxV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "fac1d6858b6e852b1d6034f3b69ca5f1ebca68c7"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V2/Scripts/PropellerVisualV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "c52bf722d1800dceb1c7a229923afaa3b66a3716"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V3/Scripts/Editor/PropellerV3Builder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "31e95931562bb01bf6b8ae447b269eea3f4ae2dc"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V3/Scripts/Editor/PropellerV3Checks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "58d63378a4574b5a17adb052d30f73b1b3ce7b7a"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V3/Scripts/PropellerGameplayV3.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "65770bfb26e4f86f610736874a1c4358eb15181d"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V3/Scripts/PropellerGeometry.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "0731e5944c0c9a6c2f71f38daee3e72d8462a78d"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V3/Scripts/PropellerSeatV3.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "6f02d0e6ba06b97b25519d3f6025f8aa35ea55a4"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V3/Scripts/PropellerVfxV3.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "56802a836e6a04890d6b9b6b2e7d0aec0c786dff"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V3/Scripts/PropellerVisualV3.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "135fee5efb24e6840a693110c098853e008003e8"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/Editor/PropellerCapture.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "a90473ed87da97132778e7b8c0ea7bdc58387300"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/Editor/PropellerTntRegression.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "ac42366e3bd822946e5b2b6e0ae1f67bf1458327"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/Editor/PropellerV4Builder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "974db0ebd6fa70882b070d388fba7ce226db6009"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/Editor/PropellerV4Checks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "7e44803fbe651fc214125136759204cb9a097cc5"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/PropellerAudioV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "524f024b19a3d298cf78a6b4fce3faa90b9bc145"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/PropellerGameplayV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "ba1ef7400d48adb4205e226931bab52a76f285e2"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/PropellerGeometry.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "7f2a1dbcb3695b3bfe17f356045e063e82dd0d3a"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/PropellerMotionV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "05dca352119abc382715c69a60dea0ebf1cd26ee"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/PropellerSeatV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "dc679c8232bb63a089462c7bbc01603a825e1da1"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/PropellerVfxV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "7e0205e82ca0cf490f30f617f741f099f5828b03"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V4/Scripts/PropellerVisualV4.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "3c1186e05f8e1e36c15e9abd3123b8eb3391e45f"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/Editor/PropellerCapture.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "2e6cc2f5a60907861b970758fae2de759a269d58"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/Editor/PropellerV5Builder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "53ad791b4dff957f3dc99b54d9540a6ca30945a7"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/Editor/PropellerV5Checks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "8f76e3f207cc9b40b76c5fccfe019b723843ff06"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/PropellerAudioV5.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "3525548dfc4e256fb3b4789beb96c2c4fd7efe63"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/PropellerGameplayV5.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "74cd40a59f8736dd8c1340f3b1365f0433488740"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/PropellerGeometry.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e8a9f18aeabac90e81ccabe7cce1542db0e17d3a"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/PropellerMotionV5.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "367381268d7d6848d261a496f25de811a9cab3b9"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/PropellerSeatV5.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "5a2b7284b71e34b8d132fe734fee1117044f7cf6"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/PropellerVfxV5.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4ea8956d950a4d89cfb8c5a8e11f9944b20b08c1"
+    },
+    {
+      "path": "Assets/Boosters/Propeller/V5/Scripts/PropellerVisualV5.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "027eddfeb7ae60b7a281a7771cca9ef6c25960d3"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/AdsEvents.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "820ee9d3cea4c5ba3b50dfdee4b663ef3741013a"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/AI.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "fc4915a83d3aeea34ca503f3f3a334ed9ca1843e"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/Autorun.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "89b85f8625815e3116bd61afe0e6d636029a9205"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/EditorMenu.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "f18457e2290a973a536557ee8828def1ae8afb79"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/LevelMakerEditor.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "9b8f767e37791bd6c1164bc2ab5326f1e1f8c59d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/PostImporting.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "406258e42fe962b5030a40adac4ca10b807b61e0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalAndroidBuild.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "d81123a11df065adcbc64e0e147c5a1a9e372d81"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalAppIconBuilder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "6097fa47f4afb08a319057c309c7f5b85a315f0b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalBoardPresentationChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "f9cee23cbce679efe685596d6d22ad9c598c9ffe"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalBoardSurfaceChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "df216c87adaf923202714a3ed8ade4dfdef9bf47"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalCampaignBlockerChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "dfc3cfff6bb5e066f91f0ffdd8f3b4ab1225b303"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalCampaignChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "5ab9f058041b5956c86c9726ca5652e090ddd8fa"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalCellBreakChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "bcc7d5ffd025c5d57e035fc0848a75e7b40a0851"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalColorBallChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "d4f9b1d801bcf0842f1e4f1069e55bedc9419e82"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalColorBallQaChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "2310410beecf7678c3c099c3da0eac88a1d78c3d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalEffectsChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "65500ea1b12a8ed1d8a5cffc788f3b9afff85a9e"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalEffectsWorkshop.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "c51e9349c4f246adddad4a651947d935301a6c19"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalGameplayArtImporter.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "a56b05919ff0794fd15d82d0171f7569cb548ea0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalHandoffCapture.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "539a6556c6fa312af2a0539fd9bb3ba1c5dd785e"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalHintPresentationChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "b23cba6a20c49739544ae5611d50e62f6f29336c"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalHomeScreenBuilder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "dac82c65015d750b1b10fac2c55ee8baf4308299"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalHomeScreenChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "4fcde1237aeb418ffad5bad85eadd17cfb32d469"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalInputRegression.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "b2d87edef495c0a6a57a0793e91505ad44ce5d4a"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalPresentationChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "22b2351c1c1c74b3524dfc987bfc42cc388d6c40"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalQaChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "9af7991b3ac7c446655826c64bcfc5d4554898a0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalRocketChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "21af5f199aae698dda0e1b369b82fb801c69e114"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalThroneAndroidBuild.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "ba265b3345d59520eaa850a8fea19cbba055b09d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalThroneBoardPlaytest.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "6fb6f4136a34d42de12e9f28d51d389eeb425002"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalThroneInputTrace.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "6d43302409944e0d44ef416e2f598ba490b5787d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalTitleScreenBuilder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "4d593f1b688d97d8d3ecd7cd52467140cdfe7839"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalTNTBuilder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "546b30f3ddcdf2437734ae6729353c56c1120b74"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalTNTChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "eaf43705c3ee1b87d4e1aedc738d856887a87629"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalToolkitBuilder.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "ac23a86ef3ae39757a060ceb01c5f8392d150612"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalToolkitChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "3fecf86a46b166213ab3ccf032bd1f441f40f125"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalVfxLab.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "96ac208d37499465dd1ae6354b54671a8fda5676"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/RoyalWebPImporter.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "cfbbd50611dd9ac86ce493d34c7cda4e8bf594b0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Editor/Warning.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "cd5c69e2bd8d4d258915b7e5fb0f195581578bcc"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GoogleRewardedAds/RewAdmobManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "1b1e7113397e41e8794630170d40488cd17110cf"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/AnimationManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "3715d192bee6afbff9188d72b8e4100f602c7f3c"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Avatar/AvatarManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "268a19d14f95de493a729e69b0264bd9458e2a48"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Avatar/FriendAvatar.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "d0bc90a18527e6056a7c2ba2fae31ef4fca06b3e"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Avatar/IAvatarLoader.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "6ad29c90fc035c7cacbd3ee43c397d587ae83d89"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Avatar/PlayerAvatar.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "dfa414e9ec787dc6373787e03122991b971e0e11"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Background.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "b16c3a93448b45b2ccadb0328106b8834cd2e77a"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/BoostAnimation.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "00892901a00d1397d9ce01cb57288427c122bdf0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/BoostIcon.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f5755c9643e43f169934c517e109e10f9ff40ae3"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/BoostShop.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "a90e4cf09d5a6d66a3a0a6e441f9c68d01301bc6"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Counter_.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "11cb7986bc9427e12c40a359793ad08a497c1b04"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/GameFieldAnim.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "10e2032290214e27d5bf9d02c5eba0922524f516"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/GUIEvents.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f4e27df2f7e90e8bfbbf6e64438ec0333b23454e"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/KeepUIInScreen.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4e5d23279e7875826d2ccb1c25ce1ef5373b8a20"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Level.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "11a83571d346358e8f7e0ec913fbc05df1663934"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/LIFESAddCounter.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "080a18e8c70b6860216c177fae39af4535025e29"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/LifeShop.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "cbc51b5894ea61485a9e7f401e4a3dd2a1402f07"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/MapLevelNumber.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "6c7d8313d051d5d6f15561ef5cf1902088724618"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/MapTargetIcon.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "5db34c1f9653c74efb9e13d7ae197c83407bde78"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/MenuManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "359b651a924b7ae16ec4bbc23d0be3d07cad7234"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/MovesLabel.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "7e1cf1719931b1921dae20ba3877586cb0fbdd61"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/NicerOutline.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "ca6efb5d1f9720bbca7e4aebf1cb425231b4fe3e"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Offlineleadboard.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "b2d306cc1a2fe20d46b78bbd80ea91a24e7092a0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/PreFailed.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "95099df70511eefb1706ed28aa751f3129244d1c"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/PrePlay.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "fce3f1b325a01b3825080bf68063654fe5f73aaa"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/ProgressBarScript.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "a78f7331e42649d709d325a69e49bef78b63ca50"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RewardIcon.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "111e9ea6dc6edb27691fbdbb51655ddb982af756"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalAndroidSystemBars.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "9f9d5c92e48daeccadf987c20f5fa3b6d55f163f"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalBoardSurface.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "0c7aa7abb560f710a9da3665da0253de08eaf403"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalButtonMotion.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4956495da1939e1cf099f682e6a183ab8a7c9402"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "c215fe87640fa8bc190f52cb31611be62495e063"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalHomeProgress.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "007b2a3b8caedbdbf9660796689c909c92f47af0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalHomeScreen.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "efdd47a7d883d2953be9058b4a2cd28d53fa94fa"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalLogoHalo.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "71508d3b3e9e580829910c4f409cd2838e8521a5"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalMenuPresenter.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "04b8507be100fda2e261c6988993210b5742fcd9"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalMenuSkin.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "089fb4db985ed3c729b7bb9568927646f589bdc8"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalPanelGraphic.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "8f952b69a70817df03f82f37ae5d4375b7fb632c"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalTitleScreen.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "94556ad27a18320c2e265c4a927a8a9595e66dba"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalVisualCatalog.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "170a0985aa62380df2164babb4c00e06043f9bd3"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/RoyalWaterGlow.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "48fa0640ad43fb640866f4f373df3833e96d50a4"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/SelectLevels.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e0cb2b03777eab41cf349f39a9a870a87d2bb27d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/TargetHolder.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "9c646fdc91f06e4ea01cee6c1fe6e374a83f0927"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Tutorial.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "c3c455d6703464f0c84e5227dc1471a1943d51f4"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Tutorial/HandTutorial.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "2e475c7e737a9f512cb1e034dc0937ed469452b7"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/GUI/Tutorial/TutorialManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4d37022b249a1365a4bee361188f1ad149a9ee8b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/INAPP.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "56f63e45297a2eba2901a91ea18b25a1b7346b6b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/InitScript.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e61efe81f09e0e1ee3534340f5ec4386bb1a3968"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/InputManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "7c12cba5332bd164e06779984ad14c0ba7e3a14d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/EventsListener.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "9d4f90d3356eca2536a1f7e32462b1a58691daf0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/FacebookManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "bba7337360c034b5117eefaa30939f267370ff9b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/FBTest.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "56b4f9c7c61ab2815baf1aad8d1faf8f2090c177"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/Gamesparks/Editor/GamesparksConfiguration.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "b2715727bb80f4cd33f4976341dfbc247acbff8b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/Gamesparks/GamesparksCurrencyManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "5e937091436c7c9e1dff78571d0740f2eab5958b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/Gamesparks/GamesparksDataManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "ee40453aa612f8098aa919cf7061ed0bc6fb3a5d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/Gamesparks/GameSparksFriendsManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "fd3a874deacbd8b29a77a684bead4be3dc128a31"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/Gamesparks/GamesparksLogin.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "8fc562298e95738b9008e06bcc4f3f92bbe4cbcc"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/ICurrencyManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f17be236ebac9511f07ad1dada12c002021595eb"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/IDataManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "d771685881cd94bb76ed07515da2804ae90c1186"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/IFriendsManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "cb5fbddaf6978354017d5eabfcdb80976b3c394d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/ILoginManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "77d5ec1fe50fd6ebc412ebf0e08612606e4abba8"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/IManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "a8069e2a21acbaa17f459089ddd26c81166b01c4"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/NetworkCurrencyManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "b326bf6b234b6d456f8a9ac791db2d5516a58b88"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/NetworkDataManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "761c2efc5d8e64188c18a52309642aa29b1fcc79"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/NetworkFriendsManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "c6c80a2525d382066e1e3daec864108fd56301b4"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/NetworkManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "deb13859a8448ad4fc51b08ef29caa2689802bbb"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/PlayFab/PlayFabCurrencyManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "cb2af056d23b2b5226eb7a2ffea4529d80e5962b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/PlayFab/PlayFabDataManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "2970c897a4c276d64a84a8d8016222c8548886a9"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/PlayFab/PlayFabFriendsManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "932bf3fd1db7fe10018bf3c0ababdd2492d5117f"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/Network/PlayFab/PlayFabManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f98b79eac852dbb1e69f09c416a30316ffa792fa"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/UnityAdsController.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4182c3685ef06262f79726dc3538d35df21a216f"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Integrations/UnityAdsID.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e395b5a89cb57832e947b16ed33862dfe232a8e9"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Item.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "1541e3d1e0ed49791b036f80dabad4afd9bb58fc"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/ItemAnimEvents.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "c4f6a0623e4973f38e21ce4b0e80a901276b53a1"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/CandyShatterService.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "eef818f4ddb8a8c3f400fc84f3625b441c3b9f8a"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/ColorBallBoostView.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "1f65201e9657b682c99bd056022af823976da44f"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/ColorBallFrameAnimator.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4c742a177aac31e0799ebb65c27f23687ec43b8d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/ColorBallPresentation.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f426feb174c4cc06702f2bed5b2ee79bb3ddd8a3"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/ColorBallTargetVfx.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "7c64a0ee409594ca0e9327cf868ed4fd5a1f447c"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/Easing.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "fb7b179dd82247157d87a87e60134dcee9718cf6"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/JuiceConfig.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "2f5634689dedfcace57de8ec1c9024bcb1a6a7a1"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/MatchVFXService.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "43f5c72cac996b0ad25270ec5cfd05a0942087db"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalAudioDirector.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "20d23d2d51230c51d400f6555ba95b82c831b801"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalBlockSkin.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "a9ed76a6396e754622ddeddb2ed6971169f41ad7"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalBurstLibrary.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "a6cab995ecdac2b40e48a4f801e475169167b739"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalCelebration.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "44963b91b2acb79379b619b0bc833651bd27e99b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalColorBallSequence.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "579d3af884d28d91cd5da8b601d1916af5faa987"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalContactShadow.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "ebbb395e8ee1ef08a32cd14274cf2e5d0fead98d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalEffectsProfile.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "fc6e22e34909200f5e5c9511bfeab64fd356ddec"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalGameplayArt.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "1a076f552f3afd9be5bed2a5d641b49709bc07ee"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalHintContour.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "5e73a5305d1d328b00393b13e4f42862f88dc24b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalHintPresenter.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "403d818975ef95e6dc3a7151ddfd2d9904494a3f"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalHintSettings.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "ac62392b2e63585076acc39aca8526ea0fda9056"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalHintSolver.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "25a94991cc5911b85873e4fad7dcace964259837"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalMatchBreakService.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "ef959c0b97656b7522229bdf125ae5cfa543c854"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalPatterns.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "3c6c465d56d3a6f80f8ef0a62c780651c6d35365"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalPieceSkin.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "c56ede80910321a22aa5a5ebbfcccc84ebe861e8"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalPowerupDirector.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "c9020af8e53185a68a214d79a9d84687fbc7611b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalPropellerPieceV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "1276779f5e65f5dbb1c74ab0768da495b164a982"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalPropellerV2.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "fa9286d11fbd351fbe11e6f3aedc6f3ea69174be"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalPropellerV2Sequence.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "8296a227cf9a9194ef00f9f01d86101c59906c71"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalRegressionRunner.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "d62075c3d952526dbe1ec75a9f593575db7199d9"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalReviewAudioCapture.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "2d2ec32469c1a2ee8e9f72023fef3cb8a9d42791"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalRocketLaunch.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4a9ced82cf669591b53f8737114ae591542fe242"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalRocketPieceAnimator.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4fc39f02f2b12aac5595e3fad16319221541dae0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalRocketSequence.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "eb81d6780e9585b8cd8f19ee176b6e291551a397"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalToolkitImpact.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "117077c21aeae73903e9b8cf3b31c976b2052e91"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/RoyalToolkitLibrary.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "7a78b2179fdd38c7ea28500711a854e6fde4fc8a"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/SparkleTextureFactory.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "8d42ecb361c73973f180b8d8c6147f6bcec4dfa5"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/TNT3DAnimator.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "7c3e0b204423c95ae324896ff44cf32f8a30504a"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/TNTFrameAnimator.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "fa88292ee5988e55d12c688846c1ecbf9d526478"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Juice/UrpBloomSetup.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "558f86ca7c06f9bb6f1ff155adfe61d007912503"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Leadboard/LeadboardManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "b085ff2c7c0e960e6ea6dce3cc2c811517a97c66"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Leadboard/LeadboardObject.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "68b7ced5f3dbba90c45e3b9c3dcbec5df6201260"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/LevelDebugger.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "35cbfd03ccc55751d9745a19b972bdfb6778572a"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/LevelManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "5928d26032c77a24421e3ed3907d6872ce454630"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/ApiTest.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "262bf47f9d453a3bdab0e7e803848cde740f58ea"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/DemoButton.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "54484ad35d99736761f4cad19b9e94958be2141d"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/Editor/SmartLevelsMap/LevelsEditorBase.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "1d0498e2de926b78d0715f555def1748b5b05bba"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/Editor/SmartLevelsMap/LevelsMapEditor.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "b490b8cb805e3800e6d5ea63d59964afc19d36c2"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/Editor/SmartLevelsMap/MapCameraEditor.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "358faa6e053789fa232c143e31a72bf915f8f535"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/Editor/SmartLevelsMap/MapLevelEditor.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "e9842bf2f1a8fc7ad7cf1b8ffc414580ac170cff"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/IMapProgressManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "d24b5f362c037bdbd639608211f6d0c5e21494c4"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/LevelReachedEventArgs.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "bfe59ed131e0348d359ed1dfd5bd940dab309a66"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/LevelsMap.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "230cd03f310a79c0886a0ad37794268585a546d8"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/MapCamera.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f86ca863561ccea309b6760f6669ff89748eb1c0"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/MapLevel.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "33e5769e561183b00dad70852486efa5dbfaefeb"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/Path.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e376070a1eb752b03951de58984f783eeb687c91"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/PathMap.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f4ce00ce1d7adeadc323d15759a5e0b0d90c68ce"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/PlayerPrefsMapProgressManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "dc5b339debfbf71a183117e70b1660bf31280ccd"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/SplineCurve.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "328f7b177398e7672aaac74a7996f8cb9fb172ea"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/StarsType.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e255018db8d027b5c0ddd0e03df058a892422a56"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/TestLevelGUI.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "6a5e1aa6d67b55b9782a944417015bc47d371009"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/TranslationType.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "28f07083c2ef744b3138fe22119a40f65c5117c6"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MapScripts/WaypointsMover.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "9a51693193d05072e32b4d17753a0ce1a9ed18ac"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/MusicBase.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "258ec20c4538916671574000d31a6cb2d0a2ca83"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/ParticleSorting.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4c1925d99f9b49498792e0ae7800b337624f74aa"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/PrivacyPolicy.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4f585f89c267c20c868bd4da8617aa02e10469ee"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/RoyalCampaignBlockers.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "2be00afc45fa3173e389cd7b4246169797f51142"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/RoyalCampaignItem.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "2545ba4d5e7f616babdeaf795b1c4ad00c6aa488"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/RoyalCampaignPiece.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f54e62e4214948fdf60e5e2471f4f5673894c894"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/RoyalModMenu.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "081aaf2d6e7b1c1349b0449ecdd9a9b98c48dbc9"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/RoyalOfflineMode.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e097226b7ca129203d8d7bcfc8d98346c24f5433"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/RoyalQaMenu.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "d195c9c0b44cf22f8ac90d7514f004e2a946f695"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/RoyalQaService.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "7be902dd0f6ecd957d8cac48989ebeac1f269bf9"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/RoyalReferenceCampaign.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "cd38bc381d7975898df0512af8a321f9a3544cad"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/RoyalSave.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "d0d04353c27cfb0fa8b98766ca310af54fa651dd"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/SafeArea.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "11fd03c002be9fccec98b590c652dcf8f515c5a5"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/SoundBase.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "2d32056716d816d5651901cc0f0d1eda2f9b148a"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Square.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4f22316343dddb5810107ae574c38a213ed107fa"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/System/AspectCamera.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "b9f900a423927917362dab4aee20f4f0cfc9dd43"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/System/CombineManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "1e9928acd1cf8cbfe77f74be2b25244ff3f2e409"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/System/DateTimeManager.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "087f34d022ae422ff4b4e9fec89d7b748501c890"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/System/RestartLevel.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "62014cf356c9cf84ad8a1e1eb6fa592c8f10d093"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/System/RewardedButton.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "38c88a8b31752029ab8f84759f0c751fe85ce553"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Targets/Editor/TargetLevelEditor.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "29526b40bcc368e6429376cf48ccb0a8235386ac"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Targets/TargetIcon.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "cf8fc64b5f26e764d9820e5b33ab848328deb82c"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Targets/TargetLevel.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "a099951563b38cf77845f53dfca38fe73537fd7c"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Targets/TargetsGroup.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "c21fa29a9a3763dcf48979f4c5f8d9d85c19b48b"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/Targets/TargetText.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "3a1dc59ba2a0a20b8a04facf0d494fbe3c1ae02e"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/UnityAdsController.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "ecebfac2ed5bbd146dd0c82cd9b5625d6fd6aa01"
+    },
+    {
+      "path": "Assets/JellyGarden/Scripts/UnityInAppsIntegration.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "77b5adc79b18b4d3ff374d8ae59ad567fb2626ec"
+    },
+    {
+      "path": "Assets/JellyGarden/Unity-Reorderable-List-master/List/Attributes/ReorderableAttribute.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "4ba12618783d43f729a8c42108c1319717816de7"
+    },
+    {
+      "path": "Assets/JellyGarden/Unity-Reorderable-List-master/List/Editor/ReorderableDrawer.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "ba983f498e5d184d6ad8cd71d7a57246d45c4c74"
+    },
+    {
+      "path": "Assets/JellyGarden/Unity-Reorderable-List-master/List/Editor/ReorderableList.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "72619dcabc3c6d9cbdccc526de714ddb24657f2a"
+    },
+    {
+      "path": "Assets/JellyGarden/Unity-Reorderable-List-master/List/ReorderableArray.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "7de019a39083b7965ae9f6fc1548445f19752380"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Animation/Editor/ReferenceGameplayMediaImporter.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "ab0999262b793a9531f4f09175f9982cab4d59e5"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Art/Editor/ReferenceBlockerImporter.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "7c881362800163acfca3a33cce5db9545c65e1d7"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Editor/ReferenceGameplayChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "75aa1e79de2235df273957e42b94b7d6c0dc01b5"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Editor/ReferenceLevelChecks.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "b1687cddb1ec3ab5313ab36bd9137df297ed3792"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Editor/ReferenceSpriteImporter.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "8a3a509d6ee665d1d2bb1447a29e11d9d8d8b8d3"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Scripts/ReferenceActivationVisual.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e54bd251902d41c7a8c4a684af181ddbcc3cef7d"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Scripts/ReferenceGameplayAudio.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "e862e271dc77686265a940070149c58d3033dfdb"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Scripts/ReferenceGameplayCatalog.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "f6c758cb0c1e9cbd82c4245d33957e589b55a027"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Scripts/ReferencePieceVisual.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "6cab08f13410880544a1092b7b57d77311d2c386"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/Scripts/ReferenceVfxPool.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "1c9102d0f446cded3222d1d7f434f9d81ac641a4"
+    },
+    {
+      "path": "Assets/ReferenceGameplay/VFX/Editor/ReferenceGameplayVfxImporter.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "09278edc7b433ff3ba2b9286b039f2d31f85c63c"
+    },
+    {
+      "path": "Assets/TutorialInfo/Scripts/Editor/ReadmeEditor.cs",
+      "assembly": "Assembly-CSharp-Editor",
+      "gitBlob": "b3a0135df9b55db622e8b7129d7811fd1c991c1a"
+    },
+    {
+      "path": "Assets/TutorialInfo/Scripts/Readme.cs",
+      "assembly": "Assembly-CSharp",
+      "gitBlob": "af9828ef157b9f642bba858b377efac0dcb58238"
+    }
+  ],
+  "assemblies": [
+    {
+      "name": "Assembly-CSharp",
+      "sourceCount": 206,
+      "exitCode": 0
+    },
+    {
+      "name": "Assembly-CSharp-Editor",
+      "sourceCount": 72,
+      "exitCode": 0
+    }
+  ]
+}

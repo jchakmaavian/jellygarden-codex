@@ -1,0 +1,16 @@
+[
+  {
+    "source": "resources.assets",
+    "pathId": 823,
+    "name": "DOOR_LP1",
+    "assetPath": "Assets/ReferenceGameplay/VFX/Meshes/DOOR_LP1__823.obj",
+    "status": "Native geometry recovered; cupboard-door VFX blocked by unavailable shader graph source."
+  },
+  {
+    "source": "resources.assets",
+    "pathId": 835,
+    "name": "DOOR_LP",
+    "assetPath": "Assets/ReferenceGameplay/VFX/Meshes/DOOR_LP__835.obj",
+    "status": "Native geometry recovered; cupboard-door VFX blocked by unavailable shader graph source."
+  }
+]
