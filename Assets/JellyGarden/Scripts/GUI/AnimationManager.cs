@@ -331,10 +331,16 @@ namespace JellyGarden.Scripts.GUI
             {
                 LevelManager.THIS.gameStatus = GameState.Map;
                 LevelManager.THIS.gameStatus = GameState.Map;
-                PlayerPrefs.SetInt("OpenLevel", LevelManager.THIS.currentLevel + 1);
-                LevelManager.THIS.LoadLevel();
-                if (LevelsMap._instance.GetMapLevels().Count >= LevelManager.THIS.currentLevel)
-                    MenuManager.Instance.ShowMenuPlay(true);
+                int nextLevel = LevelManager.THIS.currentLevel + 1;
+                // After the last authored level there is no level to open: CONTINUE returns to the home screen instead
+                // of loading a missing level file (which threw here and left this card stuck on screen).
+                if (Resources.Load<TextAsset>("Levels/" + nextLevel) != null)
+                {
+                    PlayerPrefs.SetInt("OpenLevel", nextLevel);
+                    LevelManager.THIS.LoadLevel();
+                    if (LevelsMap._instance.GetMapLevels().Count >= LevelManager.THIS.currentLevel)
+                        MenuManager.Instance.ShowMenuPlay(true);
+                }
             }
             if (gameObject.name == "MenuFailed")
             {
