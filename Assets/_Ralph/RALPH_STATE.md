@@ -246,3 +246,29 @@ Throne's own implementation.
 - **Screenshots/evidence:** `kv/play/r09_tutorial.png`, `r09_reentered.png`, `r09r_reentered.png`
 - **Remaining risk:** `showed` is session-only (the tutorial replays in a new session). That is existing behaviour, left unchanged.
 - **Next task:** R-02 (reproduce the `GetRandomItems` loop with pre-level boosters).
+
+### Iteration 8
+- **Date/time:** 2026-09-25 00:24-00:28 local
+- **Area inspected:** `LevelManager.GetRandomItems` (pre-level boosters at level start; colour ball destroyed during the win finish) (R-02)
+- **Issue:** the selection loop caps `count` by all pieces but draws only from plain ones.
+  - With fewer plain pieces than requested it never finishes.
+  - With none, `list[Random.Range(0,0)]` throws and the catch sets `Win` on every pass.
+  - Either way the game freezes on the main thread.
+- **Severity:** P0 (hang). Reachability is narrow: a crowded board, or a colour ball destroyed in the win finish with no plain piece left.
+- **Reproduction:** not run in the live editor, because an infinite main-thread loop would hang the shared Unity session. The loop, copied verbatim except for Unity types, ran in an isolated .NET program (scratchpad `r02/Program.cs`) with an iteration guard:
+  - "win finish, 0 plain": no termination in 5,000,000 iterations, 5,000,000 `Win` assignments;
+  - "5 rockets, 3 plain": no termination;
+  - normal case: fine.
+- **Root cause:** a missing cap to the plain-piece count, plus a catch that re-enters Win.
+- **Files changed:** `Assets/JellyGarden/Scripts/LevelManager.cs` (+4 lines, byte-level edit keeping line endings)
+- **Fix:** `if (list.Count < count) count = list.Count;` before the loop. Normal cases are identical, including the random picks; degenerate cases return what exists.
+- **Tests executed:** the same .NET harness against the fixed logic (all cases terminate); recompile; fresh Play Mode regression.
+- **Result:** harness: fixed version terminates in every case (0 and 3 picks respectively).
+- **Regression result:**
+  - Level 12 with all three pre-level boosters: the board starts with 5 TNT, 5 rockets and 1 colour ball.
+  - A colour ball spawned and the win finish run: Win reached normally.
+- **Console result:** no errors
+- **Performance result:** n/a
+- **Screenshots/evidence:** `kv/play/r02_boosters.png`; harness output in this entry
+- **Remaining risk:** the dead catch -> `Win` branch is kept (now unreachable) to keep the diff minimal.
+- **Next task:** P2 batch. R-11 (timed levels: HUD label and hammer slot), R-10 (Back in pause and result cards), R-13 (auto-pause on app background), R-14 (quit-level confirmation), R-12 (PreFailed tap delay).

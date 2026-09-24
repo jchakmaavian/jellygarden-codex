@@ -1445,6 +1445,10 @@ namespace JellyGarden.Scripts
                 }
             }
 
+            // Only plain pieces can be picked: asking for more than exist never finished (with none, every
+            // pass re-entered the Win state), which froze the game. Take as many as there are.
+            if (list.Count < count)
+                count = list.Count;
             while (list2.Count < count)
             {
 
