@@ -329,3 +329,23 @@ Throne's own implementation.
 - **Screenshots/evidence:** `kv/play/back_E_pause.txt`, `back_F_tool.txt`, `back_G_shop.txt`, `ralph-003820.txt`, `ralph-004047.txt`
 - **Remaining risk:** Back still does nothing on PrePlay, the win card, the fail card and the PreFailed offer. That is deliberate for now, because those need a product decision (e.g. Back = CONTINUE / TRY AGAIN).
 - **Next task:** R-13 (auto-pause when the app goes to background during a level).
+
+### Iteration 11
+- **Date/time:** 2026-09-25 00:42-00:46 local
+- **Area inspected:** app pause/resume during a level (R-13)
+- **Issue:** a level interrupted by the OS (call, home button) resumed straight into live play, with no pause menu. On the 11 timed levels the clock resumes immediately.
+- **Severity:** P2
+- **Reproduction:** QA level 12. Unity's `OnApplicationPause(true)` then `(false)` delivered to every root object, which is what the engine does when the app is backgrounded. Result: still Playing, no popup.
+- **Root cause:** only `InitScript.OnApplicationPause` existed, and it only saves lives.
+- **Files changed:** `Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs`
+- **Fix:**
+  - `OnApplicationPause(true)` opens the pause menu, only while Playing with no popup open.
+  - Focus loss does the same in builds only (the editor loses focus on every Inspector click).
+- **Tests executed:** recompile; fresh Play Mode; the same message sequence while playing; edge case on the win card.
+- **Result:** while playing: resume lands on the pause menu (Pause, timeScale 0) and Continue resumes. On the win card: unchanged.
+- **Regression result:** the pause menu from the gear and from Back is unaffected (both covered in iterations 3 and 10).
+- **Console result:** no errors
+- **Performance result:** n/a
+- **Screenshots/evidence:** driver log `kv/play/ralph-004408.txt`
+- **Remaining risk:** real OS backgrounding and focus loss need a device check (Android notification shade, calls).
+- **Next task:** R-12 (PreFailed buttons ignore taps for about 2 s).

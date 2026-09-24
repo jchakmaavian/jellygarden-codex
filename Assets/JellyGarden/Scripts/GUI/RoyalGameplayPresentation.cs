@@ -55,6 +55,16 @@ namespace RoyalThrone.Presentation
         }
         void Awake(){Build();}
         void OnEnable(){RoyalPowerupDirector.Reaction+=React;}
+        // A level interrupted by the OS (app sent to the background; on devices also focus loss, e.g. the notification
+        // shade) comes back to the pause menu instead of straight into live play. Only while actually playing with no
+        // popup open, so the win celebration, the fail offer and result cards are left alone.
+        void OnApplicationPause(bool paused){if(paused)PauseForInterruption();}
+        void OnApplicationFocus(bool focused){if(!focused&&!Application.isEditor)PauseForInterruption();}
+        void PauseForInterruption()
+        {
+            var lm=LevelManager.THIS;
+            if(lm&&lm.gameStatus==GameState.Playing&&MenuManager.Instance&&!MenuManager.Instance.BlocksBoardInput)MenuManager.Instance.ShowMenuPause(true);
+        }
         void OnDisable(){RoyalPowerupDirector.Reaction-=React;}
         void React(float value){excitement=Mathf.Max(excitement,value);}
         void Build()
