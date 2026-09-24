@@ -36,7 +36,6 @@ namespace JellyGarden.Scripts.Leadboard
 		}
 
 		void OnDisable () {
-			Debug.Log ("Leadboard disable");		
 			#if PLAYFAB || GAMESPARKS
 		//PlayFabManager.OnLevelLeadboardLoaded -= ShowLeadboard;
 			#endif

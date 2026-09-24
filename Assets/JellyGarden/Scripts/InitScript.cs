@@ -189,7 +189,6 @@ using Facebook.Unity;
             Instance = this;
             RestLifeTimer = PlayerPrefs.GetFloat("RestLifeTimer");
             DateOfExit = PlayerPrefs.GetString("DateOfExit", "");
-            print(DateOfExit);
             Gems = PlayerPrefs.GetInt("Gems");
             lifes = PlayerPrefs.GetInt("Lifes");
             {

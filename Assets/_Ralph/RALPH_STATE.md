@@ -678,3 +678,27 @@ Throne's own implementation.
 - **Screenshots/evidence:** `kv/cs_warnings.tsv`, `kv/cs_warnings_after.tsv`, driver log `kv/play/ralph-022225.txt`
 - **Remaining risk:** the editor-only warnings (33) and Spine's (14) are unchanged. The editor tools compile and work, so these are out of scope for a player-facing pass.
 - **Next task:** R-17 leftovers (Sound/Music default mismatch, `print(DateOfExit)` each launch, timer formats), then the final report.
+
+### Iteration 23 (R-17 leftovers)
+- **Date/time:** 2026-09-25 02:24-02:28 local
+- **Area inspected:** the remaining R-17 items
+- **Issue:**
+  - Every launch logged two leftover debug lines, the last exit time (`print(DateOfExit)`) and "Leadboard disable" twice. They go to logcat in release builds too.
+  - Sound/Music defaults: five reads use default 0 while the rest use 1.
+  - Timer formats: home and the timed-level HUD show `m:ss`, while `LIFESAddCounter` and the legacy `Counter_` show `mm:ss`.
+- **Severity:** P3
+- **Reproduction:** console after a fresh Play start. Code reads (`grep`).
+- **Root cause:**
+  - The prints are debug leftovers.
+  - The default-0 reads (`InitScript` :226-227, `AnimationManager` :87/:92) are unreachable: the first launch writes Music=1 and Sound=1 before any of them runs, and the keys then always exist.
+  - The `mm:ss` counters exist only on hidden legacy UI. `LIFESAddCounter` is only in `LevelsMap.prefab`, the invisible legacy map that still drives life regeneration, and the legacy `Counter_` timer is on the hidden HUD.
+- **Files changed:** `InitScript.cs` (one line removed; other sessions' edits not included), `Leadboard/LeadboardManager.cs` (one line removed)
+- **Fix:** removed the two debug prints. Nothing was changed for the latent defaults or the hidden timers.
+- **Tests executed:** recompile; fresh Play Mode start to home; console since entering Play; lives state.
+- **Result:** 0 console entries from startup to home (before: 3 info lines). Lives 5/5, home normal.
+- **Regression result:** the startup path is unchanged apart from the logs. The life-regeneration owner (`LIFESAddCounter`) was not touched.
+- **Console result:** clean
+- **Performance result:** n/a
+- **Screenshots/evidence:** driver log `kv/play/ralph-022727.txt`
+- **Remaining risk:** none
+- **Next task:** final verification summary and `FINAL_QA_REPORT.md`.
