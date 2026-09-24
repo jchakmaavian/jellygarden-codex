@@ -159,3 +159,21 @@ Throne's own implementation.
 - **Screenshots/evidence:** driver log `kv/play/ralph-235925.txt`
 - **Remaining risk:** the HUD is still drawn above popups visually (by design for the goal banners); only its input is gated.
 - **Next task:** R-05 (win progress not flushed to disk).
+
+### Iteration 4
+- **Date/time:** 2026-09-25 00:02-00:07 local
+- **Area inspected:** persistence of a win (R-05)
+- **Issue:** the Win branch writes stars and best score after its only `Save()` (`AddLife` refund), then nothing flushes. A kill or crash on the win card can lose the win and the next level's unlock.
+- **Severity:** P1 (data loss window)
+- **Reproduction:** not reproducible in the Windows editor. Evidence: a real celebration win on QA level 37 put the new star value in the registry at once with no `Save()`, because editor PlayerPrefs write straight through to the registry. The window exists where PlayerPrefs commit only on Save, pause or quit (the Android target). Code evidence: `LevelManager` Win branch writes after `AddLife(1)`.
+- **Root cause:** missing flush after the progress writes.
+- **Files changed:** `Assets/JellyGarden/Scripts/LevelManager.cs` (3 lines, byte-level edit that keeps the file's line endings)
+- **Fix:** `PlayerPrefs.Save()` right after the stars and best-score writes in the Win branch.
+- **Tests executed:** recompile; fresh Play Mode; real celebration win on QA level 38.
+- **Result:** stars 0 -> 3, level 39 unlocked, value in the registry.
+- **Regression result:** the win card shows as before; the QA session restores the real profile.
+- **Console result:** no errors (Unity AI "Account API" warning only).
+- **Performance result:** one extra PlayerPrefs flush per win.
+- **Screenshots/evidence:** `kv/play/ralph-000239.txt` (pre-fix registry read), `ralph-000506.txt`
+- **Remaining risk:** **device verification pending** (Android kill on the win card). Not marked COMPLETE.
+- **Next task:** R-06 (locale-dependent DateTime.Parse at startup).

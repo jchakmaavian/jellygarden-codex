@@ -379,6 +379,9 @@ namespace JellyGarden.Scripts
                     {
                         PlayerPrefs.SetInt("Score" + currentLevel, Score);
                     }
+                    // Flush now: the life refund above saved before these stars and best score were written, and a
+                    // kill on the win card must not lose the win or the next level's unlock.
+                    PlayerPrefs.Save();
 
                     #if PLAYFAB || GAMESPARKS
                 NetworkManager.dataManager.SetPlayerScore(currentLevel, Score);
