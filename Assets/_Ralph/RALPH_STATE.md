@@ -1077,3 +1077,22 @@ Throne's own implementation.
   - The 6 R-25 failures cannot pass unless the tests certify the copied art, which is not allowed, or the import is reversed, which is the user's call.
   - The 3 R-28 suites need retiring or re-targeting, and as shipped they would still fail because of R-25.
 - **Next task:** the TNT-cancel check ("Leaving gameplay cancels finished TNT particles and delayed corona") may pass vacuously. Measure it; if it cannot fail, make it meaningful.
+
+### Iteration 34 (the TNT-cancel check is not vacuous: a correction)
+- **Date/time:** 2026-09-25 09:55-09:55 local
+- **Area inspected:** two statements in iteration 28.
+  - Its remaining risk calls "Leaving gameplay cancels finished TNT particles and delayed corona" vacuous ("Nothing emits particle-system particles there any more").
+  - Its fix 4 says "Neither `Burst` nor the preview emits a single particle-system particle".
+- **Method:** on an open board, `kv/burst_probe.cs` replays the check's `Burst` and counts, every frame, what the check counts: particles under the director and under `RoyalToolkitImpact`. It ran twice, once with the imports switched off and once as shipped:
+  - **A:** 30 frames, staying in gameplay;
+  - **B:** the backing state switched to Map one frame after the Burst, as the check does.
+- **Result** (identical in both modes):
+  - **A:** 0 particles on the Burst frame, 29 from the next frame, and still 18-23 after 30 frames.
+  - **B:** 33 one frame after the Burst, then 0 from the first frame on Map.
+
+  So the check is meaningful. Without the cancel on leaving gameplay, the particles would still be alive when it samples 0.14 s later. No test change is needed.
+- **Correction:** both iteration 28 statements are wrong about `Burst`. The earlier probe sampled only the Burst frame, before emission starts, and then the Map, after the cancel. The same wrong sentence is in the message of commit `127c54f8`. What holds is that the TNT preview itself emits none: 45 frames through Explosion and Debris, and `TNT3DAnimator` has no particle code at all. So the rewritten preview check stands.
+- **Severity:** none; the records are corrected.
+- **Files changed:** the report's wording for the preview check, which now states what was measured.
+- **Console result:** none. The real profile was unchanged after both sessions, and the editor's statics were reset afterwards.
+- **Next task:** none the loop can act on alone. The 9 red suites wait on R-25 (6) and R-28 (3).
