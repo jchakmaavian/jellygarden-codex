@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-25 08:29 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-25 09:52 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -99,7 +99,7 @@ signal is therefore the compiler warnings plus Unity's serialization analyzer. T
 | spine-unity | 3 | 0 |
 | spine-unity-editor | 11 | 0 |
 
-**Test suites.** The project has no Unity Test Framework tests of its own; its suites are editor check suites. The final run used
+**Test suites.** The project has no Unity Test Framework tests of its own; its suites are editor check suites. The final run (iteration 33) used
 the final code in a clean editor. Each suite ran in a fresh Play session, and the player's real save was compared before and after
 each one: it never changed.
 
@@ -112,7 +112,7 @@ each one: it never changed.
 | Responsive input, pointer events and cancellation | PASS |
 | TNT sun art, board palette, dialogs (21) | PASS |
 | QA controls ("ALL QA CONTROLS PASSED") | PASS |
-| Reference campaign 01-50 ("ALL FIVE BATCHES PASSED", 413 s) | PASS |
+| Reference campaign 01-50 ("ALL FIVE BATCHES PASSED", 395 s) | PASS |
 | Effects main suite, cell breaks, TNT, rockets | **FAIL** (open item 1); with the imports off, cell breaks, rockets and TNT pass |
 | Booster suites: Color Ball V5, Propeller V5 | **FAIL** (open item 1); **PASS** with the imports off |
 | Color Ball live v1, Color Ball QA, Color Ball V4 | **FAIL**, with or without the imports: they test superseded Color Ball code (open item 2) |
@@ -128,9 +128,15 @@ As shipped, 9 suites fail, each at the same check every run.
 **Shared Match-3 VFX package tests** (`SharedPackages/com.royalthrone.match3-vfx`, run in a scratch project): EditMode **17/17**,
 PlayMode **22/22**. The package's runtime and editor assemblies compiled with 0 warnings.
 
-**Levels 1-50 regression** on the final code: **50/50**. Every level opens to live play with a populated board, its goals and the
-correct HUD limit. The console had no entries. The HUD refreshes its time label every 0.1 s, so for about 0.1 s after each
-timer tick it still shows the previous second. This was measured and is harmless, and the sweep's check allows for it.
+**Levels 1-100** on the final code: **100/100**. Levels 51-100 had never been opened by a check before iteration 32. Every level
+opens to live play with a populated board, its goals and the correct HUD limit. The console had no entries. The HUD refreshes
+its time label every 0.1 s, so for about 0.1 s after each timer tick it still shows the previous second. This was measured and is
+harmless, and the sweep's check allows for it.
+
+**No leak over repeated levels** (iteration 31). Level 12 was opened and won 50 times in the QA profile, with a sample after
+garbage collection and unloading unused assets each time. From the second cycle on, every object count is constant:
+GameObjects, textures, sprites, materials, meshes, audio clips, particle systems, audio sources, Spine graphics and pieces.
+Managed memory stays flat when no CLI traffic runs alongside: +28 KB over 20 cycles.
 
 **Layout at four sizes** (1080x1920, 20:9 1080x2400, 4:3 1536x2048, 720x1280): 36 of 36 checks. On nine screens every visible
 control is on screen and takes a tap at its centre, and no text is clipped or off screen.
@@ -271,13 +277,14 @@ None of these was redesigned or rebalanced. The loop's changes that touch them a
 | Splash, loading screen | `RoyalTitleScreen`: an unused field removed |
 | Logo and branding art | none |
 
-A Levels 1-50 regression ran after the fixes, again after the first review, and again on the final code.
+A Levels 1-50 regression ran after the fixes, again after the first review, and again on the final code. Levels 51-100 were
+swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **30 iterations:** 17 fix iterations (1-14, 22, 23, 27), 9 verification passes V-01 to V-09 (two with fixes; V-07 is the
-  texture audit), 2 reviews, and 2 R-25 evidence runs (28, with its test fixes, and 29).
-- **30 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
+- **33 iterations:** 17 fix iterations (1-14, 22, 23, 27), 11 verification passes V-01 to V-11 (two with fixes; V-07 is the
+  texture audit), 3 reviews (25, 26, 33), and 2 R-25 evidence runs (28, with its test fixes, and 29).
+- **31 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,

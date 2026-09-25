@@ -1027,3 +1027,53 @@ Throne's own implementation.
   - The editor always reports a full-screen safe area. Seeing home and the HUD actually move out of the insets, and the gesture bar's behaviour in fullscreen, still needs a notched phone (R-16's device session).
 - **Also checked:** `ProjectSettings.asset` shows uncommitted define changes: the offline build policy strips `UNITY_ADS` and `UNITY_INAPPS` from Standalone, iOS and Windows Store, and `submitAnalytics` is 0. The working-tree file is identical to the pre-loop backup (`d6fe15ce`), so this is part of the 2026-09-23 offline change awaiting a decision, not a loop change. It is now noted in the report under that item.
 - **Next task:** none the loop can act on alone; the decisions and device checks are unchanged.
+
+### Iteration 31 (verification V-10: resource growth over repeated levels)
+- **Date/time:** 2026-09-25 08:35-08:55 local
+- **Area inspected:** whether a long session accumulates objects or memory: pooled effects, board pieces, the HUD, the Kings' Spine graphics, audio. No earlier check looked for growth across levels.
+- **Method:** in the QA test profile, the same level (12) is cycled: open, settle, sample, then win it through the QA "Win instantly" command. Each sample first runs `GC.Collect()` and `Resources.UnloadUnusedAssets()`, so anything counted is still referenced. It counts:
+  - GameObjects, textures, sprites, materials, meshes, audio clips, particle systems, audio sources, Spine `SkeletonGraphic`s and board `Item`s;
+  - managed and native memory.
+  1. **CLI-driven, 30 cycles** (`kv/leak_run.py`, `kv/leak_sample.cs`). Every object count is identical from cycle 2 to cycle 30: 7180 GameObjects, 2269 textures, 1598 sprites, 3110 materials, 12618 meshes (+2 once, after cycle 1), 41 clips, 64 particle systems, 16 audio sources, 4 Spine graphics, 70 pieces. Back on the map the board's objects are gone (6822 GameObjects). The rise from the first map sample (3239) to the first level is the one-off creation of pools and cached art. Managed memory rose about 0.12 MB per cycle and native about 0.2 MB.
+  2. **Calibration.** Each CLI eval loads one more assembly into the editor (776 -> 807 after 30 trivial evals), but that costs only about 2 KB of managed memory each. This does not explain 0.12 MB per cycle, so the drift was measured again without the CLI.
+  3. **In-game loop, 20 cycles, no CLI traffic while it runs** (`kv/leak_inloop.cs`: one coroutine drives the QA service and writes its samples at the end). Managed memory 1,491,792 KB -> 1,491,820 KB (+28 KB over 20 cycles, with a drop back at cycle 19). Every object count is again constant, apart from +2 meshes once at cycle 2.
+- **Result:** no leak. The object counts are flat across 50 cycles, and without CLI traffic so is managed memory. The drift in run 1 came from the tooling.
+- **Severity:** none found.
+- **Files changed:** none in the project.
+- **Console result:** no entries in either run. The real profile was unchanged, and all level results went to the QA profile.
+- **Remaining risk:** editor (Mono) figures. An IL2CPP build on a phone has a different allocator; the object-count evidence carries over, the byte figures do not.
+- **Next task:** a sweep of levels 51-100, which no check had opened.
+
+### Iteration 32 (verification V-11: levels 51-100)
+- **Date/time:** 2026-09-25 08:55-09:05 local
+- **Area inspected:** levels 51-100. The Story grid shows 100 levels and 100 level files ship, but every earlier sweep covered only the protected 1-50.
+- **Method:** the V-08 sweep, unchanged, in the QA test profile. Each level is opened through the QA service, and the sweep checks:
+  - the level number and the Playing state;
+  - squares, pieces and goals present;
+  - the HUD's moves or time label equal to the level's limit, allowing the HUD's 0.1 s refresh lag on timed levels.
+- **Result:** **50/50 OK.** Boards have 81-99 squares and 43-99 pieces, with 1-3 goals each. The timed levels are 54, 56, 59, 69, 80, 84, 91 and 94. Level 69 was read inside the HUD's 0.1 s refresh window ("1:17" against 76 s) and was accepted by that rule. There were no console entries, and the real profile was unchanged.
+- **Severity:** none found.
+- **Files changed:** none.
+- **Next task:** the fourth review requested by the user: re-read everything since `d844e783`, then the clean rebuild, every suite, both sweeps and the package tests.
+
+### Iteration 33 (fourth review: re-read, type check, lint, every suite, both sweeps, package tests)
+- **Date/time:** 2026-09-25 09:05-09:52 local
+- **Trigger:** the user's review instruction. It arrived four times during this iteration: treat the output as unverified, re-read every change since the last verified checkpoint, run the full test suite, linter and type checker, read the real output, and fix every failure.
+- **Re-read:** every change since the last fully verified checkpoint, `d844e783`.
+  - The three test files of `127c54f8` were read against the code they check. The rocket fill matches `RocketIdleCellFill`. The board-surface orders and vertex counts match `RoyalBoardSurface.RebuildIfNeeded` line for line. The TNT preview wait cannot miss the Explosion state (about 0.25 s, sampled every frame), and `Cancel()` clears pooled actors first. The seated tolerance covers the 0.00093 maximum.
+  - The three documentation commits were re-read for their claims.
+  - No defect found.
+  - The working tree holds nothing else from the loop. Of the files modified since 07:00, 1,939 are the evidence folders that the runs restored byte-identical, the three committed test files, and six git-ignored `UserSettings/AI.*` files that Unity's AI packages rewrote during a domain reload.
+- **Type checker:** first a refresh, which had nothing pending ("No scripts needed recompilation"), then a clean rebuild (`CleanBuildCache`) with every compiler message captured per assembly (`kv/cs_warnings_final4.tsv`): **165 assemblies, 0 errors, 0 warnings**.
+- **Lint:** the repository still configures no linter: no .editorconfig, rulesets, analyzer settings, CI or package scripts. The compiler reports 0 warnings for the project, and the package test logs 0 as well.
+- **Suites:** all 23, each in a fresh Play session. **14 pass, 9 fail.**
+  - Every suite's result lines are identical to iteration 27's run, apart from the campaign's timestamp: the same 14 passes, and the 9 failures at the same checks with the same messages.
+  - The campaign passed "ALL FIVE BATCHES PASSED" in 395 s.
+  - The 9 failures are 6 from the imports (R-25) and the 3 superseded Color Ball suites (R-28).
+  - The real profile was unchanged after every suite, and the booster evidence was restored byte-identical.
+- **Levels 1-100 sweep** (QA profile): **100/100 OK**, with no console entries and the real profile identical before and after. Timed levels 32 and 56 were read inside the HUD's 0.1 s refresh window and accepted by that rule.
+- **Shared package tests:** EditMode **17/17**, PlayMode **22/22**, with 0 failed, inconclusive or skipped.
+- **Failures fixed:** none were fixable without a decision.
+  - The 6 R-25 failures cannot pass unless the tests certify the copied art, which is not allowed, or the import is reversed, which is the user's call.
+  - The 3 R-28 suites need retiring or re-targeting, and as shipped they would still fail because of R-25.
+- **Next task:** the TNT-cancel check ("Leaving gameplay cancels finished TNT particles and delayed corona") may pass vacuously. Measure it; if it cannot fail, make it meaningful.
