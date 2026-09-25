@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-25 14:25 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-25 16:07 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -36,6 +36,8 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
 - **R-10:** Back in a level resumes from pause, cancels a selected tool and closes the tool shop.
 - **R-14:** HOME in the pause menu asks "Leave level? You will lose the life used for this level." before leaving.
 - **R-21:** the home profile avatar and the area chest respond to taps again. The home layout had switched off their only tap area.
+- **R-15:** the pause menu has HELP, beside HOME, which opens How-to-play over the paused level. Close or Back returns to the
+  pause menu, and a second Back resumes. Before, How-to-play could not be reached from a level.
 
 **Levels**
 - **R-04:** the pause button works only while playing, not during the win celebration. The HUD no longer takes taps meant for a
@@ -54,13 +56,18 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
   as "no minute passed". This is latent, because ads are off in the offline build.
 
 **Shop and copy**
+- **R-20:** each win earns 1 coin, the template's own reward, which had been commented out. Before, a player had 5 coins for
+  life.
+- **R-23:** the out-of-moves CONTINUE shows the coin, as home does, instead of a gem.
 - **R-08:** the offline gem shop shows its packs as "Unavailable" instead of real-money buttons that did nothing.
 - **R-17:** the counts read "1 coin", "1 star" and "1 level completed" instead of "1 coins", and the fail card reads "Best score:
   3800". Two debug lines no longer log on every launch.
 
 **Performance**
 - **R-24:** about 3.3 KB less garbage per frame from the HUD counters and booster icons in release builds. That means fewer
-  collection pauses, which matters because incremental GC is off in this project.
+  collection pauses.
+- **Incremental GC is on** in player builds, so a collection can be spread over several frames instead of one pause.
+  Its effect has not been measured on a phone yet (open item 10).
 - **R-19:** the King on a hidden screen no longer animates in the background. Home and the HUD hide by fading to
   alpha 0, so one invisible King always kept animating and rebuilding his mesh: 70-79 us per frame in the editor, likely
   more on a phone. He now freezes while his screen is fully transparent and is refreshed on the frame it shows again. The
@@ -99,8 +106,8 @@ signal is therefore the compiler warnings plus Unity's serialization analyzer. T
 | spine-unity | 3 | 0 |
 | spine-unity-editor | 11 | 0 |
 
-**Test suites.** The project has no Unity Test Framework tests of its own; its suites are editor check suites. The final run (iteration 33) used
-the final code in a clean editor. Each suite ran in a fresh Play session, and the player's real save was compared before and after
+**Test suites.** The project has no Unity Test Framework tests of its own; its suites are editor check suites. The final run (iteration 37, after the approved
+changes) used the final code in a clean editor. Each suite ran in a fresh Play session, and the player's real save was compared before and after
 each one: it never changed.
 
 | Suite | Result |
@@ -111,7 +118,7 @@ each one: it never changed.
 | Home sky, home finish, tool bar, HUD layout | PASS |
 | Responsive input, pointer events and cancellation | PASS |
 | TNT sun art, board palette, dialogs (21) | PASS |
-| QA controls ("ALL QA CONTROLS PASSED") | PASS |
+| QA controls ("ALL QA CONTROLS PASSED"; since iteration 37 also one coin per win, and none for a rejected repeat) | PASS |
 | Reference campaign 01-50 ("ALL FIVE BATCHES PASSED", 395 s) | PASS |
 | Effects main suite, cell breaks, TNT, rockets | **FAIL**, expected (item 1, decided); with the imports off, cell breaks, rockets and TNT pass |
 | Booster suites: Color Ball V5, Propeller V5 | **FAIL**, expected (item 1, decided); **PASS** with the imports off |
@@ -126,8 +133,13 @@ the three superseded suites, so these 9 are expected failures. Any other failure
   effects suite passes 493 of its 495 checks. With the imports on it stops after 48.
 - **The other three test Color Ball code the game no longer runs** (item 2).
 
+**The approved changes** (iteration 37), in Play Mode in the QA profile: **17 of 17** checks. A win credits one coin and a
+rejected repeat none; HELP is on screen, takes a tap and overlaps nothing; How-to-play opens over the paused level, pops in
+exactly like its unpaused entrance (also when HELP is tapped while the pause menu is still arriving), turns its pages, and
+Close or Back returns to the pause menu, then Back resumes; CONTINUE shows the coin.
+
 **Shared Match-3 VFX package tests** (`SharedPackages/com.royalthrone.match3-vfx`, run in a scratch project): EditMode **17/17**,
-PlayMode **22/22**. The package's runtime and editor assemblies compiled with 0 warnings.
+PlayMode **22/22**. The package's runtime and editor assemblies compiled with 0 warnings. Rerun in iteration 37: the same.
 
 **Levels 1-100** on the final code: **100/100**. Levels 51-100 had never been opened by a check before iteration 32. Every level
 opens to live play with a populated board, its goals and the correct HUD limit. The console had no entries. The HUD refreshes
@@ -139,8 +151,9 @@ garbage collection and unloading unused assets each time. From the second cycle 
 GameObjects, textures, sprites, materials, meshes, audio clips, particle systems, audio sources, Spine graphics and pieces.
 Managed memory stays flat when no CLI traffic runs alongside: +28 KB over 20 cycles.
 
-**Layout at four sizes** (1080x1920, 20:9 1080x2400, 4:3 1536x2048, 720x1280): 36 of 36 checks. On nine screens every visible
-control is on screen and takes a tap at its centre, and no text is clipped or off screen.
+**Layout at four sizes** (1080x1920, 20:9 1080x2400, 4:3 1536x2048, 720x1280): 40 of 40 checks in iteration 37, which added How-to-play
+over the pause menu to the nine screens (36 of 36 before). On every screen each visible control is on screen and takes a tap at
+its centre, and no text is clipped or off screen.
 
 **Safe-area bands at 20:9** (iteration 30). The editor always reports a full-screen safe area, so the controls themselves were
 measured against a notch band (top 130 px) and a gesture band (bottom 100 px):
@@ -161,7 +174,8 @@ measured against a notch band (top 130 px) and a gesture band (bottom 100 px):
 - **My tooling stopped a Play session I had not started** (2026-09-25 14:18). While I waited for answers, someone entered Play
   in the shared editor. My probe refused to enter Play, but its cleanup then stopped that session. The real save now shows
   `OpenLevel` 8 (was 14) and `Lifes` 4 (was 5), written by that session's own level start three minutes earlier. I have not
-  changed the save. The tooling now stops only sessions it started (iteration 36).
+  changed the save, and the user chose to leave it as it is; the life has since refilled. The tooling now stops only
+  sessions it started (iteration 36).
 - **The player's real save lost its lives, and was restored.** During the first full suite run, a script edit of mine was still
   waiting to be picked up. The editor picked it up in the middle of a Play session and reloaded the scripts. The reload stopped the
   campaign suite and set the real save's lives from 5 to 0. The lives were restored exactly as the game writes a full set, and
@@ -233,25 +247,29 @@ user on 2026-09-25; the others are still open.
    - The home Play button and navigation were recoloured teal.
 
    Both still wait for a yes or no.
-5. **Offline economy (R-20).** There is no coin income: a player has 5 coins for life, and the gem shop is unavailable offline. R-08
-   made the shop honest, but it still gives nothing.
-6. **Currency icon (R-23).** The out-of-moves CONTINUE shows a gem, while home calls the balance coins.
+5. **Offline economy (R-20). Decided on 2026-09-25 and done (iteration 37):** each win earns 1 coin, the template's own
+   reward. Before, a player had 5 coins for life. The gem shop stays unavailable offline (R-08).
+6. **Currency icon (R-23). Decided on 2026-09-25 and done (iteration 37):** the out-of-moves CONTINUE shows the coin. The
+   same balance still shows a gem on the gem shop's packs, the lives refill price and the tool shop's prices and balance,
+   which were outside the decision.
 7. **4:3 tablets (R-22).** The raised Home tab icon draws over the Settings dialog's bottom button. The layering is intentional in
    the protected home layout, so this needs a size or layering decision.
-8. **HELP in the pause menu (R-15).** The menu has a HELP label with no button, and the How-to-play popup is unreachable. Add the
-   button or remove the label.
+8. **HELP in the pause menu (R-15). Decided on 2026-09-25 and done (iteration 37):** HELP beside HOME opens How-to-play.
+   There never was a dangling HELP label: the skin's HELP line pointed at an object only the legacy Settings dialog has, and
+   that dialog opens only from the hidden legacy map.
 9. **Texture compression.** 184 scene textures (105.7 MB) are imported uncompressed. Compressing the 77 largest would save about
    72-77 MB of memory on Android (`Assets/_Ralph/TEXTURE_AUDIT.md`). This changes how the art looks, so it needs an art sign-off and
    a device check.
-10. **Incremental GC** is off (`gcIncremental`). R-24 removed the steady per-frame garbage in normal play; turning incremental GC on
-   would shorten the remaining collection pauses.
+10. **Incremental GC. Decided on 2026-09-25 and done (iteration 37):** `gcIncremental` is on. It applies to player builds,
+    and to the editor only after a restart: the running editor still collects non-incrementally, so its effect on
+    collection pauses is not measured yet (item 12).
 11. **The King's name.** The character and its files say "Venguard", while the English word is "Vanguard". Keep the spelling or
     rename it before release.
 12. **Device checks, not possible in this pass (no Android, by instruction):**
     - R-16, whether the hidden legacy map still takes taps;
     - safe-area insets on a notched phone (the editor evidence of iteration 30 found no problem);
     - the hardware Back button;
-    - memory and frame time on a phone;
+    - memory and frame time on a phone, including collection pauses with incremental GC on;
     - the Legacy and Round launcher icons that `RoyalAppIconBuilder` still writes.
 
 ## Risks
@@ -292,10 +310,10 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **36 iterations:** 17 fix iterations (1-14, 22, 23, 27), 11 verification passes V-01 to V-11 (two with fixes; V-07 is the
-  texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes, and 29), 1 correction (34), the
-  recorded decisions (35) and 1 incident (36).
-- **34 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
+- **37 iterations:** 18 fix iterations (1-14, 22, 23, 27, and 37 with the approved changes), 11 verification passes V-01 to
+  V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
+  and 29), 1 correction (34), the recorded decisions (35) and 1 incident (36).
+- **39 commits** (`c6b9fb97` to the commit of this report): 53 files, 46 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
@@ -305,6 +323,7 @@ swept as well, in iterations 32 and 33.
     `RoyalAppIconBuilder`, `RoyalPlayModeReloadGuard` (new), and the check suites `ReferenceHomeFinishChecks`,
     `ReferenceHomeSkyChecks`, `ReferenceLayoutChecks`, `RoyalBoardSurfaceChecks`, `RoyalColorBallChecks`,
     `RoyalColorBallQaChecks`, `RoyalEffectsChecks`, `RoyalHomeScreenChecks`, `RoyalQaChecks`, `RoyalRocketChecks`, `RoyalTNTChecks`;
+  - settings: `ProjectSettings/ProjectSettings.asset` (incremental GC);
   - reports: `Assets/_Ralph/RALPH_STATE.md`, `TEXTURE_AUDIT.md`, this file.
 - **Working tree only** (untracked King Venguard work, never committed piecemeal): `KingVenguardCharacter.cs` (R-19), seven Spine files,
   `spine-unity-editor.asmdef`, `UNITY6-COMPAT-PATCHES.md`, and `Design/Characters/KingVenguard/V1/Source/tools/runtime/patch_spine_unity6_deprecations.py`.

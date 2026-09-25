@@ -82,16 +82,16 @@ Throne's own implementation.
 | R-12 | P2 | PreFailed CONTINUE / END LEVEL ignore taps for about 2 s | AnimationManager :558 |
 | R-13 | P2 | No auto-pause when the app goes to background during a level | InitScript.OnApplicationPause |
 | R-14 | P2 | Pause HOME abandons the level (life lost) with no confirmation | AnimationManager.BackToMap |
-| R-15 | P2 | HELP label in pause menu without a button; How-to-play popup unreachable | RoyalMenuSkin :127 |
+| R-15 | P2 | How-to-play popup unreachable from a level (fixed, iteration 37, by the user's decision: HELP beside HOME in the pause menu opens it). The recorded "HELP label without a button" was wrong: the pause menu showed no HELP at all | RoyalMenuSkin, AnimationManager, RoyalBackButton |
 | R-16 | P2 | Hidden legacy map may still accept taps (device check) | MapLevel, LevelsMap |
 | R-17 | P3 | Sound/Music default 0 vs 1 mismatch; `print(DateOfExit)` every launch; plurals ("1 coins"); timer formats | various |
 | R-18 | P3 | Project-code compile warnings (about 30 runtime, 40 editor); obsolete Find APIs | see compile log |
 | R-19 | P3 | Hidden HUD and home kings keep animating; AI hint coroutine pile-up (Kings fixed in iteration 27, in the untracked King Venguard work; the hint coroutines measured bounded, no defect) | RoyalGameplayPresentation, AI |
-| R-20 | design | Offline economy has no coin income (5 coins lifetime). Product decision, not changed by the loop | LevelManager :371 (commented out) |
+| R-20 | design | Offline economy has no coin income (5 coins lifetime). Decided on 2026-09-25: restore the template's 1 coin per win (done, iteration 37) | LevelManager :370 |
 | R-21 | P2 | Home profile avatar and area chest ignore real taps: their only hit area is disabled (found in verification, iteration 18) | ReferenceHomeLayout.Hide :18 |
 | R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (layering is intentional; needs a size or layering decision) | RoyalHomeScreen / ReferenceHomeLayout (protected) |
-| R-23 | P3 | Out-of-moves CONTINUE shows a gem icon while home calls the balance coins | PreFailed prefab art; ties to R-20 |
-| R-24 | P2 | Per-frame garbage from `Counter_` (`Object.name` reads) and `BoostIcon` (strings) in normal play; incremental GC is off (fixed, iteration 20; the GC setting is a decision) | Counter_.cs, BoostIcon.cs; ProjectSettings `gcIncremental` |
+| R-23 | P3 | Out-of-moves CONTINUE shows a gem icon while home calls the balance coins (fixed, iteration 37, by the user's decision: it shows the coin. The gem shop, lives refill and tool shop still show gems; they were outside the decision) | RoyalMenuSkin (PreFailed) |
+| R-24 | P2 | Per-frame garbage from `Counter_` (`Object.name` reads) and `BoostIcon` (strings) in normal play; incremental GC was off (fixed, iteration 20; incremental GC turned on in iteration 37, by the user's decision) | Counter_.cs, BoostIcon.cs; ProjectSettings `gcIncremental` |
 | R-25 | decided | The board, HUD, tool bar and home controls draw sprites and effects extracted from the Royal Match APK (reference-asset integration of 2026-09-24: `cdd68361`, then the imported `ReferencePieceVisual` prefabs and `ReferenceVfxPool`). Royal Throne's own piece art, piece animators and effects are bypassed, and 9 effect and booster suites fail for that reason. Iteration 28 measured it: with the imports off, cell breaks, rockets, TNT, Color Ball V5 and Propeller V5 pass, and effects passes 369 checks before failing on the imported HUD's smaller playable area (360x640: 30.9 px per cell, floor 32). Iteration 29 ran the rest of effects: with the imports off, 493 of its 495 checks pass (only the two 360x640 layout checks fail); as shipped, the imported leaf and lily sprites also fill under 88% of a cell. Only 6 of the 9 fail because of the imports; the other 3 are R-28. The imports also switch in through `ReferenceActivationVisual.Attach`, `RoyalBoardSurface.Edge` (imported border instead of the own `frame-edge-*` art), `PlayableViewport` and the HUD, tool bar and home art, none of which has a runtime switch. Legal and product decision; the loop changed neither the art nor the tests (found in review, iteration 25) **Decided by the user on 2026-09-25: keep the imported art**, accepting the legal exposure. The 6 suites stay red and are not edited to accept the copied art. | `RoyalGameplayArt` :55 -> `ReferenceGameplayCatalog.For`; `RoyalPieceSkin` :159; `ReferenceVfxPool.Has` early returns in `MatchVFXService` :380/:447/:494, `CandyShatterService` :354, `ColorBallVfxV4` :49, `RoyalPowerupDirector` :252, `RoyalRocketSequence` :147/:318; `ReferenceActivationVisual.Attach` from `ColorBallVisualV4` :71 and `PropellerVisualV5` :63; `RoyalBoardSurface.Edge` :69; `RoyalGameplayPresentation.PlayableViewport` :204 |
 | R-26 | decision | The QA-only reference campaign logs three "[Reference Gameplay incomplete]" warnings: cupboard door feedback, coin-collection particles and the mailbox lid animation were not recovered and have no substitute. Tied to R-25 | `RoyalCampaignBlockers` :380 |
 | R-27 | P1 (editor) | A script reload in the middle of Play, which Unity does by default when a script changes during Play, resets every static. `RoyalSave.Testing` then falls back to the player's own profile, the static `InitScript.lifes` reads 0 and is saved on exit, and the Input System, uGUI `Selectable` and QA menu references break. It zeroed the real save's lives on 2026-09-25 and killed a campaign run. Editor only: builds never reload. Fixed in iteration 26 with `RoyalPlayModeReloadGuard`, which holds reloads until Play stops | `InitScript` :103/:824 (static lives, quit save); `RoyalSave.Testing`; new `Editor/RoyalPlayModeReloadGuard.cs` |
@@ -1135,3 +1135,60 @@ Throne's own implementation.
 - **Severity:** P1 (process): it can end the user's own play.
 - **Next task:** ask the user whether to restore the save, and whether the editor is free for the four changes approved in
   iteration 35 (R-20, R-15, R-23, incremental GC).
+
+### Iteration 37 (the approved changes: R-20, R-15, R-23 and incremental GC)
+- **Date/time:** 2026-09-25 14:32-16:07 local
+- **Decisions** (the questions of iterations 35 and 36, answered by the user, who also confirmed the editor was free):
+  - R-20: restore 1 coin per win;
+  - R-15: make HELP open How-to-play;
+  - R-23: show the coin;
+  - incremental GC: turn it on;
+  - the real save after the 14:18 incident: leave it as it is. The life spent by that session has since refilled
+    (`Lifes` 5); `OpenLevel` stays 8.
+- **R-20 (done):** the win branch's own reward had been commented out: `//InitScript.THIS.AddGems(1);//Add coins after win`,
+  which also named a `THIS` that `InitScript` does not have. It now calls `InitScript.Instance.AddGems(1)`, so each win
+  earns one coin. `RoyalQaChecks` now checks that a win credits exactly one coin, and that a rejected repeat credits none.
+- **R-15 (done; the recorded premise was wrong):**
+  - The pause menu never showed a HELP label. The skin's HELP line targets an `Info` object that only the legacy Settings
+    dialog has (`CanvasGlobal/Settings/Image/Info`, which calls `AnimationManager.Info`). That dialog opens only from the
+    hidden legacy map (`LevelsMap.prefab`). So How-to-play was unreachable, as recorded, but no dangling label was shown.
+  - The pause menu now has HELP beside HOME (the old HELP slot above HOME overlaps the Hints row). It opens the existing
+    How-to-play lessons over the pause menu, and the game stays paused.
+  - Close, or Back, on How-to-play returns to the paused menu; a second Back resumes, as before. In `AnimationManager`,
+    Back closes How-to-play first, and closing it over the pause menu keeps the pause. One Back release is one action
+    (`RoyalBackButton.ConsumedThisFrame`), whichever menu's `Update` runs first.
+  - **Found in testing:** How-to-play opened from the pause menu held the first, squashed frame of its entrance (card scale
+    1.64 x 0.53, `help_tutorial_over_pause.png` before the fix). The pause stops the clock, and a legacy `Animation` does
+    not advance at `timeScale` 0. `RoyalMenuSkin.PlayEntranceUnscaled` now plays that entrance on the unscaled clock
+    (`AnimationClip.SampleAnimation`) and fires its events, the two click ticks.
+  - **Measured** against the unpaused entrance, frame by frame (`kv/help_entrance_*.cs`): both settle at full size within
+    a frame of each other (0.347 and 0.350 s), with the same squash and stretch (0.811 x 1.342 and 0.811 x 1.341) and both
+    click ticks. HELP tapped while the pause menu is still arriving, before its entrance stops the clock, also completes:
+    the clock stops midway through How-to-play's entrance.
+- **R-23 (done):** the out-of-moves CONTINUE shows the coin that home shows. The same balance still shows a gem on the gem
+  shop's packs, the lives refill price and the tool shop's prices and balance (`RoyalMenuSkin` :147, :155, :197-198);
+  they were outside the decision.
+- **Incremental GC (done):** `gcIncremental: 1` in `ProjectSettings.asset`. The file's other uncommitted lines, from
+  2026-09-23, stay out of the commit.
+- **Tests:**
+  - **Approved changes** (`kv/approved_test.py`, Play Mode, QA profile): **17/17**, including the unpaused baseline and the
+    early tap. The real profile was unchanged. The console had no entry from the game; the only new entries were Unity
+    editor warnings: the AI Assistant package's "Account API did not become accessible within 30 seconds"
+    (`com.unity.ai.assistant`, `ApiAccessibleState.cs`) and the CLI's "Editor is not in automated mode".
+  - **Type check:** a clean rebuild of every assembly, with each compiler message captured: **0 errors, 0 warnings**.
+  - **All 23 suites**, each in a fresh Play session: **14 pass, and the 9 decided failures fail at the same checks as in iteration 33**: the 11 failure lines of the two runs are identical (`diff` of the `!` lines in `kv/play/final4_suites.log` and `final5_suites.log`). QA controls now writes 330 lines, including the two coin checks, both PASS. The dialog review wrote 18 lines where iteration 33 wrote 21, with no FAIL either time: it reviews the real profile's `OpenLevel`, which has been 8 since the 14:18 incident (it was 14), and level 8 has one goal fewer (2 instead of 3) on each of its three goal dialogs. The console showed the same warnings and errors as in iteration 33, plus the AI Assistant package's editor warning. The real profile was unchanged by every suite, and the booster suites restored their tracked evidence byte-identical.
+  - **Levels 1-100:** **100/100**: every level opens to live play with a populated board, its goals and the correct HUD limit. No batch had a problem, the console had no entries, and the real profile was unchanged.
+  - **Layout at four sizes** (V-04's nine screens plus How-to-play over the pause menu, `kv/layout4_run.py`): **40 of 40** screens at 1080x1920, 1080x2400, 1536x2048 and 720x1280. Every visible control is on screen and takes a tap at its centre, and no text is clipped. The pause menu now has 7 controls, HELP included, and How-to-play over it has 3 of 3. The console had no entries, the Game view preset listing was restored exactly, and the real profile was unchanged.
+  - **Shared Match-3 VFX package** (scratch project): EditMode 17/17, PlayMode 22/22, 0 compiler messages.
+  - **Not executable in this pass:** incremental GC takes effect in a player build, and this pass builds no APK; the running editor was started on 2026-09-24 09:57 and reports `GarbageCollector.isIncremental=False` although the setting is on, so every test in this pass ran under the old GC mode. Measuring collection pauses needs an editor restart (the user's call) or a device build.
+- **Process slip (no effect):** during the full run, a dry run of the script that writes this entry wrote into the real
+  `RALPH_STATE.md` and `FINAL_QA_REPORT.md` instead of copies, because the step that should have pointed it at the copies
+  had failed. The two files held placeholder text for about a minute. Both were restored byte-identical to HEAD, and the
+  editor log shows no import or refresh in that window. The script now names the folder it writes to, and dry runs check
+  afterwards that the real files still match HEAD.
+- **Files changed:** `LevelManager.cs`, `RoyalQaChecks.cs`, `RoyalMenuSkin.cs`, `AnimationManager.cs`, `RoyalBackButton.cs`,
+  `ProjectSettings/ProjectSettings.asset`.
+- **Commits:** `d7d55667` (R-20), `b309dc5b` (R-23), `e6c639b4` (R-15), `0d392864` (incremental GC), and the commit of these records. The trailer now appears once per message; the earlier loop commits carry it twice, because their messages included it and `ralph_git` appends it.
+- **Next task:** the remaining decisions: R-26; the 2026-09-23 offline and teal changes; R-22; the gem icons that remain
+  (gem shop, lives refill, tool shop); texture compression; the King's internal file names; and whether the editor may be
+  restarted so incremental GC can be measured. Then the device checks.
