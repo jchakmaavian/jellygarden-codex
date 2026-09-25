@@ -90,8 +90,9 @@ namespace RoyalThrone.Editor
                 yield return Command("Practice board");yield return Command("Clear board");yield return Command("Shuffle board");
                 foreach(string command in qa.Commands["DEBUG"].Where(c=>c!="Reset test data")){yield return Command(command);yield return Command(command);}
                 yield return Command("Complete targets");Check(LevelManager.THIS.targetObject.All(t=>t.Done()),"All targets complete in runtime copies");
-                yield return Command("Win instantly");Check(LevelManager.THIS.gameStatus==GameState.Win,"Instant win follows the real win state");int rewardLives=InitScript.lifes;
-                int fail=qa.Failed;qa.Request("Win instantly");while(qa.Busy)yield return null;Check(qa.Failed==fail+1&&InitScript.lifes==rewardLives,"Repeated win rejected without a duplicated life reward");
+                int coinsBeforeWin=InitScript.Gems;yield return Command("Win instantly");Check(LevelManager.THIS.gameStatus==GameState.Win,"Instant win follows the real win state");int rewardLives=InitScript.lifes,rewardCoins=InitScript.Gems;
+                Check(rewardCoins==coinsBeforeWin+1,"A win credits exactly one coin");
+                int fail=qa.Failed;qa.Request("Win instantly");while(qa.Busy)yield return null;Check(qa.Failed==fail+1&&InitScript.lifes==rewardLives&&InitScript.Gems==rewardCoins,"Repeated win rejected without a duplicated life or coin reward");
                 yield return Command("Restart level");yield return Command("Lose instantly");Check(LevelManager.THIS.gameStatus==GameState.GameOver,"Instant lose follows the real lose state");
                 yield return Command("Reset test data");Check(InitScript.Gems==money,"Reset test data restores initial player-derived QA balance");
                 var after=Snapshot();Check(normal.All(k=>after[k.Key]==k.Value),"Every normal economy, level, score, booster and preference key remains unchanged");

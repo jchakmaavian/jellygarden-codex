@@ -367,7 +367,7 @@ namespace JellyGarden.Scripts
                 }
                 else if (value == GameState.Win)
                 {
-                    //InitScript.THIS.AddGems(1);//Add coins after win
+                    InitScript.Instance.AddGems(1); // One coin per win (R-20): the template's own reward, which had been commented out
                     MenuManager.Instance.ShowMenuComplete();
                     if (!InitScript.Instance.losingLifeEveryGame)
                         InitScript.Instance.AddLife(1);
