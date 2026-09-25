@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 00:16 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 00:25 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -239,7 +239,7 @@ user on 2026-09-25; the others are still open.
 
    The options were to retire or retarget them. The user chose to leave them, so they stay in the list and stay red. The Color Ball
    that ships has its own suite, Color Ball V5, and it passes with the imports off.
-3. **The reference QA campaign (R-26).** Its levels 01-50 were decoded from the APK; the campaign is QA-only and players cannot
+3. **The reference QA campaign (R-26). Decided on 2026-09-26: leave the warnings.** Its levels 01-50 were decoded from the APK; the campaign is QA-only and players cannot
    reach it. It logs three "[Reference Gameplay incomplete]" warnings: cupboard door feedback, coin-collection particles and the
    mailbox lid animation were not recovered, and nothing replaces them. Tied to item 1.
 4. **Ungated changes from 2026-09-23, made before the loop.**
@@ -249,7 +249,7 @@ user on 2026-09-25; the others are still open.
      settings: the file matches the pre-loop backup.
    - The home Play button and navigation were recoloured teal.
 
-   Both still wait for a yes or no.
+   Decided on 2026-09-26: keep both as they are. They stay uncommitted, as another session's work, unless a commit is asked for.
 5. **Offline economy (R-20). Decided on 2026-09-25 and done (iteration 37):** each win earns 1 coin, the template's own
    reward. Before, a player had 5 coins for life. The gem shop stays unavailable offline (R-08).
 6. **Currency icon (R-23). Decided on 2026-09-25 and done (iterations 37-38):** CONTINUE, the shop ("ROYAL COINS"), its packs,
@@ -265,14 +265,18 @@ user on 2026-09-25; the others are still open.
 10. **Incremental GC. Decided on 2026-09-25 and done (iteration 37):** `gcIncremental` is on. The editor was restarted in
     iteration 38 and now collects incrementally: 4 collections in 150 s of play, heap stable, no leak. Each collection still cost
     one frame of about 20 ms there, on a 1.8 GB heap that is almost all the editor's, so the effect on a phone is item 12.
-11. **The King's name.** The character and its files say "Venguard", while the English word is "Vanguard". Keep the spelling or
-    rename it before release.
+11. **The King's name. Decided on 2026-09-26: keep the internal names.** Players see "King Vanguard"; only the character's
+    folders, files and code identifiers say "Venguard".
 12. **Device checks, not possible in this pass (no Android, by instruction):**
     - R-16, whether the hidden legacy map still takes taps;
     - safe-area insets on a notched phone (the editor evidence of iteration 30 found no problem);
     - the hardware Back button;
     - memory and frame time on a phone, including collection pauses with incremental GC on;
     - the Legacy and Round launcher icons that `RoyalAppIconBuilder` still writes.
+13. **The AI Assistant package** (`com.unity.ai.assistant` 2.18.0-pre.2). **Decided on 2026-09-26: leave it installed.** It
+    checks for a Unity AI entitlement (`com.unity.editor.ai`) that this account lacks. Those checks can stall the editor for
+    over 5 s: 1512 failed checks and 21 CLI time-outs in the 37-hour editor session before the restart. A check one interrupts
+    is simply run again.
 
 ## Risks
 
@@ -312,10 +316,10 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **38 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **39 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
-  and 29), 1 correction (34), the recorded decisions (35) and 1 incident (36).
-- **42 commits** (`c6b9fb97` to the commit of this report): 53 files, 46 of them outside `Assets/_Ralph`.
+  and 29), 1 correction (34), the recorded decisions (35, 39) and 1 incident (36).
+- **43 commits** (`c6b9fb97` to the commit of this report): 53 files, 46 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
