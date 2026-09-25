@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 00:25 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 03:52 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -71,6 +71,8 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
   collection pauses.
 - **Incremental GC is on** in player builds, so a collection can be spread over several frames instead of one pause.
   Its effect has not been measured on a phone yet (open item 10).
+- **Less memory on Android:** 166 legacy textures that no screen shows are compressed (ASTC 4x4), about 54 MB less (item 9).
+- **Round launcher icon:** Android 7.1 launchers that use the Round icon show a round crown instead of a square.
 - **R-19:** the King on a hidden screen no longer animates in the background. Home and the HUD hide by fading to
   alpha 0, so one invisible King always kept animating and rebuilding his mesh: 70-79 us per frame in the editor, likely
   more on a phone. He now freezes while his screen is fully transparent and is refreshed on the frame it shows again. The
@@ -166,6 +168,13 @@ measured against a notch band (top 130 px) and a gesture band (bottom 100 px):
 - the home tab bar's backdrop extends through the bottom inset;
 - on Android the game never draws into a display cutout (`androidRenderOutsideSafeArea` is off).
 
+**Notch and cutout** (iteration 40, Unity's Device Simulator): on an Android cutout phone and an iOS notch phone (insets 141 at
+the top and 102 at the bottom), every visible control and text on the ten screens is inside the safe area, on screen, tappable
+and not clipped: 20 of 20.
+
+**Hidden legacy map (R-16, iteration 40):** at four sizes every on-screen map level lies under UI, and a delivered click on one
+reached the game's input but not the map: no scale, no popup, no level change.
+
 **Home settings, lives timer, references:**
 - settings survive a restart;
 - the lives refill is correct for a long offline gap, a normal wait and a device clock moved back;
@@ -259,20 +268,20 @@ user on 2026-09-25; the others are still open.
 8. **HELP in the pause menu (R-15). Decided on 2026-09-25 and done (iteration 37):** HELP beside HOME opens How-to-play.
    There never was a dangling HELP label: the skin's HELP line pointed at an object only the legacy Settings dialog has, and
    that dialog opens only from the hidden legacy map.
-9. **Texture compression.** 184 scene textures (105.7 MB) are imported uncompressed. Compressing the 77 largest would save about
-   72-77 MB of memory on Android (`Assets/_Ralph/TEXTURE_AUDIT.md`). This changes how the art looks, so it needs an art sign-off and
-   a device check.
+9. **Texture compression. Step 1 decided and done (iteration 40):** 166 of the 184 uncompressed scene textures are drawn by
+   nothing visible (30 screens, the legacy map proven covered); they now use ASTC 4x4 on Android, about 74.6 MB -> 20.4 MB.
+   Still open: the visible art (a device comparison) and the protected art (the owner's approval); see `TEXTURE_AUDIT.md`.
 10. **Incremental GC. Decided on 2026-09-25 and done (iteration 37):** `gcIncremental` is on. The editor was restarted in
     iteration 38 and now collects incrementally: 4 collections in 150 s of play, heap stable, no leak. Each collection still cost
     one frame of about 20 ms there, on a 1.8 GB heap that is almost all the editor's, so the effect on a phone is item 12.
 11. **The King's name. Decided on 2026-09-26: keep the internal names.** Players see "King Vanguard"; only the character's
     folders, files and code identifiers say "Venguard".
-12. **Device checks, not possible in this pass (no Android, by instruction):**
-    - R-16, whether the hidden legacy map still takes taps;
-    - safe-area insets on a notched phone (the editor evidence of iteration 30 found no problem);
-    - the hardware Back button;
+12. **Device checks, not possible in this pass (no Android, by instruction; kept by the user on 2026-09-26):**
+    - whether a phone's Back key reaches the game as `<Keyboard>/escape`, the Cancel action's only binding;
     - memory and frame time on a phone, including collection pauses with incremental GC on;
-    - the Legacy and Round launcher icons that `RoyalAppIconBuilder` still writes.
+    - how launchers render the icons.
+    Done in the editor instead (iteration 40): R-16 with a delivered click, safe-area insets in the Device Simulator, and the
+    launcher icons' files and slots (the Round icon was square; it is now built round from the adaptive layers).
 13. **The AI Assistant package** (`com.unity.ai.assistant` 2.18.0-pre.2). **Decided on 2026-09-26: leave it installed.** It
     checks for a Unity AI entitlement (`com.unity.editor.ai`) that this account lacks. Those checks can stall the editor for
     over 5 s: 1512 failed checks and 21 CLI time-outs in the 37-hour editor session before the restart. A check one interrupts
@@ -316,10 +325,10 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **39 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **40 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
-  and 29), 1 correction (34), the recorded decisions (35, 39) and 1 incident (36).
-- **43 commits** (`c6b9fb97` to the commit of this report): 53 files, 46 of them outside `Assets/_Ralph`.
+  and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36) and the editor-side device checks (40).
+- **46 commits** (`c6b9fb97` to the commit of this report): 222 files, 215 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,

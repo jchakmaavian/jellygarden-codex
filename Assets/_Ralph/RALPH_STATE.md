@@ -83,7 +83,7 @@ Throne's own implementation.
 | R-13 | P2 | No auto-pause when the app goes to background during a level | InitScript.OnApplicationPause |
 | R-14 | P2 | Pause HOME abandons the level (life lost) with no confirmation | AnimationManager.BackToMap |
 | R-15 | P2 | How-to-play popup unreachable from a level (fixed, iteration 37, by the user's decision: HELP beside HOME in the pause menu opens it). The recorded "HELP label without a button" was wrong: the pause menu showed no HELP at all | RoyalMenuSkin, AnimationManager, RoyalBackButton |
-| R-16 | P2 | Hidden legacy map may still accept taps (device check) | MapLevel, LevelsMap |
+| R-16 | P2 | Hidden legacy map may still accept taps (checked in iteration 40: it does not. At four sizes every on-screen map level lies under UI, and a delivered click on one did nothing) | MapLevel, LevelsMap |
 | R-17 | P3 | Sound/Music default 0 vs 1 mismatch; `print(DateOfExit)` every launch; plurals ("1 coins"); timer formats | various |
 | R-18 | P3 | Project-code compile warnings (about 30 runtime, 40 editor); obsolete Find APIs | see compile log |
 | R-19 | P3 | Hidden HUD and home kings keep animating; AI hint coroutine pile-up (Kings fixed in iteration 27, in the untracked King Venguard work; the hint coroutines measured bounded, no defect) | RoyalGameplayPresentation, AI |
@@ -1273,3 +1273,54 @@ Throne's own implementation.
   - the device checks: R-16, notch insets, the hardware Back button, memory, frame time and collection pauses on a phone, and
     the launcher icons.
 - **Next task:** none the loop can act on in this pass. Every remaining item needs a device or the art sign-off.
+
+### Iteration 40 (the device checks the editor can do; the round icon; texture step 1)
+- **Date/time:** 2026-09-26 00:40-03:52 local
+- **Why:** the user asked for every unexecuted part to be finished. What needs a phone stays open (the user kept the no-Android
+  rule), but several "device checks" had parts the editor can do.
+- **R-16 (checked, no defect):**
+  - `MapLevel.Update` polls the game's `InputManager` and hit-tests its own collider. It returns early when map clicks are off
+    or `EventSystem.IsPointerOverGameObject(-1)` is true.
+  - Coverage (`kv/r16_probe.cs`), home screen: map clicks are enabled, and every on-screen map level lies under a UI raycast
+    target, 0 exposed: 21 of 21 (1080x1920), 25 of 25 (1080x2400), 17 of 17 (1536x2048), 21 of 21 (720x1280).
+  - A delivered click (`kv/r16_click.cs`, with the user's OK to bring the editor to the front for about two seconds): the game's
+    touch position reached level 28 at (70, 1130), under the non-control courtyard image; press and release registered
+    (frames 605 and 607); the over-UI guard was true; the level did not scale, no popup opened and `OpenLevel` did not change.
+  - Two earlier attempts proved nothing and are not counted: while the editor is in the background the Input System keeps
+    every mouse disabled (even an added virtual one), and a virtual mouse loses the Position action to the real one.
+- **Safe-area insets (checked, no defect):** Unity's Device Simulator (`kv/notch_run.py`) on "Wide Pill Cutout" (Android,
+  1200x2640, the game gets 1200x2499 because it does not draw into cutouts) and "iOS Notch Device" (1170x2532, insets 141 at
+  the top and 102 at the bottom). On V-04's nine screens plus How-to-play over the pause menu, every visible control and text is
+  inside the safe area, on screen, tappable at its centre and not clipped: 20 of 20. The simulator's device choice and the Game
+  view were restored.
+- **Hardware Back (narrowed):** the Cancel action that every Back handler reads is bound only to `<Keyboard>/escape`; the
+  editor tests drive Escape. Whether a phone's Back key arrives as Escape is the one part left for a device.
+- **Launcher icons (checked; one defect fixed):** Adaptive (8+) uses the 1024 foreground, whose art spans 55.7% x 62.5% of the
+  canvas, inside the 66.7% safe zone, over the navy background. Round (7.1) used the opaque square icon, so round launchers
+  showed a square. The user chose the adaptive look: `RoyalAppIconBuilder` now builds `royal-throne-icon-round.png` from the
+  adaptive layers (the central 72 of 108 dp, in a circle) and puts it in the six Round slots; 1.87/255 from the approved preview.
+- **Texture compression, step 1 (done, decided by the user):**
+  - Visibility across 30 screens (`kv/tex_visible.cs`): 162 of the audit's 184 uncompressed scene textures are drawn by nothing
+    visible, 13 more only by legacy-map sprites on home, and 9 are visible (the home dialog icons, the tutorial finger, the fail cross).
+  - The legacy map on home: switching its 340 renderers off changed only animated pixels (cloud edges, the King's portrait):
+    it is fully covered.
+  - Transient art: the combo words are dead code (`LevelManager.gratzWords` is never used) and the legacy explosion is never
+    spawned (its load is commented out), but `CompleteLabel` and `NoMoreMatches` still show on every win and shuffle, at alpha 1,
+    so their two textures were excluded. `gold.png` (NPOT with mipmaps) would not take ASTC and was left as it was.
+  - 166 textures got an Android override: ASTC 4x4, normal quality, their own max size. About 74.6 MB -> 20.4 MB on a device.
+  - Unity 6.5 rewrote their `.meta` files in its current format. Checked field by field against HEAD: no GUID changed, and every
+    other difference is an old default sentinel written as the value it stood for (checked on an untouched old-format sprite).
+- **Tests:**
+  - **Type check:** a clean rebuild of all 165 assemblies after the last change (03:48-03:50): 0 errors, 0 warnings.
+  - **All 23 suites:** **14 pass, and the 9 decided failures fail at the same checks as in iteration 33**: the 11 failure lines and the console's 13 warning and error entries are identical. The real profile was unchanged by every suite, and the booster suites restored their tracked evidence byte-identical.
+  - **Levels 1-100:** **100/100**. No batch had a problem, the console had no entries, and the real profile was unchanged.
+  - **Layout at four sizes:** **40 of 40** screens at 1080x1920, 1080x2400, 1536x2048 and 720x1280. The console had no entries, the Game view was restored exactly, and the real profile was unchanged.
+  - **Approved changes:** first 12/17: all five Back steps failed. After the R-16 focus switch, the editor's Input System had seen a real focus loss, so it dropped injected events and kept devices disabled under an internal scope the public API does not clear; the game was not at fault. The harness's Back probe now re-enables those devices the way a focus gain does, and routes input to the game for the few frames of each gesture only. Then **17/17**, with an empty console and the real profile unchanged.
+  - **Shared VFX package:** EditMode 17/17, PlayMode 22/22, 0 compiler messages.
+- **Files changed:** `RoyalAppIconBuilder.cs`, `royal-throne-icon-round.png` (new), `ProjectSettings.asset` (the six Round
+  slots), `Design/Branding/AppIcon-v1/checks.txt`, 166 texture `.meta` files, `TEXTURE_AUDIT.md`.
+- **Commits:** `9bbc35d4` (round launcher icon), `7d8bb85a` (the 166 texture overrides), and the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
+  pauses on a phone; how launchers render the icons; texture steps 2-3 (visible art: a device comparison; protected art: the
+  owner's approval).
+- **Next task:** none the loop can act on in this pass.
