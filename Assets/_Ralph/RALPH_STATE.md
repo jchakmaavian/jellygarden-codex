@@ -60,7 +60,7 @@ Throne's own implementation.
 | Persistence | PlayerPrefs through RoyalSave; saves on currency, lives and settings changes, app pause and quit | **Defects:** win progress not flushed; locale-dependent DateTime.Parse at startup |
 | Pause/resume (OS) | InitScript saves lives on pause and quit | No auto-pause of a running level |
 | Offline | RoyalOfflineMode: ads, IAP, social and analytics off; INTERNET permission stripped | Works; ad-quota code still runs |
-| Safe area | Home, title and HUD read `Screen.safeArea`; legacy popups do not | Suspected: home tab-bar background ignores the bottom inset (protected layout) |
+| Safe area | Home, title and HUD read `Screen.safeArea`; legacy popups do not | Suspected: home tab-bar background ignores the bottom inset (protected layout). Not a defect (iteration 30): the backdrop extends through the inset, and the edge controls follow the safe area |
 | Characters | King Venguard in 5 slots | Verified 2026-09-24 |
 | Brand (player-facing) | The competitor's name appears in no scene, prefab, project setting or UI string | **Pass** (static). The only hits are code identifiers such as `royalMatchSize` and dev docs |
 
@@ -1002,3 +1002,28 @@ Throne's own implementation.
 - **Console result:** one routine log entry per run, no errors.
 - **Remaining risk:** checks 49-294 are unmeasured as shipped.
 - **Next task:** none the loop can act on alone. The decisions are unchanged: R-25, now with complete evidence for the main effects suite, R-28, and the items already open.
+
+### Iteration 30 (verification V-09: safe-area bands at 20:9)
+- **Date/time:** 2026-09-25 08:20-08:29 local
+- **Area inspected:** the open safe-area question from the inventory ("legacy popups do not read `Screen.safeArea`"; "Suspected: home tab-bar background ignores the bottom inset") and from V-05, which recorded insets as "cannot be simulated in the Game view". The approach: measure where the controls are instead of simulating a device.
+- **Method:**
+  - The nine screens of V-05 at 1080x2400 (20:9), in the QA test profile: home, settings, pre-level, HUD, pause, leave confirmation, win, out of moves, fail.
+  - The same layout probe as V-05, plus one band check: every visible, interactable control whose rect reaches into the top 130 px (notch, punch hole, status bar) or the bottom 100 px (gesture bar). These are conservative bands: an iPhone-style inset is about 130 / 95 px at this width, and a punch-hole Android status bar about 65-130 px. Scratchpad `kv/layout_inset_probe_loop.cs` and `kv/inset_run.py`.
+  - A Play-session check that the controls in the bands are children of the RectTransforms their screens anchor to `Screen.safeArea` (`kv/safe_hierarchy.cs`).
+  - The Android player settings.
+- **Results:**
+  - **Legacy popups:** settings, pre-level, pause, leave confirmation, win, out of moves and fail have **no control in either band** at 20:9. They do not read the safe area and do not need to. All nine screens also passed the base checks again: every control on screen and tappable at its centre, no clipped text.
+  - **Home:** the resource bar (Profile, Coins, Lives, Stars, Settings) reaches 92 px into the top band, and the main navigation sits at the bottom edge (100 px into the band). All of them are children of `RoyalHomeScreen.safeArea`, which `RefreshLayout` anchors to `Screen.safeArea`, so on a device that reports insets they move inside it.
+    - The only home element outside that rect is `navigationBackground`, deliberately: its height is `navHeight + root.rect.height * min.y`, so the tab bar's backdrop extends down through the bottom inset.
+    - The inventory's suspicion is therefore **not a defect**.
+  - **HUD:** the booster rail and pause button reach 73 px into the bottom band. They are children of the HUD's `content` ("Safe area"), which is anchored to `Screen.safeArea` every frame.
+  - **Android:** `androidRenderOutsideSafeArea: 0`, so the game never draws into a display cutout. The system keeps the window clear of the notch or punch hole.
+- **Severity:** none found.
+- **Files changed:** none in the project. The Game view was switched to a temporary "Ralph temp" 1080x2400 preset for the run and restored: the user's "RoyalThrone 1080x1920" preset is selected again, and the preset list (22 entries) is identical to before.
+  - The first removal attempt failed. In Unity 6.5 `GameViewSizeGroup.RemoveCustomSize` takes the overall index; a custom-list index is rejected. That logged 2 console errors ("Invalid index 4 18 5") from my tooling, not from the game. The script is fixed.
+- **Tests executed:** the nine-screen probe at 1080x2400, the hierarchy check in a fresh Play session, and the player settings.
+- **Console result:** no game entries. The 2 errors above came from the preset removal.
+- **Remaining risk:**
+  - The editor always reports a full-screen safe area. Seeing home and the HUD actually move out of the insets, and the gesture bar's behaviour in fullscreen, still needs a notched phone (R-16's device session).
+- **Also checked:** `ProjectSettings.asset` shows uncommitted define changes: the offline build policy strips `UNITY_ADS` and `UNITY_INAPPS` from Standalone, iOS and Windows Store, and `submitAnalytics` is 0. The working-tree file is identical to the pre-loop backup (`d6fe15ce`), so this is part of the 2026-09-23 offline change awaiting a decision, not a loop change. It is now noted in the report under that item.
+- **Next task:** none the loop can act on alone; the decisions and device checks are unchanged.

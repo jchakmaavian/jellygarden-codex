@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-25 08:20 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-25 08:29 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -135,6 +135,14 @@ timer tick it still shows the previous second. This was measured and is harmless
 **Layout at four sizes** (1080x1920, 20:9 1080x2400, 4:3 1536x2048, 720x1280): 36 of 36 checks. On nine screens every visible
 control is on screen and takes a tap at its centre, and no text is clipped or off screen.
 
+**Safe-area bands at 20:9** (iteration 30). The editor always reports a full-screen safe area, so the controls themselves were
+measured against a notch band (top 130 px) and a gesture band (bottom 100 px):
+- the legacy popups, which ignore the safe area, have no control in either band;
+- home's resource bar and navigation, and the HUD's booster rail, do reach into them, but they sit inside the rects that those
+  screens anchor to `Screen.safeArea`, so they move clear on a phone that reports insets;
+- the home tab bar's backdrop extends through the bottom inset;
+- on Android the game never draws into a display cutout (`androidRenderOutsideSafeArea` is off).
+
 **Home settings, lives timer, references:**
 - settings survive a restart;
 - the lives refill is correct for a long offline gap, a normal wait and a device clock moved back;
@@ -203,6 +211,9 @@ These are product, legal or device questions. The loop recorded them and did not
    mailbox lid animation were not recovered, and nothing replaces them. Tied to item 1.
 4. **Ungated changes from 2026-09-23, made before the loop.**
    - `RoyalOfflineMode` turns off ads, IAP, social and analytics, and strips the INTERNET permission from Android builds.
+   - Its build policy also strips the ad and purchase defines (`UNITY_ADS`, `UNITY_INAPPS`) from the Standalone, iOS and Windows
+     Store targets in the uncommitted `ProjectSettings.asset`, and analytics submission is off. The loop did not change these
+     settings: the file matches the pre-loop backup.
    - The home Play button and navigation were recoloured teal.
 
    Both still wait for a yes or no.
@@ -222,7 +233,7 @@ These are product, legal or device questions. The loop recorded them and did not
     rename it before release.
 12. **Device checks, not possible in this pass (no Android, by instruction):**
     - R-16, whether the hidden legacy map still takes taps;
-    - safe-area insets (notches and cutouts);
+    - safe-area insets on a notched phone (the editor evidence of iteration 30 found no problem);
     - the hardware Back button;
     - memory and frame time on a phone;
     - the Legacy and Round launcher icons that `RoyalAppIconBuilder` still writes.
@@ -264,9 +275,9 @@ A Levels 1-50 regression ran after the fixes, again after the first review, and 
 
 ## The loop in numbers
 
-- **29 iterations:** 17 fix iterations (1-14, 22, 23, 27), 8 verification passes V-01 to V-08 (two with fixes; V-07 is the
+- **30 iterations:** 17 fix iterations (1-14, 22, 23, 27), 9 verification passes V-01 to V-09 (two with fixes; V-07 is the
   texture audit), 2 reviews, and 2 R-25 evidence runs (28, with its test fixes, and 29).
-- **29 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
+- **30 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
