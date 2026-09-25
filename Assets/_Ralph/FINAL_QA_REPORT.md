@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-25 07:58 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-25 08:20 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -121,8 +121,8 @@ As shipped, 9 suites fail, each at the same check every run.
 - **Six fail because of the imports.** They check Royal Throne's own piece art, animators and effects, and the game draws imported
   Royal Match visuals instead. A test change cannot fix them without certifying the copied assets, and a game change cannot fix
   them without reversing an import that was made on request. That choice is open item 1.
-- **Iteration 28 measured those six with the imports switched off** (evidence under open item 1): five pass, and the main effects
-  suite passes 369 checks, against 48 with the imports on.
+- **Iterations 28 and 29 measured those six with the imports switched off** (evidence under open item 1): five pass, and the main
+  effects suite passes 493 of its 495 checks. With the imports on it stops after 48.
 - **The other three test Color Ball code the game no longer runs** (open item 2).
 
 **Shared Match-3 VFX package tests** (`SharedPackages/com.royalthrone.match3-vfx`, run in a scratch project): EditMode **17/17**,
@@ -172,15 +172,16 @@ These are product, legal or device questions. The loop recorded them and did not
    - **(b)** restoring Royal Throne's own art, by removing the imported board visuals and effects or adding a switch, then running
      the full effect suites.
 
-   **Evidence for (b), from iteration 28.** The imports were switched off for single Play sessions:
+   **Evidence for (b), from iterations 28 and 29.** The imports were switched off for single Play sessions:
    - the four caches that select them were emptied at runtime;
    - the two booster prefabs that have no cache were moved out of `Resources` for the run, then moved back, byte for byte.
 
    With the imports off:
    - **Pass:** cell breaks, rockets, TNT, Color Ball V5 (the version that ships) and Propeller V5.
-   - **Main effects suite:** passes 369 checks (48 with the imports on). It then fails on the imported HUD. Since `9f27a636` the
-     board's playable area leaves room for the imported HUD, so on a 360x640 phone a 9x11 board gets 30.9 px per cell, under the
-     suite's floor of 32.
+   - **Main effects suite:** 493 of its 495 checks pass; as shipped it stops after 48. The 2 failures come from the imported HUD.
+     Since `9f27a636` the board's playable area leaves room for the imported HUD, so on a 360x640 phone a 9x11 or 5x11 board gets
+     30.9 px per cell, under the suite's floor of 32.
+   - **As shipped**, the same suite also finds the imported leaf and lily pieces filling less than 88% of their cell.
 
    So Royal Throne's own board art and effects still work. (b) is still a code change, not only a deletion, because five places
    load imported files with no switch:
@@ -228,8 +229,8 @@ These are product, legal or device questions. The loop recorded them and did not
 
 ## Risks
 
-- **Royal Throne's own effects are only partly verified in the game.** While item 1 stands, the game never runs them. With the
-  imports switched off (iteration 28) they pass their suites, but the main effects suite stops at its 369th check. If they are
+- **Royal Throne's own effects are verified only with the imports switched off.** While item 1 stands, the game never runs them.
+  With the imports off (iterations 28-29) they pass their suites, apart from the imported HUD's two layout checks. If they are
   restored, make the code changes listed under item 1 and run every effect and booster suite again before release.
 - **The reload guard changes editor behaviour.** With `Assets/JellyGarden/Scripts/Editor/RoyalPlayModeReloadGuard.cs` in place, a
   script saved during Play takes effect when Play stops, not immediately. Deleting the file restores Unity's default, and with it
@@ -263,9 +264,9 @@ A Levels 1-50 regression ran after the fixes, again after the first review, and 
 
 ## The loop in numbers
 
-- **28 iterations:** 17 fix iterations (1-14, 22, 23, 27), 8 verification passes V-01 to V-08 (two with fixes; V-07 is the
-  texture audit), 2 reviews, and the R-25 evidence run with its test fixes (28).
-- **28 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
+- **29 iterations:** 17 fix iterations (1-14, 22, 23, 27), 8 verification passes V-01 to V-08 (two with fixes; V-07 is the
+  texture audit), 2 reviews, and 2 R-25 evidence runs (28, with its test fixes, and 29).
+- **29 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
