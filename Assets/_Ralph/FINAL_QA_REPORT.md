@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-25 14:15 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-25 14:25 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -158,6 +158,10 @@ measured against a notch band (top 130 px) and a gesture band (bottom 100 px):
 
 ## What went wrong during verification
 
+- **My tooling stopped a Play session I had not started** (2026-09-25 14:18). While I waited for answers, someone entered Play
+  in the shared editor. My probe refused to enter Play, but its cleanup then stopped that session. The real save now shows
+  `OpenLevel` 8 (was 14) and `Lifes` 4 (was 5), written by that session's own level start three minutes earlier. I have not
+  changed the save. The tooling now stops only sessions it started (iteration 36).
 - **The player's real save lost its lives, and was restored.** During the first full suite run, a script edit of mine was still
   waiting to be picked up. The editor picked it up in the middle of a Play session and reloaded the scripts. The reload stopped the
   campaign suite and set the real save's lives from 5 to 0. The lives were restored exactly as the game writes a full set, and
@@ -288,10 +292,10 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **35 iterations:** 17 fix iterations (1-14, 22, 23, 27), 11 verification passes V-01 to V-11 (two with fixes; V-07 is the
-  texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes, and 29), 1 correction (34) and the
-  recorded decisions (35).
-- **33 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
+- **36 iterations:** 17 fix iterations (1-14, 22, 23, 27), 11 verification passes V-01 to V-11 (two with fixes; V-07 is the
+  texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes, and 29), 1 correction (34), the
+  recorded decisions (35) and 1 incident (36).
+- **34 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,

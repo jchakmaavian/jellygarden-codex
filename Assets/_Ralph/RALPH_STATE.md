@@ -1109,3 +1109,29 @@ Throne's own implementation.
   A later review should expect exactly these, at exactly the checks recorded in iteration 33, and treat any other failure as new. The tests are not edited to accept the copied art.
 - **Files changed:** these records only.
 - **Next task:** the remaining decisions (R-26; the 2026-09-23 offline and teal changes; R-20, R-23, R-22, R-15; texture compression; incremental GC; the King's name) and the device checks.
+
+### Iteration 36 (incident: my tooling stopped a Play session it had not started)
+- **Date/time:** 2026-09-25 14:18-14:25 local
+- **What happened:** the loop waited about four hours for the user's answers (iteration 35), and during that wait a Play
+  session was entered in the shared editor. The editor log shows it was entered after the loop's last session ended (09:57) and
+  was still running when the loop's notes were imported (14:15). At 14:18 the loop's probe for R-15 found the editor playing.
+  Its Play helper correctly refused to enter Play, but the script's cleanup (`finally: if playing: stop`) then stopped that
+  session. The log shows the exit right after the refusal, preceded by command time-outs ("Main thread operation timed out
+  after 5000ms").
+- **The real profile afterwards:**
+  - `OpenLevel` 14 -> 8 and `Lifes` 5 -> 4: a life was spent at 14:15:32, with the refill due at 14:20:32.
+  - Coins, stars, scores and settings are unchanged.
+
+  The life and `OpenLevel` were written by that session's own level start, three minutes before the stop, not by the stop.
+  If a level was in progress, the stop ended that attempt. The loop has not changed the save; whether to restore it is the
+  user's call.
+- **Root cause:** the scratchpad drivers' cleanup stopped any running Play session, not only one the script had entered, and
+  `suites.fresh_play()` also stopped a running session before each suite.
+- **Fix** (scratchpad tooling, not the project):
+  - `ralph_run.STARTED` is set by `play()`, and `stop()` only stops a session this process entered;
+  - `suites.fresh_play()` refuses when the editor is playing instead of stopping it;
+  - `r25_parked.py` waits for Edit Mode instead of stopping Play;
+  - the old `run_tests.py` is retired.
+- **Severity:** P1 (process): it can end the user's own play.
+- **Next task:** ask the user whether to restore the save, and whether the editor is free for the four changes approved in
+  iteration 35 (R-20, R-15, R-23, incremental GC).
