@@ -35,13 +35,15 @@ namespace RoyalThrone.Editor
             var expected=anim.Current==TNTFrameAnimator.Phase.Reveal?TNTFrameAnimator.RevealFrame(anim.Frame):TNTFrameAnimator.IdleFrame(anim.Frame);
             // The Reveal opens larger than the cell and eases down, so the pose is checked against the
             // zoom the animator reports: the barrel base stays put and Idle is always exactly 1.19x.
+            // Up to zoom 1.001 the frame keeps the seated sorting, but the pull-down already applies to
+            // any zoom above 1 (0.93 x the excess, at most 0.00093), so the seated base allows 0.001.
             bool seated=anim.Zoom<=1.001f;
             float expectedScale=anim.Zoom/TNTFrameAnimator.ContentScale;
             var expectedPose=view?view.transform.localPosition:Vector3.zero;
             return new Sample{Phase=anim.Current,Frame=anim.Frame,Zoom=anim.Zoom,
                 Drawn=view&&view.enabled&&anim.Frame>=0&&view.sprite==expected&&
                     Mathf.Abs(expectedPose.x-TNTFrameAnimator.BaseOffset.x)<1e-4f&&
-                    (seated?Mathf.Abs(expectedPose.y-TNTFrameAnimator.BaseOffset.y)<1e-4f:expectedPose.y<TNTFrameAnimator.BaseOffset.y)&&
+                    (seated?Mathf.Abs(expectedPose.y-TNTFrameAnimator.BaseOffset.y)<1e-3f:expectedPose.y<TNTFrameAnimator.BaseOffset.y)&&
                     Mathf.Abs(view.transform.localScale.x-expectedScale)<1e-3f&&
                     view.sortingOrder==item.sprRenderer.sortingOrder+(seated?1:6),
                 StaticShown=item.sprRenderer.enabled,

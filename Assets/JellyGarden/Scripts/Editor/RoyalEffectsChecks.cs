@@ -244,8 +244,11 @@ namespace RoyalThrone.Editor
                 Check(director.ActiveOperations==0,"Decorative TNT tail does not hold board input");
                 stateField.SetValue(lm,GameState.Map);yield return null;yield return new WaitForSeconds(.14f);
                 Check(VisibleImpactParticles(director)==0,"Leaving gameplay cancels finished TNT particles and delayed corona");
-                director.Preview("TNT",source.transform.position);yield return null;
-                Check(VisibleImpactParticles(director)>0,"Effects Workshop preview still plays while already on Map");
+                // The TNT preview is the pooled TNT actor, drawn with sprites rather than particles:
+                // it ignites for IgnitionDuration, then explodes, while the game stays on Map.
+                director.Preview("TNT",source.transform.position);bool exploded=false;float until=Time.realtimeSinceStartup+2f;
+                while(!exploded&&Time.realtimeSinceStartup<until){yield return null;exploded=Object.FindObjectsByType<TNT3DAnimator>().Any(a=>a.gameObject.activeSelf&&a.State==TNT3DAnimator.VisualState.Explosion);}
+                Check(exploded&&lm.gameStatus==GameState.Map,"Effects Workshop preview still plays while already on Map");
             }
             finally {stateField.SetValue(lm,beforeState);director.Cancel();}
 
