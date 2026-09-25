@@ -1,1 +1,1 @@
-Default icon assigned. Android Legacy/Round/Adaptive slots verified: 18. Adaptive foreground fits within 62.5% safe square.
+Default icon assigned. Android Legacy/Round/Adaptive slots verified: 18. Adaptive foreground fits within 62.5% safe square. Round slots use the adaptive layers in a circle.
