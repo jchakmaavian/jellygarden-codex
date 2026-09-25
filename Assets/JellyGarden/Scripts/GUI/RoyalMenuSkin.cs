@@ -141,10 +141,11 @@ namespace RoyalThrone.Presentation
                         for(int i=1;i<=3;i++){var b=p.Find("Boost"+i);Place(b,(i-2)*174,-113,128,128);var im=b.GetComponent<Image>();im.sprite=RoyalPieceSkin.Art(new[]{"orb","rocket","tnt"}[i-1]);im.preserveAspect=true;Boost(b);Label(p,"Royal boost name "+i,new[]{"MAGIC ORB","ROCKET","TNT"}[i-1],(i-2)*174,-204,160,36,19);}
                         Button(p.Find("Info"),"?",247,-10,46,46,26);Button(p.Find("Play"),"PLAY",0,-306,382,100,44);HideVisual(p.Find("Offline"));break;
                     case "GemsShop":
-                        Base(menu,p,880,"ROYAL GEMS");Label(p,"Royal subtitle","A little extra for your next adventure",0,315,520,45,21);
+                        // Home and CONTINUE call the shared balance coins; the shop, its packs and every price show the coin too.
+                        Base(menu,p,880,"ROYAL COINS");Label(p,"Royal subtitle","A little extra for your next adventure",0,315,520,45,21);
                         for(int i=1;i<=4;i++){
                             var pack=p.Find("Pack"+i);Place(pack,i%2==1?-142:142,i<=2?135:-140,260,250);Surface(pack,false,true);
-                            Art(pack,"Royal gem","gem",0,37,118,105);Field(pack,"Count",0,-24,180,49,38);
+                            Art(pack,"Royal coin","coin",0,37,118,105);Field(pack,"Count",0,-24,180,49,38);
                             var buy=pack.Find("Buy");Place(buy,0,-86,224,67);Surface(buy,true);Field(buy,"Price",0,0,196,50,28);
                         }Button(p.Find("Video"),"WATCH & EARN",0,-371,360,64,23);break;
                     case "LiveShop":
@@ -152,7 +153,7 @@ namespace RoyalThrone.Presentation
                         Art(p,"Royal heart","heart",0,105,220,210);Label(p,"Royal message","Refill your hearts and keep playing",0,-42,505,50,24);
                         Label(p,"Royal next life","",0,-88,505,44,22);
                         var life=p.Find("BuyLife");Place(life,0,-147,380,96);Surface(life,true);HideVisual(life.Find("Text"));Label(life,"Royal refill","REFILL",-75,0,210,64,30);
-                        Field(life,"Price",72,0,70,62,35);Art(life,"Royal gem","gem",135,0,55,55);Button(p.Find("Video"),"WATCH FOR A LIFE",0,-265,380,66,24);break;
+                        Field(life,"Price",72,0,70,62,35);Art(life,"Royal coin","coin",135,0,55,55);Button(p.Find("Video"),"WATCH FOR A LIFE",0,-265,380,66,24);break;
                     case "MenuPause":case "Settings":
                         bool paused=menu.name=="MenuPause";
                         Base(menu,p,paused?720:600,paused?"TAKE A BREATHER":"SETTINGS");
@@ -191,8 +192,8 @@ namespace RoyalThrone.Presentation
                         var share=p.Find("Share");if(share)Button(share,"SHARE",0,-264,220,45,18);break;
                     case "BoostShop":
                         Base(menu,p,850,"ROYAL BOOSTERS");Place(p.Find("Boost"),-180,211,138,138);Field(p,"BoostDescription",78,211,300,140,23);
-                        for(int i=1;i<=3;i++){var b=p.Find("BuyBoost"+i);Place(b,0,43-(i-1)*128,490,96);Surface(b,true);Field(b,"Count",-130,0,140,65,32);Field(b,"Price",105,0,90,65,32);Art(b,"Royal gem","gem",181,0,56,56);}
-                        Field(p,"Gems",30,-334,230,46,28);Art(p,"Royal balance gem","gem",-125,-334,50,50);break;
+                        for(int i=1;i<=3;i++){var b=p.Find("BuyBoost"+i);Place(b,0,43-(i-1)*128,490,96);Surface(b,true);Field(b,"Count",-130,0,140,65,32);Field(b,"Price",105,0,90,65,32);Art(b,"Royal coin","coin",181,0,56,56);}
+                        Field(p,"Gems",30,-334,230,46,28);Art(p,"Royal balance coin","coin",-125,-334,50,50);break;
                     case "BoostInfo":
                         Base(menu,p,810,"POWER UP YOUR PLAY");
                         int ix=0;var descriptions=p.GetComponentsInChildren<Text>(true);

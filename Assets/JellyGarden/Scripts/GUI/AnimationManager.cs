@@ -114,7 +114,7 @@ namespace JellyGarden.Scripts.GUI
                         buy.Find("Price").GetComponent<Text>().text = "Unavailable";
                     }
                     var subtitle = transform.Find("Image/Royal subtitle");
-                    if (subtitle) subtitle.GetComponent<Text>().text = "Gem packs are not available in this version";
+                    if (subtitle) subtitle.GetComponent<Text>().text = "Coin packs are not available in this version";
                 }
             }
             if (name == "MenuComplete")
