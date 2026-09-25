@@ -188,7 +188,7 @@ namespace RoyalThrone.Presentation
                     group.transform.SetParent(banner,false);group.name="Royal live goals";Place(group.transform,0,63,450,90);
                 }
                 foreach(string n in new[]{"TargetCheck1","TargetCheck2","TargetUnCheck1","TargetUnCheck2"})HideVisual(banner.Find("Targets/"+n));
-                Button(retry.Find("Buy"),"",0,-85,420,95);var buy=retry.Find("Buy");HideVisual(buy.Find("Royal caption"));Label(buy,"Royal more","CONTINUE",-65,0,250,65,30);Field(buy,"Price",107,0,66,65,32);buy.Find("Price").GetComponent<Text>().enabled=true;Art(buy,"Royal gem","gem",167,0,52,52);
+                Button(retry.Find("Buy"),"",0,-85,420,95);var buy=retry.Find("Buy");HideVisual(buy.Find("Royal caption"));Label(buy,"Royal more","CONTINUE",-65,0,250,65,30);Field(buy,"Price",107,0,66,65,32);buy.Find("Price").GetComponent<Text>().enabled=true;Art(buy,"Royal coin","coin",167,0,52,52);
                 Button(retry.Find("GiveUp"),"END LEVEL",0,-199,320,70,26);Button(retry.Find("Video"),"WATCH FOR MOVES",0,-280,400,68,23);retry.gameObject.AddComponent<RoyalMenuPresenter>().ConfigureRetryMotion();
             }
         }
