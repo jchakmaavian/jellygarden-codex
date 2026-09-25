@@ -92,9 +92,10 @@ Throne's own implementation.
 | R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (layering is intentional; needs a size or layering decision) | RoyalHomeScreen / ReferenceHomeLayout (protected) |
 | R-23 | P3 | Out-of-moves CONTINUE shows a gem icon while home calls the balance coins | PreFailed prefab art; ties to R-20 |
 | R-24 | P2 | Per-frame garbage from `Counter_` (`Object.name` reads) and `BoostIcon` (strings) in normal play; incremental GC is off (fixed, iteration 20; the GC setting is a decision) | Counter_.cs, BoostIcon.cs; ProjectSettings `gcIncremental` |
-| R-25 | decision | The board, HUD, tool bar and home controls draw sprites and effects extracted from the Royal Match APK (reference-asset integration of 2026-09-24: `cdd68361`, then the imported `ReferencePieceVisual` prefabs and `ReferenceVfxPool`). Royal Throne's own piece art, piece animators and effects are bypassed, and 9 effect and booster suites fail for that reason. Legal and product decision; the loop changed neither the art nor the tests (found in review, iteration 25) | `RoyalGameplayArt` :55 -> `ReferenceGameplayCatalog.For`; `RoyalPieceSkin` :159; `ReferenceVfxPool.Has` early returns in `MatchVFXService` :380/:447/:494, `CandyShatterService` :354, `ColorBallVfxV4` :49, `RoyalPowerupDirector` :252, `RoyalRocketSequence` :147/:318 |
+| R-25 | decision | The board, HUD, tool bar and home controls draw sprites and effects extracted from the Royal Match APK (reference-asset integration of 2026-09-24: `cdd68361`, then the imported `ReferencePieceVisual` prefabs and `ReferenceVfxPool`). Royal Throne's own piece art, piece animators and effects are bypassed, and 9 effect and booster suites fail for that reason. Iteration 28 measured it: with the imports off, cell breaks, rockets, TNT, Color Ball V5 and Propeller V5 pass, and effects passes 369 checks before failing on the imported HUD's smaller playable area (360x640: 30.9 px per cell, floor 32). Only 6 of the 9 fail because of the imports; the other 3 are R-28. The imports also switch in through `ReferenceActivationVisual.Attach`, `RoyalBoardSurface.Edge` (imported border instead of the own `frame-edge-*` art), `PlayableViewport` and the HUD, tool bar and home art, none of which has a runtime switch. Legal and product decision; the loop changed neither the art nor the tests (found in review, iteration 25) | `RoyalGameplayArt` :55 -> `ReferenceGameplayCatalog.For`; `RoyalPieceSkin` :159; `ReferenceVfxPool.Has` early returns in `MatchVFXService` :380/:447/:494, `CandyShatterService` :354, `ColorBallVfxV4` :49, `RoyalPowerupDirector` :252, `RoyalRocketSequence` :147/:318; `ReferenceActivationVisual.Attach` from `ColorBallVisualV4` :71 and `PropellerVisualV5` :63; `RoyalBoardSurface.Edge` :69; `RoyalGameplayPresentation.PlayableViewport` :204 |
 | R-26 | decision | The QA-only reference campaign logs three "[Reference Gameplay incomplete]" warnings: cupboard door feedback, coin-collection particles and the mailbox lid animation were not recovered and have no substitute. Tied to R-25 | `RoyalCampaignBlockers` :380 |
 | R-27 | P1 (editor) | A script reload in the middle of Play, which Unity does by default when a script changes during Play, resets every static. `RoyalSave.Testing` then falls back to the player's own profile, the static `InitScript.lifes` reads 0 and is saved on exit, and the Input System, uGUI `Selectable` and QA menu references break. It zeroed the real save's lives on 2026-09-25 and killed a campaign run. Editor only: builds never reload. Fixed in iteration 26 with `RoyalPlayModeReloadGuard`, which holds reloads until Play stops | `InitScript` :103/:824 (static lives, quit save); `RoyalSave.Testing`; new `Editor/RoyalPlayModeReloadGuard.cs` |
+| R-28 | P3 (tests) | Three Color Ball suites test code the game no longer runs, and fail with every import off (iteration 28): `RunColorBall` (live v1) waits for `ColorBallFrameAnimator`, which no runtime code attaches; `RoyalColorBallQaChecks` expects `ColorBallBoostView` for a single Color Ball, which has run the V4 charge-and-beam sequence since the 09-21/22 rework; `ColorBallV4Checks` holds the V5 prefab that ships to V4 rules (V5 lifts the 1.75 rad per-frame cap) and never selects `UseV4Baseline`. Retire or re-target them: Color Ball V5, the version that ships, has its own suite, which passes with the imports off | `RoyalColorBallChecks` :41; `RoyalColorBallQaChecks` :109; `ColorBallV4Checks` :63 |
 
 ## Iteration log
 
@@ -890,3 +891,87 @@ Throne's own implementation.
 - **Performance result:** about 70-80 us per frame saved in the editor, likely more on a phone.
 - **Remaining risk:** a King on a screen that fades in from alpha 0 resumes his idle from the pose where he froze. He is refreshed on the first visible frame, so that frame shows no stale pose, but his idle does not jump ahead to where it would have been.
 - **Next task:** none left that the loop can act on alone. Every open backlog item needs a decision or a device: R-25 (most urgent), R-26, R-20, R-22, R-23, R-15, R-16, plus texture compression, incremental GC and the King's name. The next step is to gather evidence for the R-25 decision: whether Royal Throne's own board art and effects still work if the imports are switched off. That can be done at runtime without editing any file.
+
+### Iteration 28 (R-25 evidence: Royal Throne's own art and effects with the imports off)
+- **Date/time:** 2026-09-25 07:00-07:58 local
+- **Area inspected:** R-25. Do Royal Throne's own board art, animators and effects still pass the 9 red suites when the imported Royal Match visuals are off? The answer sizes option (b) of the decision.
+- **Method:**
+  - **Runtime switch, no file edited** (scratchpad `kv/imports_off.cs`). In each fresh Play session, before any board exists, the four caches that decide whether an import is used are set to "missing":
+    - `ReferenceGameplayCatalog.entries` is emptied. That turns off the board sprites and the catalog's gate on imported sound effects.
+    - `ReferencePieceVisual.prefabs` is set to null for the 6 imported booster visuals.
+    - `ReferenceVfxPool.prefabs` is set to null for all 28 imported particle prefabs.
+    - `ReferenceGameplayAudio.cache` is set to null for all 44 imported clips.
+
+    Unity resets all four at the next Play start. The editor was also reset after every run with the classes' own `Reset` methods (`kv/imports_reset.cs`). It was checked at the start and end of every suite: the first board piece draws `ruby` instead of `Items-MatchItem-book__22221`, and no imported pool or piece view was created.
+  - **Imports without a cache stay on under that switch:**
+    - the Color Ball and Propeller activation visuals (`ReferenceActivationVisual.Attach` loads its prefab on every call);
+    - the board border, the HUD layout, the tool bar and the home art.
+  - **Parked run for the activation visuals.** For the 5 Color Ball and Propeller suites, `Visuals/ColorBall.prefab` and `Visuals/Propeller.prefab` were moved out of `Resources` with `AssetDatabase.MoveAsset` (GUIDs kept) and moved back afterwards (`kv/park.cs`, `kv/unpark.cs`, `kv/r25_parked.py`). Afterwards the SHA-256 of both prefabs and both metas was identical, the folder's git status was unchanged and the parking folder was gone. This was the one step that touched project files, and it left no change.
+  - **Evidence and profile.** Every result folder a suite writes (tracked evidence under `Design/Effects/` and `Assets/Boosters/*/Animation/Review`) was backed up first and restored byte-identical afterwards. The new results are kept in scratchpad `r25/`, `r25-parked/` and `r25-on/`. The player's real profile was compared before and after every suite and never changed.
+- **Results:**
+
+  | Suite | Imports on (as shipped) | Imports off |
+  |---|---|---|
+  | Cell breaks | FAIL (imported match particles) | **PASS** (78 checks) |
+  | Rockets | FAIL (imported rocket visual) | **PASS** (168 checks) |
+  | TNT | FAIL (imported TNT visual) | **PASS** (37 checks) after a test fix (3 below) |
+  | Color Ball V5, the version that ships | FAIL | **PASS** with the activation prefab parked |
+  | Propeller V5 | FAIL | **PASS** with the prefab parked ("ALL PROPELLER V5 CHECKS PASSED") |
+  | Effects (main suite) | FAIL after 48 passing checks | 369 checks pass after the test fixes (was 54), then it fails at a consequence of the imported HUD (below) |
+  | Color Ball live v1 (`RunColorBall`) | FAIL | FAIL, also when parked: it tests `ColorBallFrameAnimator`, which no runtime code attaches any more |
+  | Color Ball QA (`RoyalColorBallQaChecks`) | FAIL | FAIL, also when parked: it expects `ColorBallBoostView` for a single Color Ball. A single ball has run the V4 charge-and-beam sequence since the 09-21/22 rework |
+  | Color Ball V4 | FAIL | FAIL, also when parked: it holds the V5 prefab that ships to V4 rules. V5 deliberately lifts V4's 1.75 rad per-frame cap (`if(!referenceV5)`), and the suite never selects `UseV4Baseline` |
+
+- **Test defects found and fixed** (test code only, in Royal Throne's own art path; none involves imported art):
+  1. **Rocket fill (`RoyalBoardSurfaceChecks`).** The check expected idle rockets at 94% of the cell. Rocket review v6 made them 78% on purpose (`RoyalPieceSkin.RocketIdleCellFill`, "fitted to 78% of the actual cell"), and the rocket suite checks 78%. The check now expects 78% for rockets and 94% for every other piece.
+  2. **Board surface (`RoyalBoardSurfaceChecks`).** The check expected 5 layers (a shadow and 4 edges) and a shadow under all 64 cells. `8aca59e4` (09-20 19:35, an hour after the checkpoint whose recorded run passed all 495 checks) added the grout layer and limited the drop shadow to the bottom-right silhouette. The expectations were derived from `RoyalBoardSurface.RebuildIfNeeded` for the complete 8x8 fixture:
+     - 6 layers;
+     - grout under 64 cells (256 vertices, order -2);
+     - shadow under 15 cells, the bottom row and the right column (60 vertices, order -1);
+     - edges of 8 segments each (32 vertices, order 2).
+  3. **TNT seated tolerance (`RoyalTNTChecks`).** 1 of 6387 frames failed: Reveal frame 14 at zoom 1.000689, with the base 0.000639 below the seated pose (under 0.07 source px). The check counts zoom up to 1.001 as seated and allows 0.0001. The animator pulls the frame down for any zoom above 1: 0.93 times the excess, at most 0.00093. The seated band now allows 0.001, and the enlarged band stays strict. A frame observer beside the suite (`kv/tnt_observer.cs`) showed every other term holding on all 6387 frames: sprite, scale, sorting, hidden static art, pose and single renderer.
+  4. **TNT preview on Map (`RoyalEffectsChecks`).** "Effects Workshop preview still plays while already on Map" counted particle-system particles one frame after `Preview("TNT")`. The check was replayed step by step in both modes (`kv/preview_probe.cs`). Neither `Burst` nor the preview emits a single particle-system particle. The preview's TNT actor does play while on Map: Activated, Ignition, Explosion at frame 8, then Debris. The check now waits, for up to 2 s, for the preview actor to reach Explosion while the game stays on Map. The file's mixed line endings were kept, so the diff is those 5 lines.
+
+  With the imports on, effects and TNT still fail at the same checks as before these fixes:
+  - effects: "Gameplay NONE colour 0 fills 94% of its cell", after 48 passing checks;
+  - TNT: "quarter: the created TNT carries the frame animator".
+
+  So the as-shipped verdicts do not change.
+- **Found, not fixed (part of R-25):**
+  - **The imported HUD shrinks the board on small phones.** With the imports off, effects stops at "9x11 board fits safe area above boosters with readable cells at 360x640 (30.9 px/cell)", against a floor of 32.
+    - `9f27a636` (09-24, "Import packaged gameplay HUD layout") changed `RoyalGameplayPresentation.PlayableViewport`. It used to reserve fixed fractions of the safe area (x 2-98%, y 14.5-80.8%). It now reserves the imported HUD's 155 px at the bottom and 285 px at the top, at the 720x1280 reference.
+    - The check is right. This is a consequence of the import, and it cannot be switched off at runtime.
+  - **R-25 missed some switch points:**
+    - **`ReferenceActivationVisual.Attach`** (`ColorBallVisualV4` :71, `PropellerVisualV5` :63). It has no cache, and while it is attached the V4 and V5 code skip their own visuals through `UsesNative`.
+    - **`RoyalBoardSurface.Edge`.** In `9f27a636` the imported `Border-side__17165` replaced Royal Throne's own `frame-edge-*` art. Without it the board has no gold edge at all.
+    - **`PlayableViewport`**, described above.
+    - **`ReferenceGameplayAudio`.** The imported sound effects are gated by the catalog, except on the activation paths.
+    - **The HUD, tool bar and home art.**
+- **Corrections to iterations 25-27:** iteration 25 says the effects suite stops "after 52 passing checks"; its result file, like every run since, says 48. They also attributed all 9 failures to R-25. Three of them do not come from the imports: Color Ball live v1, Color Ball QA and Color Ball V4 fail with every import off, the parked prefabs included. They test Color Ball implementations the game no longer runs (R-28).
+- **Severity:** R-25 is a decision; R-28 is P3 test maintenance.
+- **Files changed:**
+  - `Assets/JellyGarden/Scripts/Editor/RoyalBoardSurfaceChecks.cs`
+  - `Assets/JellyGarden/Scripts/Editor/RoyalTNTChecks.cs`
+  - `Assets/JellyGarden/Scripts/Editor/RoyalEffectsChecks.cs`
+
+  All three were identical to HEAD before this iteration, so the commit carries only these hunks. The two prefabs were moved and restored, with no net change. The tooling is in the scratchpad (`kv/`).
+- **Tests executed:**
+  - the 9 suites with the imports off (623 s);
+  - effects and TNT again after each fix;
+  - the 5 Color Ball and Propeller suites with the prefabs parked (414 s);
+  - effects and TNT with the imports on;
+  - the TNT frame observer, and the preview replay in both modes;
+  - a final confirmation of effects and TNT on the committed bytes, in both modes.
+- **Regression result:** on the committed bytes, with the imports off, TNT passes (37 checks) and effects passes 369 checks before the HUD failure. With the imports on, both fail at their R-25 checks as before. The other 14 suites do not call the three changed files: `RoyalBoardSurfaceChecks` and `RoyalTNTChecks` are called only from `RoyalEffectsChecks`.
+- **Console result:** only the suites' own failure exceptions, plus the CLI's routine "not in automated mode" warning after each recompile.
+- **Compile:** `Assembly-CSharp-Editor` was rebuilt four times, each with 0 errors and 0 warnings.
+- **Remaining risk:**
+  - **Option (b) still needs code changes.** It is not only a matter of deleting the imports, because five places load imported files with no switch:
+    - the activation visuals (without them the V4 and V5 visuals are already correct);
+    - the board border, whose `frame-edge-*` art must be restored;
+    - `PlayableViewport` and the HUD layout, reverted or re-sized;
+    - the tool bar;
+    - the home art.
+  - **The main effects suite may hold more stale checks after check 369.** It stops at its first failure, and the 09-20 version had 495 checks.
+  - **"Leaving gameplay cancels finished TNT particles and delayed corona" passes vacuously.** Nothing emits particle-system particles there any more.
+- **Next task:** none the loop can act on alone. The decisions are R-25 (now with evidence), R-28, and the items already open.

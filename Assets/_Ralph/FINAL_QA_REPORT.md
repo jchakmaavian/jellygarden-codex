@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-25 06:50 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-25 07:58 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -13,7 +13,8 @@ iteration-by-iteration record, with the reproduction, root cause, tests and evid
   - compile warnings;
   - the project's own check suites;
   - the shared VFX package's tests;
-  - a Levels 1-50 regression.
+  - a Levels 1-50 regression;
+  - an evidence run for the Royal Match art decision, with the imports switched off.
 - **Declined, with the reason:**
   - **Importing or reproducing features or assets from `Royal_Throne-rf.apk`.** It is Dream Games' Royal Match, and
     `SourceReference/CLAUDE.md` makes it a quality reference only.
@@ -72,7 +73,11 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
   profile's save routing fell back to the player's own save, and the game's lives read 0 and were saved on exit. The guard makes
   scripts edited during Play take effect when Play stops.
 - **Test suites:** three of the project's check suites had drifted from the game and were fixed as tests: the home screen suite
-  (twice), HUD layout and QA controls.
+  (twice), HUD layout and QA controls. Iteration 28 fixed four more stale checks, which the evidence run exposed:
+  - the board check expected idle rockets at 94% of the cell, instead of their designed 78%;
+  - the same check predated the board's grout layer;
+  - the TNT frame check was 0.0009 too strict just above zoom 1;
+  - the TNT preview check counted particles that the preview no longer uses.
 
 **Not changed:**
 - **R-07** (a booster pack purchase sets the stock instead of adding): unreachable with the current buttons.
@@ -108,13 +113,17 @@ each one: it never changed.
 | TNT sun art, board palette, dialogs (21) | PASS |
 | QA controls ("ALL QA CONTROLS PASSED") | PASS |
 | Reference campaign 01-50 ("ALL FIVE BATCHES PASSED", 413 s) | PASS |
-| Effects: board surface, cell breaks, TNT, rockets, Color Ball, Color Ball QA | **FAIL** (open item 1) |
-| Booster suites: Color Ball V4, Color Ball V5, Propeller V5 | **FAIL** (open item 1) |
+| Effects main suite, cell breaks, TNT, rockets | **FAIL** (open item 1); with the imports off, cell breaks, rockets and TNT pass |
+| Booster suites: Color Ball V5, Propeller V5 | **FAIL** (open item 1); **PASS** with the imports off |
+| Color Ball live v1, Color Ball QA, Color Ball V4 | **FAIL**, with or without the imports: they test superseded Color Ball code (open item 2) |
 
-The 9 failing suites check Royal Throne's own piece art, animators and effects. The game currently draws imported Royal Match
-visuals instead, so each suite fails at its first such check, the same check every run. A test change cannot fix them without
-certifying the copied assets. Nor can a game change fix them without reversing an import that was made on request. That choice is
-open item 1.
+As shipped, 9 suites fail, each at the same check every run.
+- **Six fail because of the imports.** They check Royal Throne's own piece art, animators and effects, and the game draws imported
+  Royal Match visuals instead. A test change cannot fix them without certifying the copied assets, and a game change cannot fix
+  them without reversing an import that was made on request. That choice is open item 1.
+- **Iteration 28 measured those six with the imports switched off** (evidence under open item 1): five pass, and the main effects
+  suite passes 369 checks, against 48 with the imports on.
+- **The other three test Color Ball code the game no longer runs** (open item 2).
 
 **Shared Match-3 VFX package tests** (`SharedPackages/com.royalthrone.match3-vfx`, run in a scratch project): EditMode **17/17**,
 PlayMode **22/22**. The package's runtime and editor assemblies compiled with 0 warnings.
@@ -162,29 +171,55 @@ These are product, legal or device questions. The loop recorded them and did not
    - **(a)** keeping the imported art and accepting the legal exposure;
    - **(b)** restoring Royal Throne's own art, by removing the imported board visuals and effects or adding a switch, then running
      the full effect suites.
-2. **The reference QA campaign (R-26).** Its levels 01-50 were decoded from the APK; the campaign is QA-only and players cannot
+
+   **Evidence for (b), from iteration 28.** The imports were switched off for single Play sessions:
+   - the four caches that select them were emptied at runtime;
+   - the two booster prefabs that have no cache were moved out of `Resources` for the run, then moved back, byte for byte.
+
+   With the imports off:
+   - **Pass:** cell breaks, rockets, TNT, Color Ball V5 (the version that ships) and Propeller V5.
+   - **Main effects suite:** passes 369 checks (48 with the imports on). It then fails on the imported HUD. Since `9f27a636` the
+     board's playable area leaves room for the imported HUD, so on a 360x640 phone a 9x11 board gets 30.9 px per cell, under the
+     suite's floor of 32.
+
+   So Royal Throne's own board art and effects still work. (b) is still a code change, not only a deletion, because five places
+   load imported files with no switch:
+   - the Color Ball and Propeller activation visuals;
+   - the board border, which replaced the own `frame-edge-*` art;
+   - the playable area and the HUD layout;
+   - the tool bar;
+   - the home art.
+2. **Three superseded Color Ball suites (R-28).** Color Ball live v1, Color Ball QA and Color Ball V4 fail whether the imports
+   are on or off. They test Color Ball code the game no longer runs:
+   - live v1 waits for a frame animator that nothing attaches;
+   - Color Ball QA expects the Boosting view for a single ball, which since the 09-21/22 rework runs the V4 charge-and-beam
+     sequence;
+   - Color Ball V4 holds the V5 prefab that ships to V4's rules.
+
+   Retire or re-target them. The Color Ball that ships has its own suite, Color Ball V5, and it passes with the imports off.
+3. **The reference QA campaign (R-26).** Its levels 01-50 were decoded from the APK; the campaign is QA-only and players cannot
    reach it. It logs three "[Reference Gameplay incomplete]" warnings: cupboard door feedback, coin-collection particles and the
    mailbox lid animation were not recovered, and nothing replaces them. Tied to item 1.
-3. **Ungated changes from 2026-09-23, made before the loop.**
+4. **Ungated changes from 2026-09-23, made before the loop.**
    - `RoyalOfflineMode` turns off ads, IAP, social and analytics, and strips the INTERNET permission from Android builds.
    - The home Play button and navigation were recoloured teal.
 
    Both still wait for a yes or no.
-4. **Offline economy (R-20).** There is no coin income: a player has 5 coins for life, and the gem shop is unavailable offline. R-08
+5. **Offline economy (R-20).** There is no coin income: a player has 5 coins for life, and the gem shop is unavailable offline. R-08
    made the shop honest, but it still gives nothing.
-5. **Currency icon (R-23).** The out-of-moves CONTINUE shows a gem, while home calls the balance coins.
-6. **4:3 tablets (R-22).** The raised Home tab icon draws over the Settings dialog's bottom button. The layering is intentional in
+6. **Currency icon (R-23).** The out-of-moves CONTINUE shows a gem, while home calls the balance coins.
+7. **4:3 tablets (R-22).** The raised Home tab icon draws over the Settings dialog's bottom button. The layering is intentional in
    the protected home layout, so this needs a size or layering decision.
-7. **HELP in the pause menu (R-15).** The menu has a HELP label with no button, and the How-to-play popup is unreachable. Add the
+8. **HELP in the pause menu (R-15).** The menu has a HELP label with no button, and the How-to-play popup is unreachable. Add the
    button or remove the label.
-8. **Texture compression.** 184 scene textures (105.7 MB) are imported uncompressed. Compressing the 77 largest would save about
+9. **Texture compression.** 184 scene textures (105.7 MB) are imported uncompressed. Compressing the 77 largest would save about
    72-77 MB of memory on Android (`Assets/_Ralph/TEXTURE_AUDIT.md`). This changes how the art looks, so it needs an art sign-off and
    a device check.
-9. **Incremental GC** is off (`gcIncremental`). R-24 removed the steady per-frame garbage in normal play; turning incremental GC on
+10. **Incremental GC** is off (`gcIncremental`). R-24 removed the steady per-frame garbage in normal play; turning incremental GC on
    would shorten the remaining collection pauses.
-10. **The King's name.** The character and its files say "Venguard", while the English word is "Vanguard". Keep the spelling or
+11. **The King's name.** The character and its files say "Venguard", while the English word is "Vanguard". Keep the spelling or
     rename it before release.
-11. **Device checks, not possible in this pass (no Android, by instruction):**
+12. **Device checks, not possible in this pass (no Android, by instruction):**
     - R-16, whether the hidden legacy map still takes taps;
     - safe-area insets (notches and cutouts);
     - the hardware Back button;
@@ -193,8 +228,9 @@ These are product, legal or device questions. The loop recorded them and did not
 
 ## Risks
 
-- **Royal Throne's own effects are unverified in the game.** While item 1 stands, its piece animators and effects have not run in
-  the game since 2026-09-24 14:41. If they are restored, run the full effect and booster suites before release.
+- **Royal Throne's own effects are only partly verified in the game.** While item 1 stands, the game never runs them. With the
+  imports switched off (iteration 28) they pass their suites, but the main effects suite stops at its 369th check. If they are
+  restored, make the code changes listed under item 1 and run every effect and booster suite again before release.
 - **The reload guard changes editor behaviour.** With `Assets/JellyGarden/Scripts/Editor/RoyalPlayModeReloadGuard.cs` in place, a
   script saved during Play takes effect when Play stops, not immediately. Deleting the file restores Unity's default, and with it
   the risk to the real save.
@@ -207,7 +243,7 @@ These are product, legal or device questions. The loop recorded them and did not
   and the King Venguard content exist only in the working tree. They are not in any commit or in the backup branch.
 - **Suites change tracked files.** The project's check suites rewrite their result files under `Design/`, in other agents'
   folders. The loop left those refreshed files uncommitted. It backed up and restored the per-version booster evidence byte for
-  byte.
+  byte. In iteration 28 it restored every result folder byte for byte.
 - **Latent fixes.** The rewarded-ad timer fix and R-06 only matter once ads are on, which the offline build does not do.
 
 ## Protected areas
@@ -227,9 +263,9 @@ A Levels 1-50 regression ran after the fixes, again after the first review, and 
 
 ## The loop in numbers
 
-- **27 iterations:** 17 fix iterations (1-14, 22, 23, 27), 8 verification passes V-01 to V-08 (two with fixes; V-07 is the
-  texture audit), and 2 reviews.
-- **25 commits** before this report's last update (`c6b9fb97` to `5f51df08`): 51 files, 44 of them outside `Assets/_Ralph`.
+- **28 iterations:** 17 fix iterations (1-14, 22, 23, 27), 8 verification passes V-01 to V-08 (two with fixes; V-07 is the
+  texture audit), 2 reviews, and the R-25 evidence run with its test fixes (28).
+- **28 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
@@ -237,8 +273,8 @@ A Levels 1-50 regression ran after the fixes, again after the first review, and 
     `RoyalMenuSkin`, `RoyalReviewAudioCapture`, `RoyalTitleScreen`, `Square`, `TutorialManager`, `UrpBloomSetup`;
   - editor: `LevelMakerEditor`, `LevelsEditorBase`, `MapLevelEditor`, `PostImporting`, `ReorderableDrawer`,
     `RoyalAppIconBuilder`, `RoyalPlayModeReloadGuard` (new), and the check suites `ReferenceHomeFinishChecks`,
-    `ReferenceHomeSkyChecks`, `ReferenceLayoutChecks`, `RoyalColorBallChecks`, `RoyalColorBallQaChecks`, `RoyalEffectsChecks`,
-    `RoyalHomeScreenChecks`, `RoyalQaChecks`, `RoyalRocketChecks`, `RoyalTNTChecks`;
+    `ReferenceHomeSkyChecks`, `ReferenceLayoutChecks`, `RoyalBoardSurfaceChecks`, `RoyalColorBallChecks`,
+    `RoyalColorBallQaChecks`, `RoyalEffectsChecks`, `RoyalHomeScreenChecks`, `RoyalQaChecks`, `RoyalRocketChecks`, `RoyalTNTChecks`;
   - reports: `Assets/_Ralph/RALPH_STATE.md`, `TEXTURE_AUDIT.md`, this file.
 - **Working tree only** (untracked King Venguard work, never committed piecemeal): `KingVenguardCharacter.cs` (R-19), seven Spine files,
   `spine-unity-editor.asmdef`, `UNITY6-COMPAT-PATCHES.md`, and `Design/Characters/KingVenguard/V1/Source/tools/runtime/patch_spine_unity6_deprecations.py`.
