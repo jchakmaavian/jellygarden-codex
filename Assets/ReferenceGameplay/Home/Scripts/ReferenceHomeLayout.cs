@@ -57,6 +57,16 @@ namespace RoyalThrone.ReferenceGameplay
             tabArt=new Image[5];int[] ids={16927,22238,16525,17106,16492};
             for(int i=0;i<5;i++){tabArt[i]=Pic(home.tabButtons[i].transform,ids[i],.13f,.20f,.87f,.94f);tabArt[i].preserveAspect=true;home.tabButtons[i].GetComponent<Image>().enabled=true;home.tabButtons[i].GetComponent<Image>().color=Color.clear;}
         }
+        // R-22: a tall dialog (Settings, Story) is centred in the safe area. On squat screens (4:3 tablets) it reached under the
+        // resource bar and down into the raised tab art, across its bottom button. Where it does not fit, shorten and move it so the
+        // button clears the art and the dialog, close control included, stays below the bar. Where it fits (16:9, 20:9) nothing moves.
+        static float Edge(RectTransform r,RectTransform space,bool top){var c=new Vector3[4];r.GetWorldCorners(c);float a=space.InverseTransformPoint(c[0]).y,b=space.InverseTransformPoint(c[1]).y;return top?Mathf.Max(a,b):Mathf.Min(a,b);}
+        void FitDialog(){var d=home.dialogRect;if(!d||!home.dialog||!home.dialog.activeInHierarchy||!home.dialogButton)return;var p=(RectTransform)d.parent;const float gap=8;
+            float floor=Edge(tabArt[home.SelectedTab].rectTransform,p,true)+gap,ceiling=Edge(home.hud,p,false)-gap,f=((RectTransform)home.dialogButton.transform).anchorMin.y;
+            float h=d.rect.height,bottom=p.rect.center.y+d.anchoredPosition.y-h*d.pivot.y,reach=home.closeButton?Mathf.Max(0,Edge((RectTransform)home.closeButton.transform,p,true)-(bottom+h)):0;
+            if(bottom+f*h>=floor-.5f&&bottom+h<=ceiling+.5f)return;
+            float fit=Mathf.Max(h*.6f,Mathf.Min(h,(ceiling-reach-floor)/(1-f)));
+            d.sizeDelta=new Vector2(d.sizeDelta.x,fit);d.anchoredPosition=new Vector2(d.anchoredPosition.x,floor-f*fit+fit*d.pivot.y-p.rect.center.y);}
         void LateUpdate(){if(!built||!home)return;float w=home.layout.rect.width;
             home.hud.sizeDelta=new Vector2(w*.95f,w*.16f);home.hud.anchoredPosition=new Vector2(0,-w*.115f);
             float[] edges={0,.15f,.435f,.70f,.865f,1};for(int i=0;i<5;i++)Bounds((RectTransform)home.resourceButtons[i].transform,edges[i],0,edges[i+1]-.01f,1);
@@ -67,6 +77,7 @@ namespace RoyalThrone.ReferenceGameplay
             float[] nav={0,1/6f,2/6f,4/6f,5/6f,1};
             for(int i=0;i<5;i++){var b=home.tabButtons[i];Bounds((RectTransform)b.transform,nav[i],0,nav[i+1],1);bool selected=i==home.SelectedTab;Bounds(tabArt[i].rectTransform,i==2?.20f:.10f,selected?.34f:.18f,i==2?.80f:.90f,selected?1.40f:.91f);foreach(var t in b.GetComponentsInChildren<Text>(true)){t.enabled=true;t.transform.SetAsLastSibling();}}
             if(fill)fill.fillAmount=home.Progress.areaTotal>0?(float)home.Progress.areaCompleted/home.Progress.areaTotal:0;
+            FitDialog();
         }
     }
 }
