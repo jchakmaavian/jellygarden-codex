@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-25 09:55 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-25 14:15 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -113,17 +113,18 @@ each one: it never changed.
 | TNT sun art, board palette, dialogs (21) | PASS |
 | QA controls ("ALL QA CONTROLS PASSED") | PASS |
 | Reference campaign 01-50 ("ALL FIVE BATCHES PASSED", 395 s) | PASS |
-| Effects main suite, cell breaks, TNT, rockets | **FAIL** (open item 1); with the imports off, cell breaks, rockets and TNT pass |
-| Booster suites: Color Ball V5, Propeller V5 | **FAIL** (open item 1); **PASS** with the imports off |
-| Color Ball live v1, Color Ball QA, Color Ball V4 | **FAIL**, with or without the imports: they test superseded Color Ball code (open item 2) |
+| Effects main suite, cell breaks, TNT, rockets | **FAIL**, expected (item 1, decided); with the imports off, cell breaks, rockets and TNT pass |
+| Booster suites: Color Ball V5, Propeller V5 | **FAIL**, expected (item 1, decided); **PASS** with the imports off |
+| Color Ball live v1, Color Ball QA, Color Ball V4 | **FAIL**, expected, with or without the imports: they test superseded Color Ball code (item 2, decided) |
 
-As shipped, 9 suites fail, each at the same check every run.
+As shipped, 9 suites fail, each at the same check every run. On 2026-09-25 the user decided to keep the imported art and to leave
+the three superseded suites, so these 9 are expected failures. Any other failure is new.
 - **Six fail because of the imports.** They check Royal Throne's own piece art, animators and effects, and the game draws imported
   Royal Match visuals instead. A test change cannot fix them without certifying the copied assets, and a game change cannot fix
-  them without reversing an import that was made on request. That choice is open item 1.
-- **Iterations 28 and 29 measured those six with the imports switched off** (evidence under open item 1): five pass, and the main
+  them without reversing an import that was made on request. That choice was item 1: the user kept the imported art.
+- **Iterations 28 and 29 measured those six with the imports switched off** (evidence under item 1): five pass, and the main
   effects suite passes 493 of its 495 checks. With the imports on it stops after 48.
-- **The other three test Color Ball code the game no longer runs** (open item 2).
+- **The other three test Color Ball code the game no longer runs** (item 2).
 
 **Shared Match-3 VFX package tests** (`SharedPackages/com.royalthrone.match3-vfx`, run in a scratch project): EditMode **17/17**,
 PlayMode **22/22**. The package's runtime and editor assemblies compiled with 0 warnings.
@@ -166,9 +167,10 @@ measured against a notch band (top 130 px) and a gesture band (bottom 100 px):
 
 ## Open items that need a decision
 
-These are product, legal or device questions. The loop recorded them and did not change them.
+These are product, legal or device questions. The loop recorded them and did not change them. Items 1 and 2 were decided by the
+user on 2026-09-25; the others are still open.
 
-1. **Royal Match art and effects in the game (R-25). A legal and product decision, and the most urgent.** Since the reference-asset
+1. **Royal Match art and effects in the game (R-25). Decided on 2026-09-25: keep the imported art.** Since the reference-asset
    integration of 2026-09-24 (`cdd68361` "Integrate recovered gameplay assets and 50-level reference QA campaign", then the
    imported `ReferencePieceVisual` prefabs and `ReferenceVfxPool`), the game draws sprites and effects extracted from the Royal
    Match APK:
@@ -204,14 +206,18 @@ These are product, legal or device questions. The loop recorded them and did not
    - the playable area and the HUD layout;
    - the tool bar;
    - the home art.
-2. **Three superseded Color Ball suites (R-28).** Color Ball live v1, Color Ball QA and Color Ball V4 fail whether the imports
+
+   **Decision (2026-09-25):** (a), keep the imported art and accept the legal exposure. The six suites stay red. They are not
+   edited to accept the copied art.
+2. **Three superseded Color Ball suites (R-28). Decided on 2026-09-25: leave them as they are.** Color Ball live v1, Color Ball QA and Color Ball V4 fail whether the imports
    are on or off. They test Color Ball code the game no longer runs:
    - live v1 waits for a frame animator that nothing attaches;
    - Color Ball QA expects the Boosting view for a single ball, which since the 09-21/22 rework runs the V4 charge-and-beam
      sequence;
    - Color Ball V4 holds the V5 prefab that ships to V4's rules.
 
-   Retire or re-target them. The Color Ball that ships has its own suite, Color Ball V5, and it passes with the imports off.
+   The options were to retire or retarget them. The user chose to leave them, so they stay in the list and stay red. The Color Ball
+   that ships has its own suite, Color Ball V5, and it passes with the imports off.
 3. **The reference QA campaign (R-26).** Its levels 01-50 were decoded from the APK; the campaign is QA-only and players cannot
    reach it. It logs three "[Reference Gameplay incomplete]" warnings: cupboard door feedback, coin-collection particles and the
    mailbox lid animation were not recovered, and nothing replaces them. Tied to item 1.
@@ -282,9 +288,10 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **34 iterations:** 17 fix iterations (1-14, 22, 23, 27), 11 verification passes V-01 to V-11 (two with fixes; V-07 is the
-  texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes, and 29), and 1 correction (34).
-- **32 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
+- **35 iterations:** 17 fix iterations (1-14, 22, 23, 27), 11 verification passes V-01 to V-11 (two with fixes; V-07 is the
+  texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes, and 29), 1 correction (34) and the
+  recorded decisions (35).
+- **33 commits** (`c6b9fb97` to the commit of this report): 52 files, 45 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
