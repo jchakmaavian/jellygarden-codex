@@ -89,8 +89,8 @@ Throne's own implementation.
 | R-19 | P3 | Hidden HUD and home kings keep animating; AI hint coroutine pile-up (Kings fixed in iteration 27, in the untracked King Venguard work; the hint coroutines measured bounded, no defect) | RoyalGameplayPresentation, AI |
 | R-20 | design | Offline economy has no coin income (5 coins lifetime). Decided on 2026-09-25: restore the template's 1 coin per win (done, iteration 37) | LevelManager :370 |
 | R-21 | P2 | Home profile avatar and area chest ignore real taps: their only hit area is disabled (found in verification, iteration 18) | ReferenceHomeLayout.Hide :18 |
-| R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (layering is intentional; needs a size or layering decision) | RoyalHomeScreen / ReferenceHomeLayout (protected) |
-| R-23 | P3 | Out-of-moves CONTINUE shows a gem icon while home calls the balance coins (fixed, iteration 37, by the user's decision: it shows the coin. The gem shop, lives refill and tool shop still show gems; they were outside the decision) | RoyalMenuSkin (PreFailed) |
+| R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (fixed, iteration 38, by the user's decision: a tall home dialog that does not fit is shortened and moved; 16:9 and 20:9 unchanged) | ReferenceHomeLayout.FitDialog |
+| R-23 | P3 | Out-of-moves CONTINUE shows a gem icon while home calls the balance coins (fixed, iteration 37, by the user's decision: it shows the coin; iteration 38, also decided: the shop, its packs, the lives refill and the tool shop show the coin too) | RoyalMenuSkin |
 | R-24 | P2 | Per-frame garbage from `Counter_` (`Object.name` reads) and `BoostIcon` (strings) in normal play; incremental GC was off (fixed, iteration 20; incremental GC turned on in iteration 37, by the user's decision) | Counter_.cs, BoostIcon.cs; ProjectSettings `gcIncremental` |
 | R-25 | decided | The board, HUD, tool bar and home controls draw sprites and effects extracted from the Royal Match APK (reference-asset integration of 2026-09-24: `cdd68361`, then the imported `ReferencePieceVisual` prefabs and `ReferenceVfxPool`). Royal Throne's own piece art, piece animators and effects are bypassed, and 9 effect and booster suites fail for that reason. Iteration 28 measured it: with the imports off, cell breaks, rockets, TNT, Color Ball V5 and Propeller V5 pass, and effects passes 369 checks before failing on the imported HUD's smaller playable area (360x640: 30.9 px per cell, floor 32). Iteration 29 ran the rest of effects: with the imports off, 493 of its 495 checks pass (only the two 360x640 layout checks fail); as shipped, the imported leaf and lily sprites also fill under 88% of a cell. Only 6 of the 9 fail because of the imports; the other 3 are R-28. The imports also switch in through `ReferenceActivationVisual.Attach`, `RoyalBoardSurface.Edge` (imported border instead of the own `frame-edge-*` art), `PlayableViewport` and the HUD, tool bar and home art, none of which has a runtime switch. Legal and product decision; the loop changed neither the art nor the tests (found in review, iteration 25) **Decided by the user on 2026-09-25: keep the imported art**, accepting the legal exposure. The 6 suites stay red and are not edited to accept the copied art. | `RoyalGameplayArt` :55 -> `ReferenceGameplayCatalog.For`; `RoyalPieceSkin` :159; `ReferenceVfxPool.Has` early returns in `MatchVFXService` :380/:447/:494, `CandyShatterService` :354, `ColorBallVfxV4` :49, `RoyalPowerupDirector` :252, `RoyalRocketSequence` :147/:318; `ReferenceActivationVisual.Attach` from `ColorBallVisualV4` :71 and `PropellerVisualV5` :63; `RoyalBoardSurface.Edge` :69; `RoyalGameplayPresentation.PlayableViewport` :204 |
 | R-26 | decision | The QA-only reference campaign logs three "[Reference Gameplay incomplete]" warnings: cupboard door feedback, coin-collection particles and the mailbox lid animation were not recovered and have no substitute. Tied to R-25 | `RoyalCampaignBlockers` :380 |
@@ -1192,3 +1192,66 @@ Throne's own implementation.
 - **Next task:** the remaining decisions: R-26; the 2026-09-23 offline and teal changes; R-22; the gem icons that remain
   (gem shop, lives refill, tool shop); texture compression; the King's internal file names; and whether the editor may be
   restarted so incremental GC can be measured. Then the device checks.
+
+### Iteration 38 (second round of decisions: coins everywhere, R-22, the editor restart)
+- **Date/time:** 2026-09-25 16:10 to 2026-09-26 00:16 local. The loop waited 16:40-18:56 for the user's answers and 19:12-22:52 for a
+  Play session of the user's to end.
+- **Decisions** (asked at 16:20):
+  - the 2026-09-23 changes: the user answered "continue" instead of choosing. Nothing was reverted; the item stays open.
+  - R-22: fit the dialog on 4:3.
+  - The currency: coins everywhere.
+  - The editor restart for incremental GC: yes.
+- **A Play session the loop had not started** ran in the shared editor from before 18:56. The loop did not touch it and saved
+  no script while it ran. Asked, the user said it was theirs and they were done; by 22:52 they had left Play themselves, so
+  nothing was stopped. The real profile's `OpenLevel` moved from 8 to 23 during it. No project file changed (checked against
+  the 16:09 rebuild: only `ProjectAuditorSettings.asset`, rewritten with identical content, and the other agent's channel file).
+- **R-22 (fixed):**
+  - Measured first, in the home root's space (`kv/home_dialog_probe.cs`, four sizes). At 4:3 the Settings and Story
+    dialogs (991.6 tall, centred) had their bottom button 52.6 units inside the raised tab art and their top 25.5 units over
+    the resource bar. At 16:9, 20:9 and 720x1280 they fit.
+  - `ReferenceHomeLayout` raises the selected tab's art and places the resource bar every frame, so the fit is there
+    (`FitDialog`, in its `LateUpdate`). A dialog that does not fit is shortened and moved so that its button clears the art
+    by 8 units and the dialog, close button included, stays 8 below the bar. A dialog that fits is not touched.
+  - After: at 4:3 the dialogs are 860.9 tall, the button clears the art by 8.0 and the close button clears the bar by 7.5.
+    The settings rows stay 89.9 above the button and 12.4 below the copy, and the Story grid 111.9 and 8.6. At 16:9, 20:9 and
+    720x1280 every value is identical to before. Screenshots `kv/play/r38_1536x2048_{settings,story}.png`.
+- **Coins everywhere (done):** the shop is titled "ROYAL COINS", its offline subtitle says "Coin packs are not available in
+  this version", and its 4 packs, the lives refill price and the tool shop's 3 prices and balance show the coin. Probe:
+  9 coin icons, all the coin sprite, 0 gem icons (screenshots `kv/play/r38_{gemsshop,liveshop,boostshop}.png`).
+- **Correction to iteration 37:** it said CONTINUE "shows the coin that home shows". Both are coins, but home's resource bar
+  draws the imported reference coin (sprite 22081), while CONTINUE and the shops draw the game's own `RoyalGameplay/coin`.
+  The imported art is not spread further (R-25).
+- **Editor restart (done):**
+  - Checked first: Edit Mode, idle, no prefab stage, no window with unsaved changes, no asset with user edits (only fonts
+    and shaders the editor marks itself). `main.unity` was marked unsaved. A copy of the in-memory scene, written to `Temp/`,
+    differed from the saved file only in 42 empty-string formatting lines, 25 defaults of fields that other sessions' script
+    edits added, and 4 sizes recalculated by the `[ExecuteAlways]` title and home layout code. So nothing was saved, and the
+    saved file is unchanged.
+  - Quit through `EditorApplication.Exit` at 23:05:33 (the process exited at 23:05:46). Relaunched with
+    `-projectPath ... -automated` at 23:05:54, ready at 23:06:27, and licensing validated. The new session has no Unity Hub
+    sign-in; the old one had come from the Hub.
+  - After: `GarbageCollector.isIncremental=True`, `main.unity` clean, and the CLI's automated-mode warning gone.
+  - A "Ralph temp" Game view preset came back from disk: removing presets through reflection had changed only the in-memory
+    list. It was removed and the list saved (`SaveToHDD`), identical to before; `gv_restore.cs` now always saves.
+  - Startup logged 414 shader-compile warnings from Unity's own `com.unity.render-pipelines.core` package (light-transport
+    and probe shaders), not from project code.
+- **Incremental GC, measured in the editor:**
+  - 20 level cycles with a forced collection each (`kv/gc_inloop.cs`): object counts constant (7185 GameObjects, 1394
+    textures, 563 sprites, 115 materials, 123 meshes), so no leak. Its GC-pause figure was vacuous: between forced
+    collections nothing reached the collector's own trigger, so no collection ran in the measured windows.
+  - 150 s of continuous play with no forced collection (`kv/gc_long.cs`): 4 collections; 868 MB allocated, mostly by the
+    editor; mono heap 1781 MB before and after; frame time median 16.7 ms, p99 30.3 ms, max 91.2 ms. 8 frames spent time in
+    `GC.Collect`, 4 of them 17.9-20.1 ms: in the editor each collection still costs one frame of about 20 ms.
+  - That heap is almost all the editor's, and the GC mode is fixed per process, so there is no before/after and no guide to a
+    phone. What pauses a player build sees remains a device check.
+- **Tests:**
+  - **Type check:** clean rebuild of all 165 assemblies in the restarted editor (23:13-23:15): 0 errors, 0 warnings.
+  - **All 23 suites:** **14 pass, and the 9 decided failures fail at the same checks as in iteration 33**: the 11 failure lines are identical, and so are the console's warnings and errors (13 entries). QA controls wrote 330 lines, all PASS. The dialog review wrote 21 lines: it reviews the real profile's `OpenLevel`, now 23, a level with 3 goals. The real profile was unchanged by every suite, and the booster suites restored their tracked evidence byte-identical.
+  - **Levels 1-100:** 98 of 100 in the full run; levels 83 and 84 went unchecked. While level 83 was checked, the editor's main thread was blocked for more than 5 s during a licensing burst (an access-token refresh, then 9 entitlement requests answered with 404, "Found 0 entitlement groups"). Three CLI requests timed out, and level 84 then found the game still on level 83. A re-sweep of levels 80-90 passed all 11, and levels 83 and 84 gave exactly iteration 37's values. The 404s come from the AI Assistant package (`com.unity.ai.assistant`, `EditorConnectionLimitProvider`), which checks for the `com.unity.editor.ai` entitlement that this account does not have. The previous, Hub-launched session logged 1512 of them and 21 main-thread time-outs, so they predate the restart.
+  - **Layout at four sizes:** **40 of 40** screens at 1080x1920, 1080x2400, 1536x2048 and 720x1280, the refitted Settings dialog included. The console had no entries, the Game view was restored exactly, and the real profile was unchanged.
+  - **Approved changes** (`kv/approved_test.py`): **17/17**, with an empty console and the real profile unchanged. Its R-23 label now says what it checks: the game's own coin icon.
+  - **Shared VFX package:** EditMode 17/17, PlayMode 22/22, 0 compiler messages.
+- **Files changed:** `ReferenceHomeLayout.cs`, `RoyalMenuSkin.cs`, `AnimationManager.cs`.
+- **Commits:** `d01918ad` (R-22), `84fdacb7` (coins everywhere), and the commit of these records.
+- **Next task:** the remaining decisions: R-26; the 2026-09-23 offline and teal changes; texture compression; the King's
+  internal file names. Then the device checks, including collection pauses in a player build.

@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-25 16:07 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 00:16 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -58,7 +58,10 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
 **Shop and copy**
 - **R-20:** each win earns 1 coin, the template's own reward, which had been commented out. Before, a player had 5 coins for
   life.
-- **R-23:** the out-of-moves CONTINUE shows the coin, as home does, instead of a gem.
+- **R-23 and coins everywhere:** the out-of-moves CONTINUE, the shop (now "ROYAL COINS"), its packs, the lives refill and the
+  tool shop show a coin for the balance that home calls coins, instead of a gem.
+- **R-22:** on 4:3 tablets the Settings and Story dialogs fit between the resource bar and the tab bar. Their bottom button used
+  to sit under the raised tab icon.
 - **R-08:** the offline gem shop shows its packs as "Unavailable" instead of real-money buttons that did nothing.
 - **R-17:** the counts read "1 coin", "1 star" and "1 level completed" instead of "1 coins", and the fail card reads "Best score:
   3800". Two debug lines no longer log on every launch.
@@ -106,8 +109,8 @@ signal is therefore the compiler warnings plus Unity's serialization analyzer. T
 | spine-unity | 3 | 0 |
 | spine-unity-editor | 11 | 0 |
 
-**Test suites.** The project has no Unity Test Framework tests of its own; its suites are editor check suites. The final run (iteration 37, after the approved
-changes) used the final code in a clean editor. Each suite ran in a fresh Play session, and the player's real save was compared before and after
+**Test suites.** The project has no Unity Test Framework tests of its own; its suites are editor check suites. The final run (iteration 38, after the
+second round of decisions) used the final code in a freshly restarted editor, with incremental GC active. Each suite ran in a fresh Play session, and the player's real save was compared before and after
 each one: it never changed.
 
 | Suite | Result |
@@ -151,8 +154,8 @@ garbage collection and unloading unused assets each time. From the second cycle 
 GameObjects, textures, sprites, materials, meshes, audio clips, particle systems, audio sources, Spine graphics and pieces.
 Managed memory stays flat when no CLI traffic runs alongside: +28 KB over 20 cycles.
 
-**Layout at four sizes** (1080x1920, 20:9 1080x2400, 4:3 1536x2048, 720x1280): 40 of 40 checks in iteration 37, which added How-to-play
-over the pause menu to the nine screens (36 of 36 before). On every screen each visible control is on screen and takes a tap at
+**Layout at four sizes** (1080x1920, 20:9 1080x2400, 4:3 1536x2048, 720x1280): 40 of 40 checks in iteration 38 (40 of 40 in iteration 37, which added
+How-to-play over the pause menu to the nine screens; 36 of 36 before). On every screen each visible control is on screen and takes a tap at
 its centre, and no text is clipped or off screen.
 
 **Safe-area bands at 20:9** (iteration 30). The editor always reports a full-screen safe area, so the controls themselves were
@@ -249,20 +252,19 @@ user on 2026-09-25; the others are still open.
    Both still wait for a yes or no.
 5. **Offline economy (R-20). Decided on 2026-09-25 and done (iteration 37):** each win earns 1 coin, the template's own
    reward. Before, a player had 5 coins for life. The gem shop stays unavailable offline (R-08).
-6. **Currency icon (R-23). Decided on 2026-09-25 and done (iteration 37):** the out-of-moves CONTINUE shows the coin. The
-   same balance still shows a gem on the gem shop's packs, the lives refill price and the tool shop's prices and balance,
-   which were outside the decision.
-7. **4:3 tablets (R-22).** The raised Home tab icon draws over the Settings dialog's bottom button. The layering is intentional in
-   the protected home layout, so this needs a size or layering decision.
+6. **Currency icon (R-23). Decided on 2026-09-25 and done (iterations 37-38):** CONTINUE, the shop ("ROYAL COINS"), its packs,
+   the lives refill and the tool shop show the game's own coin. Home's resource bar keeps its imported coin art (item 1).
+7. **4:3 tablets (R-22). Decided on 2026-09-25 and done (iteration 38):** a tall home dialog that does not fit is shortened and
+   moved, so its button clears the raised tab icon and its close button clears the resource bar. 16:9 and 20:9 are unchanged.
 8. **HELP in the pause menu (R-15). Decided on 2026-09-25 and done (iteration 37):** HELP beside HOME opens How-to-play.
    There never was a dangling HELP label: the skin's HELP line pointed at an object only the legacy Settings dialog has, and
    that dialog opens only from the hidden legacy map.
 9. **Texture compression.** 184 scene textures (105.7 MB) are imported uncompressed. Compressing the 77 largest would save about
    72-77 MB of memory on Android (`Assets/_Ralph/TEXTURE_AUDIT.md`). This changes how the art looks, so it needs an art sign-off and
    a device check.
-10. **Incremental GC. Decided on 2026-09-25 and done (iteration 37):** `gcIncremental` is on. It applies to player builds,
-    and to the editor only after a restart: the running editor still collects non-incrementally, so its effect on
-    collection pauses is not measured yet (item 12).
+10. **Incremental GC. Decided on 2026-09-25 and done (iteration 37):** `gcIncremental` is on. The editor was restarted in
+    iteration 38 and now collects incrementally: 4 collections in 150 s of play, heap stable, no leak. Each collection still cost
+    one frame of about 20 ms there, on a 1.8 GB heap that is almost all the editor's, so the effect on a phone is item 12.
 11. **The King's name.** The character and its files say "Venguard", while the English word is "Vanguard". Keep the spelling or
     rename it before release.
 12. **Device checks, not possible in this pass (no Android, by instruction):**
@@ -310,10 +312,10 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **37 iterations:** 18 fix iterations (1-14, 22, 23, 27, and 37 with the approved changes), 11 verification passes V-01 to
+- **38 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
   and 29), 1 correction (34), the recorded decisions (35) and 1 incident (36).
-- **39 commits** (`c6b9fb97` to the commit of this report): 53 files, 46 of them outside `Assets/_Ralph`.
+- **42 commits** (`c6b9fb97` to the commit of this report): 53 files, 46 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
