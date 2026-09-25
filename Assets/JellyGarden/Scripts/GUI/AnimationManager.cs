@@ -163,12 +163,14 @@ namespace JellyGarden.Scripts.GUI
         {
             if (InputManager.Instance != null && InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
             {
-                if (name == "MenuPlay" || name == "Settings" || name == "BoostInfo" || name == "GemsShop" || name == "LiveShop" || name == "BoostShop" || name == "Reward")
+                // One Back release, one action: another menu may already have handled it earlier in this frame.
+                if (RoyalThrone.Presentation.RoyalBackButton.ConsumedThisFrame) return;
+                if (name == "MenuPlay" || name == "Settings" || name == "BoostInfo" || name == "GemsShop" || name == "LiveShop" || name == "BoostShop" || name == "Reward" || name == "Tutorial")
                 {
                     CloseMenu();
                     RoyalThrone.Presentation.RoyalBackButton.Consume();
                 }
-                else if (name == "MenuPause")
+                else if (name == "MenuPause" && !IsOpen("Tutorial"))   // How-to-play on top of the pause menu closes first
                 {
                     // Back first dismisses the leave question; otherwise it resumes, exactly like the Continue button.
                     var leaveConfirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
@@ -378,7 +380,8 @@ namespace JellyGarden.Scripts.GUI
 
             if (SceneManager.GetActiveScene().name == "game")
             {
-                if (LevelManager.Instance.gameStatus == GameState.Pause)
+                // How-to-play opened from the pause menu returns to that menu; only closing the pause menu itself resumes.
+                if (LevelManager.Instance.gameStatus == GameState.Pause && !(name == "Tutorial" && IsOpen("MenuPause")))
                 {
                     LevelManager.Instance.gameStatus = GameState.WaitAfterClose;
 
@@ -387,6 +390,13 @@ namespace JellyGarden.Scripts.GUI
             SoundBase.Instance.PlaySound(SoundBase.Instance.swish[1]);
 
             gameObject.SetActive(false);
+        }
+
+        static bool IsOpen(string menu)
+        {
+            var canvas = MenuManager.Instance ? MenuManager.Instance.GetCanvasGlobal() : null;
+            var popup = canvas ? canvas.Find(menu) : null;
+            return popup && popup.gameObject.activeSelf;
         }
 
         public void SwishSound()

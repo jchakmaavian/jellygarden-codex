@@ -103,6 +103,25 @@ namespace RoyalThrone.Presentation
             stay.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{dim.SetActive(false);RoyalAudioDirector.Get?.Play(RoyalCue.Click);});
             dim.SetActive(false);
         }
+        // The pause menu stops the clock (timeScale 0, from the end of its own entrance), and a legacy Animation does not advance
+        // then: How-to-play opened from it held the first, squashed frame of its entrance. Play that entrance on the unscaled clock,
+        // with its events (the click ticks), even when the tap comes before the clock stops, so it cannot freeze midway either.
+        static void PlayEntranceUnscaled(Transform popup)
+        {
+            var entrance=popup?popup.GetComponent<Animation>():null;var host=popup?popup.GetComponent<JellyGarden.Scripts.GUI.AnimationManager>():null;
+            if(!entrance||!entrance.clip||!host||!popup.gameObject.activeInHierarchy)return;
+            entrance.Stop();host.StartCoroutine(EntranceUnscaled(popup.gameObject,entrance.clip));
+        }
+        static System.Collections.IEnumerator EntranceUnscaled(GameObject popup,AnimationClip clip)
+        {
+            var events=clip.events;int next=0;
+            for(float t=0;;t+=Time.unscaledDeltaTime){
+                clip.SampleAnimation(popup,Mathf.Min(t,clip.length));
+                for(;next<events.Length&&events[next].time<=t;next++)popup.SendMessage(events[next].functionName,SendMessageOptions.DontRequireReceiver);
+                if(t>=clip.length)yield break;
+                yield return null;
+            }
+        }
         public static void Apply(Transform root,Font display)
         {
             font=display;
@@ -145,7 +164,14 @@ namespace RoyalThrone.Presentation
                         var hint=new GameObject("Hints",typeof(RectTransform),typeof(Image),typeof(UnityEngine.UI.Button));hint.transform.SetParent(p,false);
                         Button(hint.transform,"MATCHING HINTS ON",0,paused?-143:-89,456,74,24);
                         hint.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{RoyalHintSettings.Enabled=!RoyalHintSettings.Enabled;RoyalAudioDirector.Get?.Play(RoyalCue.Click);});
-                        Button(p.Find("Map"),"HOME",0,-241,280,68,24);Button(p.Find("Info"),"HELP",0,-189,280,68,24);
+                        if(paused){
+                            // HELP opens the existing How-to-play lessons. The pause menu has no Info object, so the button is made here,
+                            // beside HOME: the old HELP slot above HOME overlaps the Hints row.
+                            var help=new GameObject("Info",typeof(RectTransform),typeof(Image),typeof(UnityEngine.UI.Button));help.transform.SetParent(p,false);
+                            help.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{RoyalAudioDirector.Get?.Play(RoyalCue.Click);var menus=JellyGarden.Scripts.GUI.MenuManager.Instance;menus.ShowTutorial(true);PlayEntranceUnscaled(menus.GetCanvasGlobal().Find("Tutorial"));});
+                            Button(p.Find("Map"),"HOME",-119,-241,218,68,24);Button(help.transform,"HELP",119,-241,218,68,24);
+                        }
+                        else{Button(p.Find("Map"),"HOME",0,-241,280,68,24);Button(p.Find("Info"),"HELP",0,-189,280,68,24);}
                         if(paused)Label(p,"Royal hint description","A gentle clue after a few quiet seconds",0,-303,510,38,19);
                         if(paused)LeaveConfirm(menu,p);
                         break;

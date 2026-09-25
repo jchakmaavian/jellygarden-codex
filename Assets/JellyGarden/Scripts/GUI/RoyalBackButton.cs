@@ -27,6 +27,9 @@ namespace RoyalThrone.Presentation
         /// <summary>True when something consumed the gesture that began with the latest press.</summary>
         public static bool Consumed => pressFrame >= 0 && consumedFrame >= pressFrame;
 
+        /// <summary>True when a handler consumed a Back gesture in this very frame, even if its press was not noted.</summary>
+        public static bool ConsumedThisFrame => consumedFrame == Time.frameCount;
+
         public static void Quit()
         {
             QuitRequests++;
