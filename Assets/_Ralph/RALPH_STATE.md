@@ -86,7 +86,7 @@ Throne's own implementation.
 | R-16 | P2 | Hidden legacy map may still accept taps (device check) | MapLevel, LevelsMap |
 | R-17 | P3 | Sound/Music default 0 vs 1 mismatch; `print(DateOfExit)` every launch; plurals ("1 coins"); timer formats | various |
 | R-18 | P3 | Project-code compile warnings (about 30 runtime, 40 editor); obsolete Find APIs | see compile log |
-| R-19 | P3 | Hidden HUD and home kings keep animating; AI hint coroutine pile-up | RoyalGameplayPresentation, AI |
+| R-19 | P3 | Hidden HUD and home kings keep animating; AI hint coroutine pile-up (Kings fixed in iteration 27, in the untracked King Venguard work; the hint coroutines measured bounded, no defect) | RoyalGameplayPresentation, AI |
 | R-20 | design | Offline economy has no coin income (5 coins lifetime). Product decision, not changed by the loop | LevelManager :371 (commented out) |
 | R-21 | P2 | Home profile avatar and area chest ignore real taps: their only hit area is disabled (found in verification, iteration 18) | ReferenceHomeLayout.Hide :18 |
 | R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (layering is intentional; needs a size or layering decision) | RoyalHomeScreen / ReferenceHomeLayout (protected) |
@@ -858,3 +858,35 @@ Throne's own implementation.
   - The reload guard changes editor behaviour for everyone using this editor: a script saved during Play now takes effect when Play stops. Delete the file to return to Unity's default.
   - `DateOfExit` in the real profile was rewritten by the damaged exit. It is rewritten on every exit anyway, and only feeds the life schedule, which is now full.
 - **Next task:** R-19: measure whether the hidden Home and HUD Kings still animate (both screens hide with a `CanvasGroup` alpha of 0 and stay active), and the AI hint coroutine pile-up; then fix what is worth fixing.
+
+### Iteration 27 (R-19: hidden Kings and hint coroutines)
+- **Date/time:** 2026-09-25 05:48-06:50 local
+- **Area inspected:** R-19, from the initial static pass: "hidden HUD and home Kings keep animating; AI hint coroutine pile-up".
+- **Issue (part 1, confirmed):** Home and the gameplay HUD hide by setting a `CanvasGroup` alpha to 0 and stay active (`RoyalGameplayPresentation` :158/:165, `RoyalHomeScreen` :86/:124). So the King on the hidden screen kept animating and rebuilding his mesh:
+  - on Home, the HUD King cost 70 us per frame;
+  - in a level, the Home King cost 79 us per frame.
+
+  These are editor (Mono) figures, timed with a Stopwatch around `Update(0)` + `LateUpdate()` x 200. The win and fail card Kings are inactive while their cards are closed and cost nothing.
+- **Part 2 (not a defect):** counted with the profiler markers `AI.CheckPossibleCombines() [Coroutine: MoveNext]` and `AI.showTipCor() [Coroutine: MoveNext]` for 50 s, with a control marker reading 1 per frame:
+  - **idle:** one hint display alive (1 resume per frame) and one scan per ~7 s cycle (4 s idle, 2.4 s hint, 1 s scan);
+  - **during 5 real moves:** scans rise to 1-5 resumes per second. The display count reads 2-3 in the frame a new hint replaces the old one, because a new coroutine's first step runs inside `StartCoroutine`;
+  - **after the moves:** back to one display and the same cycle, with no growth.
+
+  Every scan ends after showing a hint; the only self-restart follows a no-moves reshuffle. No change to the protected AI. A first attempt read all zeros, because script markers are only emitted while the Profiler runs. That was not evidence, so it was re-run with the Profiler on and restored afterwards.
+- **Severity:** P3 (performance)
+- **Root cause:** `SkeletonGraphic` updates whenever its GameObject is active. A `CanvasGroup` alpha of 0 hides it without deactivating it.
+- **Files changed:** `Assets/Characters/KingVenguard/V1/Scripts/KingVenguardCharacter.cs`. This is untracked King Venguard work, so the change is in the working tree only and not committed.
+- **Fix:** `KingVenguardCharacter.LateUpdate` freezes the `SkeletonGraphic` while an enabled `CanvasGroup` above the King has alpha 0. On the frame he shows again it refreshes him once (`Update(0)`, `LateUpdate()`), so that frame never draws a stale pose. Disabled groups are ignored, as Unity ignores them; this was found when re-reading the change before the full run.
+- **Tests executed:**
+  - **Screen changes:** home, level, HUD reaction, pause, resume, home. The King on the hidden screen is frozen with his time held, and the visible one animates. The HUD reaction plays through into idle. Every active King keeps his 266-vertex mesh.
+  - **Group states:** a disabled alpha-0 group does not freeze him (time 6.032 -> 6.565). An enabled one freezes him, with time held at 6.565. Removing it unfreezes him, with a mesh. After 200 frames, the reused list holds exactly the 2 groups of the parent chain.
+  - **Regression suites:** home, ref-home-sky, ref-home-finish, ref-layout, ref-tools, dialogs and qa-controls pass, followed by the full run below.
+- **Result:** the invisible King's cost (70-79 us per frame in the editor) is gone. The visible King is unchanged.
+- **Regression result:** a full verification run on the final code, after a clean rebuild (165 assemblies: 0 errors, 0 warnings):
+  - **Suites:** 14 pass (campaign-all "ALL FIVE BATCHES PASSED" in 413 s), and the same 9 fail at the same checks as before (R-25). The real profile was unchanged after every suite, and the booster evidence was restored byte-identical.
+  - **Levels 1-50:** 50/50, 0 console entries, real profile identical before and after. The timed levels 20, 27 and 32 passed only on the sweep's 1.5 s re-check. Measured per frame, the HUD time label trails `Limit` by 63-105 ms after each timer tick, and every lagging frame shows exactly the previous second. This is the HUD's deliberate 0.1 s label refresh, not a defect. The sweep's check (`kv/ralph_run.py` `LEVELCHECK`) now accepts the previous second on timed levels and labels it, instead of relying on the re-check.
+  - **Shared package:** 17/17 EditMode and 22/22 PlayMode tests pass, 0 compiler warnings.
+- **Console result:** 0 errors during the tests (2 routine warnings after the recompile).
+- **Performance result:** about 70-80 us per frame saved in the editor, likely more on a phone.
+- **Remaining risk:** a King on a screen that fades in from alpha 0 resumes his idle from the pose where he froze. He is refreshed on the first visible frame, so that frame shows no stale pose, but his idle does not jump ahead to where it would have been.
+- **Next task:** none left that the loop can act on alone. Every open backlog item needs a decision or a device: R-25 (most urgent), R-26, R-20, R-22, R-23, R-15, R-16, plus texture compression, incremental GC and the King's name. The next step is to gather evidence for the R-25 decision: whether Royal Throne's own board art and effects still work if the imports are switched off. That can be done at runtime without editing any file.

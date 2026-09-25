@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-25 05:50 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-25 06:50 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -60,6 +60,10 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
 **Performance**
 - **R-24:** about 3.3 KB less garbage per frame from the HUD counters and booster icons in release builds. That means fewer
   collection pauses, which matters because incremental GC is off in this project.
+- **R-19:** the King on a hidden screen no longer animates in the background. Home and the HUD hide by fading to
+  alpha 0, so one invisible King always kept animating and rebuilding his mesh: 70-79 us per frame in the editor, likely
+  more on a phone. He now freezes while his screen is fully transparent and is refreshed on the frame it shows again. The
+  change is in the untracked King Venguard work (see Risks).
 
 **Engineering, no visible change**
 - **R-18 and the reviews:** the project compiles with **0 warnings** (was 69). Obsolete Unity APIs were moved to their current
@@ -72,12 +76,13 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
 
 **Not changed:**
 - **R-07** (a booster pack purchase sets the stock instead of adding): unreachable with the current buttons.
-- **R-19** (hidden Kings keep animating; hint coroutines): not started. It is the next task.
+- **R-19's second half** (a suspected pile-up of hint coroutines): measured with profiler markers across idle play and
+  real moves, it is bounded, with one hint display and one scan per ~7 s cycle. No change to the protected AI.
 
 ## Verification
 
 **Type check (the C# compiler).** A full clean rebuild of all 165 assemblies, with every compiler message captured per assembly:
-**0 errors**. The editor assembly was recompiled again after the last two changes: 0 errors, 0 warnings.
+**0 errors**. The final clean rebuild, after the last change, also gives 0 errors and 0 warnings.
 
 **Lint.** The repository configures no linter: no .editorconfig, rulesets, analyzer settings, CI or package scripts. The lint
 signal is therefore the compiler warnings plus Unity's serialization analyzer. They went from **69 to 0**:
@@ -102,7 +107,7 @@ each one: it never changed.
 | Responsive input, pointer events and cancellation | PASS |
 | TNT sun art, board palette, dialogs (21) | PASS |
 | QA controls ("ALL QA CONTROLS PASSED") | PASS |
-| Reference campaign 01-50 ("ALL FIVE BATCHES PASSED", 398 s) | PASS |
+| Reference campaign 01-50 ("ALL FIVE BATCHES PASSED", 413 s) | PASS |
 | Effects: board surface, cell breaks, TNT, rockets, Color Ball, Color Ball QA | **FAIL** (open item 1) |
 | Booster suites: Color Ball V4, Color Ball V5, Propeller V5 | **FAIL** (open item 1) |
 
@@ -115,7 +120,8 @@ open item 1.
 PlayMode **22/22**. The package's runtime and editor assemblies compiled with 0 warnings.
 
 **Levels 1-50 regression** on the final code: **50/50**. Every level opens to live play with a populated board, its goals and the
-correct HUD limit; the timed levels 20, 27 and 32 show "0:56". The console had no entries.
+correct HUD limit. The console had no entries. The HUD refreshes its time label every 0.1 s, so for about 0.1 s after each
+timer tick it still shows the previous second. This was measured and is harmless, and the sweep's check allows for it.
 
 **Layout at four sizes** (1080x1920, 20:9 1080x2400, 4:3 1536x2048, 720x1280): 36 of 36 checks. On nine screens every visible
 control is on screen and takes a tap at its centre, and no text is clipped or off screen.
@@ -221,9 +227,9 @@ A Levels 1-50 regression ran after the fixes, again after the first review, and 
 
 ## The loop in numbers
 
-- **26 iterations:** 16 fix iterations (1-14, 22, 23), 8 verification passes V-01 to V-08 (two with fixes; V-07 is the texture
-  audit), and 2 reviews.
-- **24 commits** before the one that adds this report (`c6b9fb97` to `51e2e6af`): 49 files, 44 of them outside `Assets/_Ralph`.
+- **27 iterations:** 17 fix iterations (1-14, 22, 23, 27), 8 verification passes V-01 to V-08 (two with fixes; V-07 is the
+  texture audit), and 2 reviews.
+- **25 commits** before this report's last update (`c6b9fb97` to `5f51df08`): 51 files, 44 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
@@ -234,5 +240,5 @@ A Levels 1-50 regression ran after the fixes, again after the first review, and 
     `ReferenceHomeSkyChecks`, `ReferenceLayoutChecks`, `RoyalColorBallChecks`, `RoyalColorBallQaChecks`, `RoyalEffectsChecks`,
     `RoyalHomeScreenChecks`, `RoyalQaChecks`, `RoyalRocketChecks`, `RoyalTNTChecks`;
   - reports: `Assets/_Ralph/RALPH_STATE.md`, `TEXTURE_AUDIT.md`, this file.
-- **Working tree only** (untracked King Venguard work, never committed piecemeal): seven Spine files,
+- **Working tree only** (untracked King Venguard work, never committed piecemeal): `KingVenguardCharacter.cs` (R-19), seven Spine files,
   `spine-unity-editor.asmdef`, `UNITY6-COMPAT-PATCHES.md`, and `Design/Characters/KingVenguard/V1/Source/tools/runtime/patch_spine_unity6_deprecations.py`.
