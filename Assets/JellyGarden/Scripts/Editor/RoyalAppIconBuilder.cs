@@ -52,8 +52,25 @@ namespace RoyalThrone.Editor
 #pragma warning restore CS0618
             AssetDatabase.SaveAssets();
             Directory.CreateDirectory("Design/Branding/AppIcon-v1");
-            File.WriteAllText("Design/Branding/AppIcon-v1/checks.txt","Default icon assigned. Android Legacy/Round/Adaptive slots verified: "+slots+". Adaptive foreground fits within 62.5% safe square. Round slots use the adaptive layers in a circle.\n");
+            File.WriteAllText("Design/Branding/AppIcon-v1/checks.txt","Default icon assigned. Android Legacy/Round/Adaptive slots verified: "+slots+". "+SafeZone(Folder+"royal-throne-icon-foreground.png")+" Round slots use the adaptive layers in a circle.\n");
             Debug.Log("[Royal Throne Icon] Default and "+slots+" Android icon slots verified.");
+        }
+
+        // Adaptive layers are 108 dp; launchers show the central 72 dp through their mask, and only what lies inside the 66 dp
+        // safe circle shows under every mask. Measure the foreground's visible pixels (alpha above 16) against both, and fail if
+        // any reaches past 36 dp, where a circular mask would cut it.
+        static string SafeZone(string foregroundPath)
+        {
+            var fg=new Texture2D(2,2,TextureFormat.RGBA32,false);fg.LoadImage(File.ReadAllBytes(foregroundPath));
+            int n=fg.width;float dp=n/108f,c=(n-1)*.5f,far=0,ink=0,outside=0;var px=fg.GetPixels32();
+            for(int y=0;y<n;y++)for(int x=0;x<n;x++)
+            {
+                float a=px[y*n+x].a/255f;if(a<=0)continue;
+                float r=Mathf.Sqrt((x-c)*(x-c)+(y-c)*(y-c))/dp;ink+=a;if(r>33)outside+=a;if(px[y*n+x].a>16)far=Mathf.Max(far,r);
+            }
+            UnityEngine.Object.DestroyImmediate(fg);
+            if(far>36)throw new InvalidOperationException("Adaptive foreground reaches "+far.ToString("F2")+" dp from the centre; a circular launcher mask shows 36 dp.");
+            return "Adaptive foreground: farthest visible pixel "+far.ToString("F2")+" dp from the centre (a circular mask shows 36 dp); "+(100*outside/ink).ToString("F1")+"% of its ink lies outside the 66 dp safe circle.";
         }
 
         // Launchers that ask for the Round icon (Android 7.1) show it as it is, so a square icon stays square there. Build it from

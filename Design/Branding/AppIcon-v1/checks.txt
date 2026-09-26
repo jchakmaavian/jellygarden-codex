@@ -1,1 +1,1 @@
-Default icon assigned. Android Legacy/Round/Adaptive slots verified: 18. Adaptive foreground fits within 62.5% safe square. Round slots use the adaptive layers in a circle.
+Default icon assigned. Android Legacy/Round/Adaptive slots verified: 18. Adaptive foreground: farthest visible pixel 35.92 dp from the centre (a circular mask shows 36 dp); 1.3% of its ink lies outside the 66 dp safe circle. Round slots use the adaptive layers in a circle.
