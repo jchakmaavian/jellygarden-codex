@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 13:34 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 13:39 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -290,6 +290,7 @@ decided changes are done. Item 12 needs a phone, which this pass excludes.
     iteration 43, the icon under the circle, squircle, rounded-square and teardrop masks: none cuts the crown, but 1.3% of it
     lies outside Android's 66 dp safe circle. Decided in iteration 44: no change, since nothing is clipped and the logo is
     protected; scaling the adaptive foreground by 0.919 would fit it inside.
+    The steps for running the four checks on a phone are in `RALPH_STATE.md`, iteration 45.
 13. **The AI Assistant package** (`com.unity.ai.assistant` 2.18.0-pre.2). **Decided on 2026-09-26: leave it installed.** It
     checks for a Unity AI entitlement (`com.unity.editor.ai`) that this account lacks. Those checks can stall the editor for
     over 5 s: 1512 failed checks and 21 CLI time-outs in the 37-hour editor session before the restart. A check one interrupts
@@ -333,12 +334,12 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **44 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **45 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
   and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40),
-  texture steps 2-3 (41), their follow-up (42), the device checks' desk work (43) and
-  the report's corrections (44).
-- **52 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
+  texture steps 2-3 (41), their follow-up (42), the device checks' desk work (43),
+  the report's corrections (44) and the phone checks' runbook (45).
+- **53 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,

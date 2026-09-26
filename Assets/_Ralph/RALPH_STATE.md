@@ -1490,3 +1490,36 @@ Throne's own implementation.
 - **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
   pauses on a phone; launchers other than the four common mask shapes; how the compressed art looks on a phone's screen.
 - **Next task:** none the loop can act on in this pass.
+
+### Iteration 45 (a runbook for the phone checks; nothing run)
+- **Date/time:** 2026-09-26 13:37-13:39 local
+- **Why:** the user asked for the plan to continue. Everything left needs a phone, which this pass excludes (kept by the user on
+  2026-09-26), so no APK was built and nothing ran on Android. These steps let the pass that allows a phone run the four checks
+  at once.
+- **Build and install (the development build, so the QA tools are in it):**
+  - With the editor stopped, `RoyalThrone.Editor.RoyalAndroidBuild.BuildAndroid()` (Development, LZ4) writes
+    `Builds/Android/RoyalThrone-Test.apk`; poll `Builds/Android/last-build.log` until `STATUS succeeded`. It turns
+    `EditorUserBuildSettings.development` on and script debugging and profiler autoconnect off, and (unlike the Levels 01-50
+    test build) does not restore them: note their values first and put them back afterwards.
+  - adb is `<Unity 6000.5.10f1>/Editor/Data/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb.exe`. First `adb devices`,
+    then a screenshot (`adb exec-out screencap -p > s.png`): if someone is playing on the phone, observe only. In Git Bash,
+    prefix adb calls that take device paths with `MSYS_NO_PATHCONV=1`.
+  - `adb install -r` the APK (package `com.codexsandbox.jellygarden`, arm64, minSdk 26), then start it with
+    `adb shell monkey -p com.codexsandbox.jellygarden -c android.intent.category.LAUNCHER 1`.
+- **1. The Back key as Escape (R-03, R-10, R-15):** on home, open Settings, then `adb shell input keyevent KEYCODE_BACK`: the
+  dialog must close and the app stay (`adb shell pidof com.codexsandbox.jellygarden`); a second Back on the bare home quits. In a
+  level: Back pauses, Back again resumes; HELP in the pause menu, then Back, returns to the pause menu. A screenshot before and
+  after each Back.
+- **2. Memory, frame time, collection pauses:** `adb shell dumpsys meminfo com.codexsandbox.jellygarden` on home and in level 12
+  (TOTAL PSS and Graphics). The Unity Profiler connected to the development build over ADB, 60 s on home and 60 s in a level:
+  CPU frame time (median and 99th percentile) and the frames that hold a garbage collection.
+- **3. The launcher icon:** `adb shell input keyevent KEYCODE_HOME`, open the app list, screenshot: the crown must be whole. Note
+  the launcher's mask shape; `Design/Branding/AppIcon-v1/checks.txt` has the crown's measured margins.
+- **4. The compressed art on screen:** screenshots of the title screen (logo, crown, castle), home Settings (the gear icon) and
+  the fail screen (the crosses), looked at 1:1 beside the editor's captures of the same screens.
+- **Afterwards:** put the three build settings back, and record the results here and in `FINAL_QA_REPORT.md` item 12.
+- **Tests:** none; only these records changed.
+- **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`.
+- **Commits:** the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** the four checks above.
+- **Next task:** none the loop can act on in this pass.
