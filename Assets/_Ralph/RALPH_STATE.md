@@ -1468,3 +1468,25 @@ Throne's own implementation.
 - **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
   pauses on a phone; launchers other than the four common mask shapes; how the compressed art looks on a phone's screen.
 - **Next task:** none the loop can act on in this pass.
+
+### Iteration 44 (the crown's margin decided; the report's stale statements)
+- **Date/time:** 2026-09-26 13:28-13:34 local
+- **Why:** the user asked again for the blocker to be solved. Iteration 43 had left the crown's safe-zone margin as "the owner's
+  call", and `FINAL_QA_REPORT.md` still called items open that were decided long ago.
+- **The crown's safe-zone margin (decided: no change):** none of the four common mask shapes cuts it, and the logo is protected
+  art, which gets integration fixes for defects only; 1.3% of its ink past Android's guideline, with nothing clipped, is not a
+  defect. `RoyalAppIconBuilder` now fails if the crown ever reaches a circular mask's edge. Scaling the adaptive foreground
+  by 0.919 (33 / 35.92 dp) would bring it inside the safe circle, if the owner wants that.
+- **Four stale statements in `FINAL_QA_REPORT.md`, corrected:**
+  - the open-items header said items 1 and 2 were decided and "the others are still open": all but item 12 were decided by the
+    user on 2026-09-25 and 2026-09-26, and the decided changes are done;
+  - "Navigation and Back" said Android Back closes dialogs: R-03, R-10 and R-15 were verified with Escape in the editor, and
+    whether a phone's Back key arrives as Escape is item 12;
+  - the incremental-GC line sent its phone measurement to item 10, which itself defers it to item 12;
+  - the WebP line sent the texture saving to "Open items" in general: it is item 9, done.
+- **Tests:** none; only these records changed.
+- **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`.
+- **Commits:** the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
+  pauses on a phone; launchers other than the four common mask shapes; how the compressed art looks on a phone's screen.
+- **Next task:** none the loop can act on in this pass.

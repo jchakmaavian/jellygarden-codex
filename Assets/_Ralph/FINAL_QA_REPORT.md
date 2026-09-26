@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 13:26 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 13:34 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -20,7 +20,7 @@ iteration-by-iteration record, with the reproduction, root cause, tests and evid
     `SourceReference/CLAUDE.md` makes it a quality reference only.
   - **Brand scrubbing.**
   - **PNG -> WebP conversion.** Unity re-encodes every texture at import, so the source format changes neither build size nor
-    memory, and Unity has no native WebP importer. The real texture saving is in the compression settings (see Open items).
+    memory, and Unity has no native WebP importer. The real texture saving is in the compression settings (Open items, item 9: done).
 - **Protected areas** (Levels 1-50, the match-3 board, level design and balance, home layout, splash, loading screen, logo) were
   not redesigned. "Protected areas" below lists the minimal integration fixes that touched them.
 
@@ -29,7 +29,7 @@ iteration-by-iteration record, with the reproduction, root cause, tests and evid
 Each item was reproduced first and fixed with the smallest change. It was then retested in Play Mode, with a regression check and
 a clean console. The IDs match the backlog in `RALPH_STATE.md`.
 
-**Navigation and Back**
+**Navigation and Back** (tested with Escape in the editor; whether a phone's Back key arrives as Escape is item 12)
 - **R-01:** CONTINUE after the last level (100) returns home. It used to try to load level 101, throw, and leave the win card stuck.
 - **R-03:** Android Back on home closes an open dialog or popup without also quitting the game. It quits only from the bare home
   screen.
@@ -70,7 +70,7 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
 - **R-24:** about 3.3 KB less garbage per frame from the HUD counters and booster icons in release builds. That means fewer
   collection pauses.
 - **Incremental GC is on** in player builds, so a collection can be spread over several frames instead of one pause.
-  Its effect has not been measured on a phone yet (open item 10).
+  Its effect has not been measured on a phone yet (item 12).
 - **Less memory on Android:** 183 of the 184 uncompressed scene textures are compressed (ASTC 4x4), about 75 MB less: the 166
   that no screen shows, and the 11 visible and 6 protected ones the user approved on an in-editor comparison (item 9).
 - **Round launcher icon:** Android 7.1 launchers that use the Round icon show a round crown instead of a square.
@@ -198,8 +198,8 @@ reached the game's input but not the map: no scale, no popup, no level change.
 
 ## Open items that need a decision
 
-These are product, legal or device questions. The loop recorded them and did not change them. Items 1 and 2 were decided by the
-user on 2026-09-25; the others are still open.
+These were product, legal or device questions. All but item 12 were decided by the user on 2026-09-25 and 2026-09-26, and the
+decided changes are done. Item 12 needs a phone, which this pass excludes.
 
 1. **Royal Match art and effects in the game (R-25). Decided on 2026-09-25: keep the imported art.** Since the reference-asset
    integration of 2026-09-24 (`cdd68361` "Integrate recovered gameplay assets and 50-level reference QA campaign", then the
@@ -288,7 +288,8 @@ user on 2026-09-25; the others are still open.
     Done in the editor instead (iteration 40): R-16 with a delivered click, safe-area insets in the Device Simulator, and the
     launcher icons' files and slots (the Round icon was square; it is now built round from the adaptive layers). In
     iteration 43, the icon under the circle, squircle, rounded-square and teardrop masks: none cuts the crown, but 1.3% of it
-    lies outside Android's 66 dp safe circle; shrinking the logo by about 8% would fix that, the owner's call.
+    lies outside Android's 66 dp safe circle. Decided in iteration 44: no change, since nothing is clipped and the logo is
+    protected; scaling the adaptive foreground by 0.919 would fit it inside.
 13. **The AI Assistant package** (`com.unity.ai.assistant` 2.18.0-pre.2). **Decided on 2026-09-26: leave it installed.** It
     checks for a Unity AI entitlement (`com.unity.editor.ai`) that this account lacks. Those checks can stall the editor for
     over 5 s: 1512 failed checks and 21 CLI time-outs in the 37-hour editor session before the restart. A check one interrupts
@@ -332,11 +333,12 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **43 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **44 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
   and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40),
-  texture steps 2-3 (41), their follow-up (42) and the device checks' desk work (43).
-- **51 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
+  texture steps 2-3 (41), their follow-up (42), the device checks' desk work (43) and
+  the report's corrections (44).
+- **52 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
