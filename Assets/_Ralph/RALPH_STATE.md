@@ -1324,3 +1324,87 @@ Throne's own implementation.
   pauses on a phone; how launchers render the icons; texture steps 2-3 (visible art: a device comparison; protected art: the
   owner's approval).
 - **Next task:** none the loop can act on in this pass.
+
+### Iteration 41 (texture steps 2-3, decided by the user)
+- **Date/time:** 2026-09-26 03:52-12:47 local
+- **Why:** texture steps 2 and 3 were the last open items the editor could settle, and they were the user's to decide.
+- **The question, and a blocked night:**
+  - At 03:55 the loop asked the user about both steps, with the evidence below; the call was interrupted when the session ended.
+  - From 04:01 to 11:32 every shell command and every write into the project needed an approval this session could not get.
+    Nothing ran and nothing in the project changed (the branch stayed at `4539b0a4`); the loop only prepared scripts in its
+    scratchpad. Its interim plan (compress 12, leave the protected art) was never applied.
+  - At 11:32 the user's answers to that question arrived: "Compress the 11" (step 2) and "Compress them" (step 3: the
+    protected art plus `fb_logout-button`). At 11:33 the shell worked again.
+- **Evidence given with the question** (`kv/tex_astc_compare.cs`, `kv/play/astc/`): each source compressed to ASTC 4x4 in memory
+  and decoded back; ASTC decoding is deterministic, so these are the texels a phone shows. Alpha-weighted PSNR 36.9-48.9 dB on
+  the 11 visible textures and 42.7-61.9 dB on the protected art; differences only at edges and as fine grain, invisible at display
+  size; on the logo the largest errors sit in its anti-aliased outline.
+- **Applied at 11:33 (`kv/tex_compress23.cs`):** the step-1 override (ASTC 4x4, normal quality, each texture's own max size) on
+  17 textures:
+  - step 2, the 11 visible ones that are not protected art: the seven home dialog icons, `level_completed_text` and
+    `no_match_text` (the win and shuffle banners), `finger_for_tutorial` and `x_failed`;
+  - step 3, the protected art: `logo`, `royal_play_crown`, `royal_castle_blue`, `home-castle` and `wheel`, plus
+    `fb_logout-button`, which nothing visible draws and which the audit flagged only because its name contains "logo".
+  - Importer read-back: 17 of 17 overridden, and every imported texture is ASTC 4x4. About 31.1 MB -> 8.5 MB on a device
+    (visible 7.8 -> 2.0 MB, protected 23.3 -> 6.6 MB), counting whole 4x4 blocks; mipmaps are off on all 17.
+  - With step 1, 183 of the audit's 184 uncompressed scene textures now use ASTC on Android: about 105.8 MB -> 30.9 MB, 74.9 MB
+    less. Only `gold.png` (0.11 MB, NPOT with mipmaps) is left.
+  - Editor side effect: `game.unity` now loads in about 1.35 s instead of 1.2 s in Play Mode, most likely the editor decoding
+    ASTC for display on this PC, whose GPU cannot sample it. A phone's GPU reads ASTC directly.
+- **In context, after the change (`kv/shot_compare41.py`):** the layout run's screenshots from iteration 40, taken before the 17
+  overrides and kept in `kv/play/res_before41/`, against this run's: 24 pairs at 1536x2048, 720x1280 and 1080x2400 (sheets in
+  `kv/play/res_compare41/`).
+  - Where the 17 are drawn, the difference is small: the Settings dialog's gear icon (170x167 px at 1536x2048) by 1.3/255 on
+    average, 0.8% of its pixels by more than 8; the fail screen's crosses (40x40 px at 1080x2400, 27x27 at 720x1280) by 1.2 and
+    1.1/255, 2.3% and 1.8% by more than 8.
+  - Every other difference is something that moves between any two runs: the random level-12 board, drifting clouds, the King,
+    the drop arrows, and the pre-level popup's pulsing boosts, PLAY and close buttons (three captures of today's build 0.35 s
+    apart differ there by 5-24/255 on average). How-to-play over the pause menu is pixel-identical at both sizes compared.
+- **The `.meta` rewrites (checked):** Unity 6.5 rewrote the 7 old-format files among the 17 in its current format.
+  - `tex2_meta_check.py`, field by field against HEAD: 17 of 17 pass. No GUID changed; the Android entry is as intended; every
+    other changed value is an old-format default sentinel written as the value it imports as; the rest are version numbers,
+    three obsolete keys that held empty defaults, and 45 keys the current format adds, none of them an override.
+  - The sentinels' meaning was measured in the editor (`kv/sentinel_probe.cs`): untouched old-format textures import wrap -1 as
+    Repeat (8 of 8 sprites, 13 of 13 others), filter -1 as Bilinear, aniso -1 as 1 and mip bias -100 as 0. The rewritten files
+    hold 0, 1, 1 and 0 and import the same: 12 of 12 wrap-0 sprites Repeat, 25 of 25 Bilinear with bias 0.
+  - A correction drafted during the blocked night said the wrap sentinel meant Clamp for sprites, so that commit `7d8bb85a`'s
+    "wrap -1 -> Repeat" was wrong. The measurement shows the draft was wrong: its only evidence, `failed_banner_01`, already had
+    an explicit Clamp before step 1. `7d8bb85a`'s message stands; the draft was never recorded.
+- **Corrections to iteration 40 (its record and commit `7d8bb85a` stay as written):**
+  - **Size:** step 1's 166 textures take 22.25 MB as ASTC 4x4, not about 20.4 MB. The 20.4 was the audit's 8-bpp estimate,
+    which ignores ASTC's 4x4 blocks, and small textures pad heavily (mipmaps are off on all 166). Step 1 saves about 52.4 MB,
+    not 54.
+  - **Its `.meta` check compared only the keys both versions have.** A strict re-check of the 166 (every key, the rules of
+    `tex2_meta_check.py`) finds no GUID change and the Android entry as intended, and three differences it had not reported:
+    - 10 `iPhone` platform entries are now keyed `iOS`, with identical settings, and 4 sprites' `fileIDToRecycleName` names
+      moved to `internalIDToNameTable` with the same IDs: renames by the format upgrade.
+    - 68 legacy sprite-packing tags were dropped (Pack1 50, Pack2 8, Game 6, Pack3 4). This changes nothing: Unity 6.5 no
+      longer supports them (`TextureImporter.spritePackingTag` is obsolete, "support for packing sprites through
+      spritePackingTag has been removed", and the legacy `Packer` class is gone), an untouched sprite whose `.meta` still says
+      Pack1 reads back an empty tag (`kv/packer_probe.cs`), and the project has no Sprite Atlas.
+- **A latent limit in R-22's `FitDialog` (found re-reading iteration 38's code; no change):** it runs every frame on the height
+  it last set, so its 60% minimum is measured from the shortened height, not the design height. It cannot take effect:
+  - the home canvas scales from 720x1280 with "Expand", so every screen squatter than that is 1280 units tall, and the layout
+    width is capped at 0.68 x the safe height: every screen squatter than 0.68 (4:3 tablets, square, landscape) has the same
+    geometry, where the fit needs 86.8% of the design height (iteration 38: 991.6 -> 860.9). Insets shrink the free space and,
+    below 1180 units, the dialog with it, so by the same formulas the fit never needs less than about 80%;
+  - `RoyalHomeScreen.RefreshLayout` restores the design height whenever the screen, the safe area or the open panel changes, so a
+    dialog shortened for one shape never stays short on another.
+  - Keeping the design height apart would make the minimum hold if those proportions ever change. The home layout is protected,
+    and it gets no change without a reachable defect.
+- **Iteration 40's safe-area result, checked after the fact:** it was recorded before its log had been read.
+  `kv/play/notch_run.log` agrees with every figure: 20 of 20 screens, 0 issues, every control tappable, 0 new console entries,
+  the Game view and the simulator's device restored, the real profile unchanged.
+- **Tests:**
+  - **Type check:** a clean rebuild of all 165 assemblies after the change (11:45-11:47): 0 errors, 0 warnings.
+  - **All 23 suites:** **14 pass, and the 9 decided failures fail at the same checks as in iteration 33**: the 11 failure lines are identical. The console had 15 warning and error entries against the baseline's 13: an "Account API did not become accessible" warning in `ref-home-sky`, and five "/api/exec ... timed out after 5000ms" errors in `colorball` while the editor was blocked for about 30 s entering Play Mode (the log shows no import or compile then; the known licensing stalls). Re-run at 12:39, both matched the baseline exactly: `ref-home-sky` passed with no entries, and `colorball` failed at its known check with only its known exception, in 19 s instead of 63 s. The real profile was unchanged by every suite, and the booster suites restored their tracked evidence byte-identical.
+  - **Levels 1-100:** **100/100**. No batch had a problem, the console had no entries, and the real profile was unchanged.
+  - **Layout at four sizes:** **40 of 40** screens at 1080x1920, 1080x2400, 1536x2048 and 720x1280. The console had no entries, the Game view was restored exactly, and the real profile was unchanged.
+  - **Approved changes:** **17/17**, with an empty console and the real profile unchanged.
+  - **Shared VFX package:** EditMode 17/17, PlayMode 22/22, 0 compiler messages.
+- **Files changed:** 17 texture `.meta` files, `TEXTURE_AUDIT.md`, `FINAL_QA_REPORT.md` (which also gains the files iteration 40
+  left out of its "Changed files" list: the texture `.meta` files, the round icon and its checks, and the Round icon slots).
+- **Commits:** `cfea8e56` (the 17 texture overrides), and the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
+  pauses on a phone; how launchers render the icons; how the compressed art looks on a phone's screen.
+- **Next task:** none the loop can act on in this pass.

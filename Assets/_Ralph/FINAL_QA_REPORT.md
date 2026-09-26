@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 03:52 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 12:47 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -71,7 +71,8 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
   collection pauses.
 - **Incremental GC is on** in player builds, so a collection can be spread over several frames instead of one pause.
   Its effect has not been measured on a phone yet (open item 10).
-- **Less memory on Android:** 166 legacy textures that no screen shows are compressed (ASTC 4x4), about 54 MB less (item 9).
+- **Less memory on Android:** 183 of the 184 uncompressed scene textures are compressed (ASTC 4x4), about 75 MB less: the 166
+  that no screen shows, and the 11 visible and 6 protected ones the user approved on an in-editor comparison (item 9).
 - **Round launcher icon:** Android 7.1 launchers that use the Round icon show a round crown instead of a square.
 - **R-19:** the King on a hidden screen no longer animates in the background. Home and the HUD hide by fading to
   alpha 0, so one invisible King always kept animating and rebuilding his mesh: 70-79 us per frame in the editor, likely
@@ -268,9 +269,11 @@ user on 2026-09-25; the others are still open.
 8. **HELP in the pause menu (R-15). Decided on 2026-09-25 and done (iteration 37):** HELP beside HOME opens How-to-play.
    There never was a dangling HELP label: the skin's HELP line pointed at an object only the legacy Settings dialog has, and
    that dialog opens only from the hidden legacy map.
-9. **Texture compression. Step 1 decided and done (iteration 40):** 166 of the 184 uncompressed scene textures are drawn by
-   nothing visible (30 screens, the legacy map proven covered); they now use ASTC 4x4 on Android, about 74.6 MB -> 20.4 MB.
-   Still open: the visible art (a device comparison) and the protected art (the owner's approval); see `TEXTURE_AUDIT.md`.
+9. **Texture compression. Decided and done (iterations 40-41):** 183 of the 184 uncompressed scene textures now use ASTC 4x4 on
+   Android, about 105.8 MB -> 30.9 MB. Step 1: the 166 that nothing visible draws (30 screens, the legacy map proven covered).
+   Steps 2-3, decided by the user on an in-editor comparison of what a phone decodes (PSNR 36.9-61.9 dB): the 11 visible and
+   the 6 protected textures. Left: `gold.png` (0.11 MB, NPOT with mipmaps). Not yet seen on a phone (item 12); see
+   `TEXTURE_AUDIT.md`.
 10. **Incremental GC. Decided on 2026-09-25 and done (iteration 37):** `gcIncremental` is on. The editor was restarted in
     iteration 38 and now collects incrementally: 4 collections in 150 s of play, heap stable, no leak. Each collection still cost
     one frame of about 20 ms there, on a 1.8 GB heap that is almost all the editor's, so the effect on a phone is item 12.
@@ -279,7 +282,8 @@ user on 2026-09-25; the others are still open.
 12. **Device checks, not possible in this pass (no Android, by instruction; kept by the user on 2026-09-26):**
     - whether a phone's Back key reaches the game as `<Keyboard>/escape`, the Cancel action's only binding;
     - memory and frame time on a phone, including collection pauses with incremental GC on;
-    - how launchers render the icons.
+    - how launchers render the icons;
+    - how the compressed art looks on a phone's screen (its decoded texels were compared in the editor).
     Done in the editor instead (iteration 40): R-16 with a delivered click, safe-area insets in the Device Simulator, and the
     launcher icons' files and slots (the Round icon was square; it is now built round from the adaptive layers).
 13. **The AI Assistant package** (`com.unity.ai.assistant` 2.18.0-pre.2). **Decided on 2026-09-26: leave it installed.** It
@@ -325,10 +329,11 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **40 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **41 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
-  and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36) and the editor-side device checks (40).
-- **46 commits** (`c6b9fb97` to the commit of this report): 222 files, 215 of them outside `Assets/_Ralph`.
+  and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40) and
+  texture steps 2-3 (41).
+- **48 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
@@ -338,7 +343,9 @@ swept as well, in iterations 32 and 33.
     `RoyalAppIconBuilder`, `RoyalPlayModeReloadGuard` (new), and the check suites `ReferenceHomeFinishChecks`,
     `ReferenceHomeSkyChecks`, `ReferenceLayoutChecks`, `RoyalBoardSurfaceChecks`, `RoyalColorBallChecks`,
     `RoyalColorBallQaChecks`, `RoyalEffectsChecks`, `RoyalHomeScreenChecks`, `RoyalQaChecks`, `RoyalRocketChecks`, `RoyalTNTChecks`;
-  - settings: `ProjectSettings/ProjectSettings.asset` (incremental GC);
+  - assets: 183 texture `.meta` files (the Android ASTC override: 166 in iteration 40, 17 in iteration 41) and the new round
+    launcher icon `Assets/RoyalBranding/royal-throne-icon-round.png`, with its checks in `Design/Branding/AppIcon-v1/checks.txt`;
+  - settings: `ProjectSettings/ProjectSettings.asset` (incremental GC; the six Round icon slots);
   - reports: `Assets/_Ralph/RALPH_STATE.md`, `TEXTURE_AUDIT.md`, this file.
 - **Working tree only** (untracked King Venguard work, never committed piecemeal): `KingVenguardCharacter.cs` (R-19), seven Spine files,
   `spine-unity-editor.asmdef`, `UNITY6-COMPAT-PATCHES.md`, and `Design/Characters/KingVenguard/V1/Source/tools/runtime/patch_spine_unity6_deprecations.py`.
