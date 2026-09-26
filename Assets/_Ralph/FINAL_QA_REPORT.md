@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 13:07 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 13:26 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -280,12 +280,15 @@ user on 2026-09-25; the others are still open.
 11. **The King's name. Decided on 2026-09-26: keep the internal names.** Players see "King Vanguard"; only the character's
     folders, files and code identifiers say "Venguard".
 12. **Device checks, not possible in this pass (no Android, by instruction; kept by the user on 2026-09-26):**
-    - whether a phone's Back key reaches the game as `<Keyboard>/escape`, the Cancel action's only binding;
+    - whether a phone's Back key reaches the game as `<Keyboard>/escape`, the Cancel action's only binding (GameActivity
+      passes it on as `AKEYCODE_BACK`; the Input System's mapping is in closed engine code, iteration 43);
     - memory and frame time on a phone, including collection pauses with incremental GC on;
-    - how launchers render the icons;
+    - how launchers beyond the four common mask shapes render the icons;
     - how the compressed art looks on a phone's screen (its decoded texels were compared in the editor).
     Done in the editor instead (iteration 40): R-16 with a delivered click, safe-area insets in the Device Simulator, and the
-    launcher icons' files and slots (the Round icon was square; it is now built round from the adaptive layers).
+    launcher icons' files and slots (the Round icon was square; it is now built round from the adaptive layers). In
+    iteration 43, the icon under the circle, squircle, rounded-square and teardrop masks: none cuts the crown, but 1.3% of it
+    lies outside Android's 66 dp safe circle; shrinking the logo by about 8% would fix that, the owner's call.
 13. **The AI Assistant package** (`com.unity.ai.assistant` 2.18.0-pre.2). **Decided on 2026-09-26: leave it installed.** It
     checks for a Unity AI entitlement (`com.unity.editor.ai`) that this account lacks. Those checks can stall the editor for
     over 5 s: 1512 failed checks and 21 CLI time-outs in the 37-hour editor session before the restart. A check one interrupts
@@ -329,11 +332,11 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **42 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **43 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
   and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40),
-  texture steps 2-3 (41) and their follow-up (42).
-- **49 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
+  texture steps 2-3 (41), their follow-up (42) and the device checks' desk work (43).
+- **51 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,

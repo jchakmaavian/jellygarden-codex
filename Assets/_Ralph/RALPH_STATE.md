@@ -1431,3 +1431,40 @@ Throne's own implementation.
 - **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
   pauses on a phone; how launchers render the icons; how the compressed art looks on a phone's screen.
 - **Next task:** none the loop can act on in this pass.
+
+### Iteration 43 (the device checks as far as they go without a phone; two decisions)
+- **Date/time:** 2026-09-26 13:10-13:26 local
+- **Why:** the user asked again for the blocker to be solved. What was left looked phone-only, but three items had parts that
+  are not.
+- **A phone's Back key (narrowed as far as the sources go):**
+  - The project builds with GameActivity (`androidApplicationEntry: 2`). Its input code, which Unity ships as source
+    (`PlaybackEngines/AndroidPlayer/Source/GameActivity/UGAInput.cpp`), hands every key event to the engine with its raw
+    Android key code, `AKEYCODE_BACK` included; it treats Back like Escape only to hide the soft keyboard.
+  - Unity 6.5's manual (`Input.backButtonLeavesApp`) says the Back button arrives as `KeyCode.Escape`, but for the legacy
+    Input Manager. This project runs the Input System only (`activeInputHandler: 1`), whose Cancel action is bound to
+    `<Keyboard>/escape`.
+  - The Input System 1.20 package's source, documentation and changelog say nothing about Android's Back key; the engine
+    maps it in closed native code. Only a phone can confirm that it reaches `<Keyboard>/escape`.
+- **How launchers render the icons (measured; one correction):**
+  - Iteration 40 said the crown lies "inside the 66.7% safe zone". 66.7% is the 72 dp viewport, not the safe zone; Android's
+    safe zone is a 66 dp circle (61.1% of the 108 dp layer). Measured now: the farthest visible pixel is 35.92 dp from the
+    centre, and 1.3% of the crown's ink lies outside the 66 dp circle. The circle, squircle, rounded-square and teardrop
+    masks cut none of it (`scratchpad/icon_masks41.png`).
+  - `RoyalAppIconBuilder` had written "fits within 62.5% safe square" as fixed text since 2026-09-14. It now measures the
+    foreground against both zones, writes the figures to `checks.txt` and fails if any pixel reaches past 36 dp, where a
+    circular mask cuts (`2390d246`). Re-running it left every icon PNG and `ProjectSettings.asset` byte-identical; the three
+    icon `.meta` files it re-saved with trailing spaces only were restored.
+  - Not changed: shrinking the crown by about 8% would bring it inside the safe circle, but it is the logo (protected art)
+    and no common mask cuts it. The owner's call.
+- **Decisions:**
+  - `gold.png` stays uncompressed. ASTC needs its mipmaps off, a change for every platform beyond the approved Android
+    override, for about 90 KB; only the hidden legacy map uses it.
+  - R-22's `FitDialog` stays as it is (iteration 41: its latent limit cannot take effect).
+- **Tests:** a clean rebuild of all 165 assemblies after the change (13:23-13:25): 0 errors, 0 warnings. The builder's run
+  verified its 18 slots and produced byte-identical icons. Only this editor tool changed, no runtime code, so the suites
+  were not re-run.
+- **Files changed:** `RoyalAppIconBuilder.cs`, `Design/Branding/AppIcon-v1/checks.txt`, these records.
+- **Commits:** `2390d246` (the builder), and the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
+  pauses on a phone; launchers other than the four common mask shapes; how the compressed art looks on a phone's screen.
+- **Next task:** none the loop can act on in this pass.
