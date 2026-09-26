@@ -17,6 +17,8 @@ namespace RoyalThrone.Editor
         {
             RoyalHomeScreenBuilder.RequireCopy();
             if(EditorApplication.isPlayingOrWillChangePlaymode)throw new InvalidOperationException("Stop Play Mode before setting the app icon.");
+            // Measure the foreground first, so one that fails the check stops the builder before it changes anything.
+            string safeZone=SafeZone(Folder+"royal-throne-icon-foreground.png");
             var texture=new Texture2D(8,8,TextureFormat.RGB24,false);
             var pixels=Enumerable.Repeat(Background,64).ToArray();texture.SetPixels(pixels);texture.Apply();
             File.WriteAllBytes(Folder+"royal-throne-icon-background.png",texture.EncodeToPNG());UnityEngine.Object.DestroyImmediate(texture);
@@ -52,7 +54,7 @@ namespace RoyalThrone.Editor
 #pragma warning restore CS0618
             AssetDatabase.SaveAssets();
             Directory.CreateDirectory("Design/Branding/AppIcon-v1");
-            File.WriteAllText("Design/Branding/AppIcon-v1/checks.txt","Default icon assigned. Android Legacy/Round/Adaptive slots verified: "+slots+". "+SafeZone(Folder+"royal-throne-icon-foreground.png")+" Round slots use the adaptive layers in a circle.\n");
+            File.WriteAllText("Design/Branding/AppIcon-v1/checks.txt","Default icon assigned. Android Legacy/Round/Adaptive slots verified: "+slots+". "+safeZone+" Round slots use the adaptive layers in a circle.\n");
             Debug.Log("[Royal Throne Icon] Default and "+slots+" Android icon slots verified.");
         }
 
@@ -64,7 +66,8 @@ namespace RoyalThrone.Editor
             var fg=new Texture2D(2,2,TextureFormat.RGBA32,false);float far=0,ink=0,outside=0;
             try
             {
-                fg.LoadImage(File.ReadAllBytes(foregroundPath));int n=fg.width;
+                if(!fg.LoadImage(File.ReadAllBytes(foregroundPath)))throw new InvalidOperationException("Cannot read the adaptive foreground: "+foregroundPath);
+                int n=fg.width;
                 if(fg.height!=n)throw new InvalidOperationException("Adaptive foreground must be square (108 x 108 dp); it is "+n+"x"+fg.height+".");
                 float dp=n/108f,c=(n-1)*.5f;var px=fg.GetPixels32();
                 for(int y=0;y<n;y++)for(int x=0;x<n;x++)
@@ -84,18 +87,22 @@ namespace RoyalThrone.Editor
         // 108 dp, in an anti-aliased circle.
         static void WriteRoundIcon(string foregroundPath,string outputPath)
         {
-            var fg=new Texture2D(2,2,TextureFormat.RGBA32,false);fg.LoadImage(File.ReadAllBytes(foregroundPath));
             const int size=1024;const float margin=18f/108f,span=72f/108f,radius=size*.5f;
-            var output=new Texture2D(size,size,TextureFormat.RGBA32,false);var pixels=new Color[size*size];
-            for(int y=0;y<size;y++)for(int x=0;x<size;x++)
+            var fg=new Texture2D(2,2,TextureFormat.RGBA32,false);var output=new Texture2D(size,size,TextureFormat.RGBA32,false);
+            try
             {
-                var c=fg.GetPixelBilinear(margin+span*(x+.5f)/size,margin+span*(y+.5f)/size);
-                var px=Color.Lerp(Background,new Color(c.r,c.g,c.b,1),c.a);
-                px.a=Mathf.Clamp01(radius-Vector2.Distance(new Vector2(x+.5f,y+.5f),new Vector2(radius,radius))+.5f);
-                pixels[y*size+x]=px;
+                if(!fg.LoadImage(File.ReadAllBytes(foregroundPath)))throw new InvalidOperationException("Cannot read the adaptive foreground: "+foregroundPath);
+                var pixels=new Color[size*size];
+                for(int y=0;y<size;y++)for(int x=0;x<size;x++)
+                {
+                    var c=fg.GetPixelBilinear(margin+span*(x+.5f)/size,margin+span*(y+.5f)/size);
+                    var px=Color.Lerp(Background,new Color(c.r,c.g,c.b,1),c.a);
+                    px.a=Mathf.Clamp01(radius-Vector2.Distance(new Vector2(x+.5f,y+.5f),new Vector2(radius,radius))+.5f);
+                    pixels[y*size+x]=px;
+                }
+                output.SetPixels(pixels);output.Apply();File.WriteAllBytes(outputPath,output.EncodeToPNG());
             }
-            output.SetPixels(pixels);output.Apply();File.WriteAllBytes(outputPath,output.EncodeToPNG());
-            UnityEngine.Object.DestroyImmediate(fg);UnityEngine.Object.DestroyImmediate(output);
+            finally{UnityEngine.Object.DestroyImmediate(fg);UnityEngine.Object.DestroyImmediate(output);}
         }
     }
 }
