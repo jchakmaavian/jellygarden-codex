@@ -89,7 +89,7 @@ Throne's own implementation.
 | R-19 | P3 | Hidden HUD and home kings keep animating; AI hint coroutine pile-up (Kings fixed in iteration 27, in the untracked King Venguard work; the hint coroutines measured bounded, no defect) | RoyalGameplayPresentation, AI |
 | R-20 | design | Offline economy has no coin income (5 coins lifetime). Decided on 2026-09-25: restore the template's 1 coin per win (done, iteration 37) | LevelManager :370 |
 | R-21 | P2 | Home profile avatar and area chest ignore real taps: their only hit area is disabled (found in verification, iteration 18) | ReferenceHomeLayout.Hide :18 |
-| R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (fixed, iteration 38, by the user's decision: a tall home dialog that does not fit is shortened and moved; 16:9 and 20:9 unchanged) | ReferenceHomeLayout.FitDialog |
+| R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (fixed, iteration 38, by the user's decision: a tall home dialog that does not fit is shortened and moved; 16:9 and 20:9 unchanged; iteration 48: its 60% minimum now holds) | ReferenceHomeLayout.FitDialog |
 | R-23 | P3 | Out-of-moves CONTINUE shows a gem icon while home calls the balance coins (fixed, iteration 37, by the user's decision: it shows the coin; iteration 38, also decided: the shop, its packs, the lives refill and the tool shop show the coin too) | RoyalMenuSkin |
 | R-24 | P2 | Per-frame garbage from `Counter_` (`Object.name` reads) and `BoostIcon` (strings) in normal play; incremental GC was off (fixed, iteration 20; incremental GC turned on in iteration 37, by the user's decision) | Counter_.cs, BoostIcon.cs; ProjectSettings `gcIncremental` |
 | R-25 | decided | The board, HUD, tool bar and home controls draw sprites and effects extracted from the Royal Match APK (reference-asset integration of 2026-09-24: `cdd68361`, then the imported `ReferencePieceVisual` prefabs and `ReferenceVfxPool`). Royal Throne's own piece art, piece animators and effects are bypassed, and 9 effect and booster suites fail for that reason. Iteration 28 measured it: with the imports off, cell breaks, rockets, TNT, Color Ball V5 and Propeller V5 pass, and effects passes 369 checks before failing on the imported HUD's smaller playable area (360x640: 30.9 px per cell, floor 32). Iteration 29 ran the rest of effects: with the imports off, 493 of its 495 checks pass (only the two 360x640 layout checks fail); as shipped, the imported leaf and lily sprites also fill under 88% of a cell. Only 6 of the 9 fail because of the imports; the other 3 are R-28. The imports also switch in through `ReferenceActivationVisual.Attach`, `RoyalBoardSurface.Edge` (imported border instead of the own `frame-edge-*` art), `PlayableViewport` and the HUD, tool bar and home art, none of which has a runtime switch. Legal and product decision; the loop changed neither the art nor the tests (found in review, iteration 25) **Decided by the user on 2026-09-25: keep the imported art**, accepting the legal exposure. The 6 suites stay red and are not edited to accept the copied art. | `RoyalGameplayArt` :55 -> `ReferenceGameplayCatalog.For`; `RoyalPieceSkin` :159; `ReferenceVfxPool.Has` early returns in `MatchVFXService` :380/:447/:494, `CandyShatterService` :354, `ColorBallVfxV4` :49, `RoyalPowerupDirector` :252, `RoyalRocketSequence` :147/:318; `ReferenceActivationVisual.Attach` from `ColorBallVisualV4` :71 and `PropellerVisualV5` :63; `RoyalBoardSurface.Edge` :69; `RoyalGameplayPresentation.PlayableViewport` :204 |
@@ -1654,4 +1654,47 @@ Throne's own implementation.
 - **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`.
 - **Commits:** the commit of these records.
 - **Still open (a phone, which the user kept out of this pass):** the four phone checks of iteration 45.
+- **Next task:** none the loop can act on in this pass.
+
+### Iteration 48 (the open calls decided; the Back key traced into Unity's player; FitDialog's 60% minimum fixed)
+- **Date/time:** 2026-09-26 18:25-19:34 local
+- **Why:** the user said that stopping was a failure: state the blocker, decide what can be decided, find what is missing, and
+  keep going. The blocker: the four phone checks need Android, which the user's rule keeps out of this pass. The other items
+  had been left as the user's call.
+- **Decided by the loop:**
+  - the round launcher icon stays: no player sees it, and removing it changes the APK's icon resources, which only a device
+    build could check;
+  - no push: the branch holds the Royal Match import (`cdd68361`), and a push needs the user's explicit go-ahead;
+  - the AI Assistant package's console warning stays: removing the package would undo the user's decision, and relaunching the
+    shared editor through the Hub would interrupt its other users over a warning;
+  - the 9 failing suites follow the user's decisions on the Royal Match art and the superseded Color Ball suites (items 1, 2).
+- **Found: how a phone's Back reaches the game on Android 13 and later.** The project has predictive back on
+  (`androidPredictiveBackSupport: 1`; Unity's tooltip: "If set, Android's OnBackInvokedCallback will be used to handle back
+  events on Android 13 and above"). Unity's player (`classes.jar`, disassembled with the JDK that ships with the editor)
+  registers that callback in `UnityPlayer.initialize`, and its `Runnable` (`com.unity3d.player.m0`) turns each back event into a
+  `KEYCODE_BACK` press and release (`KeyEvent` down, then up a millisecond later, from a keyboard source) sent through
+  `Activity.dispatchKeyEvent`. So with predictive back on, Back still arrives as the Back key, as on older Android. The phone
+  check is left with the native step that turns `KEYCODE_BACK` into the Input System's Escape key: the Input System's managed
+  Android code maps only gamepad keys, and its `Keyboard` layout gives Escape the `Back` usage.
+- **Fixed: FitDialog's 60% minimum (R-22, latent).**
+  - Reproduced (`kv/fit_forced.py pre47`, QA profile): the Settings dialog, given a 3000-unit design height, went to 1800 (60%),
+    then 1080, then 931.8 (31%, what fits) and stayed there. The minimum was taken from the dialog's current height, the one
+    FitDialog had set the frame before. **Correction to iterations 41 and 43:** they called this a collapse; the dialog shrinks
+    to whatever fits, and to nothing only when nothing fits.
+  - Fix (`ReferenceHomeLayout.FitDialog`): it remembers the layout's height (any height it did not set) and the one it set,
+    takes the 60% minimum and the upper limit from the layout's height, and skips the write when the dialog already sits there.
+  - After (`kv/fit_forced.py post47`): 1800 (60%) in all 30 frames. Reopening restores the normal 937.7, before and after.
+  - Nothing moves on the screens that exist (`kv/r22_measure.py` at four sizes before and after the fix, `kv/r22_compare.py`):
+    every dialog edge, button, row, grid, title and copy is identical. Only the close button's top differs, by up to 0.2 units,
+    as it does between any two runs (iteration 38's run against today's, both before the fix).
+- **Tests:** the full run on the fix (`kv/final_run13.sh`, 18:36-19:33): a clean rebuild of all 165 assemblies with 0 messages of
+  any kind (the type check, and the lint, since Unity's serialization analyzer reports through the compiler); the 23 suites, 14
+  passing and the 9 decided failures failing with iteration 33's 11 failure lines, the console holding iteration 33's 13 entries
+  plus the AI Assistant account warning, the real profile never changing and the evidence restored byte-identical 3 of 3 times;
+  Levels 1-100 with no problem; layout 40 of 40 at four sizes, the Game view restored exactly; the approved changes 17 of 17;
+  R-29 18 of 18; the forced fit at 1800 in all 30 frames and 937.7 on reopening; the VFX kit 17 of 17 and 22 of 22.
+- **Files changed:** `ReferenceHomeLayout.cs`, these records.
+- **Commits:** `419a51e2` (the fix), and the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** the four phone checks of iteration 45; for the Back key, only
+  the native step above.
 - **Next task:** none the loop can act on in this pass.
