@@ -1738,3 +1738,35 @@ Throne's own implementation.
 - **Still open (a phone, which the user kept out of this pass):** the four phone checks of iteration 45; for the Back key,
   whether the engine delivers it to the Input System at all on this version.
 - **Next task:** none the loop can act on in this pass.
+
+### Iteration 50 (the phone checks narrowed without a phone; records only)
+- **Date/time:** 2026-09-26 21:05-21:11 local
+- **Why:** the user said that stopping was a failure. The blocker, the phone checks, stays with the user's no-Android rule;
+  what each check still needs was looked for without one.
+- **Back key.** Unity's own documentation (6000.6) describes Back only for the legacy Input Manager
+  (`Input.backButtonLeavesApp`: "you're responsible for responding to Back button by calling Input.GetKey and passing
+  KeyCode.Escape"); the Input System and the predictive back setting pages say nothing about how Back reaches scripts, which
+  matches the Unity answer of iteration 49. Every Back handler of the game reads the Cancel action's `WasPressedThisFrame` /
+  `WasReleasedThisFrame`, which record a press and release in the same frame; the only key polling in `Assets` is a third-party
+  VFX demo that the game does not use. **Decided:** no switch to "Both" input handling now. It changes a project-wide setting,
+  needs the shared editor restarted, and what it would fix can only be seen on a phone. If the phone check finds no Back, the
+  remedy is to set Active Input Handling to Both and feed the legacy `Input.GetKeyDown(KeyCode.Escape)`, which Unity documents
+  for Android, into the same handlers.
+- **Compressed art.** ASTC decoding is specified bit-exactly (Khronos OES_texture_compression_astc: "Bit exact decode. This is
+  a must for conformance testing and reproducibility."). The default LDR decode is FP16, and 8-bit decoding is an optional
+  mode (EXT_texture_compression_astc_decode_mode). So a conformant phone GPU decodes the texels that iteration 41 compared in
+  the editor, apart from rounding to 8 bits, provided Unity's editor decoder is conformant too. The check is left with the
+  phone's own display and texture filtering.
+- **Launcher shapes.** AOSP defines five masks: the framework default circle and, in `frameworks/base` android10-release, the
+  square, rounded rect, squircle and teardrop overlays (android12 and android14 ship none there; Pixel's other shapes are not
+  in AOSP). With those exact `config_icon_mask` paths, scaled to the 72 dp viewport and 4x supersampled
+  (`scratchpad/icon_aosp_masks.py`, sheet `icon_aosp_masks.png`): no mask cuts any of the crown's ink (0.000%), and the most
+  opaque pixel any of them cuts has alpha 4/255, an invisible edge. This confirms iteration 43, whose paths were not kept. Left
+  for the phone: launchers with shapes of their own, where only the 1.3% of the crown outside the 66 dp safe circle is exposed.
+- **Tests:** none; no project file changed but these records.
+- **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`.
+- **Commits:** the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** whether the engine delivers Back to the Input System on this
+  version; memory, frame time and collection pauses; launchers with shapes of their own; the compressed art on the phone's
+  display.
+- **Next task:** none the loop can act on in this pass.

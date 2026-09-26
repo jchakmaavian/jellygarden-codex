@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 21:00 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 21:11 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -317,10 +317,13 @@ decided changes are done. Item 12 needs a phone, which this pass excludes.
       passes it on as `AKEYCODE_BACK`, and on Android 13 and later Unity's player turns the predictive back callback into the
       same key's press and release, iteration 48; only the engine's native mapping of that key to Escape is unverified. Reports
       on Unity Discussions differ, one Unity answer calls Android Back support lacking in the Input System package, and the
-      game reads Back through an action, which records a press and release in the same frame: iteration 49);
+      game reads Back through an action, which records a press and release in the same frame: iteration 49. If the phone
+      shows no Back, the remedy is "Both" input handling with the legacy `KeyCode.Escape`, which Unity documents for
+      Android: iteration 50);
     - memory and frame time on a phone, including collection pauses with incremental GC on;
-    - how launchers beyond the four common mask shapes render the icons;
-    - how the compressed art looks on a phone's screen (its decoded texels were compared in the editor).
+    - how launchers with shapes of their own render the icons (AOSP's five masks cut none of the crown: iteration 50);
+    - how the compressed art looks on a phone's screen (its decoded texels were compared in the editor, and ASTC decoding is
+      specified bit-exactly, so a conformant phone decodes the same texels: only the display is left, iteration 50).
     Done in the editor instead (iteration 40): R-16 with a delivered click, safe-area insets in the Device Simulator, and the
     launcher icons' files and slots (the Round icon was square; it is now built round from the adaptive layers, though no
     phone the game installs on uses it: iteration 46). In
@@ -371,14 +374,15 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **49 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **50 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
   and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40),
   texture steps 2-3 (41), their follow-up (42), the device checks' desk work (43),
   the report's corrections (44), the phone checks' runbook (45), and the never-executed parts finished, with R-29 found by a
   review copy of the session and fixed (46), the other Back handlers checked (47), and the open calls decided, the Back key
-  traced into Unity's player and R-22's 60% minimum fixed (48), and R-30 found by sending Back as a phone does and fixed (49).
-- **62 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
+  traced into Unity's player and R-22's 60% minimum fixed (48), R-30 found by sending Back as a phone does and fixed (49), and
+  the phone checks narrowed without a phone (50).
+- **63 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
