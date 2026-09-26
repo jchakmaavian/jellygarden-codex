@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 18:09 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 18:20 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -154,7 +154,9 @@ Close or Back returns to the pause menu, then Back resumes; CONTINUE shows the c
 **Stacked popups and Back (R-29, iteration 46):** the booster guide, the lives shop, the coin shop over the lives shop, the
 booster shop and the coin shop over the booster shop, each over the level card, plus the card alone, three rounds each, with
 a real Escape press and release: before the fix, Back closed the card in all 15 stacked runs and left the top popup over
-home; after it, only the top popup closed, 18 of 18, and again 18 of 18 on the final code.
+home; after it, only the top popup closed, 18 of 18, and again 18 of 18 on the final code. The other Back handlers were
+checked by reading in iteration 47: a home dialog and a popup are never open together, and in a level `LevelManager` runs
+after every popup and the tool bar, so a Back they answer never also pauses the game.
 
 **Shared Match-3 VFX package tests** (`SharedPackages/com.royalthrone.match3-vfx`, run in a scratch project): EditMode **17/17**,
 PlayMode **22/22**. The package's runtime and editor assemblies compiled with 0 warnings. Rerun in iteration 37: the same.
@@ -353,13 +355,13 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **46 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **47 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
   and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40),
   texture steps 2-3 (41), their follow-up (42), the device checks' desk work (43),
   the report's corrections (44), the phone checks' runbook (45), and the never-executed parts finished, with R-29 found by a
-  review copy of the session and fixed (46).
-- **57 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
+  review copy of the session and fixed (46), and the other Back handlers checked (47).
+- **58 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,

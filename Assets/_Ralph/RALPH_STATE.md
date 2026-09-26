@@ -1631,3 +1631,27 @@ Throne's own implementation.
 - **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
   pauses on a phone; launchers other than the four common mask shapes; how the compressed art looks on a phone's screen.
 - **Next task:** none the loop can act on in this pass.
+
+### Iteration 47 (the other Back handlers, after R-29; no change)
+- **Date/time:** 2026-09-26 18:17-18:20 local
+- **Why:** R-29 showed that the loop's Back tests had stacked one pair of popups only. Before the loop ends, every other place
+  where one Back could reach two handlers was checked. The user asked to continue with the plan.
+- **The handlers:** `RoyalHomeScreen` closes its dialog on the press (in `LateUpdate`); `AnimationManager` closes the top popup
+  on the release; in a level, `ReferenceBoosterBar` closes its shop or cancels a chosen tool on the release; `LevelManager`
+  pauses (in a level) or quits (on the bare home) on the release, only if nothing consumed the gesture.
+- **A home dialog and a popup are never open together.** Opening a level from a dialog closes the dialog (`OpenLevel`). While a
+  popup is open, the home controls and the tab bar take no taps (`controls` and `navigationInput` are not interactable), so no
+  dialog opens over or under one. The level card that opens without a tap, after CONTINUE on the win card, finds no dialog
+  either: leaving home for the level closed it.
+- **In a level the order is fixed.** `LevelManager` has execution order 1000; every popup and the tool bar have 0 (the tool bar's
+  meta sets none). They answer the release first and consume it, so the pause branch sees it consumed: a Back that closes a
+  popup or the tool shop, or cancels a tool, never also pauses. Iteration 46's `r10` run showed the tool cases.
+- **The out-of-moves offer:** only the coin shop opened over it answers Back. The offer has no Back branch, and the game is not
+  in `Playing` there, so nothing pauses.
+- **Result:** no other case of one Back doing two things. Nothing changed in the code.
+- **Tests:** none run. This is a reading of the code; iteration 46's runs cover the cases that exist (the stacks, the home
+  dialog, the level card, the bare home, pause, a chosen tool and the tool shop).
+- **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`.
+- **Commits:** the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** the four phone checks of iteration 45.
+- **Next task:** none the loop can act on in this pass.
