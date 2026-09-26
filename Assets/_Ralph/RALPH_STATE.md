@@ -1408,3 +1408,26 @@ Throne's own implementation.
 - **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
   pauses on a phone; how launchers render the icons; how the compressed art looks on a phone's screen.
 - **Next task:** none the loop can act on in this pass.
+
+### Iteration 42 (iteration 41's open parts that need no phone)
+- **Date/time:** 2026-09-26 12:53-13:07 local
+- **Why:** the user asked for the plan to continue. Two of iteration 41's open parts needed no phone: the cause of the editor
+  stall in its `colorball` suite, and the in-context comparison of the 16 screens whose "before" captures had been overwritten.
+- **The stall's cause (found):** Windows installed a Microsoft Defender security intelligence update in exactly that window.
+  Windows Update started it at 12:04:08 and finished at 12:04:17; Defender reported the new version at 12:04:17, a
+  configuration change at 12:04:18 and its health report at 12:04:34 (Windows' System, Application and Defender event logs).
+  Unity's own logs are silent then: the licensing client's last request was at 12:03:39 and the Hub's next entry at 12:05:36.
+  The scene load that ended the stall spent 1.2 s deserializing (0.14 s normally). An operating-system event, not the game.
+  - **Correction to iteration 41 (its record and commit `e1c1a0bb` stay as written):** its suites line calls the stall "the
+    known licensing stalls". The licensing client was idle; the cause was the Defender update.
+  - The other extra entry, the "Account API did not become accessible" warning, comes from the AI Assistant package, which has
+    had no account since the editor was relaunched without the Hub in iteration 38. It is in this editor session's log 6 times;
+    this one came in the first Play session after the clean rebuild's domain reload.
+- **The other 16 screens (in context):** all 40 compared (`kv/shot_compare42.py`, sheets in `kv/play/res_compare42/`). "Before" was captured at 12:56-13:06 with the 17 textures' pre-change `.meta` files written back and reimported (uncompressed again: RGBA32 x15, RGB24 x2); "after" is iteration 41's layout run. Where the 17 are drawn, the difference stays small at every size: the Settings gear icon by 1.29-1.34/255 on average (114x111 px at 720x1280, 170x167 px at the other sizes; 0.8-0.9% of its pixels by more than 8), the fail cross by 1.07-1.44/255 (27x27 to 58x57 px; 1.8-2.9% by more than 8). Every other difference is something that moves between any two runs: the random level-12 board, drifting clouds, the King, the drop arrows, the pre-level popup's pulsing buttons, and the QA test profile's coin and star counts. How-to-play over the pause menu is pixel-identical at all four sizes.
+- **Tests:** the in-context capture ran the layout harness once more in the pre-change state: 40 of 40 screens pass, the Game view was restored exactly and the real profile was unchanged.
+- **Files changed:** these records only. The 17 texture `.meta` files were written to their pre-change versions for the
+  capture and restored from HEAD afterwards: all 17 match HEAD again and import as ASTC 4x4 (17 of 17, 0 errors); the editor ended stopped, with the real profile unchanged.
+- **Commits:** the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
+  pauses on a phone; how launchers render the icons; how the compressed art looks on a phone's screen.
+- **Next task:** none the loop can act on in this pass.

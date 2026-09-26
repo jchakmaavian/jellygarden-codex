@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 12:47 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 13:07 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -329,11 +329,11 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **41 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **42 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
-  and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40) and
-  texture steps 2-3 (41).
-- **48 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
+  and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40),
+  texture steps 2-3 (41) and their follow-up (42).
+- **49 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
