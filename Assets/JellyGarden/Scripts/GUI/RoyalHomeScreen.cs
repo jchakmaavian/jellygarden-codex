@@ -91,6 +91,14 @@ namespace RoyalThrone.Presentation
             legacyCanvas.sortingOrder = LegacySortingOrder;
         }
 
+        // Back closes an open dialog here, before LevelManager (execution order 1000) handles the release: on Android 13+
+        // Unity sends the press and the release in the same frame, and its quit check must already see this Back consumed.
+        void Update()
+        {
+            if (!Application.isPlaying || !dialog || !dialog.activeSelf || !LevelManager.THIS || LevelManager.THIS.gameStatus != GameState.Map || InputManager.Instance == null) return;
+            if (InputManager.Instance.Gameplay.Cancel.WasPressedThisFrame()) { ClosePanel(); RoyalBackButton.Consume(); }
+        }
+
         void LateUpdate()
         {
             if (lastSafe != Screen.safeArea || lastSize != ((RectTransform)transform).rect.size) RefreshLayout();
@@ -135,7 +143,6 @@ namespace RoyalThrone.Presentation
                 nextRefresh = Time.unscaledTime + .25f;
                 RefreshResources();
             }
-            if (map && dialog.activeSelf && InputManager.Instance.Gameplay.Cancel.WasPressedThisFrame()) { ClosePanel(); RoyalBackButton.Consume(); }
             float time = Time.unscaledTime;
             UpdateNavigation(false);
             if (waterGlow) waterGlow.color = new Color(.8f, .95f, 1, map && MotionEnabled ? .08f + .1f * (1 + Mathf.Sin(time * 1.8f)) : 0);
