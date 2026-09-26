@@ -68,27 +68,27 @@ Throne's own implementation.
 
 | ID | P | Issue | Where |
 |---|---|---|---|
-| R-01 | P0 | CONTINUE after winning level 100 loads missing level 101: NullReferenceException, win card stuck | AnimationManager.CloseMenu :329; LevelManager.LoadLevel :2346 |
-| R-02 | P0? | `GetRandomItems` can loop forever (pre-level boosters, or a colour bomb during the win finish); reproduce first | LevelManager :1442-1455 (gameplay: smallest fix only) |
-| R-03 | P1 | Back on home closes a dialog or popup **and** quits the app | LevelManager.Update :827-833 |
-| R-04 | P1 | HUD pause gear works in any state (win celebration, other popups); HUD above popups takes taps | RoyalGameplayPresentation :107, :151 |
-| R-05 | P1 | Win stars, score and OpenLevel written without `Save()` (lost on kill) | LevelManager Win branch :376-381; AnimationManager :329 |
-| R-06 | P1 | Locale-dependent `DateTime.Parse` of ad-quota dates in InitScript.Awake can throw on every launch | DateTimeManager :26/:42/:59/:92; InitScript :202; RewardedButton |
-| R-07 | P1 | Pre-level booster pack purchase sets stock instead of adding | AnimationManager.BuyBoost :596 -> InitScript.BuyBoost |
-| R-08 | P1 | Offline gem shop: $ packs whose Buy does nothing, no feedback | AnimationManager.Buy :468, GemsShop |
-| R-09 | P1? | Level-1 tutorial hand throws when re-entering after leaving untouched; reproduce | HandTutorial :42, TutorialManager |
-| R-10 | P2 | Back cannot resume from pause, cancel a selected tool or dismiss result cards | AnimationManager :150, LevelManager :829 |
-| R-11 | P2 | Timed levels: HUD shows seconds under "Moves"; the Royal Hammer slot is hidden | RoyalGameplayPresentation :85/:157; LevelManager :602 |
-| R-12 | P2 | PreFailed CONTINUE / END LEVEL ignore taps for about 2 s | AnimationManager :558 |
-| R-13 | P2 | No auto-pause when the app goes to background during a level | InitScript.OnApplicationPause |
-| R-14 | P2 | Pause HOME abandons the level (life lost) with no confirmation | AnimationManager.BackToMap |
+| R-01 | P0 | CONTINUE after winning level 100 loads missing level 101: NullReferenceException, win card stuck (fixed, iteration 1: `c6b9fb97`) | AnimationManager.CloseMenu :329; LevelManager.LoadLevel :2346 |
+| R-02 | P0? | `GetRandomItems` can loop forever (pre-level boosters, or a colour bomb during the win finish); reproduce first (fixed, iteration 8: `3f193d09`) | LevelManager :1442-1455 (gameplay: smallest fix only) |
+| R-03 | P1 | Back on home closes a dialog or popup **and** quits the app (fixed, iteration 2: `397ef5fc`; the same-frame case is R-30) | LevelManager.Update :827-833 |
+| R-04 | P1 | HUD pause gear works in any state (win celebration, other popups); HUD above popups takes taps (fixed, iteration 3: `260ab5b7`) | RoyalGameplayPresentation :107, :151 |
+| R-05 | P1 | Win stars, score and OpenLevel written without `Save()` (lost on kill) (fixed, iteration 4: `bee59bea`) | LevelManager Win branch :376-381; AnimationManager :329 |
+| R-06 | P1 | Locale-dependent `DateTime.Parse` of ad-quota dates in InitScript.Awake can throw on every launch (fixed, iteration 5: `22e9e6b6`) | DateTimeManager :26/:42/:59/:92; InitScript :202; RewardedButton |
+| R-07 | P1 | Pre-level booster pack purchase sets stock instead of adding (not reachable, iteration 6, no change: the shop opens only when the stock is 0, where setting equals adding, and the other callers rely on setting) | AnimationManager.BuyBoost :596 -> InitScript.BuyBoost |
+| R-08 | P1 | Offline gem shop: $ packs whose Buy does nothing, no feedback (fixed, iteration 6: `94bf293b`) | AnimationManager.Buy :468, GemsShop |
+| R-09 | P1? | Level-1 tutorial hand throws when re-entering after leaving untouched; reproduce (fixed, iteration 7: `cc862e87`) | HandTutorial :42, TutorialManager |
+| R-10 | P2 | Back cannot resume from pause, cancel a selected tool or dismiss result cards (fixed, iteration 10: `ee91e1d4`) | AnimationManager :150, LevelManager :829 |
+| R-11 | P2 | Timed levels: HUD shows seconds under "Moves"; the Royal Hammer slot is hidden (fixed, iteration 9: `f4461b0d`) | RoyalGameplayPresentation :85/:157; LevelManager :602 |
+| R-12 | P2 | PreFailed CONTINUE / END LEVEL ignore taps for about 2 s (fixed, iteration 12: `dcdf5f12`) | AnimationManager :558 |
+| R-13 | P2 | No auto-pause when the app goes to background during a level (fixed, iteration 11: `cd7fe07f`) | InitScript.OnApplicationPause |
+| R-14 | P2 | Pause HOME abandons the level (life lost) with no confirmation (fixed, iteration 13: `47686639`) | AnimationManager.BackToMap |
 | R-15 | P2 | How-to-play popup unreachable from a level (fixed, iteration 37, by the user's decision: HELP beside HOME in the pause menu opens it). The recorded "HELP label without a button" was wrong: the pause menu showed no HELP at all | RoyalMenuSkin, AnimationManager, RoyalBackButton |
 | R-16 | P2 | Hidden legacy map may still accept taps (checked in iteration 40: it does not. At four sizes every on-screen map level lies under UI, and a delivered click on one did nothing) | MapLevel, LevelsMap |
-| R-17 | P3 | Sound/Music default 0 vs 1 mismatch; `print(DateOfExit)` every launch; plurals ("1 coins"); timer formats | various |
-| R-18 | P3 | Project-code compile warnings (about 30 runtime, 40 editor); obsolete Find APIs | see compile log |
+| R-17 | P3 | Sound/Music default 0 vs 1 mismatch; `print(DateOfExit)` every launch; plurals ("1 coins"); timer formats (plurals fixed in iteration 14 (`56aeabfb`), the debug lines in iteration 23 (`680c6e70`); the default-0 reads are unreachable and the `mm:ss` timers only on hidden UI, so no change there) | various |
+| R-18 | P3 | Project-code compile warnings (about 30 runtime, 40 editor); obsolete Find APIs (fixed: the obsolete APIs in iteration 22 (`f5c7771f`), zero warnings in iteration 25 (`adea09ff`)) | see compile log |
 | R-19 | P3 | Hidden HUD and home kings keep animating; AI hint coroutine pile-up (Kings fixed in iteration 27, in the untracked King Venguard work; the hint coroutines measured bounded, no defect) | RoyalGameplayPresentation, AI |
 | R-20 | design | Offline economy has no coin income (5 coins lifetime). Decided on 2026-09-25: restore the template's 1 coin per win (done, iteration 37) | LevelManager :370 |
-| R-21 | P2 | Home profile avatar and area chest ignore real taps: their only hit area is disabled (found in verification, iteration 18) | ReferenceHomeLayout.Hide :18 |
+| R-21 | P2 | Home profile avatar and area chest ignore real taps: their only hit area is disabled (found in verification, iteration 18) (fixed in the same iteration: `571038cb`) | ReferenceHomeLayout.Hide :18 |
 | R-22 | P3 | 4:3 tablets: the raised Home tab icon draws over the Settings dialog's bottom button (fixed, iteration 38, by the user's decision: a tall home dialog that does not fit is shortened and moved; 16:9 and 20:9 unchanged; iteration 48: its 60% minimum now holds) | ReferenceHomeLayout.FitDialog |
 | R-23 | P3 | Out-of-moves CONTINUE shows a gem icon while home calls the balance coins (fixed, iteration 37, by the user's decision: it shows the coin; iteration 38, also decided: the shop, its packs, the lives refill and the tool shop show the coin too) | RoyalMenuSkin |
 | R-24 | P2 | Per-frame garbage from `Counter_` (`Object.name` reads) and `BoostIcon` (strings) in normal play; incremental GC was off (fixed, iteration 20; incremental GC turned on in iteration 37, by the user's decision) | Counter_.cs, BoostIcon.cs; ProjectSettings `gcIncremental` |
@@ -1786,6 +1786,21 @@ Throne's own implementation.
   fit's entry under "Engineering", the verification runs, the texture figures and the counts.
 - **Tests:** none; no project file changed but these records.
 - **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`, `TEXTURE_AUDIT.md`.
+- **Commits:** the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** the four phone checks, as narrowed in iteration 50.
+- **Next task:** none the loop can act on in this pass.
+
+### Iteration 52 (the backlog table given each item's outcome; records only)
+- **Date/time:** 2026-09-26 21:30-21:29 local
+- **Why:** the user said that stopping was a failure. The phone checks stay with the user's no-Android rule. Reading the backlog
+  table on its own, R-01 to R-18 and R-21 showed no outcome (only the rows added later carried one), so a reader could not tell
+  that they were fixed without the iteration log.
+- **Changed:** each of those rows now says how it ended, with its iteration and commit, taken from the iteration log and the
+  commit history: fixed (R-01 to R-06, R-08 to R-14, R-18, R-21), fixed in part with the rest unreachable (R-17), not reachable
+  (R-07, iteration 6: the pre-level shop opens only at stock 0, where setting equals adding). R-15, R-16 and R-19 to R-30
+  already had theirs.
+- **Tests:** none; no project file changed but these records.
+- **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`.
 - **Commits:** the commit of these records.
 - **Still open (a phone, which the user kept out of this pass):** the four phone checks, as narrowed in iteration 50.
 - **Next task:** none the loop can act on in this pass.
