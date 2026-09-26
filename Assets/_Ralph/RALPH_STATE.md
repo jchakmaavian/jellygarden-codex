@@ -1770,3 +1770,22 @@ Throne's own implementation.
   version; memory, frame time and collection pauses; launchers with shapes of their own; the compressed art on the phone's
   display.
 - **Next task:** none the loop can act on in this pass.
+
+### Iteration 51 (the records checked against iterations 46-50; records only)
+- **Date/time:** 2026-09-26 21:20-21:21 local
+- **Why:** the user said that stopping was a failure. The phone checks stay with the user's no-Android rule; the records are
+  the loop's deliverable, and five iterations had changed facts they state, so every statement those iterations touched was
+  looked up in the three records.
+- **Found and corrected:**
+  - `FINAL_QA_REPORT.md`, "Protected areas", home layout row: it never listed R-22's dialog fit in `ReferenceHomeLayout`
+    (iteration 38), nor iteration 48's 60% minimum and R-30's move of the dialog's Back check into `RoyalHomeScreen.Update`
+    (iteration 49). All three are home layout code. Added.
+  - `TEXTURE_AUDIT.md`, steps 2 and 3: they said each texture was compared "as a phone decodes it"; they now add that ASTC
+    decoding is specified bit-exactly, so a conformant phone decodes those same texels (iteration 50).
+- **Checked and still right:** the Back items (R-03, R-10, R-15, R-29, R-30 and item 12), the round icon's correction, the
+  fit's entry under "Engineering", the verification runs, the texture figures and the counts.
+- **Tests:** none; no project file changed but these records.
+- **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`, `TEXTURE_AUDIT.md`.
+- **Commits:** the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** the four phone checks, as narrowed in iteration 50.
+- **Next task:** none the loop can act on in this pass.

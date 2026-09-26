@@ -10,7 +10,8 @@ evidence are in `RALPH_STATE.md`, iteration 40.
 **Steps 2 and 3 done (2026-09-26, iteration 41, decided by the user):** the 11 visible textures that are not protected art (the
 seven home dialog icons, the win and shuffle banners, the tutorial finger, the fail cross) and the protected art (the logo, the
 title crown, both castles, the wheel), plus `fb_logout-button`, which nothing visible draws: 17 textures with the same Android
-override, about 31.1 MB -> 8.5 MB. Each was compared as a phone decodes it (compressed to ASTC 4x4 in memory and decoded back):
+override, about 31.1 MB -> 8.5 MB. Each was compared as a phone decodes it (compressed to ASTC 4x4 in memory and decoded back;
+ASTC decoding is specified bit-exactly, so a conformant phone decodes these same texels, iteration 50):
 PSNR 36.9-48.9 dB on the visible art and 42.7-61.9 dB on the protected art, with no difference visible at display size. 183 of
 the 184 now use ASTC on Android, about 105.8 MB -> 30.9 MB counting whole blocks (the 8-bpp estimate below, 28.9 MB, ignores
 them); only `gold.png` (0.11 MB) is left. The evidence is in `RALPH_STATE.md`, iteration 41.
