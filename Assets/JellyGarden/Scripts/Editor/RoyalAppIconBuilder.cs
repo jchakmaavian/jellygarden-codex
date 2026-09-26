@@ -61,14 +61,20 @@ namespace RoyalThrone.Editor
         // any reaches past 36 dp, where a circular mask would cut it.
         static string SafeZone(string foregroundPath)
         {
-            var fg=new Texture2D(2,2,TextureFormat.RGBA32,false);fg.LoadImage(File.ReadAllBytes(foregroundPath));
-            int n=fg.width;float dp=n/108f,c=(n-1)*.5f,far=0,ink=0,outside=0;var px=fg.GetPixels32();
-            for(int y=0;y<n;y++)for(int x=0;x<n;x++)
+            var fg=new Texture2D(2,2,TextureFormat.RGBA32,false);float far=0,ink=0,outside=0;
+            try
             {
-                float a=px[y*n+x].a/255f;if(a<=0)continue;
-                float r=Mathf.Sqrt((x-c)*(x-c)+(y-c)*(y-c))/dp;ink+=a;if(r>33)outside+=a;if(px[y*n+x].a>16)far=Mathf.Max(far,r);
+                fg.LoadImage(File.ReadAllBytes(foregroundPath));int n=fg.width;
+                if(fg.height!=n)throw new InvalidOperationException("Adaptive foreground must be square (108 x 108 dp); it is "+n+"x"+fg.height+".");
+                float dp=n/108f,c=(n-1)*.5f;var px=fg.GetPixels32();
+                for(int y=0;y<n;y++)for(int x=0;x<n;x++)
+                {
+                    float a=px[y*n+x].a/255f;if(a<=0)continue;
+                    float r=Mathf.Sqrt((x-c)*(x-c)+(y-c)*(y-c))/dp;ink+=a;if(r>33)outside+=a;if(px[y*n+x].a>16)far=Mathf.Max(far,r);
+                }
             }
-            UnityEngine.Object.DestroyImmediate(fg);
+            finally{UnityEngine.Object.DestroyImmediate(fg);}
+            if(ink<=0)throw new InvalidOperationException("Adaptive foreground has no visible pixels.");
             if(far>36)throw new InvalidOperationException("Adaptive foreground reaches "+far.ToString("F2")+" dp from the centre; a circular launcher mask shows 36 dp.");
             return "Adaptive foreground: farthest visible pixel "+far.ToString("F2")+" dp from the centre (a circular mask shows 36 dp); "+(100*outside/ink).ToString("F1")+"% of its ink lies outside the 66 dp safe circle.";
         }
