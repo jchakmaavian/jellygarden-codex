@@ -97,6 +97,7 @@ Throne's own implementation.
 | R-27 | P1 (editor) | A script reload in the middle of Play, which Unity does by default when a script changes during Play, resets every static. `RoyalSave.Testing` then falls back to the player's own profile, the static `InitScript.lifes` reads 0 and is saved on exit, and the Input System, uGUI `Selectable` and QA menu references break. It zeroed the real save's lives on 2026-09-25 and killed a campaign run. Editor only: builds never reload. Fixed in iteration 26 with `RoyalPlayModeReloadGuard`, which holds reloads until Play stops | `InitScript` :103/:824 (static lives, quit save); `RoyalSave.Testing`; new `Editor/RoyalPlayModeReloadGuard.cs` |
 | R-28 | P3 (tests) | Three Color Ball suites test code the game no longer runs, and fail with every import off (iteration 28): `RunColorBall` (live v1) waits for `ColorBallFrameAnimator`, which no runtime code attaches; `RoyalColorBallQaChecks` expects `ColorBallBoostView` for a single Color Ball, which has run the V4 charge-and-beam sequence since the 09-21/22 rework; `ColorBallV4Checks` holds the V5 prefab that ships to V4 rules (V5 lifts the 1.75 rad per-frame cap) and never selects `UseV4Baseline`. Retire or re-target them: Color Ball V5, the version that ships, has its own suite, which passes with the imports off. **Decided by the user on 2026-09-25: leave them as they are**; they stay in the suite list and stay red. | `RoyalColorBallChecks` :41; `RoyalColorBallQaChecks` :109; `ColorBallV4Checks` :63 |
 | R-29 | P3 | Back on a popup opened over another one (the booster guide or a shop over the pre-level card, the coin shop over a shop) closed the card underneath and left the top popup over home: each popup reads Back in its own `Update`, and iteration 37's one-Back-one-action return let whichever ran first answer, in the editor always the card (before it, one Back closed both). Found by a review copy of this session; fixed in iteration 46: a popup covered by a later open one ignores Back | AnimationManager.Update |
+| R-30 | P1 | Back on a home dialog closed it **and** quit the game when its press and release came in the same frame, as Unity's player sends them on Android 13+ with predictive back on: `LevelManager.Update` handled the release, with nothing consumed yet, before `RoyalHomeScreen.LateUpdate` closed the dialog on the press. Fixed in iteration 49: the check runs in `Update`, before `LevelManager`'s | RoyalHomeScreen.Update |
 
 ## Iteration log
 
@@ -1697,4 +1698,43 @@ Throne's own implementation.
 - **Commits:** `419a51e2` (the fix), and the commit of these records.
 - **Still open (a phone, which the user kept out of this pass):** the four phone checks of iteration 45; for the Back key, only
   the native step above.
+- **Next task:** none the loop can act on in this pass.
+
+### Iteration 49 (the Back key without a phone; R-30: Back on a home dialog quit the game when press and release came together)
+- **Date/time:** 2026-09-26 19:43-21:00 local
+- **Why:** the user said that stopping was a failure. The blocker, the phone checks, stays with the user's no-Android rule, which
+  is theirs to lift. Missing information was looked for instead: whether a phone's Back reaches an Input-System-only game.
+- **Found, without a device (Unity Discussions):** the reports disagree. On Unity 6.0 and 2022.3 with Input System 1.14.2,
+  polling `Keyboard.current.escapeKey` and `Cancel` or `Back` bindings did not see the Android Back button, and a Unity staff
+  member answered that "this feature is not properly documented and is lacking in the InputSystem package" (2024-11-18; still
+  open at the last post, 2025-10-29). Others report `escapeKey.wasPressedThisFrame` working (2024), or an action bound to `Back
+  [Any]` working where polling did not (2021). One explanation fits them all: Unity's player sends the press and the release
+  together (iteration 48: 1 ms apart), so polling a key's state can miss both, while an action records both. This game reads
+  Back through the Cancel action (`WasPressedThisFrame`, `WasReleasedThisFrame`), which records both. Whether the engine
+  delivers the key at all on this version (Unity 6000.5.10f1, Input System 1.20.0; the package's changelog since 1.14 lists no
+  Android Back change) still needs the phone.
+- **R-30 (P1, found in the editor by sending Back as a phone does):** with the press and the release in one frame, Back on a
+  home dialog closed it and also asked to quit. `LevelManager.Update` (execution order 1000) handled the release, with nothing
+  consumed yet, before `RoyalHomeScreen.LateUpdate` closed the dialog on the press. Every Back test until now sent the press and
+  the release in different frames. **Correction to iteration 47:** its reading assumed that too; its "no other case of one Back
+  doing two things" held only for a press and a release in different frames.
+  - Reproduced (`kv/back_sameframe.py before2`: a real Escape press and release queued in the same update, in 9 situations): 8
+    right; with the profile dialog open, the dialog closed and a quit was requested. A first run (`before`) wrote no per-frame
+    logs, because its file names held a colon; its 9 console errors came from that probe, not the game. Its results matched.
+  - Fix (`RoyalHomeScreen`): the dialog's Back check moves from `LateUpdate` into a new `Update`, which runs before
+    `LevelManager`'s (default order 0), so the release sees the Back consumed. Only the loop's lines are committed; the file's
+    other sessions' hunks stay out.
+  - After: 9 of 9 with press and release in one frame (`back_sameframe.py after`). With them in different frames, as before
+    (`ralph_run.py r03 r03d r10`): the dialog and the level card close without a quit, the bare home quits, Back pauses and
+    resumes a level, cancels a chosen tool and closes the tool shop without pausing.
+- **Tests:** the full run on the fix (`kv/final_run14.sh`, 20:00-21:00): a clean rebuild of all 165 assemblies with 0 messages of
+  any kind (the type check, and the lint); the 23 suites, 14 passing and the 9 decided failures failing with iteration 33's 11
+  failure lines, the console holding iteration 33's 13 entries plus the AI Assistant account warning, the real profile never
+  changing and the evidence restored byte-identical 3 of 3 times; Levels 1-100 with no problem; layout 40 of 40 at four sizes,
+  the Game view restored exactly; the approved changes 17 of 17; R-29 18 of 18; the forced fit at 1800 in all 30 frames; Back
+  with press and release in one frame 9 of 9; the VFX kit 17 of 17 and 22 of 22.
+- **Files changed:** `RoyalHomeScreen.cs`, these records.
+- **Commits:** `a326d77d` (the fix), and the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** the four phone checks of iteration 45; for the Back key,
+  whether the engine delivers it to the Input System at all on this version.
 - **Next task:** none the loop can act on in this pass.

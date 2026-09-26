@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 19:34 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 21:00 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -40,6 +40,8 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
   pause menu, and a second Back resumes. Before, How-to-play could not be reached from a level.
 - **R-29:** Back on a popup opened over another one (the booster guide or a shop over the level card, the coin shop over a
   shop) closes only that popup. Since iteration 37 it closed the level card underneath instead and left the popup over home.
+- **R-30:** on Android 13 and later, Back on a home dialog closes it without also quitting the game. There Unity sends Back's
+  press and release in the same frame, and the quit check ran before the dialog had closed.
 
 **Levels**
 - **R-04:** the pause button works only while playing, not during the win celebration. The HUD no longer takes taps meant for a
@@ -139,8 +141,8 @@ each one: it never changed.
 
 As shipped, 9 suites fail, each at the same check every run. On 2026-09-25 the user decided to keep the imported art and to leave
 the three superseded suites, so these 9 are expected failures. Any other failure is new. The last full runs, on the final
-code in iterations 46 and 48, gave the same 14 passes and the same failure lines; their console had one more entry, the AI
-Assistant package's account warning (item 13).
+code in iterations 46, 48 and 49, gave the same 14 passes and the same failure lines; their console had one more entry, the
+AI Assistant package's account warning (item 13).
 - **Six fail because of the imports.** They check Royal Throne's own piece art, animators and effects, and the game draws imported
   Royal Match visuals instead. A test change cannot fix them without certifying the copied assets, and a game change cannot fix
   them without reversing an import that was made on request. That choice was item 1: the user kept the imported art.
@@ -152,14 +154,19 @@ Assistant package's account warning (item 13).
 rejected repeat none; HELP is on screen, takes a tap and overlaps nothing; How-to-play opens over the paused level, pops in
 exactly like its unpaused entrance (also when HELP is tapped while the pause menu is still arriving), turns its pages, and
 Close or Back returns to the pause menu, then Back resumes; CONTINUE shows the coin. 17 of 17 again on the final code
-(iterations 46 and 48).
+(iterations 46, 48 and 49).
 
 **Stacked popups and Back (R-29, iteration 46):** the booster guide, the lives shop, the coin shop over the lives shop, the
 booster shop and the coin shop over the booster shop, each over the level card, plus the card alone, three rounds each, with
 a real Escape press and release: before the fix, Back closed the card in all 15 stacked runs and left the top popup over
-home; after it, only the top popup closed, 18 of 18, and again 18 of 18 on the final code in iterations 46 and 48. The other
-Back handlers were checked by reading in iteration 47: a home dialog and a popup are never open together, and in a level
-`LevelManager` runs after every popup and the tool bar, so a Back they answer never also pauses the game.
+home; after it, only the top popup closed, 18 of 18, and again 18 of 18 on the final code in iterations 46, 48 and 49. The
+other Back handlers were checked by reading in iteration 47: a home dialog and a popup are never open together, and in a
+level `LevelManager` runs after every popup and the tool bar, so a Back they answer never also pauses the game.
+
+**Back with its press and release in one frame (R-30, iteration 49),** as Unity's player sends it on Android 13 and later: a
+real Escape press and release queued in the same update, in every Back situation (a home dialog, the level card, the booster
+guide over the card, the bare home, a level while playing, the pause menu, a chosen tool, the tool shop and How-to-play over
+the pause menu). Before the fix, Back on the home dialog also asked to quit; after it, 9 of 9, again on the final code.
 
 **Shared Match-3 VFX package tests** (`SharedPackages/com.royalthrone.match3-vfx`, run in a scratch project): EditMode **17/17**,
 PlayMode **22/22**. The package's runtime and editor assemblies compiled with 0 warnings. Rerun in iteration 37: the same.
@@ -216,6 +223,9 @@ reached the game's input but not the map: no scale, no popup, no level change.
   the first popup to update take it. Its tests stacked only How-to-play over the pause menu, where the pause menu defers
   explicitly, so they passed. A review copy of this session found it by reading the code on 2026-09-25, but its notes stayed
   in that copy's scratchpad until iteration 46 read them, reproduced it in 15 of 15 stacked cases and fixed it.
+- **Every Back test sent the press and the release in different frames (R-30).** A phone on Android 13 or later sends them in
+  the same frame. Tested that way in iteration 49, Back on a home dialog also quit the game. It is fixed, and the full run now
+  sends Back both ways.
 
 ## Open items that need a decision
 
@@ -305,7 +315,9 @@ decided changes are done. Item 12 needs a phone, which this pass excludes.
 12. **Device checks, not possible in this pass (no Android, by instruction; kept by the user on 2026-09-26):**
     - whether a phone's Back key reaches the game as `<Keyboard>/escape`, the Cancel action's only binding (GameActivity
       passes it on as `AKEYCODE_BACK`, and on Android 13 and later Unity's player turns the predictive back callback into the
-      same key's press and release, iteration 48; only the engine's native mapping of that key to Escape is unverified);
+      same key's press and release, iteration 48; only the engine's native mapping of that key to Escape is unverified. Reports
+      on Unity Discussions differ, one Unity answer calls Android Back support lacking in the Input System package, and the
+      game reads Back through an action, which records a press and release in the same frame: iteration 49);
     - memory and frame time on a phone, including collection pauses with incremental GC on;
     - how launchers beyond the four common mask shapes render the icons;
     - how the compressed art looks on a phone's screen (its decoded texels were compared in the editor).
@@ -359,14 +371,14 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **48 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **49 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
   and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40),
   texture steps 2-3 (41), their follow-up (42), the device checks' desk work (43),
   the report's corrections (44), the phone checks' runbook (45), and the never-executed parts finished, with R-29 found by a
   review copy of the session and fixed (46), the other Back handlers checked (47), and the open calls decided, the Back key
-  traced into Unity's player and R-22's 60% minimum fixed (48).
-- **60 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
+  traced into Unity's player and R-22's 60% minimum fixed (48), and R-30 found by sending Back as a phone does and fixed (49).
+- **62 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,
