@@ -1,6 +1,6 @@
 # Royal Throne - QA loop final report
 
-The loop ran from 2026-09-24 23:40 to 2026-09-26 13:39 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
+The loop ran from 2026-09-24 23:40 to 2026-09-26 18:09 (local, UTC+6) on branch `visual-rebuild-v2`, in the shared Unity 6000.5.10f1
 editor. The pre-loop state is preserved on `backup/pre-ralph-2026-09-24` (`d6fe15ce`). `Assets/_Ralph/RALPH_STATE.md` is the
 iteration-by-iteration record, with the reproduction, root cause, tests and evidence for every item.
 
@@ -38,6 +38,8 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
 - **R-21:** the home profile avatar and the area chest respond to taps again. The home layout had switched off their only tap area.
 - **R-15:** the pause menu has HELP, beside HOME, which opens How-to-play over the paused level. Close or Back returns to the
   pause menu, and a second Back resumes. Before, How-to-play could not be reached from a level.
+- **R-29:** Back on a popup opened over another one (the booster guide or a shop over the level card, the coin shop over a
+  shop) closes only that popup. Since iteration 37 it closed the level card underneath instead and left the popup over home.
 
 **Levels**
 - **R-04:** the pause button works only while playing, not during the win celebration. The HUD no longer takes taps meant for a
@@ -73,13 +75,15 @@ a clean console. The IDs match the backlog in `RALPH_STATE.md`.
   Its effect has not been measured on a phone yet (item 12).
 - **Less memory on Android:** 183 of the 184 uncompressed scene textures are compressed (ASTC 4x4), about 75 MB less: the 166
   that no screen shows, and the 11 visible and 6 protected ones the user approved on an in-editor comparison (item 9).
-- **Round launcher icon:** Android 7.1 launchers that use the Round icon show a round crown instead of a square.
 - **R-19:** the King on a hidden screen no longer animates in the background. Home and the HUD hide by fading to
   alpha 0, so one invisible King always kept animating and rebuilding his mesh: 70-79 us per frame in the editor, likely
   more on a phone. He now freezes while his screen is fully transparent and is refreshed on the frame it shows again. The
   change is in the untracked King Venguard work (see Risks).
 
 **Engineering, no visible change**
+- **Round launcher icon:** the Round icon slots hold a round crown built from the adaptive layers (iteration 40), but no
+  player sees it: Unity uses the Round icon only on Android 7.1, the game requires Android 8.0, and there the round icon is
+  the adaptive one (corrected in iteration 46; iteration 40 listed it as a change for players).
 - **R-18 and the reviews:** the project compiles with **0 warnings** (was 69). Obsolete Unity APIs were moved to their current
   forms, dead code was removed, and the vendored Spine runtime got a second guarded patch set.
 - **R-27, editor safety:** a script reload can no longer happen in the middle of Play. Before, one reset every static: the QA test
@@ -131,7 +135,9 @@ each one: it never changed.
 | Color Ball live v1, Color Ball QA, Color Ball V4 | **FAIL**, expected, with or without the imports: they test superseded Color Ball code (item 2, decided) |
 
 As shipped, 9 suites fail, each at the same check every run. On 2026-09-25 the user decided to keep the imported art and to leave
-the three superseded suites, so these 9 are expected failures. Any other failure is new.
+the three superseded suites, so these 9 are expected failures. Any other failure is new. The last full run, on the final
+code in iteration 46, gave the same 14 passes and the same failure lines; its console had one more entry, the AI Assistant
+package's account warning (item 13).
 - **Six fail because of the imports.** They check Royal Throne's own piece art, animators and effects, and the game draws imported
   Royal Match visuals instead. A test change cannot fix them without certifying the copied assets, and a game change cannot fix
   them without reversing an import that was made on request. That choice was item 1: the user kept the imported art.
@@ -142,7 +148,13 @@ the three superseded suites, so these 9 are expected failures. Any other failure
 **The approved changes** (iteration 37), in Play Mode in the QA profile: **17 of 17** checks. A win credits one coin and a
 rejected repeat none; HELP is on screen, takes a tap and overlaps nothing; How-to-play opens over the paused level, pops in
 exactly like its unpaused entrance (also when HELP is tapped while the pause menu is still arriving), turns its pages, and
-Close or Back returns to the pause menu, then Back resumes; CONTINUE shows the coin.
+Close or Back returns to the pause menu, then Back resumes; CONTINUE shows the coin. 17 of 17 again on the final code
+(iteration 46).
+
+**Stacked popups and Back (R-29, iteration 46):** the booster guide, the lives shop, the coin shop over the lives shop, the
+booster shop and the coin shop over the booster shop, each over the level card, plus the card alone, three rounds each, with
+a real Escape press and release: before the fix, Back closed the card in all 15 stacked runs and left the top popup over
+home; after it, only the top popup closed, 18 of 18, and again 18 of 18 on the final code.
 
 **Shared Match-3 VFX package tests** (`SharedPackages/com.royalthrone.match3-vfx`, run in a scratch project): EditMode **17/17**,
 PlayMode **22/22**. The package's runtime and editor assemblies compiled with 0 warnings. Rerun in iteration 37: the same.
@@ -195,6 +207,10 @@ reached the game's input but not the map: no scale, no popup, no level change.
   nothing else in the save changed. The reload guard (R-27) now prevents this, and every edit of mine is followed by a refresh.
 - **The home suite failed intermittently.** It read the screen size from an editor callback, which reports the editor window about
   3.5% of the time. It now runs inside the game loop and passed 3 of 3 runs, then again in the final run.
+- **A Back bug of the loop's own went unnoticed for nine iterations (R-29).** Iteration 37 made one Back one action but let
+  the first popup to update take it. Its tests stacked only How-to-play over the pause menu, where the pause menu defers
+  explicitly, so they passed. A review copy of this session found it by reading the code on 2026-09-25, but its notes stayed
+  in that copy's scratchpad until iteration 46 read them, reproduced it in 15 of 15 stacked cases and fixed it.
 
 ## Open items that need a decision
 
@@ -272,7 +288,9 @@ decided changes are done. Item 12 needs a phone, which this pass excludes.
 9. **Texture compression. Decided and done (iterations 40-41):** 183 of the 184 uncompressed scene textures now use ASTC 4x4 on
    Android, about 105.8 MB -> 30.9 MB. Step 1: the 166 that nothing visible draws (30 screens, the legacy map proven covered).
    Steps 2-3, decided by the user on an in-editor comparison of what a phone decodes (PSNR 36.9-61.9 dB): the 11 visible and
-   the 6 protected textures. Left: `gold.png` (0.11 MB, NPOT with mipmaps). Not yet seen on a phone (item 12); see
+   the 6 protected textures. On screen in the editor, before and after (iteration 46), each of them that is drawn differs by
+   at most 1.9/255 on average, except the title's rotating halo, which turns between captures (its texture decodes at 61.9
+   dB). Left: `gold.png` (0.11 MB, NPOT with mipmaps). Not yet seen on a phone (item 12); see
    `TEXTURE_AUDIT.md`.
 10. **Incremental GC. Decided on 2026-09-25 and done (iteration 37):** `gcIncremental` is on. The editor was restarted in
     iteration 38 and now collects incrementally: 4 collections in 150 s of play, heap stable, no leak. Each collection still cost
@@ -286,7 +304,8 @@ decided changes are done. Item 12 needs a phone, which this pass excludes.
     - how launchers beyond the four common mask shapes render the icons;
     - how the compressed art looks on a phone's screen (its decoded texels were compared in the editor).
     Done in the editor instead (iteration 40): R-16 with a delivered click, safe-area insets in the Device Simulator, and the
-    launcher icons' files and slots (the Round icon was square; it is now built round from the adaptive layers). In
+    launcher icons' files and slots (the Round icon was square; it is now built round from the adaptive layers, though no
+    phone the game installs on uses it: iteration 46). In
     iteration 43, the icon under the circle, squircle, rounded-square and teardrop masks: none cuts the crown, but 1.3% of it
     lies outside Android's 66 dp safe circle. Decided in iteration 44: no change, since nothing is clipped and the logo is
     protected; scaling the adaptive foreground by 0.919 would fit it inside.
@@ -334,12 +353,13 @@ swept as well, in iterations 32 and 33.
 
 ## The loop in numbers
 
-- **45 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
+- **46 iterations:** 19 fix iterations (1-14, 22, 23, 27, and 37-38 with the decided changes), 11 verification passes V-01 to
   V-11 (two with fixes; V-07 is the texture audit), 3 reviews (25, 26, 33), 2 R-25 evidence runs (28, with its test fixes,
   and 29), 1 correction (34), the recorded decisions (35, 39), 1 incident (36), the editor-side device checks (40),
   texture steps 2-3 (41), their follow-up (42), the device checks' desk work (43),
-  the report's corrections (44) and the phone checks' runbook (45).
-- **53 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
+  the report's corrections (44), the phone checks' runbook (45), and the never-executed parts finished, with R-29 found by a
+  review copy of the session and fixed (46).
+- **57 commits** (`c6b9fb97` to the commit of this report): 239 files, 232 of them outside `Assets/_Ralph`.
 - **Changed files:**
   - runtime: `AnimationManager`, `BoostAnimation`, `BoostIcon`, `Counter_`, `DateTimeManager`, `HandTutorial`, `InitScript`,
     `LeadboardManager`, `LevelManager`, `LevelsMap`, `MapCamera`, `MapTargetIcon`, `MatchVFXService`, `PropellerVisualV5`,

@@ -96,6 +96,7 @@ Throne's own implementation.
 | R-26 | decided | The QA-only reference campaign logs three "[Reference Gameplay incomplete]" warnings: cupboard door feedback, coin-collection particles and the mailbox lid animation were not recovered and have no substitute. Tied to R-25. Decided on 2026-09-26: leave the warnings | `RoyalCampaignBlockers` :380 |
 | R-27 | P1 (editor) | A script reload in the middle of Play, which Unity does by default when a script changes during Play, resets every static. `RoyalSave.Testing` then falls back to the player's own profile, the static `InitScript.lifes` reads 0 and is saved on exit, and the Input System, uGUI `Selectable` and QA menu references break. It zeroed the real save's lives on 2026-09-25 and killed a campaign run. Editor only: builds never reload. Fixed in iteration 26 with `RoyalPlayModeReloadGuard`, which holds reloads until Play stops | `InitScript` :103/:824 (static lives, quit save); `RoyalSave.Testing`; new `Editor/RoyalPlayModeReloadGuard.cs` |
 | R-28 | P3 (tests) | Three Color Ball suites test code the game no longer runs, and fail with every import off (iteration 28): `RunColorBall` (live v1) waits for `ColorBallFrameAnimator`, which no runtime code attaches; `RoyalColorBallQaChecks` expects `ColorBallBoostView` for a single Color Ball, which has run the V4 charge-and-beam sequence since the 09-21/22 rework; `ColorBallV4Checks` holds the V5 prefab that ships to V4 rules (V5 lifts the 1.75 rad per-frame cap) and never selects `UseV4Baseline`. Retire or re-target them: Color Ball V5, the version that ships, has its own suite, which passes with the imports off. **Decided by the user on 2026-09-25: leave them as they are**; they stay in the suite list and stay red. | `RoyalColorBallChecks` :41; `RoyalColorBallQaChecks` :109; `ColorBallV4Checks` :63 |
+| R-29 | P3 | Back on a popup opened over another one (the booster guide or a shop over the pre-level card, the coin shop over a shop) closed the card underneath and left the top popup over home: each popup reads Back in its own `Update`, and iteration 37's one-Back-one-action return let whichever ran first answer, in the editor always the card (before it, one Back closed both). Found by a review copy of this session; fixed in iteration 46: a popup covered by a later open one ignores Back | AnimationManager.Update |
 
 ## Iteration log
 
@@ -1522,4 +1523,111 @@ Throne's own implementation.
 - **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`.
 - **Commits:** the commit of these records.
 - **Still open (a phone, which the user kept out of this pass):** the four checks above.
+- **Next task:** none the loop can act on in this pass.
+
+### Iteration 46 (shown, not told; R-29 fixed; the other copies of this session)
+- **Date/time:** 2026-09-26 13:45-18:09 local
+- **Why:** the user asked to be shown, not told: every command, what it reported, and every part never executed. Then, several
+  times, for a review: re-read every change since the last verified checkpoint, run the full suite, lint and type check, and
+  fix every failure.
+- **The log:** every tool call of this copy since the session resumed at 11:35, with its command and what it reported, is in
+  `scratchpad/command_log_session.md`, one line per call in `scratchpad/command_digest.md` (571 calls up to these
+  records). It follows this copy's own message chain (`scratchpad/cmdlog_chain.py`), because other copies of the session write
+  to the same transcript.
+- **Other copies of this session were running.** The session was also resumed at 14:37 and at 17:18 (both rooted at `outputs`,
+  sharing this copy's scratchpad) and at 15:08 (rooted at `JellyGarden-Codex`); earlier review copies had written notes on
+  2026-09-25 19:15 and 2026-09-26 00:54. They could only read files and write memory and scratchpad notes: every shell command
+  they tried (git, unity, python), their `exit-play` request to the editor (14:38) and every write inside the project were
+  refused. So none of them changed the project, ran Unity or used git. Their 112 calls in this window are not in the
+  log. They left three findings, checked below, and a loop-state memory note (14:40) that was stale within the hour: it said
+  `final_run9` had stopped mid-layout and left the editor in Play; the run finished (layout 40 of 40), and that Play session
+  was its own. The 17:18 copy took itself for this one: it wrote `scratchpad/apply_iter46.py` for "a session allowed to run
+  git", rewrote the loop-state memory note and added a line to these records' script saying this copy had lost those
+  permissions. It had not: this copy read `final_run12` itself and made the commits.
+- **R-29, found by a review copy: reproduced, fixed.**
+  - Found by reading: on 2026-09-25 at 10:50, before `e6c639b4`, a review copy noted that one Back closed every stacked popup
+    at once; at 19:15 it noted how `e6c639b4` changed that. Both notes stayed in that copy's scratchpad until now.
+  - Reproduced (`kv/r29_repro.py before 3`, QA profile, a real Escape press and release): in all 15 stacked runs (the booster
+    guide, the lives shop, the coin shop over the lives shop, the booster shop and the coin shop over the booster shop, each over
+    the level card, three rounds), Back closed the card underneath and left the top popup open over home; the 3 card-alone
+    controls closed the card. No quit request, and the real profile was unchanged.
+  - Cause: each popup reads Back in its own `AnimationManager.Update`. Iteration 37's `ConsumedThisFrame` return
+    (`e6c639b4`) made one Back one action, but the action went to whichever popup's `Update` ran first, which in the editor was
+    always the card. Before `e6c639b4`, one Back closed both. **Correction to iteration 37:** its "whichever menu's `Update`
+    runs first" described this defect as intended.
+  - Fix: a popup covered by a later open sibling with an `AnimationManager` ignores Back. The `ConsumedThisFrame` return stays:
+    when the top popup closes first, the one under it is uncovered in the same frame. Measured in Play first: `CanvasGlobal` is
+    one overlay canvas (sorting order 30) whose 13 children are exactly the 13 popups, and none has a canvas of its own, so
+    sibling order is draw order. A popup that ignores Back never covers one that answers it: the pause, win, fail and
+    out-of-moves cards open only in a level, above no popup that answers Back, and the rate card is off in the offline build.
+    With any popup open, home never turns an unanswered Back into a quit (`BlocksBoardInput`).
+  - After (`kv/r29_repro.py after 3`): 18 of 18: each Back closed only the top popup and left the ones under it open. No quit
+    request, and the real profile was unchanged.
+  - The other Back paths (`ralph_run.py r03 r03d r10`): Back closed the home profile dialog, and separately the level card,
+    without a quit request; on the bare home it requested a quit, as designed (the editor ignores `Application.Quit`); in level
+    12 it opened the pause menu, and on the pause menu it resumed; it cancelled a chosen tool and closed the tool shop without
+    pausing. The console had no entries.
+- **Checked and found wrong: "the round-2 decisions were never answered".** Two review copies wrote that the second-round
+  question (2026-09-25 16:11) came back without an answer, and prepared corrections to iteration 38's decisions. The transcript
+  shows the answer arriving at 18:48: "Fit the dialog on 4:3", "Coins everywhere" and "Yes, restart it", and "continue" for
+  the 2026-09-23 changes. The loop's work on those changes, commits included, follows that answer in the transcript; those
+  copies' part of it holds only an earlier "interrupted" result of the same call. Iteration 38's record is right and nothing
+  was changed. The corrections they prepared (their `iteration40_corrections.md`, section 1) must not be applied.
+- **Correction (the round launcher icon, iteration 40): no player sees it.** Unity uses the Round icon only on Android 7.1
+  (API 25), as its own slot description says; the game requires Android 8.0 (`AndroidMinSdkVersion: 26`); and on Android 8.0
+  and later Unity's own Android template points the round icon at the adaptive layers (`mipmap-anydpi-v26/app_icon_round.xml`).
+  It stays: it does no harm, and removing it changes the APK's icon resources, which only a device build could check.
+- **In context, 15 of the 17 textures, never compared until now (correction to iterations 41 and 42):** their layout screens
+  show only the Settings gear icon and the fail cross, so "where the 17 are drawn" was true of those two only. Done now, each
+  "before" captured with the 17 textures' pre-change imports, restored afterwards (ASTC 4x4 again, 17 of 17, matching HEAD):
+  - the title screen (`kv/before_after42.py`): the blue castle's area differs by 1.88/255 on average (3.4% of its pixels by
+    more than 8), the logo's lettering by 1.37 (0.27%), the PLAY button and its crown by 0.92 (0.11%). The halo's rays differ
+    by 6.2 because the halo turns between captures; its texture decodes at 61.9 dB.
+  - the home dialogs' header icons, in boxes that include some dialog background: star 0.30/255, chest 0.84, trophy 0.64, team
+    0.66, cards 0.79, settings gear 1.30, and the heart in the lives dialog 0.25 (`kv/before_after42b.py`); no box has more than
+    0.9% of its pixels changed by more than 8.
+  - level 1's tutorial finger, frozen at the screen centre (its animation only moves it): 0.49/255 on its pixels, 0.39% by more
+    than 8.
+  - the win and shuffle banners, which play a short animation and hide themselves at its end (so single shots missed them): shown
+    by the game's own `MenuManager` calls in level 12, with the clock fixed at 1/30 s a frame and every frame captured
+    (`kv/before_after42c.py`); on phase-matched frames (the second run was exactly one frame ahead), 1.04/255 and 0.70/255 on
+    their own pixels, 0.61% and 0.02% by more than 8.
+  - Never drawn, so nothing to compare: `home-castle` (`RoyalHomeScreen.ApplyCampaignArtwork` swaps in the campaign palace art at
+    runtime) and `fb_logout-button`. The home bar's heart, star and gear are other sprites: pixel-identical before and after.
+  - Everything else that differed on those screens moves between runs: the King, clouds, the tutorial hand, the matching-hint
+    highlight, the drop arrows.
+- **Re-read, and a defect in iteration 43's change fixed (`37ddd33c`):** `RoyalAppIconBuilder.SafeZone` used the image width for
+  both axes (a taller foreground was measured only in part, a wider one threw an index error) and divided by zero for a fully
+  transparent one. It now refuses a non-square or empty foreground and releases its texture on every path. Its result is
+  unchanged: the same figures, and `checks.txt`, every icon PNG and `ProjectSettings.asset` match HEAD.
+- **Re-read again, and three more defects fixed (`e37b015b`):** neither reader checked `LoadImage`'s result, so an unreadable
+  foreground left the 2x2 placeholder texture, which `SafeZone` would have measured and `WriteRoundIcon` would have written to
+  disk as the round icon; and `Apply` measured the safe zone last, after writing the icons and assigning the slots, so a failing
+  foreground left the project half-updated. `Apply` now measures first, both readers throw on an unreadable file, and
+  `WriteRoundIcon` releases its textures on every path. Tested directly on scratch files (`kv/icon_edge_tests.cs`): an
+  unreadable, a non-square (100x50) and an empty image each fail with their own message, `WriteRoundIcon` writes nothing for the
+  unreadable one, and the real foreground gives the same figures. A full builder run left `checks.txt`, every icon PNG and
+  `ProjectSettings.asset` identical to HEAD.
+- **Tests:** four full runs (`kv/final_run9.sh` to `final_run12.sh`), on `dc7bbb76` (before the fixes), `37ddd33c`,
+  `e37b015b` and `5cee04fe` (R-29):
+  - **Type check:** each run starts with a clean rebuild of all 165 assemblies with every compiler message captured: 0 errors, 0
+    warnings and no other message in each of the four runs (the last took 71 s).
+  - **Lint:** Unity's serialization analyzer reports through the compiler, so the same rebuilds are the lint: no warning or
+    info message of any kind.
+  - **The 23 suites:** in each run 14 pass and the 9 decided failures fail (6 from the Royal Match imports, 3 superseded Color
+    Ball suites: items 1 and 2), with the same 11 failure lines as iteration 33. The console held iteration 33's 13 entries plus
+    the one below; the real profile never changed, and the evidence was restored byte-identical 3 of 3 times.
+  - **Levels 1-100:** no problem in any level, in each run, and the real profile unchanged. **Layout at four sizes:** 40 of 40
+    screens each time, the Game view restored exactly. **The approved changes:** 17 of 17 each time. **The shared VFX
+    kit:** EditMode and PlayMode exit 0 in each run; the last run's result files: 17 of 17 and 22 of 22.
+  - **R-29 on the final code** (in `final_run12`): 18 of 18, only the top popup closed; no quit request, no console entry, the
+    real profile unchanged.
+  - **The console's extra entry:** the AI Assistant package's "Account API did not become accessible" warning, in the first
+    Play session after each run's clean rebuild (a domain reload). It comes from that package having no account since the editor
+    was relaunched without the Hub in iteration 38. Removing it means removing the package, which the user decided to keep, or
+    relaunching the editor through the Hub; both are the user's call, so it is recorded, not worked around.
+- **Files changed:** `RoyalAppIconBuilder.cs`, `AnimationManager.cs`, these records.
+- **Commits:** `37ddd33c` and `e37b015b` (the builder's fixes), `5cee04fe` (R-29), and the commit of these records.
+- **Still open (a phone, which the user kept out of this pass):** a phone's Back key as Escape; memory, frame time and collection
+  pauses on a phone; launchers other than the four common mask shapes; how the compressed art looks on a phone's screen.
 - **Next task:** none the loop can act on in this pass.
