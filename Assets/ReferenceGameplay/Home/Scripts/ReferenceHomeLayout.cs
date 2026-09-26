@@ -61,12 +61,17 @@ namespace RoyalThrone.ReferenceGameplay
         // resource bar and down into the raised tab art, across its bottom button. Where it does not fit, shorten and move it so the
         // button clears the art and the dialog, close control included, stays below the bar. Where it fits (16:9, 20:9) nothing moves.
         static float Edge(RectTransform r,RectTransform space,bool top){var c=new Vector3[4];r.GetWorldCorners(c);float a=space.InverseTransformPoint(c[0]).y,b=space.InverseTransformPoint(c[1]).y;return top?Mathf.Max(a,b):Mathf.Min(a,b);}
+        // The layout's height for the open dialog (any height not set here) and the last one set here: the 60% minimum and the
+        // upper limit come from the layout's height, so a dialog that cannot fit even at 60% stays there instead of shrinking again.
+        float designHeight,fittedHeight=float.NaN;
         void FitDialog(){var d=home.dialogRect;if(!d||!home.dialog||!home.dialog.activeInHierarchy||!home.dialogButton)return;var p=(RectTransform)d.parent;const float gap=8;
             float floor=Edge(tabArt[home.SelectedTab].rectTransform,p,true)+gap,ceiling=Edge(home.hud,p,false)-gap,f=((RectTransform)home.dialogButton.transform).anchorMin.y;
             float h=d.rect.height,bottom=p.rect.center.y+d.anchoredPosition.y-h*d.pivot.y,reach=home.closeButton?Mathf.Max(0,Edge((RectTransform)home.closeButton.transform,p,true)-(bottom+h)):0;
+            if(d.sizeDelta.y!=fittedHeight)designHeight=h;
             if(bottom+f*h>=floor-.5f&&bottom+h<=ceiling+.5f)return;
-            float fit=Mathf.Max(h*.6f,Mathf.Min(h,(ceiling-reach-floor)/(1-f)));
-            d.sizeDelta=new Vector2(d.sizeDelta.x,fit);d.anchoredPosition=new Vector2(d.anchoredPosition.x,floor-f*fit+fit*d.pivot.y-p.rect.center.y);}
+            float fit=Mathf.Max(designHeight*.6f,Mathf.Min(designHeight,(ceiling-reach-floor)/(1-f))),y=floor-f*fit+fit*d.pivot.y-p.rect.center.y;
+            if(d.sizeDelta.y==fit&&d.anchoredPosition.y==y)return;
+            d.sizeDelta=new Vector2(d.sizeDelta.x,fit);d.anchoredPosition=new Vector2(d.anchoredPosition.x,y);fittedHeight=fit;}
         void LateUpdate(){if(!built||!home)return;float w=home.layout.rect.width;
             home.hud.sizeDelta=new Vector2(w*.95f,w*.16f);home.hud.anchoredPosition=new Vector2(0,-w*.115f);
             float[] edges={0,.15f,.435f,.70f,.865f,1};for(int i=0;i<5;i++)Bounds((RectTransform)home.resourceButtons[i].transform,edges[i],0,edges[i+1]-.01f,1);
