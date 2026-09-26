@@ -161,7 +161,7 @@ namespace JellyGarden.Scripts.GUI
 
         void Update()
         {
-            if (InputManager.Instance != null && InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
+            if (InputManager.Instance != null && InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame() && !CoveredByLaterPopup())
             {
                 // One Back release, one action: another menu may already have handled it earlier in this frame.
                 if (RoyalThrone.Presentation.RoyalBackButton.ConsumedThisFrame) return;
@@ -397,6 +397,20 @@ namespace JellyGarden.Scripts.GUI
             var canvas = MenuManager.Instance ? MenuManager.Instance.GetCanvasGlobal() : null;
             var popup = canvas ? canvas.Find(menu) : null;
             return popup && popup.gameObject.activeSelf;
+        }
+
+        // Popups stack (the booster guide or a shop over the level card, the coin shop over a shop), and a later child of the
+        // global canvas draws on top. Back belongs to the top one: which popup's Update runs first is not defined.
+        bool CoveredByLaterPopup()
+        {
+            var parent = transform.parent;
+            if (!parent) return false;
+            for (int i = transform.GetSiblingIndex() + 1; i < parent.childCount; i++)
+            {
+                var sibling = parent.GetChild(i);
+                if (sibling.gameObject.activeSelf && sibling.GetComponent<AnimationManager>()) return true;
+            }
+            return false;
         }
 
         public void SwishSound()
