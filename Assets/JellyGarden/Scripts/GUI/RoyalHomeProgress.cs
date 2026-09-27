@@ -5,7 +5,9 @@ namespace RoyalThrone.Presentation
 {
     public struct RoyalHomeProgress
     {
-        public int nextLevel, completed, stars, area, areaCompleted, areaTotal;
+        // Level progress comes from the saves read here. The area fields and the stars left to spend are filled by
+        // RoyalAreas.Fill: areas are restored with stars, separately from level progress.
+        public int nextLevel, completed, stars, available, area, areaCompleted, areaTotal;
 
         public static RoyalHomeProgress Read(int[] levels, Func<int, int> starsForLevel)
         {
@@ -20,13 +22,7 @@ namespace RoyalThrone.Presentation
                 // Match the existing map's unlock rule, including restored non-contiguous saves.
                 if (level == 1 || starsForLevel(level - 1) > 0) result.nextLevel = level;
             }
-            result.area = (result.nextLevel - 1) / 6 + 1;
-            foreach (int level in levels)
-                if ((level - 1) / 6 + 1 == result.area)
-                {
-                    result.areaTotal++;
-                    if (starsForLevel(level) > 0) result.areaCompleted++;
-                }
+            result.available = result.stars;
             return result;
         }
     }

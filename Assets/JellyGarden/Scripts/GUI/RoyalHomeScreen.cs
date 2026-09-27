@@ -49,6 +49,12 @@ namespace RoyalThrone.Presentation
         RoyalPanelGraphic[] tabSurfaces;
         float[] tabEmphasis;
         bool presentationPolished;
+        RoyalAreaScene areaScene;
+        RoyalAreaView areaView;
+        public RoyalAreaView AreaView => areaView;
+        public string OpenPanelName => openPanel;
+        /// <summary>A restored area is shown full screen: the Home controls and tabs are put away until its Back.</summary>
+        public bool SceneViewOpen { get; set; }
         // Existing game-scene canvas settings, restored whenever the board owns presentation.
         const RenderMode LegacyRenderMode = RenderMode.ScreenSpaceCamera;
         const int LegacySortingOrder = 2;
@@ -78,6 +84,9 @@ namespace RoyalThrone.Presentation
             { int index = i; settingButtons[i].onClick.AddListener(() => ToggleSetting(index)); }
             dialog.SetActive(false);
             presentation.alpha = 0;
+            // Areas: the Home background is the current area, restored with stars through the Area card's dialogs.
+            areaScene = RoyalAreaScene.Attach(this);
+            if (areaScene) { areaScene.ShowCurrent(); areaView = RoyalAreaView.Attach(this, areaScene); }
         }
 
         void OnEnable()
@@ -135,8 +144,10 @@ namespace RoyalThrone.Presentation
                     if (child.gameObject.activeInHierarchy) { legacyPopup = true; break; }
             // The dialog veil catches the castle controls; navigation remains available
             // above it so a tab can be changed directly without a second close tap.
-            controls.interactable = controls.blocksRaycasts = map && !legacyPopup && !dialog.activeSelf;
-            if (navigationInput) navigationInput.interactable = navigationInput.blocksRaycasts = map && !legacyPopup;
+            controls.interactable = controls.blocksRaycasts = map && !legacyPopup && !dialog.activeSelf && !SceneViewOpen;
+            if (navigationInput) navigationInput.interactable = navigationInput.blocksRaycasts = map && !legacyPopup && !SceneViewOpen;
+            controls.alpha = SceneViewOpen ? 0 : 1;
+            if (navigationInput) navigationInput.alpha = SceneViewOpen ? 0 : 1;
             if (!legacyPopup) waitingForLevel = false;
             if (map && Time.unscaledTime >= nextRefresh)
             {
@@ -155,10 +166,13 @@ namespace RoyalThrone.Presentation
 
         public void RefreshProgress()
         {
-            Progress = RoyalHomeProgress.Read(levelNumbers, ReadStars);
+            var progress = RoyalHomeProgress.Read(levelNumbers, ReadStars);
+            RoyalAreas.Fill(ref progress);
+            Progress = progress;
             if (levelLabel) levelLabel.text = "Level " + Progress.nextLevel;
-            if (areaLabel) areaLabel.text = "Area " + Progress.area;
-            if (areaProgress) areaProgress.text = Progress.areaCompleted + "/" + Progress.areaTotal;
+            var area = RoyalAreas.CurrentArea;
+            if (areaLabel) areaLabel.text = RoyalAreas.AllRestored ? "Areas" : "Area " + Progress.area;
+            if (areaProgress) areaProgress.text = RoyalAreas.AllRestored ? "Restored" : area == null || !area.Ready ? "Soon" : Progress.areaCompleted + "/" + Progress.areaTotal;
             if (areaFill) areaFill.anchorMax = new Vector2(Progress.areaTotal > 0 ? (float)Progress.areaCompleted / Progress.areaTotal : 0, 1);
             RefreshResources();
         }
@@ -173,7 +187,8 @@ namespace RoyalThrone.Presentation
             lifeLabel.text = InitScript.lifes.ToString();
             int seconds = Mathf.Max(0, Mathf.CeilToInt(InitScript.RestLifeTimer));
             lifeStatus.text = InitScript.lifes >= InitScript.Instance.CapOfLife ? "Full" : (seconds / 60) + ":" + (seconds % 60).ToString("00");
-            starLabel.text = Progress.stars.ToString();
+            // Stars left to spend on area tasks (earned in levels, less what tasks cost).
+            starLabel.text = Progress.available.ToString();
             if (openPanel == "lives") dialogDetail.text = "Lives: " + InitScript.lifes + "/" + InitScript.Instance.CapOfLife +
                 (InitScript.lifes < InitScript.Instance.CapOfLife ? "\nNext life in " + lifeStatus.text : "\nYour next level is ready.");
         }
@@ -204,6 +219,7 @@ namespace RoyalThrone.Presentation
         {
             if (!IsHomeVisible || waitingForLevel) return;
             if (panel == "home") { ClosePanel(); return; }
+            if (areaView) panel = areaView.Route(panel);
             string[] tabs = { "story", "leagues", "home", "team", "collection" };
             int selected = Array.IndexOf(tabs, panel);
             SelectedTab = selected < 0 ? 2 : selected;
@@ -211,6 +227,7 @@ namespace RoyalThrone.Presentation
             openPanel = panel;
             returnFocus = focus ? focus : levelButton.gameObject;
             levelGrid.SetActive(false); settingsGroup.SetActive(false);
+            if (areaView) areaView.Hide();
             previousPage.gameObject.SetActive(false); nextPage.gameObject.SetActive(false); pageLabel.gameObject.SetActive(false);
             dialogCopy.gameObject.SetActive(true); dialogDetail.gameObject.SetActive(true);
             dialogButtonLabel.text = "Back to home";
@@ -220,9 +237,10 @@ namespace RoyalThrone.Presentation
                 case "profile": title = "Your Majesty"; copy = "Welcome to your kingdom"; detail = Count(Progress.completed, "level", "levels") + " completed\n" + Count(Progress.stars, "star", "stars") + " earned"; icon = 0; break;
                 case "coins": title = Count(InitScript.Gems, "coin", "coins"); copy = "A little help for your next challenge"; detail = "Use your balance for boosts and extra moves during a level."; icon = 1; break;
                 case "lives": title = "Royal lives"; copy = "One heart, one new adventure"; icon = 2; break;
-                case "stars": title = Count(Progress.stars, "star", "stars"); copy = "Your royal achievements"; detail = "Earn up to three stars in each level. Replay a completed level from Story to improve your score."; icon = 3; break;
+                case "stars": title = Count(Progress.available, "star", "stars") + " to spend"; copy = "Restore your kingdom"; detail = "Win levels to earn up to three stars each, then spend them on area tasks. " + Count(Progress.stars, "star", "stars") + " earned so far."; icon = 3; break;
                 case "settings": title = "Settings"; copy = "Make yourself at home"; icon = 4; settingsGroup.SetActive(true); dialogDetail.gameObject.SetActive(false); RefreshSettings(); break;
-                case "area": title = "Area " + Progress.area; copy = Progress.area == 1 ? "The Royal Courtyard" : "Your royal journey"; detail = Progress.areaCompleted + " of " + Progress.areaTotal + " levels completed\n\nCastle restoration and chest rewards are coming soon."; icon = 5; break;
+                case RoyalAreaView.Tasks: case RoyalAreaView.List: case RoyalAreaView.Chest: case RoyalAreaView.Unlocked: case RoyalAreaView.Short: case RoyalAreaView.Soon:
+                    if (areaView) areaView.Fill(panel, ref title, ref copy, ref detail, ref icon); break;
                 case "story": title = "Royal Journey"; copy = "Choose your next chapter"; icon = 6; page = Array.IndexOf(levelNumbers, Progress.nextLevel) / levelChoices.Length; levelGrid.SetActive(true); dialogDetail.gameObject.SetActive(false); PopulateLevels(); break;
                 case "leagues": title = "Royal Leagues"; copy = "Rise through the royal ranks"; detail = "Competitions are coming soon.\nKeep sharpening your match skills!"; icon = 7; break;
                 case "team": title = "Your Royal Team"; copy = "A kingdom is better together"; detail = "Teams and helping friends are coming soon."; icon = 9; break;
@@ -424,7 +442,7 @@ namespace RoyalThrone.Presentation
             Place(navigation, width, navHeight, .5f, 0, 0, navHeight * .5f);
             navigationBackground.sizeDelta = new Vector2(0, navHeight + root.rect.height * min.y);
             UpdateNavigation(!Application.isPlaying);
-            bool tallDialog = openPanel == "story" || openPanel == "settings";
+            bool tallDialog = openPanel == "story" || openPanel == "settings" || RoyalAreaView.Tall(openPanel);
             float dialogWidth = Mathf.Min(width * .88f, 670), dialogHeight = Mathf.Min(height * .84f, dialogWidth * (tallDialog ? 1.48f : 1.08f));
             Place(dialogRect, dialogWidth, dialogHeight, .5f, .5f, 0, 0);
             if (dialogIcon)

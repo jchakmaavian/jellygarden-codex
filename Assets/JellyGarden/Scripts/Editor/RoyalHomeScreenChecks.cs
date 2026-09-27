@@ -58,7 +58,7 @@ namespace RoyalThrone.Editor
                 home.ClosePanel(); home.RefreshProgress(); Canvas.ForceUpdateCanvases();
                 Check(home.levelNumbers.Length == 100, "All 100 existing levels available");
                 Check(!LevelsMap.IsLevelLocked(home.Progress.nextLevel), "Next level obeys the original unlock rule");
-                Check(home.coinLabel.text == InitScript.Gems.ToString("N0") && home.lifeLabel.text == InitScript.lifes.ToString() && home.starLabel.text == home.Progress.stars.ToString(), "HUD shows real saved resources");
+                Check(home.coinLabel.text == InitScript.Gems.ToString("N0") && home.lifeLabel.text == InitScript.lifes.ToString() && home.starLabel.text == home.Progress.available.ToString(), "HUD shows real saved resources (stars left to spend)");
                 Check(home.legacyMapUI.gameObject.activeInHierarchy && home.legacyMapUI.GetComponentsInChildren<LIFESAddCounter>().Any(t => t.isActiveAndEnabled), "Original life-regeneration counter remains active");
                 Check(home.legacyMapUI.alpha == 0 && !home.legacyMapUI.blocksRaycasts, "Old map HUD hidden without disabling its timer");
                 Check(home.globalMenus.GetComponent<Canvas>().renderMode == RenderMode.ScreenSpaceOverlay && home.globalMenus.GetComponent<Canvas>().sortingOrder > home.GetComponent<Canvas>().sortingOrder, "Legacy level/boost/lives canvas can render above Home");
@@ -90,9 +90,16 @@ namespace RoyalThrone.Editor
                     case 0:
                         home.areaButton.onClick.Invoke(); Check(home.dialog.activeSelf && !home.controls.interactable, "Area dialog disables castle controls while navigation stays usable");
                         CheckHit(home.tabButtons[0]);
-                        Check(home.dialogDetail.text.Contains("coming soon"), "Unbuilt restoration/rewards are disclosed"); Capture("area"); break;
+                        // The player's real areas are only looked at here; building is checked in the QA profile (RoyalAreaChecks).
+                        string route = home.OpenPanelName;
+                        Check(route == RoyalAreaView.Tasks ? home.AreaView.TasksVisible && home.AreaView.VisibleTiles == RoyalAreas.CurrentArea.tasks.Length
+                            : route == RoyalAreaView.Chest || route == RoyalAreaView.Soon, "Area card opens the current area's tasks (or its chest, or coming soon)");
+                        Capture("area"); break;
                     case 1:
+                        // The dialog's controls are hit-tested a step after it opened: the raycaster skips a graphic until its canvas
+                        // has been drawn once, and Canvas.ForceUpdateCanvases does not do that.
                         CheckHit(home.closeButton); CheckHit(home.dialogButton);
+                        if (home.OpenPanelName == RoyalAreaView.Tasks) { CheckHit(home.AreaView.TaskButton(0)); CheckHit(home.AreaView.SecondaryButton); }
                         home.ClosePanel(); home.tabButtons[0].onClick.Invoke(); Canvas.ForceUpdateCanvases();
                         Check(home.levelGrid.activeSelf, "Story opens replay and level selection");
                         CheckNavigation(0);
@@ -148,19 +155,19 @@ namespace RoyalThrone.Editor
         {
             var levels = Enumerable.Range(1, 100).ToArray();
             var p = RoyalHomeProgress.Read(levels, n => 0);
-            Check(p.nextLevel == 1 && p.stars == 0 && p.area == 1 && p.areaTotal == 6, "Fresh save starts at level 1 / area 1");
+            Check(p.nextLevel == 1 && p.stars == 0 && p.available == 0, "Fresh save starts at level 1 with no stars");
             p = RoyalHomeProgress.Read(levels, n => n <= 6 ? 3 : 0);
-            Check(p.nextLevel == 7 && p.stars == 18 && p.area == 2 && p.areaCompleted == 0, "Six completed levels advance the area");
+            Check(p.nextLevel == 7 && p.stars == 18 && p.completed == 6, "Six completed levels offer level 7 with 18 stars (areas no longer follow levels)");
             p = RoyalHomeProgress.Read(levels, n => n == 1 ? 2 : n == 8 ? 1 : 0);
             Check(p.nextLevel == 9 && p.completed == 2 && p.stars == 3, "Restored non-contiguous progress matches map unlocks");
             p = RoyalHomeProgress.Read(levels, n => n <= 99 ? 3 : 0);
-            Check(p.nextLevel == 100 && p.area == 17 && p.areaTotal == 4 && p.areaCompleted == 3, "Final partial area has four levels");
+            Check(p.nextLevel == 100 && p.completed == 99 && p.stars == 297, "Level 99 completed offers level 100");
             p = RoyalHomeProgress.Read(levels, n => 3);
-            Check(p.nextLevel == 100 && p.stars == 300 && p.areaCompleted == 4, "Completed campaign never offers missing level 101");
+            Check(p.nextLevel == 100 && p.stars == 300 && p.completed == 100, "Completed campaign never offers missing level 101");
             p = RoyalHomeProgress.Read(levels, n => n == 1 ? 99 : -1);
             Check(p.stars == 3 && p.completed == 1, "Unexpected saved star values are clamped");
             p = RoyalHomeProgress.Read(Array.Empty<int>(), n => 0);
-            Check(p.areaTotal == 0 && p.stars == 0, "Empty level list is safe");
+            Check(p.nextLevel == 1 && p.stars == 0 && p.completed == 0, "Empty level list is safe");
         }
         static void CheckHit(Button button)
         {

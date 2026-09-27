@@ -1,0 +1,42 @@
+Royal Throne area checks 2026-09-27T11:34:46.9517161Z
+PASS Home is visible with its area view
+PASS QA profile active
+PASS Ten areas, 87 tasks, 208 stars in the catalogue
+PASS Every task costs one to three stars
+PASS Area 1 has its art and six tasks for ten stars
+PASS A fresh profile's Home shows Area 1 unrestored
+PASS Area card counts tasks (0/6), not levels
+PASS Star counter shows stars left to spend
+PASS Area dialog lists the six tasks
+PASS Task 1 receives its tap
+PASS All areas receives its tap
+PASS Back to home receives its tap
+PASS Too few stars explains and offers the next level
+PASS No task is built without enough stars
+PASS Building a one-star task spends one star
+PASS The dialog closes and the task's object appears
+PASS The object finishes fading in
+PASS Star counter and Area card update
+PASS A built task cannot be bought again (1)
+PASS A built task cannot be bought again (2)
+PASS A built task cannot be bought again (3)
+PASS A built task cannot be bought again (4)
+PASS A built task cannot be bought again (5)
+PASS Six tasks spend exactly the area's ten stars
+PASS A restored area offers its chest
+PASS The restored scene replaces the objects
+PASS The chest pays 20 coins and a rocket
+PASS Area 2 becomes current with no tasks built
+PASS Without Area 2's art the game says more areas are coming
+PASS Home keeps restored Area 1 until Area 2's art exists
+PASS Area card shows Area 2 as coming soon
+PASS The areas list shows all ten areas
+PASS Restored areas can be visited; later ones are locked
+PASS Area 1 receives its tap
+PASS A restored area opens full screen with the Home controls put away
+PASS Back to areas receives its tap
+PASS Back returns to the areas list with the controls restored
+PASS Area progress is saved in the profile
+PASS No runtime errors
+PASS The player's real save is untouched
+ALL AREA CHECKS PASSED

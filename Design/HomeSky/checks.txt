@@ -1,5 +1,5 @@
 Homepage sky checks
-PASS Supplied background appears on live homepage
+PASS Current area's scene appears on the live homepage
 PASS Exactly three cloud sprites created
 PASS Clouds render behind controls and never intercept taps
 PASS All three clouds drift continuously at normal speed

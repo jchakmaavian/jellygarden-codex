@@ -1,16 +1,16 @@
 Royal Throne Unity home checks
-2026-09-27T08:25:12.8799874Z
+2026-09-27T11:41:24.9786206Z
 Resolution: 1080x2160
-PASS Fresh save starts at level 1 / area 1
-PASS Six completed levels advance the area
+PASS Fresh save starts at level 1 with no stars
+PASS Six completed levels offer level 7 with 18 stars (areas no longer follow levels)
 PASS Restored non-contiguous progress matches map unlocks
-PASS Final partial area has four levels
+PASS Level 99 completed offers level 100
 PASS Completed campaign never offers missing level 101
 PASS Unexpected saved star values are clamped
 PASS Empty level list is safe
 PASS All 100 existing levels available
 PASS Next level obeys the original unlock rule
-PASS HUD shows real saved resources
+PASS HUD shows real saved resources (stars left to spend)
 PASS Original life-regeneration counter remains active
 PASS Old map HUD hidden without disabling its timer
 PASS Legacy level/boost/lives canvas can render above Home
@@ -57,12 +57,16 @@ PASS Play session remains available
 PASS Area dialog disables castle controls while navigation stays usable
 PASS Story stays on screen
 PASS Story receives its pointer hit (hits: Story, Royal blue courtyard; interactable: True; center: (91.80, 143.21))
-PASS Unbuilt restoration/rewards are disclosed
+PASS Area card opens the current area's tasks (or its chest, or coming soon)
 PASS Play session remains available
 PASS Close stays on screen
-PASS Close receives its pointer hit (hits: Close, Royal dialog panel, Home dialog; interactable: True; center: (991.20, 1569.22))
+PASS Close receives its pointer hit (hits: Close, Royal dialog panel, Home dialog; interactable: True; center: (991.20, 1759.30))
 PASS Back to home stays on screen
-PASS Back to home receives its pointer hit (hits: Back to home, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 710.48))
+PASS Back to home receives its pointer hit (hits: Back to home, Royal dialog panel, Home dialog; interactable: True; center: (753.84, 499.78))
+PASS Task 1 stays on screen
+PASS Task 1 receives its pointer hit (hits: Task 1, Royal dialog panel, Home dialog; interactable: True; center: (261.22, 1076.48))
+PASS All areas stays on screen
+PASS All areas receives its pointer hit (hits: All areas, Royal dialog panel, Home dialog; interactable: True; center: (326.16, 499.78))
 PASS Story opens replay and level selection
 PASS Navigation selects tab 0
 PASS Tab 0 shows its name
@@ -163,7 +167,7 @@ PASS Pre-level selection receives the real next level
 PASS Opening Home dialogs consumes no coins or lives
 PASS Play session remains available
 PASS Close stays on screen
-PASS Close receives its pointer hit (hits: Close, Image, MenuPlay; interactable: True; center: (928.67, 1570.49))
+PASS Close receives its pointer hit (hits: Close, Image, MenuPlay; interactable: True; center: (928.67, 1570.50))
 PASS Play session remains available
 PASS Play session remains available
 PASS Closing pre-level returns control to Home

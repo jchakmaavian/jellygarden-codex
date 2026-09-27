@@ -1,0 +1,163 @@
+{
+  "about": "Royal Throne areas, restored with stars as in Royal Match (structure only; all names, scenes and art are original). Costs are stars per task; regions are polygons in scene pixels (x right, y down). Areas without regions wait for their generated scene. The pipeline in tools/ turns this file plus the art into Assets/JellyGarden/Resources/RoyalAreas.",
+  "style": "Bright, polished cartoon 3D mobile casual game scene in portrait 9:16, the same art style as the Royal Throne castle approach: soft warm sunlight, royal blue, gold and cream palette, crisp stylized details, gentle depth of field. No text, no letters, no people, no characters, no animals, no UI. The top 20% is open sky or ceiling, the bottom 25% is a clear floor or ground in the foreground, and the scene's feature objects stand well apart across the middle of the frame.",
+  "areas": [
+    {
+      "number": 1, "name": "Castle Approach", "subtitle": "Welcome the kingdom home", "outdoor": true,
+      "rewardCoins": 20, "rewardBoost": "Stripes",
+      "scene": "EXISTING: the approved Home castle (Homepage_bg.png, supplied by the user) is this area's restored view.",
+      "tasks": [
+        { "name": "Raise the castle keep", "cost": 1, "excludeSky": true, "before": "a half-built castle keep of bare pale stone walls with wooden scaffolding and ropes, no roofs, no towers' spires, no flags and no banners", "regions": [[[285,625],[715,625],[715,1176],[285,1176]]] },
+        { "name": "Rebuild the grand stairway", "cost": 1, "before": "broken, crumbled stone steps with cracks, loose rubble and small weeds, the balustrades fallen", "regions": [[[345,1176],[600,1176],[600,1250],[650,1250],[650,1362],[292,1362],[292,1250],[345,1250]]] },
+        { "name": "Restore the twin waterfalls", "cost": 2, "before": "dry grey rock cliffs with no water, empty stone basins and a few dry shrubs", "regions": [[[150,1078],[284,1078],[284,1282],[150,1282]], [[286,1178],[345,1178],[345,1249],[286,1249]], [[716,1092],[776,1092],[776,1272],[716,1272]], [[600,1178],[650,1178],[650,1249],[600,1249]]] },
+        { "name": "Set the golden gate pillars", "cost": 2, "before": "the toppled ruins of a stone gate pillar: a cracked low base with broken stone blocks, no golden sphere and no banner", "regions": [[[78,1148],[202,1148],[202,1446],[78,1446]], [[738,1148],[864,1148],[864,1446],[738,1446]]] },
+        { "name": "Pave the sunlit plaza", "cost": 2, "before": "cracked, dusty and broken paving stones with patches of bare earth, weeds and small puddles", "regions": [[[204,1362],[736,1362],[736,1470],[640,1470],[640,1672],[330,1672],[330,1470],[204,1470]]] },
+        { "name": "Plant the courtyard gardens", "cost": 2, "before": "bare brown earth with dry twigs and pebbles, no bushes and no flowers", "regions": [[[0,1148],[76,1148],[76,1262],[0,1262]], [[866,1148],[941,1148],[941,1262],[866,1262]], [[0,1350],[76,1350],[76,1430],[0,1430]], [[866,1350],[941,1350],[941,1430],[866,1430]], [[0,1462],[328,1462],[328,1672],[0,1672]], [[642,1470],[941,1470],[941,1672],[642,1672]]] }
+      ]
+    },
+    {
+      "number": 2, "name": "Queen's Rose Garden", "subtitle": "Bloom for the Queen", "outdoor": true,
+      "rewardCoins": 25, "rewardBoost": "Packages",
+      "scene": "The Queen's walled rose garden behind the castle: a tall rose-covered arch at the back centre, a round white marble fountain in the middle, low clipped hedge-maze rows on the left, two carved white garden benches on the right, a small swan pond with lily pads at the lower left, and rows of red and pink rose beds along the lower right. Blue sky above with a far castle tower behind the garden wall.",
+      "tasks": [
+        { "name": "Build the rose arch", "cost": 1, "before": "a bare, broken trellis frame with dead vines" },
+        { "name": "Restore the marble fountain", "cost": 2, "before": "a cracked, dry fountain bowl full of dead leaves" },
+        { "name": "Trim the hedge maze", "cost": 2, "before": "overgrown, shaggy wild bushes" },
+        { "name": "Place the garden benches", "cost": 2, "before": "an empty gravel patch" },
+        { "name": "Fill the swan pond", "cost": 2, "before": "a dry muddy hollow" },
+        { "name": "Plant the rose beds", "cost": 3, "before": "empty soil beds with a few weeds" }
+      ]
+    },
+    {
+      "number": 3, "name": "Throne Hall", "subtitle": "A seat worthy of the King", "outdoor": false,
+      "rewardCoins": 30, "rewardBoost": "Colorful_bomb",
+      "scene": "The castle's grand throne hall seen from the entrance: a golden royal throne on a raised dais at the back centre under a blue canopy, a long crimson carpet running from the foreground to the dais, a crystal chandelier hanging high in the middle, tall stained-glass windows on the back wall, royal blue and gold banners on the side walls, white marble pillars on both sides, and golden candelabras beside the carpet.",
+      "tasks": [
+        { "name": "Restore the royal throne", "cost": 2, "before": "an empty stone dais with a broken wooden chair" },
+        { "name": "Roll out the crimson carpet", "cost": 2, "before": "a bare dusty stone floor" },
+        { "name": "Hang the crystal chandelier", "cost": 2, "before": "a bare iron hook and a dangling chain" },
+        { "name": "Fit the stained-glass windows", "cost": 2, "before": "empty, boarded-up window openings" },
+        { "name": "Raise the realm's banners", "cost": 2, "before": "bare wall with empty banner poles" },
+        { "name": "Polish the marble pillars", "cost": 2, "before": "cracked, grey, dusty pillars" },
+        { "name": "Light the golden candelabras", "cost": 3, "before": "empty bare floor spots" }
+      ]
+    },
+    {
+      "number": 4, "name": "Royal Stables", "subtitle": "Stalls fit for royal steeds", "outdoor": true,
+      "rewardCoins": 35, "rewardBoost": "Stripes",
+      "scene": "The royal stables courtyard: a long wooden stable building with arched blue doors at the back, a hay loft with golden hay above, an ornate royal carriage in the middle, a stone water trough at the lower left, a tall horseshoe-shaped stone arch on the right, lantern posts along a cobbled path, wooden saddle racks by the wall, and a golden weather vane on the stable roof. Blue sky above.",
+      "tasks": [
+        { "name": "Rebuild the stable doors", "cost": 2, "before": "broken, missing wooden doors" },
+        { "name": "Fill the hay loft", "cost": 2, "before": "an empty dusty loft" },
+        { "name": "Restore the royal carriage", "cost": 2, "before": "a broken cart frame with a missing wheel" },
+        { "name": "Fix the water trough", "cost": 2, "before": "a cracked dry trough" },
+        { "name": "Raise the horseshoe arch", "cost": 2, "before": "a pile of fallen stones" },
+        { "name": "Light the lantern posts", "cost": 2, "before": "bent bare poles" },
+        { "name": "Hang the saddle racks", "cost": 3, "before": "a bare wall with empty pegs" },
+        { "name": "Set the weather vane", "cost": 3, "before": "a bare rooftop spike" }
+      ]
+    },
+    {
+      "number": 5, "name": "Grand Ballroom", "subtitle": "Music for a royal night", "outdoor": false,
+      "rewardCoins": 40, "rewardBoost": "Packages",
+      "scene": "The castle's grand ballroom: a gleaming patterned dance floor in the foreground and middle, a raised orchestra stage at the back with music stands, a white and gold grand piano on the left, a wall of tall gilded mirrors at the back, two sparkling chandeliers above, blue velvet curtains with gold tassels, an upper balcony with a balustrade, and a long banquet table with a white cloth and golden goblets on the right.",
+      "tasks": [
+        { "name": "Lay the dance floor", "cost": 2, "before": "rough, broken floorboards" },
+        { "name": "Build the orchestra stage", "cost": 2, "before": "a bare low platform frame" },
+        { "name": "Tune the grand piano", "cost": 2, "before": "a dusty sheet-covered shape" },
+        { "name": "Restore the mirror wall", "cost": 2, "before": "cracked, empty mirror frames" },
+        { "name": "Hang the ballroom chandeliers", "cost": 2, "before": "bare hooks on the ceiling" },
+        { "name": "Drape the velvet curtains", "cost": 3, "before": "bare window frames" },
+        { "name": "Open the balcony", "cost": 3, "before": "a broken balustrade" },
+        { "name": "Set the banquet table", "cost": 3, "before": "bare trestles" }
+      ]
+    },
+    {
+      "number": 6, "name": "Knights' Armory", "subtitle": "Ready the King's guard", "outdoor": false,
+      "rewardCoins": 45, "rewardBoost": "Colorful_bomb",
+      "scene": "The knights' armory: stone walls with wooden weapon racks of polished swords and spears, gleaming suits of armor on stands, a wall of round painted shields, a glowing forge with an anvil at the back right, straw training dummies, a tall banner stand, iron-bound armor chests, arched windows with blue sky, and a round wooden table in the middle foreground.",
+      "tasks": [
+        { "name": "Mount the weapon racks", "cost": 2, "before": "empty broken racks" },
+        { "name": "Polish the suits of armor", "cost": 2, "before": "rusty, toppled armor pieces" },
+        { "name": "Hang the shield wall", "cost": 2, "before": "a bare stone wall with empty hooks" },
+        { "name": "Relight the forge", "cost": 2, "before": "a cold, ashy, cracked forge" },
+        { "name": "Set up the training dummies", "cost": 2, "before": "bare wooden posts" },
+        { "name": "Raise the banner stand", "cost": 3, "before": "a fallen pole" },
+        { "name": "Fill the armor chests", "cost": 3, "before": "empty open crates" },
+        { "name": "Restore the arched windows", "cost": 3, "before": "boarded-up window arches" },
+        { "name": "Place the round table", "cost": 3, "before": "an empty floor with scattered planks" }
+      ]
+    },
+    {
+      "number": 7, "name": "Starwatch Observatory", "subtitle": "Chart the kingdom's stars", "outdoor": false,
+      "rewardCoins": 50, "rewardBoost": "Stripes",
+      "scene": "The castle's star observatory at dusk: a great brass telescope under an opening dome, a large celestial globe on a gold stand, dome shutters open to a violet starry sky at the top, a round map table with star charts, a spiral stone stair on the left, a crystal orrery of planets, hanging moon-shaped lanterns, curved shelves of scrolls, a carved astronomer's desk, and potted night-blooming flowers in the foreground.",
+      "tasks": [
+        { "name": "Build the brass telescope", "cost": 2, "before": "an empty mount and loose brass tubes" },
+        { "name": "Restore the star globe", "cost": 2, "before": "a bare broken stand" },
+        { "name": "Open the dome shutters", "cost": 2, "before": "closed, patched wooden shutters" },
+        { "name": "Lay out the map table", "cost": 2, "before": "a bare, cracked table" },
+        { "name": "Rebuild the spiral stair", "cost": 2, "before": "broken steps and gaps" },
+        { "name": "Assemble the crystal orrery", "cost": 3, "before": "scattered brass rings" },
+        { "name": "Hang the moon lanterns", "cost": 3, "before": "bare hanging cords" },
+        { "name": "Fill the scroll shelves", "cost": 3, "before": "empty dusty shelves" },
+        { "name": "Set the astronomer's desk", "cost": 3, "before": "a bare desk frame" },
+        { "name": "Plant the night garden", "cost": 3, "before": "empty clay pots" }
+      ]
+    },
+    {
+      "number": 8, "name": "Harbor Lighthouse", "subtitle": "Guide the ships home", "outdoor": true,
+      "rewardCoins": 55, "rewardBoost": "Packages",
+      "scene": "The kingdom's harbor on a sunny day: a tall white and blue lighthouse with a golden lamp on the right, a stone pier running into turquoise water, a royal sailboat with blue and gold sails at the dock, fishing nets on wooden frames, colorful market stalls with awnings, stacked cargo crates and barrels, a bronze harbor bell on a post, a lantern-lined path, a small boat house, and a dune garden of grasses in the foreground. Blue sky above.",
+      "tasks": [
+        { "name": "Relight the lighthouse lamp", "cost": 2, "before": "a dark, broken lamp room" },
+        { "name": "Rebuild the stone pier", "cost": 2, "before": "a collapsed, broken pier" },
+        { "name": "Launch the royal sailboat", "cost": 2, "before": "an empty dock berth" },
+        { "name": "Hang the fishing nets", "cost": 2, "before": "bare frames" },
+        { "name": "Open the market stalls", "cost": 3, "before": "bare wooden stall frames" },
+        { "name": "Stack the cargo crates", "cost": 3, "before": "an empty quay" },
+        { "name": "Hang the harbor bell", "cost": 3, "before": "an empty post" },
+        { "name": "Light the lantern path", "cost": 3, "before": "bare posts along a rough path" },
+        { "name": "Paint the boat house", "cost": 3, "before": "a faded, broken shack" },
+        { "name": "Plant the dune garden", "cost": 3, "before": "bare sand" }
+      ]
+    },
+    {
+      "number": 9, "name": "Crystal Winter Garden", "subtitle": "Frost that sparkles like jewels", "outdoor": false,
+      "rewardCoins": 60, "rewardBoost": "Colorful_bomb",
+      "scene": "A royal glass winter garden: a great glass dome above, an ice fountain in the centre, frosted silver trees, a crystal arch, glowing snow lanterns, beds of white and blue winter roses, a small frozen skating pond in the foreground, birch benches, glass swan sculptures, a crystal footbridge over a stream, and a tall star-topped tree at the back, all in cool blue, white and gold tones.",
+      "tasks": [
+        { "name": "Glaze the glass dome", "cost": 2, "before": "a bare iron dome frame" },
+        { "name": "Restore the ice fountain", "cost": 2, "before": "a dry, cracked basin" },
+        { "name": "Plant the frosted trees", "cost": 2, "before": "bare stumps" },
+        { "name": "Raise the crystal arch", "cost": 2, "before": "broken arch pieces" },
+        { "name": "Light the snow lanterns", "cost": 3, "before": "dark empty posts" },
+        { "name": "Plant the winter roses", "cost": 3, "before": "bare frozen soil" },
+        { "name": "Freeze the skating pond", "cost": 3, "before": "a muddy puddle" },
+        { "name": "Place the birch benches", "cost": 3, "before": "an empty path" },
+        { "name": "Sculpt the glass swans", "cost": 3, "before": "rough blocks of ice" },
+        { "name": "Build the crystal bridge", "cost": 3, "before": "a broken plank crossing" },
+        { "name": "Decorate the star tree", "cost": 3, "before": "a bare fir tree" }
+      ]
+    },
+    {
+      "number": 10, "name": "Treasure Vault", "subtitle": "The crown jewels of Royal Throne", "outdoor": false,
+      "rewardCoins": 65, "rewardBoost": "Stripes",
+      "scene": "The royal treasure vault: a huge round golden vault door at the back, heaps of gold coins, a velvet pedestal with a jeweled crown in the centre, glass jewel cases, a stand with a golden scepter, a royal blue tapestry, a small coin fountain, a gem-studded chandelier, two stone guardian statues beside the door, open treasure chests, a table with a royal seal, and a hidden stair behind a sliding panel.",
+      "tasks": [
+        { "name": "Open the vault door", "cost": 2, "before": "a sealed, rusted door" },
+        { "name": "Heap the gold hoard", "cost": 2, "before": "an empty stone floor" },
+        { "name": "Set the crown pedestal", "cost": 2, "before": "a bare broken plinth" },
+        { "name": "Fill the jewel cases", "cost": 2, "before": "empty cracked cases" },
+        { "name": "Mount the scepter stand", "cost": 3, "before": "an empty stand" },
+        { "name": "Hang the royal tapestry", "cost": 3, "before": "a bare wall" },
+        { "name": "Restore the coin fountain", "cost": 3, "before": "a dry basin" },
+        { "name": "Hang the gem chandelier", "cost": 3, "before": "a bare chain" },
+        { "name": "Raise the guardian statues", "cost": 3, "before": "broken statue bases" },
+        { "name": "Fill the treasure chests", "cost": 3, "before": "empty chests" },
+        { "name": "Set the royal seal table", "cost": 3, "before": "a bare table frame" },
+        { "name": "Reveal the secret stair", "cost": 3, "before": "a plain stone wall" }
+      ]
+    }
+  ]
+}

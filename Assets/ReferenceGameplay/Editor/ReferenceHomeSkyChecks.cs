@@ -25,7 +25,9 @@ namespace RoyalThrone.ReferenceGameplay.Editor
             try{qa.StartSession();qa.Visible=false;RoyalSave.SetInt("RoyalThrone.HomeMotion",1);yield return new WaitForSecondsRealtime(.6f);
                 var home=UnityEngine.Object.FindAnyObjectByType<RoyalHomeScreen>();var sky=home.GetComponent<ReferenceHomeSky>();
                 var bg=home.transform.Find("Castle framing/Royal blue courtyard").GetComponent<Image>();
-                Check(home.IsHomeVisible&&bg.sprite==Resources.Load<Sprite>("ReferenceGameplay/Home/Sky/Homepage_bg"),"Supplied background appears on live homepage");
+                // Since 2026-09-27 the background is the current area (Area 1's restored scene is the supplied castle).
+                var areaScene=bg.GetComponent<RoyalAreaScene>();var shown=areaScene?areaScene.Shown:null;
+                Check(home.IsHomeVisible&&shown!=null&&bg.sprite==RoyalAreas.Art(areaScene.ShowingRestored?shown.after:shown.before),"Current area's scene appears on the live homepage");
                 Check(sky&&sky.CloudCount==3,"Exactly three cloud sprites created");Check(bg.GetComponentsInChildren<Image>().Where(i=>i.name.StartsWith("Sky cloud ")).All(i=>!i.raycastTarget&&i.transform.parent==bg.transform),"Clouds render behind controls and never intercept taps");
                 var first=Enumerable.Range(0,3).Select(sky.CloudPosition).ToArray();yield return Shot("Homepage-clouds");yield return new WaitForSecondsRealtime(12);yield return Shot("Homepage-clouds-12s");
                 Check(Enumerable.Range(0,3).All(i=>Vector2.Distance(first[i],sky.CloudPosition(i))>.1f),"All three clouds drift continuously at normal speed");
