@@ -1,0 +1,42 @@
+#if UNITY_EDITOR && !ROYAL_DISABLE_QA
+using System;
+using System.IO;
+using System.Collections;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+using JellyGarden.Scripts;
+using RoyalThrone.Testing;
+using RoyalThrone.Campaign;
+using RoyalThrone.ReferenceGameplay;
+[InitializeOnLoad]
+public static class CoinAssetCheck {
+ const string Dir="Design/Coin-Club/";
+ static bool running;
+ static CoinAssetCheck(){EditorApplication.update+=Poll;}
+ static void Poll(){if(running||EditorApplication.isCompiling||EditorApplication.isUpdating||!File.Exists(Dir+"check.request"))return;
+  if(!EditorApplication.isPlaying||!RoyalQaService.Instance||!RoyalQaService.Instance.Ready)return;
+  if(RoyalSave.Testing)return;
+  File.Delete(Dir+"check.request");running=true;RoyalThrone.Editor.RoyalRegressionRunner.Run(Run());}
+ static void Check(bool ok,string message){File.AppendAllText(Dir+"unity-checks.txt",(ok?"PASS ":"FAIL ")+message+"\n");if(!ok)throw new Exception(message);}
+ static IEnumerator Shot(string name){yield return new WaitForEndOfFrame();var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Dir+name+".png",tex.EncodeToPNG());UnityEngine.Object.Destroy(tex);}
+ static IEnumerator Run(){var qa=RoyalQaService.Instance;int coins=InitScript.Gems,lives=InitScript.lifes;int errors=0;
+  Application.LogCallback log=(message,stack,type)=>{if(type==LogType.Exception||type==LogType.Error)errors++;};Application.logMessageReceived+=log;
+  File.WriteAllText(Dir+"unity-checks.txt","Coin art-only import verification\n");
+  try{
+   string p="Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Sprites/";
+   var files=Directory.GetFiles(p,"Items-CoinItem-coin*.png");Check(files.Length==9,"Nine coin pose textures retained");
+   foreach(var f in files){var sprite=AssetDatabase.LoadAssetAtPath<Sprite>(f.Replace('\\','/'));Check(sprite&&sprite.rect.width>0&&sprite.pixelsPerUnit==140,"Imported sprite and original 140 PPU: "+Path.GetFileName(f));}
+   var coin=ReferenceGameplayCatalog.Art("coin");Check(coin&&coin.name.Contains("16660"),"Board catalog resolves the replaced coin sprite");
+   Check(Resources.Load<Sprite>("ReferenceGameplay/Home/22081"),"Home coin loads through its existing resource path");
+   qa.StartSession();Check(RoyalSave.Testing,"Separate QA save active");RoyalReferenceCampaign.Select(true);qa.Level=20;yield return qa.OpenLevel();qa.Visible=false;
+   yield return new WaitForSecondsRealtime(.8f);
+   var visible=UnityEngine.Object.FindObjectsByType<SpriteRenderer>(FindObjectsSortMode.None).Where(r=>r.enabled&&r.sprite==coin).ToArray();
+   Check(visible.Length>0,"Live level 20 displays updated coin sprites: "+visible.Length);yield return Shot("Coin-board-live");
+   yield return qa.EndSession();yield return new WaitForSecondsRealtime(.6f);yield return Shot("Coin-home-live");
+   Check(!RoyalSave.Testing&&InitScript.Gems==coins&&InitScript.lifes==lives,"Normal currency/lives restored");
+   Check(errors==0,"No new Unity errors during coin check");File.AppendAllText(Dir+"unity-checks.txt","COMPLETE\n");
+  }finally{Application.logMessageReceived-=log;if(RoyalSave.Testing)qa.StartCoroutine(qa.EndSession());running=false;}
+ }
+}
+#endif

@@ -1,0 +1,18 @@
+Coin art-only import verification
+PASS Nine coin pose textures retained
+PASS Imported sprite and original 140 PPU: Items-CoinItem-coin.02__21355.png
+PASS Imported sprite and original 140 PPU: Items-CoinItem-coin.03__22083.png
+PASS Imported sprite and original 140 PPU: Items-CoinItem-coin.04__17107.png
+PASS Imported sprite and original 140 PPU: Items-CoinItem-coin.05__17096.png
+PASS Imported sprite and original 140 PPU: Items-CoinItem-coin.10_g__16629.png
+PASS Imported sprite and original 140 PPU: Items-CoinItem-coin.10__21779.png
+PASS Imported sprite and original 140 PPU: Items-CoinItem-coin.11_g__17115.png
+PASS Imported sprite and original 140 PPU: Items-CoinItem-coin.11__22228.png
+PASS Imported sprite and original 140 PPU: Items-CoinItem-coin__16660.png
+PASS Board catalog resolves the replaced coin sprite
+PASS Home coin loads through its existing resource path
+PASS Separate QA save active
+PASS Live level 20 displays updated coin sprites: 79
+PASS Normal currency/lives restored
+PASS No new Unity errors during coin check
+COMPLETE
