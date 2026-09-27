@@ -91,7 +91,7 @@ namespace RoyalThrone.Editor
                 foreach(string command in qa.Commands["DEBUG"].Where(c=>c!="Reset test data")){yield return Command(command);yield return Command(command);}
                 yield return Command("Complete targets");Check(LevelManager.THIS.targetObject.All(t=>t.Done()),"All targets complete in runtime copies");
                 int coinsBeforeWin=InitScript.Gems;yield return Command("Win instantly");Check(LevelManager.THIS.gameStatus==GameState.Win,"Instant win follows the real win state");int rewardLives=InitScript.lifes,rewardCoins=InitScript.Gems;
-                Check(rewardCoins==coinsBeforeWin+1,"A win credits exactly one coin");
+                Check(rewardCoins==coinsBeforeWin+JellyGarden.Scripts.Juice.RoyalWinSequence.Coins(LevelManager.THIS.stars),"A win credits 10 coins plus 5 per star");
                 int fail=qa.Failed;qa.Request("Win instantly");while(qa.Busy)yield return null;Check(qa.Failed==fail+1&&InitScript.lifes==rewardLives&&InitScript.Gems==rewardCoins,"Repeated win rejected without a duplicated life or coin reward");
                 yield return Command("Restart level");yield return Command("Lose instantly");Check(LevelManager.THIS.gameStatus==GameState.GameOver,"Instant lose follows the real lose state");
                 yield return Command("Reset test data");Check(InitScript.Gems==money,"Reset test data restores initial player-derived QA balance");

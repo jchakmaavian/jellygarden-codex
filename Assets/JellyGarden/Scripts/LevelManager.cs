@@ -367,8 +367,12 @@ namespace JellyGarden.Scripts
                 }
                 else if (value == GameState.Win)
                 {
-                    InitScript.Instance.AddGems(1); // One coin per win (R-20): the template's own reward, which had been commented out
+                    // A win pays 10 coins plus 5 per star (the user's decision, 2026-09-27; R-20 had restored the template's one),
+                    // and the win card shows them flying into the coin counter.
+                    int winCoins = Juice.RoyalWinSequence.Coins(stars), coinsBefore = InitScript.Gems;
+                    InitScript.Instance.AddGems(winCoins);
                     MenuManager.Instance.ShowMenuComplete();
+                    Juice.RoyalWinSequence.Reward(this, winCoins, coinsBefore);
                     if (!InitScript.Instance.losingLifeEveryGame)
                         InitScript.Instance.AddLife(1);
                     OnMenuComplete();
@@ -759,9 +763,9 @@ namespace JellyGarden.Scripts
             MenuManager.Instance.ShowCompleteLabel(false);
             SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
 
-            MenuManager.Instance.ShowPreCompleteBanner(true);
-            yield return new WaitForSeconds(CelebrationWait(1.6f, 0.5f));
-            MenuManager.Instance.ShowPreCompleteBanner(false);
+            // The celebration after the booster session (SPLENDID! lettering, confetti, fireworks, the king's cheer)
+            // replaces the inherited pre-complete banner; a tap shortens it, as it shortens the booster session.
+            yield return Juice.RoyalWinSequence.Celebrate(this);
 
             gameStatus = GameState.Win;
             preWinAnimationRunning = false;
