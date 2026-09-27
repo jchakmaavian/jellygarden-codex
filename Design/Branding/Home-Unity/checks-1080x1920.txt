@@ -1,5 +1,5 @@
 Royal Throne Unity home checks
-2026-09-27T07:26:34.8105022Z
+2026-09-27T08:24:44.8535251Z
 Resolution: 1080x1920
 PASS Fresh save starts at level 1 / area 1
 PASS Six completed levels advance the area
@@ -96,13 +96,13 @@ PASS Hints button immediately updates the shared setting and label
 PASS Home Hints check restores the player's preference
 PASS Play session remains available
 PASS Setting 0 stays on screen
-PASS Setting 0 receives its pointer hit (hits: Setting 0, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 1097.08))
+PASS Setting 0 receives its pointer hit (hits: Setting 0, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 1097.17))
 PASS Setting 1 stays on screen
-PASS Setting 1 receives its pointer hit (hits: Setting 1, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 998.93))
+PASS Setting 1 receives its pointer hit (hits: Setting 1, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 999.03))
 PASS Setting 2 stays on screen
-PASS Setting 2 receives its pointer hit (hits: Setting 2, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 900.78))
+PASS Setting 2 receives its pointer hit (hits: Setting 2, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 900.90))
 PASS Setting 3 Hints stays on screen
-PASS Setting 3 Hints receives its pointer hit (hits: Setting 3 Hints, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 802.63))
+PASS Setting 3 Hints receives its pointer hit (hits: Setting 3 Hints, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 802.76))
 PASS Future tab 1 has no fabricated feature
 PASS Navigation selects tab 1
 PASS Tab 0 shows its name
@@ -163,7 +163,7 @@ PASS Pre-level selection receives the real next level
 PASS Opening Home dialogs consumes no coins or lives
 PASS Play session remains available
 PASS Close stays on screen
-PASS Close receives its pointer hit (hits: Close, Image, MenuPlay; interactable: True; center: (899.23, 1363.79))
+PASS Close receives its pointer hit (hits: Close, Image, MenuPlay; interactable: True; center: (928.67, 1450.49))
 PASS Play session remains available
 PASS Play session remains available
 PASS Closing pre-level returns control to Home

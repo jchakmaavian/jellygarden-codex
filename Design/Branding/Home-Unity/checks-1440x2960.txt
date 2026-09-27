@@ -1,5 +1,5 @@
 Royal Throne Unity home checks
-2026-09-27T07:27:17.0774007Z
+2026-09-27T08:25:27.1990233Z
 Resolution: 1440x2960
 PASS Fresh save starts at level 1 / area 1
 PASS Six completed levels advance the area
@@ -163,7 +163,7 @@ PASS Pre-level selection receives the real next level
 PASS Opening Home dialogs consumes no coins or lives
 PASS Play session remains available
 PASS Close stays on screen
-PASS Close receives its pointer hit (hits: Close, Image, MenuPlay; interactable: True; center: (1198.97, 2018.39))
+PASS Close receives its pointer hit (hits: Close, Image, MenuPlay; interactable: True; center: (1238.22, 2133.99))
 PASS Play session remains available
 PASS Play session remains available
 PASS Closing pre-level returns control to Home

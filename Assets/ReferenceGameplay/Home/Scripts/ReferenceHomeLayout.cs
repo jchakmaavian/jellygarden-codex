@@ -17,12 +17,19 @@ namespace RoyalThrone.ReferenceGameplay
         // settings as fractions of the bar's width.
         const float HudWidth=.9685f,HudHeight=.1498f,HudCentre=.1071f;
         static readonly float[] ResourceEdges={0,.1424f,.1520f,.4044f,.4054f,.6721f,.6730f,.8824f,.8910f,.9990f};
-        // Counters (coins, lives, stars), as x0,y0,x1,y1 of each counter: the cream panel, the icon over its left end, the value
-        // between them and the + badge at the panel's right end. The panel sprite's cream face is its top 10-65%.
-        static readonly Vector4 Panel=new Vector4(.13f,.023f,1,.7954f);
-        static readonly Vector4[] Icon={new Vector4(.002f,.192f,.4034f,.866f),new Vector4(0,.195f,.398f,.82f),new Vector4(0,.2818f,.3836f,.7701f)};
-        static readonly Vector4[] Value={new Vector4(.432f,.3869f,.716f,.6589f),new Vector4(.416f,.3869f,.742f,.6589f),new Vector4(.3836f,.3869f,.6712f,.6589f)};
-        static readonly Vector4[] Plus={new Vector4(.7225f,.2683f,.9555f,.6791f),new Vector4(.7426f,.2683f,.9634f,.6791f),new Vector4(.6746f,.2683f,.9556f,.6791f)};
+        // Counters (coins, lives, stars) in reference pixels (1080 wide, y down from the top of the screen), turned into anchors by
+        // Px(). Each is a slim cream pill, 77 px tall with a thin edge, a tan lip and a soft shadow, starting under the icon's
+        // centre. The + sits in the pill's round right end, and the value between the icon and the +.
+        static readonly Vector4[] IconPx={new Vector4(176.5f,56.5f,282.5f,165.5f),new Vector4(441,64,552,165),new Vector4(721,72,805,151)};
+        static readonly Vector4[] ValuePx={new Vector4(288,83,366,146),new Vector4(556,82,646,145),new Vector4(806,82,870,145)};
+        static readonly Vector4 LifeCountPx=new Vector4(463,83.5f,533,144.5f);
+        static readonly float[] PillLeft={229,497,763},PillRight={434,714,938};
+        const float PillTop=79,PillBottom=156,FaceTop=82,FaceBottom=150,PillEdge=2.5f;
+        // Values render at about 32 px, the reference digits' size.
+        const int ValueSize=21;
+        // The + badge's green disc is 53 px across; in its sprite pair it fills 92% of the width and 85% of the height, centred 45%
+        // from the top.
+        const float PlusDisc=53,PlusWidth=PlusDisc/.921f,PlusHeight=PlusDisc/.853f,PlusCentre=.453f;
         // Level and area cards: 1014 x 201 px, centred 436 px above the safe bottom; the area card is the wider one.
         const float ActionsWidth=.9394f,ActionsHeight=.1864f,ActionsCentre=.4040f,LevelRight=.4687f,AreaLeft=.5175f;
         // Tab bar: 286 px, the imported strip's gold edge and highlight fill its top 14.3 units (at w 720) and stay visible.
@@ -52,6 +59,18 @@ namespace RoyalThrone.ReferenceGameplay
         // A soft drop shadow gives the resource art the reference's depth against the sky.
         static void Shade(Graphic g){var s=g.gameObject.AddComponent<Shadow>();s.effectColor=new Color(.02f,.1f,.3f,.35f);s.effectDistance=new Vector2(0,-3);}
         static void Shade(Transform parent,string name){foreach(Transform c in parent)if(c.name==name)Shade(c.GetComponent<Graphic>());}
+        // Reference pixels -> anchors inside resource control i: x from the bar's left edge, y down from the top of the screen.
+        static Vector4 Px(int i,Vector4 p){const float W=1080;float barW=HudWidth*W,barH=HudHeight*W,top=HudCentre*W-barH*.5f,left=(W-barW)*.5f+ResourceEdges[i*2]*barW,width=(ResourceEdges[i*2+1]-ResourceEdges[i*2])*barW;
+            return new Vector4((p.x-left)/width,(top+barH-p.w)/barH,(p.z-left)/width,(top+barH-p.y)/barH);}
+        static RoyalPanelGraphic PillLayer(Transform parent,int i,string name,Vector4 p,Color top,Color bottom){var g=Surface(name,parent,top,bottom);Bounds(g.rectTransform,Px(i,p));g.cornerRadius=1000;return g;}
+        // The counter's cream pill, drawn to the reference's profile rather than the imported panel sprite, whose deep lower bevel
+        // made the bar a third taller than the reference.
+        static void Pill(Transform parent,int i,float left,float right){
+            PillLayer(parent,i,"Counter shadow far",new Vector4(left,PillTop+10,right,PillBottom+10),new Color(0,.06f,.2f,.3f),new Color(0,.06f,.2f,.3f));
+            PillLayer(parent,i,"Counter shadow",new Vector4(left,PillTop+5,right,PillBottom+5),new Color(0,.06f,.18f,.55f),new Color(0,.06f,.18f,.55f));
+            PillLayer(parent,i,"Counter edge",new Vector4(left,PillTop,right,PillBottom),new Color(.60f,.49f,.37f),new Color(.70f,.53f,.35f));
+            PillLayer(parent,i,"Counter face",new Vector4(left+PillEdge,FaceTop,right-PillEdge,FaceBottom),new Color(.985f,.965f,.91f),new Color(.895f,.815f,.66f));
+            PillLayer(parent,i,"Counter shine",new Vector4(left+14,FaceTop+2,right-14,FaceTop+20),new Color(1,1,1,.55f),new Color(1,1,1,0));}
         static Image Pic(Transform parent,int id,float x0,float y0,float x1,float y1,bool sliced=false){var r=new GameObject("Imported "+id,typeof(RectTransform)).GetComponent<RectTransform>();r.SetParent(parent,false);Bounds(r,x0,y0,x1,y1);var im=r.gameObject.AddComponent<Image>();im.sprite=Art(id);im.raycastTarget=false;im.type=sliced?Image.Type.Sliced:Image.Type.Simple;im.pixelsPerUnitMultiplier=2;return im;}
         static Image Pic(Transform parent,int id,Vector4 b)=>Pic(parent,id,b.x,b.y,b.z,b.w);
         static void Pair(Transform p,int id,float x0,float y0,float x1,float y1,bool slice=false,bool rightHalf=false){float m=(x0+x1)*.5f;var a=Pic(p,id,x0,y0,m,y1,slice);var b=Pic(p,id,m,y0,x1,y1,slice);(rightHalf?a:b).rectTransform.localScale=new Vector3(-1,1,1);}
@@ -83,11 +102,14 @@ namespace RoyalThrone.ReferenceGameplay
             portrait.transform.SetAsLastSibling();Bounds(portrait.rectTransform,.13f,.12f,.87f,.91f);portrait.preserveAspect=true;
             Pair(home.resourceButtons[0].transform,16613,0,0,1,1,true);Shade(home.resourceButtons[0].transform,"Imported 16613");
             int[] icons={22081,21591,16674};Text[] values={home.coinLabel,home.lifeStatus,home.starLabel};plus=new RectTransform[3];
-            for(int i=1;i<=3;i++){var b=home.resourceButtons[i].transform;Pair(b,21706,Panel.x,Panel.y,Panel.z,Panel.w,true,true);var im=Pic(b,icons[i-1],Icon[i-1]);im.preserveAspect=true;Shade(im);TextPlace(values[i-1],Value[i-1],24);
+            for(int i=1;i<=3;i++){var b=home.resourceButtons[i].transform;int k=i-1;Pill(b,i,PillLeft[k],PillRight[k]);
+                var im=Pic(b,icons[k],Px(i,IconPx[k]));im.preserveAspect=true;Shade(im);TextPlace(values[k],Px(i,ValuePx[k]),ValueSize);
                 // Every counter carries the same + badge. It is art inside the counter, so a tap still opens that counter's panel.
-                var badge=new GameObject("Plus badge",typeof(RectTransform)).GetComponent<RectTransform>();badge.SetParent(b,false);Bounds(badge,Plus[i-1]);Pair(badge,16282,0,0,1,1);plus[i-1]=badge;}
+                float cx=PillRight[k]-(PillBottom-PillTop)*.5f,cy=(PillTop+PillBottom)*.5f;
+                var badge=new GameObject("Plus badge",typeof(RectTransform)).GetComponent<RectTransform>();badge.SetParent(b,false);
+                Bounds(badge,Px(i,new Vector4(cx-PlusWidth*.5f,cy-PlusHeight*PlusCentre,cx+PlusWidth*.5f,cy+PlusHeight*(1-PlusCentre))));Pair(badge,16282,0,0,1,1);plus[k]=badge;}
             foreach(var t in home.resourceButtons[1].GetComponentsInChildren<Text>(true))if(t!=home.coinLabel)t.enabled=false;
-            TextPlace(home.lifeLabel,.08f,.398f,.33f,.778f,31);
+            TextPlace(home.lifeLabel,Px(2,LifeCountPx),31);
             // Settings: the blue dial inside a gold outer rim, as in the reference.
             var settings=home.resourceButtons[4].transform;var ring=Surface("Settings gold rim",settings,new Color(1,.88f,.4f),new Color(.84f,.5f,.07f));Anchor(ring.rectTransform,.013f,.164f,.987f,.844f);ring.cornerRadius=1000;Shade(ring);
             Pair(settings,17072,.066f,.201f,.934f,.807f,false,true);
