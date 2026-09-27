@@ -23,6 +23,7 @@ namespace RoyalThrone.Presentation
         readonly Dictionary<string,Sprite> cellSprites=new Dictionary<string,Sprite>();
         Vector2 cellSpriteSize;
         readonly List<Image> goalIcons=new List<Image>();readonly List<Text> goalNumbers=new List<Text>();
+        RectTransform goalArea;
         Transform framedField;Square[] framedSquares;Vector2 framedScreen;Rect framedSafeArea;
         static Color Navy=>new Color(.025f,.12f,.32f);
         // Booster rail metrics in canvas reference units (720x1280): the width and spacing the
@@ -86,7 +87,8 @@ namespace RoyalThrone.Presentation
             Pair("Goal container",header,"Game-goal_panel_container",.027f,.07f,.315f,.85f,true);
             Pair("Goal banner",header,"Game-goal_panel_banner",.021f,.67f,.321f,.96f);
             Label("Goal heading",header,"Goals",28,.03f,.744f,.312f,.92f);
-            var goalArea=Rect("Goal contents",header,.045f,.11f,.297f,.70f);
+            // The goals keep a margin inside the cream panel (about .037-.303 x .13-.70 of the header); LayoutGoals places them.
+            goalArea=Rect("Goal contents",header,.055f,.14f,.285f,.69f);
             for(int i=0;i<4;i++){
                 var icon=Rect("Goal icon "+i,goalArea,0,.4f,1,.94f).gameObject.AddComponent<Image>();
                 icon.preserveAspect=true;icon.raycastTarget=false;goalIcons.Add(icon);
@@ -170,13 +172,9 @@ namespace RoyalThrone.Presentation
                 if(movesHeading)movesHeading.text=timed?"Time":"Moves";
                 moves.text=timed?limit/60+":"+(limit%60).ToString("00"):limit.ToString();
                 foreach(var tool in railTools)if(tool&&!tool.activeSelf)tool.SetActive(true);
-                for(int i=0;i<goalIcons.Count;i++){
-                    bool active=lm.targetObject!=null&&i<lm.targetObject.Length;goalIcons[i].gameObject.SetActive(active);goalNumbers[i].gameObject.SetActive(active);if(!active)continue;
-                    var target=lm.targetObject[i];goalIcons[i].sprite=RoyalVisualCatalog.Goal(target,true);goalNumbers[i].text=Mathf.Max(0,target.GetCount()).ToString();
-                    float step=1f/Mathf.Min(goalIcons.Count,lm.targetObject.Length),left=i*step;
-                    var ir=goalIcons[i].rectTransform;ir.anchorMin=new Vector2(left,.4f);ir.anchorMax=new Vector2(left+step,.94f);
-                    var nr=goalNumbers[i].rectTransform;nr.anchorMin=new Vector2(left+.002f,0);nr.anchorMax=new Vector2(left+step-.002f,.42f);
-                }
+                int shown=lm.targetObject==null?0:Mathf.Min(goalIcons.Count,lm.targetObject.Length);
+                for(int i=0;i<goalIcons.Count;i++){goalIcons[i].gameObject.SetActive(i<shown);goalNumbers[i].gameObject.SetActive(i<shown);}
+                if(shown>0)LayoutGoals(lm,shown);
             }
             excitement=Mathf.MoveTowards(excitement,0,Time.deltaTime*.8f);
             kingImage.sprite=excitement>.5f?cheer:lm.Limit<=5?think:idle;
@@ -185,6 +183,34 @@ namespace RoyalThrone.Presentation
             var cam=Camera.main;if(cam){FrameBoard(lm,cam);backdrop.transform.position=cam.ViewportToWorldPoint(new Vector3(.5f,.5f,18));var bounds=backdrop.sprite.bounds.size;float scale=Mathf.Max(cam.orthographicSize*2*cam.aspect/bounds.x,cam.orthographicSize*2/bounds.y);backdrop.transform.localScale=Vector3.one*scale;}
             if(Time.unscaledTime>lastRefresh){lastRefresh=Time.unscaledTime+.3f;StyleBoard(lm);}
         }
+        // The Goals card: one column per goal. The icons share one square size, larger when there are fewer goals (the score
+        // star's art fills only 80% x 75% of its square, so its box is larger); the numbers share one font size that fits the
+        // longest; the icon-over-number group is centred in the panel, like the Moves number beside it.
+        void LayoutGoals(LevelManager lm,int shown)
+        {
+            float width=goalArea.rect.width,height=goalArea.rect.height,pitch=width/shown;
+            float size=Mathf.Min(shown==1?72:shown==2?62:shown==3?50:40,pitch-8);
+            int font=shown<=2?34:30;
+            for(int i=0;i<shown;i++){
+                var target=lm.targetObject[i];var number=goalNumbers[i];
+                goalIcons[i].sprite=RoyalVisualCatalog.Goal(target,true);number.text=Mathf.Max(0,target.GetCount()).ToString();
+                // Best fit stays off so every number shares one size; a box shorter than the font's line height would then
+                // truncate the text to nothing, so the numbers overflow vertically.
+                number.resizeTextForBestFit=false;number.horizontalOverflow=HorizontalWrapMode.Overflow;number.verticalOverflow=VerticalWrapMode.Overflow;number.fontSize=30;
+                float at30=number.preferredWidth;
+                while(font>16&&at30*font/30f>pitch-6)font--;
+            }
+            float textHeight=font*1.1f,gap=8,group=size+gap+textHeight,bottom=(height-group)*.5f;   // the digits' visual height
+            var star=RoyalPieceSkin.Art("star");
+            for(int i=0;i<shown;i++){
+                float x=(i+.5f)*pitch;var icon=goalIcons[i];
+                float box=icon.sprite&&icon.sprite==star?size*1.2f:size;
+                Place(icon.rectTransform,x,bottom+textHeight+gap+size*.5f,box,box);
+                goalNumbers[i].fontSize=font;Place(goalNumbers[i].rectTransform,x,bottom+textHeight*.5f,pitch-4,textHeight);
+            }
+        }
+        static void Place(RectTransform r,float x,float y,float w,float h)
+        {r.anchorMin=r.anchorMax=Vector2.zero;r.pivot=new Vector2(.5f,.5f);r.anchoredPosition=new Vector2(x,y);r.sizeDelta=new Vector2(w,h);}
         public static Rect PlayableViewport(Rect safeNormalized)
         {
             float scale=Mathf.Min(Screen.width/720f,Screen.height/1280f);
