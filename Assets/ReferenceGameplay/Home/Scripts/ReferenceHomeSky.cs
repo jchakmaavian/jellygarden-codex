@@ -13,6 +13,8 @@ namespace RoyalThrone.ReferenceGameplay
         // and this keeps the clouds where the Home reference shows them.
         readonly Vector2[] seats={new Vector2(.19f,.802f),new Vector2(.80f,.722f),new Vector2(.52f,.672f)};
         readonly float[] periods={170,205,240},amplitudes={.10f,.08f,.11f},phases={0,1.6f,3.1f};
+        // Drift runs 1.3x the periods above (the user's request of 2026-09-27); the path and its bounds are unchanged.
+        const float DriftSpeed=1.3f;
         float elapsed;bool initialized;public int CloudCount=>initialized?3:0;
         public float MotionSeconds=>elapsed;
         public Vector2 CloudPosition(int index)=>clouds[index].anchoredPosition;
@@ -33,7 +35,7 @@ namespace RoyalThrone.ReferenceGameplay
         }
         void LateUpdate(){if(!initialized)return;if(home.IsHomeVisible&&home.MotionEnabled)elapsed+=Time.unscaledDeltaTime;Render();}
         void Render(){float w=sky.rect.width,h=sky.rect.height;
-            for(int i=0;i<3;i++){var r=clouds[i];var art=r.GetComponent<Image>().sprite;float phase=elapsed*Mathf.PI*2/periods[i]+phases[i];
+            for(int i=0;i<3;i++){var r=clouds[i];var art=r.GetComponent<Image>().sprite;float phase=elapsed*DriftSpeed*Mathf.PI*2/periods[i]+phases[i];
                 // Bounded continuous drift has no wrap, teleport, opacity pop or random jitter.
                 float x=seats[i].x+amplitudes[i]*(Mathf.Sin(phase)-Mathf.Sin(phases[i]));
                 float y=seats[i].y+.0025f*(Mathf.Sin(phase*.73f)-Mathf.Sin(phases[i]*.73f));
