@@ -68,8 +68,7 @@ namespace RoyalThrone.Editor
                 foreach (var b in home.resourceButtons.Concat(home.tabButtons).Concat(new[] { home.levelButton, home.areaButton })) CheckHit(b);
                 Rect left = ScreenRect(home.levelRect), right = ScreenRect(home.areaRect), nav = ScreenRect(home.navigation), hud = ScreenRect(home.hud);
                 Check(left.xMax < right.xMin && left.yMin > nav.yMax && hud.yMin > left.yMax, "HUD, level/area actions and navigation do not overlap");
-                var homeIcon = home.tabButtons[2].transform.Find("Home icon") as RectTransform;
-                Check(!ScreenRect(homeIcon).Overlaps(left) && !ScreenRect(homeIcon).Overlaps(right), "Lifted Home icon leaves the primary actions clear");
+                CheckHomeArt(left, right);
                 Capture("home");
                 phase = 0; next = EditorApplication.timeSinceStartup + .6;
                 Application.logMessageReceived += Log; EditorApplication.update += Watch; running = true; return true;
@@ -180,10 +179,34 @@ namespace RoyalThrone.Editor
             for (int i = 0; i < home.tabButtons.Length; i++)
             {
                 var label = home.tabButtons[i].GetComponentInChildren<Text>(true);
-                Check(label.gameObject.activeSelf == (i == selected), "Tab " + i + " shows a label only when selected");
+                Check(label.gameObject.activeSelf && label.enabled && label.text.Length > 0, "Tab " + i + " shows its name");
                 Rect hit = ScreenRect((RectTransform)home.tabButtons[i].transform);
                 Check(hit.width >= Screen.width * .13f, "Tab " + i + " retains a generous touch target");
             }
+        }
+        // The raised Home art must leave the level and area cards clear. The imported castle (drawn when the reference layout is
+        // attached) rises through the gap between them: in its sprite only the central spire fills the top quarter, at most 14% of
+        // the width in the top 17% and 20% down to 25% (measured from 16525.png). So only rows in that quarter may reach above the
+        // cards, and the spire's column there must stay between the cards.
+        static void CheckHomeArt(Rect left, Rect right)
+        {
+            var castle = home.tabButtons[2].GetComponentsInChildren<Image>().FirstOrDefault(i => i.enabled && i.sprite && i.name.StartsWith("Imported"));
+            if (!castle)
+            {
+                var homeIcon = home.tabButtons[2].transform.Find("Home icon") as RectTransform;
+                Check(!ScreenRect(homeIcon).Overlaps(left) && !ScreenRect(homeIcon).Overlaps(right), "Lifted Home icon leaves the primary actions clear");
+                return;
+            }
+            Rect box = ScreenRect(castle.rectTransform);
+            float aspect = castle.sprite.rect.width / castle.sprite.rect.height;
+            // preserveAspect draws the sprite centred in its box.
+            Vector2 size = box.width / box.height > aspect ? new Vector2(box.height * aspect, box.height) : new Vector2(box.width, box.width / aspect);
+            Rect art = new Rect(box.center - size * .5f, size);
+            float cardBottom = Mathf.Min(left.yMin, right.yMin), above = Mathf.Clamp01((art.yMax - cardBottom) / art.height);
+            float spire = art.width * (above <= .17f ? .14f : .20f);
+            Rect column = Rect.MinMaxRect(art.center.x - spire * .5f, cardBottom, art.center.x + spire * .5f, art.yMax);
+            Check(above <= .25f && (above == 0 || !column.Overlaps(left) && !column.Overlaps(right)),
+                "Lifted Home castle leaves the primary actions clear (" + Mathf.RoundToInt(above * 100) + "% of it above the cards, spire between them)");
         }
         static void CheckHints()
         {

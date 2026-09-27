@@ -354,6 +354,10 @@ namespace RoyalThrone.Presentation
                 rect.anchorMax = new Vector2(1, 1 - i * .25f - .015f);
                 rect.offsetMin = rect.offsetMax = Vector2.zero;
             }
+            // Calm press feedback on every Home control: down to 0.975, settling in about 0.15 s, and no growth on hover or focus
+            // (a tapped button keeps the focus, so a focus scale stayed enlarged after every tap).
+            foreach (var motion in GetComponentsInChildren<RoyalButtonMotion>(true))
+            { motion.pressScale = .975f; motion.hoverScale = 1; motion.response = 20; }
             UpdateNavigation(true);
         }
 
@@ -373,7 +377,8 @@ namespace RoyalThrone.Presentation
                 icon.anchorMin = icon.anchorMax = new Vector2(.5f, .58f + .24f * t);
                 icon.sizeDelta = Vector2.one * navigation.rect.width * Mathf.Lerp(.17f, .22f, t);
                 icon.anchoredPosition = Vector2.zero;
-                tabLabels[i].gameObject.SetActive(selected);
+                // Every tab is named under its icon; the selected one is emphasised by its size and the raised art.
+                tabLabels[i].gameObject.SetActive(true);
                 tabLabels[i].rectTransform.anchorMin = new Vector2(.01f, .04f);
                 tabLabels[i].rectTransform.anchorMax = new Vector2(.99f, .29f);
                 tabLabels[i].rectTransform.offsetMin = tabLabels[i].rectTransform.offsetMax = Vector2.zero;
@@ -429,6 +434,9 @@ namespace RoyalThrone.Presentation
                 SetVertical(dialogCopy.rectTransform, tallDialog ? .62f : .48f, tallDialog ? .68f : .58f);
                 SetVertical(dialogButton.GetComponent<RectTransform>(), tallDialog ? .035f : .07f, tallDialog ? .14f : .21f);
             }
+            // In Play Mode the imported layout replaces this placement every frame; apply it now so callers read what is drawn.
+            var reference = GetComponent<RoyalThrone.ReferenceGameplay.ReferenceHomeLayout>();
+            if (reference) reference.Relayout();
         }
         static void SetVertical(RectTransform rect, float bottom, float top)
         { rect.anchorMin = new Vector2(rect.anchorMin.x, bottom); rect.anchorMax = new Vector2(rect.anchorMax.x, top); }

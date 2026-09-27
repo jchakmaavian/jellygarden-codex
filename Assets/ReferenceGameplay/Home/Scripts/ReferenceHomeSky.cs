@@ -9,7 +9,9 @@ namespace RoyalThrone.ReferenceGameplay
     {
         RoyalHomeScreen home; RectTransform sky; readonly RectTransform[] clouds=new RectTransform[3];
         readonly float[] widths={.43f,.33f,.24f};
-        readonly Vector2[] seats={new Vector2(.19f,.82f),new Vector2(.80f,.74f),new Vector2(.52f,.69f)};
+        // Heights sit .018 lower than before 2026-09-27: ReferenceHomeLayout now lifts the background to meet the card row,
+        // and this keeps the clouds where the Home reference shows them.
+        readonly Vector2[] seats={new Vector2(.19f,.802f),new Vector2(.80f,.722f),new Vector2(.52f,.672f)};
         readonly float[] periods={170,205,240},amplitudes={.10f,.08f,.11f},phases={0,1.6f,3.1f};
         float elapsed;bool initialized;public int CloudCount=>initialized?3:0;
         public float MotionSeconds=>elapsed;

@@ -9,6 +9,9 @@ namespace RoyalThrone.Presentation
         IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
     {
         public float hoverScale = 1.025f;
+        public float pressScale = .955f;
+        // Rate of the exponential settle toward the target scale: 20 reaches 95% of the way in about 0.15 s.
+        public float response = 22;
         Button button;
         bool pressed;
         bool hovered;
@@ -19,9 +22,9 @@ namespace RoyalThrone.Presentation
         void Update()
         {
             bool usable = button != null && button.IsInteractable();
-            float target = !usable ? 1 : pressed ? .955f : hovered || selected ? hoverScale : 1;
+            float target = !usable ? 1 : pressed ? pressScale : hovered || selected ? hoverScale : 1;
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one * target,
-                1 - Mathf.Exp(-22 * Time.unscaledDeltaTime));
+                1 - Mathf.Exp(-response * Time.unscaledDeltaTime));
         }
         public void OnPointerDown(PointerEventData e) { if (e.button == PointerEventData.InputButton.Left) pressed = true; }
         public void OnPointerUp(PointerEventData e) => pressed = false;
