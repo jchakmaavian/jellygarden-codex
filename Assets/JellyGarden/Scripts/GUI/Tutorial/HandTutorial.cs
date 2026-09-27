@@ -34,6 +34,7 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 		{
 			float speed = 1;
 			int posNum = 0;
+			if (!AI.THIS || !AI.THIS.tipItem) yield break;   // its piece is gone (see TutorialManager.GetItemsPositions)
 
 //		for (int i = 0; i < 2; i++) {
 			transform.position = AI.THIS.tipItem.transform.position;
