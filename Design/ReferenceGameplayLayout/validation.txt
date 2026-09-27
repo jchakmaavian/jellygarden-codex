@@ -1,7 +1,7 @@
 RUNNING gameplay layout checks
 PASS Separate QA save active
 PASS Live gameplay HUD is active
-PASS Header, portrait frame and five rail slots use imported APK sprites
+PASS Goal, portrait and Moves panels and the bottom bar are drawn to the gameplay reference
 PASS Four original boost controllers and inventory bindings retained
 PASS In-game booster count, plus and lock connections intact
 PASS Imported hand button selects its original action

@@ -37,9 +37,13 @@ namespace RoyalThrone.ReferenceGameplay.Editor
                 yield return qa.Execute("Original levels");qa.Level=14;yield return qa.OpenLevel();qa.Visible=false;
                 yield return new WaitForSecondsRealtime(1);
                 var hud=lm.transform.Find("Royal gameplay HUD/Safe area");Check(hud,"Live gameplay HUD is active");
-                // The imported tool bar adds its own "Native left/right" art from Tools/ (checked by ReferenceBoosterChecks), not layout art.
-                var imported=hud.GetComponentsInChildren<Image>(true).Where(i=>(i.name.Contains(" left")||i.name.Contains(" right")||i.name.Contains("Packaged header"))&&!i.name.StartsWith("Native ")).ToArray();
-                Check(imported.Length>=30&&imported.All(i=>i.sprite&&AssetDatabase.GetAssetPath(i.sprite).StartsWith("Assets/ReferenceGameplay/Layout/")),"Header, portrait frame and five rail slots use imported APK sprites");
+                // Since the gameplay HUD was rebuilt to its reference (Design/GameplayHud), RoyalGameplayHud draws the Goal and
+                // Moves panels, the portrait frame and the bottom bar; the settings gear is the only packaged layout art left.
+                // The tool bar's purchase popup keeps its own packaged art (ReferenceBoosterChecks covers it).
+                var header=hud.Find("Imported gameplay header");var rail=hud.Find("Imported booster rail");var toolShop=hud.Find("Reference tool purchase");
+                var layoutArt=hud.GetComponentsInChildren<Image>(true).Where(i=>i.sprite&&AssetDatabase.GetAssetPath(i.sprite).StartsWith("Assets/ReferenceGameplay/Layout/")&&!(toolShop&&i.transform.IsChildOf(toolShop))).ToArray();
+                Check(header&&header.Find("Royal HUD goal panel")&&header.Find("Royal HUD moves panel")&&header.Find("Royal HUD portrait")&&rail&&rail.Find("Royal HUD bar")&&
+                    layoutArt.Length>0&&layoutArt.All(i=>i.name.StartsWith("Settings gear")),"Goal, portrait and Moves panels and the bottom bar are drawn to the gameplay reference");
                 Check(hud.GetComponentsInChildren<BoostIcon>(true).Length==4,"Four original boost controllers and inventory bindings retained");
                 yield return Capture("Gameplay-Level14-first");
                 Check(hud.GetComponentsInChildren<BoostIcon>(true).All(b=>b.boostCount&&b.transform.Find("Indicator/Plus")&&b.transform.Find("Lock")),"In-game booster count, plus and lock connections intact");
