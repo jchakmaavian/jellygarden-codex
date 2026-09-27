@@ -1804,3 +1804,35 @@ Throne's own implementation.
 - **Commits:** the commit of these records.
 - **Still open (a phone, which the user kept out of this pass):** the four phone checks, as narrowed in iteration 50.
 - **Next task:** none the loop can act on in this pass.
+
+### Iteration 53 (Android allowed: the development APK built; no phone connected yet)
+- **Date/time:** 2026-09-27 09:52-10:03 local
+- **Why:** asked once more, with the Back key's new risk in hand, the user chose "Allow Android now": build the development APK
+  and run iteration 45's four checks on a phone, the Back key first.
+- **Before:** `adb devices` (the SDK's own adb) listed no phone, over USB or wireless debugging. The build settings were read
+  first so that they could be put back: `development=False`, script debugging and profiler autoconnect off, deep profiling off,
+  Generic subtarget, APK (not an App Bundle), IL2CPP, ARM64, no custom keystore, `com.codexsandbox.jellygarden`, 2 scenes. The
+  09-23 test APK and its log were moved to `Builds/Android/previous/` instead of being overwritten. A settings read first timed
+  out after 5 s: the AI Assistant package's entitlement checks (item 13) were stalling the main thread; the retry worked.
+- **Build:** `RoyalAndroidBuild.BuildAndroid()` scheduled from a one-shot editor update hook (a CLI eval is cut off at 5 s):
+  succeeded in 6 min 11 s, 0 errors, 981 warnings. `Builds/Android/RoyalThrone-Test.apk`: 189.9 MB, 58.8 MB smaller than the
+  09-23 test build; the ASTC overrides of iterations 40 and 41 are the likely main cause. It is a development build
+  (`boot.config`: `player-connection-mode=Listen`), and its manifest carries `enableOnBackInvokedCallback`, so Back reaches it
+  the way iterations 48 and 49 describe.
+- **After:** `development` put back to False; the other settings were never changed. `ProjectSettings.asset` and
+  `EditorBuildSettings.asset` are byte-identical to before the build, and the working tree still holds only the other sessions'
+  169 entries.
+- **The build's warnings:** about 970 of the 981 are shader warnings from `com.unity.ai.inference` 2.6.1 (formerly Sentis:
+  `ConvGeneric` alone 920). That package has been a direct dependency since the project's baseline (`7194b956`); no code of the
+  game uses it, yet its shaders are compiled into every Android build. Removing it would shorten builds and likely shrink the
+  APK, but it is part of the user's own project, so it is the user's call and was not changed. Three warnings are the game's own
+  Color Ball V5 sphere shader (`ColorBallSphere.shader` :39, `fwidth` inside a loop whose length is the per-material `_Samples`,
+  also on gles3): harmless in practice, since every pixel of a draw runs the same number of iterations, and the effect is the
+  user's approved visual, so it was not changed; the phone check of the art includes a Color Ball. Two are player-only C#
+  warnings in the third-party All In 1 VFX toolkit, one is Unity Services' project-link notice.
+- **Tests:** none on a phone yet; nothing in the project changed but these records.
+- **Files changed:** `RALPH_STATE.md`, `FINAL_QA_REPORT.md`.
+- **Commits:** the commit of these records.
+- **Still open:** the four phone checks, now waiting only for a phone connected over USB with USB debugging on and this computer
+  authorized. Then: install, launch, and run them in iteration 45's order, the Back key first.
+- **Next task:** the phone checks, as soon as a phone is connected.
