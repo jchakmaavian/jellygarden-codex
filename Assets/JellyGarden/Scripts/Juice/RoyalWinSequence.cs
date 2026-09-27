@@ -247,10 +247,14 @@ namespace JellyGarden.Scripts.Juice
             // A creation burst at the board's centre: its ring and sparkles open the celebration, and its reaction makes the
             // king in the HUD portrait cheer.
             if (RoyalPowerupDirector.Get) RoyalPowerupDirector.Get.Creation(center);
+            // A cascade banner still showing from the booster session gives way to the celebration's word.
+            var banner = lm.GetComponent<RoyalCelebration>(); if (banner && banner.IsShowing) banner.Cancel();
 
             float t = 0, hold = 1.45f, exit = .28f;
             while (true)
             {
+                // The level was left or restarted mid-celebration (QA tools can): stop at once and clear the overlay.
+                if (lm.gameStatus != GameState.PreWinAnimations) { foreach (var b in bits) b.age = b.life; break; }
                 t += Time.unscaledDeltaTime;
                 // A tap (the same one that sped up the booster session) jumps to the exit.
                 if (lm.SkipWinCelebration && t < hold) hold = Mathf.Max(.25f, t);

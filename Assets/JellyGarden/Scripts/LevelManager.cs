@@ -766,6 +766,7 @@ namespace JellyGarden.Scripts
             // The celebration after the booster session (SPLENDID! lettering, confetti, fireworks, the king's cheer)
             // replaces the inherited pre-complete banner; a tap shortens it, as it shortens the booster session.
             yield return Juice.RoyalWinSequence.Celebrate(this);
+            if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
 
             gameStatus = GameState.Win;
             preWinAnimationRunning = false;
