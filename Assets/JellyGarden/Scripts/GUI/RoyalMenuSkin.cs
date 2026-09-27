@@ -72,15 +72,103 @@ namespace RoyalThrone.Presentation
             Place(p,0,0,620,h);Surface(p);Label(p,"Royal heading",title,p.Find("Close")?-24:0,h*.5f-65,430,70,36);Button(p.Find("Close"),"×",257,h*.5f-50,68,68,46);
             var backdrop=menu.GetComponent<Image>();if(backdrop)backdrop.color=new Color(.005f,.015f,.05f,.82f);HideVisual(menu.Find("Leadboard"));
         }
-        public static void Boost(Transform t,bool compact=false)
+        // The Level Start card (MenuPlay): LEVEL over the number, the goals on a light band, three boosters standing on one
+        // baseline, then PLAY, in a 672-unit card (was 820). Its controls get a lighter trim than the shared popup style.
+        static readonly Color SectionGold=new Color(1,.88f,.58f),TealTop=new Color(.10f,.64f,.58f),TealBottom=new Color(.03f,.41f,.43f),
+            NavyTop=new Color(.11f,.30f,.62f),NavyBottom=new Color(.05f,.16f,.40f);
+        static void LevelCard(Transform menu,Transform p)
         {
-            if(!t)return;var indicator=t.Find("Indicator");if(!indicator)return;Place(indicator,0,0,100,100);
-            float badgeY=compact?-24:-46;Button(indicator.Find("Plus"),"+",49,badgeY,48,48,33);
-            var plate=indicator.Find("Image");if(plate){Place(plate,49,badgeY,48,48);Surface(plate,true);Field(plate,"Count",0,0,42,40,24);var check=plate.Find("Check");if(check){Place(check,0,0,38,38);var im=check.GetComponent<Image>();if(im)im.color=Color.clear;Label(check,"Royal check","✓",0,0,38,38,25);}}
+            Base(menu,p,672,"LEVEL");
+            Ring(p,"Depth",0,new Color(.27f,.14f,.04f),new Color(.12f,.08f,.055f),34);Ring(p,"Gold rim",2,new Color(1,.93f,.6f),new Color(.78f,.45f,.10f),32);
+            Ring(p,"Inner edge",5,new Color(.09f,.30f,.65f),new Color(.025f,.10f,.29f),29);Ring(p,"Enamel",7,new Color(.10f,.35f,.72f),new Color(.04f,.17f,.45f),27);Glint(p,14,.62f,.13f,20);
+            Soft(Label(p,"Royal heading","LEVEL",0,286,300,34,26),1.5f,.45f);Field(p,"Level",0,236,240,78,64);Soft(p.Find("Level"),2,.5f);
+            // A smaller, quieter close circle; the control keeps its 68-unit tap area.
+            var close=p.Find("Close");Button(close,"×",266,292,68,68,32);Thin(close,52,2.5f,NavyTop,NavyBottom);if(close)Soft(close.Find("Royal caption"),1,.4f);
+            for(int s=1;s<=3;s++)HideVisual(p.Find("Star"+s));
+            var goals=Label(p,"Royal goals heading","LEVEL GOALS",0,171,400,30,23);goals.color=SectionGold;Soft(goals,1.5f,.45f);
+            // The goals stand on a light band (a gold hairline over translucent navy), not a framed plate. LevelCardGoal places them.
+            var band=new GameObject("Royal goal band",typeof(RectTransform)).transform;band.SetParent(p,false);Place(band,0,90,524,124);band.SetSiblingIndex(1);
+            Layer(band,"Line",0,new Color(1,.86f,.52f,.30f),new Color(1,.80f,.45f,.16f),24);Layer(band,"Fill",1.5f,new Color(.015f,.07f,.22f,.40f),new Color(.015f,.06f,.18f,.52f),22.5f);
+            Place(p.Find("Targets"),0,90,524,124);HideVisual(p.Find("TargetDescription1"));HideVisual(p.Find("TargetDescription2"));
+            var boosts=Label(p,"Royal boosters heading","START WITH A BOOST",0,-18,400,30,23);boosts.color=SectionGold;Soft(boosts,1.5f,.45f);
+            // Help sits just after the heading's text, drawn small, with a 56-unit tap area.
+            boosts.resizeTextForBestFit=false;float headingWidth=boosts.preferredWidth;boosts.resizeTextForBestFit=true;
+            var info=p.Find("Info");Button(info,"?",Mathf.Clamp(headingWidth*.5f+29,150,262),-18,56,56,21);Thin(info,34,2,NavyTop,NavyBottom);if(info)Soft(info.Find("Royal caption"),1,.4f);
+            string[] art={"orb","rocket","tnt"},names={"MAGIC ORB","ROCKET","TNT"};const float baseline=-150;
+            for(int i=1;i<=3;i++){float x=(i-2)*170f;Boost(p.Find("Boost"+i),art[i-1],x,baseline);Soft(Label(p,"Royal boost name "+i,names[i-1],x,baseline-22,150,24,18),1.5f,.45f);}
+            // PLAY: wider and lower than before, a cleaner teal gradient under a thin gold rim.
+            var play=p.Find("Play");Button(play,"PLAY",0,-262,400,84,42);
+            Ring(play,"Depth",0,new Color(.01f,.10f,.15f,.85f),new Color(.01f,.06f,.10f,.85f),28);Ring(play,"Gold rim",1.5f,new Color(1,.90f,.58f),new Color(.80f,.50f,.14f),26.5f);
+            Off(play,"Inner edge");Ring(play,"Enamel",4,TealTop,TealBottom,24);Glint(play,7,.5f,.16f,20);
+            if(play){var caption=Soft(play.Find("Royal caption"),2,.55f);if(caption)caption.color=new Color(1,.98f,.92f);}
+            HideVisual(p.Find("Offline"));
+        }
+        // A goal column on the Level Start card's band: the icon over its amount. The presenter calls this, because the goals
+        // are created each time the card opens.
+        public static void LevelCardGoal(JellyGarden.Scripts.Targets.TargetIcon target,int index,int count)
+        {
+            if(!target)return;float pitch=Mathf.Min(164,500f/Mathf.Max(1,count));Place(target.transform,(index-(count-1)*.5f)*pitch,0,pitch-8,124);
+            var icon=target.imageRenderer;if(icon){
+                // The score star fills only 80% x 75% of its square, so it gets a larger box to match the other goal icons.
+                float box=icon.sprite&&icon.sprite==RoyalPieceSkin.Art("star")?86:72;Place(icon.transform,0,20,box,box);icon.preserveAspect=true;
+            }
+            if(target.textObj){Typography(target.textObj,30);Place(target.textObj.transform,0,-58,pitch-12,38);Soft(target.textObj,1.5f,.5f);}
+            if(target.checkObject)Place(target.checkObject.transform,0,-58,32,32);
+        }
+        // A booster slot on the Level Start card. The art stands on the row's baseline, and the badge (the +, the count, or the
+        // tick once chosen) sits at the same bottom-right point of every 104-unit slot, clear of the art.
+        static void Boost(Transform b,string art,float x,float baseline)
+        {
+            if(!b)return;const float slot=104,badgeX=slot*.5f+7,badgeY=-slot*.5f+9;
+            var image=b.GetComponent<Image>();image.sprite=RoyalPieceSkin.Art(art);image.preserveAspect=true;
+            // rocket.webp draws only in the middle 57% of its square, a short wide shape: draw it larger, and lower its square
+            // so that it stands on the baseline like the orb and the TNT.
+            bool rocket=image.sprite&&image.sprite.name=="rocket";float size=rocket?slot*1.14f:slot,drop=rocket?.21f*size:0,lift=drop+(slot-size)*.5f;
+            Place(b,x,baseline+size*.5f-drop,size,size);
+            var indicator=b.Find("Indicator");if(indicator){
+                Place(indicator,0,lift,slot,slot);
+                var plus=indicator.Find("Plus");Button(plus,"+",badgeX,badgeY,34,34,25);Thin(plus,34,2,TealTop,TealBottom);
+                // Button() sizes its caption as the control less 28 x 15, which leaves no room at 34 units: give the + its own box.
+                if(plus)Soft(Label(plus,"Royal caption","+",0,1,26,30,25),1,.4f);
+                var plate=indicator.Find("Image");if(plate){
+                    Place(plate,badgeX,badgeY,34,34);Surface(plate,true);Thin(plate,34,2,NavyTop,NavyBottom);Field(plate,"Count",0,0,30,26,19);Soft(plate.Find("Count"),1,.4f);
+                    var check=plate.Find("Check");if(check){Place(check,0,0,30,30);var mark=check.GetComponent<Image>();if(mark)mark.color=Color.clear;Soft(Label(check,"Royal check","✓",0,0,30,30,20),1,.4f);}
+                }
+            }
             // The other boosters are only set aside while one is selected. Labelling that state
             // "LOCKED" read as a permanent unlock requirement, even on boosters the player owns,
             // so the dim alone now carries it.
-            var locked=t.Find("Lock");if(locked){var im=locked.GetComponent<Image>();if(im)im.color=new Color(.02f,.09f,.23f,.72f);Label(locked,"Royal lock","",0,0,120,40,19);}
+            var locked=b.Find("Lock");if(locked){Place(locked,0,lift,slot+14,slot+14);var dim=locked.GetComponent<Image>();if(dim)dim.color=new Color(.02f,.09f,.23f,.72f);Label(locked,"Royal lock","",0,0,120,40,19);}
+        }
+        // One ring of a Surface() skin: its inset from the control's edge, its gradient, and its corner radius (outer radius - inset).
+        static void Ring(Transform t,string layer,float inset,Color top,Color bottom,float radius)
+        {
+            var ring=t?t.Find("Royal skin/"+layer) as RectTransform:null;if(!ring)return;ring.gameObject.SetActive(true);ring.offsetMin=Vector2.one*inset;ring.offsetMax=-Vector2.one*inset;
+            var g=ring.GetComponent<RoyalPanelGraphic>();g.topColor=top;g.bottomColor=bottom;g.cornerRadius=radius;g.SetVerticesDirty();
+        }
+        static void Off(Transform t,string layer){var ring=t?t.Find("Royal skin/"+layer):null;if(ring)ring.gameObject.SetActive(false);}
+        static void Glint(Transform t,float inset,float from,float alpha,float radius)
+        {
+            var glint=t?t.Find("Royal skin/Top glint") as RectTransform:null;if(!glint)return;glint.anchorMin=new Vector2(0,from);glint.anchorMax=Vector2.one;
+            glint.offsetMin=new Vector2(inset,0);glint.offsetMax=-Vector2.one*inset;
+            var g=glint.GetComponent<RoyalPanelGraphic>();g.topColor=new Color(1,1,1,alpha);g.bottomColor=new Color(1,1,1,0);g.cornerRadius=radius;g.SetVerticesDirty();
+        }
+        // The card's small round controls: a thin gold rim straight onto the face, without the dark outer ring, the blue inner
+        // edge or the glint. The circle is drawn at `visual` size, so a control can keep a larger tap area.
+        static void Thin(Transform t,float visual,float rim,Color top,Color bottom)
+        {
+            var skin=t?t.Find("Royal skin") as RectTransform:null;if(!skin)return;var r=(RectTransform)t;
+            float inset=Mathf.Max(0,(Mathf.Min(r.sizeDelta.x,r.sizeDelta.y)-visual)*.5f);skin.offsetMin=Vector2.one*inset;skin.offsetMax=-Vector2.one*inset;
+            Off(t,"Depth");Off(t,"Inner edge");Off(t,"Top glint");
+            Ring(t,"Gold rim",0,new Color(1,.89f,.57f),new Color(.80f,.52f,.16f),visual*.5f);Ring(t,"Enamel",rim,top,bottom,visual*.5f-rim);
+        }
+        // A softer drop shadow than Typography's for the card's text. An Outline is a Shadow too, so this looks for the exact type.
+        static Text Soft(Component c,float drop,float alpha)
+        {
+            var text=c?c.GetComponent<Text>():null;if(!text)return null;Shadow shadow=null;
+            foreach(var s in text.GetComponents<Shadow>())if(s.GetType()==typeof(Shadow))shadow=s;
+            if(!shadow)shadow=text.gameObject.AddComponent<Shadow>();
+            shadow.enabled=true;shadow.effectColor=new Color(0,.04f,.14f,alpha);shadow.effectDistance=new Vector2(0,-drop);return text;
         }
         // Pause -> HOME leaves the level and the life spent on it, so the pause menu asks first. The card covers the
         // pause panel (its dimmer blocks the buttons underneath); LEAVE runs the existing BackToMap, STAY returns.
@@ -131,15 +219,7 @@ namespace RoyalThrone.Presentation
                 foreach(var text in menu.GetComponentsInChildren<Text>(true))Typography(text,32);
                 switch(menu.name)
                 {
-                    case "MenuPlay":
-                        Base(menu,p,820,"LEVEL");Field(p,"Level",0,265,220,80,60);
-                        for(int s=1;s<=3;s++)HideVisual(p.Find("Star"+s));
-                        Label(p,"Royal goals heading","LEVEL GOALS",0,182,500,45,24);
-                        var gp=new GameObject("Royal goal plate",typeof(RectTransform)).transform;gp.SetParent(p,false);Place(gp,0,101,506,120);Surface(gp,false,true);gp.SetSiblingIndex(1);
-                        Place(p.Find("Targets"),0,103,460,94);HideVisual(p.Find("TargetDescription1"));HideVisual(p.Find("TargetDescription2"));
-                        Label(p,"Royal boosters heading","START WITH A BOOST",0,-10,460,44,25);
-                        for(int i=1;i<=3;i++){var b=p.Find("Boost"+i);Place(b,(i-2)*174,-113,128,128);var im=b.GetComponent<Image>();im.sprite=RoyalPieceSkin.Art(new[]{"orb","rocket","tnt"}[i-1]);im.preserveAspect=true;Boost(b);Label(p,"Royal boost name "+i,new[]{"MAGIC ORB","ROCKET","TNT"}[i-1],(i-2)*174,-204,160,36,19);}
-                        Button(p.Find("Info"),"?",247,-10,46,46,26);Button(p.Find("Play"),"PLAY",0,-306,382,100,44);HideVisual(p.Find("Offline"));break;
+                    case "MenuPlay":LevelCard(menu,p);break;
                     case "GemsShop":
                         // Home and CONTINUE call the shared balance coins; the shop, its packs and every price show the coin too.
                         Base(menu,p,880,"ROYAL COINS");Label(p,"Royal subtitle","A little extra for your next adventure",0,315,520,45,21);

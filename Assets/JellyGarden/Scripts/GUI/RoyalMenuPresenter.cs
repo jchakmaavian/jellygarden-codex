@@ -78,7 +78,8 @@ namespace RoyalThrone.Presentation
                 foreach(var layout in group.GetComponents<LayoutGroup>())layout.enabled=false;
                 var targets=group.GetComponentsInChildren<TargetIcon>();
                 for(int i=0;i<targets.Length;i++){
-                    var target=targets[i];RoyalMenuSkin.Place(target.transform,(i-(targets.Length-1)*.5f)*150,8,128,90);
+                    var target=targets[i];if(name=="MenuPlay"){RoyalMenuSkin.LevelCardGoal(target,i,targets.Length);continue;}
+                    RoyalMenuSkin.Place(target.transform,(i-(targets.Length-1)*.5f)*150,8,128,90);
                     RoyalMenuSkin.Typography(target.textObj,29);RoyalMenuSkin.Place(target.textObj.transform,0,-33,132,40);
                     if(target.imageRenderer){RoyalMenuSkin.Place(target.imageRenderer.transform,0,16,58,58);target.imageRenderer.preserveAspect=true;}
                     if(target.checkObject)RoyalMenuSkin.Place(target.checkObject.transform,0,-32,32,32);
