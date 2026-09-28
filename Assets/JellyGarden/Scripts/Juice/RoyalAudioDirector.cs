@@ -72,6 +72,14 @@ namespace JellyGarden.Scripts.Juice
                 voice.Stop(); voice.clip = null; instance.voiceGains[i] = 0;
             }
         }
+        // Cancel only the owning presentation's cue; music and other gameplay voices continue.
+        public void StopClip(AudioClip clip)
+        {
+            if (!clip || voices == null) return;
+            for (int i = 0; i < voices.Length; i++)
+                if (voices[i] && voices[i].clip == clip)
+                { voices[i].Stop(); voices[i].clip = null; voiceGains[i] = 0; }
+        }
         void BalanceVoices()
         {
             // Reserve headroom for the unchanged music mix, even on dense cascades.

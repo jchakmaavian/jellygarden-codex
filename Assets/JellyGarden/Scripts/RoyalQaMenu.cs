@@ -22,30 +22,14 @@ namespace RoyalThrone.Testing
         readonly List<Button> commandButtons=new List<Button>();readonly HashSet<int> attached=new HashSet<int>();
         string category="Gems";float scanAt;bool shown;Text loopLabel;
         readonly List<Text> debugLabels=new List<Text>();
-        readonly List<Image> rewardCoins=new List<Image>();
         readonly List<Selectable> parameters=new List<Selectable>();
         readonly List<RectTransform> cellBorders=new List<RectTransform>();
         public IEnumerator CoinReward()
         {
-            var home=FindAnyObjectByType<RoyalHomeScreen>();
-            var sprite=home&&home.icons.Length>1?home.icons[1]:RoyalPieceSkin.Art("gem");
-            while(rewardCoins.Count<8){var rect=Rect("QA reward coin",root);rect.sizeDelta=new Vector2(64,64);var image=rect.gameObject.AddComponent<Image>();image.sprite=sprite;image.preserveAspect=true;image.raycastTarget=false;rewardCoins.Add(image);}
-            float age=0;
-            try
-            {
-                while(age<1.35f)
-                {
-                    age+=Time.deltaTime;
-                    for(int i=0;i<rewardCoins.Count;i++)
-                    {
-                        var coin=rewardCoins[i];float t=Mathf.Clamp01((age-i*.04f)/.95f);coin.gameObject.SetActive(t<1);
-                        float e=t*t*(3-2*t);var r=coin.rectTransform;r.anchorMin=r.anchorMax=Vector2.Lerp(new Vector2(.5f+(i-3.5f)*.035f,.48f),new Vector2(.27f,.966f),e);
-                        r.anchoredPosition=new Vector2(Mathf.Sin(t*Mathf.PI)*(i-3.5f)*12,Mathf.Sin(t*Mathf.PI)*65);r.localScale=Vector3.one*Mathf.Lerp(1,.45f,e);
-                    }
-                    yield return null;
-                }
-            }
-            finally{foreach(var coin in rewardCoins)if(coin)coin.gameObject.SetActive(false);}
+            // Exercise the shipping coin presentation instead of a second QA-only animation.
+            var home = FindAnyObjectByType<RoyalHomeScreen>();
+            float halfHeight = 400f * Screen.height / Mathf.Max(1, Screen.width);
+            yield return RoyalWinSequence.PreviewCoins(new Vector2(0, -halfHeight * .18f), new Vector2(-210, halfHeight - 85), !home || !home.IsHomeVisible);
         }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Install()
@@ -186,4 +170,3 @@ namespace RoyalThrone.Testing
     }
 }
 #endif
-

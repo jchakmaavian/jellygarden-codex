@@ -1,0 +1,98 @@
+[
+  {
+    "name": "coin_counter",
+    "sourcePathId": 17638,
+    "sourceFile": "resources.assets",
+    "sourceResource": "assets/bin/Data/resources.resource",
+    "sourceOffset": 2634048,
+    "sourceSize": 22272,
+    "sourcePayloadSHA256": "8bbe04cb6d9177e8caa325f2382174aa1c4cb29a0c75e34355a24899915ee41c",
+    "length": 2.0033786296844482,
+    "channels": 1,
+    "sampleRate": 44100,
+    "decoded": [
+      {
+        "path": "Design/Coin-Reference/Audio/coin_counter__rfv387_17638.wav",
+        "sha256": "36a14f40d73678fd1f2a2f8f07c69e35b05314f69eb9f5ad1957e3abd09e4e8d",
+        "identicalExistingAssets": [],
+        "channels": 1,
+        "sampleRate": 44100,
+        "frames": 88349,
+        "length": 2.0033786848072563
+      }
+    ]
+  },
+  {
+    "name": "coin_appear",
+    "sourcePathId": 17675,
+    "sourceFile": "resources.assets",
+    "sourceResource": "assets/bin/Data/resources.resource",
+    "sourceOffset": 3072096,
+    "sourceSize": 24832,
+    "sourcePayloadSHA256": "a5906ef33d66e5292979ec06ff38d3119cb827ef88fd1452e8e706c70a0d5869",
+    "length": 1.8460090160369873,
+    "channels": 1,
+    "sampleRate": 44100,
+    "decoded": [
+      {
+        "path": "Design/Coin-Reference/Audio/coin_appear__rfv387_17675.wav",
+        "sha256": "570556b631a06a4f780e17e3ce91e3206a4a1e1ffcffd63454679b321af18f9e",
+        "identicalExistingAssets": [],
+        "channels": 1,
+        "sampleRate": 44100,
+        "frames": 81409,
+        "length": 1.8460090702947847
+      }
+    ]
+  },
+  {
+    "name": "coin_collect",
+    "sourcePathId": 17679,
+    "sourceFile": "resources.assets",
+    "sourceResource": "assets/bin/Data/resources.resource",
+    "sourceOffset": 3125216,
+    "sourceSize": 3360,
+    "sourcePayloadSHA256": "f5b5ec9f32ed6146f1ef65f21bae1ef3d8873c3595d91ba15ba0a60115138fe1",
+    "length": 0.3173469305038452,
+    "channels": 1,
+    "sampleRate": 44100,
+    "decoded": [
+      {
+        "path": "Design/Coin-Reference/Audio/coin_collect__rfv387_17679.wav",
+        "sha256": "1b2774c955e261bad5be49bb33433473ed0648f56f75f2fe1281acf8667539f6",
+        "identicalExistingAssets": [
+          "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_collect__15714.wav"
+        ],
+        "channels": 1,
+        "sampleRate": 44100,
+        "frames": 13995,
+        "length": 0.3173469387755102
+      }
+    ]
+  },
+  {
+    "name": "coin_collect",
+    "sourcePathId": 17782,
+    "sourceFile": "resources.assets",
+    "sourceResource": "assets/bin/Data/resources.resource",
+    "sourceOffset": 5623648,
+    "sourceSize": 4544,
+    "sourcePayloadSHA256": "69af6deec61ec2329ddd0df5995f13c1e6dac345eb73a75b7ddca0c39bbf3bea",
+    "length": 0.2709750533103943,
+    "channels": 1,
+    "sampleRate": 44100,
+    "decoded": [
+      {
+        "path": "Design/Coin-Reference/Audio/coin_collect__rfv387_17782.wav",
+        "sha256": "50361fe64789c42738bdac1ebf1dcd86068fa7f49c2e2bda1377a162aaf533a2",
+        "identicalExistingAssets": [
+          "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_collect__15802.wav"
+        ],
+        "channels": 1,
+        "sampleRate": 44100,
+        "frames": 11950,
+        "length": 0.2709750566893424
+      }
+    ]
+  }
+]

@@ -1171,14 +1171,17 @@ namespace JellyGarden.Scripts
         IEnumerator DestroyCor(bool showScore = false, string anim_name = "", bool explEffect = false)
         {
             bool royalSpecial = RoyalEffectsProfile.Get && RoyalPowerupDirector.IsPower(currentType);
-            if (royalSpecial || royalConsumed)
+            // An accepted campaign coin hit already owns its recovered particles and SFX.
+            // Release the board through the same completion path without a second fruit pop.
+            bool royalCoin = RoyalThrone.Campaign.RoyalCampaignBlockers.HasCoinPresentation(this);
+            if (royalSpecial || royalConsumed || royalCoin)
             {
-                if (!royalConsumed) RoyalPowerupDirector.Get.Queue(this);
+                if (!royalConsumed && !royalCoin) RoyalPowerupDirector.Get.Queue(this);
                 sprRenderer.enabled = false; if (anim) anim.enabled = false; SetAnimationDestroyingFinished();
             }
             //if (anim_name == "")
             //{
-            if (royalSpecial || royalConsumed) { }
+            if (royalSpecial || royalConsumed || royalCoin) { }
             else if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
                 PlayDestroyAnimation("destroy");
             else if (currentType == ItemsTypes.VERTICAL_STRIPPED)

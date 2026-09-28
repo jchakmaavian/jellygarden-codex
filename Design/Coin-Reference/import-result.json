@@ -1,0 +1,81 @@
+{
+    "ok": true,
+    "source": "royal_thron_rfv387.apk/resources.assets",
+    "error": "",
+    "clips": [
+        {
+            "name": "CoinFlipAnimation",
+            "assetPath": "Assets/ReferenceGameplay/Animation/Clips/CoinFlipAnimation.anim",
+            "firstSprite": "Items-CoinItem-coin__16660",
+            "sourcePathId": 16383,
+            "duration": 0.20000000298023225,
+            "frameRate": 60.0,
+            "loop": true,
+            "initialSpriteAtZero": true,
+            "flipXUsesConstantTangents": true,
+            "floatCurves": 4,
+            "objectCurves": 1,
+            "spriteKeys": 12
+        },
+        {
+            "name": "CoinFlipNoLoopAnimation",
+            "assetPath": "Assets/ReferenceGameplay/Animation/Clips/CoinFlipNoLoopAnimation.anim",
+            "firstSprite": "Items-CoinItem-coin__16660",
+            "sourcePathId": 16384,
+            "duration": 0.21666666865348817,
+            "frameRate": 60.0,
+            "loop": false,
+            "initialSpriteAtZero": true,
+            "flipXUsesConstantTangents": true,
+            "floatCurves": 4,
+            "objectCurves": 1,
+            "spriteKeys": 13
+        },
+        {
+            "name": "CoinIdleAnimation",
+            "assetPath": "Assets/ReferenceGameplay/Animation/Clips/CoinIdleAnimation.anim",
+            "firstSprite": "Items-CoinItem-coin__16660",
+            "sourcePathId": 16385,
+            "duration": 0.01666666753590107,
+            "frameRate": 60.0,
+            "loop": true,
+            "initialSpriteAtZero": true,
+            "flipXUsesConstantTangents": true,
+            "floatCurves": 4,
+            "objectCurves": 1,
+            "spriteKeys": 1
+        },
+        {
+            "name": "CoinTapAnimation",
+            "assetPath": "Assets/ReferenceGameplay/Animation/Clips/CoinTapAnimation.anim",
+            "firstSprite": "Items-CoinItem-coin__16660",
+            "sourcePathId": 16386,
+            "duration": 0.5333333015441895,
+            "frameRate": 60.0,
+            "loop": false,
+            "initialSpriteAtZero": true,
+            "flipXUsesConstantTangents": true,
+            "floatCurves": 13,
+            "objectCurves": 1,
+            "spriteKeys": 6
+        }
+    ],
+    "particlePrefabs": [
+        "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/CoinItemExplodeParticles.prefab",
+        "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/RemainingMovesCoinTracer.prefab",
+        "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/CoinHitParticles.prefab",
+        "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/CoinCollectHitParticles.prefab"
+    ],
+    "audioAssets": [
+        "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_counter__rfv387_17638.wav",
+        "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_appear__rfv387_17675.wav"
+    ],
+    "notes": [
+        "Only the four native coin clips, named coin particle hierarchies and two new audio cues were imported.",
+        "Sprite IDs were remapped by source sprite name to the nine established club coin sprites.",
+        "Initial sprites come from each clip's own raw streamed sentinel; FlipX tangents remain constant.",
+        "Original clip duration, frame rate, loop setting, transform values and slopes are retained.",
+        "Original native data, extraction provenance and hashes remain under Design/Coin-Reference.",
+        "Native gameplay method bodies and source event callbacks are not part of the imported media."
+    ]
+}

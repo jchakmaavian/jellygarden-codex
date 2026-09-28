@@ -1,0 +1,1301 @@
+[
+  {
+    "name": "CoinFlipAnimation",
+    "duration": 0.20000000298023224,
+    "frameRate": 60.0,
+    "loop": true,
+    "curves": [
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.25,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.159999966621399,
+            "inSlope": -9.599998685319509,
+            "outSlope": -9.59999942779541
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 0.9300000071525574,
+            "inSlope": -17.699996548097058,
+            "outSlope": -17.700000762939453
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 0.5699999928474426,
+            "inSlope": -5.600005856355935,
+            "outSlope": -5.599998474121094
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 0.5,
+            "inSlope": -2.3216002897896715e-07,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 0.8100000023841858,
+            "inSlope": 16.5000059731805,
+            "outSlope": 16.5
+          },
+          {
+            "time": 0.11666666716337204,
+            "value": 1.0499999523162842,
+            "inSlope": 11.400002855458933,
+            "outSlope": 11.399999618530273
+          },
+          {
+            "time": 0.13333334028720856,
+            "value": 1.190000057220459,
+            "inSlope": -8.002926712435965e-07,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.11666666716337204,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.13333334028720856,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.11666666716337204,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.13333334028720856,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 212,
+        "property": "m_FlipX",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.1666666716337204,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 212,
+        "property": "m_Sprite",
+        "isPPtr": true,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0,
+            "objectPathId": 18674,
+            "sourceInitialSentinel": true,
+            "spriteName": "Items-CoinItem-coin"
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 23888,
+            "spriteName": "Items-CoinItem-coin.02"
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 2.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 24616,
+            "spriteName": "Items-CoinItem-coin.03"
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 3.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 19121,
+            "spriteName": "Items-CoinItem-coin.04"
+          },
+          {
+            "time": 0.06666667014360428,
+            "value": 4.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 19110,
+            "spriteName": "Items-CoinItem-coin.05"
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 5.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 19121,
+            "spriteName": "Items-CoinItem-coin.04"
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 6.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 24616,
+            "spriteName": "Items-CoinItem-coin.03"
+          },
+          {
+            "time": 0.11666666716337204,
+            "value": 7.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 23888,
+            "spriteName": "Items-CoinItem-coin.02"
+          },
+          {
+            "time": 0.13333334028720856,
+            "value": 8.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 18674,
+            "spriteName": "Items-CoinItem-coin"
+          },
+          {
+            "time": 0.15000000596046448,
+            "value": 9.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 24761,
+            "spriteName": "Items-CoinItem-coin.11"
+          },
+          {
+            "time": 0.1666666716337204,
+            "value": 10.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 24312,
+            "spriteName": "Items-CoinItem-coin.10"
+          },
+          {
+            "time": 0.18333333730697632,
+            "value": 11.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 24761,
+            "spriteName": "Items-CoinItem-coin.11"
+          }
+        ]
+      }
+    ],
+    "missingBindings": [],
+    "pathId": 16383
+  },
+  {
+    "name": "CoinFlipNoLoopAnimation",
+    "duration": 0.21666666865348816,
+    "frameRate": 60.0,
+    "loop": false,
+    "curves": [
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.25,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.159999966621399,
+            "inSlope": -9.599998685319509,
+            "outSlope": -9.59999942779541
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 0.9300000071525574,
+            "inSlope": -17.699996548097058,
+            "outSlope": -17.700000762939453
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 0.5699999928474426,
+            "inSlope": -5.600005856355935,
+            "outSlope": -5.599998474121094
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 0.5,
+            "inSlope": -2.3216002897896715e-07,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 0.8100000023841858,
+            "inSlope": 16.5000059731805,
+            "outSlope": 16.5
+          },
+          {
+            "time": 0.11666666716337204,
+            "value": 1.0499999523162842,
+            "inSlope": 11.400002855458933,
+            "outSlope": 11.399999618530273
+          },
+          {
+            "time": 0.13333334028720856,
+            "value": 1.190000057220459,
+            "inSlope": 2.3999986858992592,
+            "outSlope": 2.40000057220459
+          },
+          {
+            "time": 0.20000000298023224,
+            "value": 1.25,
+            "inSlope": -2.566976666784626e-07,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.11666666716337204,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.13333334028720856,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.20000000298023224,
+            "value": 1.2656199932098389,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.11666666716337204,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.13333334028720856,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.20000000298023224,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 212,
+        "property": "m_FlipX",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.1666666716337204,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.20000000298023224,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 212,
+        "property": "m_Sprite",
+        "isPPtr": true,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0,
+            "objectPathId": 18674,
+            "sourceInitialSentinel": true,
+            "spriteName": "Items-CoinItem-coin"
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 23888,
+            "spriteName": "Items-CoinItem-coin.02"
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 2.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 24616,
+            "spriteName": "Items-CoinItem-coin.03"
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 3.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 19121,
+            "spriteName": "Items-CoinItem-coin.04"
+          },
+          {
+            "time": 0.06666667014360428,
+            "value": 4.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 19110,
+            "spriteName": "Items-CoinItem-coin.05"
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 5.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 19121,
+            "spriteName": "Items-CoinItem-coin.04"
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 6.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 24616,
+            "spriteName": "Items-CoinItem-coin.03"
+          },
+          {
+            "time": 0.11666666716337204,
+            "value": 7.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 23888,
+            "spriteName": "Items-CoinItem-coin.02"
+          },
+          {
+            "time": 0.13333334028720856,
+            "value": 8.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 18674,
+            "spriteName": "Items-CoinItem-coin"
+          },
+          {
+            "time": 0.15000000596046448,
+            "value": 9.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 19129,
+            "spriteName": "Items-CoinItem-coin.11_g"
+          },
+          {
+            "time": 0.1666666716337204,
+            "value": 10.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 18643,
+            "spriteName": "Items-CoinItem-coin.10_g"
+          },
+          {
+            "time": 0.18333333730697632,
+            "value": 11.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 19129,
+            "spriteName": "Items-CoinItem-coin.11_g"
+          },
+          {
+            "time": 0.20000000298023224,
+            "value": 12.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 18674,
+            "spriteName": "Items-CoinItem-coin"
+          }
+        ]
+      }
+    ],
+    "missingBindings": [],
+    "pathId": 16384
+  },
+  {
+    "name": "CoinIdleAnimation",
+    "duration": 0.01666666753590107,
+    "frameRate": 60.0,
+    "loop": true,
+    "curves": [
+      {
+        "path": "",
+        "typeID": 212,
+        "property": "m_FlipX",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 212,
+        "property": "m_Sprite",
+        "isPPtr": true,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0,
+            "objectPathId": 18674,
+            "spriteName": "Items-CoinItem-coin"
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.25,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.25,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.2656199932098389,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.2656199932098389,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.01666666753590107,
+            "value": 1.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      }
+    ],
+    "missingBindings": [],
+    "pathId": 16385
+  },
+  {
+    "name": "CoinTapAnimation",
+    "duration": 0.5333333015441895,
+    "frameRate": 60.0,
+    "loop": false,
+    "curves": [
+      {
+        "path": "",
+        "typeID": 4,
+        "property": "m_LocalPosition.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": -0.0009871999500319362,
+            "inSlope": -3.0031206410541245e-09,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": -1.610000026630587e-06,
+            "inSlope": -1.7623721371151646e-09,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.18333333730697632,
+            "value": -0.00037967998650856316,
+            "inSlope": -1.6722767372245873e-09,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.25,
+            "value": 0.00025313999503850937,
+            "inSlope": 0.006507071113120315,
+            "outSlope": 0.006507073529064655
+          },
+          {
+            "time": 0.28333333134651184,
+            "value": 0.00041581684490665793,
+            "inSlope": -4.3356278463246856e-10,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.38333332538604736,
+            "value": 0.0,
+            "inSlope": 2.3872243209988042e-09,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.5166666507720947,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 4,
+        "property": "m_LocalPosition.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.01600000075995922,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 0.12999999523162842,
+            "inSlope": 1.320000332593949,
+            "outSlope": 1.320000171661377
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 0.16300000250339508,
+            "inSlope": 1.013278083661362e-08,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.18333333730697632,
+            "value": 0.01600000075995922,
+            "inSlope": -0.4533320038318145,
+            "outSlope": -0.45333343744277954
+          },
+          {
+            "time": 0.25,
+            "value": -0.0010000000474974513,
+            "inSlope": -0.35999996642270715,
+            "outSlope": -0.36000001430511475
+          },
+          {
+            "time": 0.28333333134651184,
+            "value": -0.019999999552965164,
+            "inSlope": 2.31663357830314e-07,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.38333332538604736,
+            "value": 0.01600000075995922,
+            "inSlope": -1.3828272660276753e-07,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.5166666507720947,
+            "value": 0.01600000075995922,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 4,
+        "property": "m_LocalPosition.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.18333333730697632,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.25,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.28333333134651184,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.38333332538604736,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.5166666507720947,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 4,
+        "property": "m_LocalScale.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 0.9024999737739563,
+            "inSlope": 7.846952154721976e-07,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 0.9998438358306885,
+            "inSlope": 0.5031222619299154,
+            "outSlope": 0.5031228065490723
+          },
+          {
+            "time": 0.25,
+            "value": 1.024999976158142,
+            "inSlope": 0.2551485961616604,
+            "outSlope": 0.25514861941337585
+          },
+          {
+            "time": 0.28333333134651184,
+            "value": 1.0466210842132568,
+            "inSlope": 4.7773287104035944e-08,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.38333332538604736,
+            "value": 1.0,
+            "inSlope": 6.215179482182975e-08,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.5166666507720947,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 4,
+        "property": "m_LocalScale.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.25,
+            "value": 0.9624999761581421,
+            "inSlope": -0.36900792384117037,
+            "outSlope": -0.3690079152584076
+          },
+          {
+            "time": 0.28333333134651184,
+            "value": 0.9323485493659973,
+            "inSlope": -2.703612027588065e-07,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.38333332538604736,
+            "value": 1.0,
+            "inSlope": -6.323525258977725e-08,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.5166666507720947,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 4,
+        "property": "m_LocalScale.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.05000000074505806,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.25,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.28333333134651184,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.38333332538604736,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.5166666507720947,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 212,
+        "property": "m_FlipX",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.18333333730697632,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.25,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.38333332538604736,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.5166666507720947,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 212,
+        "property": "m_Sprite",
+        "isPPtr": true,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0,
+            "objectPathId": 18674,
+            "sourceInitialSentinel": true,
+            "spriteName": "Items-CoinItem-coin"
+          },
+          {
+            "time": 0.10000000149011612,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 18674,
+            "spriteName": "Items-CoinItem-coin"
+          },
+          {
+            "time": 0.18333333730697632,
+            "value": 2.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 18674,
+            "spriteName": "Items-CoinItem-coin"
+          },
+          {
+            "time": 0.25,
+            "value": 3.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 18674,
+            "spriteName": "Items-CoinItem-coin"
+          },
+          {
+            "time": 0.38333332538604736,
+            "value": 4.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 18674,
+            "spriteName": "Items-CoinItem-coin"
+          },
+          {
+            "time": 0.5166666507720947,
+            "value": 5.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0,
+            "objectPathId": 18674,
+            "spriteName": "Items-CoinItem-coin"
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.5333333015441895,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.5333333015441895,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.5333333015441895,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.25,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.5333333015441895,
+            "value": 1.25,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.2656199932098389,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.5333333015441895,
+            "value": 1.2656199932098389,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "Shadow",
+        "typeID": 4,
+        "property": "m_LocalScale.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.5333333015441895,
+            "value": 1.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      }
+    ],
+    "missingBindings": [],
+    "pathId": 16386
+  }
+]

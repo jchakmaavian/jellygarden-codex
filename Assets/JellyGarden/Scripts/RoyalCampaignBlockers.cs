@@ -37,6 +37,7 @@ namespace RoyalThrone.Campaign
         static readonly Dictionary<Square, CellState> states = new Dictionary<Square, CellState>();
         static readonly Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
         static readonly HashSet<Item> collectedPresentation = new HashSet<Item>();
+        static readonly HashSet<Item> collectedCoinPresentation = new HashSet<Item>();
         static readonly HashSet<string> reportedPresentationGaps = new HashSet<string>();
         static int wave;
         public static int CurrentWave => wave;
@@ -83,6 +84,7 @@ namespace RoyalThrone.Campaign
         {
             states.Clear();
             collectedPresentation.Clear();
+            collectedCoinPresentation.Clear();
             wave++;
             if (!RoyalReferenceCampaign.Active || !level || level.squaresArray == null) return;
             foreach (var square in level.squaresArray)
@@ -289,6 +291,7 @@ namespace RoyalThrone.Campaign
         }
 
         public static bool IsSpecialItem(Item item) => item && item.GetComponent<RoyalCampaignItem>();
+        public static bool HasCoinPresentation(Item item) => item && collectedCoinPresentation.Contains(item);
         public static void OnItemDestroying(Item item)
         {
             if (!RoyalReferenceCampaign.Active || !item) return;
@@ -306,8 +309,9 @@ namespace RoyalThrone.Campaign
                     }
                     else if (sprite && sprite == Art("coin"))
                     {
+                        var effect = NativeEffect("CoinItemExplodeParticles", item.transform.position);
+                        if (effect != null && effect.Valid) collectedCoinPresentation.Add(item);
                         ReferenceGameplayAudio.Play("coin_collect__15714");
-                        ReportGap("Coin collection particles and target-flight timing are not recovered; no substitute coin effect was added.");
                     }
                 }
             }
