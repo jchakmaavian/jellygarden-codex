@@ -23,7 +23,7 @@ namespace RoyalThrone.Editor
         static RoyalHomeScreen home;
         static readonly List<string> checks = new List<string>();
         static readonly List<string> errors = new List<string>();
-        static int phase, openingCount, startingCoins, startingLives, startingOpenLevel;
+        static int phase, openingCount, startingCoins, startingLives, startingOpenLevel; static bool hadOpenLevel;
         static double next;
         static bool running;
         static int runId;
@@ -50,7 +50,7 @@ namespace RoyalThrone.Editor
         static bool Begin()
         {
             checks.Clear(); errors.Clear(); size = Screen.width + "x" + Screen.height;
-            startingCoins = InitScript.Gems; startingLives = InitScript.lifes; startingOpenLevel = PlayerPrefs.GetInt("OpenLevel");
+            startingCoins = InitScript.Gems; startingLives = InitScript.lifes; startingOpenLevel = PlayerPrefs.GetInt("OpenLevel"); hadOpenLevel = PlayerPrefs.HasKey("OpenLevel");
             Directory.CreateDirectory(Output);
             try
             {
@@ -246,7 +246,7 @@ namespace RoyalThrone.Editor
         {
             running = false; EditorApplication.update -= Watch; Application.logMessageReceived -= Log;
             // Opening the next level's card writes OpenLevel on the active profile: put the player's selection back.
-            PlayerPrefs.SetInt("OpenLevel", startingOpenLevel); PlayerPrefs.Save();
+            if (hadOpenLevel) PlayerPrefs.SetInt("OpenLevel", startingOpenLevel); else PlayerPrefs.DeleteKey("OpenLevel"); PlayerPrefs.Save();
             if (failure != null) checks.Add("FAIL " + failure.Message);
             checks.AddRange(errors.Select(e => "ERROR " + e));
             File.WriteAllLines(Output + "checks-" + size + ".txt", new[] { "Royal Throne Unity home checks", DateTime.UtcNow.ToString("O"), "Resolution: " + size }.Concat(checks));

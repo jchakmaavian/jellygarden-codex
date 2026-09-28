@@ -32,6 +32,8 @@ namespace RoyalThrone.Testing
         int normalMoney,normalLives,normalLevel; float normalTimer,normalMusic,normalSound;
         string normalDate; UnityEngine.Random.State normalRandom;
         bool practice; float replayAt;
+        /// <summary>The QA practice board is in place (it tests the tools, so the opening's padlocks stay off).</summary>
+        public bool Practising => practice;
         readonly List<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager> suspendedTutorials=new List<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager>();
         static readonly ItemsTypes[] Powers={ItemsTypes.PACKAGE,ItemsTypes.HORIZONTAL_STRIPPED,ItemsTypes.VERTICAL_STRIPPED,ItemsTypes.HELICOPTER,ItemsTypes.BOMB};
         public static readonly string[] PowerNames={"TNT","Rocket H","Rocket V","Propeller","Color ball"};

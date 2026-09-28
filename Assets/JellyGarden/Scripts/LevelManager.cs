@@ -754,18 +754,18 @@ namespace JellyGarden.Scripts
             preWinAnimationRunning = true;
             SkipWinCelebration = false;
 
-            MenuManager.Instance.ShowCompleteLabel(true);
-            yield return new WaitForSeconds(0.5f);
+            // The reference order (Design/RoyalMatchReference/OBSERVATIONS.md): the celebration (the logo under pennants,
+            // fireworks, confetti, the complete fanfare) as soon as the goals are done, before the moves left are used. It
+            // replaces the inherited pre-complete banner; a tap shortens it.
+            yield return Juice.RoyalWinSequence.Celebrate(this);
+            if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
+            SkipWinCelebration = false;
 
+            // Then the booster session, with the goal panel turned into a Reward counter that the coins fly into.
+            Juice.RoyalWinSequence.BeginFinale(this);
             yield return RoyalThrone.ReferenceGameplay.ReferenceWinFinish.Play(this);
             if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
-
-            MenuManager.Instance.ShowCompleteLabel(false);
-            SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
-
-            // The celebration after the booster session (SPLENDID! lettering, confetti, fireworks, the king's cheer)
-            // replaces the inherited pre-complete banner; a tap shortens it, as it shortens the booster session.
-            yield return Juice.RoyalWinSequence.Celebrate(this);
+            yield return Juice.RoyalWinSequence.EndFinale(this);
             if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
 
             gameStatus = GameState.Win;

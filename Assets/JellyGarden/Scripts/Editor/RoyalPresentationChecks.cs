@@ -20,6 +20,8 @@ namespace RoyalThrone.Editor
         static IEnumerator Run()
         {
             Directory.CreateDirectory(Folder);int gems=InitScript.Gems,lives=InitScript.lifes;var result=new List<string>();
+            // Opening the card writes OpenLevel; the player's value (or its absence) is put back at the end.
+            bool hadLevel=PlayerPrefs.HasKey("OpenLevel");int openLevel=PlayerPrefs.GetInt("OpenLevel",1);
             var manager=MenuManager.Instance;var root=manager.GetCanvasGlobal();
             InitScript.Instance.TryOpenLevel(Mathf.Max(1,PlayerPrefs.GetInt("OpenLevel",1)));manager.menuPlay.SetActive(false);
             foreach(string name in new[]{"MenuPlay","GemsShop","LiveShop","BoostShop","BoostInfo","Settings","Tutorial","MenuComplete","MenuFailed","PreFailed"}){
@@ -49,6 +51,7 @@ namespace RoyalThrone.Editor
                 else menu.GetComponent<AnimationManager>().CloseMenu();yield return null;
             }
             result.Add((InitScript.Gems==gems&&InitScript.lifes==lives?"PASS ":"FAIL ")+"Dialog review preserves gems and lives; no purchase callbacks invoked");
+            if(hadLevel)PlayerPrefs.SetInt("OpenLevel",openLevel);else PlayerPrefs.DeleteKey("OpenLevel");PlayerPrefs.Save();
             File.WriteAllLines(Folder+"dialog-checks.txt",result);Debug.Log("[Royal Presentation Checks] "+string.Join("; ",result));
         }
         static bool Overlap(RectTransform a,RectTransform b){var ac=new Vector3[4];var bc=new Vector3[4];a.GetWorldCorners(ac);b.GetWorldCorners(bc);return new Rect(ac[0],ac[2]-ac[0]).Overlaps(new Rect(bc[0],bc[2]-bc[0]));}

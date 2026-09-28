@@ -29,7 +29,14 @@ namespace RoyalThrone.Campaign
         static CampaignManifest manifest;
         static bool enabled;
         public static bool Enabled => enabled && RoyalSave.Testing;
-        public static bool Active => Enabled && Current != null;
+        // Player levels 1..OpeningLevels play these verified layouts in the player's own profile, through this same loader.
+        // They were matched cell by cell against the reference build's opening boards (Design/RoyalMatchReference). The QA
+        // campaign (Select, levels 1-50 in the test save) is unchanged; its level-number and home rules stay behind Enabled.
+        public const int OpeningLevels = 5;
+        static bool opening;
+        /// <summary>A player opening level (1-5) is loaded from the verified reference layouts.</summary>
+        public static bool Opening => opening && Current != null;
+        public static bool Active => (Enabled || opening) && Current != null;
         public static CampaignLevel Current { get; private set; }
         public static bool IsBonus => Active && (Current.number==20||Current.number==40);
         static readonly HashSet<int> initialized=new HashSet<int>();
@@ -74,7 +81,8 @@ namespace RoyalThrone.Campaign
         }
         public static bool TryLoad(LevelManager lm,int n,out SquareBlocks[] board)
         {
-            Current=null;board=null;if(!Enabled)return false;RequirePlayable(n);
+            Current=null;board=null;opening=false;
+            if(Enabled)RequirePlayable(n);else if(n>=1&&n<=OpeningLevels)opening=true;else return false;
             Current=Levels.Single(l=>l.number==n);var l=Current;
             initialized.Clear();feeds.Clear();
             foreach(var group in l.predefined.GroupBy(p=>p.x))
@@ -177,6 +185,6 @@ namespace RoyalThrone.Campaign
             return false;
         }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void Reset(){enabled=false;Current=null;manifest=null;initialized.Clear();feeds.Clear();originalHomeLevels.Clear();}
+        static void Reset(){enabled=false;opening=false;Current=null;manifest=null;initialized.Clear();feeds.Clear();originalHomeLevels.Clear();}
     }
 }

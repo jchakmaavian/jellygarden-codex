@@ -25,6 +25,14 @@ namespace RoyalThrone.ReferenceGameplay
         static readonly string[] Descriptions={"Clear one object without using a move.","Clear a row without using a move.","Clear a column without using a move.","Shuffle the movable pieces without using a move."};
         public static bool IsTool(BoostType type)=>Array.IndexOf(Types,type)>=0;
         public static bool OwnsInput=>Instance&&(Instance.Selected>=0||Instance.Busy||Instance.ShopOpen);
+        // The verified opening (levels 1-5) keeps the in-level tools padlocked, as the reference build does
+        // (Design/RoyalMatchReference/OBSERVATIONS.md). The QA practice board, which tests the tools, stays unlocked.
+        public static bool Locked=>RoyalThrone.Campaign.RoyalReferenceCampaign.Opening&&!QaPractice;
+#if (UNITY_EDITOR || DEVELOPMENT_BUILD) && !ROYAL_DISABLE_QA
+        static bool QaPractice=>RoyalQaService.Instance&&RoyalQaService.Instance.Practising;
+#else
+        static bool QaPractice=>false;   // the QA service exists only in editor and development builds
+#endif
         public int Selected {get;private set;}=-1;
         public bool Busy {get;private set;}
         public bool ShopOpen=>shop&&shop.gameObject.activeSelf;
@@ -32,6 +40,7 @@ namespace RoyalThrone.ReferenceGameplay
         public string Status {get;private set;}="";
         RectTransform hud,shop,prompt;Text message,balance,price,title,body;Image shopIcon;
         Font font;int buying=-1;bool purchasePending;readonly List<BoostIcon> buttons=new List<BoostIcon>();
+        readonly Dictionary<BoostIcon,GameObject> padlocks=new Dictionary<BoostIcon,GameObject>();static Sprite padlockArt,discArt;
         SpriteRenderer hammer;Square[] currentBoard;Coroutine operation;bool shuffled;
         LevelManager LM=>LevelManager.THIS;
         public static Sprite Art(int index)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+Icons[index]);
@@ -80,6 +89,71 @@ namespace RoyalThrone.ReferenceGameplay
             foreach(var g in plus.GetComponentsInChildren<Graphic>(true))g.enabled=false;
             var hit=plus.GetComponent<Image>();if(hit){hit.enabled=true;hit.color=Color.clear;}
             Halves(plus,16891,34,34);var symbol=Box("Native plus",plus,0,0,21,21);Halves(symbol,21167,21,21);
+            // The opening's padlock: a green disc over the tool art with a gold padlock on it, drawn here (no image asset).
+            var cover=new GameObject("Opening padlock",typeof(RectTransform)).GetComponent<RectTransform>();cover.SetParent(icon.transform,false);
+            cover.anchorMin=new Vector2(.14f,.14f);cover.anchorMax=new Vector2(.86f,.86f);cover.offsetMin=cover.offsetMax=Vector2.zero;
+            var disc=cover.gameObject.AddComponent<Image>();disc.sprite=discArt?discArt:(discArt=Disc());disc.raycastTarget=false;disc.preserveAspect=true;
+            var lockImage=Box("Padlock",cover,0,2,0,0);lockImage.anchorMin=new Vector2(.2f,.18f);lockImage.anchorMax=new Vector2(.8f,.84f);lockImage.offsetMin=lockImage.offsetMax=Vector2.zero;
+            var pad=lockImage.gameObject.AddComponent<Image>();pad.sprite=padlockArt?padlockArt:(padlockArt=Padlock());pad.raycastTarget=false;pad.preserveAspect=true;
+            cover.gameObject.SetActive(false);padlocks[icon]=cover.gameObject;padlocksShown=null;
+        }
+        // The padlocks change only when the lock state does. While locked, the stock badge stays hidden every frame:
+        // LevelManager.UnLockBoosts (after each move) calls BoostIcon.UnLockBoost, which shows the Indicator again.
+        bool? padlocksShown;
+        void ShowPadlocks()
+        {
+            bool locked=Locked;
+            if(padlocksShown!=locked)
+            {
+                padlocksShown=locked;if(locked)CancelSelection();
+                foreach(var pair in padlocks)
+                {
+                    if(!pair.Key||!pair.Value)continue;
+                    pair.Value.SetActive(locked);if(locked)pair.Value.transform.SetAsLastSibling();
+                    var badge=pair.Key.transform.Find("Indicator");if(badge)badge.gameObject.SetActive(!locked);
+                }
+            }
+            else if(locked)
+                foreach(var pair in padlocks)
+                {
+                    if(!pair.Key)continue;
+                    var badge=pair.Key.transform.Find("Indicator");if(badge&&badge.gameObject.activeSelf)badge.gameObject.SetActive(false);
+                }
+        }
+        // A green disc with a soft darker rim, like the tool buttons' own face.
+        static Sprite Disc()
+        {
+            const int N=96;var t=new Texture2D(N,N,TextureFormat.RGBA32,false){wrapMode=TextureWrapMode.Clamp};var c=new Color[N*N];
+            for(int y=0;y<N;y++)for(int x=0;x<N;x++)
+            {
+                float dx=(x+.5f)/N*2-1,dy=(y+.5f)/N*2-1,r=Mathf.Sqrt(dx*dx+dy*dy);
+                var col=Color.Lerp(new Color(.36f,.72f,.26f),new Color(.14f,.46f,.14f),Mathf.Clamp01(.5f-dy*.5f));
+                col=Color.Lerp(col,new Color(.09f,.32f,.10f),Mathf.Clamp01((r-.82f)/.14f));
+                col.a=Mathf.Clamp01((1-r)*N*.5f);c[y*N+x]=col;
+            }
+            t.SetPixels(c);t.Apply();return UnityEngine.Sprite.Create(t,new Rect(0,0,N,N),new Vector2(.5f,.5f),N);
+        }
+        // A gold padlock: a rounded body with a keyhole under a shackle, with a dark outline.
+        static Sprite Padlock()
+        {
+            const int N=128;var t=new Texture2D(N,N,TextureFormat.RGBA32,false){wrapMode=TextureWrapMode.Clamp};var c=new Color[N*N];
+            Color gold=new Color(1f,.84f,.30f),deep=new Color(.84f,.56f,.12f),edge=new Color(.36f,.20f,.04f),hole=new Color(.30f,.16f,.04f);
+            for(int y=0;y<N;y++)for(int x=0;x<N;x++)
+            {
+                float px=x+.5f,py=y+.5f;
+                // body: a rounded rectangle 26..102 x 14..74
+                float bx=Mathf.Max(Mathf.Abs(px-64)-38+12,0),by=Mathf.Max(Mathf.Abs(py-44)-30+12,0),body=Mathf.Sqrt(bx*bx+by*by)-12;
+                // shackle: a half ring (outer 30, inner 19) over the body, with its legs down into it
+                float sx=px-64,sy=Mathf.Max(py-80,0),ring=Mathf.Abs(Mathf.Sqrt(sx*sx+sy*sy)-24.5f)-5.5f;
+                if(py<70)ring=1e3f;
+                float d=Mathf.Min(body,ring);
+                Color col;float a=Mathf.Clamp01(1.5f-d);
+                if(d>-2.5f)col=edge;
+                else if(body<=d+.01f){col=Color.Lerp(deep,gold,Mathf.Clamp01((py-14)/60f));float k=Mathf.Sqrt((px-64)*(px-64)+(py-50)*(py-50));if(k<8||(Mathf.Abs(px-64)<3.5f&&py>28&&py<50))col=hole;}
+                else col=Color.Lerp(deep,gold,.55f+.45f*Mathf.Clamp01(-sx/30f));
+                col.a=a;c[y*N+x]=col;
+            }
+            t.SetPixels(c);t.Apply();return UnityEngine.Sprite.Create(t,new Rect(0,0,N,N),new Vector2(.5f,.5f),N);
         }
         void BuildPrompt()
         {
@@ -107,7 +181,7 @@ namespace RoyalThrone.ReferenceGameplay
         public int Stock(int index)=>RoyalSave.GetInt(Types[index].ToString(),0);
         public void Choose(BoostType type)
         {
-            int index=Array.IndexOf(Types,type);if(index<0||Busy||!LM||LM.gameStatus!=GameState.Playing)return;
+            int index=Array.IndexOf(Types,type);if(index<0||Busy||!LM||LM.gameStatus!=GameState.Playing||Locked)return;
             if(ShopOpen)CloseShop();
             if(Selected==index){CancelSelection();return;}
             CancelSelection();if(Stock(index)<=0){OpenShop(type);return;}
@@ -147,6 +221,7 @@ namespace RoyalThrone.ReferenceGameplay
         void Update()
         {
             if(!LM)return;
+            ShowPadlocks();
             if(LM.gameStatus!=GameState.Playing||(currentBoard!=null&&currentBoard!=LM.squaresArray))
             {CancelSelection();CloseShop();if(Busy&&(LM.gameStatus==GameState.Map||LM.gameStatus==GameState.PrepareGame||currentBoard!=LM.squaresArray))CancelOperation();currentBoard=LM.squaresArray;return;}
             foreach(var b in buttons)if(b)b.transform.localScale=Vector3.one*(Selected==Array.IndexOf(Types,b.type)?1.06f:1);

@@ -281,19 +281,44 @@ namespace RoyalThrone.Presentation
             }
         }
 
+        /// <summary>While a built task's star flight, reveal and the list's return play (the reference's order).</summary>
+        public bool Building => building != null;
+        Coroutine building;
+        void OnDisable() { building = null; }
+
         void Choose(int task)
         {
+            if (building != null) return;
             var result = RoyalAreas.Build(task, home.Progress.stars);
             if (result == RoyalAreas.BuildResult.NotEnoughStars) { shortTask = task; home.OpenPanel(Short, tiles[task].button.gameObject); return; }
             if (result != RoyalAreas.BuildResult.Built) return;
+            building = StartCoroutine(BuildMotion(task));
+        }
+
+        // As the reference stages a task (Design/RoyalMatchReference/OBSERVATIONS.md): the star flies from Do It to the star
+        // counter, which then counts down; the list closes and the object appears under a sparkle beam; a moment later the
+        // list opens again on the next task. The star is already spent (RoyalAreas.Build); this is presentation only.
+        IEnumerator BuildMotion(int task)
+        {
+            bool landed = false;
+            if (!RoyalWinSequence.FlyStar(tiles[task].button.transform, home.starLabel ? home.starLabel.transform : null, () => landed = true)) landed = true;
+            float deadline = Time.unscaledTime + 1.2f;
+            while (!landed && Time.unscaledTime < deadline) yield return null;
             home.ClosePanel();
             home.RefreshProgress();
             scene.Reveal(task);
+            RoyalWinSequence.Beam(scene.Patch(task) ? scene.Patch(task).transform : null);
             if (RoyalAreas.Complete)
             {
+                building = null;
                 if (pendingChest != null) StopCoroutine(pendingChest);
                 pendingChest = StartCoroutine(ChestWhenRevealed());
+                yield break;
             }
+            while (scene.Revealing) yield return null;
+            yield return new WaitForSecondsRealtime(1.3f);
+            building = null;
+            if (home.IsHomeVisible && !home.dialog.activeSelf) home.OpenPanel(Tasks, home.areaButton.gameObject);
         }
 
         IEnumerator ChestWhenRevealed()

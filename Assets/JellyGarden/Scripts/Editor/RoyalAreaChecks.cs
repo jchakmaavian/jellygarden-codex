@@ -117,16 +117,25 @@ namespace RoyalThrone.Editor
                 yield return Shot("tasks");
                 view.TaskButton(0).onClick.Invoke(); yield return null;
                 Check(RoyalAreas.IsDone(0) && RoyalAreas.Available(earned) == 9, "Building a one-star task spends one star");
+                // The reference's order: the star flies from Do It first, then the list closes and the object appears.
+                Check(view.Building && home.dialog.activeSelf && home.starLabel.text == "10", "The star flies from Do It before the list closes");
+                float flight = Time.unscaledTime + 3;
+                while (home.dialog.activeSelf && Time.unscaledTime < flight) yield return null;
                 Check(!home.dialog.activeSelf && scene.Patch(0).enabled && scene.Patch(0).sprite, "The dialog closes and the task's object appears");
                 yield return Seconds(.5f);
                 Check(scene.Patch(0).color.a > .99f, "The object finishes fading in");
                 Check(home.starLabel.text == "9" && home.areaProgress.text == "1/6", "Star counter and Area card update");
                 yield return Shot("one-task");
+                flight = Time.unscaledTime + 4;
+                while (view.Building && Time.unscaledTime < flight) yield return null;
+                Check(!view.Building && home.OpenPanelName == RoyalAreaView.Tasks, "The list opens again by itself on the next task");
                 for (int i = 1; i < 6; i++)
                 {
-                    home.areaButton.onClick.Invoke(); yield return null;
+                    if (home.OpenPanelName != RoyalAreaView.Tasks) { home.areaButton.onClick.Invoke(); yield return null; }
                     Check(!view.TaskButton(i - 1).interactable, "A built task cannot be bought again (" + (i) + ")");
                     view.TaskButton(i).onClick.Invoke(); yield return Frames(2);
+                    flight = Time.unscaledTime + 5;
+                    while (view.Building && Time.unscaledTime < flight) yield return null;
                     if (i == 3) yield return Shot("four-tasks");
                 }
                 Check(RoyalAreas.Complete && RoyalAreas.Available(earned) == 0 && RoyalAreas.Spent == earned, "Six tasks spend exactly the area's ten stars");

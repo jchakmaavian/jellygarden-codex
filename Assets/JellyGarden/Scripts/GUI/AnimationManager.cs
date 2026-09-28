@@ -363,13 +363,16 @@ namespace JellyGarden.Scripts.GUI
                 LevelManager.THIS.gameStatus = GameState.Map;
                 LevelManager.THIS.gameStatus = GameState.Map;
                 int nextLevel = LevelManager.THIS.currentLevel + 1;
+                // After levels 1-5 (the verified opening) CONTINUE stays on Home, where the rewards play, and the player
+                // opens the next level from the Level button, as the reference does. Read before LoadLevel resets it.
+                bool opening = RoyalThrone.Campaign.RoyalReferenceCampaign.Opening;
                 // After the last authored level there is no level to open: CONTINUE returns to the home screen instead
                 // of loading a missing level file (which threw here and left this card stuck on screen).
                 if (Resources.Load<TextAsset>("Levels/" + nextLevel) != null)
                 {
                     PlayerPrefs.SetInt("OpenLevel", nextLevel);
                     LevelManager.THIS.LoadLevel();
-                    if (LevelsMap._instance.GetMapLevels().Count >= LevelManager.THIS.currentLevel)
+                    if (!opening && LevelsMap._instance.GetMapLevels().Count >= LevelManager.THIS.currentLevel)
                         MenuManager.Instance.ShowMenuPlay(true);
                 }
             }
