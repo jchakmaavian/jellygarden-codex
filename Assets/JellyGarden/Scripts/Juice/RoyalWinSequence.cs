@@ -798,7 +798,8 @@ namespace JellyGarden.Scripts.Juice
                 }
                 finally { ReleaseHomeHold(); }
                 // The task list opens by itself when the current area's next task can be paid for.
-                if (lm.gameStatus == GameState.Map && Affordable(starsNow) && home.areaButton) home.OpenPanel("area", home.areaButton.gameObject);
+                // The very first time, the reference points at the Area card instead (RoyalAreaView.GuideFirstTask).
+                if (lm.gameStatus == GameState.Map && Affordable(starsNow) && home.areaButton && !(home.AreaView && home.AreaView.GuideFirstTask())) home.OpenPanel("area", home.areaButton.gameObject);
             }
             finally { homeRunning = false; homeReward = null; ReleaseHomeHold(); }
         }
@@ -847,44 +848,153 @@ namespace JellyGarden.Scripts.Juice
             Destroy(stage.gameObject);
         }
 
-        // ---------------------------------------------------------------- Areas: a task's star and its reveal
+        // ---------------------------------------------------------------- Areas (RoyalAreaView): stars, streaks, puffs, the chest
 
-        /// <summary>A star flies from a task's button to the star counter; false when there is no overlay to draw on.</summary>
-        public static bool FlyStar(Transform from, Transform to, global::System.Action land)
+        static RoyalWinSequence Area()
         {
-            var lm = LevelManager.THIS; if (!lm || !from || !to) return false;
-            var s = Get(lm); s.reduced = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0;
-            s.Fly(s.star, s.Local(from), s.Local(to) + new Vector2(-60, 0), 0, 96, .6f, () => { RoyalAudioDirector.Get?.Play(RoyalCue.Create); land?.Invoke(); }, false, 50);
-            return true;
+            var lm = LevelManager.THIS; if (!lm) return null;
+            var s = Get(lm); s.reduced = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0; return s;
         }
 
-        /// <summary>A new area object's sparkle beam: a column of light over it that fades, with sparkles rising.</summary>
-        public static void Beam(Transform at)
+        /// <summary>
+        /// A star leaves the counter (<paramref name="depart"/> as it goes) and arcs out to the left and down, then in to Do It
+        /// (<paramref name="land"/>), trailing sparkles: the reference's spend (GAPS.md A-09). False when there is no overlay.
+        /// </summary>
+        public static bool AreaStar(Transform from, Transform to, float delay, float flight, global::System.Action depart, global::System.Action land)
         {
-            var lm = LevelManager.THIS; if (!lm || !at) return;
-            var s = Get(lm); s.StartCoroutine(s.RunBeam(at));
+            var s = Area(); if (!s || !from || !to) return false;
+            s.StartCoroutine(s.RunAreaStar(from, to, delay, flight, depart, land)); return true;
         }
-
-        IEnumerator RunBeam(Transform at)
+        IEnumerator RunAreaStar(Transform from, Transform to, float delay, float flight, global::System.Action depart, global::System.Action land)
         {
-            var p = Local(at);
-            var column = Picture("Area beam", root, soft, p + new Vector2(0, 160), new Vector2(200, 720), new Color(1, .97f, .85f, 0)); column.preserveAspect = false;
-            var core = Picture("Area beam core", root, soft, p, new Vector2(330, 330), new Color(1, .95f, .75f, 0)); core.preserveAspect = false;
-            RingFlash(p, 260, new Color(1, .95f, .8f)); SparkleBurst(p, 14, 300, Color.white, 26);
-            float t = 0, life = 1.1f;
-            while (t < life)
+            yield return Scaled();
+            float end = Time.unscaledTime + delay; while (Time.unscaledTime < end) yield return null;
+            if (!from || !to) { depart?.Invoke(); land?.Invoke(); yield break; }
+            Vector2 a = Local(from), b = Local(to), c = new Vector2(Mathf.Min(a.x, b.x) - 330, Mathf.Lerp(a.y, b.y, .45f));
+            var art = RoyalThrone.Presentation.RoyalAreaKit.Star ? RoyalThrone.Presentation.RoyalAreaKit.Star : star;
+            var img = Picture("Area star", root, art, a, new Vector2(80, 80), Color.white);
+            depart?.Invoke();
+            float t = 0;
+            while (t < flight)
             {
-                t += Time.unscaledDeltaTime; float u = t / life, a = Mathf.Sin(Mathf.Clamp01(u) * Mathf.PI);
-                column.color = new Color(1, .97f, .85f, .55f * a); column.rectTransform.sizeDelta = new Vector2(200 * (1 - .5f * u), 720);
-                core.color = new Color(1, .95f, .75f, .5f * a);
-                if (!reduced && Random.value < .5f)
-                {
-                    var b = Spawn(1, p + new Vector2(Random.Range(-80f, 80f), Random.Range(-40f, 40f)), new Vector2(0, Random.Range(180f, 360f)), Random.Range(.5f, .8f), Random.Range(16f, 26f), Random.value < .5f ? Color.white : Gold);
-                    if (b != null) { b.gravity = 0; b.drag = .6f; }
-                }
+                t += Time.unscaledDeltaTime; float u = Mathf.Clamp01(t / flight), w = u * u * (3 - 2 * u);
+                Vector2 p = (1 - w) * (1 - w) * a + 2 * (1 - w) * w * c + w * w * b;
+                img.rectTransform.anchoredPosition = p; img.rectTransform.localScale = Vector3.one * Mathf.Lerp(1.1f, .72f, u);
+                if (!reduced && Random.value < .75f) Spawn(1, p + Random.insideUnitCircle * 10, Random.insideUnitCircle * 40, .45f, Random.Range(12f, 20f), new Color(1, .92f, .6f));
                 yield return null;
             }
-            Destroy(column.gameObject); Destroy(core.gameObject);
+            Destroy(img.gameObject);
+            if (to) { var p2 = Local(to); SparkleBurst(p2, 6, 200, Gold, 20); RingFlash(p2, 110, new Color(1, .95f, .7f)); }
+            RoyalAudioDirector.Get?.Play(RoyalCue.Create);
+            land?.Invoke();
+        }
+
+        /// <summary>A light streak from a new object to the Area card, landing with a ring (A-13).</summary>
+        public static bool AreaStreak(Transform from, Transform to, float duration, global::System.Action land)
+        {
+            var s = Area(); if (!s || !from || !to) return false;
+            s.StartCoroutine(s.RunAreaStreak(from, to, duration, land)); return true;
+        }
+        IEnumerator RunAreaStreak(Transform from, Transform to, float duration, global::System.Action land)
+        {
+            yield return Scaled();
+            Vector2 a = Local(from), b = Local(to), c = new Vector2(Mathf.Lerp(a.x, b.x, .25f), Mathf.Max(a.y, b.y) + 160);
+            var halo = Picture("Area streak", root, soft, a, new Vector2(130, 130), new Color(1, .93f, .55f, 1)); halo.preserveAspect = false;
+            var core = Picture("Area streak core", root, sparkle, a, new Vector2(84, 84), Color.white);
+            float t = 0;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime; float u = Mathf.Clamp01(t / duration), w = u * u;
+                Vector2 p = (1 - w) * (1 - w) * a + 2 * (1 - w) * w * c + w * w * b;
+                halo.rectTransform.anchoredPosition = p; core.rectTransform.anchoredPosition = p; core.rectTransform.localRotation = Quaternion.Euler(0, 0, t * 360);
+                int n = reduced ? 2 : 5;
+                for (int i = 0; i < n; i++) Spawn(1, p + Random.insideUnitCircle * 14, Random.insideUnitCircle * 26, Random.Range(.5f, .85f), Random.Range(18f, 30f), i % 2 == 0 ? Color.white : new Color(1, .86f, .38f));
+                var trail = Spawn(3, p, Vector2.zero, .45f, 70, new Color(1, .9f, .5f, .75f)); if (trail != null) trail.grow = 10;
+                yield return null;
+            }
+            Destroy(halo.gameObject); Destroy(core.gameObject);
+            RingFlash(b, 190, new Color(1, .92f, .6f)); SparkleBurst(b, 10, 260, Gold, 22);
+            RoyalAudioDirector.Get?.Play(RoyalCue.Click);
+            land?.Invoke();
+        }
+
+        /// <summary>Dust and sparkles at a new object's foot as it rises (A-12). <paramref name="width"/> in Home canvas units.</summary>
+        public static void AreaPuff(Transform at, float width)
+        {
+            var s = Area(); if (!s || !at) return;
+            s.StartCoroutine(s.RunAreaPuff(at, width));
+        }
+        IEnumerator RunAreaPuff(Transform at, float width)
+        {
+            yield return Scaled();
+            if (!at) yield break;
+            var p = Local(at); float w = Mathf.Clamp(width * 1.1f, 120, 700);
+            int puffs = reduced ? 3 : 9;
+            for (int i = 0; i < puffs; i++)
+            {
+                var b = Spawn(3, p + new Vector2(Random.Range(-.45f, .45f) * w, Random.Range(-10f, 30f)), new Vector2(Random.Range(-.5f, .5f) * w, Random.Range(40f, 120f)),
+                              Random.Range(.6f, .9f), Random.Range(.25f, .4f) * w, new Color(1, .97f, .92f, .8f));
+                if (b != null) { b.grow = w * .3f; b.drag = 2.5f; }
+            }
+            SparkleBurst(p + new Vector2(0, 40), 12, 320, Color.white, 22);
+            RoyalAudioDirector.Get?.Play(RoyalCue.Create);
+        }
+
+        /// <summary>The chest opening: a warm flash, a ring and a spray of sparkles (A-19).</summary>
+        public static void AreaBurst(Transform at, float scale)
+        {
+            var s = Area(); if (!s || !at) return;
+            var p = s.Local(at);
+            var core = s.Spawn(3, p, Vector2.zero, .5f, 220 * scale, new Color(1, .95f, .75f)); if (core != null) core.grow = 320 * scale;
+            s.RingFlash(p, 320 * scale, s.GoldTint); s.SparkleBurst(p, 26, 560, Gold, 28);
+            RoyalAudioDirector.Get?.Play(RoyalCue.Create);
+        }
+        Color GoldTint => new Color(1, .9f, .55f);
+
+        /// <summary>Confetti over the whole screen for "Area Completed!".</summary>
+        public static void AreaConfetti()
+        {
+            var s = Area(); if (!s) return;
+            s.StartCoroutine(s.RunAreaConfetti());
+        }
+        IEnumerator RunAreaConfetti()
+        {
+            yield return Scaled();
+            ConfettiBurst(new Vector2(-Half.x, Half.y * .85f), -35, 28, 46);
+            ConfettiBurst(new Vector2(Half.x, Half.y * .85f), 215, 28, 46);
+            float t = 0;
+            while (t < 2.4f)
+            {
+                t += Time.unscaledDeltaTime;
+                if (!reduced && Random.value < .6f)
+                    Spawn(0, new Vector2(Random.Range(-Half.x, Half.x), Half.y + 30), new Vector2(Random.Range(-60f, 60f), Random.Range(-260f, -120f)), Random.Range(2.2f, 3f), Random.Range(20f, 30f), Confetti[Random.Range(0, Confetti.Length)]);
+                yield return null;
+            }
+        }
+
+        /// <summary>A ring of gold sparkles opening over a newly unlocked area.</summary>
+        public static void AreaUnlockRing(Transform at)
+        {
+            var s = Area(); if (!s || !at) return;
+            var p = s.Local(at);
+            s.RingFlash(p, 520, s.GoldTint); s.SparkleBurst(p, 36, 700, Gold, 26);
+        }
+
+        /// <summary>A reward's pieces fly from where it is shown to a counter; <paramref name="land"/> runs once per piece. Coins
+        /// turn as every coin flight does; anything else (a booster) keeps its own face on the way.</summary>
+        public static bool AreaReward(Transform from, Transform to, int pieces, bool coins, global::System.Action land)
+        {
+            var s = Area(); if (!s || !from || !to) return false;
+            var img = from.GetComponent<Image>();
+            var art = img && img.sprite ? img.sprite : s.coin ? s.coin : RoyalPieceSkin.Art("coin");
+            s.StartCoroutine(s.RunAreaReward(from, to, pieces, art, coins, land)); return true;
+        }
+        IEnumerator RunAreaReward(Transform from, Transform to, int pieces, Sprite art, bool coins, global::System.Action land)
+        {
+            yield return Scaled();
+            if (!from || !to) { for (int i = 0; i < pieces; i++) land?.Invoke(); yield break; }
+            Vector2 a = Local(from), b = Local(to) + new Vector2(-60, 0);
+            for (int i = 0; i < pieces; i++) Fly(art, a, b, i * .05f, 76, .6f, () => { RoyalAudioDirector.Get?.Play(RoyalCue.Click); land?.Invoke(); }, coins);
         }
 
         void OnDestroy()

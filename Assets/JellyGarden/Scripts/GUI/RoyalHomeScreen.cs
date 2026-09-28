@@ -69,7 +69,8 @@ namespace RoyalThrone.Presentation
             levelButton.onClick.AddListener(OpenNextLevel);
             areaButton.onClick.AddListener(() => OpenPanel("area", areaButton.gameObject));
             string[] resources = { "profile", "coins", "lives", "stars", "settings" };
-            string[] tabs = { "story", "leagues", "home", "team", "collection" };
+            // The first tab lists the areas, as the reference's does (the user's decision, 2026-09-28).
+            string[] tabs = { RoyalAreaView.List, "leagues", "home", "team", "collection" };
             for (int i = 0; i < resources.Length; i++)
             { int index = i; resourceButtons[i].onClick.AddListener(() => OpenPanel(resources[index], resourceButtons[index].gameObject)); }
             for (int i = 0; i < tabs.Length; i++)
@@ -174,6 +175,7 @@ namespace RoyalThrone.Presentation
             if (areaLabel) areaLabel.text = RoyalAreas.AllRestored ? "Areas" : "Area " + Progress.area;
             if (areaProgress) areaProgress.text = RoyalAreas.AllRestored ? "Restored" : area == null || !area.Ready ? "Soon" : Progress.areaCompleted + "/" + Progress.areaTotal;
             if (areaFill) areaFill.anchorMax = new Vector2(Progress.areaTotal > 0 ? (float)Progress.areaCompleted / Progress.areaTotal : 0, 1);
+            if (areaView) areaView.DecorateCard();
             RefreshResources();
         }
 
@@ -220,7 +222,7 @@ namespace RoyalThrone.Presentation
             if (!IsHomeVisible || waitingForLevel) return;
             if (panel == "home") { ClosePanel(); return; }
             if (areaView) panel = areaView.Route(panel);
-            string[] tabs = { "story", "leagues", "home", "team", "collection" };
+            string[] tabs = { RoyalAreaView.List, "leagues", "home", "team", "collection" };
             int selected = Array.IndexOf(tabs, panel);
             SelectedTab = selected < 0 ? 2 : selected;
             RefreshProgress();

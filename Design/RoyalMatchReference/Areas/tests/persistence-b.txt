@@ -1,0 +1,5 @@
+PASS After a restart the two built tasks are still built
+PASS Their stars stay spent (2), no more, no less
+PASS Home shows 2/6 with both objects in the scene
+PASS The next task on offer is the third
+ALL PERSISTENCE CHECKS PASSED done

@@ -92,17 +92,24 @@ namespace RoyalThrone.Editor
                         CheckHit(home.tabButtons[0]);
                         // The player's real areas are only looked at here; building is checked in the QA profile (RoyalAreaChecks).
                         string route = home.OpenPanelName;
-                        Check(route == RoyalAreaView.Tasks ? home.AreaView.TasksVisible && home.AreaView.VisibleTiles == RoyalAreas.CurrentArea.tasks.Length
-                            : route == RoyalAreaView.Chest || route == RoyalAreaView.Soon, "Area card opens the current area's tasks (or its chest, or coming soon)");
+                        // The reference lists one task at a time: the next one, in order.
+                        Check(route == RoyalAreaView.Tasks ? home.AreaView.TasksVisible && home.AreaView.VisibleTiles == 1 && home.AreaView.RowTask == RoyalAreas.NextTask
+                            : route == RoyalAreaView.Chest || route == RoyalAreaView.Soon || route == RoyalAreaView.Unlocked, "Area card opens the current area's next task (or its chest, the new area, or coming soon)");
                         Capture("area"); break;
                     case 1:
                         // The dialog's controls are hit-tested a step after it opened: the raycaster skips a graphic until its canvas
-                        // has been drawn once, and Canvas.ForceUpdateCanvases does not do that.
-                        CheckHit(home.closeButton); CheckHit(home.dialogButton);
-                        if (home.OpenPanelName == RoyalAreaView.Tasks) { CheckHit(home.AreaView.TaskButton(0)); CheckHit(home.AreaView.SecondaryButton); }
+                        // has been drawn once, and Canvas.ForceUpdateCanvases does not do that. An area dialog has its own controls.
+                        if (home.AreaView.Showing == RoyalAreaView.Chest) CheckHit(home.AreaView.StageButton);
+                        else { CheckHit(home.AreaView.CloseButton); if (home.OpenPanelName == RoyalAreaView.Tasks) CheckHit(home.AreaView.DoItButton); }
+                        // The first tab lists the areas (the user's decision, 2026-09-28).
                         home.ClosePanel(); home.tabButtons[0].onClick.Invoke(); Canvas.ForceUpdateCanvases();
-                        Check(home.levelGrid.activeSelf, "Story opens replay and level selection");
+                        Check(home.AreaView.ListVisible && home.AreaView.ListedAreas >= 1, "Areas tab opens the list of areas");
                         CheckNavigation(0);
+                        Capture("areas");
+                        // Level selection stays available as a panel; it is no longer on a tab, so no tab is selected for it.
+                        home.ClosePanel(); home.OpenPanel("story"); Canvas.ForceUpdateCanvases();
+                        Check(home.levelGrid.activeSelf, "Story opens replay and level selection");
+                        CheckNavigation(2);
                         Check(!ScreenRect(home.gridRect).Overlaps(ScreenRect(home.dialogCopy.rectTransform)), "Story subtitle does not overlap level grid");
                         for (int i = 0; i < home.levelChoices.Length; i++)
                         {

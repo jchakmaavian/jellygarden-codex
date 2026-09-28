@@ -1,0 +1,14 @@
+screen 720x1612 real before: RoyalThrone.Area.Current=2,RoyalThrone.Area.Done=0,RoyalThrone.Area.Spent=10,Gems=155,Stripes=1,Packages=-,Colorful_bomb=3,OpenLevel=29,Lifes=5
+5.169 shot 01_home_area1_0of6 panel=
+5.969 shot 02_tasks_12stars panel=area
+build1 frames 172 in 5.5 s
+12.098 shot 03_tasks_after_build panel=area
+12.402 shot 04_home_area1_1of6 panel=
+13.016 shot 05_tasks_0stars panel=area
+13.628 shot 06_short_of_stars panel=area-stars
+15.054 shot 07_chest panel=area-complete
+15.991 shot 08_all_areas panel=areas
+16.807 shot 09_visit_area1 panel=
+18.032 shot 10_left_tab_events panel=story
+real after:  RoyalThrone.Area.Current=2,RoyalThrone.Area.Done=0,RoyalThrone.Area.Spent=10,Gems=155,Stripes=1,Packages=-,Colorful_bomb=3,OpenLevel=29,Lifes=5  (unchanged)
+done testing=False

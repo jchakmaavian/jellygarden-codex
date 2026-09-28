@@ -1,0 +1,14 @@
+18:15:27.28 PASS A fresh QA profile: no stars, the guide is due
+18:15:47.28 L1 card open, stars 1
+18:15:56.01 PASS Level 1 won: Home with one star to spend
+18:15:56.01 PASS The first time, Home points at the Area card instead of opening the list
+18:15:56.03 PASS The tab bar is dimmed too, and a tap on a tab lands on its dim (hit: Area guide dim over the tabs)
+18:15:56.64 PASS Its tap opens the list, with no close
+18:15:56.71 PASS A tap outside does not close the guided list
+18:15:56.72 PASS Do It builds the first task and ends the guide for good
+18:16:04.99 PASS The list comes back with its close
+18:16:24.94 L2 card open, stars 1
+18:16:33.75 PASS After Level 2, with a star for the next task, the list opens by itself
+18:16:34.43 real before: RoyalThrone.Area.Current=2,RoyalThrone.Area.Done=0,RoyalThrone.Area.Spent=10,RoyalThrone.Area.Entered=-,RoyalThrone.Area.Guided=-,Gems=155,OpenLevel=29,Lifes=5,Level.001.StarsCount=3,Level.002.StarsCount=3
+18:16:34.43 real after:  RoyalThrone.Area.Current=2,RoyalThrone.Area.Done=0,RoyalThrone.Area.Spent=10,RoyalThrone.Area.Entered=-,RoyalThrone.Area.Guided=-,Gems=155,OpenLevel=29,Lifes=5,Level.001.StarsCount=3,Level.002.StarsCount=3  (unchanged)
+18:16:34.43 ALL GUIDE CHECKS PASSED done

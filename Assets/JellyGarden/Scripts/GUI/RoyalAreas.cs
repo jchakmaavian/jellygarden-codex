@@ -36,7 +36,8 @@ namespace RoyalThrone.Presentation
     {
         [Serializable] sealed class CatalogFile { public RoyalAreaInfo[] areas; }
         const string Folder = "RoyalAreas/";
-        public const string CurrentKey = "RoyalThrone.Area.Current", DoneKey = "RoyalThrone.Area.Done", SpentKey = "RoyalThrone.Area.Spent";
+        public const string CurrentKey = "RoyalThrone.Area.Current", DoneKey = "RoyalThrone.Area.Done", SpentKey = "RoyalThrone.Area.Spent",
+            EnteredKey = "RoyalThrone.Area.Entered";
         static RoyalAreaInfo[] all;
 
         public static RoyalAreaInfo[] All
@@ -68,6 +69,27 @@ namespace RoyalThrone.Presentation
         }
         public static bool Complete { get { var area = CurrentArea; return area != null && area.tasks.Length > 0 && DoneCount == area.tasks.Length; } }
         public static int Available(int earned) => Mathf.Max(0, earned - Spent);
+        /// <summary>The next task to build: tasks are offered one at a time, in order, as in the reference. -1 when none is left.</summary>
+        public static int NextTask
+        {
+            get
+            {
+                var area = CurrentArea; if (area == null) return -1;
+                for (int i = 0; i < area.tasks.Length; i++) if (!IsDone(i)) return i;
+                return -1;
+            }
+        }
+        /// <summary>The last area the player has gone into. After a chest the next area waits behind its "New Area" card until
+        /// Unlock (Enter); saves from before this key count as entered.</summary>
+        public static int Entered => Mathf.Clamp(PlayerPrefs.GetInt(EnteredKey, Current), 0, All.Length + 1);
+        public static bool AwaitingEntry => Entered < Current && !AllRestored;
+        /// <summary>Unlock on the New Area card: the next area becomes the one shown and built.</summary>
+        public static bool Enter()
+        {
+            if (!AwaitingEntry) return false;
+            PlayerPrefs.SetInt(EnteredKey, Current); PlayerPrefs.Save();
+            return true;
+        }
 
         /// <summary>Raised after a task is paid for: area number, task index. Build animations can hook in here later.</summary>
         public static event Action<int, int> TaskBuilt;
@@ -80,6 +102,8 @@ namespace RoyalThrone.Presentation
             var area = CurrentArea;
             if (area == null || !area.Ready || task < 0 || task >= area.tasks.Length) return BuildResult.Unavailable;
             if (IsDone(task)) return BuildResult.AlreadyDone;
+            // One task at a time, in order: a later task is not on offer yet.
+            if (task != NextTask || AwaitingEntry) return BuildResult.Unavailable;
             int cost = area.tasks[task].cost;
             if (Available(earned) < cost) return BuildResult.NotEnoughStars;
             PlayerPrefs.SetInt(DoneKey, PlayerPrefs.GetInt(DoneKey, 0) | (1 << task));
@@ -107,6 +131,8 @@ namespace RoyalThrone.Presentation
             if (reward.boost != BoostType.None) PlayerPrefs.SetInt("" + reward.boost, PlayerPrefs.GetInt("" + reward.boost) + 1);
             PlayerPrefs.SetInt(CurrentKey, area.number + 1);
             PlayerPrefs.SetInt(DoneKey, 0);
+            // The next area waits behind the Area card's "New Area" until the player unlocks it (Enter).
+            PlayerPrefs.SetInt(EnteredKey, area.number);
             PlayerPrefs.Save();
             AreaCollected?.Invoke(area.number);
             return true;

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,7 +24,7 @@ namespace RoyalThrone.Presentation
         public bool Hold { get; set; }
         public RoyalAreaInfo Shown => shown;
         public bool ShowingRestored => restored;
-        public bool Revealing { get { foreach (float t in fadeStart) if (t >= 0) return true; return false; } }
+        public bool Revealing { get { if (rising > 0 || replay != null) return true; foreach (float t in fadeStart) if (t >= 0) return true; return false; } }
         public Image Patch(int task) => task >= 0 && task < patches.Count ? patches[task] : null;
 
         public static RoyalAreaScene Attach(RoyalHomeScreen home)
@@ -36,11 +37,12 @@ namespace RoyalThrone.Presentation
             return view;
         }
 
-        /// <summary>The player's current area; while it has no art yet, the last area restored before it.</summary>
+        /// <summary>The player's current area; while it has no art yet, or waits behind the Area card's "New Area", the last
+        /// area restored before it.</summary>
         public void ShowCurrent()
         {
             var area = RoyalAreas.CurrentArea;
-            if (area != null && area.Ready) Show(area, RoyalAreas.Complete);
+            if (area != null && area.Ready && !RoyalAreas.AwaitingEntry) Show(area, RoyalAreas.Complete);
             else Show(RoyalAreas.LastReadyBefore(RoyalAreas.Current - 1), true);
         }
 
@@ -85,9 +87,83 @@ namespace RoyalThrone.Presentation
             shownState = SavedState();
         }
 
+        /// <summary>
+        /// A task just paid for rises into its place, as the reference builds it: a puff at its foot, then the object grows up
+        /// out of the ground from its base (70% wide, 45% tall, a little low), overshoots slightly and settles. The reference
+        /// assembles each object from its parts; ours is one picture, so the whole object rises.
+        /// </summary>
+        public IEnumerator Rise(int task, float duration)
+        {
+            var area = RoyalAreas.CurrentArea;
+            if (area == null || !area.Ready || task < 0 || task >= area.tasks.Length) yield break;
+            if (shown != area || restored) Show(area, false);
+            if (task >= patches.Count) yield break;
+            var patch = patches[task]; Place(patch, area.tasks[task], true);
+            var r = patch.rectTransform; r.pivot = new Vector2(.5f, 0);
+            rising++;
+            try
+            {
+                JellyGarden.Scripts.Juice.RoyalWinSequence.AreaPuff(patch.transform, r.rect.width);
+                float t = 0;
+                while (t < duration)
+                {
+                    t += Time.unscaledDeltaTime; float u = Mathf.Clamp01(t / duration);
+                    // Up to 1.04 at 70% of the time, then back to 1; it is fully opaque by a third of the way.
+                    float grow = u < .7f ? Mathf.Lerp(0, 1.04f, 1 - (1 - u / .7f) * (1 - u / .7f)) : Mathf.Lerp(1.04f, 1, (u - .7f) / .3f);
+                    r.localScale = new Vector3(Mathf.Lerp(.7f, 1, Mathf.Min(1, grow)) * (grow > 1 ? grow : 1), Mathf.Lerp(.45f, 1, Mathf.Min(1, grow)) * (grow > 1 ? grow : 1), 1);
+                    r.anchoredPosition = new Vector2(0, -r.rect.height * .06f * (1 - Mathf.Min(1, grow)));
+                    patch.color = new Color(1, 1, 1, Mathf.Clamp01(u * 3));
+                    yield return null;
+                }
+            }
+            finally
+            {
+                r.localScale = Vector3.one; r.anchoredPosition = Vector2.zero; patch.color = Color.white; rising--;
+                shownState = SavedState();
+                if (RoyalAreas.Complete && shown == RoyalAreas.CurrentArea) Show(shown, true);
+            }
+        }
+        int rising;
+
+        Coroutine replay;
+        public bool Replaying => replay != null;
+        /// <summary>A restored area's restoration played again (the Areas tab's View): its unrestored scene, then each task's
+        /// object rising in order, then the restored scene.</summary>
+        public void Replay(RoyalAreaInfo area, bool motion)
+        {
+            StopReplay();
+            if (area == null || !area.Ready) return;
+            replay = StartCoroutine(RunReplay(area, motion));
+        }
+        public void StopReplay() { if (replay != null) { StopCoroutine(replay); replay = null; } }
+        IEnumerator RunReplay(RoyalAreaInfo area, bool motion)
+        {
+            var sprite = RoyalAreas.Art(area.before);
+            if (!sprite || !motion) { Show(area, true); replay = null; yield break; }
+            Show(area, false);
+            foreach (var p in patches) p.enabled = false;
+            yield return new WaitForSecondsRealtime(.6f);
+            for (int i = 0; i < area.tasks.Length && i < patches.Count; i++)
+            {
+                var patch = patches[i]; Place(patch, area.tasks[i], true);
+                var r = patch.rectTransform; r.pivot = new Vector2(.5f, 0);
+                float t = 0;
+                while (t < .55f)
+                {
+                    t += Time.unscaledDeltaTime; float u = Mathf.Clamp01(t / .55f), e = 1 - (1 - u) * (1 - u);
+                    r.localScale = new Vector3(Mathf.Lerp(.75f, 1, e), Mathf.Lerp(.5f, 1, e), 1); patch.color = new Color(1, 1, 1, Mathf.Clamp01(u * 3));
+                    yield return null;
+                }
+                r.localScale = Vector3.one; patch.color = Color.white;
+                yield return new WaitForSecondsRealtime(.3f);
+            }
+            Show(area, true);
+            replay = null;
+        }
+
         // The area and its finished tasks as saved, including which profile (QA or player) is active: when any of them changes
         // outside the area dialogs (a QA session starting or ending), the scene is redrawn from the save.
-        static int SavedState() => RoyalAreas.Current * 65536 ^ RoyalThrone.Testing.RoyalSave.GetInt(RoyalAreas.DoneKey, 0) ^ (RoyalThrone.Testing.RoyalSave.Testing ? 1 << 30 : 0);
+        static int SavedState() => RoyalAreas.Current * 65536 ^ RoyalThrone.Testing.RoyalSave.GetInt(RoyalAreas.DoneKey, 0) ^ (RoyalAreas.Entered << 20) ^ (RoyalThrone.Testing.RoyalSave.Testing ? 1 << 30 : 0);
 
         Image NewPatch(int index)
         {

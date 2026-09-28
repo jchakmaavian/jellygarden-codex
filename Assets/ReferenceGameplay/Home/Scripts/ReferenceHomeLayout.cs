@@ -52,6 +52,9 @@ namespace RoyalThrone.ReferenceGameplay
         const float PulsePeriod=7,PulseLength=.6f,PulseAmount=.07f,PulseStagger=.22f,GlowPeriod=2.8f;
         static Sprite Art(int id)=>Resources.Load<Sprite>("ReferenceGameplay/Home/"+id);
         public static void Attach(RoyalHomeScreen home){var v=home.GetComponent<ReferenceHomeLayout>();if(!v)v=home.gameObject.AddComponent<ReferenceHomeLayout>();v.home=home;v.Build();}
+        // 0 in place, 1 off the screen: while an area task builds, the resource bar slides up and the cards and tab bar slide down,
+        // as the reference clears the scene for the new object (RoyalAreaView). Applied in Relayout, which places them every frame.
+        public float HudAway{get;set;}
         static void Bounds(RectTransform r,float x0,float y0,float x1,float y1){Anchor(r,x0,y0,x1,y1);r.localScale=Vector3.one;}
         // Buttons keep their scale: RoyalButtonMotion owns it for the press feedback.
         static void Anchor(RectTransform r,float x0,float y0,float x1,float y1){r.anchorMin=new Vector2(x0,y0);r.anchorMax=new Vector2(x1,y1);r.offsetMin=r.offsetMax=Vector2.zero;}
@@ -130,7 +133,8 @@ namespace RoyalThrone.ReferenceGameplay
             // The reference bar deepens from royal blue to navy under the imported gold edge.
             navDepth=Surface("Royal navigation depth",home.navigation,new Color(0,.33f,.72f),new Color(0,.21f,.52f));Anchor(navDepth.rectTransform,0,0,1,1);navDepth.transform.SetSiblingIndex(1);
             tabArt=new Image[5];tabRim=new RoyalPanelGraphic[5];tabFace=new RoyalPanelGraphic[5];tabLine=new RoyalPanelGraphic[5];emphasis=new float[5];
-            int[] ids={16927,22238,16525,17106,16492};string[] names={"Events","Tournaments","Home","Team","Collection"};
+            // The first tab is the Areas list (the user's decision of 2026-09-28, as in the reference); the book art names it.
+            int[] ids={16927,22238,16525,17106,16492};string[] names={"Areas","Tournaments","Home","Team","Collection"};
             for(int i=0;i<5;i++){var tab=home.tabButtons[i].transform;
                 tabArt[i]=Pic(tab,ids[i],.13f,.20f,.87f,.94f);tabArt[i].preserveAspect=true;home.tabButtons[i].GetComponent<Image>().enabled=true;home.tabButtons[i].GetComponent<Image>().color=Color.clear;
                 tabRim[i]=Surface("Selected tab rim",tab,new Color(.36f,.64f,1,.9f),new Color(.14f,.40f,.82f,0));tabRim[i].transform.SetSiblingIndex(0);
@@ -176,12 +180,14 @@ namespace RoyalThrone.ReferenceGameplay
         // Also run by RoyalHomeScreen.RefreshLayout, whose own placement this replaces: code that reads the layout right after a
         // refresh (the Home checks' overlap and tap tests) then sees what is drawn.
         public void Relayout(){if(!built||!home)return;float w=home.layout.rect.width,inset=home.safeArea.anchorMin.y*((RectTransform)home.transform).rect.height;
-            home.hud.sizeDelta=new Vector2(w*HudWidth,w*HudHeight);home.hud.anchoredPosition=new Vector2(0,-w*HudCentre);
+            float away=Mathf.Clamp01(HudAway),top=(1-home.safeArea.anchorMax.y)*((RectTransform)home.transform).rect.height;
+            home.hud.sizeDelta=new Vector2(w*HudWidth,w*HudHeight);home.hud.anchoredPosition=new Vector2(0,-w*HudCentre+away*(w*(HudCentre+HudHeight)+top+24));
             for(int i=0;i<5;i++)Anchor((RectTransform)home.resourceButtons[i].transform,ResourceEdges[i*2],0,ResourceEdges[i*2+1],1);
-            home.actions.sizeDelta=new Vector2(w*ActionsWidth,w*ActionsHeight);home.actions.anchoredPosition=new Vector2(0,w*ActionsCentre);
+            float navH=w*NavHeight,drop=away*(w*(ActionsCentre+ActionsHeight)+inset+24);
+            home.actions.sizeDelta=new Vector2(w*ActionsWidth,w*ActionsHeight);home.actions.anchoredPosition=new Vector2(0,w*ActionsCentre-drop);
             Anchor(home.levelRect,0,0,LevelRight,1);Anchor(home.areaRect,AreaLeft,0,1,1);
-            float navH=w*NavHeight;home.navigation.sizeDelta=new Vector2(w,navH);home.navigation.anchoredPosition=new Vector2(0,navH*.5f);
-            home.navigationBackground.sizeDelta=new Vector2(0,navH+inset);
+            float sink=away*(navH*1.35f+inset+24);home.navigation.sizeDelta=new Vector2(w,navH);home.navigation.anchoredPosition=new Vector2(0,navH*.5f-sink);
+            home.navigationBackground.sizeDelta=new Vector2(0,navH+inset);home.navigationBackground.anchoredPosition=new Vector2(home.navigationBackground.anchoredPosition.x,-sink);
             navDepth.rectTransform.offsetMin=new Vector2(0,-inset);navDepth.rectTransform.offsetMax=new Vector2(0,-w*GoldTrim);
             bool motion=home.MotionEnabled&&home.IsHomeVisible;float time=Time.unscaledTime;
             float glow=motion?.5f+.5f*Mathf.Sin(time*Mathf.PI*2/GlowPeriod):1;

@@ -1,0 +1,7 @@
+Real save (HKCU\Software\Unity\UnityEditor\CodexSandbox\Royal Throne): the first export (16:17, before any run) against the
+last (18:18, after the A-27 runs, with the QA test profile put back as it was). Whole save, real and QA profile together:
+181 keys in A, 181 in B, 4 differ
+  DateOfExit_h4018879448                                       text '2026-09-28T10:16:13.1914225Z'  ->  text '2026-09-28T12:18:30.2526399Z'
+  unity.player_session_count_h922449978                        text '1000'  ->  text '1013'
+  unity.player_sessionid_h1351336811                           text '2831386708427288491'  ->  text '6496610968541415905'
+  unity_connect.session_id_h4145606137                         text 'fac21844-3a62-e734-3bc5-23af8978dcc1'  ->  text '82d4175c-1b0f-4de4-1b07-4c3a4bfc8768'

@@ -1,0 +1,21 @@
+328.354 shot 01_home_area1_0of6
+329.154 shot 02_tasks
+329.461 shot 03_chest_tooltip
+build1 frames 293
+339.085 shot 04_next_task
+340.703 shot 05_last_task
+last frames 382
+352.519 shot 06_chest_tap_to_open
+open frames 74
+354.771 shot 07_chest_rewards_tap_to_continue
+completed frames 191
+361.901 shot 08_restored_showcase_continue
+363.107 shot 09_home_area2_soon
+363.921 shot 10_coming_soon
+365.032 shot 11_areas_tab
+365.434 shot 12_areas_tab_restored
+view frames 222
+372.568 shot 13_back_on_areas_tab
+real before: RoyalThrone.Area.Current=2,RoyalThrone.Area.Done=0,RoyalThrone.Area.Spent=10,RoyalThrone.Area.Entered=-,Gems=155,Stripes=1,OpenLevel=29,Lifes=5
+real after:  RoyalThrone.Area.Current=2,RoyalThrone.Area.Done=0,RoyalThrone.Area.Spent=10,RoyalThrone.Area.Entered=-,Gems=155,Stripes=1,OpenLevel=29,Lifes=5  (unchanged)
+done
