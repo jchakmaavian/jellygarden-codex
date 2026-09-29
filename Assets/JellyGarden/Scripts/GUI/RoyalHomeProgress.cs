@@ -17,7 +17,9 @@ namespace RoyalThrone.Presentation
             foreach (int level in levels)
             {
                 int stars = Mathf.Clamp(starsForLevel(level), 0, 3);
-                result.stars += stars;
+                // One star per won level (the reference: exactly one per win; the user's decision, 2026-09-29). Saves from
+                // the earlier 1-3 rule count each won level once.
+                if (stars > 0) result.stars++;
                 if (stars > 0) result.completed++;
                 // Match the existing map's unlock rule, including restored non-contiguous saves.
                 if (level == 1 || starsForLevel(level - 1) > 0) result.nextLevel = level;

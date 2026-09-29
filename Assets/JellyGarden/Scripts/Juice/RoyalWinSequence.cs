@@ -602,11 +602,10 @@ namespace JellyGarden.Scripts.Juice
         public static void Reward(LevelManager lm, int coins, int balanceBefore)
         {
             var s = Get(lm); s.CancelRewardPresentation();
-            int best = PlayerPrefs.GetInt(string.Format("Level.{0:000}.StarsCount", lm.currentLevel), 0);
             bool opening = RoyalThrone.Campaign.RoyalReferenceCampaign.Opening;
             // Home plays the rewards only after the verified opening levels, whose CONTINUE goes Home (AnimationManager).
             // Later levels go on to the next level's card, so their coins fly on the win card as before.
-            s.pending = opening ? new Pending { coins = coins, before = balanceBefore, stars = Mathf.Max(0, lm.stars - best), level = lm.currentLevel, opening = true } : null;
+            s.pending = opening ? new Pending { coins = coins, before = balanceBefore, stars = lm.StarsGained, level = lm.currentLevel, opening = true } : null;
             s.reward = s.StartCoroutine(opening ? s.RunCard() : s.RunCardCoins(lm, coins, balanceBefore));
         }
 

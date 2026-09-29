@@ -1,0 +1,9 @@
+round 1: pack x3 for 5 coins; stock 2 -> 5, coins 105 -> 100
+PASS round 1: the pack is added to the stock (2 + 3 = 5)
+PASS round 1: the price is charged once (105 - 5 = 100)
+PASS round 1: shop closed after buying (True)
+round 2: pack x3 for 5 coins; stock 5 -> 8, coins 105 -> 100
+PASS round 2: the pack is added to the stock (5 + 3 = 8)
+PASS round 2: the price is charged once (105 - 5 = 100)
+PASS round 2: shop closed after buying (True)
+ALL BOOSTER PURCHASE CHECKS PASSED

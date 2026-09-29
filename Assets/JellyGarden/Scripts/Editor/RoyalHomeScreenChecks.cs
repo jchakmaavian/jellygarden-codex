@@ -164,15 +164,16 @@ namespace RoyalThrone.Editor
             var p = RoyalHomeProgress.Read(levels, n => 0);
             Check(p.nextLevel == 1 && p.stars == 0 && p.available == 0, "Fresh save starts at level 1 with no stars");
             p = RoyalHomeProgress.Read(levels, n => n <= 6 ? 3 : 0);
-            Check(p.nextLevel == 7 && p.stars == 18 && p.completed == 6, "Six completed levels offer level 7 with 18 stars (areas no longer follow levels)");
+            // One star per won level (the reference; the user's decision, 2026-09-29), whatever a level's saved 1-3.
+            Check(p.nextLevel == 7 && p.stars == 6 && p.completed == 6, "Six completed levels offer level 7 with 6 stars, one per won level (areas no longer follow levels)");
             p = RoyalHomeProgress.Read(levels, n => n == 1 ? 2 : n == 8 ? 1 : 0);
-            Check(p.nextLevel == 9 && p.completed == 2 && p.stars == 3, "Restored non-contiguous progress matches map unlocks");
+            Check(p.nextLevel == 9 && p.completed == 2 && p.stars == 2, "Restored non-contiguous progress matches map unlocks");
             p = RoyalHomeProgress.Read(levels, n => n <= 99 ? 3 : 0);
-            Check(p.nextLevel == 100 && p.completed == 99 && p.stars == 297, "Level 99 completed offers level 100");
+            Check(p.nextLevel == 100 && p.completed == 99 && p.stars == 99, "Level 99 completed offers level 100");
             p = RoyalHomeProgress.Read(levels, n => 3);
-            Check(p.nextLevel == 100 && p.stars == 300 && p.completed == 100, "Completed campaign never offers missing level 101");
+            Check(p.nextLevel == 100 && p.stars == 100 && p.completed == 100, "Completed campaign never offers missing level 101");
             p = RoyalHomeProgress.Read(levels, n => n == 1 ? 99 : -1);
-            Check(p.stars == 3 && p.completed == 1, "Unexpected saved star values are clamped");
+            Check(p.stars == 1 && p.completed == 1, "Unexpected saved star values count one won level");
             p = RoyalHomeProgress.Read(Array.Empty<int>(), n => 0);
             Check(p.nextLevel == 1 && p.stars == 0 && p.completed == 0, "Empty level list is safe");
         }

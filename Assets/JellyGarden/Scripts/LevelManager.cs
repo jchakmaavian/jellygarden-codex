@@ -167,6 +167,10 @@ namespace JellyGarden.Scripts
         public ItemAnimEvents[] itemExplPool = new ItemAnimEvents[20];
         public static int Score;
         public int stars;
+        /// <summary>Stars this win added to the Area balance: 1 on a level's first win, 0 on a replay (set by CommitWin).</summary>
+        public int StarsGained { get; private set; }
+        // A win's lasting effects are paid once per attempt (CommitWin), the moment its goals are met.
+        bool winCommitted; int committedCoins, committedCoinsBefore;
         private int linePoint;
         public int star1;
         public int star2;
@@ -363,27 +367,23 @@ namespace JellyGarden.Scripts
                 }
                 else if (value == GameState.PreWinAnimations)
                 {
+                    CommitWin();
                     StartCoroutine(PreWinAnimationsCor());
                 }
                 else if (value == GameState.Win)
                 {
-                    // A win pays 10 coins plus 5 per star (the user's decision, 2026-09-27; R-20 had restored the template's one),
-                    // and the win card shows them flying into the coin counter.
-                    int winCoins = Juice.RoyalWinSequence.Coins(stars), coinsBefore = InitScript.Gems;
-                    InitScript.Instance.AddGems(winCoins);
+                    // The coins, the star, the life refund and the unlock were committed when the goals were met (CommitWin); a
+                    // win reached another way commits here. The card and its coin flights present what was committed, and
+                    // every win shows exactly one star.
+                    CommitWin();
+                    stars = 1;
                     MenuManager.Instance.ShowMenuComplete();
-                    Juice.RoyalWinSequence.Reward(this, winCoins, coinsBefore);
-                    if (!InitScript.Instance.losingLifeEveryGame)
-                        InitScript.Instance.AddLife(1);
+                    Juice.RoyalWinSequence.Reward(this, committedCoins, committedCoinsBefore);
                     OnMenuComplete();
-                    if (PlayerPrefs.GetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), 0) < stars)
-                        PlayerPrefs.SetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), stars);
                     if (Score > PlayerPrefs.GetInt("Score" + currentLevel))
                     {
                         PlayerPrefs.SetInt("Score" + currentLevel, Score);
                     }
-                    // Flush now: the life refund above saved before these stars and best score were written, and a
-                    // kill on the win card must not lose the win or the next level's unlock.
                     PlayerPrefs.Save();
 
                     #if PLAYFAB || GAMESPARKS
@@ -552,6 +552,7 @@ namespace JellyGarden.Scripts
             ActivatedBoost = null;
             Score = 0;
             stars = 0;
+            winCommitted = false; StarsGained = 0;
             moveID = 0;
             // These survive a level otherwise: a win celebration interrupted by leaving the level
             // leaves preWinAnimationRunning set, and every later win then hangs before the banner.
@@ -717,7 +718,9 @@ namespace JellyGarden.Scripts
                 if (targetObject.Any(i => !i.Done())) lose = true;
                 if (lose)
                     gameStatus = GameState.PreFailed;
-                else if (Score >= THIS.star1 && targetObject.All(i => i.Done()))
+                // Goals met is a win, whatever the score (one star per win, as in the reference). With the old score
+                // condition a level whose goals were met on its last move, below star1, neither failed nor won: it hung.
+                else if (targetObject.All(i => i.Done()))
                 {
                     gameStatus = GameState.PreWinAnimations;
                 }
@@ -732,6 +735,32 @@ namespace JellyGarden.Scripts
 
 
             }
+        }
+
+        /// <summary>
+        /// A win's lasting effects, once per attempt, the moment its goals are met: before the celebration and the finale,
+        /// which only present them, so a kill during the finale cannot lose the win (the reference keeps it by then too).
+        /// A win is worth exactly one star (the reference: one per win, whatever the score; the user's decision, 2026-09-29)
+        /// and 10 coins plus 5 per star (the user's decision, 2026-09-27). It refunds the life spent on Play, saves the
+        /// star that unlocks the next level and the best score, then flushes the save.
+        /// </summary>
+        void CommitWin()
+        {
+            if (winCommitted) return;
+            winCommitted = true;
+            stars = 1;
+            string starsKey = string.Format("Level.{0:000}.StarsCount", currentLevel);
+            StarsGained = PlayerPrefs.GetInt(starsKey, 0) > 0 ? 0 : 1;
+            committedCoinsBefore = InitScript.Gems;
+            committedCoins = Juice.RoyalWinSequence.Coins(stars);
+            InitScript.Instance.AddGems(committedCoins);
+            if (!InitScript.Instance.losingLifeEveryGame)
+                InitScript.Instance.AddLife(1);
+            if (PlayerPrefs.GetInt(starsKey, 0) < stars)
+                PlayerPrefs.SetInt(starsKey, stars);
+            if (Score > PlayerPrefs.GetInt("Score" + currentLevel))
+                PlayerPrefs.SetInt("Score" + currentLevel, Score);
+            PlayerPrefs.Save();
         }
 
         /// <summary>Set by a tap during the win celebration: the reward still plays out, faster.</summary>
@@ -2321,14 +2350,8 @@ namespace JellyGarden.Scripts
             {
                 stars = 1;
             }
-            if (Score >= star2 && stars <= 1)
-            {
-                stars = 2;
-            }
-            if (Score >= star3 && stars <= 2)
-            {
-                stars = 3;
-            }
+            // A win is worth exactly one star (the reference; the user's decision, 2026-09-29): the score no longer adds
+            // a second or third. The star markers below still light up with the score.
 
             if (Score >= star1)
             {

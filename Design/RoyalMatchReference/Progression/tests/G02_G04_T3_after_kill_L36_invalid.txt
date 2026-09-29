@@ -1,0 +1,10 @@
+INVALID RUN (level 36): the T2 kill run before it threw "Board did not settle within 30 seconds" while the level was
+opening, before "Complete targets", so level 36 was never won. These FAILs are that missing win, not a lost one. The valid
+run is G02_G04_T3_after_kill_L35.txt.
+
+after the simulated kill: level 36 stars 0, coins 210 (expected 210)
+FAIL the win committed before the kill kept its star (StarsCount 0)
+PASS the win's coins were kept, paid once (210)
+FAIL the next level is unlocked on Home (Level 36)
+PASS Area stars earned = won levels (30 = 30)
+2 FAILED

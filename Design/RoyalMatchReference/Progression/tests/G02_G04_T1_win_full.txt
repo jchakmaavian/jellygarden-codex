@@ -1,0 +1,13 @@
+PASS level 32 is playing
+at the goals: state PreWinAnimations, level stars 0 -> 1, coins 195 -> 210, lives 5 -> 5, lm.stars 1, StarsGained 1
+PASS the goals start the win finale
+PASS exactly one star is saved at the goals (not the forced 3)
+PASS the coins (15) are paid at the goals, before the finale
+PASS one star, gained on this first win
+at the card: state Win, coins 210, lm.stars 1, card True
+PASS the finale ends on the win card
+PASS no second payment when the Win state arrives (210 -> 210)
+PASS the card shows one star
+PASS a forced second win entry pays nothing (210)
+PASS Area stars earned = won levels (29 = 29)
+ALL WIN CHECKS PASSED
