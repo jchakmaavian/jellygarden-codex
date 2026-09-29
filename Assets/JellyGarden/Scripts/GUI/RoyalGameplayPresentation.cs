@@ -1,4 +1,5 @@
 using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+using System.Collections;
 using System.Collections.Generic;
 using JellyGarden.Scripts;
 using JellyGarden.Scripts.GUI;
@@ -11,7 +12,7 @@ namespace RoyalThrone.Presentation
     public sealed class RoyalGameplayPresentation : MonoBehaviour
     {
         CanvasGroup group; RectTransform content,king; Image kingImage;Text moves,level,goals;
-        SpriteRenderer backdrop; Sprite idle,cheer,think;float excitement,lastRefresh;bool built;
+        SpriteRenderer backdrop; Sprite idle,cheer,think;float excitement,lastRefresh;bool built,ready;
         readonly HashSet<Square> styled=new HashSet<Square>();
         readonly List<CanvasGroup> hidden=new List<CanvasGroup>();
         // Timed levels: the limit header reads "Time" (m:ss) instead of "Moves"; the four rebound rail tools stay
@@ -56,7 +57,9 @@ namespace RoyalThrone.Presentation
         {
             var r=Rect(name,parent,anchor.x,anchor.y,anchor.x,anchor.y);r.sizeDelta=size;r.anchoredPosition=position;return r;
         }
-        void Awake(){Build();}
+        // Under the startup loading screen this build runs in frames of its own after the scene's first frame
+        // (RoyalTitleScreen.QueueStartupWork); otherwise all at once, here, as before. LateUpdate waits until it is complete.
+        void Awake(){var steps=Build();if(!RoyalTitleScreen.QueueStartupWork(this,steps))while(steps.MoveNext()){}}
         void OnEnable(){RoyalPowerupDirector.Reaction+=React;}
         // A level interrupted by the OS (app sent to the background; on devices also focus loss, e.g. the notification
         // shade) comes back to the pause menu instead of straight into live play. Only while actually playing with no
@@ -70,9 +73,10 @@ namespace RoyalThrone.Presentation
         }
         void OnDisable(){RoyalPowerupDirector.Reaction-=React;}
         void React(float value){excitement=Mathf.Max(excitement,value);}
-        void Build()
+        // Each yield only marks a frame boundary for the startup loading screen; run straight through, it is the same build.
+        IEnumerator Build()
         {
-            if(built)return;built=true;
+            if(built)yield break;built=true;
             display=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             var font=Resources.Load<Font>("RoyalGameplay/Display");if(font)display=font;
             var menus=GameObject.Find("CanvasGlobal");if(menus)RoyalMenuSkin.Apply(menus.transform,display);
@@ -105,6 +109,8 @@ namespace RoyalThrone.Presentation
             var portrait=RoyalGameplayHud.BuildPortrait(header);
             king=Rect("King reactions",portrait.slot,.5f,.5f,.5f,.5f);king.sizeDelta=new Vector2(196,217);king.anchoredPosition=new Vector2(0,5);
             kingImage=king.gameObject.AddComponent<Image>();kingImage.sprite=idle;kingImage.preserveAspect=true;kingImage.raycastTarget=false;
+            yield return null;   // the king's rig below is the build's largest single piece: a frame of its own
+            yield return null;
             // Keep the live level label available to existing diagnostics, without adding
             // a heading that is absent from the source gameplay hierarchy.
             level=Label("Level",header,"",22,0,0,0,0);level.gameObject.SetActive(false);
@@ -162,10 +168,11 @@ namespace RoyalThrone.Presentation
             // A clean royal-blue gradient behind the board (the gameplay reference): no scenery.
             backdrop.sprite=RoyalGameplayHud.Backdrop();backdrop.color=Color.white;
             group.alpha=0;group.blocksRaycasts=false;
+            ready=true;
         }
         void LateUpdate()
         {
-            var lm=LevelManager.THIS;if(!lm)return;
+            var lm=LevelManager.THIS;if(!lm||!ready)return;
             // The board appears with the HUD, the backdrop and its styled cells from the moment it exists, its entrance slide
             // (WaitForPopup) included; only the goals card, which this overlay would cover, keeps them back.
             bool show=lm.GameField&&lm.gameStatus!=GameState.Map&&lm.GameField.gameObject.activeInHierarchy&&!(prePlay&&prePlay.gameObject.activeInHierarchy);

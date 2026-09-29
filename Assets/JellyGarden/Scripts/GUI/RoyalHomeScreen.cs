@@ -38,6 +38,7 @@ namespace RoyalThrone.Presentation
         Rect lastSafe;
         Vector2 lastSize;
         bool lastMap, waitingForLevel, runtimeInitialized;
+        bool runtimeQueued;   // InitializeRuntime handed to the startup loading screen, which runs it in a frame of its own
         float nextRefresh;
         int page;
         string openPanel;
@@ -114,7 +115,9 @@ namespace RoyalThrone.Presentation
             if (lastSafe != Screen.safeArea || lastSize != ((RectTransform)transform).rect.size) RefreshLayout();
             if (!Application.isPlaying) return;
             // ExecuteAlways Awake can run during editor scene authoring, before Play Mode.
-            // Initialize on the first actual game frame so both direct scene play and title entry work.
+            // Initialize on the first actual game frame so both direct scene play and title entry work. Under the startup loading
+            // screen it runs in a frame of its own (RoyalTitleScreen.QueueStartupWork) and Home waits for it; otherwise here.
+            if (!runtimeInitialized && (runtimeQueued || (runtimeQueued = RoyalTitleScreen.QueueStartupWork(this, InitializeRuntime)))) return;
             InitializeRuntime();
             bool map = LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Map;
             if (map != lastMap)
