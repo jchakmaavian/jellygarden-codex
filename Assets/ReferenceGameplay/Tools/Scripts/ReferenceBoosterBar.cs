@@ -289,7 +289,7 @@ namespace RoyalThrone.ReferenceGameplay
                 {
                     if(type==2&&ReferenceCannonSequence.Available){
                         if(!cannon)cannon=gameObject.AddComponent<ReferenceCannonSequence>();
-                        yield return cannon.Play(affected,HitCell,PresentCannon);
+                        yield return cannon.Play(affected,HitCannonCell,PresentCannon);
                     }else{
                         if(type==0)yield return Hammer(affected[0].transform.position);
                         foreach(var s in affected){HitCell(s);if(type!=0)yield return new WaitForSeconds(.045f);}
@@ -307,6 +307,13 @@ namespace RoyalThrone.ReferenceGameplay
             if(!s||s.type==SquareTypes.UNDESTROYABLE)return;
             if(s.item&&s.item.currentType!=ItemsTypes.INGREDIENT){s.item.royalBlastClear=true;s.item.DestroyItem(true);LastHitCount++;}
             else if(s.block.Count>0){s.DestroyBlock();LastHitCount++;}
+        }
+        void HitCannonCell(Square s)
+        {
+            // Share the existing immediate projectile-impact presentation. The ball has
+            // already arrived, so the generic match anticipation would make the hit lag.
+            if(s&&s.type!=SquareTypes.UNDESTROYABLE&&s.item&&s.item.currentType!=ItemsTypes.INGREDIENT)s.item.royalRocketClear=true;
+            HitCell(s);
         }
         IEnumerator Hammer(Vector3 position)
         {

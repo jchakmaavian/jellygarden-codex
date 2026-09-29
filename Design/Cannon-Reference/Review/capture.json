@@ -1,6 +1,6 @@
 {
-  "frames": 79,
-  "fps": 30,
+  "frames": 139,
+  "fps": 60,
   "source": "Unity Game view; fixed simulated timestep",
   "audio": "Silent screen capture",
   "performanceBenchmark": false

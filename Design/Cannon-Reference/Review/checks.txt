@@ -8,8 +8,10 @@ PASS Repeated tap rejected while cannon runs
 PASS Native motion runs before cell damage
 PASS Entrance does not clear cells early
 PASS Whole bottom bar is below the screen before the shot
+PASS Projectile launches on the firing pose at 60 FPS
 PASS Bottom bar stays hidden during firing and recoil
 PASS Cannon and board resolution finish in column 3
+PASS Firing cue observed
 PASS Bar slides back after the firing clip
 PASS Bottom bar returns to its original position and accepts input
 PASS All eight column cells hit exactly once
@@ -21,8 +23,10 @@ PASS Repeated tap rejected while cannon runs
 PASS Native motion runs before cell damage
 PASS Entrance does not clear cells early
 PASS Whole bottom bar is below the screen before the shot
+PASS Projectile launches on the firing pose at 30 FPS
 PASS Bottom bar stays hidden during firing and recoil
 PASS Cannon and board resolution finish in column 0
+PASS Firing cue observed
 PASS Bar slides back after the firing clip
 PASS Bottom bar returns to its original position and accepts input
 PASS All eight column cells hit exactly once
@@ -34,8 +38,10 @@ PASS Repeated tap rejected while cannon runs
 PASS Native motion runs before cell damage
 PASS Entrance does not clear cells early
 PASS Whole bottom bar is below the screen before the shot
+PASS Projectile launches on the firing pose at 15 FPS
 PASS Bottom bar stays hidden during firing and recoil
 PASS Cannon and board resolution finish in column 7
+PASS Firing cue observed
 PASS Bar slides back after the firing clip
 PASS Bottom bar returns to its original position and accepts input
 PASS All eight column cells hit exactly once
