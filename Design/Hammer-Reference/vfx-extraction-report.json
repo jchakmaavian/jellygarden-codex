@@ -1,0 +1,29 @@
+{
+  "prefabs": [
+    "HammerImpactRfv387",
+    "HammerRewardRfv387"
+  ],
+  "systems": 11,
+  "materials": [
+    [
+      "Default-ParticleSystem",
+      "Particles/Standard Unlit"
+    ],
+    [
+      "Additive Particle Material",
+      "Mobile/Particles/Additive"
+    ]
+  ],
+  "sprites": 8,
+  "textures": 3,
+  "external": [
+    [
+      1,
+      2
+    ],
+    [
+      4,
+      10202
+    ]
+  ]
+}

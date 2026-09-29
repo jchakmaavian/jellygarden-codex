@@ -1,0 +1,26 @@
+{
+  "m_Component": [
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 79033
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 137166
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 112336
+      }
+    }
+  ],
+  "m_Layer": 5,
+  "m_Name": "RoyalPassUnclaimedHammer",
+  "m_Tag": 0,
+  "m_IsActive": true
+}

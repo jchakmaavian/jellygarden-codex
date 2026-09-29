@@ -1,0 +1,37 @@
+Hammer animation / native VFX / SFX / gameplay checks
+PASS Isolated profile and all native hammer resources available
+PASS Exactly one callback at the native impact pose for step 0.0167
+PASS Exactly one callback at the native impact pose for step 0.0333
+PASS Exactly one callback at the native impact pose for step 0.0667
+PASS Exactly one callback at the native impact pose for step 0.5300
+PASS Pause prevents motion, VFX, and premature damage
+PASS Invalid target does not spend stock
+PASS Real board pointer starts hammer on the selected blocker
+PASS Duplicate input rejected while hammer runs
+PASS Flight begins before damage
+PASS Hammer action and board resolution finish in column 3
+PASS Exactly one cell hit and one hammer spent; no move consumed
+PASS Hammer clears the targeted wire blocker
+PASS Refill preserves piece-to-cell ownership
+PASS Animation and particle objects cleaned up
+PASS Invalid target does not spend stock
+PASS Hammer starts in column 0
+PASS Duplicate input rejected while hammer runs
+PASS Flight begins before damage
+PASS Hammer action and board resolution finish in column 0
+PASS Exactly one cell hit and one hammer spent; no move consumed
+PASS Refill preserves piece-to-cell ownership
+PASS Animation and particle objects cleaned up
+PASS Invalid target does not spend stock
+PASS Hammer starts in column 7
+PASS Duplicate input rejected while hammer runs
+PASS Flight begins before damage
+PASS Hammer action and board resolution finish in column 7
+PASS Exactly one cell hit and one hammer spent; no move consumed
+PASS Refill preserves piece-to-cell ownership
+PASS Animation and particle objects cleaned up
+PASS Game pause freezes an in-flight hammer
+PASS Cancellation releases tool input without an impact
+PASS Normal inventory and coins restored after QA
+PASS Sound preference preserved
+ALL HAMMER CHECKS PASSED

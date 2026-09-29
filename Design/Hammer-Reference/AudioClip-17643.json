@@ -1,0 +1,20 @@
+{
+  "m_Name": "hammer_use_hit",
+  "m_LoadType": 0,
+  "m_Channels": 1,
+  "m_Frequency": 44100,
+  "m_BitsPerSample": 16,
+  "m_Length": 0.43081632256507874,
+  "m_IsTrackerFormat": false,
+  "m_Ambisonic": false,
+  "m_SubsoundIndex": 0,
+  "m_PreloadAudioData": true,
+  "m_LoadInBackground": false,
+  "m_Legacy3D": true,
+  "m_Resource": {
+    "m_Source": "resources.resource",
+    "m_Offset": 2703360,
+    "m_Size": 5472
+  },
+  "m_CompressionFormat": 1
+}

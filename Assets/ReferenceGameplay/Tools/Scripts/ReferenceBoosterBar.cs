@@ -42,7 +42,7 @@ namespace RoyalThrone.ReferenceGameplay
         RectTransform rail;CanvasGroup railInput;Vector2 railRest;bool railMoving,railBlocks,railInteractable;float railDrop;
         Font font;int buying=-1;bool purchasePending;readonly List<BoostIcon> buttons=new List<BoostIcon>();
         readonly Dictionary<BoostIcon,GameObject> padlocks=new Dictionary<BoostIcon,GameObject>();static Sprite padlockArt,discArt;
-        SpriteRenderer hammer;ReferenceCannonSequence cannon;Square[] currentBoard;Coroutine operation;bool shuffled;
+        ReferenceHammerSequence hammer;ReferenceCannonSequence cannon;Square[] currentBoard;Coroutine operation;bool shuffled;
         LevelManager LM=>LevelManager.THIS;
         public static Sprite Art(int index)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+Icons[index]);
         static Sprite Sprite(int id)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+id);
@@ -272,6 +272,7 @@ namespace RoyalThrone.ReferenceGameplay
             if(Selected!=3&&(!target||target.IsNone()||target.type==SquareTypes.UNDESTROYABLE||(target.item&&target.item.currentType==ItemsTypes.INGREDIENT&&target.block.Count==0)))return false;
             int type=Selected;var affected=type==3?new List<Square>():LM.squaresArray.Where(s=>s&&!s.IsNone()&&(type==0?s==target:type==1?s.row==target.row:s.col==target.col)).OrderBy(s=>type==2?-s.row:s.col).ToList();
             if(type==3&&Movable().Count<2)return false;
+            if(type==0&&!ReferenceHammerSequence.Available){Status="Hammer animation assets are unavailable.";return false;}
             InitScript.Instance.SpendBoost(Types[type]);CancelSelection();Busy=true;LM.DragBlocked=true;currentBoard=LM.squaresArray;LastHitCount=0;
             operation=StartCoroutine(Use(type,affected));return true;
         }
@@ -287,11 +288,14 @@ namespace RoyalThrone.ReferenceGameplay
                 }
                 else
                 {
-                    if(type==2&&ReferenceCannonSequence.Available){
+                    if(type==0){
+                        if(!hammer)hammer=gameObject.AddComponent<ReferenceHammerSequence>();
+                        var target=affected[0];float cell=LM.squareWidth*Mathf.Abs(LM.GameField.lossyScale.x);
+                        yield return hammer.Play(target.transform.position,HammerOrigin(target.transform.position),cell,()=>HitCannonCell(target));
+                    }else if(type==2&&ReferenceCannonSequence.Available){
                         if(!cannon)cannon=gameObject.AddComponent<ReferenceCannonSequence>();
                         yield return cannon.Play(affected,HitCannonCell,PresentCannon);
                     }else{
-                        if(type==0)yield return Hammer(affected[0].transform.position);
                         foreach(var s in affected){HitCell(s);if(type!=0)yield return new WaitForSeconds(.045f);}
                     }
                 }
@@ -300,7 +304,7 @@ namespace RoyalThrone.ReferenceGameplay
                 while((LM.IsResolvingMatches||RoyalPowerupDirector.Busy||LM.GetItems().Where(i=>i).Any(i=>i.falling||i.destroying))&&Time.realtimeSinceStartup<deadline)yield return null;
                 Status="Completed "+Titles[type];
             }
-            finally{Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.enabled=false;if(cannon)cannon.Cancel();operation=null;}
+            finally{Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(cannon)cannon.Cancel();operation=null;}
         }
         void HitCell(Square s)
         {
@@ -315,12 +319,13 @@ namespace RoyalThrone.ReferenceGameplay
             if(s&&s.type!=SquareTypes.UNDESTROYABLE&&s.item&&s.item.currentType!=ItemsTypes.INGREDIENT)s.item.royalRocketClear=true;
             HitCell(s);
         }
-        IEnumerator Hammer(Vector3 position)
+        Vector3 HammerOrigin(Vector3 target)
         {
-            if(!hammer){var go=new GameObject("Reusable reference hammer");go.transform.SetParent(transform);hammer=go.AddComponent<SpriteRenderer>();hammer.sprite=Art(0);hammer.sortingOrder=34;}
-            hammer.enabled=true;float cell=LM.squareWidth;hammer.transform.localScale=Vector3.one*cell*1.35f;
-            for(float t=0;t<.24f;t+=Time.deltaTime){float u=t/.24f;hammer.transform.position=position+new Vector3(.15f,Mathf.Lerp(.8f,0,u*u),-.5f)*cell;hammer.transform.rotation=Quaternion.Euler(0,0,Mathf.Lerp(-35,15,u*u));yield return null;}
-            hammer.enabled=false;
+            var button=buttons.FirstOrDefault(b=>b&&b.type==BoostType.RoyalHammer);var camera=Camera.main;
+            if(!button||!camera)return target+Vector3.down*LM.squareHeight*5;
+            var canvas=button.GetComponentInParent<Canvas>();var uiCamera=canvas&&canvas.renderMode!=RenderMode.ScreenSpaceOverlay?canvas.worldCamera:null;
+            var screen=RectTransformUtility.WorldToScreenPoint(uiCamera,button.transform.position);
+            return camera.ScreenToWorldPoint(new Vector3(screen.x,screen.y,Mathf.Abs(camera.transform.position.z-target.z)));
         }
         IEnumerator Shuffle()
         {
@@ -345,7 +350,7 @@ namespace RoyalThrone.ReferenceGameplay
             for(float t=0;t<.5f;t+=Time.deltaTime){float u=Mathf.SmoothStep(0,1,t/.5f);for(int n=0;n<pieces.Count;n++)if(pieces[n])pieces[n].transform.position=Vector3.Lerp(start[n],pieces[n].square.transform.position,u)+Vector3.up*Mathf.Sin(u*Mathf.PI)*.18f;yield return null;}
             foreach(var p in pieces)if(p)p.transform.position=p.square.transform.position;LastHitCount=0;
         }
-        void CancelOperation(){if(operation!=null)StopCoroutine(operation);operation=null;Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.enabled=false;if(cannon)cannon.Cancel();}
+        void CancelOperation(){if(operation!=null)StopCoroutine(operation);operation=null;Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(cannon)cannon.Cancel();}
         void OnDisable(){CancelSelection();CloseShop();CancelOperation();}
     }
 }
