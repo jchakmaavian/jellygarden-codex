@@ -1,0 +1,10 @@
+# Reproducible inspection dumps and uncompressed frame captures.
+/[0-9]*.json
+/[0-9]*.txt
+/index.json
+/reference-sheet.png
+/firing-sheet.png
+/Review/Frames/
+/Review/Column-*.png
+/import-error.txt
+__pycache__/

@@ -41,7 +41,7 @@ namespace RoyalThrone.ReferenceGameplay
         RectTransform hud,shop,prompt;Text message,balance,price,title,body;Image shopIcon;
         Font font;int buying=-1;bool purchasePending;readonly List<BoostIcon> buttons=new List<BoostIcon>();
         readonly Dictionary<BoostIcon,GameObject> padlocks=new Dictionary<BoostIcon,GameObject>();static Sprite padlockArt,discArt;
-        SpriteRenderer hammer;Square[] currentBoard;Coroutine operation;bool shuffled;
+        SpriteRenderer hammer;ReferenceCannonSequence cannon;Square[] currentBoard;Coroutine operation;bool shuffled;
         LevelManager LM=>LevelManager.THIS;
         public static Sprite Art(int index)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+Icons[index]);
         static Sprite Sprite(int id)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+id);
@@ -262,11 +262,12 @@ namespace RoyalThrone.ReferenceGameplay
                 }
                 else
                 {
-                    if(type==0)yield return Hammer(affected[0].transform.position);
-                    foreach(var s in affected){if(!s||s.type==SquareTypes.UNDESTROYABLE)continue;
-                        if(s.item&&s.item.currentType!=ItemsTypes.INGREDIENT){s.item.royalBlastClear=true;s.item.DestroyItem(true);LastHitCount++;}
-                        else if(s.block.Count>0){s.DestroyBlock();LastHitCount++;}
-                        if(type!=0)yield return new WaitForSeconds(.045f);
+                    if(type==2&&ReferenceCannonSequence.Available){
+                        if(!cannon)cannon=gameObject.AddComponent<ReferenceCannonSequence>();
+                        yield return cannon.Play(affected,HitCell);
+                    }else{
+                        if(type==0)yield return Hammer(affected[0].transform.position);
+                        foreach(var s in affected){HitCell(s);if(type!=0)yield return new WaitForSeconds(.045f);}
                     }
                 }
                 yield return new WaitForSeconds(.12f);LM.FindMatches();
@@ -274,7 +275,13 @@ namespace RoyalThrone.ReferenceGameplay
                 while((LM.IsResolvingMatches||RoyalPowerupDirector.Busy||LM.GetItems().Where(i=>i).Any(i=>i.falling||i.destroying))&&Time.realtimeSinceStartup<deadline)yield return null;
                 Status="Completed "+Titles[type];
             }
-            finally{Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.enabled=false;operation=null;}
+            finally{Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.enabled=false;if(cannon)cannon.Cancel();operation=null;}
+        }
+        void HitCell(Square s)
+        {
+            if(!s||s.type==SquareTypes.UNDESTROYABLE)return;
+            if(s.item&&s.item.currentType!=ItemsTypes.INGREDIENT){s.item.royalBlastClear=true;s.item.DestroyItem(true);LastHitCount++;}
+            else if(s.block.Count>0){s.DestroyBlock();LastHitCount++;}
         }
         IEnumerator Hammer(Vector3 position)
         {
@@ -306,7 +313,7 @@ namespace RoyalThrone.ReferenceGameplay
             for(float t=0;t<.5f;t+=Time.deltaTime){float u=Mathf.SmoothStep(0,1,t/.5f);for(int n=0;n<pieces.Count;n++)if(pieces[n])pieces[n].transform.position=Vector3.Lerp(start[n],pieces[n].square.transform.position,u)+Vector3.up*Mathf.Sin(u*Mathf.PI)*.18f;yield return null;}
             foreach(var p in pieces)if(p)p.transform.position=p.square.transform.position;LastHitCount=0;
         }
-        void CancelOperation(){if(operation!=null)StopCoroutine(operation);operation=null;Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.enabled=false;}
+        void CancelOperation(){if(operation!=null)StopCoroutine(operation);operation=null;Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.enabled=false;if(cannon)cannon.Cancel();}
         void OnDisable(){CancelSelection();CloseShop();CancelOperation();}
     }
 }

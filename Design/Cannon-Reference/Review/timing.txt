@@ -1,0 +1,6 @@
+frame=0 unity=422 elapsed=0.033 dt=0.0333 scale=1 hits=0
+frame=30 unity=452 elapsed=1.033 dt=0.0333 scale=1 hits=5
+frame=60 unity=482 elapsed=1.667 dt=0.0333 scale=1 hits=8
+resolution=False drag=False swaps=0 state=Playing hits=8 remaining=
+resolution=False drag=False swaps=0 state=Playing hits=8 remaining=
+resolution=False drag=False swaps=0 state=Playing hits=8 remaining=
