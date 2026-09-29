@@ -1,0 +1,5 @@
+var qa=RoyalThrone.Testing.RoyalQaService.Instance;var bar=RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Instance;
+var report=new {playing=UnityEditor.EditorApplication.isPlaying,compiling=UnityEditor.EditorApplication.isCompiling,testing=RoyalThrone.Testing.RoyalSave.Testing,boosterBusy=bar&&bar.Busy,archerAvailable=RoyalThrone.ReferenceGameplay.ReferenceArcherSequence.Available,hammerAvailable=RoyalThrone.ReferenceGameplay.ReferenceHammerSequence.Available,captureFramerate=UnityEngine.Time.captureFramerate,inputRouting=UnityEngine.InputSystem.InputSystem.settings.editorInputBehaviorInPlayMode.ToString(),inputBackground=UnityEngine.InputSystem.InputSystem.settings.backgroundBehavior.ToString()};
+System.IO.File.WriteAllText("Design/Archer-Reference/Review/final-editor-state.json",Newtonsoft.Json.JsonConvert.SerializeObject(report,Newtonsoft.Json.Formatting.Indented));
+if(RoyalThrone.Testing.RoyalSave.Testing||(bar&&bar.Busy))throw new System.Exception("QA is still running");
+UnityEditor.EditorApplication.isPlaying=false;return report;

@@ -1,0 +1,25 @@
+{
+  "prefabs": [
+    "ArcherTrailRfv387",
+    "ArcherSmokeRfv387"
+  ],
+  "systems": 6,
+  "materials": [
+    [
+      "Additive Particle Material",
+      "Mobile/Particles/Additive"
+    ]
+  ],
+  "sprites": 3,
+  "textures": 2,
+  "external": [
+    [
+      1,
+      2
+    ],
+    [
+      4,
+      10202
+    ]
+  ]
+}

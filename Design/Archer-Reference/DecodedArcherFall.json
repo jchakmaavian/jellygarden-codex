@@ -1,0 +1,1517 @@
+{
+  "name": "ArrowFallAnimation",
+  "duration": 0.5,
+  "frameRate": 60.0,
+  "loop": false,
+  "curves": [
+    {
+      "path": "Arrow/Arrow_arka",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": -0.023126840591430664,
+          "inSlope": 1.6189956708601017e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.00970369577407837,
+          "inSlope": 0.008888957045908974,
+          "outSlope": 0.00888905767351389
+        },
+        {
+          "time": 0.25,
+          "value": 0.009999999776482582,
+          "inSlope": 0.011852160022989916,
+          "outSlope": 0.011852160096168518
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.02500000037252903,
+          "inSlope": 0.09600034767166177,
+          "outSlope": 0.09600000083446503
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.027000000700354576,
+          "inSlope": -1.1920303633061735e-10,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 1.335107580047179e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.6499999761581421,
+          "inSlope": 6.218182158601389,
+          "outSlope": 6.218181610107422
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 1.1399999856948853,
+          "inSlope": 4.199998461861631,
+          "outSlope": 4.200000286102295
+        },
+        {
+          "time": 0.25,
+          "value": 1.2799999713897705,
+          "inSlope": 0.44000205914131474,
+          "outSlope": 0.440001517534256
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.2910000085830688,
+          "inSlope": -7.629370923911694e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.02500000037252903,
+          "inSlope": -2.51998327256581,
+          "outSlope": -2.52000093460083
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": -0.05900000035762787,
+          "inSlope": 7.756556330562603e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.007000000216066837,
+          "inSlope": 6.930047291575647e-08,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka_golge",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.04399999976158142,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": -0.008431613445281982,
+          "inSlope": -0.20511592384171173,
+          "outSlope": -0.20511583983898163
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": -0.01783275604248047,
+          "inSlope": -1.4421113941898156e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.020768821239471436,
+          "inSlope": 0.778327632794678,
+          "outSlope": 0.7783276438713074
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.05999999865889549,
+          "inSlope": -3.768031930917459e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.03999999910593033,
+          "inSlope": -0.277499959469089,
+          "outSlope": -0.2775000333786011
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.023000000044703484,
+          "inSlope": -4.029283834361408e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.029999999329447746,
+          "inSlope": 1.939140037432452e-08,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka_golge",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.02500000037252903,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.5600000023841858,
+          "inSlope": 6.091827353748645,
+          "outSlope": 6.091827869415283
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 1.14183509349823,
+          "inSlope": 3.770653057801937,
+          "outSlope": 3.7706503868103027
+        },
+        {
+          "time": 0.25,
+          "value": 1.2675234079360962,
+          "inSlope": 1.781650044364567,
+          "outSlope": 1.7816497087478638
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.3200000524520874,
+          "inSlope": -3.3125292464575296e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": -0.009999999776482582,
+          "inSlope": -1.2000021553253646,
+          "outSlope": -1.1999995708465576
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": -0.05000000074505806,
+          "inSlope": 1.2397731241620136e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": -1.1126194854327309e-07,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka_golge",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_butun",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_butun",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.6000000238418579,
+          "inSlope": 6.272728857286346,
+          "outSlope": 6.272727012634277
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 1.149999976158142,
+          "inSlope": 4.320000766801122,
+          "outSlope": 4.32000207901001
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.3300000429153442,
+          "inSlope": -1.573562631307368e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0024643000215291977,
+          "inSlope": -0.016470823691008718,
+          "outSlope": -0.0164716187864542
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.001915200031362474,
+          "inSlope": -0.01317839156171318,
+          "outSlope": -0.01317839976400137
+        },
+        {
+          "time": 0.5,
+          "value": -0.019999999552965164,
+          "inSlope": -2.52108112164251e-08,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_butun",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_maske",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_maske",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.6000000238418579,
+          "inSlope": 6.272728857286346,
+          "outSlope": 6.272727012634277
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 1.149999976158142,
+          "inSlope": 4.320000766801122,
+          "outSlope": 4.32000207901001
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.3300000429153442,
+          "inSlope": -1.573562631307368e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0024643000215291977,
+          "inSlope": -0.016470823691008718,
+          "outSlope": -0.0164716187864542
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.001915200031362474,
+          "inSlope": -0.013178401495815908,
+          "outSlope": -0.013178401626646519
+        },
+        {
+          "time": 0.5,
+          "value": -0.019999997690320015,
+          "inSlope": 1.3187226288735587e-07,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_maske",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_uc",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.029716620221734047,
+          "inSlope": 0.4340498148380081,
+          "outSlope": 0.43404966592788696
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0434049628674984,
+          "inSlope": 1.1657491350014482e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.042990319430828094,
+          "inSlope": 1.1342012676274216e-09,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_uc",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.6000000238418579,
+          "inSlope": 6.054546734837009,
+          "outSlope": 6.0545454025268555
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 1.1100000143051147,
+          "inSlope": 5.27401414148088,
+          "outSlope": 5.274015426635742
+        },
+        {
+          "time": 0.25,
+          "value": 1.3032020330429077,
+          "inSlope": 1.8642670581589744,
+          "outSlope": 1.8642666339874268
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.349808692932129,
+          "inSlope": 7.589659123397041e-09,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.014266982674598694,
+          "inSlope": 1.867888940410012e-05,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_uc",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_uc_golge",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0005019307136535645,
+          "inSlope": -1.0990065107963076e-10,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 2.3559951073393037e-09,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.029716620221734047,
+          "inSlope": 0.4340498148380081,
+          "outSlope": 0.43404966592788696
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0434049628674984,
+          "inSlope": 1.1657491350014482e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.042990319430828094,
+          "inSlope": -0.012439304590229131,
+          "outSlope": -0.012439304031431675
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.027000000700354576,
+          "inSlope": -8.322749356359793e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.042990319430828094,
+          "inSlope": 2.1699740893055264e-08,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_uc_golge",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.5957150459289551,
+          "inSlope": 6.054545133602371,
+          "outSlope": 6.0545454025268555
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 1.1100000143051147,
+          "inSlope": 5.306155648254698,
+          "outSlope": 5.306152820587158
+        },
+        {
+          "time": 0.25,
+          "value": 1.3032020330429077,
+          "inSlope": 1.8642670988326877,
+          "outSlope": 1.8642666339874268
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.349808692932129,
+          "inSlope": 7.589659123397041e-09,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.014266982674598694,
+          "inSlope": -0.36800901582839174,
+          "outSlope": -0.36800864338874817
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0020000000949949026,
+          "inSlope": -0.04800003692438953,
+          "outSlope": -0.04800001159310341
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 1.1309986870655653e-08,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_uc_golge",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 13.107000350952148,
+          "inSlope": -2.5656312573119067e-05,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 5.88700008392334,
+          "inSlope": -186.09747889158604,
+          "outSlope": -186.09750366210938
+        },
+        {
+          "time": 0.25,
+          "value": -11.706000328063965,
+          "inSlope": -103.76992090474721,
+          "outSlope": -103.77001190185547
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": -18.326000213623047,
+          "inSlope": -9.464024472549681e-06,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": -0.00015729331971670035,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka_golge",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka_golge",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_arka_golge",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 8.449000358581543,
+          "inSlope": 3.846656795758463e-06,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 7.152000427246094,
+          "inSlope": -38.909998109711225,
+          "outSlope": -38.90999984741211
+        },
+        {
+          "time": 0.25,
+          "value": -9.972000122070312,
+          "inSlope": -40.67989507875723,
+          "outSlope": -40.680030822753906
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": -10.98900032043457,
+          "inSlope": -48.81601645683891,
+          "outSlope": -48.816001892089844
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": -15.7160005569458,
+          "inSlope": 2.8039876553975773e-05,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": -14.655000686645508,
+          "inSlope": 25.463999081283266,
+          "outSlope": 25.46399688720703
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": -7.139428089431021e-05,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_uc_golge",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_uc_golge",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Arrow/Arrow_uc_golge",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": -0.43700000643730164,
+          "inSlope": 9.568369208068361e-08,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_butun",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_butun",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.0284368991851807,
+          "inSlope": 0.3412427812970528,
+          "outSlope": 0.34124279022216797
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 1.178749918937683,
+          "inSlope": -3.4129789341363903e-06,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 1.178749918937683,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_butun",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_maske",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_maske",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.0284368991851807,
+          "inSlope": 0.3412427812970528,
+          "outSlope": 0.34124279022216797
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 1.178749918937683,
+          "inSlope": -3.4129789341363903e-06,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 1.178749918937683,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_maske",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Target/Target_maske",
+      "typeID": 212,
+      "property": "m_Color.a",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    }
+  ],
+  "missingBindings": []
+}

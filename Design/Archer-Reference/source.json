@@ -1,0 +1,95 @@
+{
+  "apk": "Design/Backup/apk/royal_thron_rfv387.apk",
+  "apkSHA256": "a2cbee4ecf021ee464dc6f17766ba6c0b2addb2d65007f611e5c368532aa8151",
+  "clipId": 16190,
+  "controllerId": 18043,
+  "prefabId": 46037,
+  "sprites": [
+    {
+      "id": 18702,
+      "name": "arrow-Arrow_uc_golge",
+      "assetPath": "Assets/ReferenceGameplay/Tools/Archer/Sprites/arrow-Arrow_uc_golge__18702.png",
+      "pivot": {
+        "x": 0.24761904776096344,
+        "y": 0.5590062141418457
+      },
+      "ppu": 140.0,
+      "width": 105,
+      "height": 161,
+      "sha256": "1c8a322872e1010d3d7477740a529c4f425a1a537c1ef4460d92d20fe4f4fc16"
+    },
+    {
+      "id": 18908,
+      "name": "arrow-Arrow_uc",
+      "assetPath": "Assets/ReferenceGameplay/Tools/Archer/Sprites/arrow-Arrow_uc__18908.png",
+      "pivot": {
+        "x": 0.22549019753932953,
+        "y": 0.4968152940273285
+      },
+      "ppu": 140.0,
+      "width": 102,
+      "height": 157,
+      "sha256": "ed7c80916f45ce9871f89631a8c23a9aa2eb2a5a3d55ec0d75e0a389e583e886"
+    },
+    {
+      "id": 18975,
+      "name": "arrow-Hedef",
+      "assetPath": "Assets/ReferenceGameplay/Tools/Archer/Sprites/arrow-Hedef__18975.png",
+      "pivot": {
+        "x": -0.5299999713897705,
+        "y": 0.506369411945343
+      },
+      "ppu": 140.0,
+      "width": 100,
+      "height": 314,
+      "sha256": "98a9a9449aef1c9af80c9762db95d8bac9e87127306062724ae2fad74f0b1dd4"
+    },
+    {
+      "id": 23805,
+      "name": "arrow-Arrow_arka_golge",
+      "assetPath": "Assets/ReferenceGameplay/Tools/Archer/Sprites/arrow-Arrow_arka_golge__23805.png",
+      "pivot": {
+        "x": 1.0535714626312256,
+        "y": 0.5620915293693542
+      },
+      "ppu": 140.0,
+      "width": 224,
+      "height": 153,
+      "sha256": "16ed4618269e81be7c5e5a80de08243dd81c3474306a2d70e22daa21fbeb9c2c"
+    },
+    {
+      "id": 23919,
+      "name": "arrow-Arrow_arka",
+      "assetPath": "Assets/ReferenceGameplay/Tools/Archer/Sprites/arrow-Arrow_arka__23919.png",
+      "pivot": {
+        "x": 0.9873417615890503,
+        "y": 0.4966442883014679
+      },
+      "ppu": 140.0,
+      "width": 237,
+      "height": 149,
+      "sha256": "3aa7026484d6cef13b3026e2ce699e0c9315b587f6e43b3fa6ea7266e449eaf2"
+    },
+    {
+      "id": 23930,
+      "name": "arrow-Hedef_mask",
+      "assetPath": "Assets/ReferenceGameplay/Tools/Archer/Sprites/arrow-Hedef_mask__23930.png",
+      "pivot": {
+        "x": -2.0740740299224854,
+        "y": 0.4859813153743744
+      },
+      "ppu": 140.0,
+      "width": 27,
+      "height": 107,
+      "sha256": "9a775b9a83b16fcfd932e81c8b0409cd3601740d1a389d49ffacb820ecc84304"
+    }
+  ],
+  "audio": [
+    {
+      "id": 17939,
+      "name": "arrow_use",
+      "assetPath": "Assets/ReferenceGameplay/Tools/Archer/Audio/arrow_use.wav",
+      "sha256": "49db937b0fc22dd8601379c550a53ed74c3f1ff41cccb12c40b9c40e43cf3691"
+    }
+  ]
+}

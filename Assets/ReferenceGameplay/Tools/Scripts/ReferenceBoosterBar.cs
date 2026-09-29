@@ -42,7 +42,7 @@ namespace RoyalThrone.ReferenceGameplay
         RectTransform rail;CanvasGroup railInput;Vector2 railRest;bool railMoving,railBlocks,railInteractable;float railDrop;
         Font font;int buying=-1;bool purchasePending;readonly List<BoostIcon> buttons=new List<BoostIcon>();
         readonly Dictionary<BoostIcon,GameObject> padlocks=new Dictionary<BoostIcon,GameObject>();static Sprite padlockArt,discArt;
-        ReferenceHammerSequence hammer;ReferenceCannonSequence cannon;Square[] currentBoard;Coroutine operation;bool shuffled;
+        ReferenceHammerSequence hammer;ReferenceArcherSequence archer;ReferenceCannonSequence cannon;Square[] currentBoard;Coroutine operation;bool shuffled;
         LevelManager LM=>LevelManager.THIS;
         public static Sprite Art(int index)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+Icons[index]);
         static Sprite Sprite(int id)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+id);
@@ -273,6 +273,7 @@ namespace RoyalThrone.ReferenceGameplay
             int type=Selected;var affected=type==3?new List<Square>():LM.squaresArray.Where(s=>s&&!s.IsNone()&&(type==0?s==target:type==1?s.row==target.row:s.col==target.col)).OrderBy(s=>type==2?-s.row:s.col).ToList();
             if(type==3&&Movable().Count<2)return false;
             if(type==0&&!ReferenceHammerSequence.Available){Status="Hammer animation assets are unavailable.";return false;}
+            if(type==1&&!ReferenceArcherSequence.Available){Status="Archer animation assets are unavailable.";return false;}
             InitScript.Instance.SpendBoost(Types[type]);CancelSelection();Busy=true;LM.DragBlocked=true;currentBoard=LM.squaresArray;LastHitCount=0;
             operation=StartCoroutine(Use(type,affected));return true;
         }
@@ -292,6 +293,9 @@ namespace RoyalThrone.ReferenceGameplay
                         if(!hammer)hammer=gameObject.AddComponent<ReferenceHammerSequence>();
                         var target=affected[0];float cell=LM.squareWidth*Mathf.Abs(LM.GameField.lossyScale.x);
                         yield return hammer.Play(target.transform.position,HammerOrigin(target.transform.position),cell,()=>HitCannonCell(target));
+                    }else if(type==1){
+                        if(!archer)archer=gameObject.AddComponent<ReferenceArcherSequence>();
+                        yield return archer.Play(affected,HitCannonCell);
                     }else if(type==2&&ReferenceCannonSequence.Available){
                         if(!cannon)cannon=gameObject.AddComponent<ReferenceCannonSequence>();
                         yield return cannon.Play(affected,HitCannonCell,PresentCannon);
@@ -304,7 +308,7 @@ namespace RoyalThrone.ReferenceGameplay
                 while((LM.IsResolvingMatches||RoyalPowerupDirector.Busy||LM.GetItems().Where(i=>i).Any(i=>i.falling||i.destroying))&&Time.realtimeSinceStartup<deadline)yield return null;
                 Status="Completed "+Titles[type];
             }
-            finally{Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(cannon)cannon.Cancel();operation=null;}
+            finally{Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(archer)archer.Cancel();if(cannon)cannon.Cancel();operation=null;}
         }
         void HitCell(Square s)
         {
@@ -350,7 +354,7 @@ namespace RoyalThrone.ReferenceGameplay
             for(float t=0;t<.5f;t+=Time.deltaTime){float u=Mathf.SmoothStep(0,1,t/.5f);for(int n=0;n<pieces.Count;n++)if(pieces[n])pieces[n].transform.position=Vector3.Lerp(start[n],pieces[n].square.transform.position,u)+Vector3.up*Mathf.Sin(u*Mathf.PI)*.18f;yield return null;}
             foreach(var p in pieces)if(p)p.transform.position=p.square.transform.position;LastHitCount=0;
         }
-        void CancelOperation(){if(operation!=null)StopCoroutine(operation);operation=null;Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(cannon)cannon.Cancel();}
+        void CancelOperation(){if(operation!=null)StopCoroutine(operation);operation=null;Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(archer)archer.Cancel();if(cannon)cannon.Cancel();}
         void OnDisable(){CancelSelection();CloseShop();CancelOperation();}
     }
 }

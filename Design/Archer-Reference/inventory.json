@@ -1,0 +1,1352 @@
+[
+  {
+    "id": 590,
+    "type": "Texture2D",
+    "name": "royal_pass_claim_arrow"
+  },
+  {
+    "id": 737,
+    "type": "Texture2D",
+    "name": "loading_arrow"
+  },
+  {
+    "id": 813,
+    "type": "Texture2D",
+    "name": "arrow_250px"
+  },
+  {
+    "id": 856,
+    "type": "Texture2D",
+    "name": "arrow_250px_shadow"
+  },
+  {
+    "id": 899,
+    "type": "Texture2D",
+    "name": "golden_arrow"
+  },
+  {
+    "id": 16190,
+    "type": "AnimationClip",
+    "name": "ArrowAnimation"
+  },
+  {
+    "id": 16191,
+    "type": "AnimationClip",
+    "name": "ArrowFallAnimation"
+  },
+  {
+    "id": 17939,
+    "type": "AudioClip",
+    "name": "arrow_use"
+  },
+  {
+    "id": 18043,
+    "type": "AnimatorController",
+    "name": "ArrowAnimator"
+  },
+  {
+    "id": 18271,
+    "type": "Sprite",
+    "name": "Lives_popup_clock_arrow"
+  },
+  {
+    "id": 18589,
+    "type": "Sprite",
+    "name": "arrow_sh"
+  },
+  {
+    "id": 18670,
+    "type": "Sprite",
+    "name": "arrow_shadow"
+  },
+  {
+    "id": 18702,
+    "type": "Sprite",
+    "name": "arrow-Arrow_uc_golge"
+  },
+  {
+    "id": 18872,
+    "type": "Sprite",
+    "name": "arrow_down"
+  },
+  {
+    "id": 18908,
+    "type": "Sprite",
+    "name": "arrow-Arrow_uc"
+  },
+  {
+    "id": 18975,
+    "type": "Sprite",
+    "name": "arrow-Hedef"
+  },
+  {
+    "id": 19080,
+    "type": "Sprite",
+    "name": "Team-Create_tab_arrow_sign"
+  },
+  {
+    "id": 19164,
+    "type": "Sprite",
+    "name": "Landmarks-palmiye_narrow"
+  },
+  {
+    "id": 19341,
+    "type": "Sprite",
+    "name": "Arrow_02"
+  },
+  {
+    "id": 19381,
+    "type": "Sprite",
+    "name": "GlasArrow_Down"
+  },
+  {
+    "id": 19567,
+    "type": "Sprite",
+    "name": "Arrow_LID_Horizontal"
+  },
+  {
+    "id": 19825,
+    "type": "Sprite",
+    "name": "arrow"
+  },
+  {
+    "id": 20079,
+    "type": "Sprite",
+    "name": "royal_pass_claim_arrow"
+  },
+  {
+    "id": 20393,
+    "type": "Sprite",
+    "name": "ArrowFrame_DOWN"
+  },
+  {
+    "id": 20493,
+    "type": "Sprite",
+    "name": "ArrowFrame_UP"
+  },
+  {
+    "id": 20689,
+    "type": "Sprite",
+    "name": "Arrow_LID_Down"
+  },
+  {
+    "id": 20990,
+    "type": "Sprite",
+    "name": "arrow_def_glow"
+  },
+  {
+    "id": 21288,
+    "type": "Sprite",
+    "name": "ArrowFrame_Shadow"
+  },
+  {
+    "id": 21366,
+    "type": "Sprite",
+    "name": "slider_arrow"
+  },
+  {
+    "id": 21609,
+    "type": "Sprite",
+    "name": "loading_arrow"
+  },
+  {
+    "id": 21631,
+    "type": "Sprite",
+    "name": "Arrow_01"
+  },
+  {
+    "id": 21735,
+    "type": "Sprite",
+    "name": "ArrowFrame_Particle_R"
+  },
+  {
+    "id": 22286,
+    "type": "Sprite",
+    "name": "arrow_250px"
+  },
+  {
+    "id": 22296,
+    "type": "Sprite",
+    "name": "shop_card_more_offers_arrow"
+  },
+  {
+    "id": 22356,
+    "type": "Sprite",
+    "name": "arrow_a"
+  },
+  {
+    "id": 22379,
+    "type": "Sprite",
+    "name": "arrow_add_IN"
+  },
+  {
+    "id": 22603,
+    "type": "Sprite",
+    "name": "ArrowFrame_SIDE"
+  },
+  {
+    "id": 22624,
+    "type": "Sprite",
+    "name": "ArrowFrame_Particle_L"
+  },
+  {
+    "id": 22753,
+    "type": "Sprite",
+    "name": "arrow_250px_shadow"
+  },
+  {
+    "id": 22830,
+    "type": "Sprite",
+    "name": "arrow_b"
+  },
+  {
+    "id": 22837,
+    "type": "Sprite",
+    "name": "Arrow_GlowParticle"
+  },
+  {
+    "id": 22987,
+    "type": "Sprite",
+    "name": "Arrow_Glow"
+  },
+  {
+    "id": 23031,
+    "type": "Sprite",
+    "name": "golden_arrow"
+  },
+  {
+    "id": 23113,
+    "type": "Sprite",
+    "name": "Arrow_LID_"
+  },
+  {
+    "id": 23408,
+    "type": "Sprite",
+    "name": "GlasArrow_UP"
+  },
+  {
+    "id": 23439,
+    "type": "Sprite",
+    "name": "GlasArrow_SIDE"
+  },
+  {
+    "id": 23805,
+    "type": "Sprite",
+    "name": "arrow-Arrow_arka_golge"
+  },
+  {
+    "id": 23919,
+    "type": "Sprite",
+    "name": "arrow-Arrow_arka"
+  },
+  {
+    "id": 23925,
+    "type": "Sprite",
+    "name": "TeamLogo-Logos-arrow01"
+  },
+  {
+    "id": 23930,
+    "type": "Sprite",
+    "name": "arrow-Hedef_mask"
+  },
+  {
+    "id": 24143,
+    "type": "Sprite",
+    "name": "arrow_icon"
+  },
+  {
+    "id": 24210,
+    "type": "Sprite",
+    "name": "add_arrow"
+  },
+  {
+    "id": 24264,
+    "type": "Sprite",
+    "name": "arrow_up"
+  },
+  {
+    "id": 24539,
+    "type": "Sprite",
+    "name": "Chat-Chat_tab_clock_arrow"
+  },
+  {
+    "id": 24701,
+    "type": "Sprite",
+    "name": "TeamLogo-Logos-arrow02"
+  },
+  {
+    "id": 24705,
+    "type": "Sprite",
+    "name": "StarDialog-star_dialog_arrow"
+  },
+  {
+    "id": 24980,
+    "type": "GameObject",
+    "name": "Arrow Closed"
+  },
+  {
+    "id": 24981,
+    "type": "GameObject",
+    "name": "Arrow Closed"
+  },
+  {
+    "id": 24984,
+    "type": "GameObject",
+    "name": "Arrow Opened"
+  },
+  {
+    "id": 24985,
+    "type": "GameObject",
+    "name": "Arrow Closed"
+  },
+  {
+    "id": 25014,
+    "type": "GameObject",
+    "name": "Arrow Opened"
+  },
+  {
+    "id": 25026,
+    "type": "GameObject",
+    "name": "Arrow Closed"
+  },
+  {
+    "id": 25029,
+    "type": "GameObject",
+    "name": "Arrow Closed"
+  },
+  {
+    "id": 25040,
+    "type": "GameObject",
+    "name": "Arrow Opened"
+  },
+  {
+    "id": 25046,
+    "type": "GameObject",
+    "name": "Arrow Opened"
+  },
+  {
+    "id": 25047,
+    "type": "GameObject",
+    "name": "Arrow Opened"
+  },
+  {
+    "id": 25058,
+    "type": "GameObject",
+    "name": "Arrow Closed"
+  },
+  {
+    "id": 25060,
+    "type": "GameObject",
+    "name": "Arrow Opened"
+  },
+  {
+    "id": 25226,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25227,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25228,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25229,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25230,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25231,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25457,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25477,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25478,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25479,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25561,
+    "type": "GameObject",
+    "name": "Arrows"
+  },
+  {
+    "id": 25623,
+    "type": "GameObject",
+    "name": "LeftArrow"
+  },
+  {
+    "id": 25728,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25729,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25730,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 25731,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 26851,
+    "type": "GameObject",
+    "name": "ArrowGlow1"
+  },
+  {
+    "id": 26979,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 27388,
+    "type": "GameObject",
+    "name": "arrow_test"
+  },
+  {
+    "id": 27698,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 27711,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 27848,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 27851,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 27871,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 27982,
+    "type": "GameObject",
+    "name": "RewardIconArrow"
+  },
+  {
+    "id": 28081,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 28105,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 28106,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 28172,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 28173,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 28720,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 28820,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 29038,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 29311,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 29550,
+    "type": "GameObject",
+    "name": "Arrows"
+  },
+  {
+    "id": 30278,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 30456,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 30712,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 30855,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 31520,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 31726,
+    "type": "GameObject",
+    "name": "Lives_popup_clock_arrow"
+  },
+  {
+    "id": 31727,
+    "type": "GameObject",
+    "name": "Lives_popup_clock_arrow"
+  },
+  {
+    "id": 31728,
+    "type": "GameObject",
+    "name": "Lives_popup_clock_arrow"
+  },
+  {
+    "id": 31821,
+    "type": "GameObject",
+    "name": "ArrowLeft"
+  },
+  {
+    "id": 31835,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 31876,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 31931,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 32475,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 32577,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 32651,
+    "type": "GameObject",
+    "name": "BuyBoosterArrow"
+  },
+  {
+    "id": 32652,
+    "type": "GameObject",
+    "name": "ArrowBoosterUnlock"
+  },
+  {
+    "id": 33065,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 33066,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 34085,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 34518,
+    "type": "GameObject",
+    "name": "ArrowBoosterParticles"
+  },
+  {
+    "id": 35058,
+    "type": "GameObject",
+    "name": "ArrowCenterPivot"
+  },
+  {
+    "id": 35154,
+    "type": "GameObject",
+    "name": "add_arrow_glow_Add"
+  },
+  {
+    "id": 35950,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 36033,
+    "type": "GameObject",
+    "name": "UpArrow"
+  },
+  {
+    "id": 36131,
+    "type": "GameObject",
+    "name": "Arrow2"
+  },
+  {
+    "id": 36132,
+    "type": "GameObject",
+    "name": "Arrow1"
+  },
+  {
+    "id": 36189,
+    "type": "GameObject",
+    "name": "HomeTutorialArrow"
+  },
+  {
+    "id": 36190,
+    "type": "GameObject",
+    "name": "TutorialArrow"
+  },
+  {
+    "id": 36193,
+    "type": "GameObject",
+    "name": "ArrowPart1"
+  },
+  {
+    "id": 36194,
+    "type": "GameObject",
+    "name": "ArrowPart1"
+  },
+  {
+    "id": 36950,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 37340,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 37383,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 37413,
+    "type": "GameObject",
+    "name": "ArrowLeft"
+  },
+  {
+    "id": 37616,
+    "type": "GameObject",
+    "name": "Arrow2"
+  },
+  {
+    "id": 38171,
+    "type": "GameObject",
+    "name": "GlassArrow"
+  },
+  {
+    "id": 38197,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 38285,
+    "type": "GameObject",
+    "name": "Arrow_01"
+  },
+  {
+    "id": 38368,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 38495,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 38549,
+    "type": "GameObject",
+    "name": "LowerArrow"
+  },
+  {
+    "id": 39029,
+    "type": "GameObject",
+    "name": "ArrowPositioner"
+  },
+  {
+    "id": 39212,
+    "type": "GameObject",
+    "name": "Arrow_arka_golge"
+  },
+  {
+    "id": 39581,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 39654,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 39689,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 39690,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 39718,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 40776,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 40841,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 41389,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 41461,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 41462,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 41470,
+    "type": "GameObject",
+    "name": "DownArrow"
+  },
+  {
+    "id": 41471,
+    "type": "GameObject",
+    "name": "DownArrow"
+  },
+  {
+    "id": 41668,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 41879,
+    "type": "GameObject",
+    "name": "DownArrow"
+  },
+  {
+    "id": 42688,
+    "type": "GameObject",
+    "name": "ArrowFrameShadow"
+  },
+  {
+    "id": 42709,
+    "type": "GameObject",
+    "name": "Arrow_02_Ctrl"
+  },
+  {
+    "id": 42718,
+    "type": "GameObject",
+    "name": "UnlimitedArrowIconView"
+  },
+  {
+    "id": 42818,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 42849,
+    "type": "GameObject",
+    "name": "DownArrow"
+  },
+  {
+    "id": 42850,
+    "type": "GameObject",
+    "name": "DownArrow"
+  },
+  {
+    "id": 42918,
+    "type": "GameObject",
+    "name": "LadderOfferTypeTwoArrow"
+  },
+  {
+    "id": 42926,
+    "type": "GameObject",
+    "name": "ClockArrow"
+  },
+  {
+    "id": 42983,
+    "type": "GameObject",
+    "name": "Arrow1"
+  },
+  {
+    "id": 42984,
+    "type": "GameObject",
+    "name": "Arrow2"
+  },
+  {
+    "id": 43251,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 43497,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 43498,
+    "type": "GameObject",
+    "name": "Arrow_01_Ctrl"
+  },
+  {
+    "id": 43943,
+    "type": "GameObject",
+    "name": "add_arrow_IN"
+  },
+  {
+    "id": 44030,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 44031,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 44032,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 44033,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 44144,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 44230,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 44270,
+    "type": "GameObject",
+    "name": "DownArrow"
+  },
+  {
+    "id": 44545,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 44621,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 44631,
+    "type": "GameObject",
+    "name": "LadderOfferArrowShop"
+  },
+  {
+    "id": 44632,
+    "type": "GameObject",
+    "name": "LadderOfferArrow"
+  },
+  {
+    "id": 44729,
+    "type": "GameObject",
+    "name": "ClockArrow"
+  },
+  {
+    "id": 45298,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 45299,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 45436,
+    "type": "GameObject",
+    "name": "WeeklyPassUnclaimedArrowWithRibbon"
+  },
+  {
+    "id": 45459,
+    "type": "GameObject",
+    "name": "WeeklyPassUnclaimedArrow"
+  },
+  {
+    "id": 45468,
+    "type": "GameObject",
+    "name": "RoyalPassUnclaimedArrowWithRibbon"
+  },
+  {
+    "id": 45483,
+    "type": "GameObject",
+    "name": "RoyalPassUnclaimedArrow"
+  },
+  {
+    "id": 45793,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 46020,
+    "type": "GameObject",
+    "name": "ArrowRight"
+  },
+  {
+    "id": 46033,
+    "type": "GameObject",
+    "name": "add_arrow_glow_Def"
+  },
+  {
+    "id": 46037,
+    "type": "GameObject",
+    "name": "ArrowBoosterPrefab"
+  },
+  {
+    "id": 46044,
+    "type": "GameObject",
+    "name": "RoyalPassUnclaimedUnlimitedArrow"
+  },
+  {
+    "id": 46045,
+    "type": "GameObject",
+    "name": "ShopUnlimitedArrowReward"
+  },
+  {
+    "id": 46205,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 46688,
+    "type": "GameObject",
+    "name": "GlassArrow"
+  },
+  {
+    "id": 46726,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 46889,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 47818,
+    "type": "GameObject",
+    "name": "BarRewardArrow"
+  },
+  {
+    "id": 47824,
+    "type": "GameObject",
+    "name": "BarRewardUnlimitedArrow"
+  },
+  {
+    "id": 48111,
+    "type": "GameObject",
+    "name": "Arrow Closed"
+  },
+  {
+    "id": 48113,
+    "type": "GameObject",
+    "name": "Arrow Opened"
+  },
+  {
+    "id": 48131,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 48307,
+    "type": "GameObject",
+    "name": "ArrowIconView"
+  },
+  {
+    "id": 48625,
+    "type": "GameObject",
+    "name": "Arrow_uc"
+  },
+  {
+    "id": 49185,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 49216,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 49373,
+    "type": "GameObject",
+    "name": "OfferArrow"
+  },
+  {
+    "id": 49408,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 49540,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 49558,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 49559,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 49780,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 49876,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 50304,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 50357,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 50358,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 50974,
+    "type": "GameObject",
+    "name": "UpArrow"
+  },
+  {
+    "id": 50975,
+    "type": "GameObject",
+    "name": "UpArrow"
+  },
+  {
+    "id": 51026,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 51046,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 51075,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 51166,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 51226,
+    "type": "GameObject",
+    "name": "ArrowGlass"
+  },
+  {
+    "id": 51805,
+    "type": "GameObject",
+    "name": "arrow_shadow"
+  },
+  {
+    "id": 52088,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 52103,
+    "type": "GameObject",
+    "name": "arrow_250px_shadow"
+  },
+  {
+    "id": 52106,
+    "type": "GameObject",
+    "name": "arrow_250px_shadow"
+  },
+  {
+    "id": 52112,
+    "type": "GameObject",
+    "name": "Arrows"
+  },
+  {
+    "id": 52213,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 52516,
+    "type": "GameObject",
+    "name": "Arrow_02"
+  },
+  {
+    "id": 53008,
+    "type": "GameObject",
+    "name": "UnlimitedArrow"
+  },
+  {
+    "id": 53250,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 53261,
+    "type": "GameObject",
+    "name": "arrow_shadow"
+  },
+  {
+    "id": 53453,
+    "type": "GameObject",
+    "name": "UpArrow"
+  },
+  {
+    "id": 53573,
+    "type": "GameObject",
+    "name": "DownArrow"
+  },
+  {
+    "id": 53592,
+    "type": "GameObject",
+    "name": "RewardIconUnlimitedArrow"
+  },
+  {
+    "id": 53647,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 53743,
+    "type": "GameObject",
+    "name": "Arrow1"
+  },
+  {
+    "id": 53895,
+    "type": "GameObject",
+    "name": "GlassArrow"
+  },
+  {
+    "id": 54025,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 54395,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 55052,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 55053,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 55068,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 55069,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 55070,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 55190,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 55334,
+    "type": "GameObject",
+    "name": "ArrowBoosterInfo"
+  },
+  {
+    "id": 55945,
+    "type": "GameObject",
+    "name": "ArrowRight"
+  },
+  {
+    "id": 56550,
+    "type": "GameObject",
+    "name": "UpArrow"
+  },
+  {
+    "id": 56716,
+    "type": "GameObject",
+    "name": "Arrow_arka"
+  },
+  {
+    "id": 57244,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 57944,
+    "type": "GameObject",
+    "name": "GlassArrow"
+  },
+  {
+    "id": 58088,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 58148,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 58149,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 58400,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 58617,
+    "type": "GameObject",
+    "name": "UpperArrow"
+  },
+  {
+    "id": 58843,
+    "type": "GameObject",
+    "name": "RightArrow"
+  },
+  {
+    "id": 59053,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 59054,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 59240,
+    "type": "GameObject",
+    "name": "Arrow_uc_golge"
+  },
+  {
+    "id": 59862,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 59863,
+    "type": "GameObject",
+    "name": "Arrow"
+  },
+  {
+    "id": 59880,
+    "type": "GameObject",
+    "name": "ArrowFrame"
+  }
+]

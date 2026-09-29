@@ -1,0 +1,44 @@
+var results=new System.Collections.Generic.List<string>();
+var qa=RoyalThrone.Testing.RoyalQaService.Instance;
+if(RoyalThrone.Testing.RoyalSave.Testing)throw new System.Exception("Wait for gameplay QA to finish before media verification.");
+qa.StartSession();qa.Visible=false;
+int oldSound=RoyalThrone.Testing.RoyalSave.GetInt("Sound",1);
+var host=new UnityEngine.GameObject("Archer and hammer media checks");
+var archer=host.AddComponent<RoyalThrone.ReferenceGameplay.ReferenceArcherSequence>();
+var hammer=host.AddComponent<RoyalThrone.ReferenceGameplay.ReferenceHammerSequence>();
+var audio=JellyGarden.Scripts.Juice.RoyalAudioDirector.Get;
+System.Action<bool,string> check=(ok,message)=>{results.Add((ok?"PASS ":"FAIL ")+message);if(!ok)throw new System.Exception(message);};
+try {
+ RoyalThrone.Testing.RoyalSave.SetInt("Sound",1);
+ var voices=audio.GetComponents<UnityEngine.AudioSource>();
+ var row=new[]{new UnityEngine.Vector3(-3,0),new UnityEngine.Vector3(3,0)};
+ archer.Begin(row,1,i=>{});archer.Advance(.2f,false);
+ check(System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name=="arrow_use"),"Original archer cue starts on release");
+ archer.Advance(1,true);
+ check(!System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name=="arrow_use"),"Pause freezes archer audio");
+ archer.Advance(.01f,false);
+ check(System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name=="arrow_use"),"Resume restores the archer cue");
+ archer.Cancel();
+ check(!System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name=="arrow_use"),"Cancel stops archer audio");
+ RoyalThrone.Testing.RoyalSave.SetInt("Sound",0);archer.Begin(row,1,i=>{});archer.Advance(.2f,false);
+ check(!System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name=="arrow_use"),"Mute suppresses the archer cue");archer.Cancel();
+ RoyalThrone.Testing.RoyalSave.SetInt("Sound",1);
+ hammer.Begin(UnityEngine.Vector3.zero,UnityEngine.Vector3.down*3,1,()=>{});
+ check(System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name=="hammer_use_appear"),"Original hammer appearance cue plays");
+ hammer.Advance(.45f,false);
+ check(System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name=="hammer_use_hit"),"Original hammer hit cue plays at impact");
+ var fx=UnityEngine.GameObject.Find("Hammer - native impact VFX");
+ check(System.Linq.Enumerable.Sum(fx.GetComponentsInChildren<UnityEngine.ParticleSystem>(),p=>p.particleCount)>0,"Imported hammer impact particles emit");
+ hammer.Advance(1,true);
+ check(!System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name.StartsWith("hammer_use_")),"Pause freezes hammer audio");
+ hammer.Advance(.5f,false);
+ check(System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name=="hammer_use_disappear"),"Original hammer return cue plays");hammer.Cancel();
+ check(!System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name.StartsWith("hammer_use_")),"Cancel stops hammer cues");
+ RoyalThrone.Testing.RoyalSave.SetInt("Sound",0);hammer.Begin(UnityEngine.Vector3.zero,UnityEngine.Vector3.down,1,()=>{});hammer.Advance(.5f,false);
+ check(!System.Linq.Enumerable.Any(voices,v=>v.isPlaying&&v.clip&&v.clip.name.StartsWith("hammer_use_")),"Mute suppresses hammer cues");
+} finally {
+ archer.Cancel();hammer.Cancel();UnityEngine.Object.Destroy(host);RoyalThrone.Testing.RoyalSave.SetInt("Sound",oldSound);
+ RoyalThrone.Editor.RoyalRegressionRunner.Run(qa.EndSession());
+ System.IO.File.WriteAllLines("Design/Archer-Reference/Review/media-checks.txt",results);
+}
+return true;
