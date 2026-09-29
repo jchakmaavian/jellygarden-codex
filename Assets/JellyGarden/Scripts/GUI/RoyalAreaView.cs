@@ -473,7 +473,7 @@ namespace RoyalThrone.Presentation
             row.gameObject.SetActive(has); rowSlide.anchoredPosition = Vector2.zero; SetAlpha(rowSlide, 1);
             if (!has) return;
             var t = area.tasks[task];
-            rowArt.sprite = RoyalAreas.Art(t.patch); rowArt.enabled = rowArt.sprite;
+            rowArt.sprite = RoyalAreas.Art(string.IsNullOrEmpty(t.icon) ? t.patch : t.icon); rowArt.enabled = rowArt.sprite;
             rowName.text = t.name; doItCost.text = t.cost.ToString();
             doIt.gameObject.SetActive(!done); doIt.interactable = !done && building == null; doItRect.localScale = Vector3.one;
             tick.gameObject.SetActive(false);

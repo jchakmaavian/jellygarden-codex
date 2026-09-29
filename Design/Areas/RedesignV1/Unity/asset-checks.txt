@@ -1,0 +1,436 @@
+Royal Throne area redesign checks 2026-09-29T12:38:34.8321025Z
+PASS The runtime area catalogue loads
+PASS The ten-area campaign remains present
+PASS Campaign task count and star economy remain 87 tasks / 208 stars
+PASS Area 1 has its own completed art contract
+PASS Area 1 preserves task indices and star costs
+PASS Area 1 has clear, distinct names for each restoration object
+PASS Area 1 uses unique redesign scenes and thumbnails
+PASS Sprite loads: RedesignV1/Area01/before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/before
+PASS Sprite loads: RedesignV1/Area01/after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/after
+PASS Area 1 before and after have identical dimensions
+PASS Area 1 has a 940x1672 scene
+PASS Sprite loads: RedesignV1/Area01/thumb-before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/thumb-before
+PASS Thumbnail is 240x428: RedesignV1/Area01/thumb-before
+PASS Sprite loads: RedesignV1/Area01/thumb-after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/thumb-after
+PASS Thumbnail is 240x428: RedesignV1/Area01/thumb-after
+PASS Area 1 task 1 has a unique object sprite
+PASS Area 1 task 1 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area01/task-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/task-01
+PASS Area 1 task 1 fits its scene bounds without scaling
+PASS Area 1 task 1 contains transparent space and solid object pixels
+PASS Area 1 task 1 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area01/icon-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/icon-01
+PASS Area 1 task 1 icon is 256x256
+PASS Area 1 task 2 has a unique object sprite
+PASS Area 1 task 2 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area01/task-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/task-02
+PASS Area 1 task 2 fits its scene bounds without scaling
+PASS Area 1 task 2 contains transparent space and solid object pixels
+PASS Area 1 task 2 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area01/icon-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/icon-02
+PASS Area 1 task 2 icon is 256x256
+PASS Area 1 task 3 has a unique object sprite
+PASS Area 1 task 3 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area01/task-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/task-03
+PASS Area 1 task 3 fits its scene bounds without scaling
+PASS Area 1 task 3 contains transparent space and solid object pixels
+PASS Area 1 task 3 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area01/icon-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/icon-03
+PASS Area 1 task 3 icon is 256x256
+PASS Area 1 task 4 has a unique object sprite
+PASS Area 1 task 4 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area01/task-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/task-04
+PASS Area 1 task 4 fits its scene bounds without scaling
+PASS Area 1 task 4 contains transparent space and solid object pixels
+PASS Area 1 task 4 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area01/icon-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/icon-04
+PASS Area 1 task 4 icon is 256x256
+PASS Area 1 task 5 has a unique object sprite
+PASS Area 1 task 5 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area01/task-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/task-05
+PASS Area 1 task 5 fits its scene bounds without scaling
+PASS Area 1 task 5 contains transparent space and solid object pixels
+PASS Area 1 task 5 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area01/icon-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/icon-05
+PASS Area 1 task 5 icon is 256x256
+PASS Area 1 task 6 has a unique object sprite
+PASS Area 1 task 6 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area01/task-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/task-06
+PASS Area 1 task 6 fits its scene bounds without scaling
+PASS Area 1 task 6 contains transparent space and solid object pixels
+PASS Area 1 task 6 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area01/icon-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area01/icon-06
+PASS Area 1 task 6 icon is 256x256
+PASS Area 2 has its own completed art contract
+PASS Area 2 preserves task indices and star costs
+PASS Area 2 has clear, distinct names for each restoration object
+PASS Area 2 uses unique redesign scenes and thumbnails
+PASS Sprite loads: RedesignV1/Area02/before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/before
+PASS Sprite loads: RedesignV1/Area02/after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/after
+PASS Area 2 before and after have identical dimensions
+PASS Area 2 has a 940x1672 scene
+PASS Sprite loads: RedesignV1/Area02/thumb-before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/thumb-before
+PASS Thumbnail is 240x428: RedesignV1/Area02/thumb-before
+PASS Sprite loads: RedesignV1/Area02/thumb-after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/thumb-after
+PASS Thumbnail is 240x428: RedesignV1/Area02/thumb-after
+PASS Area 2 task 1 has a unique object sprite
+PASS Area 2 task 1 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area02/task-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/task-01
+PASS Area 2 task 1 fits its scene bounds without scaling
+PASS Area 2 task 1 contains transparent space and solid object pixels
+PASS Area 2 task 1 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area02/icon-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/icon-01
+PASS Area 2 task 1 icon is 256x256
+PASS Area 2 task 2 has a unique object sprite
+PASS Area 2 task 2 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area02/task-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/task-02
+PASS Area 2 task 2 fits its scene bounds without scaling
+PASS Area 2 task 2 contains transparent space and solid object pixels
+PASS Area 2 task 2 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area02/icon-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/icon-02
+PASS Area 2 task 2 icon is 256x256
+PASS Area 2 task 3 has a unique object sprite
+PASS Area 2 task 3 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area02/task-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/task-03
+PASS Area 2 task 3 fits its scene bounds without scaling
+PASS Area 2 task 3 contains transparent space and solid object pixels
+PASS Area 2 task 3 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area02/icon-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/icon-03
+PASS Area 2 task 3 icon is 256x256
+PASS Area 2 task 4 has a unique object sprite
+PASS Area 2 task 4 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area02/task-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/task-04
+PASS Area 2 task 4 fits its scene bounds without scaling
+PASS Area 2 task 4 contains transparent space and solid object pixels
+PASS Area 2 task 4 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area02/icon-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/icon-04
+PASS Area 2 task 4 icon is 256x256
+PASS Area 2 task 5 has a unique object sprite
+PASS Area 2 task 5 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area02/task-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/task-05
+PASS Area 2 task 5 fits its scene bounds without scaling
+PASS Area 2 task 5 contains transparent space and solid object pixels
+PASS Area 2 task 5 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area02/icon-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/icon-05
+PASS Area 2 task 5 icon is 256x256
+PASS Area 2 task 6 has a unique object sprite
+PASS Area 2 task 6 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area02/task-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/task-06
+PASS Area 2 task 6 fits its scene bounds without scaling
+PASS Area 2 task 6 contains transparent space and solid object pixels
+PASS Area 2 task 6 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area02/icon-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area02/icon-06
+PASS Area 2 task 6 icon is 256x256
+PASS Area 3 has its own completed art contract
+PASS Area 3 preserves task indices and star costs
+PASS Area 3 has clear, distinct names for each restoration object
+PASS Area 3 uses unique redesign scenes and thumbnails
+PASS Sprite loads: RedesignV1/Area03/before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/before
+PASS Sprite loads: RedesignV1/Area03/after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/after
+PASS Area 3 before and after have identical dimensions
+PASS Area 3 has a 940x1672 scene
+PASS Sprite loads: RedesignV1/Area03/thumb-before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/thumb-before
+PASS Thumbnail is 240x428: RedesignV1/Area03/thumb-before
+PASS Sprite loads: RedesignV1/Area03/thumb-after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/thumb-after
+PASS Thumbnail is 240x428: RedesignV1/Area03/thumb-after
+PASS Area 3 task 1 has a unique object sprite
+PASS Area 3 task 1 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area03/task-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/task-01
+PASS Area 3 task 1 fits its scene bounds without scaling
+PASS Area 3 task 1 contains transparent space and solid object pixels
+PASS Area 3 task 1 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area03/icon-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/icon-01
+PASS Area 3 task 1 icon is 256x256
+PASS Area 3 task 2 has a unique object sprite
+PASS Area 3 task 2 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area03/task-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/task-02
+PASS Area 3 task 2 fits its scene bounds without scaling
+PASS Area 3 task 2 contains transparent space and solid object pixels
+PASS Area 3 task 2 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area03/icon-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/icon-02
+PASS Area 3 task 2 icon is 256x256
+PASS Area 3 task 3 has a unique object sprite
+PASS Area 3 task 3 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area03/task-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/task-03
+PASS Area 3 task 3 fits its scene bounds without scaling
+PASS Area 3 task 3 contains transparent space and solid object pixels
+PASS Area 3 task 3 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area03/icon-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/icon-03
+PASS Area 3 task 3 icon is 256x256
+PASS Area 3 task 4 has a unique object sprite
+PASS Area 3 task 4 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area03/task-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/task-04
+PASS Area 3 task 4 fits its scene bounds without scaling
+PASS Area 3 task 4 contains transparent space and solid object pixels
+PASS Area 3 task 4 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area03/icon-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/icon-04
+PASS Area 3 task 4 icon is 256x256
+PASS Area 3 task 5 has a unique object sprite
+PASS Area 3 task 5 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area03/task-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/task-05
+PASS Area 3 task 5 fits its scene bounds without scaling
+PASS Area 3 task 5 contains transparent space and solid object pixels
+PASS Area 3 task 5 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area03/icon-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/icon-05
+PASS Area 3 task 5 icon is 256x256
+PASS Area 3 task 6 has a unique object sprite
+PASS Area 3 task 6 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area03/task-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/task-06
+PASS Area 3 task 6 fits its scene bounds without scaling
+PASS Area 3 task 6 contains transparent space and solid object pixels
+PASS Area 3 task 6 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area03/icon-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/icon-06
+PASS Area 3 task 6 icon is 256x256
+PASS Area 3 task 7 has a unique object sprite
+PASS Area 3 task 7 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area03/task-07
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/task-07
+PASS Area 3 task 7 fits its scene bounds without scaling
+PASS Area 3 task 7 contains transparent space and solid object pixels
+PASS Area 3 task 7 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area03/icon-07
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area03/icon-07
+PASS Area 3 task 7 icon is 256x256
+PASS Area 4 has its own completed art contract
+PASS Area 4 preserves task indices and star costs
+PASS Area 4 has clear, distinct names for each restoration object
+PASS Area 4 uses unique redesign scenes and thumbnails
+PASS Sprite loads: RedesignV1/Area04/before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/before
+PASS Sprite loads: RedesignV1/Area04/after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/after
+PASS Area 4 before and after have identical dimensions
+PASS Area 4 has a 940x1672 scene
+PASS Sprite loads: RedesignV1/Area04/thumb-before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/thumb-before
+PASS Thumbnail is 240x428: RedesignV1/Area04/thumb-before
+PASS Sprite loads: RedesignV1/Area04/thumb-after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/thumb-after
+PASS Thumbnail is 240x428: RedesignV1/Area04/thumb-after
+PASS Area 4 task 1 has a unique object sprite
+PASS Area 4 task 1 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area04/task-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/task-01
+PASS Area 4 task 1 fits its scene bounds without scaling
+PASS Area 4 task 1 contains transparent space and solid object pixels
+PASS Area 4 task 1 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area04/icon-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/icon-01
+PASS Area 4 task 1 icon is 256x256
+PASS Area 4 task 2 has a unique object sprite
+PASS Area 4 task 2 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area04/task-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/task-02
+PASS Area 4 task 2 fits its scene bounds without scaling
+PASS Area 4 task 2 contains transparent space and solid object pixels
+PASS Area 4 task 2 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area04/icon-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/icon-02
+PASS Area 4 task 2 icon is 256x256
+PASS Area 4 task 3 has a unique object sprite
+PASS Area 4 task 3 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area04/task-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/task-03
+PASS Area 4 task 3 fits its scene bounds without scaling
+PASS Area 4 task 3 contains transparent space and solid object pixels
+PASS Area 4 task 3 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area04/icon-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/icon-03
+PASS Area 4 task 3 icon is 256x256
+PASS Area 4 task 4 has a unique object sprite
+PASS Area 4 task 4 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area04/task-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/task-04
+PASS Area 4 task 4 fits its scene bounds without scaling
+PASS Area 4 task 4 contains transparent space and solid object pixels
+PASS Area 4 task 4 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area04/icon-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/icon-04
+PASS Area 4 task 4 icon is 256x256
+PASS Area 4 task 5 has a unique object sprite
+PASS Area 4 task 5 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area04/task-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/task-05
+PASS Area 4 task 5 fits its scene bounds without scaling
+PASS Area 4 task 5 contains transparent space and solid object pixels
+PASS Area 4 task 5 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area04/icon-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/icon-05
+PASS Area 4 task 5 icon is 256x256
+PASS Area 4 task 6 has a unique object sprite
+PASS Area 4 task 6 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area04/task-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/task-06
+PASS Area 4 task 6 fits its scene bounds without scaling
+PASS Area 4 task 6 contains transparent space and solid object pixels
+PASS Area 4 task 6 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area04/icon-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/icon-06
+PASS Area 4 task 6 icon is 256x256
+PASS Area 4 task 7 has a unique object sprite
+PASS Area 4 task 7 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area04/task-07
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/task-07
+PASS Area 4 task 7 fits its scene bounds without scaling
+PASS Area 4 task 7 contains transparent space and solid object pixels
+PASS Area 4 task 7 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area04/icon-07
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/icon-07
+PASS Area 4 task 7 icon is 256x256
+PASS Area 4 task 8 has a unique object sprite
+PASS Area 4 task 8 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area04/task-08
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/task-08
+PASS Area 4 task 8 fits its scene bounds without scaling
+PASS Area 4 task 8 contains transparent space and solid object pixels
+PASS Area 4 task 8 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area04/icon-08
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area04/icon-08
+PASS Area 4 task 8 icon is 256x256
+PASS Area 5 has its own completed art contract
+PASS Area 5 preserves task indices and star costs
+PASS Area 5 has clear, distinct names for each restoration object
+PASS Area 5 uses unique redesign scenes and thumbnails
+PASS Sprite loads: RedesignV1/Area05/before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/before
+PASS Sprite loads: RedesignV1/Area05/after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/after
+PASS Area 5 before and after have identical dimensions
+PASS Area 5 has a 940x1672 scene
+PASS Sprite loads: RedesignV1/Area05/thumb-before
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/thumb-before
+PASS Thumbnail is 240x428: RedesignV1/Area05/thumb-before
+PASS Sprite loads: RedesignV1/Area05/thumb-after
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/thumb-after
+PASS Thumbnail is 240x428: RedesignV1/Area05/thumb-after
+PASS Area 5 task 1 has a unique object sprite
+PASS Area 5 task 1 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area05/task-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/task-01
+PASS Area 5 task 1 fits its scene bounds without scaling
+PASS Area 5 task 1 contains transparent space and solid object pixels
+PASS Area 5 task 1 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area05/icon-01
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/icon-01
+PASS Area 5 task 1 icon is 256x256
+PASS Area 5 task 2 has a unique object sprite
+PASS Area 5 task 2 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area05/task-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/task-02
+PASS Area 5 task 2 fits its scene bounds without scaling
+PASS Area 5 task 2 contains transparent space and solid object pixels
+PASS Area 5 task 2 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area05/icon-02
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/icon-02
+PASS Area 5 task 2 icon is 256x256
+PASS Area 5 task 3 has a unique object sprite
+PASS Area 5 task 3 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area05/task-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/task-03
+PASS Area 5 task 3 fits its scene bounds without scaling
+PASS Area 5 task 3 contains transparent space and solid object pixels
+PASS Area 5 task 3 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area05/icon-03
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/icon-03
+PASS Area 5 task 3 icon is 256x256
+PASS Area 5 task 4 has a unique object sprite
+PASS Area 5 task 4 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area05/task-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/task-04
+PASS Area 5 task 4 fits its scene bounds without scaling
+PASS Area 5 task 4 contains transparent space and solid object pixels
+PASS Area 5 task 4 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area05/icon-04
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/icon-04
+PASS Area 5 task 4 icon is 256x256
+PASS Area 5 task 5 has a unique object sprite
+PASS Area 5 task 5 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area05/task-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/task-05
+PASS Area 5 task 5 fits its scene bounds without scaling
+PASS Area 5 task 5 contains transparent space and solid object pixels
+PASS Area 5 task 5 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area05/icon-05
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/icon-05
+PASS Area 5 task 5 icon is 256x256
+PASS Area 5 task 6 has a unique object sprite
+PASS Area 5 task 6 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area05/task-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/task-06
+PASS Area 5 task 6 fits its scene bounds without scaling
+PASS Area 5 task 6 contains transparent space and solid object pixels
+PASS Area 5 task 6 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area05/icon-06
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/icon-06
+PASS Area 5 task 6 icon is 256x256
+PASS Area 5 task 7 has a unique object sprite
+PASS Area 5 task 7 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area05/task-07
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/task-07
+PASS Area 5 task 7 fits its scene bounds without scaling
+PASS Area 5 task 7 contains transparent space and solid object pixels
+PASS Area 5 task 7 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area05/icon-07
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/icon-07
+PASS Area 5 task 7 icon is 256x256
+PASS Area 5 task 8 has a unique object sprite
+PASS Area 5 task 8 has valid top-left scene bounds
+PASS Sprite loads: RedesignV1/Area05/task-08
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/task-08
+PASS Area 5 task 8 fits its scene bounds without scaling
+PASS Area 5 task 8 contains transparent space and solid object pixels
+PASS Area 5 task 8 has a unique redesign task icon
+PASS Sprite loads: RedesignV1/Area05/icon-08
+PASS Mobile compression and alpha-edge import contract: RedesignV1/Area05/icon-08
+PASS Area 5 task 8 icon is 256x256
+Exact base + layer composition is checked on lossless design sources by the asset pipeline, before WebP and GPU compression.
+ALL REDESIGN ASSET CHECKS PASSED

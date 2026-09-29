@@ -1,0 +1,107 @@
+{
+  "number": 5,
+  "name": "Grand Royal Library",
+  "tasks": 8,
+  "stars": 19,
+  "source_sheet_sha256": "7e62f8ad63b4440354569428b75dc7724da732b754729f905b2d8b491a70eac7",
+  "source_background_sha256": "983393a8a28e57361910b05ecdeec82ece09c3aaa09b2e1e84564172531f13e6",
+  "exact_composite_verified": true,
+  "placements": [
+    {
+      "cell": 0,
+      "name": "Fill the western bookcase",
+      "instances": [
+        [
+          0.17,
+          0.22,
+          0.4,
+          0.495
+        ]
+      ]
+    },
+    {
+      "cell": 1,
+      "name": "Restore the eastern shelves",
+      "instances": [
+        [
+          0.46,
+          0.22,
+          0.865,
+          0.495
+        ]
+      ]
+    },
+    {
+      "cell": 2,
+      "name": "Set the royal reading desk",
+      "instances": [
+        [
+          0.315,
+          0.485,
+          0.685,
+          0.65
+        ]
+      ]
+    },
+    {
+      "cell": 3,
+      "name": "Place the velvet reading chair",
+      "instances": [
+        [
+          0.67,
+          0.54,
+          0.91,
+          0.718
+        ]
+      ]
+    },
+    {
+      "cell": 4,
+      "name": "Chart the celestial globe",
+      "instances": [
+        [
+          0.055,
+          0.455,
+          0.295,
+          0.655
+        ]
+      ]
+    },
+    {
+      "cell": 5,
+      "name": "Raise the library ladder",
+      "instances": [
+        [
+          0.67,
+          0.32,
+          0.83,
+          0.53
+        ]
+      ]
+    },
+    {
+      "cell": 6,
+      "name": "Unroll the sapphire rug",
+      "instances": [
+        [
+          0.31,
+          0.665,
+          0.69,
+          0.81
+        ]
+      ]
+    },
+    {
+      "cell": 7,
+      "name": "Light the library chandelier",
+      "instances": [
+        [
+          0.33,
+          0.065,
+          0.67,
+          0.265
+        ]
+      ]
+    }
+  ]
+}

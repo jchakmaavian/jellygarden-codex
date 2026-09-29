@@ -2,232 +2,433 @@
  "areas": [
   {
    "number": 1,
-   "name": "Castle Approach",
-   "subtitle": "Welcome the kingdom home",
+   "name": "Sapphire Castle",
+   "subtitle": "Raise the crown of the kingdom",
    "outdoor": true,
    "rewardCoins": 20,
    "rewardBoost": "Stripes",
    "tasks": [
     {
-     "name": "Raise the castle keep",
+     "name": "Raise the sapphire castle",
      "cost": 1,
-     "patch": "Area01/task-01",
-     "x0": 0.2851063829787234,
-     "y0": 0.36363636363636365,
-     "x1": 0.7787234042553192,
-     "y1": 0.7129186602870813
+     "patch": "RedesignV1/Area01/task-01",
+     "icon": "RedesignV1/Area01/icon-01",
+     "x0": 0.2553191489361702,
+     "y0": 0.1339712918660287,
+     "x1": 0.7446808510638298,
+     "y1": 0.4258373205741627
     },
     {
-     "name": "Rebuild the grand stairway",
+     "name": "Restore the crown fountain",
      "cost": 1,
-     "patch": "Area01/task-02",
-     "x0": 0.2936170212765957,
-     "y0": 0.69377990430622,
-     "x1": 0.7106382978723405,
-     "y1": 0.8253588516746412
+     "patch": "RedesignV1/Area01/task-02",
+     "icon": "RedesignV1/Area01/icon-02",
+     "x0": 0.3148936170212766,
+     "y0": 0.5,
+     "x1": 0.6851063829787234,
+     "y1": 0.7057416267942583
     },
     {
-     "name": "Restore the twin waterfalls",
+     "name": "Build the royal gazebos",
      "cost": 2,
-     "patch": "Area01/task-03",
+     "patch": "RedesignV1/Area01/task-03",
+     "icon": "RedesignV1/Area01/icon-03",
+     "x0": 0.0425531914893617,
+     "y0": 0.4090909090909091,
+     "x1": 0.9574468085106383,
+     "y1": 0.5909090909090909
+    },
+    {
+     "name": "Shape the emerald topiaries",
+     "cost": 2,
+     "patch": "RedesignV1/Area01/task-04",
+     "icon": "RedesignV1/Area01/icon-04",
+     "x0": 0.03404255319148936,
+     "y0": 0.6722488038277512,
+     "x1": 0.9659574468085106,
+     "y1": 0.7918660287081339
+    },
+    {
+     "name": "Place the swan guardians",
+     "cost": 2,
+     "patch": "RedesignV1/Area01/task-05",
+     "icon": "RedesignV1/Area01/icon-05",
      "x0": 0.14042553191489363,
-     "y0": 0.6339712918660287,
-     "x1": 0.8425531914893617,
-     "y1": 0.777511961722488
+     "y0": 0.5502392344497608,
+     "x1": 0.8595744680851064,
+     "y1": 0.6626794258373205
     },
     {
-     "name": "Set the golden gate pillars",
+     "name": "Plant the royal flower beds",
      "cost": 2,
-     "patch": "Area01/task-04",
-     "x0": 0.06382978723404255,
-     "y0": 0.6770334928229665,
-     "x1": 0.9361702127659575,
-     "y1": 0.8755980861244019
-    },
-    {
-     "name": "Pave the sunlit plaza",
-     "cost": 2,
-     "patch": "Area01/task-05",
-     "x0": 0.2,
-     "y0": 0.8038277511961722,
-     "x1": 0.8,
-     "y1": 1.0
-    },
-    {
-     "name": "Plant the courtyard gardens",
-     "cost": 2,
-     "patch": "Area01/task-06",
-     "x0": 0.0,
-     "y0": 0.6770334928229665,
-     "x1": 1.0,
-     "y1": 1.0
+     "patch": "RedesignV1/Area01/task-06",
+     "icon": "RedesignV1/Area01/icon-06",
+     "x0": 0.13191489361702127,
+     "y0": 0.7464114832535885,
+     "x1": 0.8723404255319149,
+     "y1": 0.8516746411483254
     }
    ],
-   "placeholder": true,
-   "before": "Area01/before",
-   "after": "Area01/after",
-   "thumbBefore": "Area01/thumb-before",
-   "thumbAfter": "Area01/thumb-after"
+   "placeholder": false,
+   "before": "RedesignV1/Area01/before",
+   "after": "RedesignV1/Area01/after",
+   "thumbBefore": "RedesignV1/Area01/thumb-before",
+   "thumbAfter": "RedesignV1/Area01/thumb-after",
+   "bakedAtmosphere": true
   },
   {
    "number": 2,
-   "name": "Queen's Rose Garden",
-   "subtitle": "Bloom for the Queen",
-   "outdoor": true,
+   "name": "Crown Throne Room",
+   "subtitle": "A home for the royal court",
+   "outdoor": false,
    "rewardCoins": 25,
    "rewardBoost": "Packages",
    "tasks": [
     {
-     "name": "Build the rose arch",
-     "cost": 1
+     "name": "Place the sapphire throne",
+     "cost": 1,
+     "patch": "RedesignV1/Area02/task-01",
+     "icon": "RedesignV1/Area02/icon-01",
+     "x0": 0.32340425531914896,
+     "y0": 0.2751196172248804,
+     "x1": 0.676595744680851,
+     "y1": 0.48564593301435405
     },
     {
-     "name": "Restore the marble fountain",
-     "cost": 2
+     "name": "Roll out the royal carpet",
+     "cost": 2,
+     "patch": "RedesignV1/Area02/task-02",
+     "icon": "RedesignV1/Area02/icon-02",
+     "x0": 0.3446808510638298,
+     "y0": 0.4688995215311005,
+     "x1": 0.6553191489361702,
+     "y1": 0.861244019138756
     },
     {
-     "name": "Trim the hedge maze",
-     "cost": 2
+     "name": "Hang the court banners",
+     "cost": 2,
+     "patch": "RedesignV1/Area02/task-03",
+     "icon": "RedesignV1/Area02/icon-03",
+     "x0": 0.3276595744680851,
+     "y0": 0.19856459330143542,
+     "x1": 0.6723404255319149,
+     "y1": 0.39473684210526316
     },
     {
-     "name": "Place the garden benches",
-     "cost": 2
+     "name": "Raise the crystal chandelier",
+     "cost": 2,
+     "patch": "RedesignV1/Area02/task-04",
+     "icon": "RedesignV1/Area02/icon-04",
+     "x0": 0.3702127659574468,
+     "y0": 0.08851674641148326,
+     "x1": 0.6297872340425532,
+     "y1": 0.26555023923444976
     },
     {
-     "name": "Fill the swan pond",
-     "cost": 2
+     "name": "Stand the golden guardians",
+     "cost": 2,
+     "patch": "RedesignV1/Area02/task-05",
+     "icon": "RedesignV1/Area02/icon-05",
+     "x0": 0.10212765957446808,
+     "y0": 0.423444976076555,
+     "x1": 0.8978723404255319,
+     "y1": 0.645933014354067
     },
     {
-     "name": "Plant the rose beds",
-     "cost": 3
+     "name": "Set the velvet benches",
+     "cost": 3,
+     "patch": "RedesignV1/Area02/task-06",
+     "icon": "RedesignV1/Area02/icon-06",
+     "x0": 0.03829787234042553,
+     "y0": 0.69377990430622,
+     "x1": 0.9617021276595744,
+     "y1": 0.8014354066985646
     }
    ],
-   "placeholder": false
+   "placeholder": false,
+   "before": "RedesignV1/Area02/before",
+   "after": "RedesignV1/Area02/after",
+   "thumbBefore": "RedesignV1/Area02/thumb-before",
+   "thumbAfter": "RedesignV1/Area02/thumb-after",
+   "bakedAtmosphere": true
   },
   {
    "number": 3,
-   "name": "Throne Hall",
-   "subtitle": "A seat worthy of the King",
+   "name": "Royal Dining Salon",
+   "subtitle": "Set a feast for the kingdom",
    "outdoor": false,
    "rewardCoins": 30,
    "rewardBoost": "Colorful_bomb",
    "tasks": [
     {
-     "name": "Restore the royal throne",
-     "cost": 2
+     "name": "Set the royal banquet",
+     "cost": 2,
+     "patch": "RedesignV1/Area03/task-01",
+     "icon": "RedesignV1/Area03/icon-01",
+     "x0": 0.2851063829787234,
+     "y0": 0.5334928229665071,
+     "x1": 0.7148936170212766,
+     "y1": 0.7200956937799043
     },
     {
-     "name": "Roll out the crimson carpet",
-     "cost": 2
+     "name": "Arrange the dining chairs",
+     "cost": 2,
+     "patch": "RedesignV1/Area03/task-02",
+     "icon": "RedesignV1/Area03/icon-02",
+     "x0": 0.1702127659574468,
+     "y0": 0.6339712918660287,
+     "x1": 0.8297872340425532,
+     "y1": 0.7200956937799043
     },
     {
-     "name": "Hang the crystal chandelier",
-     "cost": 2
+     "name": "Fill the china cabinet",
+     "cost": 2,
+     "patch": "RedesignV1/Area03/task-03",
+     "icon": "RedesignV1/Area03/icon-03",
+     "x0": 0.09787234042553192,
+     "y0": 0.3253588516746411,
+     "x1": 0.3404255319148936,
+     "y1": 0.5311004784688995
     },
     {
-     "name": "Fit the stained-glass windows",
-     "cost": 2
+     "name": "Tune the grand piano",
+     "cost": 2,
+     "patch": "RedesignV1/Area03/task-04",
+     "icon": "RedesignV1/Area03/icon-04",
+     "x0": 0.6723404255319149,
+     "y0": 0.42822966507177035,
+     "x1": 0.9404255319148936,
+     "y1": 0.6004784688995215
     },
     {
-     "name": "Raise the realm's banners",
-     "cost": 2
+     "name": "Light the golden fireplace",
+     "cost": 2,
+     "patch": "RedesignV1/Area03/task-05",
+     "icon": "RedesignV1/Area03/icon-05",
+     "x0": 0.3702127659574468,
+     "y0": 0.41866028708133973,
+     "x1": 0.6425531914893617,
+     "y1": 0.5358851674641149
     },
     {
-     "name": "Polish the marble pillars",
-     "cost": 2
+     "name": "Drape the sapphire curtains",
+     "cost": 2,
+     "patch": "RedesignV1/Area03/task-06",
+     "icon": "RedesignV1/Area03/icon-06",
+     "x0": 0.07234042553191489,
+     "y0": 0.24401913875598086,
+     "x1": 0.9276595744680851,
+     "y1": 0.4784688995215311
     },
     {
-     "name": "Light the golden candelabras",
-     "cost": 3
+     "name": "Hang the banquet chandelier",
+     "cost": 3,
+     "patch": "RedesignV1/Area03/task-07",
+     "icon": "RedesignV1/Area03/icon-07",
+     "x0": 0.3446808510638298,
+     "y0": 0.11483253588516747,
+     "x1": 0.6553191489361702,
+     "y1": 0.3062200956937799
     }
    ],
-   "placeholder": false
+   "placeholder": false,
+   "before": "RedesignV1/Area03/before",
+   "after": "RedesignV1/Area03/after",
+   "thumbBefore": "RedesignV1/Area03/thumb-before",
+   "thumbAfter": "RedesignV1/Area03/thumb-after",
+   "bakedAtmosphere": true
   },
   {
    "number": 4,
-   "name": "Royal Stables",
-   "subtitle": "Stalls fit for royal steeds",
+   "name": "Queen's Crown Garden",
+   "subtitle": "Make the royal gardens bloom",
    "outdoor": true,
    "rewardCoins": 35,
    "rewardBoost": "Stripes",
    "tasks": [
     {
-     "name": "Rebuild the stable doors",
-     "cost": 2
+     "name": "Raise the flowering arch",
+     "cost": 2,
+     "patch": "RedesignV1/Area04/task-01",
+     "icon": "RedesignV1/Area04/icon-01",
+     "x0": 0.3659574468085106,
+     "y0": 0.09330143540669857,
+     "x1": 0.6340425531914894,
+     "y1": 0.2583732057416268
     },
     {
-     "name": "Fill the hay loft",
-     "cost": 2
+     "name": "Build the garden pavilion",
+     "cost": 2,
+     "patch": "RedesignV1/Area04/task-02",
+     "icon": "RedesignV1/Area04/icon-02",
+     "x0": 0.03404255319148936,
+     "y0": 0.23205741626794257,
+     "x1": 0.3404255319148936,
+     "y1": 0.43779904306220097
     },
     {
-     "name": "Restore the royal carriage",
-     "cost": 2
+     "name": "Restore the garden fountain",
+     "cost": 2,
+     "patch": "RedesignV1/Area04/task-03",
+     "icon": "RedesignV1/Area04/icon-03",
+     "x0": 0.3446808510638298,
+     "y0": 0.20334928229665072,
+     "x1": 0.6553191489361702,
+     "y1": 0.4043062200956938
     },
     {
-     "name": "Fix the water trough",
-     "cost": 2
+     "name": "Plant the rose terraces",
+     "cost": 2,
+     "patch": "RedesignV1/Area04/task-04",
+     "icon": "RedesignV1/Area04/icon-04",
+     "x0": 0.059574468085106386,
+     "y0": 0.507177033492823,
+     "x1": 0.9404255319148936,
+     "y1": 0.6100478468899522
     },
     {
-     "name": "Raise the horseshoe arch",
-     "cost": 2
+     "name": "Sculpt the emerald hedges",
+     "cost": 2,
+     "patch": "RedesignV1/Area04/task-05",
+     "icon": "RedesignV1/Area04/icon-05",
+     "x0": 0.08085106382978724,
+     "y0": 0.6100478468899522,
+     "x1": 0.9191489361702128,
+     "y1": 0.7272727272727273
     },
     {
-     "name": "Light the lantern posts",
-     "cost": 2
+     "name": "Place the royal garden seats",
+     "cost": 2,
+     "patch": "RedesignV1/Area04/task-06",
+     "icon": "RedesignV1/Area04/icon-06",
+     "x0": 0.6723404255319149,
+     "y0": 0.3062200956937799,
+     "x1": 0.9361702127659575,
+     "y1": 0.4043062200956938
     },
     {
-     "name": "Hang the saddle racks",
-     "cost": 3
+     "name": "Set the swan statues",
+     "cost": 3,
+     "patch": "RedesignV1/Area04/task-07",
+     "icon": "RedesignV1/Area04/icon-07",
+     "x0": 0.11914893617021277,
+     "y0": 0.3588516746411483,
+     "x1": 0.8808510638297873,
+     "y1": 0.507177033492823
     },
     {
-     "name": "Set the weather vane",
-     "cost": 3
+     "name": "Light the garden lanterns",
+     "cost": 3,
+     "patch": "RedesignV1/Area04/task-08",
+     "icon": "RedesignV1/Area04/icon-08",
+     "x0": 0.37446808510638296,
+     "y0": 0.4784688995215311,
+     "x1": 0.625531914893617,
+     "y1": 0.7009569377990431
     }
    ],
-   "placeholder": false
+   "placeholder": false,
+   "before": "RedesignV1/Area04/before",
+   "after": "RedesignV1/Area04/after",
+   "thumbBefore": "RedesignV1/Area04/thumb-before",
+   "thumbAfter": "RedesignV1/Area04/thumb-after",
+   "bakedAtmosphere": true
   },
   {
    "number": 5,
-   "name": "Grand Ballroom",
-   "subtitle": "Music for a royal night",
+   "name": "Grand Royal Library",
+   "subtitle": "A treasury of stories and stars",
    "outdoor": false,
    "rewardCoins": 40,
    "rewardBoost": "Packages",
    "tasks": [
     {
-     "name": "Lay the dance floor",
-     "cost": 2
+     "name": "Fill the western bookcase",
+     "cost": 2,
+     "patch": "RedesignV1/Area05/task-01",
+     "icon": "RedesignV1/Area05/icon-01",
+     "x0": 0.1702127659574468,
+     "y0": 0.2703349282296651,
+     "x1": 0.4,
+     "y1": 0.49521531100478466
     },
     {
-     "name": "Build the orchestra stage",
-     "cost": 2
+     "name": "Restore the eastern shelves",
+     "cost": 2,
+     "patch": "RedesignV1/Area05/task-02",
+     "icon": "RedesignV1/Area05/icon-02",
+     "x0": 0.4595744680851064,
+     "y0": 0.2607655502392344,
+     "x1": 0.8680851063829788,
+     "y1": 0.49521531100478466
     },
     {
-     "name": "Tune the grand piano",
-     "cost": 2
+     "name": "Set the royal reading desk",
+     "cost": 2,
+     "patch": "RedesignV1/Area05/task-03",
+     "icon": "RedesignV1/Area05/icon-03",
+     "x0": 0.3148936170212766,
+     "y0": 0.4904306220095694,
+     "x1": 0.6851063829787234,
+     "y1": 0.6507177033492823
     },
     {
-     "name": "Restore the mirror wall",
-     "cost": 2
+     "name": "Place the velvet reading chair",
+     "cost": 2,
+     "patch": "RedesignV1/Area05/task-04",
+     "icon": "RedesignV1/Area05/icon-04",
+     "x0": 0.6680851063829787,
+     "y0": 0.5598086124401914,
+     "x1": 0.9106382978723404,
+     "y1": 0.7177033492822966
     },
     {
-     "name": "Hang the ballroom chandeliers",
-     "cost": 2
+     "name": "Chart the celestial globe",
+     "cost": 2,
+     "patch": "RedesignV1/Area05/task-05",
+     "icon": "RedesignV1/Area05/icon-05",
+     "x0": 0.05531914893617021,
+     "y0": 0.48086124401913877,
+     "x1": 0.2936170212765957,
+     "y1": 0.6555023923444976
     },
     {
-     "name": "Drape the velvet curtains",
-     "cost": 3
+     "name": "Raise the library ladder",
+     "cost": 3,
+     "patch": "RedesignV1/Area05/task-06",
+     "icon": "RedesignV1/Area05/icon-06",
+     "x0": 0.6680851063829787,
+     "y0": 0.3684210526315789,
+     "x1": 0.8297872340425532,
+     "y1": 0.5311004784688995
     },
     {
-     "name": "Open the balcony",
-     "cost": 3
+     "name": "Unroll the sapphire rug",
+     "cost": 3,
+     "patch": "RedesignV1/Area05/task-07",
+     "icon": "RedesignV1/Area05/icon-07",
+     "x0": 0.3148936170212766,
+     "y0": 0.6650717703349283,
+     "x1": 0.6851063829787234,
+     "y1": 0.8110047846889952
     },
     {
-     "name": "Set the banquet table",
-     "cost": 3
+     "name": "Light the library chandelier",
+     "cost": 3,
+     "patch": "RedesignV1/Area05/task-08",
+     "icon": "RedesignV1/Area05/icon-08",
+     "x0": 0.3404255319148936,
+     "y0": 0.0645933014354067,
+     "x1": 0.6595744680851063,
+     "y1": 0.26555023923444976
     }
    ],
-   "placeholder": false
+   "placeholder": false,
+   "before": "RedesignV1/Area05/before",
+   "after": "RedesignV1/Area05/after",
+   "thumbBefore": "RedesignV1/Area05/thumb-before",
+   "thumbAfter": "RedesignV1/Area05/thumb-after",
+   "bakedAtmosphere": true
   },
   {
    "number": 6,

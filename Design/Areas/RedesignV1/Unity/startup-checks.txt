@@ -1,0 +1,3 @@
+Royal Throne area redesign checks 2026-09-29T12:44:21.9585180Z
+PASS Normal startup reached Home with its area view and QA service ready
+HOME READY; no scene, area, currency or level keys were set by the preparation helper.

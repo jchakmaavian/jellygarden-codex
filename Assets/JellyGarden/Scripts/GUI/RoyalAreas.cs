@@ -11,7 +11,7 @@ namespace RoyalThrone.Presentation
     [Serializable]
     public sealed class RoyalAreaTask
     {
-        public string name, patch;
+        public string name, patch, icon;
         public int cost;
         public float x0, y0, x1, y1;
     }
@@ -21,7 +21,7 @@ namespace RoyalThrone.Presentation
     {
         public int number, rewardCoins;
         public string name, subtitle, rewardBoost, before, after, thumbBefore, thumbAfter;
-        public bool outdoor, placeholder;
+        public bool outdoor, placeholder, bakedAtmosphere;
         public RoyalAreaTask[] tasks;
         // An area without its generated scene is listed but cannot be restored yet ("coming soon").
         public bool Ready => !string.IsNullOrEmpty(before) && !string.IsNullOrEmpty(after) && tasks != null && tasks.Length > 0 &&
@@ -39,6 +39,10 @@ namespace RoyalThrone.Presentation
         public const string CurrentKey = "RoyalThrone.Area.Current", DoneKey = "RoyalThrone.Area.Done", SpentKey = "RoyalThrone.Area.Spent",
             EnteredKey = "RoyalThrone.Area.Entered";
         static RoyalAreaInfo[] all;
+
+        // Fast Enter Play Mode can retain static fields after the editor imports a new catalogue.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void ResetCatalog() { all = null; }
 
         public static RoyalAreaInfo[] All
         {

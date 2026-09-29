@@ -71,7 +71,10 @@ namespace RoyalThrone.Presentation
                 fadeStart[i] = -1; patch.color = Color.white;
             }
             foreach (Transform child in transform)
-                if (child.name.StartsWith("Sky cloud ")) child.gameObject.SetActive(area.outdoor);
+            {
+                if (child.name.StartsWith("Sky cloud ")) child.gameObject.SetActive(area.outdoor && !area.bakedAtmosphere);
+                if (child.name == "Royal sky depth") child.gameObject.SetActive(!area.bakedAtmosphere);
+            }
         }
 
         /// <summary>Fades in a task that was just paid for; a completed area then settles on its restored scene.</summary>

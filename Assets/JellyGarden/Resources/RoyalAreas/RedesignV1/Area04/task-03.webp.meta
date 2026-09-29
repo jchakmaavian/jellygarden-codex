@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 5b59782ce23cfb942a0c8a3733467164
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: fda128e237330134eb75754cbb4c4607, type: 3}
+  pixelsPerUnit: 160
+  bleedTransparentEdges: 1
+  astcOnMobile: 1

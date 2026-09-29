@@ -1,0 +1,128 @@
+{
+  "name": "Royal Library",
+  "dimensions": {
+    "background": [
+      941,
+      1672
+    ],
+    "atlas": [
+      1254,
+      1254
+    ]
+  },
+  "alpha": "objects.png uses genuine 32-bit RGBA alpha; empty bottom-right region A=0",
+  "items": [
+    {
+      "name": "Tall Bookcase",
+      "cell": 0,
+      "placement": {
+        "centerX": 0.33,
+        "bottomY": 0.48,
+        "width": 0.24
+      }
+    },
+    {
+      "name": "Wide Bookshelf",
+      "cell": 1,
+      "placement": {
+        "centerX": 0.66,
+        "bottomY": 0.48,
+        "width": 0.31
+      }
+    },
+    {
+      "name": "Reading Desk",
+      "cell": 2,
+      "placement": {
+        "centerX": 0.51,
+        "bottomY": 0.665,
+        "width": 0.46
+      }
+    },
+    {
+      "name": "Reading Chair",
+      "cell": 3,
+      "placement": {
+        "centerX": 0.3,
+        "bottomY": 0.8,
+        "width": 0.28
+      }
+    },
+    {
+      "name": "Celestial Globe",
+      "cell": 4,
+      "placement": {
+        "centerX": 0.74,
+        "bottomY": 0.765,
+        "width": 0.25
+      }
+    },
+    {
+      "name": "Rolling Library Ladder",
+      "cell": 5,
+      "placement": {
+        "centerX": 0.815,
+        "bottomY": 0.565,
+        "width": 0.18
+      }
+    },
+    {
+      "name": "Oval Royal Rug",
+      "cell": 6,
+      "placement": {
+        "centerX": 0.5,
+        "bottomY": 0.84,
+        "width": 0.77
+      },
+      "layer": "Place behind furniture"
+    },
+    {
+      "name": "Chandelier",
+      "cell": 7,
+      "placement": {
+        "centerX": 0.5,
+        "bottomY": 0.27,
+        "width": 0.31
+      },
+      "layer": "Foreground ceiling decoration"
+    }
+  ],
+  "notes": [
+    "Row-major atlas order; ninth cell empty.",
+    "Exact zero-alpha first row cut y471. Second boundary differs per column: left y856, middle y846, right y864.",
+    "Use row-specific horizontal cuts; bottom-left rug extends to x440.",
+    "Background shelf bays rear wall around x.33 and .66; floor starts at y.49.",
+    "Placement y origin top. Positions assume cropped visible sprite, preserve aspect. Rug must render behind desk, chair, globe."
+  ],
+  "approximateAtlasCuts": {
+    "rows": [
+      0,
+      471,
+      846,
+      1254
+    ],
+    "columnsTopMiddle": [
+      0,
+      380,
+      847,
+      1254
+    ],
+    "columnsBottom": [
+      0,
+      448,
+      835,
+      1254
+    ]
+  },
+  "generation": "Built-in image_gen; originals retained as objects-original.png",
+  "prompts": [
+    {
+      "key": "librarybase",
+      "prompt": "Use case: stylized-concept. Asset type: original mobile game restoration area EMPTY library architectural background plate. Create a high-resolution portrait 9:16 image, ideally 1728x3072 pixels. Original ROYAL THRONE palace library room rendered as polished colorful stylized 3D mobile game art with rounded bevels and crisp clean detail. Ivory walls, warm walnut wood lower paneling, sapphire blue inset wall panels and tasteful gold molding. Elevated frontal camera looking slightly down, NOT steep isometric. Grand yet warmly inviting room. High narrow arched windows along sidewalls bring soft daylight. Rear wall at y=.33-.5 has two EMPTY recessed framed bookshelf bays, empty flat wall surfaces inside; absolutely no shelves or books. Empty warm cream marble floor fills lower half, plenty of unobstructed open decorating space from y=.5 to y=.95. Ceiling upper area with EMPTY gold ornamental rosette for a future chandelier, no light fixture. Columns and architectural moldings form the permanent room structure. This is the EMPTY base environment BEFORE restoration. DO NOT draw bookcases, bookshelves, books, tables, desks, chairs, globe, ladders, rugs, chandelier, people, text, logos, interface, watermark. Original custom royal architecture. Warm daylight from upper left; smooth bevelled ivory stone, lustrous gold trim, varnished walnut, deep blue accents. Fill image edge to edge."
+    },
+    {
+      "key": "libraryobjects",
+      "prompt": "Use case: stylized-concept. Asset type: transparent sprite atlas for original Royal Throne royal library restoration mobile game. Generate ONE SQUARE PNG, ideally 3072x3072, with actual transparent alpha background (NOT white, NOT black, NOT checkerboard). Layout is a strict uniform invisible 3 by 3 grid, nine equal square cells. First eight cells each contain exactly one isolated complete decorative object group. Cell 9 bottom-right MUST BE EMPTY transparent. Generous transparent padding 10% inside each cell on every side; no object may cross its own cell or touch a neighbor. No grid lines. Row-major order EXACTLY: top-left tall sapphire-blue and gold filled bookcase with leather-bound colorful books and arched crown; top-middle a wider matching large sapphire-blue and gold bookshelf full of books, architectural arched crown; top-right ornate sapphire-blue royal reading desk with walnut desktop and gold trim, no chair; middle-left plush sapphire-blue upholstered royal reading armchair with gold curved frame; middle-center celestial globe with blue globe, golden constellation dots and a brass armillary stand; middle-right graceful rolling library ladder with gently curving spiral-like side rails, walnut steps and gold rolling wheels, standalone ladder only; bottom-left plush sapphire-blue oval floor rug with elegant gold border seen foreshortened to match floor perspective; bottom-middle gold and sapphire-blue chandelier, complete hanging fixture without ceiling, candles and tiny crystal details, shown fully including suspension; bottom-right totally empty transparent. All objects original unique designs, no text, no readable book titles, no labels, no logos, no background, no floor rectangles, no environment. Style: polished colorful bevelled stylized 3D mobile game assets, ivory accents, luminous gold trim, sapphire velvet, warm walnut. Consistent elevated FRONTAL camera looking slightly downward, NOT steep isometric; see fronts and slight top faces. Warm daylight upper-left, subtle contact shadows only. Each object fully visible, including bases and ornament. Optimized for individual cropping and placing onto an empty portrait library background."
+    }
+  ]
+}

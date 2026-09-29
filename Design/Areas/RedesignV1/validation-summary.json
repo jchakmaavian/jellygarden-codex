@@ -1,0 +1,77 @@
+{
+  "runtime_assets": 90,
+  "runtime_source_bytes": 26505758,
+  "asset_pass_checks": 433,
+  "play_pass_checks": 208,
+  "art_sources": [
+    {
+      "file": "Area01\\after.png",
+      "sha256": "118e1a537f986efcba2355184fcb7fc773b4906da0d7a65e48a45f5a5c49f968"
+    },
+    {
+      "file": "Area01\\before.png",
+      "sha256": "9c86835e19f388e12222c4b651b268850ba763a9f84d4707c326d4d81f502a42"
+    },
+    {
+      "file": "Area01\\objects.png",
+      "sha256": "6e126d23fbe4609ab8b1d5c9004f7a809d436df1e366605b97ff72b330881f36"
+    },
+    {
+      "file": "Area02\\after.png",
+      "sha256": "7edeb4fd15c5c8e34ab49cd622afd14c56f5094091c4f1a15db0f578020b0bd0"
+    },
+    {
+      "file": "Area02\\before.png",
+      "sha256": "7586045d57780bda6da4449526afb3e13c20cabf9d1877e3d10a76f4faa3032d"
+    },
+    {
+      "file": "Area02\\objects.png",
+      "sha256": "de4456d41104d424c7ca186f7692ee3d4c8c60eeb4b9359e113f48374ab05780"
+    },
+    {
+      "file": "Area03\\after.png",
+      "sha256": "9ab0d1fc19923f220972a220e170c25e48a80126c287bbe94ad561ce75f30960"
+    },
+    {
+      "file": "Area03\\before.png",
+      "sha256": "47cf739c95d673033f427d476c974f6dd42dd15250d1d4452c5cab7885cb0cfb"
+    },
+    {
+      "file": "Area03\\cabinet-replacement.png",
+      "sha256": "4a845a8608d1303458d91acfc02375b98d1e05921d4f553b5cfc8b3890af5832"
+    },
+    {
+      "file": "Area03\\objects.png",
+      "sha256": "7218147613dc683842c86c2524468a495dfe4f60a11eb0c67f3b11e67dacdfad"
+    },
+    {
+      "file": "Area04\\after.png",
+      "sha256": "8b2582c24e12c551c4ed89195d658b49e7e8aad9b46b9476a280ce42fd639e96"
+    },
+    {
+      "file": "Area04\\before.png",
+      "sha256": "da8a3b4fc3e1f10c5c327d84ffb202b8bee410abb3ffa2d8c881beb319e021a3"
+    },
+    {
+      "file": "Area04\\objects.png",
+      "sha256": "978fa96e0a9cb3fc28cd62a9d8f85bf816686de5d05bcdc60b936bf67b2006df"
+    },
+    {
+      "file": "Area05\\after.png",
+      "sha256": "24341ecf59768a62aab60d318f69c0048ed253866da762f5a96d7da593653825"
+    },
+    {
+      "file": "Area05\\before.png",
+      "sha256": "983393a8a28e57361910b05ecdeec82ece09c3aaa09b2e1e84564172531f13e6"
+    },
+    {
+      "file": "Area05\\objects.png",
+      "sha256": "7e62f8ad63b4440354569428b75dc7724da732b754729f905b2d8b491a70eac7"
+    }
+  ],
+  "test_resolution": [
+    1080,
+    1920
+  ],
+  "physical_device_test": false
+}

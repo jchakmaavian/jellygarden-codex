@@ -1,0 +1,496 @@
+{
+ "areas": [
+  {
+   "number": 1,
+   "name": "Castle Approach",
+   "subtitle": "Welcome the kingdom home",
+   "outdoor": true,
+   "rewardCoins": 20,
+   "rewardBoost": "Stripes",
+   "tasks": [
+    {
+     "name": "Raise the castle keep",
+     "cost": 1,
+     "patch": "Area01/task-01",
+     "x0": 0.2851063829787234,
+     "y0": 0.36363636363636365,
+     "x1": 0.7787234042553192,
+     "y1": 0.7129186602870813
+    },
+    {
+     "name": "Rebuild the grand stairway",
+     "cost": 1,
+     "patch": "Area01/task-02",
+     "x0": 0.2936170212765957,
+     "y0": 0.69377990430622,
+     "x1": 0.7106382978723405,
+     "y1": 0.8253588516746412
+    },
+    {
+     "name": "Restore the twin waterfalls",
+     "cost": 2,
+     "patch": "Area01/task-03",
+     "x0": 0.14042553191489363,
+     "y0": 0.6339712918660287,
+     "x1": 0.8425531914893617,
+     "y1": 0.777511961722488
+    },
+    {
+     "name": "Set the golden gate pillars",
+     "cost": 2,
+     "patch": "Area01/task-04",
+     "x0": 0.06382978723404255,
+     "y0": 0.6770334928229665,
+     "x1": 0.9361702127659575,
+     "y1": 0.8755980861244019
+    },
+    {
+     "name": "Pave the sunlit plaza",
+     "cost": 2,
+     "patch": "Area01/task-05",
+     "x0": 0.2,
+     "y0": 0.8038277511961722,
+     "x1": 0.8,
+     "y1": 1.0
+    },
+    {
+     "name": "Plant the courtyard gardens",
+     "cost": 2,
+     "patch": "Area01/task-06",
+     "x0": 0.0,
+     "y0": 0.6770334928229665,
+     "x1": 1.0,
+     "y1": 1.0
+    }
+   ],
+   "placeholder": true,
+   "before": "Area01/before",
+   "after": "Area01/after",
+   "thumbBefore": "Area01/thumb-before",
+   "thumbAfter": "Area01/thumb-after"
+  },
+  {
+   "number": 2,
+   "name": "Queen's Rose Garden",
+   "subtitle": "Bloom for the Queen",
+   "outdoor": true,
+   "rewardCoins": 25,
+   "rewardBoost": "Packages",
+   "tasks": [
+    {
+     "name": "Build the rose arch",
+     "cost": 1
+    },
+    {
+     "name": "Restore the marble fountain",
+     "cost": 2
+    },
+    {
+     "name": "Trim the hedge maze",
+     "cost": 2
+    },
+    {
+     "name": "Place the garden benches",
+     "cost": 2
+    },
+    {
+     "name": "Fill the swan pond",
+     "cost": 2
+    },
+    {
+     "name": "Plant the rose beds",
+     "cost": 3
+    }
+   ],
+   "placeholder": false
+  },
+  {
+   "number": 3,
+   "name": "Throne Hall",
+   "subtitle": "A seat worthy of the King",
+   "outdoor": false,
+   "rewardCoins": 30,
+   "rewardBoost": "Colorful_bomb",
+   "tasks": [
+    {
+     "name": "Restore the royal throne",
+     "cost": 2
+    },
+    {
+     "name": "Roll out the crimson carpet",
+     "cost": 2
+    },
+    {
+     "name": "Hang the crystal chandelier",
+     "cost": 2
+    },
+    {
+     "name": "Fit the stained-glass windows",
+     "cost": 2
+    },
+    {
+     "name": "Raise the realm's banners",
+     "cost": 2
+    },
+    {
+     "name": "Polish the marble pillars",
+     "cost": 2
+    },
+    {
+     "name": "Light the golden candelabras",
+     "cost": 3
+    }
+   ],
+   "placeholder": false
+  },
+  {
+   "number": 4,
+   "name": "Royal Stables",
+   "subtitle": "Stalls fit for royal steeds",
+   "outdoor": true,
+   "rewardCoins": 35,
+   "rewardBoost": "Stripes",
+   "tasks": [
+    {
+     "name": "Rebuild the stable doors",
+     "cost": 2
+    },
+    {
+     "name": "Fill the hay loft",
+     "cost": 2
+    },
+    {
+     "name": "Restore the royal carriage",
+     "cost": 2
+    },
+    {
+     "name": "Fix the water trough",
+     "cost": 2
+    },
+    {
+     "name": "Raise the horseshoe arch",
+     "cost": 2
+    },
+    {
+     "name": "Light the lantern posts",
+     "cost": 2
+    },
+    {
+     "name": "Hang the saddle racks",
+     "cost": 3
+    },
+    {
+     "name": "Set the weather vane",
+     "cost": 3
+    }
+   ],
+   "placeholder": false
+  },
+  {
+   "number": 5,
+   "name": "Grand Ballroom",
+   "subtitle": "Music for a royal night",
+   "outdoor": false,
+   "rewardCoins": 40,
+   "rewardBoost": "Packages",
+   "tasks": [
+    {
+     "name": "Lay the dance floor",
+     "cost": 2
+    },
+    {
+     "name": "Build the orchestra stage",
+     "cost": 2
+    },
+    {
+     "name": "Tune the grand piano",
+     "cost": 2
+    },
+    {
+     "name": "Restore the mirror wall",
+     "cost": 2
+    },
+    {
+     "name": "Hang the ballroom chandeliers",
+     "cost": 2
+    },
+    {
+     "name": "Drape the velvet curtains",
+     "cost": 3
+    },
+    {
+     "name": "Open the balcony",
+     "cost": 3
+    },
+    {
+     "name": "Set the banquet table",
+     "cost": 3
+    }
+   ],
+   "placeholder": false
+  },
+  {
+   "number": 6,
+   "name": "Knights' Armory",
+   "subtitle": "Ready the King's guard",
+   "outdoor": false,
+   "rewardCoins": 45,
+   "rewardBoost": "Colorful_bomb",
+   "tasks": [
+    {
+     "name": "Mount the weapon racks",
+     "cost": 2
+    },
+    {
+     "name": "Polish the suits of armor",
+     "cost": 2
+    },
+    {
+     "name": "Hang the shield wall",
+     "cost": 2
+    },
+    {
+     "name": "Relight the forge",
+     "cost": 2
+    },
+    {
+     "name": "Set up the training dummies",
+     "cost": 2
+    },
+    {
+     "name": "Raise the banner stand",
+     "cost": 3
+    },
+    {
+     "name": "Fill the armor chests",
+     "cost": 3
+    },
+    {
+     "name": "Restore the arched windows",
+     "cost": 3
+    },
+    {
+     "name": "Place the round table",
+     "cost": 3
+    }
+   ],
+   "placeholder": false
+  },
+  {
+   "number": 7,
+   "name": "Starwatch Observatory",
+   "subtitle": "Chart the kingdom's stars",
+   "outdoor": false,
+   "rewardCoins": 50,
+   "rewardBoost": "Stripes",
+   "tasks": [
+    {
+     "name": "Build the brass telescope",
+     "cost": 2
+    },
+    {
+     "name": "Restore the star globe",
+     "cost": 2
+    },
+    {
+     "name": "Open the dome shutters",
+     "cost": 2
+    },
+    {
+     "name": "Lay out the map table",
+     "cost": 2
+    },
+    {
+     "name": "Rebuild the spiral stair",
+     "cost": 2
+    },
+    {
+     "name": "Assemble the crystal orrery",
+     "cost": 3
+    },
+    {
+     "name": "Hang the moon lanterns",
+     "cost": 3
+    },
+    {
+     "name": "Fill the scroll shelves",
+     "cost": 3
+    },
+    {
+     "name": "Set the astronomer's desk",
+     "cost": 3
+    },
+    {
+     "name": "Plant the night garden",
+     "cost": 3
+    }
+   ],
+   "placeholder": false
+  },
+  {
+   "number": 8,
+   "name": "Harbor Lighthouse",
+   "subtitle": "Guide the ships home",
+   "outdoor": true,
+   "rewardCoins": 55,
+   "rewardBoost": "Packages",
+   "tasks": [
+    {
+     "name": "Relight the lighthouse lamp",
+     "cost": 2
+    },
+    {
+     "name": "Rebuild the stone pier",
+     "cost": 2
+    },
+    {
+     "name": "Launch the royal sailboat",
+     "cost": 2
+    },
+    {
+     "name": "Hang the fishing nets",
+     "cost": 2
+    },
+    {
+     "name": "Open the market stalls",
+     "cost": 3
+    },
+    {
+     "name": "Stack the cargo crates",
+     "cost": 3
+    },
+    {
+     "name": "Hang the harbor bell",
+     "cost": 3
+    },
+    {
+     "name": "Light the lantern path",
+     "cost": 3
+    },
+    {
+     "name": "Paint the boat house",
+     "cost": 3
+    },
+    {
+     "name": "Plant the dune garden",
+     "cost": 3
+    }
+   ],
+   "placeholder": false
+  },
+  {
+   "number": 9,
+   "name": "Crystal Winter Garden",
+   "subtitle": "Frost that sparkles like jewels",
+   "outdoor": false,
+   "rewardCoins": 60,
+   "rewardBoost": "Colorful_bomb",
+   "tasks": [
+    {
+     "name": "Glaze the glass dome",
+     "cost": 2
+    },
+    {
+     "name": "Restore the ice fountain",
+     "cost": 2
+    },
+    {
+     "name": "Plant the frosted trees",
+     "cost": 2
+    },
+    {
+     "name": "Raise the crystal arch",
+     "cost": 2
+    },
+    {
+     "name": "Light the snow lanterns",
+     "cost": 3
+    },
+    {
+     "name": "Plant the winter roses",
+     "cost": 3
+    },
+    {
+     "name": "Freeze the skating pond",
+     "cost": 3
+    },
+    {
+     "name": "Place the birch benches",
+     "cost": 3
+    },
+    {
+     "name": "Sculpt the glass swans",
+     "cost": 3
+    },
+    {
+     "name": "Build the crystal bridge",
+     "cost": 3
+    },
+    {
+     "name": "Decorate the star tree",
+     "cost": 3
+    }
+   ],
+   "placeholder": false
+  },
+  {
+   "number": 10,
+   "name": "Treasure Vault",
+   "subtitle": "The crown jewels of Royal Throne",
+   "outdoor": false,
+   "rewardCoins": 65,
+   "rewardBoost": "Stripes",
+   "tasks": [
+    {
+     "name": "Open the vault door",
+     "cost": 2
+    },
+    {
+     "name": "Heap the gold hoard",
+     "cost": 2
+    },
+    {
+     "name": "Set the crown pedestal",
+     "cost": 2
+    },
+    {
+     "name": "Fill the jewel cases",
+     "cost": 2
+    },
+    {
+     "name": "Mount the scepter stand",
+     "cost": 3
+    },
+    {
+     "name": "Hang the royal tapestry",
+     "cost": 3
+    },
+    {
+     "name": "Restore the coin fountain",
+     "cost": 3
+    },
+    {
+     "name": "Hang the gem chandelier",
+     "cost": 3
+    },
+    {
+     "name": "Raise the guardian statues",
+     "cost": 3
+    },
+    {
+     "name": "Fill the treasure chests",
+     "cost": 3
+    },
+    {
+     "name": "Set the royal seal table",
+     "cost": 3
+    },
+    {
+     "name": "Reveal the secret stair",
+     "cost": 3
+    }
+   ],
+   "placeholder": false
+  }
+ ]
+}
