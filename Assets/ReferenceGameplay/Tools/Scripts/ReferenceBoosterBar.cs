@@ -39,6 +39,7 @@ namespace RoyalThrone.ReferenceGameplay
         public int LastHitCount {get;private set;}
         public string Status {get;private set;}="";
         RectTransform hud,shop,prompt;Text message,balance,price,title,body;Image shopIcon;
+        RectTransform rail;CanvasGroup railInput;Vector2 railRest;bool railMoving,railBlocks,railInteractable;float railDrop;
         Font font;int buying=-1;bool purchasePending;readonly List<BoostIcon> buttons=new List<BoostIcon>();
         readonly Dictionary<BoostIcon,GameObject> padlocks=new Dictionary<BoostIcon,GameObject>();static Sprite padlockArt,discArt;
         SpriteRenderer hammer;ReferenceCannonSequence cannon;Square[] currentBoard;Coroutine operation;bool shuffled;
@@ -47,7 +48,31 @@ namespace RoyalThrone.ReferenceGameplay
         static Sprite Sprite(int id)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+id);
         void Awake(){Instance=this;}
         void OnDestroy(){if(Instance==this)Instance=null;}
-        public void Attach(RectTransform parent,Font display){hud=parent;font=display;BuildPrompt();BuildShop();}
+        public void Attach(RectTransform parent,Font display){hud=parent;font=display;rail=parent.Find("Imported booster rail") as RectTransform;BuildPrompt();BuildShop();}
+        void PresentCannon(float elapsed)
+        {
+            if(!rail)return;
+            if(elapsed<0){
+                if(railMoving){rail.anchoredPosition=railRest;if(railInput){railInput.blocksRaycasts=railBlocks;railInput.interactable=railInteractable;}}
+                railMoving=false;return;
+            }
+            if(!railMoving){
+                railMoving=true;railRest=rail.anchoredPosition;
+                railInput=rail.GetComponent<CanvasGroup>();if(!railInput)railInput=rail.gameObject.AddComponent<CanvasGroup>();
+                railBlocks=railInput.blocksRaycasts;railInteractable=railInput.interactable;
+                railInput.blocksRaycasts=false;railInput.interactable=false;
+            }
+            // Measure against the actual screen bottom, including the safe-area inset.
+            // Recalculate while running so a resolution/safe-area change cannot expose the bar.
+            var canvas=rail.GetComponentInParent<Canvas>();var cam=canvas&&canvas.renderMode!=RenderMode.ScreenSpaceOverlay?canvas.worldCamera:null;
+            if(RectTransformUtility.ScreenPointToLocalPointInRectangle(hud,Vector2.zero,cam,out var screenBottom))
+                railDrop=Mathf.Max(0,hud.rect.yMin+railRest.y+rail.rect.yMax-screenBottom.y)+16;
+            else railDrop=railRest.y+rail.rect.height+32;
+            float hidden=elapsed<ReferenceCannonSequence.RecoilEnd
+                ?Mathf.SmoothStep(0,1,elapsed/.22f)
+                :1-Mathf.SmoothStep(0,1,(elapsed-ReferenceCannonSequence.RecoilEnd)/ReferenceCannonSequence.BarReturn);
+            rail.anchoredPosition=railRest+Vector2.down*(railDrop*hidden);
+        }
         static RectTransform Box(string name,Transform parent,float x,float y,float w,float h)
         {
             var r=new GameObject(name,typeof(RectTransform)).GetComponent<RectTransform>();r.SetParent(parent,false);
@@ -264,7 +289,7 @@ namespace RoyalThrone.ReferenceGameplay
                 {
                     if(type==2&&ReferenceCannonSequence.Available){
                         if(!cannon)cannon=gameObject.AddComponent<ReferenceCannonSequence>();
-                        yield return cannon.Play(affected,HitCell);
+                        yield return cannon.Play(affected,HitCell,PresentCannon);
                     }else{
                         if(type==0)yield return Hammer(affected[0].transform.position);
                         foreach(var s in affected){HitCell(s);if(type!=0)yield return new WaitForSeconds(.045f);}
