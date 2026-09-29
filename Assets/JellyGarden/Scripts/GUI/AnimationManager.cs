@@ -692,7 +692,8 @@ namespace JellyGarden.Scripts.GUI
             if (InitScript.Gems >= price)
             {
                 InitScript.Instance.SpendGems(price);
-                InitScript.Instance.BuyBoost(boostType, price, count);
+                // InitScript.BuyBoost sets the stock (its other callers pass the new total): add the pack to what is owned.
+                InitScript.Instance.BuyBoost(boostType, price, PlayerPrefs.GetInt("" + boostType) + count);
                 //InitScript.Instance.SpendBoost(boostType);
                 CloseMenu();
             }
