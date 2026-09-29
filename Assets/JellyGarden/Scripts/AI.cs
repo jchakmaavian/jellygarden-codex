@@ -153,10 +153,6 @@ namespace JellyGarden.Scripts
 			//allow to show tips
 			allowShowTip = true;
 
-			//get max positions of squares
-			int maxRow = LevelManager.THIS.maxRows;
-			int maxCol = LevelManager.THIS.maxCols;
-
 			//variable to check: are we got tip or not
 			gotTip = false;
 
@@ -166,10 +162,14 @@ namespace JellyGarden.Scripts
 				yield return new WaitForEndOfFrame();
 			}
 			//if game is not in Playing status - wait
-			while (LevelManager.THIS.gameStatus != GameState.Playing)
+			// Input can remain responsive during combos. DragBlocked alone no longer
+			// means the board is ready for hints or a destructive no-moves shuffle.
+			while (LevelManager.THIS.gameStatus != GameState.Playing || BoardSettling(LevelManager.THIS))
 			{
-				yield return new WaitForEndOfFrame();
+				yield return null;
 			}
+			int maxRow = LevelManager.THIS.maxRows;
+			int maxCol = LevelManager.THIS.maxCols;
 
 			//if drag have not blocked and game status Playing - continue
 			if (!LevelManager.THIS.DragBlocked && LevelManager.THIS.gameStatus == GameState.Playing)
@@ -555,6 +555,14 @@ namespace JellyGarden.Scripts
 				StartCoroutine(CheckPossibleCombines());
 
 			// }
+		}
+
+		static bool BoardSettling(LevelManager level)
+		{
+			if (level.IsResolvingMatches || level.InputSwaps > 0 || Juice.RoyalPowerupDirector.Busy) return true;
+			foreach (var item in level.GetItems())
+				if (item && (item.falling || item.destroying)) return true;
+			return false;
 		}
 
 		//show tip function calls coroutine for

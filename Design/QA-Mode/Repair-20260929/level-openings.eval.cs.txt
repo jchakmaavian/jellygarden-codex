@@ -1,0 +1,25 @@
+var q=RoyalThrone.Testing.RoyalQaService.Instance;
+if(RoyalThrone.Testing.RoyalSave.Testing)throw new System.Exception("Wait for current suite to finish");
+System.Collections.IEnumerator Run() {
+ q.StartSession();
+ try {
+  foreach(bool reference in new[]{false,true}) {
+   RoyalThrone.Campaign.RoyalReferenceCampaign.Select(reference);
+   foreach(int seed in new[]{17,29,41}) foreach(int level in new[]{33,36,37}) {
+    UnityEngine.Random.InitState(seed);q.Level=level;int failed=q.Failed;
+    q.Request("Open level");while(q.Busy)yield return null;
+    var l=JellyGarden.Scripts.LevelManager.THIS;
+    System.IO.File.AppendAllText("Temp/QaRepair/levels-after.txt",$"reference={reference} seed={seed} level={level} failed={q.Failed-failed} {q.Status} resolving={l.IsResolvingMatches} state={l.gameStatus}\n");
+    if(q.Failed!=failed)throw new System.Exception(q.Status);
+   }
+  }
+  yield return q.Practice();
+  if(RoyalThrone.Campaign.RoyalReferenceCampaign.Active||!RoyalThrone.Campaign.RoyalReferenceCampaign.Enabled)throw new System.Exception("Practice did not detach only the board");
+  yield return q.OpenLevel();
+  if(!RoyalThrone.Campaign.RoyalReferenceCampaign.Active)throw new System.Exception("Campaign mode did not survive practice");
+  System.IO.File.AppendAllText("Temp/QaRepair/levels-after.txt","PASS reference campaign reopens correctly after a practice fixture\n");
+  yield return q.EndSession();
+  System.IO.File.AppendAllText("Temp/QaRepair/levels-after.txt","ALL OPENING CHECKS PASSED\n");
+ } finally {if(RoyalThrone.Testing.RoyalSave.Testing)q.StartCoroutine(q.EndSession());}
+}
+RoyalThrone.Editor.RoyalRegressionRunner.Run(Run());return "Level opening checks started";

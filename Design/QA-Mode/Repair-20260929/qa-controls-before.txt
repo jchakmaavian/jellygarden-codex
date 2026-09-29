@@ -1,0 +1,124 @@
+PASS QA session enters isolated save routing
+PASS Settings exposes the internal menu entry
+PASS Writes land only in QA keys
+PASS Deleted QA key does not expose the player value
+PASS Control executes exactly once: Set gems (Completed: Set gems)
+PASS No runtime exception after Set gems
+PASS Currency runtime/save/UI source agrees for Set gems
+PASS Control executes exactly once: Add gems (Completed: Add gems)
+PASS No runtime exception after Add gems
+PASS Currency runtime/save/UI source agrees for Add gems
+PASS Control executes exactly once: Remove gems (Completed: Remove gems)
+PASS No runtime exception after Remove gems
+PASS Currency runtime/save/UI source agrees for Remove gems
+PASS Control executes exactly once: Set coins (Completed: Set coins)
+PASS No runtime exception after Set coins
+PASS Currency runtime/save/UI source agrees for Set coins
+PASS Control executes exactly once: Add coins (Completed: Add coins)
+PASS No runtime exception after Add coins
+PASS Currency runtime/save/UI source agrees for Add coins
+PASS Control executes exactly once: Remove coins (Completed: Remove coins)
+PASS No runtime exception after Remove coins
+PASS Currency runtime/save/UI source agrees for Remove coins
+PASS Control executes exactly once: Refill coins (Completed: Refill coins)
+PASS No runtime exception after Refill coins
+PASS Currency runtime/save/UI source agrees for Refill coins
+PASS Control executes exactly once: Set stars (Completed: Set stars)
+PASS No runtime exception after Set stars
+PASS Selected-level stars set to 2
+PASS Control executes exactly once: Add stars (Completed: Add stars)
+PASS No runtime exception after Add stars
+PASS Stars add clamps to three
+PASS Control executes exactly once: Remove stars (Completed: Remove stars)
+PASS No runtime exception after Remove stars
+PASS Stars remove updates the same level
+PASS Control executes exactly once: Set lives (Completed: Set lives)
+PASS No runtime exception after Set lives
+PASS Lives runtime and save agree
+PASS Control executes exactly once: Empty lives (Completed: Empty lives)
+PASS No runtime exception after Empty lives
+PASS Empty lives reaches zero
+PASS Control executes exactly once: Refill lives (Completed: Refill lives)
+PASS No runtime exception after Refill lives
+PASS Refill reaches the authored cap
+PASS Control executes exactly once: Test refill timer (Completed: Test refill timer)
+PASS No runtime exception after Test refill timer
+PASS Real life counter awards exactly one life at timer expiry (lives 4 -> 5 after 2.99 s)
+PASS Control executes exactly once: Set lives (Completed: Set lives)
+PASS No runtime exception after Set lives
+PASS Control executes exactly once: Test refill timer (Completed: Test refill timer)
+PASS No runtime exception after Test refill timer
+PASS Control executes exactly once: Reset refill timer (Completed: Reset refill timer)
+PASS No runtime exception after Reset refill timer
+PASS Reset uses the authored refill duration
+PASS Control executes exactly once: Set booster stock (Completed: Set booster stock)
+PASS No runtime exception after Set booster stock
+PASS Booster stock uses existing key: ExtraMoves
+PASS Booster stock uses existing key: Packages
+PASS Booster stock uses existing key: Stripes
+PASS Booster stock uses existing key: ExtraTime
+PASS Booster stock uses existing key: Bomb
+PASS Booster stock uses existing key: Colorful_bomb
+PASS Booster stock uses existing key: Hand
+PASS Booster stock uses existing key: Random_color
+PASS Booster stock uses existing key: RoyalHammer
+PASS Booster stock uses existing key: RoyalArrow
+PASS Booster stock uses existing key: RoyalCannon
+PASS Booster stock uses existing key: RoyalJester
+PASS Control executes exactly once: Open level (Completed: Open level)
+PASS No runtime exception after Open level
+PASS Control executes exactly once: Restart level (Completed: Restart level)
+PASS No runtime exception after Restart level
+PASS Control executes exactly once: Practice board (Completed: Practice board)
+PASS No runtime exception after Practice board
+PASS Control executes exactly once: Spawn selected gem (Completed: Spawn selected gem)
+PASS No runtime exception after Spawn selected gem
+PASS Spawned selected gem 0
+PASS Control executes exactly once: Spawn selected gem (Completed: Spawn selected gem)
+PASS No runtime exception after Spawn selected gem
+PASS Spawned selected gem 1
+PASS Control executes exactly once: Spawn selected gem (Completed: Spawn selected gem)
+PASS No runtime exception after Spawn selected gem
+PASS Spawned selected gem 2
+PASS Control executes exactly once: Spawn selected gem (Completed: Spawn selected gem)
+PASS No runtime exception after Spawn selected gem
+PASS Spawned selected gem 3
+PASS Control executes exactly once: Spawn selected gem (Completed: Spawn selected gem)
+PASS No runtime exception after Spawn selected gem
+PASS Spawned selected gem 4
+PASS Control executes exactly once: Spawn TNT (Completed: Spawn TNT)
+PASS No runtime exception after Spawn TNT
+PASS Native power type: PACKAGE
+PASS Control executes exactly once: Spawn rocket H (Completed: Spawn rocket H)
+PASS No runtime exception after Spawn rocket H
+PASS Native power type: HORIZONTAL_STRIPPED
+PASS Control executes exactly once: Spawn rocket V (Completed: Spawn rocket V)
+PASS No runtime exception after Spawn rocket V
+PASS Native power type: VERTICAL_STRIPPED
+PASS Control executes exactly once: Spawn propeller (Completed: Spawn propeller)
+PASS No runtime exception after Spawn propeller
+PASS Native power type: HELICOPTER
+PASS Control executes exactly once: Spawn color ball (Completed: Spawn color ball)
+PASS No runtime exception after Spawn color ball
+PASS Native power type: BOMB
+PASS Control executes exactly once: Activate selected (Completed: Activate selected)
+PASS No runtime exception after Activate selected
+PASS Control executes exactly once: Practice board (Completed: Practice board)
+PASS No runtime exception after Practice board
+PASS Control executes exactly once: Combine selected (Completed: Combine selected)
+PASS No runtime exception after Combine selected
+PASS Settled ownership after combination 0 + 0
+PASS Control executes exactly once: Practice board (Completed: Practice board)
+PASS No runtime exception after Practice board
+PASS Control executes exactly once: Combine selected (Completed: Combine selected)
+PASS No runtime exception after Combine selected
+PASS Settled ownership after combination 0 + 1
+PASS Control executes exactly once: Practice board (Completed: Practice board)
+PASS No runtime exception after Practice board
+PASS Control executes exactly once: Combine selected (Completed: Combine selected)
+PASS No runtime exception after Combine selected
+PASS Settled ownership after combination 0 + 2
+PASS Control executes exactly once: Practice board (Completed: Practice board)
+PASS No runtime exception after Practice board
+FAILED — see the Console; QA profile is being restored.
+Exception: Control executes exactly once: Combine selected (Combine selected: Board did not settle within 30 seconds.)

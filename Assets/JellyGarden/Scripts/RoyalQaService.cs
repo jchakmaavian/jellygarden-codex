@@ -31,6 +31,8 @@ namespace RoyalThrone.Testing
         public event Action Changed;
         int normalMoney,normalLives,normalLevel; float normalTimer,normalMusic,normalSound;
         string normalDate; UnityEngine.Random.State normalRandom;
+        DateTime normalLifeDeadline;
+        bool ownsSession, endingSession;
         bool practice; float replayAt;
         /// <summary>The QA practice board is in place (it tests the tools, so the opening's padlocks stay off).</summary>
         public bool Practising => practice;
@@ -56,15 +58,22 @@ namespace RoyalThrone.Testing
         void Add(string category,params string[] labels)=>Commands[category]=new List<string>(labels);
         public void StartSession()
         {
-            if(!Ready||RoyalSave.Testing||Busy)return;
+            if(endingSession)throw new InvalidOperationException("Wait for the test session to finish restoring.");
+            if(RoyalSave.Testing)
+            {
+                if(!ownsSession)throw new InvalidOperationException("The active test profile has no player snapshot. Start QA through StartSession before changing test values.");
+                return; // Re-entry must never capture test values as the player's state.
+            }
+            if(!Ready||Busy)return;
 #if PLAYFAB || GAMESPARKS || FACEBOOK || UNITY_INAPPS || UNITY_ADS || GOOGLE_MOBILE_ADS
             Status="QA requires the project's offline build configuration (network, purchases and ads disabled).";Changed?.Invoke();return;
 #endif
             normalMoney=InitScript.Gems;normalLives=InitScript.lifes;normalTimer=InitScript.RestLifeTimer;
+            normalLifeDeadline=InitScript.Instance.LifeRefillDeadline;
             normalDate=InitScript.DateOfExit;normalLevel=LM.currentLevel;normalRandom=UnityEngine.Random.state;
             normalMusic=MusicBase.Instance.GetVolume();normalSound=SoundBase.Instance.GetVolume();
             // Switch before leaving a board: any transition callback also writes QA keys.
-            RoyalSave.Testing=true;RoyalSave.SetInt("OpenLevelTest",0);
+            ownsSession=true;RoyalSave.Testing=true;RoyalSave.SetInt("OpenLevelTest",0);
             ToMap();Hydrate();Level=Mathf.Max(1,normalLevel);Visible=true;
             Status="TEST PROFILE ACTIVE. Coins and Gems share one balance. Stars are per selected level (0–3).";Changed?.Invoke();
         }
@@ -75,18 +84,25 @@ namespace RoyalThrone.Testing
         }
         public IEnumerator EndSession()
         {
-            if(!RoyalSave.Testing)yield break;
-            Loop=false;Status="Finishing the current test before restoring the player profile.";
-            while(Busy)yield return null;
-            ToMap();yield return null; // retire old UI animation callbacks before switching profile
-            RoyalSave.Save();RoyalSave.Testing=false;
-            RoyalThrone.Campaign.RoyalReferenceCampaign.Select(false);
-            InitScript.Gems=normalMoney;InitScript.lifes=normalLives;InitScript.DateOfExit=normalDate;
-            // Restore the remaining seconds captured at StartSession, not a stale exit stamp.
-            InitScript.Instance.SetRefillSeconds(normalTimer);
-            LM.currentLevel=normalLevel;UnityEngine.Random.state=normalRandom;Speed=1;Time.timeScale=1;practice=false;
-            MusicBase.Instance.SetVolume(normalMusic);SoundBase.Instance.SetVolume(normalSound);
-            Refresh();Status="Test session ended. Normal player progress restored.";Visible=false;Changed?.Invoke();
+            if(!RoyalSave.Testing||endingSession)yield break;
+            if(!ownsSession)throw new InvalidOperationException("Cannot restore a test profile without its player snapshot; save routing remains isolated.");
+            endingSession=true;
+            try
+            {
+                Loop=false;Status="Finishing the current test before restoring the player profile.";
+                while(Busy)yield return null;
+                ToMap();yield return null; // retire old UI animation callbacks before switching profile
+                RoyalSave.Save();
+                RoyalThrone.Campaign.RoyalReferenceCampaign.Select(false);
+                InitScript.Gems=normalMoney;InitScript.lifes=normalLives;InitScript.DateOfExit=normalDate;
+                InitScript.Instance.RestoreLifeScheduleForTesting(normalLifeDeadline,normalTimer);
+                LM.currentLevel=normalLevel;UnityEngine.Random.state=normalRandom;Speed=1;Time.timeScale=1;practice=false;
+                MusicBase.Instance.SetVolume(normalMusic);SoundBase.Instance.SetVolume(normalSound);
+                // No yield or persistence between restoring runtime values and changing routes.
+                RoyalSave.Testing=false;ownsSession=false;
+                Refresh();Status="Test session ended. Normal player progress restored.";Visible=false;Changed?.Invoke();
+            }
+            finally { endingSession=false; }
         }
         void ToMap()
         {
@@ -124,6 +140,7 @@ namespace RoyalThrone.Testing
         float FullTimer=>InitScript.Instance.TotalTimeForRestLifeHours*3600+InitScript.Instance.TotalTimeForRestLifeMin*60+InitScript.Instance.TotalTimeForRestLifeSec;
         public void Request(string command)
         {
+            if(endingSession){Status="Wait for the test session to finish restoring.";return;}
             if(Busy){Status="Wait for the current test to finish.";return;}
             StartCoroutine(RunSafely(command));
         }
@@ -280,11 +297,18 @@ namespace RoyalThrone.Testing
         {
             yield return null;float end=Time.realtimeSinceStartup+30;int quietFrames=0;
             while(quietFrames<3&&Time.realtimeSinceStartup<end){quietFrames=BoardMoving()?0:quietFrames+1;yield return null;}
-            if(BoardMoving())throw new InvalidOperationException("Board did not settle within 30 seconds.");
+            if(quietFrames<3||BoardMoving())throw new InvalidOperationException("Board did not settle within 30 seconds. "+
+                "Level="+LM.currentLevel+" state="+LM.gameStatus+" resolving="+LM.IsResolvingMatches+
+                " powers="+RoyalPowerupDirector.Busy+" drag="+LM.DragBlocked+" swaps="+LM.InputSwaps+
+                " falling="+LM.GetItems().Count(i=>i&&i.falling)+" destroying="+LM.GetItems().Count(i=>i&&i.destroying));
         }
         public IEnumerator Practice()
         {
             yield return Board();LM.StopAllCoroutines();AI.THIS.StopAllCoroutines();AI.THIS.GetComponent<RoyalHintPresenter>()?.Hide();RoyalPowerupDirector.Get.Cancel();
+            // A fixture is not the preceding campaign level: discard its fixed opening,
+            // refill feeds and palette before generating the replacement board.
+            RoyalThrone.Campaign.RoyalReferenceCampaign.ReleaseBoard();
+            LM.colorLimit=RoyalGameplayArt.BoardColorCount;
             RetireTutorial();
             foreach(var tutorial in FindObjectsByType<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager>(FindObjectsInactive.Include))
                 if(tutorial.enabled){suspendedTutorials.Add(tutorial);tutorial.enabled=false;}

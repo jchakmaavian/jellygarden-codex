@@ -49,6 +49,18 @@ namespace RoyalThrone.Editor
             Application.logMessageReceived+=Log;
             try
             {
+                // Reproduce an external harness enabling routing without capturing player state.
+                var routing=typeof(RoyalSave).GetProperty("Testing");
+                routing.SetValue(null,true);
+                try
+                {
+                    bool startRejected=false,endRejected=false;
+                    try{qa.StartSession();}catch(InvalidOperationException){startRejected=true;}
+                    try{qa.EndSession().MoveNext();}catch(InvalidOperationException){endRejected=true;}
+                    Check(startRejected&&endRejected&&RoyalSave.Testing,"Unowned test profile cannot switch routing back to the player save");
+                    var untouched=Snapshot();Check(normal.All(k=>untouched[k.Key]==k.Value),"Rejected unowned teardown leaves every player key unchanged");
+                }
+                finally {routing.SetValue(null,false);}
                 qa.StartSession();Check(RoyalSave.Testing,"QA session enters isolated save routing");qa.Level=1;qa.Amount=10;qa.Speed=1;qa.Loop=false;
                 // Since 2026-09-22 the Mod Menu replaces the Game Testing Mode screen; its Settings entry reads "Mod Menu".
                 Check(FindButtons().Any(b=>b.GetComponentInChildren<Text>()?.text=="Mod Menu"),"Settings exposes the internal menu entry");
@@ -60,6 +72,7 @@ namespace RoyalThrone.Editor
                 qa.Amount=2;yield return Command("Set stars");Check(RoyalSave.GetInt("Level.001.StarsCount")==2,"Selected-level stars set to 2");qa.Amount=1;
                 yield return Command("Add stars");Check(RoyalSave.GetInt("Level.001.StarsCount")==3,"Stars add clamps to three");yield return Command("Remove stars");Check(RoyalSave.GetInt("Level.001.StarsCount")==2,"Stars remove updates the same level");
                 qa.Amount=2;yield return Command("Set lives");Check(InitScript.lifes==2&&RoyalSave.GetInt("Lifes")==2,"Lives runtime and save agree");
+                qa.StartSession();Check(RoyalSave.Testing&&InitScript.lifes==2,"Repeated StartSession keeps the active test and original player snapshot");
                 yield return Command("Empty lives");Check(InitScript.lifes==0,"Empty lives reaches zero");yield return Command("Refill lives");Check(InitScript.lifes==InitScript.Instance.CapOfLife,"Refill reaches the authored cap");
                 yield return Command("Test refill timer");int before=InitScript.lifes;float realStart=Time.realtimeSinceStartup;
                 // The life schedule runs on the real (UTC) clock. A scaled WaitForSeconds counts from the start of a frame that
@@ -72,6 +85,21 @@ namespace RoyalThrone.Editor
                 yield return Command("Reset refill timer");Check(InitScript.RestLifeTimer>3,"Reset uses the authored refill duration");
                 qa.Amount=8;yield return Command("Set booster stock");foreach(BoostType boost in Enum.GetValues(typeof(BoostType)))if(boost!=BoostType.None)Check(RoyalSave.GetInt(boost.ToString())==8,"Booster stock uses existing key: "+boost);
                 yield return Command("Open level");yield return Command("Restart level");yield return Command("Practice board");
+                Check(!RoyalThrone.Campaign.RoyalReferenceCampaign.Active&&LevelManager.THIS.colorLimit==RoyalGameplayArt.BoardColorCount,"Practice board releases campaign opening/refill rules and restores its full palette");
+                // No-move fixture with one piece still falling: the idle hint scan must
+                // wait, not regenerate the board underneath an active resolution.
+                foreach(var cell in LevelManager.THIS.squaresArray)cell.item.SetColor((cell.col+cell.row*2)%5);
+                Check(RoyalHintSolver.Find(LevelManager.THIS)==null,"Shuffle regression fixture has no available move");
+                var fallingPiece=LevelManager.THIS.GetSquare(0,0).item;fallingPiece.falling=true;
+                AI.THIS.StartCoroutine(AI.THIS.CheckPossibleCombines());
+                yield return new WaitForSeconds(1.5f);
+                bool waited=LevelManager.THIS.gameStatus==GameState.Playing&&fallingPiece&&fallingPiece.square.item==fallingPiece;
+                fallingPiece.falling=false;
+                Check(waited,"Hint scan does not shuffle while a piece is still falling");
+                float shuffleUntil=Time.realtimeSinceStartup+4f;
+                while(LevelManager.THIS.gameStatus==GameState.Playing&&Time.realtimeSinceStartup<shuffleUntil)yield return null;
+                Check(LevelManager.THIS.gameStatus==GameState.RegenLevel,"No-move shuffle resumes when the board becomes idle");
+                yield return qa.Settled();yield return Command("Practice board");
                 for(int color=0;color<RoyalGameplayArt.BoardColorCount;color++){qa.Gem=color;yield return Command("Spawn selected gem");Check(LevelManager.THIS.GetSquare(3,3).item.color==color,"Spawned selected gem "+color);}
                 string[] spawns={"Spawn TNT","Spawn rocket H","Spawn rocket V","Spawn propeller","Spawn color ball"};
                 ItemsTypes[] types={ItemsTypes.PACKAGE,ItemsTypes.HORIZONTAL_STRIPPED,ItemsTypes.VERTICAL_STRIPPED,ItemsTypes.HELICOPTER,ItemsTypes.BOMB};
@@ -96,7 +124,14 @@ namespace RoyalThrone.Editor
                 yield return Command("Restart level");yield return Command("Lose instantly");Check(LevelManager.THIS.gameStatus==GameState.GameOver,"Instant lose follows the real lose state");
                 yield return Command("Reset test data");Check(InitScript.Gems==money,"Reset test data restores initial player-derived QA balance");
                 var after=Snapshot();Check(normal.All(k=>after[k.Key]==k.Value),"Every normal economy, level, score, booster and preference key remains unchanged");
-                yield return qa.EndSession();Check(!RoyalSave.Testing&&InitScript.Gems==money&&InitScript.lifes==lives,"Ending QA restores normal runtime resources");
+                var ending=qa.EndSession();Check(ending.MoveNext()&&RoyalSave.Testing,"Teardown keeps QA routing while retiring callbacks");
+                Check(!qa.EndSession().MoveNext(),"Concurrent EndSession cannot restore twice");
+                int completedAtEnd=qa.Completed;qa.Request("Empty lives");
+                Check(!qa.Busy&&qa.Completed==completedAtEnd,"Teardown rejects new QA commands");
+                yield return null;yield return ending;
+                Check(!RoyalSave.Testing&&InitScript.Gems==money&&InitScript.lifes==lives,"Ending QA restores normal runtime resources");
+                yield return qa.EndSession();
+                var restored=Snapshot();Check(normal.All(k=>restored[k.Key]==k.Value),"Ending and repeated teardown preserve every player key including the life deadline");
                 Check(Mathf.Approximately(Time.timeScale,1),"Ending QA restores game speed");success=true;
             }
             finally

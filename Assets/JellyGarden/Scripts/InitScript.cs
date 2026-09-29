@@ -91,6 +91,15 @@ using Facebook.Unity;
         // backgrounding and quitting, and so elapsed time is never counted twice or lost.
         public const string NextLifeKey = "RoyalThrone.NextLifeUtc";
         static DateTime nextLifeUtc;
+#if (UNITY_EDITOR || DEVELOPMENT_BUILD) && !ROYAL_DISABLE_QA
+        internal DateTime LifeRefillDeadline => nextLifeUtc;
+        // Restoring a QA snapshot must not persist a new deadline to the player's save.
+        internal void RestoreLifeScheduleForTesting(DateTime deadline, float remaining)
+        {
+            nextLifeUtc = deadline;
+            RestLifeTimer = remaining;
+        }
+#endif
         public static DateTime today;
         public static DateTime DateOfRestLife;
         public static string timeForReps;

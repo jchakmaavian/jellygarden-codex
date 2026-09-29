@@ -79,6 +79,10 @@ namespace RoyalThrone.Campaign
             if(!Enabled)return;
             if(n<1||n>50)throw new InvalidOperationException("Reference campaign contains levels 01–50 only.");
         }
+        internal static void ReleaseBoard()
+        {
+            Current=null;opening=false;initialized.Clear();feeds.Clear();
+        }
         public static bool TryLoad(LevelManager lm,int n,out SquareBlocks[] board)
         {
             Current=null;board=null;opening=false;

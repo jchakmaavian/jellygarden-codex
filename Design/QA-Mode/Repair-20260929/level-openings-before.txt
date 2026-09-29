@@ -1,0 +1,9 @@
+seed=17 level=33 failed=0 Completed: Open level resolving=False state=Playing
+seed=17 level=36 failed=0 Completed: Open level resolving=False state=Playing
+seed=17 level=37 failed=0 Completed: Open level resolving=False state=Playing
+seed=29 level=33 failed=0 Completed: Open level resolving=False state=Playing
+seed=29 level=36 failed=0 Completed: Open level resolving=False state=Playing
+seed=29 level=37 failed=0 Completed: Open level resolving=False state=Playing
+seed=41 level=33 failed=0 Completed: Open level resolving=False state=Playing
+seed=41 level=36 failed=0 Completed: Open level resolving=False state=Playing
+seed=41 level=37 failed=0 Completed: Open level resolving=False state=Playing
