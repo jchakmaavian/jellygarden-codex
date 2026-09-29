@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using RoyalThrone.Presentation;
 using UnityEditor;
-using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,15 +12,20 @@ using UnityEngine.UI;
 namespace RoyalThrone.Editor
 {
     // Explicit authoring command. It writes real scene objects; it never runs automatically on import.
+    // It replaces the main scene's startup Canvas with the Splash -> Loading -> Home flow (RoyalTitleScreen).
     public static class RoyalTitleScreenBuilder
     {
         const string MainScene = "Assets/JellyGarden/Scenes/main.unity";
-        const string ArtPath = "Assets/JellyGarden/Textures/menu/main_menu/royal_castle_blue.png";
-        const string PlayPath = "Assets/JellyGarden/Textures/menu/main_menu/royal_play_crown.png";
+        const string Folder = "Assets/JellyGarden/Textures/menu/startup/";
+        const string SplashJson = Folder + "Splash.json";
+        const string SplashBackground = Folder + "splash_background.png";
+        const string LoadingMobile = Folder + "Loading_mobile.webp";
+        const string LoadingTablet = Folder + "Loading_Tab.webp";
         const string HaloPath = "Assets/JellyGarden/Textures/menu/main_menu/wheel.png";
         const string LogoPath = "Assets/JellyGarden/Textures/menu/main_menu/logo.png";
-        static Font displayFont;
-        static Font bodyFont;
+        const string FontPath = "Assets/JellyGarden/Resources/RoyalGameplay/Display.ttf";
+        // The reference's corner colour: the first frame and anything outside the gradient are never black or white.
+        static readonly Color SplashEdge = new Color32(0x27, 0x0a, 0x88, 0xff);
 
         [MenuItem("Tools/Royal Throne/Build splash and loading screens")]
         public static void Build()
@@ -31,23 +35,26 @@ namespace RoyalThrone.Editor
                 throw new InvalidOperationException("This authoring command is restricted to the independent Codex copy.");
             var current = SceneManager.GetActiveScene();
             if (current.isDirty) throw new InvalidOperationException("Save the current scene before rebuilding its title UI.");
-            if (!File.Exists(ArtPath)) throw new FileNotFoundException("Castle illustration is not installed.", ArtPath);
+            foreach (var path in new[] { SplashJson, SplashBackground, LoadingMobile, LoadingTablet })
+                if (!File.Exists(path)) throw new FileNotFoundException("Startup asset is not installed.", path);
+            ConfigureArt(SplashBackground, 1024);
+            ConfigureWebP(LoadingMobile); ConfigureWebP(LoadingTablet);
             var scene = EditorSceneManager.OpenScene(MainScene, OpenSceneMode.Single);
-            ConfigureArt(ArtPath, false, 2048);
-            ConfigureArt(PlayPath, true, 4096);
-            var art = AssetDatabase.LoadAssetAtPath<Sprite>(ArtPath);
+            var json = AssetDatabase.LoadAssetAtPath<TextAsset>(SplashJson);
+            var gradient = AssetDatabase.LoadAssetAtPath<Sprite>(SplashBackground);
+            var mobile = AssetDatabase.LoadAllAssetsAtPath(LoadingMobile).OfType<Sprite>().FirstOrDefault();
+            var tablet = AssetDatabase.LoadAllAssetsAtPath(LoadingTablet).OfType<Sprite>().FirstOrDefault();
             var logo = AssetDatabase.LoadAssetAtPath<Sprite>(LogoPath);
-            var playArt = AssetDatabase.LoadAssetAtPath<Sprite>(PlayPath);
             var haloArt = AssetDatabase.LoadAssetAtPath<Sprite>(HaloPath);
-            displayFont = AssetDatabase.LoadAssetAtPath<Font>("Assets/JellyGarden/Fonts/BorisBlackBloxx.ttf");
-            bodyFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (!art || !logo || !playArt || !haloArt || !displayFont || !bodyFont)
-                throw new InvalidOperationException("Required title assets are missing.");
+            var font = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
+            if (!json || !gradient || !mobile || !tablet || !logo || !haloArt || !font) throw new InvalidOperationException("Required startup assets are missing.");
 
-            // The main scene contains only its opening UI, camera, input and sound roots.
-            // Keep the existing camera/input/audio and replace only this scene's Canvas.
+            // The main scene holds only its startup UI, camera, input and sound roots. Keep camera/input/audio and replace
+            // only the Canvas: the old castle title, its Play button and the old loading card go with it.
             foreach (GameObject root in scene.GetRootGameObjects())
                 if (root.GetComponent<Canvas>()) UnityEngine.Object.DestroyImmediate(root);
+            foreach (var camera in UnityEngine.Object.FindObjectsByType<Camera>(FindObjectsInactive.Include))
+                if (camera.gameObject.scene == scene) { camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = SplashEdge; }
 
             var rootRect = Rect("Royal Throne UI", null);
             SceneManager.MoveGameObjectToScene(rootRect.gameObject, scene);
@@ -61,204 +68,102 @@ namespace RoyalThrone.Editor
             rootRect.gameObject.AddComponent<GraphicRaycaster>();
             var whole = rootRect.gameObject.AddComponent<CanvasGroup>();
 
-            var backgroundFrame = Rect("Castle background", rootRect);
-            Stretch(backgroundFrame);
-            var background = Picture("Royal blue castle", backgroundFrame, art);
-            var aspect = background.gameObject.AddComponent<AspectRatioFitter>();
-            aspect.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-            aspect.aspectRatio = art.rect.width / art.rect.height;
-            var shade = Surface("Lower vignette", rootRect, new Vector2(720, 480), new Vector2(.5f, 0), Vector2.zero,
-                new Color(.055f, .08f, .22f, 0), new Color(.09f, .12f, .30f, .14f), 0);
-            shade.rectTransform.anchorMin = Vector2.zero;
-            shade.rectTransform.anchorMax = new Vector2(1, .4f);
-            shade.rectTransform.offsetMin = shade.rectTransform.offsetMax = Vector2.zero;
+            // Splash: the reference gradient covering the screen, and Splash.json on it.
+            var splash = Rect("Splash", rootRect); Stretch(splash);
+            var splashGroup = splash.gameObject.AddComponent<CanvasGroup>();
+            var splashFrame = Rect("Splash background", splash); Stretch(splashFrame);
+            var splashImage = Picture("Reference gradient", splashFrame, gradient, true);
+            var splashFit = splashImage.gameObject.AddComponent<AspectRatioFitter>();
+            splashFit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            splashFit.aspectRatio = gradient.rect.width / gradient.rect.height;
+            var animation = Rect("Splash animation (Splash.json)", splash);
+            var player = animation.gameObject.AddComponent<RoyalLottiePlayer>();
+            player.animationJson = json;
 
-            var motesRoot = Rect("Floating golden lights", rootRect);
-            Stretch(motesRoot);
-            var motes = new RectTransform[12];
-            for (int i = 0; i < motes.Length; i++)
-            {
-                float size = i % 3 == 0 ? 7 : 4;
-                var light = Surface("Light " + (i + 1), motesRoot, Vector2.one * size, new Vector2(.1f + i % 5 * .18f, .15f + i * .065f),
-                    Vector2.zero, new Color(1, .95f, .65f, .7f), new Color(1, .67f, .25f, .15f), size);
-                motes[i] = light.rectTransform;
-            }
-
-            var titleRoot = Rect("Title content", rootRect);
-            Stretch(titleRoot);
-            var titleGroup = titleRoot.gameObject.AddComponent<CanvasGroup>();
-            var safe = Rect("Safe area", titleRoot);
-            Stretch(safe);
-            var titleHalo = Halo(safe, haloArt);
-            var titleLogo = Picture("Logo", safe, logo);
-            Place(titleLogo.rectTransform, Vector2.one * 550, new Vector2(.5f, 1), new Vector2(0, -28));
-            titleLogo.rectTransform.pivot = new Vector2(.5f, 1);
-
-            var play = Rect("Play", safe);
-            Place(play, new Vector2(604, 201), new Vector2(.5f, 0), Vector2.zero);
-            play.pivot = new Vector2(.5f, 0);
-            var face = play.gameObject.AddComponent<Image>();
-            face.sprite = playArt;
-            face.preserveAspect = true;
-            face.raycastTarget = true;
-            var button = play.gameObject.AddComponent<Button>();
-            button.targetGraphic = face;
-            button.transition = Selectable.Transition.ColorTint;
-            var colors = button.colors;
-            colors.normalColor = Color.white;
-            colors.highlightedColor = Color.white;
-            colors.selectedColor = Color.white;
-            colors.pressedColor = new Color(.82f, .87f, 1);
-            colors.disabledColor = new Color(.65f, .68f, .78f);
-            colors.fadeDuration = .08f;
-            button.colors = colors;
-            play.gameObject.AddComponent<RoyalButtonMotion>();
-            var error = Label("Load error", safe, "", 22, false, Hex("FFE6BD"));
-            Place(error.rectTransform, new Vector2(620, 64), new Vector2(.5f, .058f), Vector2.zero);
-
-            var loadingRoot = Rect("Loading", rootRect);
-            Stretch(loadingRoot);
-            var loadingGroup = loadingRoot.gameObject.AddComponent<CanvasGroup>();
-            loadingGroup.alpha = 0;
-            var veil = Surface("Loading input shield", loadingRoot, Vector2.zero, Vector2.zero, Vector2.zero,
-                Color.clear, Color.clear, 0);
-            Stretch(veil.rectTransform);
-            veil.raycastTarget = true;
-            var loadingSafe = Rect("Safe area", loadingRoot);
-            Stretch(loadingSafe);
-            var loadingHalo = Halo(loadingSafe, haloArt);
-            var loadingLogo = Picture("Royal Throne logo", loadingSafe, logo);
-            Place(loadingLogo.rectTransform, Vector2.one * 576, new Vector2(.5f, 1), Vector2.zero);
-            loadingLogo.rectTransform.pivot = new Vector2(.5f, 1);
-            var card = Rect("Loading card", loadingSafe);
-            Place(card, new Vector2(604, 302), new Vector2(.5f, 0), Vector2.zero);
-            card.pivot = new Vector2(.5f, 0);
-            var cardDepth = Surface("Gold depth", card, Vector2.zero, Vector2.zero, Vector2.zero, Hex("BC812D"), Hex("9C611E"), 43);
-            Inset(cardDepth.rectTransform, 0, -8, 0, 0);
-            var cardBorder = Surface("Gold hairline", card, Vector2.zero, Vector2.zero, Vector2.zero,
-                Hex("FFE5A0"), Hex("F9D37A"), 43);
-            Stretch(cardBorder.rectTransform);
-            var cardFace = Surface("Royal blue panel", card, Vector2.zero, Vector2.zero, Vector2.zero, Hex("345FE0"), Hex("152B77"), 40);
-            Inset(cardFace.rectTransform, 5, 5, 5, 5);
-            var jewels = new RectTransform[3];
-            for (int i = 0; i < 3; i++)
-            {
-                var jewel = Surface("Animated jewel " + (i + 1), card, Vector2.one * 28, new Vector2(.5f, 1),
-                    new Vector2((i - 1) * 42, -44), Hex("FFF1A2"), Hex("DA8B2A"), 0);
-                jewel.diamond = true;
-                jewels[i] = jewel.rectTransform;
-            }
-            var loadingLabel = Label("Heading", card, "Loading your kingdom", 34, false, Hex("FFF3D0"));
-            loadingLabel.fontStyle = FontStyle.Bold;
-            Place(loadingLabel.rectTransform, new Vector2(520, 48), new Vector2(.5f, 1), new Vector2(0, -103));
-            var track = Surface("Progress rim", card, Vector2.zero, Vector2.zero, Vector2.zero, Hex("101C49"), Hex("7E9CE0"), 20);
-            track.rectTransform.anchorMin = new Vector2(0, .5f);
-            track.rectTransform.anchorMax = new Vector2(1, .5f);
-            track.rectTransform.offsetMin = new Vector2(52, -39);
-            track.rectTransform.offsetMax = new Vector2(-52, 0);
-            var inset = Surface("Progress track", track.transform, Vector2.zero, Vector2.zero, Vector2.zero, Hex("070D28"), Hex("101C49"), 18);
-            Inset(inset.rectTransform, 2, 2, 2, 2);
-            var fillContainer = Rect("Progress fill area", inset.transform);
-            Inset(fillContainer, 3, 3, 3, 3);
-            var fill = Surface("Sapphire progress fill", fillContainer, Vector2.zero, Vector2.zero, Vector2.zero, Hex("E4ECFF"), Hex("315DE3"), 15);
-            Stretch(fill.rectTransform);
-            fill.rectTransform.anchorMax = new Vector2(0, 1);
-            fill.gameObject.AddComponent<RectMask2D>();
-            var shine = Surface("Moving glint", fill.transform, new Vector2(28, 0), new Vector2(0, .5f), Vector2.zero,
-                new Color(1, 1, .92f, .55f), new Color(1, 1, .92f, .06f), 12);
-            shine.rectTransform.anchorMin = Vector2.zero;
-            shine.rectTransform.anchorMax = new Vector2(0, 1);
-            shine.rectTransform.sizeDelta = new Vector2(28, 0);
-            var status = Label("Status", card, "Preparing your game...", 24, false, Hex("E1EAFF"));
-            Place(status.rectTransform, new Vector2(500, 46), new Vector2(.5f, 0), new Vector2(0, 54));
+            // Loading: the illustration covering the screen, the logo at the top and the text at the bottom.
+            var loading = Rect("Loading", rootRect); Stretch(loading);
+            var loadingGroup = loading.gameObject.AddComponent<CanvasGroup>();
+            var loadingFrame = Rect("Loading background", loading); Stretch(loadingFrame);
+            var loadingImage = Picture("Loading illustration", loadingFrame, mobile, true);
+            var loadingFit = loadingImage.gameObject.AddComponent<AspectRatioFitter>();
+            loadingFit.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            loadingFit.aspectRatio = mobile.rect.width / mobile.rect.height;
+            var safe = Rect("Safe area", loading); Stretch(safe);
+            var halo = Rect("Rotating logo halo", safe);
+            var haloGraphic = halo.gameObject.AddComponent<RoyalLogoHalo>();
+            haloGraphic.sprite = haloArt; haloGraphic.color = new Color(1, .99f, .96f, .3f); haloGraphic.raycastTarget = false; haloGraphic.SetAllDirty();
+            var logoImage = Picture("Royal Throne logo", safe, logo, false);
+            var label = Rect("Loading text", safe).gameObject.AddComponent<Text>();
+            label.font = font; label.fontSize = 46; label.text = "Loading..."; label.alignment = TextAnchor.MiddleCenter; label.color = new Color(1, .98f, .92f);
+            label.supportRichText = true; label.raycastTarget = false; label.horizontalOverflow = HorizontalWrapMode.Overflow; label.verticalOverflow = VerticalWrapMode.Overflow;
+            var outline = label.gameObject.AddComponent<Outline>(); outline.effectColor = new Color(.06f, .10f, .30f, .85f); outline.effectDistance = new Vector2(2.2f, -2.2f);
+            var shadow = label.gameObject.AddComponent<Shadow>(); shadow.effectColor = new Color(.03f, .06f, .2f, .55f); shadow.effectDistance = new Vector2(0, -4);
 
             var controller = rootRect.gameObject.AddComponent<RoyalTitleScreen>();
-            controller.safeArea = safe;
-            controller.loadingSafeArea = loadingSafe;
-            controller.titleLogo = titleLogo.rectTransform;
-            controller.loadingLogo = loadingLogo.rectTransform;
-            controller.titleHalo = titleHalo.rectTransform;
-            controller.loadingHalo = loadingHalo.rectTransform;
-            controller.playRect = play;
-            controller.loadingCard = card;
-            controller.wholeScreen = whole;
-            controller.titleGroup = titleGroup;
-            controller.loadingGroup = loadingGroup;
-            controller.playButton = button;
-            controller.errorLabel = error;
-            controller.progressFill = fill.rectTransform;
-            controller.progressShine = shine.rectTransform;
-            controller.jewels = jewels;
-            controller.loadingLabel = loadingLabel;
-            controller.loadingStatus = status;
-            controller.motes = motes;
-            controller.gameScene = "game";
-            controller.PrepareLoadingJourney();
-            loadingRoot.gameObject.SetActive(false);
-            UnityEventTools.AddPersistentListener(button.onClick, controller.BeginPlay);
+            controller.splashGroup = splashGroup; controller.splashBackground = splashFit; controller.splashAnimation = player;
+            controller.loadingGroup = loadingGroup; controller.loadingBackground = loadingImage; controller.loadingFitter = loadingFit;
+            controller.loadingMobile = mobile; controller.loadingTablet = tablet;
+            controller.loadingSafeArea = safe; controller.loadingLogo = logoImage.rectTransform; controller.loadingHalo = halo; controller.loadingLabel = label;
+            controller.wholeScreen = whole; controller.gameScene = "game";
+            loading.gameObject.SetActive(false);
             var eventSystem = UnityEngine.Object.FindAnyObjectByType<EventSystem>();
-            if (eventSystem) eventSystem.firstSelectedGameObject = button.gameObject;
+            if (eventSystem) eventSystem.firstSelectedGameObject = null;
+
+            // Unity's own splash (the grey "Made with Unity" screen) came before the old title; the game's splash replaces it.
+            PlayerSettings.SplashScreen.show = false;
+            PlayerSettings.SplashScreen.backgroundColor = SplashEdge;
+
             Canvas.ForceUpdateCanvases();
             controller.RefreshLayout();
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene, MainScene);
+            AssetDatabase.SaveAssets();
             Selection.activeGameObject = rootRect.gameObject;
-            Debug.Log("Royal Throne: splash and animated loading screens authored and saved.");
+            Debug.Log("Royal Throne: startup Splash and Loading screens authored and saved.");
             Validate();
         }
 
         [MenuItem("Tools/Royal Throne/Validate title screen")]
         public static void Validate()
         {
-            var controller = UnityEngine.Object.FindAnyObjectByType<RoyalTitleScreen>();
-            if (!controller) throw new InvalidOperationException("Open the main scene to validate its title UI.");
-            if (!controller.playButton || !controller.progressFill || !controller.loadingGroup || controller.jewels.Length != 3 ||
-                !controller.titleHalo || !controller.loadingHalo)
-                throw new InvalidOperationException("Title UI bindings are incomplete.");
-            if (Application.isPlaying || controller.jewels[0].Find("Crown matching piece"))
+            var controller = UnityEngine.Object.FindAnyObjectByType<RoyalTitleScreen>(FindObjectsInactive.Include);
+            if (!controller) throw new InvalidOperationException("Open the main scene to validate its startup UI.");
+            if (!controller.splashGroup || !controller.splashBackground || !controller.splashAnimation || !controller.loadingGroup || !controller.loadingBackground ||
+                !controller.loadingFitter || !controller.loadingMobile || !controller.loadingTablet || !controller.loadingSafeArea || !controller.loadingLogo ||
+                !controller.loadingHalo || !controller.loadingLabel || !controller.wholeScreen)
+                throw new InvalidOperationException("Startup UI bindings are incomplete.");
+            if (AssetDatabase.GetAssetPath(controller.splashAnimation.animationJson) != SplashJson) throw new InvalidOperationException("The splash must play Splash.json.");
+            if (AssetDatabase.GetAssetPath(controller.loadingMobile) != LoadingMobile || AssetDatabase.GetAssetPath(controller.loadingTablet) != LoadingTablet)
+                throw new InvalidOperationException("The loading illustrations are not the phone and tablet art.");
+            var logo = controller.loadingLogo.GetComponent<Image>();
+            if (!logo || AssetDatabase.GetAssetPath(logo.sprite) != LogoPath || !logo.preserveAspect) throw new InvalidOperationException("Approved logo reference or aspect was changed.");
+            var halo = controller.loadingHalo.GetComponent<RoyalLogoHalo>();
+            if (!halo || AssetDatabase.GetAssetPath(halo.sprite) != HaloPath || halo.raycastTarget || halo.rotationSeconds != 6)
+                throw new InvalidOperationException("The approved six-second logo halo is not configured.");
+            if (controller.GetComponentsInChildren<Button>(true).Length > 0 || controller.GetComponentsInChildren<Selectable>(true).Length > 0)
+                throw new InvalidOperationException("The startup screens must have no buttons.");
+            if (controller.GetComponentsInChildren<EventSystem>(true).Length > 0) throw new InvalidOperationException("The persistent startup Canvas must not carry an EventSystem.");
+            foreach (var image in controller.GetComponentsInChildren<Image>(true))
             {
-                foreach (var jewel in controller.jewels)
-                {
-                    var piece = jewel.Find("Crown matching piece");
-                    if (!piece || !piece.GetComponent<Image>().sprite || piece.GetComponent<Image>().raycastTarget)
-                        throw new InvalidOperationException("Loading journey is missing a non-blocking crown piece.");
-                }
-                if (controller.loadingCard.GetComponentsInChildren<RoyalPanelGraphic>(true).Count(g => g.name.StartsWith("Match sparkle ")) != 12)
-                    throw new InvalidOperationException("Loading journey must retain its bounded 12-sparkle pool.");
+                string path = AssetDatabase.GetAssetPath(image.sprite);
+                if (path.EndsWith("/loading.png") || path.EndsWith("royal_castle_blue.png") || path.EndsWith("royal_play_crown.png"))
+                    throw new InvalidOperationException("Old title or loading art is still referenced: " + path);
             }
+            foreach (var text in controller.GetComponentsInChildren<Text>(true))
+                if (text.text.IndexOf("Match", StringComparison.OrdinalIgnoreCase) >= 0) throw new InvalidOperationException("Startup text must not name another game.");
             foreach (var graphic in controller.GetComponentsInChildren<Graphic>(true))
-                if (!graphic.GetComponent<CanvasRenderer>())
-                    throw new InvalidOperationException("Missing CanvasRenderer on " + graphic.name);
-            var image = controller.titleLogo.GetComponent<Image>();
-            if (AssetDatabase.GetAssetPath(image.sprite) != LogoPath || !image.preserveAspect)
-                throw new InvalidOperationException("Approved logo reference or aspect was changed.");
-            var playImage = controller.playButton.GetComponent<Image>();
-            if (!playImage || AssetDatabase.GetAssetPath(playImage.sprite) != PlayPath || !playImage.preserveAspect)
-                throw new InvalidOperationException("Approved crowned Play artwork is missing or stretched.");
-            foreach (var halo in controller.GetComponentsInChildren<RoyalLogoHalo>(true))
-                if (AssetDatabase.GetAssetPath(halo.sprite) != HaloPath || halo.raycastTarget || halo.rotationSeconds != 6)
-                    throw new InvalidOperationException("Original six-second decorative halo is not configured correctly.");
-            if (controller.playButton.onClick.GetPersistentEventCount() != 1 ||
-                controller.playButton.onClick.GetPersistentMethodName(0) != nameof(RoyalTitleScreen.BeginPlay))
-                throw new InvalidOperationException("Play must have exactly one async-loading callback.");
-            foreach (var graphic in controller.GetComponentsInChildren<Image>(true))
-                if (graphic.sprite && AssetDatabase.GetAssetPath(graphic.sprite).EndsWith("/loading.png"))
-                    throw new InvalidOperationException("The flattened JellyGarden loading art is still referenced.");
+                if (!graphic.GetComponent<CanvasRenderer>()) throw new InvalidOperationException("Missing CanvasRenderer on " + graphic.name);
+            if (!controller.loadingBackground.raycastTarget) throw new InvalidOperationException("The loading screen must block input to the scene beneath.");
             bool hasGame = false;
             foreach (var scene in EditorBuildSettings.scenes)
                 if (scene.enabled && scene.path == "Assets/JellyGarden/Scenes/game.unity") hasGame = true;
             if (!hasGame) throw new InvalidOperationException("The game scene is absent from the enabled scene list.");
-            Debug.Log("Royal Throne title validation PASS: approved logo, clean loading art, one Play callback, complete bindings and destination scene.");
+            if (EditorBuildSettings.scenes.Length == 0 || EditorBuildSettings.scenes[0].path != MainScene) throw new InvalidOperationException("The main scene must be the first scene in the build.");
+            if (PlayerSettings.SplashScreen.show) throw new InvalidOperationException("Unity's own splash would show before the game's splash.");
+            Debug.Log("Royal Throne startup validation PASS: Splash.json splash, phone and tablet loading art, approved logo and halo, no buttons, no EventSystem, destination scene.");
         }
 
-        [MenuItem("Tools/Royal Throne/Preview loading animation (Play Mode) _F7")]
-        public static void PreviewLoading()
-        {
-            if (!EditorApplication.isPlaying) { Debug.Log("Enter Play Mode in main to preview the loading animation."); return; }
-            UnityEngine.Object.FindAnyObjectByType<RoyalTitleScreen>()?.PreviewLoadingAnimation();
-        }
-
-        static void ConfigureArt(string path, bool transparent, int maxSize)
+        static void ConfigureArt(string path, int maxSize)
         {
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
             if (!importer) throw new FileNotFoundException("Required artwork has not been imported.", path);
@@ -268,26 +173,23 @@ namespace RoyalThrone.Editor
             importer.filterMode = FilterMode.Bilinear;
             importer.wrapMode = TextureWrapMode.Clamp;
             importer.maxTextureSize = maxSize;
+            // A smooth gradient: uncompressed, so block compression cannot band it.
             importer.textureCompression = TextureImporterCompression.Uncompressed;
-            importer.alphaIsTransparency = transparent;
-            importer.alphaSource = TextureImporterAlphaSource.FromInput;
+            importer.alphaSource = TextureImporterAlphaSource.None;
             importer.npotScale = TextureImporterNPOTScale.None;
             importer.SaveAndReimport();
         }
 
-        static RoyalLogoHalo Halo(Transform parent, Sprite sprite)
+        static void ConfigureWebP(string path)
         {
-            var rect = Rect("Rotating logo halo", parent);
-            Place(rect, new Vector2(1123, 1015), new Vector2(.5f, 1), new Vector2(0, -301));
-            var halo = rect.gameObject.AddComponent<RoyalLogoHalo>();
-            halo.sprite = sprite;
-            halo.color = new Color(1, .99f, .96f, .3f);
-            halo.raycastTarget = false;
-            halo.SetAllDirty();
-            return halo;
+            var importer = AssetImporter.GetAtPath(path) as RoyalWebPImporter;
+            if (!importer) throw new InvalidOperationException("The WebP importer is not handling " + path);
+            if (importer.astcOnMobile && !importer.bleedTransparentEdges) return;
+            // Full-screen art: ASTC 6x6 on phones like the area art, instead of desktop BC3.
+            importer.astcOnMobile = true; importer.bleedTransparentEdges = false;
+            EditorUtility.SetDirty(importer); importer.SaveAndReimport();
         }
 
-        static Color Hex(string value) { ColorUtility.TryParseHtmlString("#" + value, out var color); return color; }
         static RectTransform Rect(string name, Transform parent)
         {
             var item = new GameObject(name, typeof(RectTransform));
@@ -296,53 +198,14 @@ namespace RoyalThrone.Editor
             rect.SetParent(parent, false);
             return rect;
         }
-        static void Place(RectTransform rect, Vector2 size, Vector2 anchor, Vector2 position)
-        {
-            rect.anchorMin = rect.anchorMax = anchor;
-            rect.pivot = new Vector2(.5f, .5f);
-            rect.sizeDelta = size;
-            rect.anchoredPosition = position;
-        }
-        static void Stretch(RectTransform rect) => Inset(rect, 0, 0, 0, 0);
-        static void Inset(RectTransform rect, float left, float bottom, float right, float top)
-        {
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.offsetMin = new Vector2(left, bottom);
-            rect.offsetMax = new Vector2(-right, -top);
-        }
-        static Image Picture(string name, Transform parent, Sprite sprite)
+        static void Stretch(RectTransform rect) { rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.offsetMin = rect.offsetMax = Vector2.zero; }
+        static Image Picture(string name, Transform parent, Sprite sprite, bool blocksInput)
         {
             var image = Rect(name, parent).gameObject.AddComponent<Image>();
             image.sprite = sprite;
             image.preserveAspect = true;
-            image.raycastTarget = false;
+            image.raycastTarget = blocksInput;
             return image;
-        }
-        static RoyalPanelGraphic Surface(string name, Transform parent, Vector2 size, Vector2 anchor, Vector2 position, Color top, Color bottom, float radius)
-        {
-            var surface = Rect(name, parent);
-            surface.gameObject.AddComponent<CanvasRenderer>();
-            var graphic = surface.gameObject.AddComponent<RoyalPanelGraphic>();
-            Place(graphic.rectTransform, size, anchor, position);
-            graphic.topColor = top;
-            graphic.bottomColor = bottom;
-            graphic.cornerRadius = radius;
-            graphic.raycastTarget = false;
-            return graphic;
-        }
-        static Text Label(string name, Transform parent, string value, int size, bool display, Color color)
-        {
-            var text = Rect(name, parent).gameObject.AddComponent<Text>();
-            text.font = display ? displayFont : bodyFont;
-            text.text = value;
-            text.fontSize = size;
-            text.color = color;
-            text.alignment = TextAnchor.MiddleCenter;
-            text.raycastTarget = false;
-            text.horizontalOverflow = HorizontalWrapMode.Wrap;
-            text.verticalOverflow = VerticalWrapMode.Truncate;
-            return text;
         }
     }
 }

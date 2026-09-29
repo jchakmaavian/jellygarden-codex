@@ -1,5 +1,4 @@
 using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
-using System;
 using System.Collections;
 using JellyGarden.Scripts;
 using JellyGarden.Scripts.Juice;
@@ -9,341 +8,228 @@ using UnityEngine.UI;
 
 namespace RoyalThrone.Presentation
 {
+    /// <summary>
+    /// The Royal Throne startup flow in the first scene (main): Splash, then Loading, then Home. No input is needed.
+    /// - Splash: Splash.json (RoyalLottiePlayer) plays once over the reference's violet gradient, centred at the
+    ///   reference's proportions.
+    /// - Loading: the phone or tablet illustration (whichever matches the screen's aspect ratio, covering the screen without
+    ///   stretching), the approved Royal Throne logo with its rotating light rays at the top, and "Loading..." at the bottom.
+    ///   It starts the game scene's asynchronous load only once it is on screen, and stays until Home is genuinely ready:
+    ///   the scene is activated, the level manager is on the map, the home screen is visible and has drawn a frame beneath
+    ///   this opaque overlay. Then the overlay fades out over Home and is destroyed.
+    /// The class keeps its name and script GUID (the scene and the editor tools refer to it); <see cref="BeginPlay"/> remains
+    /// only as an input-free "start loading now" hook for those tools.
+    /// </summary>
     [ExecuteAlways]
     [DisallowMultipleComponent]
     public sealed class RoyalTitleScreen : MonoBehaviour
     {
-        [Header("Screen layout")]
-        public RectTransform safeArea;
-        public RectTransform loadingSafeArea;
-        public RectTransform titleLogo;
-        public RectTransform loadingLogo;
-        public RectTransform titleHalo;
-        public RectTransform loadingHalo;
-        public RectTransform playRect;
-        public RectTransform loadingCard;
-        public CanvasGroup wholeScreen;
-        public CanvasGroup titleGroup;
-        public CanvasGroup loadingGroup;
-        public Button playButton;
-        public Text errorLabel;
-        [Header("Loading presentation")]
-        public RectTransform progressFill;
-        public RectTransform progressShine;
-        public RectTransform[] jewels;
-        public Text loadingLabel;
-        public Text loadingStatus;
-        public string gameScene = "game";
-        [Tooltip("Brief presentation time; scene progress still comes from Unity's asynchronous operation.")]
-        [Range(.4f, 2f)] public float minimumLoadingSeconds = .9f;
-        [Header("Ambient light")]
-        public RectTransform[] motes;
+        public enum StartupPhase { Splash, Loading, OpeningHome, Done }
 
-        public bool IsLoading { get; private set; }
-        public float DisplayedProgress { get; private set; }
+        [Header("Splash")]
+        public CanvasGroup splashGroup;
+        public AspectRatioFitter splashBackground;
+        public RoyalLottiePlayer splashAnimation;
+        [Tooltip("Composition width as a share of the screen width, from Splash-reference.png (0.943 on its 852 x 1847 frame).")]
+        public float splashWidthShare = .943f;
+        [Tooltip("Composition centre as a share of the screen height from the top, from the reference.")]
+        public float splashCentreFromTop = .46f;
+        [Header("Loading")]
+        public CanvasGroup loadingGroup;
+        public Image loadingBackground;
+        public AspectRatioFitter loadingFitter;
+        public Sprite loadingMobile;
+        public Sprite loadingTablet;
+        public RectTransform loadingSafeArea;
+        public RectTransform loadingLogo;
+        public RectTransform loadingHalo;
+        public Text loadingLabel;
+        public CanvasGroup wholeScreen;
+        public string gameScene = "game";
+
+        public StartupPhase Phase { get; private set; }
+        public bool IsLoading => Application.isPlaying && Phase != StartupPhase.Splash;
+        /// <summary>The loading illustration shown ("mobile" or "tablet"), for checks.</summary>
+        public string LoadingArt { get; private set; }
+        public float SplashSeconds { get; private set; }
+        public float LoadingSeconds { get; private set; }
         public int LoadRequestCount { get; private set; }
-        Rect lastSafeArea;
-        Vector2 lastSize;
-        AsyncOperation loadOperation;
-        float startedAt;
-        bool journeyBuilt;
-        RoyalPanelGraphic[] journeySparks;
-        float loadingCycle;
+
+        Rect lastSafeArea; Vector2 lastSize;
+        bool skipSplash; float phaseStarted; AsyncOperation loadOperation;
         bool MotionEnabled => PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) != 0;
 
         void OnEnable()
         {
             RefreshLayout();
             if (!Application.isPlaying) return;
-            PrepareLoadingJourney();
-            wholeScreen.alpha = 1;
-            titleGroup.alpha = 1;
-            titleGroup.interactable = titleGroup.blocksRaycasts = true;
-            loadingGroup.alpha = 0;
-            loadingGroup.gameObject.SetActive(false);
-            playButton.interactable = true;
-            errorLabel.text = "";
-            StartCoroutine(Entrance());
+            // The persistent audio director owns the castle theme in every scene, so the music starts with the game, as it
+            // did with the old title screen, and carries on into Home.
+            _ = RoyalAudioDirector.Get;
+            Phase = StartupPhase.Splash;
+            wholeScreen.alpha = 1; wholeScreen.blocksRaycasts = true;
+            splashGroup.gameObject.SetActive(true); splashGroup.alpha = 1;
+            loadingGroup.gameObject.SetActive(false); loadingGroup.alpha = 0;
+            StartCoroutine(Run());
         }
 
         void Update()
         {
             var size = ((RectTransform)transform).rect.size;
             if (lastSafeArea != Screen.safeArea || lastSize != size) RefreshLayout();
-            if (!Application.isPlaying) return;
-            float time = Time.unscaledTime;
-            for (int i = 0; i < motes.Length; i++)
-            {
-                var mote = motes[i];
-                if (!mote) continue;
-                if (!MotionEnabled) { mote.localScale = Vector3.zero; continue; }
-                float seed = i * 2.39996f;
-                mote.anchorMin = mote.anchorMax = new Vector2(.08f + Mathf.Repeat(i * .173f, .84f),
-                    .12f + Mathf.Repeat(time * (.012f + i * .0007f) + i * .107f, .8f));
-                mote.anchoredPosition = new Vector2(Mathf.Sin(time * .6f + seed) * 18, 0);
-                float scale = .6f + .4f * Mathf.Sin(time * 1.3f + seed);
-                mote.localScale = Vector3.one * scale;
-            }
-            if (!IsLoading) return;
-            AnimateLoadingJourney(time);
-            progressShine.anchorMin = new Vector2(MotionEnabled ? Mathf.Repeat(time * .65f, 1) : .75f, 0);
-            progressShine.anchorMax = new Vector2(progressShine.anchorMin.x, 1);
+            if (!Application.isPlaying || Phase == StartupPhase.Splash || Phase == StartupPhase.Done || !loadingLabel) return;
+            // "Loading" with dots that fill in one by one; the hidden dots keep the word from shifting.
+            float t = Time.unscaledTime - phaseStarted;
+            int dots = MotionEnabled ? (int)(t / .4f) % 4 : 3;
+            loadingLabel.text = "Loading" + new string('.', dots) + "<color=#00000000>" + new string('.', 3 - dots) + "</color>";
+            var c = loadingLabel.color; c.a = MotionEnabled ? .86f + .14f * Mathf.Cos(t * Mathf.PI * 2 / 1.6f) : 1; loadingLabel.color = c;
         }
 
         public void RefreshLayout()
         {
-            if (!safeArea || !loadingSafeArea || !titleLogo || !playRect || !loadingCard) return;
             var root = (RectTransform)transform;
-            lastSize = root.rect.size;
-            lastSafeArea = Screen.safeArea;
-            Rect safe = lastSafeArea;
-            Vector2 min = Vector2.zero, max = Vector2.one;
+            lastSize = root.rect.size; lastSafeArea = Screen.safeArea;
+            if (root.rect.width <= 0 || root.rect.height <= 0) return;
+            float w = root.rect.width, h = root.rect.height;
+            // Splash: the reference's width share on phones; on wider screens as on a 9:16 phone column, so a tablet shows it
+            // at a phone's proportion of the height rather than filling its width.
+            if (splashAnimation)
+            {
+                var comp = splashAnimation.Loaded ? splashAnimation.CompositionSize : new Vector2(1200, 680);
+                var rt = (RectTransform)splashAnimation.transform;
+                float compWidth = splashWidthShare * Mathf.Min(w, h * 9f / 16f);
+                rt.anchorMin = rt.anchorMax = new Vector2(.5f, 1 - splashCentreFromTop); rt.pivot = new Vector2(.5f, .5f);
+                rt.sizeDelta = new Vector2(compWidth, compWidth * comp.y / comp.x); rt.anchoredPosition = Vector2.zero;
+                if (Application.isPlaying && splashAnimation.Loaded)
+                {
+                    var canvas = GetComponentInParent<Canvas>();
+                    float scale = canvas ? canvas.rootCanvas.scaleFactor : 1;
+                    splashAnimation.Prepare(compWidth * scale / comp.x);
+                }
+            }
+            if (splashBackground && splashBackground.TryGetComponent<Image>(out var splashImage) && splashImage.sprite)
+                splashBackground.aspectRatio = splashImage.sprite.rect.width / splashImage.sprite.rect.height;
+            SelectLoadingArt(w / h);
+            if (!loadingSafeArea || !loadingLogo || !loadingLabel) return;
+            Rect safe = lastSafeArea; Vector2 min = Vector2.zero, max = Vector2.one;
             if (Application.isPlaying && Screen.width > 0 && Screen.height > 0 && safe.width > 0)
+            { min = safe.min / new Vector2(Screen.width, Screen.height); max = safe.max / new Vector2(Screen.width, Screen.height); }
+            loadingSafeArea.anchorMin = min; loadingSafeArea.anchorMax = max; loadingSafeArea.offsetMin = loadingSafeArea.offsetMax = Vector2.zero;
+            float sw = w * (max.x - min.x), sh = h * (max.y - min.y);
+            // Top centre, clear of the notch: the approved logo and its light rays.
+            float logo = Mathf.Max(1, Mathf.Min(sw * .72f, sh * .30f));
+            loadingLogo.anchorMin = loadingLogo.anchorMax = new Vector2(.5f, 1); loadingLogo.pivot = new Vector2(.5f, 1);
+            loadingLogo.sizeDelta = Vector2.one * logo; loadingLogo.anchoredPosition = new Vector2(0, -sh * .015f);
+            if (loadingHalo)
             {
-                min = safe.min / new Vector2(Screen.width, Screen.height);
-                max = safe.max / new Vector2(Screen.width, Screen.height);
+                loadingHalo.anchorMin = loadingHalo.anchorMax = new Vector2(.5f, 1); loadingHalo.pivot = new Vector2(.5f, .5f);
+                loadingHalo.sizeDelta = new Vector2(logo * 1.9f, logo * 1.9f * 1015 / 1123);
+                loadingHalo.anchoredPosition = loadingLogo.anchoredPosition + Vector2.down * (logo * .5f);
             }
-            safeArea.anchorMin = loadingSafeArea.anchorMin = min;
-            safeArea.anchorMax = loadingSafeArea.anchorMax = max;
-            safeArea.offsetMin = safeArea.offsetMax = Vector2.zero;
-            loadingSafeArea.offsetMin = loadingSafeArea.offsetMax = Vector2.zero;
-            float width = root.rect.width * (max.x - min.x);
-            float height = root.rect.height * (max.y - min.y);
-            float logoSize = Mathf.Max(1, Mathf.Min(width * .8f, height * .45f));
-            titleLogo.sizeDelta = Vector2.one * logoSize;
-            titleLogo.anchoredPosition = new Vector2(0, -height * .01f);
-            loadingLogo.sizeDelta = titleLogo.sizeDelta;
-            loadingLogo.anchoredPosition = titleLogo.anchoredPosition;
-            LayoutHalo(titleHalo, width, logoSize);
-            LayoutHalo(loadingHalo, width, logoSize);
-            float buttonWidth = Mathf.Max(1, Mathf.Min(width * .84f, height * .48f));
-            playRect.sizeDelta = new Vector2(buttonWidth, buttonWidth / 3);
-            playRect.anchoredPosition = new Vector2(0, height * .07f);
-            float cardWidth = Mathf.Max(1, Mathf.Min(660, width * .84f));
-            loadingCard.sizeDelta = new Vector2(cardWidth, Mathf.Max(300, cardWidth * .5f));
-            loadingCard.anchoredPosition = new Vector2(0, height * .08f);
+            // Bottom centre, inside the safe area with room to spare.
+            var label = loadingLabel.rectTransform;
+            label.anchorMin = label.anchorMax = new Vector2(.5f, 0); label.pivot = new Vector2(.5f, 0);
+            label.sizeDelta = new Vector2(Mathf.Min(sw * .8f, 560), 70); label.anchoredPosition = new Vector2(0, Mathf.Max(48, sh * .055f));
         }
 
-        void LayoutHalo(RectTransform halo, float width, float logoSize)
+        // Phone art (971 x 1620) or tablet art (1536 x 2048): whichever aspect is closer to the screen's, so the cover crop is
+        // smallest. The switch point is their geometric mean (about 0.67 width/height): every phone is below it, 3:4 and
+        // 2:3 tablets are above it, and 16:10 tablets keep the phone art, which suits their taller shape better.
+        void SelectLoadingArt(float aspect)
         {
-            if (!halo) return;
-            halo.sizeDelta = new Vector2(width * 1.56f, width * 1.56f * 690 / 763);
-            halo.anchoredPosition = titleLogo.anchoredPosition + Vector2.down * (logoSize * .5f);
+            if (!loadingBackground || !loadingFitter || !loadingMobile || !loadingTablet) return;
+            float mobile = loadingMobile.rect.width / loadingMobile.rect.height, tablet = loadingTablet.rect.width / loadingTablet.rect.height;
+            bool useTablet = aspect >= Mathf.Sqrt(mobile * tablet);
+            var sprite = useTablet ? loadingTablet : loadingMobile;
+            if (loadingBackground.sprite != sprite) loadingBackground.sprite = sprite;
+            LoadingArt = useTablet ? "tablet" : "mobile";
+            loadingFitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            loadingFitter.aspectRatio = sprite.rect.width / sprite.rect.height;
         }
 
-        IEnumerator Entrance()
+        IEnumerator Run()
         {
-            // This persistent director owns the same approved castle theme in every
-            // scene, so splash-to-home has one continuous musical bed.
-            _ = RoyalAudioDirector.Get;
-            float elapsed = 0;
-            while (elapsed < .55f && !IsLoading)
+            float started = Time.unscaledTime;
+            if (splashAnimation && (splashAnimation.Loaded || splashAnimation.Load()))
             {
-                elapsed += Time.unscaledDeltaTime;
-                float t = Mathf.Clamp01(elapsed / .55f);
-                titleGroup.alpha = Mathf.SmoothStep(0, 1, t);
-                titleLogo.localScale = Vector3.one * (MotionEnabled ? Mathf.Lerp(.94f, 1, 1 - Mathf.Pow(1 - t, 3)) : 1);
+                RefreshLayout();
+                splashAnimation.Play();
+                // one presented frame of the gradient and frame 0 before the clock matters
                 yield return null;
+                while (!splashAnimation.Finished && !skipSplash) yield return null;
             }
-            titleLogo.localScale = Vector3.one;
-        }
-
-        public void BeginPlay()
-        {
-            // Latch before yielding: repeated pointer/keyboard input cannot enqueue another scene load.
-            if (IsLoading) return;
-            if (!Application.CanStreamedLevelBeLoaded(gameScene))
-            {
-                errorLabel.text = "Couldn't open the game. Please try again.";
-                Debug.LogError("Royal Throne: game scene is not available in the scene list.");
-                return;
-            }
-            IsLoading = true;
-            playButton.interactable = false;
-            titleGroup.interactable = titleGroup.blocksRaycasts = false;
-            errorLabel.text = "";
-            if (SoundBase.Instance != null) SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-            StartCoroutine(LoadGame());
+            else Debug.LogError("Royal Throne: the splash animation is missing; continuing to the loading screen.", this);
+            SplashSeconds = Time.unscaledTime - started;
+            yield return ShowLoading();
+            yield return LoadHome();
         }
 
         IEnumerator ShowLoading()
         {
-            startedAt = Time.unscaledTime;
-            loadingCycle = 0;
-            DisplayedProgress = 0;
-            SetProgress(0);
-            loadingGroup.gameObject.SetActive(true);
-            loadingGroup.blocksRaycasts = true;
-            loadingLabel.text = "Your kingdom awaits";
-            loadingStatus.text = "Opening the gates...";
+            Phase = StartupPhase.Loading; phaseStarted = Time.unscaledTime;
+            RefreshLayout();
+            loadingGroup.gameObject.SetActive(true); loadingGroup.alpha = 0;
+            // The loading screen cross-fades in over the finished splash; the splash goes only once it is covered.
             float elapsed = 0;
-            while (elapsed < .25f)
+            while (elapsed < .35f)
             {
                 elapsed += Time.unscaledDeltaTime;
-                float t = Mathf.SmoothStep(0, 1, Mathf.Clamp01(elapsed / .25f));
-                titleGroup.alpha = 1 - t;
+                float t = Mathf.SmoothStep(0, 1, Mathf.Clamp01(elapsed / .35f));
                 loadingGroup.alpha = t;
-                loadingCard.localScale = Vector3.one * (MotionEnabled ? Mathf.Lerp(.94f, 1, t) : 1);
+                if (loadingLogo) loadingLogo.localScale = Vector3.one * (MotionEnabled ? Mathf.Lerp(.94f, 1, 1 - Mathf.Pow(1 - t, 3)) : 1);
                 yield return null;
             }
-            titleGroup.alpha = 0;
-            loadingGroup.alpha = 1;
-            // Guarantee one presented frame before starting disk/scene work.
-            yield return null;
+            loadingGroup.alpha = 1; if (loadingLogo) loadingLogo.localScale = Vector3.one;
+            splashGroup.gameObject.SetActive(false);
+            // The loading screen is presented before any scene work starts.
+            yield return new WaitForEndOfFrame();
         }
 
-        IEnumerator LoadGame()
+        IEnumerator LoadHome()
         {
-            yield return ShowLoading();
-            Exception failure = null;
-            try
-            {
-                loadOperation = SceneManager.LoadSceneAsync(gameScene, LoadSceneMode.Single);
-                if (loadOperation == null) throw new InvalidOperationException("No scene operation was created.");
-                loadOperation.allowSceneActivation = false;
-                LoadRequestCount++;
-            }
-            catch (Exception exception) { failure = exception; }
-            if (failure != null)
-            {
-                Debug.LogException(failure);
-                RestoreTitle("Couldn't open the game. Please try again.");
-                yield break;
-            }
-            // Keep the overlay alive through activation so the map never flashes beneath an unfinished bar.
+            float started = Time.unscaledTime;
+            // This overlay has to outlive the first scene: it covers the switch and Home's first frames.
             DontDestroyOnLoad(gameObject);
-            while (loadOperation.progress < .9f || Time.unscaledTime - startedAt < minimumLoadingSeconds || DisplayedProgress < .999f)
+            while (true)
             {
-                float target = Mathf.Clamp01(loadOperation.progress / .9f);
-                SetProgress(Mathf.MoveTowards(DisplayedProgress, target, Time.unscaledDeltaTime * 1.8f));
+                if (!Application.CanStreamedLevelBeLoaded(gameScene)) { Debug.LogError("Royal Throne: the " + gameScene + " scene is not in the build."); yield break; }
+                loadOperation = SceneManager.LoadSceneAsync(gameScene, LoadSceneMode.Single);
+                if (loadOperation != null) { LoadRequestCount++; break; }
+                Debug.LogError("Royal Throne: the game scene load did not start; retrying.");
+                float wait = Time.unscaledTime + 1; while (Time.unscaledTime < wait) yield return null;
+            }
+            while (!loadOperation.isDone) yield return null;
+            // Genuinely ready: the game scene's systems ran their Start, the level manager is on the map and the home screen
+            // has initialised and reports itself visible.
+            float warned = Time.unscaledTime + 20;
+            RoyalHomeScreen home = null;
+            while (true)
+            {
+                if (!home) home = FindAnyObjectByType<RoyalHomeScreen>();
+                var lm = LevelManager.THIS;
+                if (home && home.IsHomeVisible && lm && lm.gameStatus == GameState.Map && InitScript.Instance) break;
+                if (Time.unscaledTime > warned) { warned = float.MaxValue; Debug.LogWarning("Royal Throne: Home is taking longer than 20 s to become ready; the loading screen stays up."); }
                 yield return null;
             }
-            SetProgress(1);
-            loadingStatus.text = "Welcome to your kingdom";
-            yield return null;
-            loadOperation.allowSceneActivation = true;
-            while (!loadOperation.isDone) yield return null;
-            yield return null;
+            // Let Home lay out and draw beneath the opaque loading screen before revealing it.
+            yield return null; yield return null; yield return new WaitForEndOfFrame();
+            LoadingSeconds = Time.unscaledTime - started;
+            Phase = StartupPhase.OpeningHome;
             float elapsed = 0;
-            while (elapsed < .3f)
+            while (elapsed < .35f)
             {
                 elapsed += Time.unscaledDeltaTime;
-                wholeScreen.alpha = 1 - Mathf.SmoothStep(0, 1, Mathf.Clamp01(elapsed / .3f));
+                wholeScreen.alpha = 1 - Mathf.SmoothStep(0, 1, Mathf.Clamp01(elapsed / .35f));
                 yield return null;
             }
+            Phase = StartupPhase.Done;
             Destroy(gameObject);
         }
 
-        void SetProgress(float progress)
-        {
-            DisplayedProgress = Mathf.Clamp01(progress);
-            progressFill.anchorMax = new Vector2(DisplayedProgress, 1);
-            loadingStatus.text = DisplayedProgress < .3f ? "Opening the gates..." : DisplayedProgress < .85f ?
-                "Preparing your next challenge..." : DisplayedProgress < .999f ? "A few finishing touches..." : "Welcome to your kingdom";
-        }
-
-        public void PrepareLoadingJourney()
-        {
-            if (journeyBuilt || !loadingCard || jewels == null || jewels.Length != 3) return;
-            journeyBuilt = true;
-            var sprite = RoyalPieceSkin.Art("crown");
-            foreach (var jewel in jewels)
-            {
-                var old = jewel.GetComponent<RoyalPanelGraphic>(); if (old) old.color = Color.clear;
-                var art = jewel.Find("Crown matching piece");
-                var go = art ? art.gameObject : new GameObject("Crown matching piece", typeof(RectTransform));
-                go.layer = 5;
-                var rect = (RectTransform)go.transform; rect.SetParent(jewel, false);
-                rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one; rect.offsetMin = rect.offsetMax = Vector2.zero;
-                var picture = go.GetComponent<Image>(); if (!picture) picture = go.AddComponent<Image>();
-                picture.sprite = sprite; picture.preserveAspect = true; picture.raycastTarget = false;
-                jewel.sizeDelta = Vector2.one * 68;
-            }
-            loadingLabel.fontSize = 32; loadingLabel.resizeTextForBestFit = true;
-            loadingLabel.resizeTextMinSize = 24; loadingLabel.resizeTextMaxSize = 32;
-            loadingLabel.rectTransform.anchorMin = new Vector2(.07f, 1); loadingLabel.rectTransform.anchorMax = new Vector2(.93f, 1);
-            loadingLabel.rectTransform.sizeDelta = new Vector2(0, 44); loadingLabel.rectTransform.anchoredPosition = new Vector2(0, -126);
-            loadingStatus.fontSize = 23; loadingStatus.resizeTextForBestFit = true;
-            loadingStatus.resizeTextMinSize = 19; loadingStatus.resizeTextMaxSize = 23;
-            loadingStatus.rectTransform.anchorMin = new Vector2(.06f, 0); loadingStatus.rectTransform.anchorMax = new Vector2(.94f, 0);
-            loadingStatus.rectTransform.sizeDelta = new Vector2(0, 44); loadingStatus.rectTransform.anchoredPosition = new Vector2(0, 42);
-            var track = loadingCard.Find("Progress rim") as RectTransform;
-            if (track)
-            {
-                track.anchorMin = new Vector2(.09f, 0); track.anchorMax = new Vector2(.91f, 0);
-                track.sizeDelta = new Vector2(0, 34); track.anchoredPosition = new Vector2(0, 108);
-            }
-            var fill = progressFill.GetComponent<RoyalPanelGraphic>();
-            if (fill) { fill.topColor = new Color(1, .93f, .47f); fill.bottomColor = new Color(.97f, .58f, .10f); fill.SetVerticesDirty(); }
-            journeySparks = new RoyalPanelGraphic[12];
-            for (int i = 0; i < journeySparks.Length; i++)
-            {
-                string name = "Match sparkle " + i; var existing = loadingCard.Find(name);
-                var go = existing ? existing.gameObject : new GameObject(name, typeof(RectTransform));
-                go.layer = 5; var rect = (RectTransform)go.transform; rect.SetParent(loadingCard, false);
-                rect.anchorMin = rect.anchorMax = new Vector2(.5f, 1); rect.sizeDelta = Vector2.one * (i % 3 == 0 ? 7 : 4);
-                var spark = go.GetComponent<RoyalPanelGraphic>(); if (!spark) spark = go.AddComponent<RoyalPanelGraphic>();
-                spark.diamond = true; spark.topColor = new Color(1, 1, .85f); spark.bottomColor = new Color(1, .65f, .12f);
-                spark.raycastTarget = false; spark.color = Color.clear; journeySparks[i] = spark;
-            }
-        }
-
-        void AnimateLoadingJourney(float time)
-        {
-            if (!journeyBuilt) return;
-            loadingCycle = Mathf.Repeat(time - startedAt, 2.4f);
-            float gather = Mathf.SmoothStep(0, 1, Mathf.Clamp01(loadingCycle / .72f));
-            float burst = Mathf.Clamp01((loadingCycle - .76f) / .6f);
-            float settle = Mathf.Clamp01((loadingCycle - 1.45f) / .5f);
-            for (int i = 0; i < jewels.Length; i++)
-            {
-                float offset = MotionEnabled ? Mathf.Lerp(120, 66, gather) : 66;
-                float lift = MotionEnabled ? Mathf.Sin(gather * Mathf.PI) * 17 : 0;
-                float scale = MotionEnabled ? 1 + Mathf.Sin(burst * Mathf.PI) * .12f : 1;
-                jewels[i].anchoredPosition = new Vector2((i - 1) * (MotionEnabled ? Mathf.Lerp(offset, 120, settle) : 66), -63 + lift);
-                jewels[i].localScale = Vector3.one * scale;
-            }
-            for (int i = 0; i < journeySparks.Length; i++)
-            {
-                float angle = i * Mathf.PI * 2 / journeySparks.Length;
-                float spread = 18 + burst * 100;
-                journeySparks[i].rectTransform.anchoredPosition = new Vector2(Mathf.Cos(angle) * spread, -63 + Mathf.Sin(angle) * spread * .37f - burst * burst * 16);
-                journeySparks[i].color = new Color(1, 1, 1, MotionEnabled && loadingCycle >= .76f ? (1 - burst) * .9f : 0);
-            }
-        }
-
-        void RestoreTitle(string message)
-        {
-            IsLoading = false;
-            titleGroup.alpha = 1;
-            wholeScreen.alpha = 1;
-            titleGroup.interactable = titleGroup.blocksRaycasts = true;
-            loadingGroup.gameObject.SetActive(false);
-            playButton.interactable = true;
-            errorLabel.text = message;
-        }
-
-#if UNITY_EDITOR
-        public void PreviewLoadingAnimation()
-        {
-            if (!Application.isPlaying || IsLoading) return;
-            IsLoading = true;
-            playButton.interactable = false;
-            titleGroup.interactable = titleGroup.blocksRaycasts = false;
-            StartCoroutine(Preview());
-        }
-        IEnumerator Preview()
-        {
-            yield return ShowLoading();
-            float elapsed = 0;
-            while (elapsed < 15)
-            {
-                elapsed += Time.unscaledDeltaTime;
-                SetProgress(Mathf.Clamp01(elapsed / 15));
-                yield return null;
-            }
-            RestoreTitle("");
-        }
-#endif
+        /// <summary>
+        /// Editor and QA tools: skip the rest of the splash and start loading now. Players never need it; the flow is
+        /// automatic.
+        /// </summary>
+        public void BeginPlay() { if (Application.isPlaying) skipSplash = true; }
     }
 }
