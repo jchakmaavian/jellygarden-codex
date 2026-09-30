@@ -1,0 +1,3 @@
+PASS normal player profile restored; isolated QA inactive
+Status: Test session ended. Normal player progress restored.
+Unity: 6000.5.10f1

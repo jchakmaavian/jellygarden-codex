@@ -43,6 +43,7 @@ namespace RoyalThrone.Characters
         Vector2 framedSize = new Vector2(-1, -1);
         Framing framing;
         bool attached, worried, worryEntered;
+        KingVanguardFaceRig faceRig;
         int sequence, idleIndex;
         Activity activity;
 
@@ -60,6 +61,7 @@ namespace RoyalThrone.Characters
                 if (!skeletonGraphic) return false;
                 if (!skeletonGraphic.IsValid) skeletonGraphic.Initialize(false);
                 if (!skeletonGraphic.IsValid || skeletonGraphic.AnimationState == null) return false;
+                if (!faceRig) faceRig = KingVanguardFaceRig.Ensure(skeletonGraphic);
                 if (!attached) { skeletonGraphic.UpdateComplete += RemoveDecoration; attached = true; }
                 return true;
             }

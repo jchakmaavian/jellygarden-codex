@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 2347874483871507413}
   - component: {fileID: 8310413994700416588}
   - component: {fileID: 6920288876047981070}
+  - component: {fileID: 8424455811400422366}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -161,3 +162,15 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+--- !u!114 &8424455811400422366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6016133421463067940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ea9e69409654dbda0f5ebc147ad42ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoyalThrone.Characters.KingVanguardFaceRig

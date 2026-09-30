@@ -1,0 +1,8 @@
+RUNNING actual in-game HUD face rendering; presentation probes in isolated QA.
+PASS live SkeletonGraphic uses animated face mapping
+PASS live face ownership has no ambiguity
+PASS HUD canvas scale path exercised at 100 pixels per unit
+PASS happy activity accepted on actual HUD
+PASS happy transition retains facial mapping throughout 230 live frames
+PASS happy returns to idle in game
+ALL LIVE HUD FACE CHECKS PASSED
