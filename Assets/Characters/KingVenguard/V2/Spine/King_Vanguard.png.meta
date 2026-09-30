@@ -1,0 +1,1079 @@
+fileFormatVersion: 2
+guid: e3a14da11a2bfcc47929adf1d67ef9da
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8871524206056143627
+    second: King_Vanguard_0
+  - first:
+      213: -6390022098899237897
+    second: King_Vanguard_1
+  - first:
+      213: 7677407735717507716
+    second: King_Vanguard_2
+  - first:
+      213: 5244663010275256729
+    second: King_Vanguard_3
+  - first:
+      213: 2788458198275961664
+    second: King_Vanguard_4
+  - first:
+      213: 1361549482382432769
+    second: King_Vanguard_5
+  - first:
+      213: 5347724455955921743
+    second: King_Vanguard_6
+  - first:
+      213: 3811070794743376714
+    second: King_Vanguard_7
+  - first:
+      213: -1452599959338579987
+    second: King_Vanguard_8
+  - first:
+      213: 9082381216404271087
+    second: King_Vanguard_9
+  - first:
+      213: 5741698365730338967
+    second: King_Vanguard_10
+  - first:
+      213: 348359031209545730
+    second: King_Vanguard_11
+  - first:
+      213: -6985164475047283780
+    second: King_Vanguard_12
+  - first:
+      213: -6583502741084121298
+    second: King_Vanguard_13
+  - first:
+      213: -2896707442538350566
+    second: King_Vanguard_14
+  - first:
+      213: -7685237286852660578
+    second: King_Vanguard_15
+  - first:
+      213: 3229068876075433575
+    second: King_Vanguard_16
+  - first:
+      213: -2402147478045217463
+    second: King_Vanguard_17
+  - first:
+      213: 5690117090683291376
+    second: King_Vanguard_18
+  - first:
+      213: 2322450823356731303
+    second: King_Vanguard_19
+  - first:
+      213: 3538520312905539825
+    second: King_Vanguard_20
+  - first:
+      213: -432020782109967432
+    second: King_Vanguard_21
+  - first:
+      213: 7452419153145512918
+    second: King_Vanguard_22
+  - first:
+      213: 5983702261493372005
+    second: King_Vanguard_23
+  - first:
+      213: -7871351469779550050
+    second: King_Vanguard_24
+  - first:
+      213: 5695636216889069494
+    second: King_Vanguard_25
+  - first:
+      213: 7710372119948554425
+    second: King_Vanguard_26
+  - first:
+      213: -3928810839632727259
+    second: King_Vanguard_27
+  - first:
+      213: -8532354531833520971
+    second: King_Vanguard_28
+  - first:
+      213: -4577195694473391301
+    second: King_Vanguard_29
+  - first:
+      213: 6946683491595515423
+    second: King_Vanguard_30
+  - first:
+      213: -3743059346223090292
+    second: King_Vanguard_31
+  - first:
+      213: -8338658076972909524
+    second: King_Vanguard_32
+  - first:
+      213: 2259182119559333161
+    second: King_Vanguard_33
+  - first:
+      213: -5468046448386018803
+    second: King_Vanguard_34
+  - first:
+      213: 6718799657133884343
+    second: King_Vanguard_35
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 0
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: King_Vanguard_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1656
+        width: 405
+        height: 215
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0b7146134cfd1b70800000000000000
+      internalID: 8871524206056143627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_1
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 1856
+        width: 36
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f30730c1c41257a0800000000000000
+      internalID: -6390022098899237897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_2
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 1828
+        width: 69
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4823743b8a1ab8a60800000000000000
+      internalID: 7677407735717507716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_3
+      rect:
+        serializedVersion: 2
+        x: 477
+        y: 1832
+        width: 37
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 999661e6839c8c840800000000000000
+      internalID: 5244663010275256729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_4
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 1838
+        width: 67
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 043b34b15f792b620800000000000000
+      internalID: 2788458198275961664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_5
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 1752
+        width: 120
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10a95895a0235e210800000000000000
+      internalID: 1361549482382432769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_6
+      rect:
+        serializedVersion: 2
+        x: 526
+        y: 1774
+        width: 75
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4bfbe92f0fe63a40800000000000000
+      internalID: 5347724455955921743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_7
+      rect:
+        serializedVersion: 2
+        x: 601
+        y: 1774
+        width: 62
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4b6b8622b4a3e430800000000000000
+      internalID: 3811070794743376714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_8
+      rect:
+        serializedVersion: 2
+        x: 407
+        y: 1685
+        width: 187
+        height: 87
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de780ee780457dbe0800000000000000
+      internalID: -1452599959338579987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_9
+      rect:
+        serializedVersion: 2
+        x: 598
+        y: 1721
+        width: 66
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fefe47688991b0e70800000000000000
+      internalID: 9082381216404271087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_10
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 1307
+        width: 138
+        height: 377
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7983cc82e3c9eaf40800000000000000
+      internalID: 5741698365730338967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_11
+      rect:
+        serializedVersion: 2
+        x: 577
+        y: 1669
+        width: 37
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2005b8571be95d400800000000000000
+      internalID: 348359031209545730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_12
+      rect:
+        serializedVersion: 2
+        x: 614
+        y: 1671
+        width: 36
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb3f02f3be5bf0f90800000000000000
+      internalID: -6985164475047283780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_13
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1440
+        width: 404
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e27dedb4323b2a4a0800000000000000
+      internalID: -6583502741084121298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_14
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 1622
+        width: 36
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a18754dade3dcc7d0800000000000000
+      internalID: -2896707442538350566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_15
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1224
+        width: 405
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e927f8ed76d885590800000000000000
+      internalID: -7685237286852660578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_16
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1008
+        width: 405
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76efeb1d805ffcc20800000000000000
+      internalID: 3229068876075433575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_17
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 1119
+        width: 211
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94da309889bd9aed0800000000000000
+      internalID: -2402147478045217463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_18
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 792
+        width: 405
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f68e80b85b57fe40800000000000000
+      internalID: 5690117090683291376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_19
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 827
+        width: 153
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7afcd7e08b00b3020800000000000000
+      internalID: 2322450823356731303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_20
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 888
+        width: 141
+        height: 277
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f02d390a795b1130800000000000000
+      internalID: 3538520312905539825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_21
+      rect:
+        serializedVersion: 2
+        x: 472
+        y: 738
+        width: 191
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bbbfba3367210af0800000000000000
+      internalID: -432020782109967432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_22
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 791
+        width: 16
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d34e843cbf4c6760800000000000000
+      internalID: 7452419153145512918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_23
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 804
+        width: 17
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 564930af0816a0350800000000000000
+      internalID: 5983702261493372005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_24
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 576
+        width: 405
+        height: 216
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e908a8dda8753c290800000000000000
+      internalID: -7871351469779550050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_25
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 662
+        width: 168
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bfc58566f6fa0f40800000000000000
+      internalID: 5695636216889069494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_26
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 359
+        width: 405
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b0fb9f779eb00b60800000000000000
+      internalID: 7710372119948554425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_27
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 380
+        height: 358
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 523bcf96b5f0a79c0800000000000000
+      internalID: -3928810839632727259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_28
+      rect:
+        serializedVersion: 2
+        x: 410
+        y: 304
+        width: 256
+        height: 281
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bc5e5872ccf69980800000000000000
+      internalID: -8532354531833520971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_29
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 331
+        width: 39
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b33577354c88a70c0800000000000000
+      internalID: -4577195694473391301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_30
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 305
+        width: 67
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f16fe9b94d3976060800000000000000
+      internalID: 6946683491595515423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_31
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 1
+        width: 261
+        height: 303
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c85ba2f2b5bfd0cc0800000000000000
+      internalID: -3743059346223090292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_32
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 296
+        width: 16
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2c769ab8a2274c80800000000000000
+      internalID: -8338658076972909524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_33
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 195
+        width: 27
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9258f370b2a3a5f10800000000000000
+      internalID: 2259182119559333161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_34
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 146
+        width: 33
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d027d94e9b89d14b0800000000000000
+      internalID: -5468046448386018803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: King_Vanguard_35
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 0
+        width: 34
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b34b70c0b8fd3d50800000000000000
+      internalID: 6718799657133884343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      King_Vanguard_0: 8871524206056143627
+      King_Vanguard_1: -6390022098899237897
+      King_Vanguard_10: 5741698365730338967
+      King_Vanguard_11: 348359031209545730
+      King_Vanguard_12: -6985164475047283780
+      King_Vanguard_13: -6583502741084121298
+      King_Vanguard_14: -2896707442538350566
+      King_Vanguard_15: -7685237286852660578
+      King_Vanguard_16: 3229068876075433575
+      King_Vanguard_17: -2402147478045217463
+      King_Vanguard_18: 5690117090683291376
+      King_Vanguard_19: 2322450823356731303
+      King_Vanguard_2: 7677407735717507716
+      King_Vanguard_20: 3538520312905539825
+      King_Vanguard_21: -432020782109967432
+      King_Vanguard_22: 7452419153145512918
+      King_Vanguard_23: 5983702261493372005
+      King_Vanguard_24: -7871351469779550050
+      King_Vanguard_25: 5695636216889069494
+      King_Vanguard_26: 7710372119948554425
+      King_Vanguard_27: -3928810839632727259
+      King_Vanguard_28: -8532354531833520971
+      King_Vanguard_29: -4577195694473391301
+      King_Vanguard_3: 5244663010275256729
+      King_Vanguard_30: 6946683491595515423
+      King_Vanguard_31: -3743059346223090292
+      King_Vanguard_32: -8338658076972909524
+      King_Vanguard_33: 2259182119559333161
+      King_Vanguard_34: -5468046448386018803
+      King_Vanguard_35: 6718799657133884343
+      King_Vanguard_4: 2788458198275961664
+      King_Vanguard_5: 1361549482382432769
+      King_Vanguard_6: 5347724455955921743
+      King_Vanguard_7: 3811070794743376714
+      King_Vanguard_8: -1452599959338579987
+      King_Vanguard_9: 9082381216404271087
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,57 @@
+{
+  "m_GameObject": {
+    "m_FileID": 0,
+    "m_PathID": 2252333904565219901
+  },
+  "m_Enabled": 1,
+  "m_Script": {
+    "m_FileID": 0,
+    "m_PathID": 3109876367424230278
+  },
+  "m_Name": "",
+  "zIndex": 0,
+  "background": {
+    "m_FileID": 0,
+    "m_PathID": 5139398322753605461
+  },
+  "failText": {
+    "m_FileID": 0,
+    "m_PathID": 5482975470607371054
+  },
+  "failButtonHolder": {
+    "m_FileID": 0,
+    "m_PathID": -8211932519352172108
+  },
+  "failButtonSpriteLeft": {
+    "m_FileID": 0,
+    "m_PathID": 8880409705442306198
+  },
+  "failButtonSpriteRight": {
+    "m_FileID": 0,
+    "m_PathID": 5658557343734638948
+  },
+  "failButtonSpriteShadowLeft": {
+    "m_FileID": 0,
+    "m_PathID": -5254097613507976016
+  },
+  "failButtonSpriteShadowRight": {
+    "m_FileID": 0,
+    "m_PathID": -1192922290317230772
+  },
+  "shadowHolder": {
+    "m_FileID": 0,
+    "m_PathID": -835645039919186602
+  },
+  "storyFailHit": {
+    "m_FileID": 0,
+    "m_PathID": 0
+  },
+  "storyFailWhoosh": {
+    "m_FileID": 0,
+    "m_PathID": 0
+  },
+  "failHitParticles": {
+    "m_FileID": 0,
+    "m_PathID": -4402229351692565094
+  }
+}

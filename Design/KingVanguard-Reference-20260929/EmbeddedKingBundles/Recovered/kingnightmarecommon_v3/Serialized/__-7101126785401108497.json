@@ -1,0 +1,104 @@
+{
+  "m_GameObject": {
+    "m_FileID": 0,
+    "m_PathID": -2748087192660104746
+  },
+  "m_Enabled": 1,
+  "m_Script": {
+    "m_FileID": 0,
+    "m_PathID": 4674490825423147780
+  },
+  "m_Name": "",
+  "root": {
+    "m_FileID": 0,
+    "m_PathID": 7239218069399601566
+  },
+  "dreamBubbleParent": {
+    "m_FileID": 0,
+    "m_PathID": -3639024168727103204
+  },
+  "topPart": {
+    "m_FileID": 0,
+    "m_PathID": -5929989646905708078
+  },
+  "centerPart": {
+    "m_FileID": 0,
+    "m_PathID": 2973948430537050208
+  },
+  "bottomPart": {
+    "m_FileID": 0,
+    "m_PathID": -1297989091165616035
+  },
+  "dialogMaskHolder": {
+    "m_FileID": 0,
+    "m_PathID": 2550381937242733727
+  },
+  "skeletonAnimation": {
+    "m_FileID": 0,
+    "m_PathID": -4747844654434271415
+  },
+  "rewardTagRibbonSprite": {
+    "m_FileID": 0,
+    "m_PathID": 5195518164487751275
+  },
+  "nightmarePlayButtonBackground": {
+    "m_FileID": 0,
+    "m_PathID": 7972937211001735180
+  },
+  "dialogBackgrounds": [
+    {
+      "m_FileID": 0,
+      "m_PathID": 967467759388571691
+    },
+    {
+      "m_FileID": 0,
+      "m_PathID": -246145562300160535
+    }
+  ],
+  "skullsBottom": {
+    "m_FileID": 0,
+    "m_PathID": -1245444161420025992
+  },
+  "skullsTop": {
+    "m_FileID": 0,
+    "m_PathID": 6285412750447913992
+  },
+  "skullMasks": [
+    {
+      "m_FileID": 0,
+      "m_PathID": 4963896718550840651
+    },
+    {
+      "m_FileID": 0,
+      "m_PathID": 8176212244672341656
+    },
+    {
+      "m_FileID": 0,
+      "m_PathID": -3944515840627161013
+    },
+    {
+      "m_FileID": 0,
+      "m_PathID": -4711478487250200264
+    },
+    {
+      "m_FileID": 0,
+      "m_PathID": 3837056085365752616
+    },
+    {
+      "m_FileID": 0,
+      "m_PathID": 202136797643595298
+    },
+    {
+      "m_FileID": 0,
+      "m_PathID": -7501913101480257336
+    },
+    {
+      "m_FileID": 0,
+      "m_PathID": 4799246836325829118
+    }
+  ],
+  "shortGreenRewardTag": {
+    "m_FileID": 0,
+    "m_PathID": 2928407680305820777
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "generated_utc": "2026-09-30T04:34:16.091374+00:00",
+  "status": "PASS",
+  "scope": "Runtime C# outside retained V1/Spine/Editor, plus serialized assets outside V1",
+  "runtime_scripts_scanned": 295,
+  "serialized_files_scanned": 660,
+  "v2_mount_call_sites": [
+    {
+      "file": "Assets/JellyGarden/Scripts/GUI/RoyalAreaView.cs",
+      "line": 867
+    },
+    {
+      "file": "Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs",
+      "line": 154
+    },
+    {
+      "file": "Assets/JellyGarden/Scripts/GUI/RoyalHomeScreen.cs",
+      "line": 74
+    },
+    {
+      "file": "Assets/JellyGarden/Scripts/GUI/RoyalHomeScreen.cs",
+      "line": 446
+    },
+    {
+      "file": "Assets/JellyGarden/Scripts/GUI/RoyalLeaderboardPage.cs",
+      "line": 282
+    },
+    {
+      "file": "Assets/JellyGarden/Scripts/GUI/RoyalMenuSkin.cs",
+      "line": 98
+    }
+  ],
+  "findings": [],
+  "limits": [
+    "Static source and serialized-reference audit only; Unity lifecycle and visual checks are separate.",
+    "Unreferenced legacy catalog keys/assets can remain archived; this audit rejects live direct loads and V1 dependencies."
+  ]
+}

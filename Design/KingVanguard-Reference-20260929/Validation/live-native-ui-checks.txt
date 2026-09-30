@@ -1,0 +1,9 @@
+RUNNING live leaderboard native rig
+PASS leaderboard shows original full-body rig
+PASS bounded transparent render target
+PASS camera renders only explicitly
+PASS source Win clip on page opening
+PASS source Win returns to Idle
+PASS hidden page suspends animation and frees GPU target
+PASS reopen reuses actor/camera
+PASS live full-body UI checks finished

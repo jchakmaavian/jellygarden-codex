@@ -1,0 +1,143 @@
+{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-09-30T04:39:49.6406666Z",
+    "baseCommit":  "3c1a30025a80aa0c88f794b99d73650fb8f266f1",
+    "branch":  "visual-rebuild-v2",
+    "archive":  "Design/KingVanguard-Reference-20260929/Delivery/host-snapshots-20260930-043948.zip",
+    "archiveSha256":  "29b05c977df01f650c3503a5854bc424bd0046b2e91e6f5c32d1e71fe5924cd3",
+    "verifiedArchiveEntries":  16,
+    "contentsAreWholeMixedWorkingFiles":  true,
+    "selfContainedFromHead":  false,
+    "baselineCaveat":  "This is a recovery overlay of eight complete current host files and their metas, including preexisting work. It does not isolate only this task edits or recreate the current working baseline from HEAD. RoyalCardKit.cs is a preexisting untracked dependency; RoyalGameplayHud.cs has preexisting changes. Restore onto the matching project baseline after comparing hashes; do not blindly overwrite newer work.",
+    "spine":  {
+                  "archived":  false,
+                  "status":  "clean",
+                  "trackedFileCount":  542
+              },
+    "directTaskRoots":  [
+                            "Assets/Characters/KingVenguard/V2",
+                            "Design/KingVanguard-Reference-20260929",
+                            "Assets/Characters.meta",
+                            "Assets/Characters/KingVenguard.meta",
+                            "Assets/Characters/KingVenguard/V2.meta"
+                        ],
+    "exclusions":  [
+                       "__pycache__",
+                       "*.pyc",
+                       "*.pyo",
+                       "*.pending",
+                       "*.exe",
+                       "*.dll",
+                       "*.pdb",
+                       "*.mdb",
+                       "*.rsp",
+                       "*.obj",
+                       "*.o",
+                       "*.ilk",
+                       "*.exp",
+                       "*.cache",
+                       "*.tmp",
+                       "*.log",
+                       "matching generated artifact metas",
+                       "all V1 assets",
+                       "live host-file diffs"
+                   ],
+    "files":  [
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/AnimationManager.cs",
+                      "bytes":  29864,
+                      "sha256":  "64d406f1812b920e76e5d8ea450ae98787a15855b60baa8e9cfeb18bdb749606",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/AnimationManager.cs.meta",
+                      "bytes":  395,
+                      "sha256":  "e36a05fb269a203300b400090fcf8e6fac3d075dfac876bf31506478791548ba",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalAreaView.cs",
+                      "bytes":  78729,
+                      "sha256":  "a9ec7634e893492fc830f4df043e75ea009e7bac22e07ee47b3defa51b561fff",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalAreaView.cs.meta",
+                      "bytes":  59,
+                      "sha256":  "cb365ae73e3b2e3390d1e9c5fe7e3308aac3235b7be4e6266034dce200dad784",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs",
+                      "bytes":  33161,
+                      "sha256":  "9ec8642998f8576ada3e631403a5366050314535142d8f7053df72f99c84eb6a",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs.meta",
+                      "bytes":  59,
+                      "sha256":  "871d92e8a286baad61daa0cbe205abfcf271d602ac5bbcb58fbc0921dda9b57a",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalHomeScreen.cs",
+                      "bytes":  35391,
+                      "sha256":  "c3c525f70651a79e6f272ab3c1c03e2049cd28f757c4e873efcb3c42cf8e16e8",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalHomeScreen.cs.meta",
+                      "bytes":  59,
+                      "sha256":  "4b3812eb33c6bcfb2d557a59d1ac9a224d4cc2ffd2d776cd8cc957307f9ba6f6",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalMenuSkin.cs",
+                      "bytes":  8816,
+                      "sha256":  "0c33ee57e40e47dfee2c414f4531288547fa4f5309cfa0ecf234ec3fae897634",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalMenuSkin.cs.meta",
+                      "bytes":  59,
+                      "sha256":  "2964ddacb8a5882b11f137859933954a1452c27c2f46ee537c41a608cbb1e20b",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalCards.cs",
+                      "bytes":  37771,
+                      "sha256":  "a4252325c2dbad4370191f754a5f5ff1ba84a45786421ffddd9781ebda469974",
+                      "trackedAtBase":  false
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalCards.cs.meta",
+                      "bytes":  59,
+                      "sha256":  "06d6eb131c17a3f0e320cb4facd6ce0db7fcd2169e9729fcb0039bf1f8265913",
+                      "trackedAtBase":  false
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalLeaderboardPage.cs",
+                      "bytes":  23990,
+                      "sha256":  "fd663e9ad8dc5af5ace5d19160aedc83277884113fb169650723fb0a63abf1c1",
+                      "trackedAtBase":  false
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/GUI/RoyalLeaderboardPage.cs.meta",
+                      "bytes":  59,
+                      "sha256":  "7d4420e1dc0b6ac77b2638bb42d9a678cf2ba5ae4c1c6517a1700e317ddb68cc",
+                      "trackedAtBase":  false
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/LevelManager.cs",
+                      "bytes":  107766,
+                      "sha256":  "a351050e4ac54c674dfabf1babf4c585db921edf4869815c2c5bca2a09730779",
+                      "trackedAtBase":  true
+                  },
+                  {
+                      "path":  "Assets/JellyGarden/Scripts/LevelManager.cs.meta",
+                      "bytes":  390,
+                      "sha256":  "43702f269724c9d96a546cfa980d28a16b255e9339f7c11bd427cf5b94ad7999",
+                      "trackedAtBase":  true
+                  }
+              ]
+}

@@ -1,0 +1,439 @@
+[
+    {
+        "layout":  "Portrait",
+        "atlasWidth":  672,
+        "atlasHeight":  1872,
+        "regions":  27,
+        "maskPixels":  130540,
+        "overlappingOwnershipPixels":  1,
+        "overlaps":  [
+                         {
+                             "first":  24,
+                             "second":  25,
+                             "x":  415,
+                             "y":  1853,
+                             "alpha":  2
+                         }
+                     ],
+        "rotationRoundTripByteDifferences":  0,
+        "details":  [
+                        {
+                            "name":  "Sakal Surat",
+                            "pixels":  55153,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Burun",
+                            "pixels":  3884,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Bıyık",
+                            "pixels":  9234,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Taç",
+                            "pixels":  20480,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Kulak",
+                            "pixels":  1162,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Kulak",
+                            "pixels":  881,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sakal Gölge",
+                            "pixels":  9241,
+                            "rotation":  90
+                        },
+                        {
+                            "name":  "Sol Göz",
+                            "pixels":  1376,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol  Göz Bebeği",
+                            "pixels":  232,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Göz kapağı",
+                            "pixels":  1397,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Kirpik",
+                            "pixels":  184,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Göz",
+                            "pixels":  1296,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Göz Bebeği",
+                            "pixels":  221,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Göz Kapağı",
+                            "pixels":  1298,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Kirpik",
+                            "pixels":  185,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Yanak",
+                            "pixels":  2189,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Yanak",
+                            "pixels":  2007,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Dil",
+                            "pixels":  1389,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Alt Diş",
+                            "pixels":  830,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Ağız",
+                            "pixels":  6711,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Ust Diş",
+                            "pixels":  763,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Bıyık Gölge",
+                            "pixels":  4278,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Taç Alt Gölge",
+                            "pixels":  4322,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Kaş Gölge",
+                            "pixels":  284,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Kaş",
+                            "pixels":  610,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Kaş Gölge",
+                            "pixels":  262,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Kaş",
+                            "pixels":  671,
+                            "rotation":  0
+                        }
+                    ]
+    },
+    {
+        "layout":  "Portrait",
+        "atlasWidth":  2048,
+        "atlasHeight":  1714,
+        "regions":  27,
+        "maskPixels":  143762,
+        "overlappingOwnershipPixels":  0,
+        "overlaps":  [
+
+                     ],
+        "rotationRoundTripByteDifferences":  0,
+        "details":  [
+                        {
+                            "name":  "Sakal Surat",
+                            "pixels":  56019,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Burun",
+                            "pixels":  3923,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Bıyık",
+                            "pixels":  9732,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Taç",
+                            "pixels":  21016,
+                            "rotation":  180
+                        },
+                        {
+                            "name":  "Sol Kulak",
+                            "pixels":  1234,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Kulak",
+                            "pixels":  946,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sakal Gölge",
+                            "pixels":  18027,
+                            "rotation":  180
+                        },
+                        {
+                            "name":  "Sol Göz",
+                            "pixels":  1498,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol  Göz Bebeği",
+                            "pixels":  249,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Göz kapağı",
+                            "pixels":  1512,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Kirpik",
+                            "pixels":  238,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Göz",
+                            "pixels":  1394,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Göz Bebeği",
+                            "pixels":  234,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Göz Kapağı",
+                            "pixels":  1394,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Kirpik",
+                            "pixels":  254,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Yanak",
+                            "pixels":  2268,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Yanak",
+                            "pixels":  2097,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Dil",
+                            "pixels":  1533,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Alt Diş",
+                            "pixels":  992,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Ağız",
+                            "pixels":  7129,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Ust Diş",
+                            "pixels":  887,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Bıyık Gölge",
+                            "pixels":  4495,
+                            "rotation":  90
+                        },
+                        {
+                            "name":  "Taç Alt Gölge",
+                            "pixels":  4554,
+                            "rotation":  270
+                        },
+                        {
+                            "name":  "Sağ Kaş Gölge",
+                            "pixels":  345,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sağ Kaş",
+                            "pixels":  692,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Kaş Gölge",
+                            "pixels":  321,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "Sol Kaş",
+                            "pixels":  779,
+                            "rotation":  0
+                        }
+                    ]
+    },
+    {
+        "layout":  "Native",
+        "atlasWidth":  1024,
+        "atlasHeight":  2048,
+        "regions":  13,
+        "maskPixels":  39129,
+        "overlappingOwnershipPixels":  0,
+        "overlaps":  [
+
+                     ],
+        "rotationRoundTripByteDifferences":  0,
+        "details":  [
+                        {
+                            "name":  "01900_kafa",
+                            "pixels":  29135,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "02500_biyik",
+                            "pixels":  4794,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "02700_kas_sag",
+                            "pixels":  310,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "02900_kas_sol",
+                            "pixels":  245,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "01910_sag_goz",
+                            "pixels":  461,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "01920_sag_goz_bebek",
+                            "pixels":  109,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "01930_sol_goz",
+                            "pixels":  621,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "01940_sol_goz_bebek",
+                            "pixels":  125,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "01950_sol_goz_kapak",
+                            "pixels":  614,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "01960_sag_goz_kapak",
+                            "pixels":  459,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "01970_agiz",
+                            "pixels":  1171,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "02600_kas_sag_G",
+                            "pixels":  673,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "02800_kas_sol_G",
+                            "pixels":  412,
+                            "rotation":  0
+                        }
+                    ]
+    },
+    {
+        "layout":  "Nightmare",
+        "atlasWidth":  2048,
+        "atlasHeight":  2048,
+        "regions":  8,
+        "maskPixels":  48052,
+        "overlappingOwnershipPixels":  0,
+        "overlaps":  [
+
+                     ],
+        "rotationRoundTripByteDifferences":  0,
+        "details":  [
+                        {
+                            "name":  "01200_A_Face copy 2",
+                            "pixels":  24695,
+                            "rotation":  0
+                        },
+                        {
+                            "name":  "01300_A_nose",
+                            "pixels":  1000,
+                            "rotation":  90
+                        },
+                        {
+                            "name":  "01400_A_moustache",
+                            "pixels":  5357,
+                            "rotation":  90
+                        },
+                        {
+                            "name":  "00900_A_fqace_G",
+                            "pixels":  13115,
+                            "rotation":  90
+                        },
+                        {
+                            "name":  "01000_A_mouth",
+                            "pixels":  2222,
+                            "rotation":  90
+                        },
+                        {
+                            "name":  "01100_A_teeth",
+                            "pixels":  647,
+                            "rotation":  90
+                        },
+                        {
+                            "name":  "01700_A_right_eyebrow",
+                            "pixels":  608,
+                            "rotation":  90
+                        },
+                        {
+                            "name":  "01800_A_left_eyebrow",
+                            "pixels":  408,
+                            "rotation":  0
+                        }
+                    ]
+    }
+]

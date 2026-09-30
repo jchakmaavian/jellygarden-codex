@@ -1,0 +1,7 @@
+﻿King: PASS; 28 reshaped attachments, 349 deform timelines, 3280 deform keys, 87735 compared vertex points, max error 8.34465E-07 Unity units; 32 animations sampled at 11 times. Weights/topology/UVs/key times unchanged; repeated apply stable.
+  Crown bounds Taç Alt Gölge: x=-1.039716..0.8891707, y=1.884731..2.661163
+  Crown bounds Taç Gölge Ust: x=-1.009979..0.3470213, y=3.118513..3.790114
+  Crown bounds Taç: x=-1.430739..0.9872504, y=1.912375..3.632738
+AreaCompleted: PASS; 27 reshaped attachments, 110 deform timelines, 625 deform keys, 60896 compared vertex points, max error 6.67572E-06 Unity units; 10 animations sampled at 11 times. Weights/topology/UVs/key times unchanged; repeated apply stable.
+  Crown bounds Taç: x=-1.900019..1.014958, y=9.168557..11.24252
+  Crown bounds Taç Alt Gölge: x=-1.428627..0.8967273, y=9.13529..10.07125

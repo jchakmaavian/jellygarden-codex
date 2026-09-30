@@ -1,0 +1,90 @@
+
+KingDrill.png
+size: 1024,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+drill_costume_01300_sol_bacak
+  rotate: false
+  xy: 409, 448
+  size: 176, 250
+  orig: 176, 250
+  offset: 0, 0
+  index: -1
+drill_costume_00200_sol_kol_a_omuz
+  rotate: false
+  xy: 0, 75
+  size: 165, 192
+  orig: 165, 192
+  offset: 0, 0
+  index: -1
+drill_costume_00400_sol_kol_a_dirsek
+  rotate: false
+  xy: 169, 198
+  size: 129, 137
+  orig: 129, 137
+  offset: 0, 0
+  index: -1
+drill_costume_00800_sol_kol_b_omuz
+  rotate: false
+  xy: 532, 1256
+  size: 289, 211
+  orig: 289, 211
+  offset: 0, 0
+  index: -1
+drill_costume_01100_sol_kol_c_omuz
+  rotate: false
+  xy: 593, 1471
+  size: 203, 322
+  orig: 203, 322
+  offset: 0, 0
+  index: -1
+drill_costume_03400_sag_kol_a_el
+  rotate: false
+  xy: 0, 782
+  size: 246, 243
+  orig: 246, 243
+  offset: 0, 0
+  index: -1
+drill_costume_04200_sag_kol_c_omuz
+  rotate: false
+  xy: 344, 1647
+  size: 246, 401
+  orig: 246, 401
+  offset: 0, 0
+  index: -1
+drill_costume_01900_kafa
+  rotate: false
+  xy: 0, 533
+  size: 188, 105
+  orig: 188, 105
+  offset: 0, 0
+  index: -1
+drill_costume_01500_sag_bacak
+  rotate: false
+  xy: 0, 271
+  size: 155, 258
+  orig: 155, 258
+  offset: 0, 0
+  index: -1
+drill_costume_01800_govde
+  rotate: false
+  xy: 0, 1029
+  size: 328, 488
+  orig: 328, 488
+  offset: 0, 0
+  index: -1
+drill_costume_00500_sol_kol_a_el
+  rotate: false
+  xy: 593, 1797
+  size: 266, 251
+  orig: 266, 251
+  offset: 0, 0
+  index: -1
+drill_costume_03950_sag_kol_b_el
+  rotate: false
+  xy: 332, 1136
+  size: 196, 333
+  orig: 196, 333
+  offset: 0, 0
+  index: -1

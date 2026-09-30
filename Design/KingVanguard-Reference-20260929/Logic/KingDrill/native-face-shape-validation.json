@@ -1,0 +1,594 @@
+{
+    "source": "Native rfv387 KingDrill; only V2 cloned mesh vertex positions are adapted.",
+    "method": "Common setup-world face affine followed by 1.55x XY scale around each pupil's post-affine centroid; inverse of each vertex's weighted skin matrix, static renderer inverse for unskinned parts.",
+    "horizontalScale": 1.149999976158142,
+    "verticalScale": 0.9200000166893005,
+    "pupilScale": 1.5499999523162842,
+    "meshes": [
+        {
+            "path": "NewKing/01900_kafa/01970_agiz",
+            "bindingHashBefore": "467e702a596f05d7186f4804e6afeaf025bd3934302290a0228b49ffc83f443f",
+            "bindingHashAfter": "467e702a596f05d7186f4804e6afeaf025bd3934302290a0228b49ffc83f443f",
+            "vertexCount": 37,
+            "boneCount": 3,
+            "skinned": true,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.8840508460998537,
+                "y": 4.511471748352051,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.3305330276489258,
+                "y": 0.2079925537109375,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.915536880493164,
+                "y": 4.536584854125977,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.3801126480102539,
+                "y": 0.19135284423828126,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 2.384185791015625e-7,
+            "maxSizeError": 3.2782554626464846e-7,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/01960_sag_goz_kapak",
+            "bindingHashBefore": "e48b3993e16355a4ca9053664667c1da30741685bbc974b855f5d2287a29bf9b",
+            "bindingHashAfter": "e48b3993e16355a4ca9053664667c1da30741685bbc974b855f5d2287a29bf9b",
+            "vertexCount": 30,
+            "boneCount": 1,
+            "skinned": true,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.8802900314331056,
+                "y": 4.86262321472168,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.11664104461669922,
+                "y": 0.1838397979736328,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.9112117290496828,
+                "y": 4.859643936157227,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.13413763046264649,
+                "y": 0.16913414001464845,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 0.000001519918441772461,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/02500_biyik",
+            "bindingHashBefore": "8d70283b53f0a5a281a2f2a20b85213f2898a89ae844dd488e182d933b918926",
+            "bindingHashAfter": "8d70283b53f0a5a281a2f2a20b85213f2898a89ae844dd488e182d933b918926",
+            "vertexCount": 53,
+            "boneCount": 6,
+            "skinned": true,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.841118335723877,
+                "y": 4.577879905700684,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.772343635559082,
+                "y": 0.42218017578125,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.866164207458496,
+                "y": 4.59768009185791,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.8881950378417969,
+                "y": 0.38840484619140627,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 4.76837158203125e-7,
+            "maxSizeError": 9.238719940185547e-7,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/01940_sol_goz_bebek",
+            "bindingHashBefore": "07daa9c5dd125e6a52243be870659da7f57b29444621c5513135353ef7eb5f54",
+            "bindingHashAfter": "07daa9c5dd125e6a52243be870659da7f57b29444621c5513135353ef7eb5f54",
+            "vertexCount": 4,
+            "boneCount": 0,
+            "skinned": false,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.714122772216797,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.06765413284301758,
+                "y": 0.0861053466796875,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.7201194763183595,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.12059402465820313,
+                "y": 0.1227865219116211,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 2.7201194763183595,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.5499999523162842,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 5.364418029785156e-7,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/01950_sol_goz_kapak",
+            "bindingHashBefore": "c02327e1757ca9a53edd0ed68856b5c36af4dd1e1aa36221d6453aaadeb95581",
+            "bindingHashAfter": "c02327e1757ca9a53edd0ed68856b5c36af4dd1e1aa36221d6453aaadeb95581",
+            "vertexCount": 25,
+            "boneCount": 1,
+            "skinned": true,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.680335521697998,
+                "y": 4.846585750579834,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.14752864837646485,
+                "y": 0.18916034698486329,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.6812644004821779,
+                "y": 4.8448896408081059,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.16965770721435548,
+                "y": 0.1740283966064453,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 8.791685104370117e-7,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/02900_kas_sol",
+            "bindingHashBefore": "10e6b373e0eeb8aaa1f4b9f47c0f365096a0114236bf29d33e85e113a7c9badd",
+            "bindingHashAfter": "10e6b373e0eeb8aaa1f4b9f47c0f365096a0114236bf29d33e85e113a7c9badd",
+            "vertexCount": 4,
+            "boneCount": 0,
+            "skinned": false,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.8771071434020998,
+                "y": 5.006821155548096,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.12300729751586914,
+                "y": 0.11685657501220703,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.9075512886047365,
+                "y": 4.992306709289551,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.14145851135253907,
+                "y": 0.10750818252563477,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 1.341104507446289e-7,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/01910_sag_goz",
+            "bindingHashBefore": "b4ea98283aaf6b10a579458ead0243b3d0554d6b375194e72c186a1013605588",
+            "bindingHashAfter": "b4ea98283aaf6b10a579458ead0243b3d0554d6b375194e72c186a1013605588",
+            "vertexCount": 4,
+            "boneCount": 0,
+            "skinned": false,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.8801822662353517,
+                "y": 4.862287998199463,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.11685657501220703,
+                "y": 0.1845102310180664,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.91108775138855,
+                "y": 4.859335899353027,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.1343851089477539,
+                "y": 0.16974925994873048,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 1.4901161193847657e-7,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/02600_kas_sag_G",
+            "bindingHashBefore": "139175a3d95c97d3def28a3d4d765fb89d2a1dee33eeff2fc0bc57995f8239d5",
+            "bindingHashAfter": "139175a3d95c97d3def28a3d4d765fb89d2a1dee33eeff2fc0bc57995f8239d5",
+            "vertexCount": 4,
+            "boneCount": 0,
+            "skinned": false,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.6618447303771974,
+                "y": 4.969919204711914,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.22141265869140626,
+                "y": 0.19066143035888673,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.6599996089935304,
+                "y": 4.958356857299805,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.2546243667602539,
+                "y": 0.17540931701660157,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 8.046627044677734e-7,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa",
+            "bindingHashBefore": "bac4638504cbf871da19bfa28eb18f3c1f6eb967e34681c8368f66d19481f707",
+            "bindingHashAfter": "bac4638504cbf871da19bfa28eb18f3c1f6eb967e34681c8368f66d19481f707",
+            "vertexCount": 50,
+            "boneCount": 4,
+            "skinned": true,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.67380690574646,
+                "y": 4.820615768432617,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 1.1517271995544434,
+                "y": 1.5225276947021485,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.6737561225891115,
+                "y": 4.82099723815918,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 1.3244867324829102,
+                "y": 1.400726318359375,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 4.76837158203125e-7,
+            "maxSizeError": 8.344650268554688e-7,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/02800_kas_sol_G",
+            "bindingHashBefore": "d7aaf7bf32d77a7970daae5c0519ec8b7d13b4beeabf06baeade58f60ab6221b",
+            "bindingHashAfter": "d7aaf7bf32d77a7970daae5c0519ec8b7d13b4beeabf06baeade58f60ab6221b",
+            "vertexCount": 4,
+            "boneCount": 0,
+            "skinned": false,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.8771071434020998,
+                "y": 5.000670909881592,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.15990924835205079,
+                "y": 0.1660594940185547,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.9075512886047365,
+                "y": 4.986648082733154,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.18389558792114259,
+                "y": 0.15277481079101563,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 7.450580596923828e-8,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/01920_sag_goz_bebek",
+            "bindingHashBefore": "93255bb2c48eaebadc703dd1420e520466ee45d5875912fa366b7ab33be6a41c",
+            "bindingHashAfter": "93255bb2c48eaebadc703dd1420e520466ee45d5875912fa366b7ab33be6a41c",
+            "vertexCount": 4,
+            "boneCount": 0,
+            "skinned": false,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.8771071434020998,
+                "y": 4.840761661529541,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.06150341033935547,
+                "y": 0.07995414733886719,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.9075512886047365,
+                "y": 4.839531421661377,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.10962986946105957,
+                "y": 0.1140146255493164,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 2.9075512886047365,
+                "y": 4.839531421661377,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.5499999523162842,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 4.470348358154297e-8,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/02700_kas_sag",
+            "bindingHashBefore": "e09b2ef072a84c8a3fe3e2c33ea4fc44c1080693a654c0fc3ce37d545b8d376a",
+            "bindingHashAfter": "e09b2ef072a84c8a3fe3e2c33ea4fc44c1080693a654c0fc3ce37d545b8d376a",
+            "vertexCount": 4,
+            "boneCount": 0,
+            "skinned": false,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.667994976043701,
+                "y": 4.988370418548584,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.14760875701904298,
+                "y": 0.12915706634521485,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.667072296142578,
+                "y": 4.9753313064575199,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.16975021362304688,
+                "y": 0.11882400512695313,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 4.991888999938965e-7,
+            "pupilCentroidError": 0.0
+        },
+        {
+            "path": "NewKing/01900_kafa/01930_sol_goz",
+            "bindingHashBefore": "cff06f32b500c8ddec08ef080229d4efe68cc0d3dad19582ffd8f36aec258234",
+            "bindingHashAfter": "cff06f32b500c8ddec08ef080229d4efe68cc0d3dad19582ffd8f36aec258234",
+            "vertexCount": 4,
+            "boneCount": 0,
+            "skinned": false,
+            "bindingsUnchanged": true,
+            "pivot": {
+                "x": 2.674145460128784,
+                "y": 4.825386047363281,
+                "z": 0.0
+            },
+            "sourceCenter": {
+                "x": 2.680295705795288,
+                "y": 4.846911907196045,
+                "z": 0.0
+            },
+            "sourceSize": {
+                "x": 0.14760875701904298,
+                "y": 0.19066143035888673,
+                "z": 0.0
+            },
+            "shapedCenter": {
+                "x": 2.681218147277832,
+                "y": 4.845190048217773,
+                "z": 0.0
+            },
+            "shapedSize": {
+                "x": 0.16975021362304688,
+                "y": 0.17540931701660157,
+                "z": 0.0
+            },
+            "pupilPivot": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            },
+            "horizontalScale": 1.149999976158142,
+            "verticalScale": 0.9200000166893005,
+            "pupilScale": 1.0,
+            "maxSetupWorldError": 0.0,
+            "maxSizeError": 8.046627044677734e-7,
+            "pupilCentroidError": 0.0
+        }
+    ]
+}

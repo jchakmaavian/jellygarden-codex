@@ -1,0 +1,781 @@
+[
+  {
+    "name": "DrillLoop",
+    "duration": 0.21666666865348816,
+    "frameRate": 60.0,
+    "loop": true,
+    "curves": [
+      {
+        "path": "edge_4",
+        "typeID": 4,
+        "property": "m_LocalPosition.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": -0.7279999852180481,
+            "inSlope": 0.8640002608299255,
+            "outSlope": 0.8640002608299255
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": -0.6991999745368958,
+            "inSlope": 0.8640002608299255,
+            "outSlope": 0.8639991283416748
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": -0.656000018119812,
+            "inSlope": 0.8639991283416748,
+            "outSlope": 1.2075010538101196
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": -0.49499988555908203,
+            "inSlope": 1.2075010538101196,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_4",
+        "typeID": 4,
+        "property": "m_LocalPosition.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0020000000949949026,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 0.009999999776482582,
+            "inSlope": 0.13199992191792465,
+            "outSlope": 0.13199999928474426
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 0.013000000268220901,
+            "inSlope": 0.06545457252589151,
+            "outSlope": 0.06545456498861313
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.03400000184774399,
+            "inSlope": 4.684213916750224e-08,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_4",
+        "typeID": 4,
+        "property": "m_LocalPosition.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_1",
+        "typeID": 4,
+        "property": "m_LocalPosition.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": -0.49499988555908203,
+            "inSlope": 1.9938446283340454,
+            "outSlope": 1.9938446283340454
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": -0.06300020217895508,
+            "inSlope": 1.9938446283340454,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_1",
+        "typeID": 4,
+        "property": "m_LocalPosition.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.03400000184774399,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.06400000303983688,
+            "inSlope": -3.861252451109465e-08,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_1",
+        "typeID": 4,
+        "property": "m_LocalPosition.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_2",
+        "typeID": 4,
+        "property": "m_LocalPosition.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": -0.06300020217895508,
+            "inSlope": 2.3538472652435303,
+            "outSlope": 2.3538472652435303
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.44699999690055847,
+            "inSlope": 2.3538472652435303,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_2",
+        "typeID": 4,
+        "property": "m_LocalPosition.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.06400000303983688,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.00800000037997961,
+            "inSlope": -4.77683617106095e-08,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_2",
+        "typeID": 4,
+        "property": "m_LocalPosition.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_3",
+        "typeID": 4,
+        "property": "m_LocalPosition.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.44699999690055847,
+            "inSlope": 3.0276923179626465,
+            "outSlope": 3.0276923179626465
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 1.1030000448226929,
+            "inSlope": 3.0276923179626465,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_3",
+        "typeID": 4,
+        "property": "m_LocalPosition.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.00800000037997961,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.017999999225139618,
+            "inSlope": -1.6745143105456606e-08,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_3",
+        "typeID": 4,
+        "property": "m_LocalPosition.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_1",
+        "typeID": 4,
+        "property": "m_LocalScale.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.3277417719364166,
+            "inSlope": 1.9478596448898315,
+            "outSlope": 1.9478596448898315
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.7497780323028564,
+            "inSlope": 1.9478590946931098,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_1",
+        "typeID": 4,
+        "property": "m_LocalScale.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.3277417719364166,
+            "inSlope": 1.9478596448898315,
+            "outSlope": 1.9478596448898315
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.7497780323028564,
+            "inSlope": 1.9478590946931098,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_1",
+        "typeID": 4,
+        "property": "m_LocalScale.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.3277417719364166,
+            "inSlope": 1.9478596448898315,
+            "outSlope": 1.9478596448898315
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.7497780323028564,
+            "inSlope": 1.9478590946931098,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_2",
+        "typeID": 4,
+        "property": "m_LocalScale.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.7497780323028564,
+            "inSlope": 1.1183069944381714,
+            "outSlope": 1.1183069944381714
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.9920778870582581,
+            "inSlope": 1.1183069944381714,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_2",
+        "typeID": 4,
+        "property": "m_LocalScale.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.7497780323028564,
+            "inSlope": 1.1183069944381714,
+            "outSlope": 1.1183069944381714
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.9920778870582581,
+            "inSlope": 1.1183069944381714,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_2",
+        "typeID": 4,
+        "property": "m_LocalScale.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.7497780323028564,
+            "inSlope": 1.1183069944381714,
+            "outSlope": 1.1183069944381714
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.9920778870582581,
+            "inSlope": 1.1183069944381714,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_3",
+        "typeID": 4,
+        "property": "m_LocalScale.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.9920778870582581,
+            "inSlope": -0.546599805355072,
+            "outSlope": -0.546599805355072
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.873647928237915,
+            "inSlope": -0.546599805355072,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_3",
+        "typeID": 4,
+        "property": "m_LocalScale.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.9920778870582581,
+            "inSlope": -0.546599805355072,
+            "outSlope": -0.546599805355072
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.873647928237915,
+            "inSlope": -0.546599805355072,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_3",
+        "typeID": 4,
+        "property": "m_LocalScale.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.9920778870582581,
+            "inSlope": -0.546599805355072,
+            "outSlope": -0.546599805355072
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.873647928237915,
+            "inSlope": -0.546599805355072,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_4",
+        "typeID": 4,
+        "property": "m_LocalScale.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 3.1041512489318848,
+            "outSlope": 3.1041512489318848
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 0.10347171127796173,
+            "inSlope": 3.104152143001482,
+            "outSlope": 1.1362075805664062
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 0.16028209030628204,
+            "inSlope": 1.1362075805664062,
+            "outSlope": 1.2559477090835571
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.3277417719364166,
+            "inSlope": 1.2559481561184216,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_4",
+        "typeID": 4,
+        "property": "m_LocalScale.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 3.1041512489318848,
+            "outSlope": 3.1041512489318848
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 0.10347171127796173,
+            "inSlope": 3.104152143001482,
+            "outSlope": 1.1362075805664062
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 0.16028209030628204,
+            "inSlope": 1.1362075805664062,
+            "outSlope": 1.2559477090835571
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.3277417719364166,
+            "inSlope": 1.2559481561184216,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_4",
+        "typeID": 4,
+        "property": "m_LocalScale.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 3.1041512489318848,
+            "outSlope": 3.1041512489318848
+          },
+          {
+            "time": 0.03333333507180214,
+            "value": 0.10347171127796173,
+            "inSlope": 3.104152143001482,
+            "outSlope": 1.1362075805664062
+          },
+          {
+            "time": 0.0833333358168602,
+            "value": 0.16028209030628204,
+            "inSlope": 1.1362075805664062,
+            "outSlope": 1.2559477090835571
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.3277417719364166,
+            "inSlope": 1.2559481561184216,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_4",
+        "typeID": 1,
+        "property": "m_IsActive",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 1.0,
+            "inSlope": 0.0,
+            "outSlope": 0.0
+          }
+        ]
+      },
+      {
+        "path": "edge_1",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "edge_1",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "edge_1",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "edge_2",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "edge_2",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "edge_2",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "edge_3",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.x",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "edge_3",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.y",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      },
+      {
+        "path": "edge_3",
+        "typeID": 4,
+        "property": "localEulerAnglesRaw.z",
+        "isPPtr": false,
+        "keys": [
+          {
+            "time": 0,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          },
+          {
+            "time": 0.21666666865348816,
+            "value": 0.0,
+            "inSlope": 0,
+            "outSlope": 0
+          }
+        ]
+      }
+    ],
+    "missingBindings": [
+      {
+        "path": 2138030896,
+        "attribute": 1,
+        "script": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "typeID": 4,
+        "customType": 0,
+        "isPPtrCurve": 0
+      },
+      {
+        "path": 2138030896,
+        "attribute": 3,
+        "script": {
+          "m_FileID": 0,
+          "m_PathID": 0
+        },
+        "typeID": 4,
+        "customType": 0,
+        "isPPtrCurve": 0
+      }
+    ],
+    "path_id": 1048396233324781074
+  }
+]

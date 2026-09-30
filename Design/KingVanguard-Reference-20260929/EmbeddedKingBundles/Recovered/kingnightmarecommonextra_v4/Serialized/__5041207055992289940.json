@@ -1,0 +1,53 @@
+{
+  "m_GameObject": {
+    "m_FileID": 0,
+    "m_PathID": 286745889897520572
+  },
+  "m_Enabled": 1,
+  "m_Script": {
+    "m_FileID": 0,
+    "m_PathID": 1820560513536890842
+  },
+  "m_Name": "",
+  "zIndex": -13,
+  "scaleDown": 1,
+  "isSilentButton": 1,
+  "shouldPlayHapticNew": 0,
+  "immediateCancelOnScroll": 0,
+  "overrideScaleFactor": 0.0,
+  "colliderBox": {
+    "m_FileID": 0,
+    "m_PathID": -6446021715564786762
+  },
+  "onClick": {
+    "m_PersistentCalls": {
+      "m_Calls": [
+        {
+          "m_Target": {
+            "m_FileID": 0,
+            "m_PathID": -5264619949879232664
+          },
+          "m_TargetAssemblyTypeName": "",
+          "m_MethodName": "ContinueClicked",
+          "m_Mode": 1,
+          "m_Arguments": {
+            "m_ObjectArgument": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_ObjectArgumentAssemblyTypeName": "UnityEngine.Object, UnityEngine",
+            "m_IntArgument": 0,
+            "m_FloatArgument": 0.0,
+            "m_StringArgument": "",
+            "m_BoolArgument": 0
+          },
+          "m_CallState": 2
+        }
+      ]
+    }
+  },
+  "title": {
+    "m_FileID": 0,
+    "m_PathID": 0
+  }
+}

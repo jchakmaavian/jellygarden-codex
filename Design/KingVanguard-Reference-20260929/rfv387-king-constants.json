@@ -1,0 +1,23 @@
+[
+  {
+    "type": "Royal.Scenes.Game.Ui.Top.King.KingUi",
+    "field": "StartWorryMoveCount",
+    "default_type_index": 23131,
+    "raw_hex": "0648e17a",
+    "compressed_integer": 3
+  },
+  {
+    "type": "Royal.Scenes.Game.Levels.Units.KingAnimation.KingAnimationStateManager",
+    "field": "StartWorryMoveCount",
+    "default_type_index": 23131,
+    "raw_hex": "06100002",
+    "compressed_integer": 3
+  },
+  {
+    "type": "Royal.Scenes.Game.Levels.Units.KingAnimation.KingAnimationStateManager",
+    "field": "LBComboExciteRayThreshold",
+    "default_type_index": 23131,
+    "raw_hex": "10000204",
+    "compressed_integer": 8
+  }
+]

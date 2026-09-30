@@ -1,0 +1,5 @@
+672x1872; painted texels=91636; edge matte repairs=0; source edge fallback=12348
+Facial policy: source face, Sakal Surat and Bıyık preserved; crown and costume painted.
+Pelerin: 44976
+Taç: 17323
+el_OK: 29337

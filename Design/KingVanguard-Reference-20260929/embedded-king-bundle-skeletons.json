@@ -1,0 +1,559 @@
+[
+  {
+    "path_id": -2785332080619426724,
+    "class_id": 49,
+    "byte_offset": 191680,
+    "size": 278860,
+    "name": "nightmare_popup.skel",
+    "file": "EmbeddedKingBundles\\kingnightmarecommon_v3_data\\CAB-14f8b05708a6270f300861926a702e4a",
+    "payload_bytes": 278831,
+    "sha256": "e77178b19851b0dccb19bf1d63abff8f35a66a9264599b6da5619d35da889434",
+    "skeleton": {
+      "version": "3.8.99",
+      "bounds": [
+        -488.0,
+        -476.5000305175781,
+        976.0001831054688,
+        953.0000610351562
+      ],
+      "fps": 30.0,
+      "bones": 75,
+      "bone_names": [
+        "root",
+        "bone",
+        "00400_A_body",
+        "00400_A_chest",
+        "K_head",
+        "K_head_move",
+        "K_head_back",
+        "01300_A_nose",
+        "K_head2",
+        "01400_A_moustache",
+        "01400_A_moustache_L",
+        "01400_A_moustache_L_2",
+        "01400_A_moustache_L_3",
+        "01400_A_moustache_R",
+        "01400_A_moustache_R_2",
+        "K_chin",
+        "K_eye_L",
+        "01700_A_right_eyebrow",
+        "01700_A_right_eyebrow2",
+        "K_eye_R",
+        "01800_A_left_eyebrow",
+        "01800_A_left_eyebrow2",
+        "K_mouth_corner_L",
+        "K_mouthcorner_R",
+        "K_lip_upper",
+        "K_lip_lower",
+        "K_hat_tip",
+        "K_hat_tip_2",
+        "belly",
+        "pillow",
+        "00800_A_Book",
+        "00800_A_Book2",
+        "00800_A_Book3",
+        "00400_A_shoulder_L",
+        "00400_A_shoulder_R",
+        "elbow_L",
+        "00800_A_wrist_L",
+        "02700_A_right_palm",
+        "02800_A__right_index_finger",
+        "02800_A__right_index_finger2",
+        "02900_A_right_middle_finger",
+        "02900_A_right_middle_finger2",
+        "03000_A_right_ring finger",
+        "03000_A_right_ring finger2",
+        "03100_A_right_ring finger",
+        "03100_A_right_ring finger2",
+        "03700_B_dog_body",
+        "03700_B_dog_body_hip",
+        "03700_B_dog_body_upper",
+        "03900_B_dog_face",
+        "04000_B_dog_left_ear",
+        "04000_B_dog_left_ear2",
+        "03800_B_dog_right_ear",
+        "03800_B_dog_right_ear2",
+        "03900_B_dog_face_tip",
+        "04200_B_dog_left_eyebrow_G",
+        "04200_B_dog_left_eyebrow_G2",
+        "04300_B_dog_right_eyebrow",
+        "04300_B_dog_right_eyebrow2",
+        "K_wrist_R",
+        "02100_A_palm",
+        "02200_A_left_index_finger",
+        "02200_A_left_index_finger2",
+        "02200_A_left_index_finger3",
+        "02300_A_left_middle_finger",
+        "02300_A_left_middle_finger2",
+        "02300_A_left_middle_finger3",
+        "02500_A_left_ring finger",
+        "02500_A_left_ring finger2",
+        "02500_A_left_ring finger3",
+        "02400_A_left_little finger",
+        "02400_A_left_little finger2",
+        "02400_A_left_little finger3",
+        "belly2",
+        "K_hat_tip_3"
+      ],
+      "slots": 43,
+      "slot_names": [
+        "00100_Z_bg",
+        "00200_A_King_shadow_G",
+        "00300_A_left_arm",
+        "00400_A_body",
+        "00500_A_blanket",
+        "00600_A_right_arm_G",
+        "00700_A_Book_G",
+        "00800_A_Book",
+        "00900_A_fqace_G",
+        "01000_A_mouth",
+        "01100_A_teeth",
+        "01200_A_Face copy 2",
+        "01400_A_moustache",
+        "01300_A_nose",
+        "01900_A_left_hand_G",
+        "02000_A_right_hand_G",
+        "02100_A_palm",
+        "02200_A_left_index_finger",
+        "02300_A_left_middle_finger",
+        "02400_A_left_little finger",
+        "02500_A_left_ring finger",
+        "02600_A_right_arm_bottom",
+        "02700_A_right_palm",
+        "02800_A__right_index_finger",
+        "02900_A_right_middle_finger",
+        "03000_A_right_ring finger",
+        "03100_A_right_ring finger",
+        "03200_A__righ_hand_G",
+        "03300_A_right_arm",
+        "03400_A_hat_G",
+        "03500_A_hat",
+        "01700_A_right_eyebrow",
+        "01800_A_left_eyebrow",
+        "03600_B_dog_body_G",
+        "03700_B_dog_body",
+        "03800_B_dog_right_ear",
+        "03900_B_dog_face",
+        "04000_B_dog_left_ear",
+        "04100_B_dog_right_eyebrow_G",
+        "04200_B_dog_left_eyebrow_G",
+        "04300_B_dog_right_eyebrow",
+        "04400_B_dog_left_eyebrow",
+        "03110_A__left_hand_S"
+      ],
+      "skins": [
+        "default"
+      ],
+      "attachment_type_counts": {
+        "2": 42,
+        "0": 1
+      },
+      "attachments": [
+        {
+          "skin": "default",
+          "slot": "00100_Z_bg",
+          "name": "00100_Z_bg",
+          "type": 2,
+          "path": "00100_Z_bg",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "00200_A_King_shadow_G",
+          "name": "00200_A_King_shadow_G",
+          "type": 2,
+          "path": "00200_A_King_shadow_G",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "00300_A_left_arm",
+          "name": "00300_A_left_arm",
+          "type": 2,
+          "path": "00300_A_left_arm",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "00400_A_body",
+          "name": "00400_A_body",
+          "type": 2,
+          "path": "00400_A_body",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "00500_A_blanket",
+          "name": "00500_A_blanket",
+          "type": 2,
+          "path": "00500_A_blanket",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "00600_A_right_arm_G",
+          "name": "00600_A_right_arm_G",
+          "type": 2,
+          "path": "00600_A_right_arm_G",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "00700_A_Book_G",
+          "name": "00700_A_Book_G",
+          "type": 2,
+          "path": "00700_A_Book_G",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "00800_A_Book",
+          "name": "00800_A_Book",
+          "type": 2,
+          "path": "00800_A_Book",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "00900_A_fqace_G",
+          "name": "00900_A_fqace_G",
+          "type": 2,
+          "path": "00900_A_fqace_G",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "01000_A_mouth",
+          "name": "01000_A_mouth",
+          "type": 2,
+          "path": "01000_A_mouth",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "01100_A_teeth",
+          "name": "01100_A_teeth",
+          "type": 2,
+          "path": "01100_A_teeth",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "01200_A_Face copy 2",
+          "name": "01200_A_Face copy 2",
+          "type": 2,
+          "path": "01200_A_Face copy 2",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "01300_A_nose",
+          "name": "01300_A_nose",
+          "type": 2,
+          "path": "01300_A_nose",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "01400_A_moustache",
+          "name": "01400_A_moustache",
+          "type": 2,
+          "path": "01400_A_moustache",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "01700_A_right_eyebrow",
+          "name": "01700_A_right_eyebrow",
+          "type": 2,
+          "path": "01700_A_right_eyebrow",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "01800_A_left_eyebrow",
+          "name": "01800_A_left_eyebrow",
+          "type": 2,
+          "path": "01800_A_left_eyebrow",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "01900_A_left_hand_G",
+          "name": "01900_A_left_hand_G",
+          "type": 2,
+          "path": "01900_A_left_hand_G",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "02000_A_right_hand_G",
+          "name": "02000_A_right_hand_G",
+          "type": 2,
+          "path": "02000_A_right_hand_G",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "02100_A_palm",
+          "name": "02100_A_palm",
+          "type": 2,
+          "path": "02100_A_palm",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "02200_A_left_index_finger",
+          "name": "02200_A_left_index_finger",
+          "type": 2,
+          "path": "02200_A_left_index_finger",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "02300_A_left_middle_finger",
+          "name": "02300_A_left_middle_finger",
+          "type": 2,
+          "path": "02300_A_left_middle_finger",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "02400_A_left_little finger",
+          "name": "02400_A_left_little finger",
+          "type": 2,
+          "path": "02400_A_left_little finger",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "02500_A_left_ring finger",
+          "name": "02500_A_left_ring finger",
+          "type": 2,
+          "path": "02500_A_left_ring finger",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "02600_A_right_arm_bottom",
+          "name": "02600_A_right_arm_bottom",
+          "type": 0,
+          "path": "02600_A_right_arm_bottom",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "02700_A_right_palm",
+          "name": "02700_A_right_palm",
+          "type": 2,
+          "path": "02700_A_right_palm",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "02800_A__right_index_finger",
+          "name": "02800_A__right_index_finger",
+          "type": 2,
+          "path": "02800_A__right_index_finger",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "02900_A_right_middle_finger",
+          "name": "02900_A_right_middle_finger",
+          "type": 2,
+          "path": "02900_A_right_middle_finger",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "03000_A_right_ring finger",
+          "name": "03000_A_right_ring finger",
+          "type": 2,
+          "path": "03000_A_right_ring finger",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "03100_A_right_ring finger",
+          "name": "03100_A_right_ring finger",
+          "type": 2,
+          "path": "03100_A_right_ring finger",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "03110_A__left_hand_S",
+          "name": "03110_A__left_hand_S",
+          "type": 2,
+          "path": "03110_A__left_hand_S",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "03200_A__righ_hand_G",
+          "name": "03200_A__righ_hand_G",
+          "type": 2,
+          "path": "03200_A__righ_hand_G",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "03300_A_right_arm",
+          "name": "03300_A_right_arm",
+          "type": 2,
+          "path": "03300_A_right_arm",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "03400_A_hat_G",
+          "name": "03400_A_hat_G",
+          "type": 2,
+          "path": "03400_A_hat_G",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "03500_A_hat",
+          "name": "03500_A_hat",
+          "type": 2,
+          "path": "03500_A_hat",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "03600_B_dog_body_G",
+          "name": "03600_B_dog_body_G",
+          "type": 2,
+          "path": "03600_B_dog_body_G",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "03700_B_dog_body",
+          "name": "03700_B_dog_body",
+          "type": 2,
+          "path": "03700_B_dog_body",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "03800_B_dog_right_ear",
+          "name": "03800_B_dog_right_ear",
+          "type": 2,
+          "path": "03800_B_dog_right_ear",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "03900_B_dog_face",
+          "name": "03900_B_dog_face",
+          "type": 2,
+          "path": "03900_B_dog_face",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "04000_B_dog_left_ear",
+          "name": "04000_B_dog_left_ear",
+          "type": 2,
+          "path": "04000_B_dog_left_ear",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "04100_B_dog_right_eyebrow_G",
+          "name": "04100_B_dog_right_eyebrow_G",
+          "type": 2,
+          "path": "04100_B_dog_right_eyebrow_G",
+          "weighted": true
+        },
+        {
+          "skin": "default",
+          "slot": "04200_B_dog_left_eyebrow_G",
+          "name": "04200_B_dog_left_eyebrow_G",
+          "type": 2,
+          "path": "04200_B_dog_left_eyebrow_G",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "04300_B_dog_right_eyebrow",
+          "name": "04300_B_dog_right_eyebrow",
+          "type": 2,
+          "path": "04300_B_dog_right_eyebrow",
+          "weighted": false
+        },
+        {
+          "skin": "default",
+          "slot": "04400_B_dog_left_eyebrow",
+          "name": "04400_B_dog_left_eyebrow",
+          "type": 2,
+          "path": "04400_B_dog_left_eyebrow",
+          "weighted": true
+        }
+      ],
+      "ik_constraints": 0,
+      "transform_constraints": 5,
+      "path_constraints": 0,
+      "events": [],
+      "animations": [
+        {
+          "name": "animation",
+          "duration": 10.0,
+          "bone_timelines": 74,
+          "slot_timelines": 2,
+          "deform_timelines": 1,
+          "draw_order_keys": 0,
+          "events": []
+        },
+        {
+          "name": "animation2",
+          "duration": 10.0,
+          "bone_timelines": 67,
+          "slot_timelines": 2,
+          "deform_timelines": 1,
+          "draw_order_keys": 0,
+          "events": []
+        },
+        {
+          "name": "animation3",
+          "duration": 11.666666984558105,
+          "bone_timelines": 67,
+          "slot_timelines": 2,
+          "deform_timelines": 0,
+          "draw_order_keys": 0,
+          "events": []
+        },
+        {
+          "name": "animation4",
+          "duration": 10.0,
+          "bone_timelines": 74,
+          "slot_timelines": 2,
+          "deform_timelines": 1,
+          "draw_order_keys": 0,
+          "events": []
+        },
+        {
+          "name": "dog_cycle",
+          "duration": 1.3333333730697632,
+          "bone_timelines": 7,
+          "slot_timelines": 0,
+          "deform_timelines": 0,
+          "draw_order_keys": 0,
+          "events": []
+        },
+        {
+          "name": "yedek_cycle",
+          "duration": 2.3333332538604736,
+          "bone_timelines": 61,
+          "slot_timelines": 2,
+          "deform_timelines": 0,
+          "draw_order_keys": 0,
+          "events": []
+        }
+      ]
+    }
+  }
+]
