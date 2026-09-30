@@ -1,0 +1,11 @@
+Final installed artwork reviewed in Unity on 2026-09-30.
+King atlas SHA256 4bf86f662641e693fed1e87733eda21a491bf8e0d049e17e0ec7214a8b470198
+Area atlas SHA256 08d0e5c6266eeb92bb20461ee9aa75600b78fad516a91a14fbfa4487a9556a4c
+
+Reviewed current 512px stress renders at 0, .15, .383333, .6, 1.3 and 3 seconds in worry entrance, idle2 and happy6. In the strongest tooth-deform pose, the coherent row remains within the lip opening and moustache layering; the new peach mouth cover removes the prior uneven orange/green-looking strip. Soft shadow masks follow the imported facial motion.
+
+Reviewed actual Game-view screenshots for mouse right, visible hint below and touch left. Both pupils visibly track the selected direction; body response remains small and the portrait stays within the HUD frame. See After/Attention-Comparison.png and full screenshots.
+
+Recorded actual AnimationState transitions at 60 fps in a private preview scene: 1,440 frames / 24 seconds. After/King-Vanguard-Face-Motion.mp4 encoded with h264_mf; complete FFmpeg decode validation returned exit 0. This is an isolated animation review, not a device recording.
+
+Final pupil-alpha fixture passed again against the installed atlas. Normal player profile restored after final live captures; Unity editor stopped. No physical Android-device verification performed.

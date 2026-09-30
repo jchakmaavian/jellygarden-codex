@@ -1,0 +1,22 @@
+RUNNING: original AnimationState at 60 Hz, current post-skin face rig.
+PASS idle to blink: 219 frames; 0 with actual mixingFrom; face coverage, body vertices, live deform and bounds valid
+PASS acknowledgement starts at idle_loop_1 time 3.6500, inside the source 3.5667-3.9 second blink
+PASS idle blink to acknowledgement to idle: 84 frames; 23 with actual mixingFrom; face coverage, body vertices, live deform and bounds valid
+PASS worry entrance to worry loop: 390 frames; 22 with actual mixingFrom; face coverage, body vertices, live deform and bounds valid
+PASS worry to happy to worry: 258 frames; 23 with actual mixingFrom; face coverage, body vertices, live deform and bounds valid
+PASS Area drill to clap start to loop: 136 frames; 22 with actual mixingFrom; face coverage, body vertices, live deform and bounds valid
+PASS Area clap finish to drill: 86 frames; 23 with actual mixingFrom; face coverage, body vertices, live deform and bounds valid
+PASS Face motion QA King A: 12 repeated mesh builds at one pose do not accumulate deformation
+PASS Face motion QA King A: disable and hide clear mapping; re-enable rebuilds the identical pose
+PASS Face motion QA King A: interior barycentric face vertex mapped and next clean render restored
+PASS Face motion QA Area A: 12 repeated mesh builds at one pose do not accumulate deformation
+PASS Face motion QA Area A: disable and hide clear mapping; re-enable rebuilds the identical pose
+PASS Face motion QA Area A: interior barycentric face vertex mapped and next clean render restored
+PASS Face motion QA King A independent action: 30 frames; 11 with actual mixingFrom; face coverage, body vertices, live deform and bounds valid
+PASS Face motion QA King A: shared source data with independent live bones, deforms and generated meshes
+PASS Face motion QA Area A independent action: 30 frames; 11 with actual mixingFrom; face coverage, body vertices, live deform and bounds valid
+PASS Face motion QA Area A: shared source data with independent live bones, deforms and generated meshes
+PASS both source fingerprints unchanged, including attachment weights/UV/geometry, all timeline arrays and setup bones
+COVERAGE Face motion QA King A: Sol Kulak | Sağ Kulak | Sakal Gölge | Sakal Surat | Sol Göz | Sol  Göz Bebeği | Sağ Göz | Sağ Göz Bebeği | Sol Yanak | Sağ Yanak | Dil | Alt Diş | Ağız | Ust Diş | Bıyık Gölge | Bıyık | Burun | Taç Alt Gölge | Taç Gölge Ust | Taç | Sağ Kaş Gölge | Sağ Kaş | Sol Kaş Gölge | Sol Kaş | Sol Göz kapağı | Sol Kirpik | Sağ Göz Kapağı | Sağ Kirpik
+COVERAGE Face motion QA Area A: Sol Kulak | Sağ Kulak | Sakal Gölge | Sakal Surat | Sol Göz | Sol  Göz Bebeği | Sağ Göz | Sağ Göz Bebeği | Sağ Göz Kapağı | Sağ Kirpik | Sol Yanak | Sağ Yanak | Dil | Alt Diş | Ağız | Ust Diş | Bıyık Gölge | Bıyık | Burun | Taç Alt Gölge | Taç | Sağ Kaş Gölge | Sağ Kaş | Sol Kaş Gölge | Sol Kaş | Sol Göz kapağı | Sol Kirpik
+COMPLETE 1275 checked mesh frames; 135 real AnimationState mixing frames. Visual transition quality still requires the companion motion recording.

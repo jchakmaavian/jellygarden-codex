@@ -1,0 +1,3442 @@
+{
+  "rule": "Visible alpha>=16, G-R>=-8 and G-B>=20. This flags yellow-green matte spill, not only pure saturated green. Exact before/current byte comparison attributes changes.",
+  "records": [
+    {
+      "cell": 1,
+      "name": "Sakal Surat",
+      "suspiciousCurrentPixels": 307,
+      "suspiciousBeforePixels": 307,
+      "rgbaChangedFromBeforeTeeth": 284,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            128,
+            2
+          ],
+          "rgba": [
+            186,
+            182,
+            101,
+            21
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            129,
+            2
+          ],
+          "rgba": [
+            186,
+            182,
+            101,
+            21
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            130,
+            2
+          ],
+          "rgba": [
+            180,
+            182,
+            101,
+            21
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            131,
+            2
+          ],
+          "rgba": [
+            180,
+            182,
+            101,
+            20
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            127,
+            3
+          ],
+          "rgba": [
+            186,
+            182,
+            101,
+            40
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            128,
+            3
+          ],
+          "rgba": [
+            186,
+            182,
+            101,
+            121
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            129,
+            3
+          ],
+          "rgba": [
+            186,
+            182,
+            101,
+            162
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            130,
+            3
+          ],
+          "rgba": [
+            180,
+            182,
+            101,
+            159
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            131,
+            3
+          ],
+          "rgba": [
+            180,
+            182,
+            101,
+            110
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            132,
+            3
+          ],
+          "rgba": [
+            171,
+            176,
+            96,
+            43
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            127,
+            4
+          ],
+          "rgba": [
+            186,
+            182,
+            101,
+            100
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            128,
+            4
+          ],
+          "rgba": [
+            186,
+            182,
+            101,
+            181
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            129,
+            4
+          ],
+          "rgba": [
+            186,
+            182,
+            101,
+            227
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            130,
+            4
+          ],
+          "rgba": [
+            180,
+            182,
+            101,
+            219
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            131,
+            4
+          ],
+          "rgba": [
+            180,
+            182,
+            101,
+            177
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 2,
+      "name": "Burun",
+      "suspiciousCurrentPixels": 6,
+      "suspiciousBeforePixels": 6,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            8,
+            45
+          ],
+          "rgba": [
+            130,
+            136,
+            40,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            13,
+            49
+          ],
+          "rgba": [
+            102,
+            113,
+            20,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            16,
+            50
+          ],
+          "rgba": [
+            93,
+            104,
+            17,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            23,
+            54
+          ],
+          "rgba": [
+            107,
+            118,
+            29,
+            254
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            28,
+            57
+          ],
+          "rgba": [
+            112,
+            120,
+            33,
+            247
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            32,
+            58
+          ],
+          "rgba": [
+            121,
+            115,
+            36,
+            244
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 3,
+      "name": "Bıyık",
+      "suspiciousCurrentPixels": 286,
+      "suspiciousBeforePixels": 286,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            169,
+            18
+          ],
+          "rgba": [
+            209,
+            205,
+            148,
+            33
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            173,
+            18
+          ],
+          "rgba": [
+            227,
+            224,
+            197,
+            84
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            174,
+            18
+          ],
+          "rgba": [
+            227,
+            224,
+            197,
+            24
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            168,
+            19
+          ],
+          "rgba": [
+            209,
+            205,
+            148,
+            160
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            169,
+            19
+          ],
+          "rgba": [
+            209,
+            205,
+            148,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            173,
+            19
+          ],
+          "rgba": [
+            227,
+            224,
+            197,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            174,
+            19
+          ],
+          "rgba": [
+            227,
+            224,
+            197,
+            252
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            177,
+            19
+          ],
+          "rgba": [
+            235,
+            244,
+            217,
+            28
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            168,
+            20
+          ],
+          "rgba": [
+            181,
+            182,
+            112,
+            150
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            169,
+            20
+          ],
+          "rgba": [
+            181,
+            182,
+            112,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            177,
+            20
+          ],
+          "rgba": [
+            235,
+            244,
+            217,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            178,
+            20
+          ],
+          "rgba": [
+            235,
+            244,
+            217,
+            190
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            169,
+            21
+          ],
+          "rgba": [
+            181,
+            182,
+            112,
+            84
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            125,
+            22
+          ],
+          "rgba": [
+            236,
+            230,
+            208,
+            39
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            126,
+            22
+          ],
+          "rgba": [
+            233,
+            233,
+            202,
+            37
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 4,
+      "name": "Taç",
+      "suspiciousCurrentPixels": 215,
+      "suspiciousBeforePixels": 215,
+      "rgbaChangedFromBeforeTeeth": 2100,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            104,
+            8
+          ],
+          "rgba": [
+            175,
+            180,
+            33,
+            227
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            105,
+            8
+          ],
+          "rgba": [
+            175,
+            180,
+            33,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            108,
+            8
+          ],
+          "rgba": [
+            186,
+            188,
+            28,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            109,
+            8
+          ],
+          "rgba": [
+            186,
+            188,
+            28,
+            233
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            99,
+            9
+          ],
+          "rgba": [
+            172,
+            184,
+            71,
+            38
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            112,
+            9
+          ],
+          "rgba": [
+            187,
+            198,
+            31,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            113,
+            9
+          ],
+          "rgba": [
+            187,
+            198,
+            31,
+            105
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            97,
+            10
+          ],
+          "rgba": [
+            172,
+            184,
+            71,
+            19
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            98,
+            10
+          ],
+          "rgba": [
+            172,
+            184,
+            71,
+            145
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            99,
+            10
+          ],
+          "rgba": [
+            172,
+            184,
+            71,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            116,
+            11
+          ],
+          "rgba": [
+            203,
+            209,
+            42,
+            29
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            116,
+            12
+          ],
+          "rgba": [
+            203,
+            209,
+            42,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            117,
+            12
+          ],
+          "rgba": [
+            203,
+            209,
+            42,
+            38
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            110,
+            13
+          ],
+          "rgba": [
+            254,
+            249,
+            175,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            111,
+            13
+          ],
+          "rgba": [
+            253,
+            249,
+            170,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 5,
+      "name": "Sol Kulak",
+      "suspiciousCurrentPixels": 13,
+      "suspiciousBeforePixels": 13,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            22,
+            2
+          ],
+          "rgba": [
+            198,
+            199,
+            99,
+            234
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            23,
+            2
+          ],
+          "rgba": [
+            198,
+            199,
+            99,
+            102
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            10,
+            3
+          ],
+          "rgba": [
+            189,
+            184,
+            91,
+            29
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            11,
+            3
+          ],
+          "rgba": [
+            189,
+            184,
+            91,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            27,
+            6
+          ],
+          "rgba": [
+            192,
+            194,
+            100,
+            252
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            3,
+            11
+          ],
+          "rgba": [
+            174,
+            178,
+            74,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            29,
+            11
+          ],
+          "rgba": [
+            182,
+            193,
+            94,
+            249
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            29,
+            27
+          ],
+          "rgba": [
+            174,
+            183,
+            81,
+            241
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            3,
+            28
+          ],
+          "rgba": [
+            167,
+            169,
+            63,
+            148
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            29,
+            28
+          ],
+          "rgba": [
+            174,
+            183,
+            81,
+            136
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            3,
+            29
+          ],
+          "rgba": [
+            167,
+            169,
+            63,
+            75
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            22,
+            43
+          ],
+          "rgba": [
+            162,
+            172,
+            60,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            19,
+            45
+          ],
+          "rgba": [
+            155,
+            162,
+            51,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 6,
+      "name": "Sağ Kulak",
+      "suspiciousCurrentPixels": 13,
+      "suspiciousBeforePixels": 13,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            6,
+            1
+          ],
+          "rgba": [
+            189,
+            188,
+            83,
+            60
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            7,
+            1
+          ],
+          "rgba": [
+            189,
+            188,
+            83,
+            254
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            13,
+            1
+          ],
+          "rgba": [
+            193,
+            190,
+            91,
+            204
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            14,
+            1
+          ],
+          "rgba": [
+            193,
+            190,
+            91,
+            86
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            4,
+            3
+          ],
+          "rgba": [
+            178,
+            180,
+            72,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            17,
+            3
+          ],
+          "rgba": [
+            198,
+            197,
+            113,
+            94
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            23
+          ],
+          "rgba": [
+            166,
+            164,
+            69,
+            117
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            24
+          ],
+          "rgba": [
+            166,
+            164,
+            69,
+            91
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            24,
+            25
+          ],
+          "rgba": [
+            180,
+            179,
+            81,
+            21
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            24,
+            26
+          ],
+          "rgba": [
+            180,
+            179,
+            81,
+            20
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            4,
+            33
+          ],
+          "rgba": [
+            170,
+            163,
+            61,
+            52
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            21,
+            36
+          ],
+          "rgba": [
+            180,
+            173,
+            75,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            21,
+            37
+          ],
+          "rgba": [
+            180,
+            173,
+            75,
+            53
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 7,
+      "name": "Sakal Gölge",
+      "suspiciousCurrentPixels": 0,
+      "suspiciousBeforePixels": 6720,
+      "rgbaChangedFromBeforeTeeth": 9241,
+      "strongGreenDominancePixels": 0,
+      "examples": []
+    },
+    {
+      "cell": 8,
+      "name": "Sol Göz",
+      "suspiciousCurrentPixels": 21,
+      "suspiciousBeforePixels": 21,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            16,
+            3
+          ],
+          "rgba": [
+            147,
+            144,
+            86,
+            252
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            17,
+            3
+          ],
+          "rgba": [
+            147,
+            144,
+            86,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            19,
+            3
+          ],
+          "rgba": [
+            143,
+            139,
+            85,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            20,
+            3
+          ],
+          "rgba": [
+            143,
+            139,
+            85,
+            253
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            12,
+            4
+          ],
+          "rgba": [
+            144,
+            141,
+            88,
+            126
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            13,
+            4
+          ],
+          "rgba": [
+            144,
+            141,
+            88,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            11,
+            5
+          ],
+          "rgba": [
+            134,
+            146,
+            78,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            25,
+            5
+          ],
+          "rgba": [
+            134,
+            140,
+            74,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            7,
+            9
+          ],
+          "rgba": [
+            158,
+            154,
+            106,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            5,
+            12
+          ],
+          "rgba": [
+            162,
+            157,
+            109,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            4,
+            14
+          ],
+          "rgba": [
+            166,
+            163,
+            114,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            19
+          ],
+          "rgba": [
+            175,
+            184,
+            128,
+            232
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            25
+          ],
+          "rgba": [
+            167,
+            161,
+            117,
+            177
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            36
+          ],
+          "rgba": [
+            184,
+            185,
+            135,
+            239
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            37
+          ],
+          "rgba": [
+            184,
+            185,
+            135,
+            179
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 9,
+      "name": "Sol  Göz Bebeği",
+      "suspiciousCurrentPixels": 4,
+      "suspiciousBeforePixels": 4,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            11,
+            4
+          ],
+          "rgba": [
+            85,
+            78,
+            45,
+            254
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            5
+          ],
+          "rgba": [
+            54,
+            63,
+            8,
+            162
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            12,
+            6
+          ],
+          "rgba": [
+            50,
+            61,
+            3,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            11,
+            15
+          ],
+          "rgba": [
+            77,
+            77,
+            7,
+            160
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 10,
+      "name": "Sol Göz kapağı",
+      "suspiciousCurrentPixels": 9,
+      "suspiciousBeforePixels": 9,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            6,
+            9
+          ],
+          "rgba": [
+            156,
+            160,
+            47,
+            105
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            32,
+            12
+          ],
+          "rgba": [
+            157,
+            168,
+            50,
+            114
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            2,
+            17
+          ],
+          "rgba": [
+            148,
+            158,
+            48,
+            125
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            35,
+            25
+          ],
+          "rgba": [
+            164,
+            158,
+            56,
+            58
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            35,
+            32
+          ],
+          "rgba": [
+            163,
+            163,
+            58,
+            48
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            35,
+            33
+          ],
+          "rgba": [
+            163,
+            163,
+            58,
+            40
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            8,
+            45
+          ],
+          "rgba": [
+            167,
+            160,
+            55,
+            186
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            10,
+            46
+          ],
+          "rgba": [
+            156,
+            167,
+            53,
+            205
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            24,
+            47
+          ],
+          "rgba": [
+            156,
+            168,
+            55,
+            149
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 11,
+      "name": "Sol Kirpik",
+      "suspiciousCurrentPixels": 10,
+      "suspiciousBeforePixels": 10,
+      "rgbaChangedFromBeforeTeeth": 4,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            11,
+            3
+          ],
+          "rgba": [
+            53,
+            59,
+            14,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            17,
+            3
+          ],
+          "rgba": [
+            50,
+            62,
+            13,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            18,
+            3
+          ],
+          "rgba": [
+            54,
+            51,
+            13,
+            253
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            6,
+            4
+          ],
+          "rgba": [
+            50,
+            59,
+            12,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            3,
+            5
+          ],
+          "rgba": [
+            56,
+            53,
+            12,
+            251
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            28,
+            5
+          ],
+          "rgba": [
+            53,
+            51,
+            12,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            6
+          ],
+          "rgba": [
+            52,
+            58,
+            11,
+            90
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            6
+          ],
+          "rgba": [
+            54,
+            51,
+            14,
+            244
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            7
+          ],
+          "rgba": [
+            49,
+            49,
+            10,
+            95
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            34,
+            7
+          ],
+          "rgba": [
+            50,
+            55,
+            11,
+            116
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 12,
+      "name": "Sağ Göz",
+      "suspiciousCurrentPixels": 26,
+      "suspiciousBeforePixels": 26,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            14,
+            3
+          ],
+          "rgba": [
+            145,
+            150,
+            90,
+            217
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            15,
+            3
+          ],
+          "rgba": [
+            145,
+            150,
+            90,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            19,
+            3
+          ],
+          "rgba": [
+            145,
+            143,
+            84,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            20,
+            3
+          ],
+          "rgba": [
+            145,
+            143,
+            84,
+            205
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            9,
+            5
+          ],
+          "rgba": [
+            153,
+            153,
+            99,
+            33
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            10,
+            5
+          ],
+          "rgba": [
+            153,
+            153,
+            99,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            27,
+            8
+          ],
+          "rgba": [
+            157,
+            154,
+            102,
+            129
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            6,
+            9
+          ],
+          "rgba": [
+            166,
+            163,
+            112,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            29,
+            11
+          ],
+          "rgba": [
+            170,
+            166,
+            121,
+            112
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            30,
+            13
+          ],
+          "rgba": [
+            180,
+            175,
+            134,
+            100
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            22
+          ],
+          "rgba": [
+            166,
+            175,
+            116,
+            54
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            23
+          ],
+          "rgba": [
+            183,
+            176,
+            131,
+            70
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            24
+          ],
+          "rgba": [
+            174,
+            183,
+            123,
+            66
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            25
+          ],
+          "rgba": [
+            185,
+            183,
+            135,
+            82
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            26
+          ],
+          "rgba": [
+            191,
+            184,
+            139,
+            96
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 13,
+      "name": "Sağ Göz Bebeği",
+      "suspiciousCurrentPixels": 3,
+      "suspiciousBeforePixels": 3,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            7,
+            1
+          ],
+          "rgba": [
+            60,
+            53,
+            8,
+            249
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            8,
+            1
+          ],
+          "rgba": [
+            60,
+            53,
+            8,
+            231
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            5
+          ],
+          "rgba": [
+            57,
+            59,
+            9,
+            146
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 14,
+      "name": "Sağ Göz Kapağı",
+      "suspiciousCurrentPixels": 6,
+      "suspiciousBeforePixels": 6,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            8,
+            5
+          ],
+          "rgba": [
+            156,
+            156,
+            48,
+            168
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            7,
+            6
+          ],
+          "rgba": [
+            150,
+            157,
+            45,
+            158
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            23
+          ],
+          "rgba": [
+            166,
+            160,
+            54,
+            54
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            30,
+            40
+          ],
+          "rgba": [
+            167,
+            160,
+            60,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            10,
+            44
+          ],
+          "rgba": [
+            168,
+            160,
+            60,
+            190
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            14,
+            45
+          ],
+          "rgba": [
+            153,
+            161,
+            52,
+            213
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 15,
+      "name": "Sağ Kirpik",
+      "suspiciousCurrentPixels": 5,
+      "suspiciousBeforePixels": 5,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            13,
+            4
+          ],
+          "rgba": [
+            49,
+            52,
+            11,
+            250
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            27,
+            4
+          ],
+          "rgba": [
+            48,
+            60,
+            11,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            31,
+            5
+          ],
+          "rgba": [
+            52,
+            50,
+            11,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            7
+          ],
+          "rgba": [
+            55,
+            48,
+            12,
+            74
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            1,
+            8
+          ],
+          "rgba": [
+            55,
+            48,
+            12,
+            162
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 16,
+      "name": "Sol Yanak",
+      "suspiciousCurrentPixels": 11,
+      "suspiciousBeforePixels": 11,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            63,
+            11
+          ],
+          "rgba": [
+            180,
+            185,
+            85,
+            18
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            66,
+            14
+          ],
+          "rgba": [
+            186,
+            184,
+            93,
+            22
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            67,
+            17
+          ],
+          "rgba": [
+            174,
+            186,
+            79,
+            38
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            67,
+            18
+          ],
+          "rgba": [
+            176,
+            183,
+            78,
+            48
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            67,
+            19
+          ],
+          "rgba": [
+            176,
+            183,
+            78,
+            51
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            66,
+            22
+          ],
+          "rgba": [
+            158,
+            161,
+            58,
+            46
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            66,
+            23
+          ],
+          "rgba": [
+            158,
+            161,
+            58,
+            20
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            46,
+            46
+          ],
+          "rgba": [
+            133,
+            144,
+            42,
+            17
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            20,
+            48
+          ],
+          "rgba": [
+            145,
+            144,
+            53,
+            37
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            41,
+            48
+          ],
+          "rgba": [
+            135,
+            142,
+            45,
+            19
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            25,
+            49
+          ],
+          "rgba": [
+            145,
+            143,
+            50,
+            31
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 17,
+      "name": "Sağ Yanak",
+      "suspiciousCurrentPixels": 13,
+      "suspiciousBeforePixels": 13,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            28,
+            3
+          ],
+          "rgba": [
+            194,
+            187,
+            98,
+            96
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            29,
+            3
+          ],
+          "rgba": [
+            194,
+            187,
+            98,
+            126
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            30,
+            3
+          ],
+          "rgba": [
+            191,
+            189,
+            95,
+            153
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            31,
+            3
+          ],
+          "rgba": [
+            193,
+            189,
+            99,
+            177
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            32,
+            3
+          ],
+          "rgba": [
+            195,
+            189,
+            99,
+            191
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            33,
+            3
+          ],
+          "rgba": [
+            184,
+            193,
+            94,
+            202
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            34,
+            3
+          ],
+          "rgba": [
+            184,
+            193,
+            94,
+            209
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            54,
+            14
+          ],
+          "rgba": [
+            192,
+            195,
+            100,
+            231
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            2,
+            15
+          ],
+          "rgba": [
+            176,
+            180,
+            87,
+            42
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            4,
+            22
+          ],
+          "rgba": [
+            144,
+            149,
+            54,
+            154
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            57,
+            32
+          ],
+          "rgba": [
+            180,
+            172,
+            76,
+            95
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            57,
+            33
+          ],
+          "rgba": [
+            180,
+            172,
+            76,
+            80
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            21,
+            43
+          ],
+          "rgba": [
+            128,
+            139,
+            41,
+            246
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 18,
+      "name": "Dil",
+      "suspiciousCurrentPixels": 5,
+      "suspiciousBeforePixels": 5,
+      "rgbaChangedFromBeforeTeeth": 13,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            56,
+            1
+          ],
+          "rgba": [
+            114,
+            124,
+            44,
+            32
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            57,
+            1
+          ],
+          "rgba": [
+            114,
+            124,
+            44,
+            18
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            63,
+            4
+          ],
+          "rgba": [
+            137,
+            136,
+            57,
+            28
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            28,
+            5
+          ],
+          "rgba": [
+            106,
+            101,
+            41,
+            171
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            29,
+            5
+          ],
+          "rgba": [
+            106,
+            101,
+            41,
+            146
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 19,
+      "name": "Alt Diş",
+      "suspiciousCurrentPixels": 53,
+      "suspiciousBeforePixels": 10,
+      "rgbaChangedFromBeforeTeeth": 830,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            65,
+            1
+          ],
+          "rgba": [
+            191,
+            198,
+            149,
+            40
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            65,
+            2
+          ],
+          "rgba": [
+            191,
+            198,
+            149,
+            227
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            66,
+            2
+          ],
+          "rgba": [
+            191,
+            198,
+            149,
+            29
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            60,
+            6
+          ],
+          "rgba": [
+            113,
+            117,
+            59,
+            196
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            66,
+            6
+          ],
+          "rgba": [
+            183,
+            176,
+            137,
+            204
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            67,
+            6
+          ],
+          "rgba": [
+            183,
+            176,
+            137,
+            23
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            60,
+            7
+          ],
+          "rgba": [
+            113,
+            117,
+            59,
+            154
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            6,
+            8
+          ],
+          "rgba": [
+            223,
+            222,
+            186,
+            94
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            6,
+            9
+          ],
+          "rgba": [
+            223,
+            222,
+            186,
+            227
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            7,
+            9
+          ],
+          "rgba": [
+            223,
+            222,
+            186,
+            63
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            67,
+            9
+          ],
+          "rgba": [
+            147,
+            143,
+            94,
+            206
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            7,
+            11
+          ],
+          "rgba": [
+            223,
+            225,
+            185,
+            233
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            8,
+            11
+          ],
+          "rgba": [
+            223,
+            225,
+            185,
+            76
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            61,
+            13
+          ],
+          "rgba": [
+            151,
+            160,
+            101,
+            50
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            62,
+            13
+          ],
+          "rgba": [
+            151,
+            160,
+            101,
+            217
+          ],
+          "wasIdenticalBeforeTeeth": false
+        }
+      ]
+    },
+    {
+      "cell": 20,
+      "name": "Ağız",
+      "suspiciousCurrentPixels": 35,
+      "suspiciousBeforePixels": 35,
+      "rgbaChangedFromBeforeTeeth": 459,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            107,
+            18
+          ],
+          "rgba": [
+            150,
+            157,
+            46,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            107,
+            19
+          ],
+          "rgba": [
+            150,
+            157,
+            46,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            107,
+            20
+          ],
+          "rgba": [
+            150,
+            157,
+            46,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            85,
+            25
+          ],
+          "rgba": [
+            167,
+            172,
+            37,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            81,
+            26
+          ],
+          "rgba": [
+            163,
+            155,
+            37,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            85,
+            26
+          ],
+          "rgba": [
+            167,
+            172,
+            37,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            75,
+            27
+          ],
+          "rgba": [
+            159,
+            166,
+            40,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            81,
+            27
+          ],
+          "rgba": [
+            163,
+            155,
+            37,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            85,
+            27
+          ],
+          "rgba": [
+            167,
+            172,
+            37,
+            253
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            75,
+            28
+          ],
+          "rgba": [
+            159,
+            166,
+            40,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            81,
+            28
+          ],
+          "rgba": [
+            163,
+            155,
+            37,
+            247
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            85,
+            28
+          ],
+          "rgba": [
+            167,
+            172,
+            37,
+            133
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            75,
+            29
+          ],
+          "rgba": [
+            159,
+            166,
+            40,
+            225
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            81,
+            29
+          ],
+          "rgba": [
+            163,
+            155,
+            37,
+            115
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            53,
+            30
+          ],
+          "rgba": [
+            124,
+            134,
+            42,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 21,
+      "name": "Ust Diş",
+      "suspiciousCurrentPixels": 36,
+      "suspiciousBeforePixels": 7,
+      "rgbaChangedFromBeforeTeeth": 763,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            61,
+            3
+          ],
+          "rgba": [
+            220,
+            212,
+            177,
+            69
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            60,
+            4
+          ],
+          "rgba": [
+            220,
+            212,
+            177,
+            174
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            61,
+            4
+          ],
+          "rgba": [
+            220,
+            212,
+            177,
+            247
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            52,
+            7
+          ],
+          "rgba": [
+            217,
+            221,
+            177,
+            53
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            51,
+            8
+          ],
+          "rgba": [
+            217,
+            221,
+            177,
+            163
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            52,
+            8
+          ],
+          "rgba": [
+            217,
+            221,
+            177,
+            239
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            46,
+            9
+          ],
+          "rgba": [
+            219,
+            221,
+            181,
+            38
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            47,
+            9
+          ],
+          "rgba": [
+            219,
+            221,
+            181,
+            71
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            42,
+            10
+          ],
+          "rgba": [
+            213,
+            221,
+            176,
+            28
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            43,
+            10
+          ],
+          "rgba": [
+            213,
+            221,
+            176,
+            55
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            46,
+            10
+          ],
+          "rgba": [
+            219,
+            221,
+            181,
+            230
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            47,
+            10
+          ],
+          "rgba": [
+            219,
+            221,
+            181,
+            254
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            38,
+            11
+          ],
+          "rgba": [
+            221,
+            223,
+            184,
+            47
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            39,
+            11
+          ],
+          "rgba": [
+            221,
+            223,
+            184,
+            66
+          ],
+          "wasIdenticalBeforeTeeth": false
+        },
+        {
+          "local": [
+            42,
+            11
+          ],
+          "rgba": [
+            213,
+            221,
+            176,
+            194
+          ],
+          "wasIdenticalBeforeTeeth": false
+        }
+      ]
+    },
+    {
+      "cell": 22,
+      "name": "Bıyık Gölge",
+      "suspiciousCurrentPixels": 0,
+      "suspiciousBeforePixels": 2899,
+      "rgbaChangedFromBeforeTeeth": 4551,
+      "strongGreenDominancePixels": 0,
+      "examples": []
+    },
+    {
+      "cell": 23,
+      "name": "Taç Alt Gölge",
+      "suspiciousCurrentPixels": 0,
+      "suspiciousBeforePixels": 3230,
+      "rgbaChangedFromBeforeTeeth": 4687,
+      "strongGreenDominancePixels": 0,
+      "examples": []
+    },
+    {
+      "cell": 24,
+      "name": "Sağ Kaş Gölge",
+      "suspiciousCurrentPixels": 0,
+      "suspiciousBeforePixels": 205,
+      "rgbaChangedFromBeforeTeeth": 284,
+      "strongGreenDominancePixels": 0,
+      "examples": []
+    },
+    {
+      "cell": 25,
+      "name": "Sağ Kaş",
+      "suspiciousCurrentPixels": 11,
+      "suspiciousBeforePixels": 11,
+      "rgbaChangedFromBeforeTeeth": 3,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            10,
+            4
+          ],
+          "rgba": [
+            89,
+            99,
+            53,
+            208
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            11,
+            4
+          ],
+          "rgba": [
+            96,
+            103,
+            57,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            16,
+            4
+          ],
+          "rgba": [
+            97,
+            94,
+            56,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            17,
+            4
+          ],
+          "rgba": [
+            97,
+            94,
+            56,
+            150
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            19,
+            5
+          ],
+          "rgba": [
+            124,
+            116,
+            70,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            20,
+            5
+          ],
+          "rgba": [
+            124,
+            116,
+            70,
+            171
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            14,
+            15
+          ],
+          "rgba": [
+            63,
+            72,
+            18,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            31,
+            18
+          ],
+          "rgba": [
+            101,
+            101,
+            57,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            28,
+            24
+          ],
+          "rgba": [
+            61,
+            61,
+            18,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            28,
+            25
+          ],
+          "rgba": [
+            61,
+            61,
+            18,
+            22
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            31,
+            27
+          ],
+          "rgba": [
+            76,
+            86,
+            29,
+            225
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    },
+    {
+      "cell": 26,
+      "name": "Sol Kaş Gölge",
+      "suspiciousCurrentPixels": 0,
+      "suspiciousBeforePixels": 185,
+      "rgbaChangedFromBeforeTeeth": 262,
+      "strongGreenDominancePixels": 0,
+      "examples": []
+    },
+    {
+      "cell": 27,
+      "name": "Sol Kaş",
+      "suspiciousCurrentPixels": 24,
+      "suspiciousBeforePixels": 24,
+      "rgbaChangedFromBeforeTeeth": 0,
+      "strongGreenDominancePixels": 0,
+      "examples": [
+        {
+          "local": [
+            20,
+            1
+          ],
+          "rgba": [
+            92,
+            89,
+            50,
+            196
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            21,
+            1
+          ],
+          "rgba": [
+            92,
+            89,
+            50,
+            231
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            28,
+            2
+          ],
+          "rgba": [
+            92,
+            97,
+            54,
+            64
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            14,
+            3
+          ],
+          "rgba": [
+            86,
+            78,
+            45,
+            41
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            15,
+            3
+          ],
+          "rgba": [
+            86,
+            78,
+            45,
+            122
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            11,
+            5
+          ],
+          "rgba": [
+            109,
+            107,
+            70,
+            31
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            8,
+            8
+          ],
+          "rgba": [
+            89,
+            81,
+            58,
+            27
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            35,
+            11
+          ],
+          "rgba": [
+            89,
+            84,
+            36,
+            90
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            27,
+            12
+          ],
+          "rgba": [
+            63,
+            58,
+            19,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            30,
+            12
+          ],
+          "rgba": [
+            62,
+            65,
+            20,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            31,
+            12
+          ],
+          "rgba": [
+            61,
+            61,
+            18,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            34,
+            12
+          ],
+          "rgba": [
+            72,
+            83,
+            24,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            35,
+            12
+          ],
+          "rgba": [
+            89,
+            84,
+            36,
+            64
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            23,
+            13
+          ],
+          "rgba": [
+            60,
+            66,
+            14,
+            255
+          ],
+          "wasIdenticalBeforeTeeth": true
+        },
+        {
+          "local": [
+            27,
+            13
+          ],
+          "rgba": [
+            63,
+            58,
+            19,
+            72
+          ],
+          "wasIdenticalBeforeTeeth": true
+        }
+      ]
+    }
+  ]
+}

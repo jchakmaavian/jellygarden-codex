@@ -17,5 +17,9 @@ MonoBehaviour:
   pupilScale: 1.1
   mouthScale: 1
   hideObsoleteUpperCrownShadow: 1
-  hideObsoleteBrowShadows: 1
-  hideObsoleteMoustacheShadow: 1
+  hideObsoleteBrowShadows: 0
+  hideObsoleteMoustacheShadow: 0
+  browShadowOpacity: 0.3
+  moustacheShadowOpacity: 0.32
+  beardShadowOpacity: 0.45
+  crownShadowOpacity: 0.42

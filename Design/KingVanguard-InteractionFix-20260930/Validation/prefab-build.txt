@@ -1,0 +1,2 @@
+Saved Assets/Characters/KingVenguard/V2/Resources/KingVanguard/KingVanguard.prefab: 32 original tracks
+Saved Assets/Characters/KingVenguard/V2/Resources/KingVanguard/KingVanguardCelebration.prefab: 10 original tracks
