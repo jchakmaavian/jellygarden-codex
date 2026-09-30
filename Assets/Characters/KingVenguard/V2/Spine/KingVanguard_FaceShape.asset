@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ee0b6a72acb48e491865df19c7246d0, type: 3}
   m_Name: KingVanguard_FaceShape
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   faceScale: {x: 1.15, y: 0.92}
   noseScale: {x: 1.05, y: 0.85}
-  pupilScale: 1.55
+  pupilScale: 1.1
   mouthScale: 0.82
   hideObsoleteUpperCrownShadow: 1

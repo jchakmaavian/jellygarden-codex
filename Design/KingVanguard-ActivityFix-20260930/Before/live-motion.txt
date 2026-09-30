@@ -1,0 +1,6 @@
+frame=0 clip=idle_loop_3 time=1.151322 duration=4.216667 activity=Idle freeze=False timeScale=1 mix=0.1922574/0.18
+frame=1 clip=idle_loop_3 time=2.086676 duration=4.216667 activity=Idle freeze=False timeScale=1 mix=0.1922574/0.18
+frame=2 clip=idle_loop_3 time=2.592975 duration=4.216667 activity=Idle freeze=False timeScale=1 mix=0.1922574/0.18
+frame=3 clip=idle_loop_3 time=3.092891 duration=4.216667 activity=Idle freeze=False timeScale=1 mix=0.1922574/0.18
+frame=4 clip=idle_loop_3 time=3.59738 duration=4.216667 activity=Idle freeze=False timeScale=1 mix=0.1922574/0.18
+frame=5 clip=idle_loop_2 time=0.06966744 duration=5.216667 activity=Idle freeze=False timeScale=1 mix=0.0677949/0.18

@@ -3,6 +3,11 @@ var root="Assets/Characters/KingVenguard/V2/";
 var report=new System.Text.StringBuilder();
 var faceModifier=UnityEditor.AssetDatabase.LoadAssetAtPath<RoyalThrone.Characters.KingVanguardFaceShapeModifier>(root+"Spine/KingVanguard_FaceShape.asset");
 if(!faceModifier)throw new System.Exception("Missing King Vanguard face shape modifier asset");
+// Keep reimports consistent with the verified HUD/Area gaze containment fix.
+var faceSettings=new UnityEditor.SerializedObject(faceModifier);
+faceSettings.FindProperty("pupilScale").floatValue=1.1f;
+faceSettings.ApplyModifiedPropertiesWithoutUndo();
+UnityEditor.EditorUtility.SetDirty(faceModifier);
 foreach(var rig in new[]{"King_Vanguard","AreaCompleted_Vanguard","Nightmare_Vanguard"}) {
     var prefix=root+"Spine/"+rig;
     var ti=(UnityEditor.TextureImporter)UnityEditor.AssetImporter.GetAtPath(prefix+".png");

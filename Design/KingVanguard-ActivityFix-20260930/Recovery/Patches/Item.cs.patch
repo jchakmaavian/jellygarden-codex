@@ -1,0 +1,36 @@
+diff --git a/Assets/JellyGarden/Scripts/Item.cs b/Assets/JellyGarden/Scripts/Item.cs
+index 810a775a..abefaf2b 100644
+--- a/Assets/JellyGarden/Scripts/Item.cs
++++ b/Assets/JellyGarden/Scripts/Item.cs
+@@ -1047,6 +1047,7 @@ namespace JellyGarden.Scripts
+         {
+             if (RoyalEffectsProfile.Get && NextType != ItemsTypes.NONE)
+             {
++                ItemsTypes previousType = currentType;
+                 ItemsTypes createdType = NextType;
+                 currentType = createdType; debugType = createdType; NextType = ItemsTypes.NONE;
+                 if (currentType == ItemsTypes.BOMB) color = 555;
+@@ -1066,6 +1067,8 @@ namespace JellyGarden.Scripts
+                     sprRenderer.enabled = true; sprRenderer.color = Color.white;
+                     royalSkin?.ApplyNow();
+                 }
++                if (previousType != currentType)
++                    RoyalThrone.Characters.KingVanguardActivityEvents.NotifyPowerupCreated(LevelManager.THIS, this);
+                 if (RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Attach(this, true)) yield break;
+                 if (tnt) TNT3DAnimator.RevealSprite(this);
+                 else
+@@ -1118,10 +1121,14 @@ namespace JellyGarden.Scripts
+ 
+             //     square.DestroyBlock();
+ 
++            ItemsTypes previousLegacyType = currentType;
+             debugType = NextType;
+             currentType = NextType;
+             NextType = ItemsTypes.NONE;
+ 
++            if (previousLegacyType != currentType)
++                RoyalThrone.Characters.KingVanguardActivityEvents.NotifyPowerupCreated(LevelManager.THIS, this);
++
+         }
+ 
+         public bool RoyalRocketRevealing { get; private set; }

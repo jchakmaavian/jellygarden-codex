@@ -18,7 +18,10 @@ namespace RoyalThrone.Characters
     {
         [SerializeField] Vector2 faceScale = new Vector2(1.15f, .92f);
         [SerializeField] Vector2 noseScale = new Vector2(1.05f, .85f);
-        [SerializeField] float pupilScale = 1.55f;
+        // 1.55 extended the irises beyond the eye whites during the source gaze
+        // motion. 1.1 retains a small enlargement while preserving side margins
+        // throughout the portrait activities and Area idle/clap tracks.
+        [SerializeField] float pupilScale = 1.1f;
         [SerializeField] float mouthScale = .82f;
         [SerializeField] bool hideObsoleteUpperCrownShadow = true;
         [NonSerialized] ConditionalWeakTable<SkeletonData, object> applied;

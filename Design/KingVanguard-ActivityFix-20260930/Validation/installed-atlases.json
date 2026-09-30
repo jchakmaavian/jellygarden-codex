@@ -1,0 +1,12 @@
+﻿[
+    {
+        "path":  "Assets/Characters/KingVenguard/V2/Spine/King_Vanguard.png",
+        "sha256":  "E769A63F610E82B39A325EF8E9573D2664B8C3F424C36A761D5DBB3E2B96FA2E",
+        "equalsPackedOutput":  true
+    },
+    {
+        "path":  "Assets/Characters/KingVenguard/V2/Spine/AreaCompleted_Vanguard.png",
+        "sha256":  "09E909B4016FD87A7450FA2A8EBF75753CAF071B280D59370F2B4AF0E534AD40",
+        "equalsPackedOutput":  true
+    }
+]

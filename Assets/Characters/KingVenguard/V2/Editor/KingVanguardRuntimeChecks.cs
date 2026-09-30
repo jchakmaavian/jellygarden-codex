@@ -17,6 +17,7 @@ namespace RoyalThrone.Characters.EditorTools
             Action<bool, string> check = (ok, name) => { if (!ok) throw new InvalidOperationException("FAIL " + name); results.Add("PASS " + name); };
             try
             {
+                CheckFeedbackQueue(check);
                 var portrait = AssetDatabase.LoadAssetAtPath<GameObject>(KingVanguardPrefabBuilder.PortraitPath);
                 var area = AssetDatabase.LoadAssetAtPath<GameObject>(KingVanguardPrefabBuilder.CelebrationPath);
                 check(portrait && area, "both new prefabs exist");
@@ -26,6 +27,32 @@ namespace RoyalThrone.Characters.EditorTools
                 check(king.Graphic.Skeleton.Data.Animations.Count == 32, "all 32 portrait tracks load");
                 check(king.CurrentAnimation == KingVanguardCharacter.IdleAnimation, "reopen starts first idle");
                 check(king.Graphic.AnimationState.GetCurrent(0).Next != null, "next idle queued at animation boundary");
+                check(Mathf.Abs(king.Graphic.Skeleton.Data.FindAnimation(KingVanguardCharacter.MatchAcknowledgementAnimation).Duration-.7f)<.001f,
+                    "match acknowledgement uses the original 0.7 second clip");
+                check(king.PlayMatchAcknowledgement()&&king.CurrentAnimation==KingVanguardCharacter.MatchAcknowledgementAnimation,
+                    "ordinary match starts its short acknowledgement");
+                check(!king.PlayMatchAcknowledgement(), "simultaneous groups cannot restart acknowledgement");
+                king.SetWorried(true);
+                Advance(king, .9f);
+                check(king.CurrentAnimation==KingVanguardCharacter.WorryStartAnimation,
+                    "acknowledgement returns to newly entered low-move context");
+                Advance(king, 6.3f);
+                check(king.PlayMatchAcknowledgement(), "normal match can acknowledge while worried");
+                Advance(king, .9f);
+                check(king.CurrentAnimation==KingVanguardCharacter.WorryLoopAnimation,
+                    "acknowledgement resumes established worry without repeating entrance");
+                check(king.PlayMatchAcknowledgement()&&king.PlaySad()&&!king.PlayMatchAcknowledgement(),
+                    "failure overrides acknowledgement and blocks later ordinary feedback");
+                king.ResetToIdle();
+                check(king.PlayMatchAcknowledgement(), "acknowledgement starts before reset test");
+                king.ResetToIdle();Advance(king,.9f);
+                check(king.CurrentActivity==KingVanguardCharacter.Activity.Idle&&king.CurrentAnimation==KingVanguardCharacter.IdleAnimation,
+                    "reset invalidates an old acknowledgement completion");
+                Advance(king, 30);
+                check(king.CurrentActivity==KingVanguardCharacter.Activity.Idle&&king.CurrentAnimation.StartsWith("idle_loop_",StringComparison.Ordinal)
+                    &&king.Graphic.AnimationState.GetCurrent(0).Next!=null,
+                    "idle variations continue with a bounded next clip after thirty seconds");
+                king.ResetToIdle();
                 check(king.PlayHappy(), "positive reaction starts");
                 check(king.CurrentAnimation == KingVanguardCharacter.HappyAnimation, "exact serialized KingUi happy binding");
                 check(!king.PlayHappy(), "cascade cannot restart active reaction");
@@ -82,7 +109,39 @@ namespace RoyalThrone.Characters.EditorTools
 
         static void Advance(KingVanguardCharacter king, float seconds)
         {
-            for (float t = 0; t < seconds; t += 1f / 60) king.Graphic.Update(1f / 60);
+            for (float t = 0; t < seconds; t += 1f / 60)
+            {
+                king.Graphic.Update(1f / 60);
+                king.SendMessage("LateUpdate",SendMessageOptions.RequireReceiver);
+            }
+        }
+
+        static void CheckFeedbackQueue(Action<bool,string> check)
+        {
+            var queue=new KingVanguardFeedbackQueue();
+            queue.Offer(KingVanguardFeedbackQueue.Feedback.Match,0);
+            check(queue.TryGet(.1f,out var feedback)&&feedback==KingVanguardFeedbackQueue.Feedback.Match,
+                "match waits without being consumed while actor is busy");
+            queue.Offer(KingVanguardFeedbackQueue.Feedback.Powerup,.2f);
+            queue.Offer(KingVanguardFeedbackQueue.Feedback.Match,.3f);
+            check(queue.TryGet(.4f,out feedback)&&feedback==KingVanguardFeedbackQueue.Feedback.Powerup,
+                "stronger feedback replaces one pending match and cannot be downgraded");
+            queue.Accepted(.4f);
+            queue.Offer(KingVanguardFeedbackQueue.Feedback.Match,.5f);
+            check(!queue.TryGet(1,out feedback),"accepted power-up applies cooldown");
+            check(!queue.TryGet(4.5f,out feedback),"expired feedback is not replayed after a long animation");
+            queue.Clear();queue.Offer(KingVanguardFeedbackQueue.Feedback.Match,10);queue.Accepted(10);
+            queue.Offer(KingVanguardFeedbackQueue.Feedback.Powerup,10.2f);
+            check(!queue.TryGet(11.9f,out feedback)&&queue.TryGet(12,out feedback)&&feedback==KingVanguardFeedbackQueue.Feedback.Powerup,
+                "fresh stronger feedback survives short acknowledgement cooldown");
+            queue.Clear();queue.Offer(KingVanguardFeedbackQueue.Feedback.Powerup,20);
+            queue.Offer(KingVanguardFeedbackQueue.Feedback.Match,22.9f);
+            check(!queue.TryGet(23.01f,out feedback),"weaker matches cannot keep an old strong reaction alive");
+            queue.Clear();queue.Offer(KingVanguardFeedbackQueue.Feedback.Powerup,30);
+            check(queue.TryGet(30.4f,out feedback),"a slow frame cannot decay a fresh power-up event below its threshold");
+            queue.Accepted(30.4f);queue.Clear();queue.Offer(KingVanguardFeedbackQueue.Feedback.Match,30.5f);
+            check(queue.TryGet(30.5f,out feedback)&&feedback==KingVanguardFeedbackQueue.Feedback.Match,
+                "new visible board clears old pending feedback and cooldown");
         }
     }
 }

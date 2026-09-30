@@ -10,11 +10,12 @@ namespace RoyalThrone.Characters
     [DisallowMultipleComponent]
     public sealed class KingVanguardCharacter : MonoBehaviour
     {
-        public enum Framing { Bust, Avatar, Celebration }
-        public enum Activity { Idle, Worried, Happy, Sad, Excited, Relief, ExtraMoves, Celebration }
+        public enum Framing { Bust, Avatar, Celebration, GameplayPortrait }
+        public enum Activity { Idle, Worried, Happy, Sad, Excited, Relief, ExtraMoves, Celebration, MatchAcknowledgement }
         public const int WorryMoveCount = 3;
         public const string IdleAnimation = "idle_loop_1";
         public const string HappyAnimation = "k-1sevinme_6";
+        public const string MatchAcknowledgementAnimation = "k-1_sevinme_3";
         public const string WorryStartAnimation = "k-1_kaygi";
         public const string WorryLoopAnimation = "k-1_kaygi_loop";
         public const string SadAnimation = "k-1_uzulme";
@@ -31,6 +32,9 @@ namespace RoyalThrone.Characters
         [SerializeField] SkeletonGraphic skeletonGraphic;
         [SerializeField] bool areaRig;
         [SerializeField] Rect portraitFocus = new Rect(-214, 0, 428, 415);
+        // The gameplay arch replaces the source outer frame. Crop into its inner window,
+        // so the cape's straight source edges extend behind the UI ring instead of floating inside it.
+        static readonly Rect GameplayFocus = new Rect(-184, 38, 368, 388);
         [SerializeField] Rect avatarFocus = new Rect(-178, 105, 356, 310);
         [SerializeField] Rect celebrationFocus = new Rect(-565, -55, 1130, 1240);
         [SerializeField, Range(0f, .2f)] float topMargin = .02f;
@@ -141,6 +145,7 @@ namespace RoyalThrone.Characters
         }
 
         public bool PlayHappy() { return areaRig ? PlayCelebration() : React(HappyAnimation, Activity.Happy); }
+        public bool PlayMatchAcknowledgement() { return !areaRig && React(MatchAcknowledgementAnimation, Activity.MatchAcknowledgement); }
         public bool PlayThumbsUp() { return !areaRig && React("Happy_2", Activity.Happy); }
         public bool PlayExcited() { return !areaRig && React("Heyecan_1", Activity.Excited); }
         // Committed gameplay outcomes take priority over a generic power-up cheer.
@@ -172,17 +177,22 @@ namespace RoyalThrone.Characters
             var size = frameArea.rect.size;
             if (size.x <= 0 || size.y <= 0 || size == framedSize) return;
             framedSize = size;
-            var box = areaRig ? celebrationFocus : framing == Framing.Avatar ? avatarFocus : portraitFocus;
+            var box = areaRig ? celebrationFocus : framing == Framing.Avatar ? avatarFocus :
+                framing == Framing.GameplayPortrait ? GameplayFocus : portraitFocus;
             var canvas = skeletonGraphic.canvas;
             float units = skeletonGraphic.SkeletonDataAsset.scale * (canvas ? canvas.referencePixelsPerUnit : 100);
-            float scale = Mathf.Min(size.x / box.width, size.y / (box.height * (1 + topMargin)));
+            bool gameplayPortrait = !areaRig && framing == Framing.GameplayPortrait;
+            float margin = gameplayPortrait ? 0 : topMargin;
+            float scale = Mathf.Min(size.x / box.width, size.y / (box.height * (1 + margin)));
             var rt = skeletonGraphic.rectTransform;
             rt.anchorMin = rt.anchorMax = new Vector2(.5f, .5f);
             rt.pivot = new Vector2(-box.xMin / box.width, -box.yMin / box.height);
             rt.sizeDelta = box.size * units;
             rt.localScale = new Vector3(scale / units, scale / units, 1);
             rt.localRotation = Quaternion.identity;
-            rt.anchoredPosition = new Vector2(-box.center.x * scale, size.y * .5f - size.y * topMargin - box.yMax * scale);
+            float originY = gameplayPortrait ? -size.y * .5f - box.yMin * scale :
+                size.y * .5f - size.y * margin - box.yMax * scale;
+            rt.anchoredPosition = new Vector2(-box.center.x * scale, originY);
         }
 
         void LateUpdate()
