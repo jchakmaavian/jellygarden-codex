@@ -1,0 +1,1438 @@
+{
+  "generatedUtc": "2026-09-30T06:00:50.043873+00:00",
+  "inputs": [
+    {
+      "path": "Design/KingVanguard-Reference-20260929/FaceRedesign/Portrait/Portrait-layout.json",
+      "sha256": "fe996e0d418b1fe05ec96510e37f56e7082764eac9e5c7f51dc31dba2bc5e656"
+    },
+    {
+      "path": "Assets/Characters/KingVenguard/V2/Spine/King_Vanguard.png",
+      "sha256": "e769a63f610e82b39a325ef8e9573d2664b8c3f424c36a761d5dbb3e2b96fa2e"
+    },
+    {
+      "path": "Assets/Characters/KingVenguard/V2/Spine/AreaCompleted_Vanguard.png",
+      "sha256": "09e909b4016fd87a7450fa2a8ebf75753caf071b280d59370f2b4af0e534ad40"
+    },
+    {
+      "path": "Design/KingVanguard-ActivityFix-20260930/FaceRedesign/Portrait-mouth-repaired-workboard.png",
+      "sha256": "ddd4133819f04114a95639869fcad365249513e06cb85445753420869e06f19d"
+    }
+  ],
+  "measurementNote": "Paint-cell sampling uses Pillow BICUBIC and is an estimate of the C# packer's System.Drawing sampling. Alpha comparisons use exact installed texels and original extraction masks. Counts marked estimated are not a reproduction of the original pack report. Final pack uses new keyed paint alpha clipped to the source island alpha, not forced source coverage. Nearest RGB fill also exists in fully transparent texels and is not by itself a visible defect.",
+  "runtimeAssetsModified": false,
+  "metrics": [
+    {
+      "cell": 1,
+      "name": "Sakal Surat",
+      "label": "FACE + BEARD UNDERLAY",
+      "atlasPhysicalRect": [
+        382,
+        1567,
+        261,
+        304
+      ],
+      "logicalSize": [
+        261,
+        304
+      ],
+      "sourceCorePixels": 54314,
+      "estimatedSourceCoreOutsideNewPaint": 783,
+      "estimatedSourceCoreOutsidePaintPercent": 1.44,
+      "sourceAlphaSum": 13849902,
+      "installedAlphaSum": 13701047,
+      "installedToSourceAlphaRatio": 0.9892522705214809,
+      "sourceCoreTexelsNoLongerOpaque": 581,
+      "sourceAndInstalledAlphaDifferences": 973,
+      "paintOpaqueFootprint": {
+        "pixels": 65071,
+        "bounds": [
+          0,
+          5,
+          261,
+          304
+        ]
+      }
+    },
+    {
+      "cell": 2,
+      "name": "Burun",
+      "label": "BUTTON NOSE",
+      "atlasPhysicalRect": [
+        527,
+        24,
+        73,
+        73
+      ],
+      "logicalSize": [
+        73,
+        73
+      ],
+      "sourceCorePixels": 2666,
+      "estimatedSourceCoreOutsideNewPaint": 849,
+      "estimatedSourceCoreOutsidePaintPercent": 31.85,
+      "sourceAlphaSum": 685823,
+      "installedAlphaSum": 468531,
+      "installedToSourceAlphaRatio": 0.6831660647134902,
+      "sourceCoreTexelsNoLongerOpaque": 822,
+      "sourceAndInstalledAlphaDifferences": 2072,
+      "paintOpaqueFootprint": {
+        "pixels": 1820,
+        "bounds": [
+          7,
+          15,
+          66,
+          59
+        ]
+      }
+    },
+    {
+      "cell": 3,
+      "name": "Bıyık",
+      "label": "WHITE MOUSTACHE",
+      "atlasPhysicalRect": [
+        407,
+        100,
+        187,
+        87
+      ],
+      "logicalSize": [
+        187,
+        87
+      ],
+      "sourceCorePixels": 8741,
+      "estimatedSourceCoreOutsideNewPaint": 1552,
+      "estimatedSourceCoreOutsidePaintPercent": 17.76,
+      "sourceAlphaSum": 2228627,
+      "installedAlphaSum": 1872708,
+      "installedToSourceAlphaRatio": 0.840296738754399,
+      "sourceCoreTexelsNoLongerOpaque": 1398,
+      "sourceAndInstalledAlphaDifferences": 1762,
+      "paintOpaqueFootprint": {
+        "pixels": 8528,
+        "bounds": [
+          0,
+          19,
+          187,
+          80
+        ]
+      }
+    },
+    {
+      "cell": 4,
+      "name": "Taç",
+      "label": "BLUE VELVET GOLD CROWN",
+      "atlasPhysicalRect": [
+        449,
+        566,
+        211,
+        187
+      ],
+      "logicalSize": [
+        211,
+        187
+      ],
+      "sourceCorePixels": 19799,
+      "estimatedSourceCoreOutsideNewPaint": 3615,
+      "estimatedSourceCoreOutsidePaintPercent": 18.26,
+      "sourceAlphaSum": 5050001,
+      "installedAlphaSum": 4169984,
+      "installedToSourceAlphaRatio": 0.8257392424278728,
+      "sourceCoreTexelsNoLongerOpaque": 3446,
+      "sourceAndInstalledAlphaDifferences": 3862,
+      "paintOpaqueFootprint": {
+        "pixels": 20943,
+        "bounds": [
+          0,
+          8,
+          211,
+          177
+        ]
+      }
+    },
+    {
+      "cell": 5,
+      "name": "Sol Kulak",
+      "label": "LEFT EAR",
+      "atlasPhysicalRect": [
+        382,
+        1678,
+        31,
+        47
+      ],
+      "logicalSize": [
+        31,
+        47
+      ],
+      "sourceCorePixels": 1074,
+      "estimatedSourceCoreOutsideNewPaint": 117,
+      "estimatedSourceCoreOutsidePaintPercent": 10.89,
+      "sourceAlphaSum": 272806,
+      "installedAlphaSum": 247934,
+      "installedToSourceAlphaRatio": 0.90882898469975,
+      "sourceCoreTexelsNoLongerOpaque": 101,
+      "sourceAndInstalledAlphaDifferences": 187,
+      "paintOpaqueFootprint": {
+        "pixels": 978,
+        "bounds": [
+          1,
+          2,
+          30,
+          46
+        ]
+      }
+    },
+    {
+      "cell": 6,
+      "name": "Sağ Kulak",
+      "label": "RIGHT EAR",
+      "atlasPhysicalRect": [
+        382,
+        1632,
+        25,
+        44
+      ],
+      "logicalSize": [
+        25,
+        44
+      ],
+      "sourceCorePixels": 768,
+      "estimatedSourceCoreOutsideNewPaint": 18,
+      "estimatedSourceCoreOutsidePaintPercent": 2.34,
+      "sourceAlphaSum": 197059,
+      "installedAlphaSum": 192224,
+      "installedToSourceAlphaRatio": 0.9754642010768348,
+      "sourceCoreTexelsNoLongerOpaque": 16,
+      "sourceAndInstalledAlphaDifferences": 77,
+      "paintOpaqueFootprint": {
+        "pixels": 800,
+        "bounds": [
+          1,
+          1,
+          25,
+          43
+        ]
+      }
+    },
+    {
+      "cell": 8,
+      "name": "Sol Göz",
+      "label": "LEFT EYE WHITE",
+      "atlasPhysicalRect": [
+        382,
+        1568,
+        37,
+        49
+      ],
+      "logicalSize": [
+        37,
+        49
+      ],
+      "sourceCorePixels": 1266,
+      "estimatedSourceCoreOutsideNewPaint": 85,
+      "estimatedSourceCoreOutsidePaintPercent": 6.71,
+      "sourceAlphaSum": 323431,
+      "installedAlphaSum": 304010,
+      "installedToSourceAlphaRatio": 0.9399531893974294,
+      "sourceCoreTexelsNoLongerOpaque": 72,
+      "sourceAndInstalledAlphaDifferences": 201,
+      "paintOpaqueFootprint": {
+        "pixels": 1190,
+        "bounds": [
+          1,
+          3,
+          35,
+          47
+        ]
+      }
+    },
+    {
+      "cell": 9,
+      "name": "Sol  Göz Bebeği",
+      "label": "LEFT BROWN IRIS + PUPIL",
+      "atlasPhysicalRect": [
+        421,
+        1570,
+        14,
+        19
+      ],
+      "logicalSize": [
+        14,
+        19
+      ],
+      "sourceCorePixels": 190,
+      "estimatedSourceCoreOutsideNewPaint": 23,
+      "estimatedSourceCoreOutsidePaintPercent": 12.11,
+      "sourceAlphaSum": 48259,
+      "installedAlphaSum": 43077,
+      "installedToSourceAlphaRatio": 0.8926210655007356,
+      "sourceCoreTexelsNoLongerOpaque": 20,
+      "sourceAndInstalledAlphaDifferences": 61,
+      "paintOpaqueFootprint": {
+        "pixels": 169,
+        "bounds": [
+          0,
+          2,
+          13,
+          18
+        ]
+      }
+    },
+    {
+      "cell": 10,
+      "name": "Sol Göz kapağı",
+      "label": "LEFT SKIN EYELID",
+      "atlasPhysicalRect": [
+        577,
+        153,
+        37,
+        50
+      ],
+      "logicalSize": [
+        37,
+        50
+      ],
+      "sourceCorePixels": 1280,
+      "estimatedSourceCoreOutsideNewPaint": 8,
+      "estimatedSourceCoreOutsidePaintPercent": 0.62,
+      "sourceAlphaSum": 326569,
+      "installedAlphaSum": 324852,
+      "installedToSourceAlphaRatio": 0.9947423056076969,
+      "sourceCoreTexelsNoLongerOpaque": 5,
+      "sourceAndInstalledAlphaDifferences": 56,
+      "paintOpaqueFootprint": {
+        "pixels": 1325,
+        "bounds": [
+          0,
+          2,
+          36,
+          48
+        ]
+      }
+    },
+    {
+      "cell": 11,
+      "name": "Sol Kirpik",
+      "label": "LEFT LASH / LID RIM",
+      "atlasPhysicalRect": [
+        448,
+        1862,
+        36,
+        9
+      ],
+      "logicalSize": [
+        36,
+        9
+      ],
+      "sourceCorePixels": 110,
+      "estimatedSourceCoreOutsideNewPaint": 62,
+      "estimatedSourceCoreOutsidePaintPercent": 56.36,
+      "sourceAlphaSum": 28407,
+      "installedAlphaSum": 14299,
+      "installedToSourceAlphaRatio": 0.503361847431971,
+      "sourceCoreTexelsNoLongerOpaque": 54,
+      "sourceAndInstalledAlphaDifferences": 109,
+      "paintOpaqueFootprint": {
+        "pixels": 109,
+        "bounds": [
+          1,
+          0,
+          35,
+          8
+        ]
+      }
+    },
+    {
+      "cell": 12,
+      "name": "Sağ Göz",
+      "label": "RIGHT EYE WHITE",
+      "atlasPhysicalRect": [
+        626,
+        202,
+        35,
+        48
+      ],
+      "logicalSize": [
+        35,
+        48
+      ],
+      "sourceCorePixels": 1151,
+      "estimatedSourceCoreOutsideNewPaint": 57,
+      "estimatedSourceCoreOutsidePaintPercent": 4.95,
+      "sourceAlphaSum": 296326,
+      "installedAlphaSum": 282159,
+      "installedToSourceAlphaRatio": 0.9521911678354245,
+      "sourceCoreTexelsNoLongerOpaque": 52,
+      "sourceAndInstalledAlphaDifferences": 168,
+      "paintOpaqueFootprint": {
+        "pixels": 1129,
+        "bounds": [
+          1,
+          3,
+          34,
+          46
+        ]
+      }
+    },
+    {
+      "cell": 13,
+      "name": "Sağ Göz Bebeği",
+      "label": "RIGHT BROWN IRIS + PUPIL",
+      "atlasPhysicalRect": [
+        449,
+        1557,
+        14,
+        18
+      ],
+      "logicalSize": [
+        14,
+        18
+      ],
+      "sourceCorePixels": 181,
+      "estimatedSourceCoreOutsideNewPaint": 34,
+      "estimatedSourceCoreOutsidePaintPercent": 18.78,
+      "sourceAlphaSum": 45955,
+      "installedAlphaSum": 38367,
+      "installedToSourceAlphaRatio": 0.8348819497334349,
+      "sourceCoreTexelsNoLongerOpaque": 31,
+      "sourceAndInstalledAlphaDifferences": 75,
+      "paintOpaqueFootprint": {
+        "pixels": 147,
+        "bounds": [
+          1,
+          1,
+          13,
+          16
+        ]
+      }
+    },
+    {
+      "cell": 14,
+      "name": "Sağ Göz Kapağı",
+      "label": "RIGHT SKIN EYELID",
+      "atlasPhysicalRect": [
+        614,
+        153,
+        35,
+        48
+      ],
+      "logicalSize": [
+        35,
+        48
+      ],
+      "sourceCorePixels": 1156,
+      "estimatedSourceCoreOutsideNewPaint": 18,
+      "estimatedSourceCoreOutsidePaintPercent": 1.56,
+      "sourceAlphaSum": 297362,
+      "installedAlphaSum": 292897,
+      "installedToSourceAlphaRatio": 0.9849846315265569,
+      "sourceCoreTexelsNoLongerOpaque": 12,
+      "sourceAndInstalledAlphaDifferences": 85,
+      "paintOpaqueFootprint": {
+        "pixels": 1221,
+        "bounds": [
+          0,
+          1,
+          34,
+          46
+        ]
+      }
+    },
+    {
+      "cell": 15,
+      "name": "Sağ Kirpik",
+      "label": "RIGHT LASH / LID RIM",
+      "atlasPhysicalRect": [
+        407,
+        6,
+        36,
+        10
+      ],
+      "logicalSize": [
+        36,
+        10
+      ],
+      "sourceCorePixels": 111,
+      "estimatedSourceCoreOutsideNewPaint": 58,
+      "estimatedSourceCoreOutsidePaintPercent": 52.25,
+      "sourceAlphaSum": 28598,
+      "installedAlphaSum": 15565,
+      "installedToSourceAlphaRatio": 0.5442688299881111,
+      "sourceCoreTexelsNoLongerOpaque": 50,
+      "sourceAndInstalledAlphaDifferences": 101,
+      "paintOpaqueFootprint": {
+        "pixels": 118,
+        "bounds": [
+          1,
+          0,
+          35,
+          8
+        ]
+      }
+    },
+    {
+      "cell": 16,
+      "name": "Sol Yanak",
+      "label": "LEFT ROSY CHEEK",
+      "atlasPhysicalRect": [
+        594,
+        99,
+        70,
+        52
+      ],
+      "logicalSize": [
+        70,
+        52
+      ],
+      "sourceCorePixels": 1705,
+      "estimatedSourceCoreOutsideNewPaint": 0,
+      "estimatedSourceCoreOutsidePaintPercent": 0.0,
+      "sourceAlphaSum": 436852,
+      "installedAlphaSum": 436413,
+      "installedToSourceAlphaRatio": 0.9989950830029393,
+      "sourceCoreTexelsNoLongerOpaque": 0,
+      "sourceAndInstalledAlphaDifferences": 102,
+      "paintOpaqueFootprint": {
+        "pixels": 2163,
+        "bounds": [
+          4,
+          4,
+          68,
+          50
+        ]
+      }
+    },
+    {
+      "cell": 17,
+      "name": "Sağ Yanak",
+      "label": "RIGHT ROSY CHEEK",
+      "atlasPhysicalRect": [
+        602,
+        49,
+        60,
+        48
+      ],
+      "logicalSize": [
+        60,
+        48
+      ],
+      "sourceCorePixels": 1746,
+      "estimatedSourceCoreOutsideNewPaint": 93,
+      "estimatedSourceCoreOutsidePaintPercent": 5.33,
+      "sourceAlphaSum": 444899,
+      "installedAlphaSum": 423470,
+      "installedToSourceAlphaRatio": 0.9518340117644679,
+      "sourceCoreTexelsNoLongerOpaque": 79,
+      "sourceAndInstalledAlphaDifferences": 276,
+      "paintOpaqueFootprint": {
+        "pixels": 1762,
+        "bounds": [
+          2,
+          3,
+          59,
+          45
+        ]
+      }
+    },
+    {
+      "cell": 18,
+      "name": "Dil",
+      "label": "TONGUE",
+      "atlasPhysicalRect": [
+        382,
+        1538,
+        67,
+        29
+      ],
+      "logicalSize": [
+        67,
+        29
+      ],
+      "sourceCorePixels": 1242,
+      "estimatedSourceCoreOutsideNewPaint": 1,
+      "estimatedSourceCoreOutsidePaintPercent": 0.08,
+      "sourceAlphaSum": 319135,
+      "installedAlphaSum": 318846,
+      "installedToSourceAlphaRatio": 0.9990944271233178,
+      "sourceCoreTexelsNoLongerOpaque": 1,
+      "sourceAndInstalledAlphaDifferences": 14,
+      "paintOpaqueFootprint": {
+        "pixels": 1441,
+        "bounds": [
+          0,
+          1,
+          67,
+          29
+        ]
+      }
+    },
+    {
+      "cell": 19,
+      "name": "Alt Diş",
+      "label": "LOWER TEETH",
+      "atlasPhysicalRect": [
+        407,
+        12,
+        69,
+        32
+      ],
+      "logicalSize": [
+        69,
+        32
+      ],
+      "sourceCorePixels": 676,
+      "estimatedSourceCoreOutsideNewPaint": 6,
+      "estimatedSourceCoreOutsidePaintPercent": 0.89,
+      "sourceAlphaSum": 171173,
+      "installedAlphaSum": 169893,
+      "installedToSourceAlphaRatio": 0.992522185157706,
+      "sourceCoreTexelsNoLongerOpaque": 5,
+      "sourceAndInstalledAlphaDifferences": 23,
+      "paintOpaqueFootprint": {
+        "pixels": 970,
+        "bounds": [
+          0,
+          1,
+          69,
+          31
+        ]
+      }
+    },
+    {
+      "cell": 20,
+      "name": "Ağız",
+      "label": "OPEN MOUTH INTERIOR",
+      "atlasPhysicalRect": [
+        505,
+        973,
+        154,
+        72
+      ],
+      "logicalSize": [
+        154,
+        72
+      ],
+      "sourceCorePixels": 6266,
+      "estimatedSourceCoreOutsideNewPaint": 14,
+      "estimatedSourceCoreOutsidePaintPercent": 0.22,
+      "sourceAlphaSum": 1598368,
+      "installedAlphaSum": 1595726,
+      "installedToSourceAlphaRatio": 0.9983470640052854,
+      "sourceCoreTexelsNoLongerOpaque": 7,
+      "sourceAndInstalledAlphaDifferences": 34,
+      "paintOpaqueFootprint": {
+        "pixels": 8108,
+        "bounds": [
+          0,
+          0,
+          153,
+          72
+        ]
+      }
+    },
+    {
+      "cell": 21,
+      "name": "Ust Diş",
+      "label": "UPPER TEETH",
+      "atlasPhysicalRect": [
+        602,
+        8,
+        67,
+        26
+      ],
+      "logicalSize": [
+        67,
+        26
+      ],
+      "sourceCorePixels": 628,
+      "estimatedSourceCoreOutsideNewPaint": 47,
+      "estimatedSourceCoreOutsidePaintPercent": 7.48,
+      "sourceAlphaSum": 159132,
+      "installedAlphaSum": 150805,
+      "installedToSourceAlphaRatio": 0.9476723726214715,
+      "sourceCoreTexelsNoLongerOpaque": 29,
+      "sourceAndInstalledAlphaDifferences": 90,
+      "paintOpaqueFootprint": {
+        "pixels": 828,
+        "bounds": [
+          0,
+          4,
+          67,
+          24
+        ]
+      }
+    },
+    {
+      "cell": 25,
+      "name": "Sağ Kaş",
+      "label": "RIGHT DARK EYEBROW",
+      "atlasPhysicalRect": [
+        382,
+        1842,
+        34,
+        30
+      ],
+      "logicalSize": [
+        34,
+        30
+      ],
+      "sourceCorePixels": 529,
+      "estimatedSourceCoreOutsideNewPaint": 209,
+      "estimatedSourceCoreOutsidePaintPercent": 39.51,
+      "sourceAlphaSum": 134814,
+      "installedAlphaSum": 86177,
+      "installedToSourceAlphaRatio": 0.6392288634711528,
+      "sourceCoreTexelsNoLongerOpaque": 191,
+      "sourceAndInstalledAlphaDifferences": 279,
+      "paintOpaqueFootprint": {
+        "pixels": 344,
+        "bounds": [
+          0,
+          4,
+          32,
+          28
+        ]
+      }
+    },
+    {
+      "cell": 27,
+      "name": "Sol Kaş",
+      "label": "LEFT DARK EYEBROW",
+      "atlasPhysicalRect": [
+        477,
+        9,
+        37,
+        31
+      ],
+      "logicalSize": [
+        37,
+        31
+      ],
+      "sourceCorePixels": 600,
+      "estimatedSourceCoreOutsideNewPaint": 234,
+      "estimatedSourceCoreOutsidePaintPercent": 39.0,
+      "sourceAlphaSum": 152576,
+      "installedAlphaSum": 95942,
+      "installedToSourceAlphaRatio": 0.6288144924496645,
+      "sourceCoreTexelsNoLongerOpaque": 224,
+      "sourceAndInstalledAlphaDifferences": 270,
+      "paintOpaqueFootprint": {
+        "pixels": 411,
+        "bounds": [
+          1,
+          1,
+          36,
+          28
+        ]
+      }
+    }
+  ],
+  "relevantOriginalTopology": {
+    "King": [
+      {
+        "slot_index": 18,
+        "slot": "Dil",
+        "setup_attachment": "Dil",
+        "slot_bone": "yuz",
+        "name": "Dil",
+        "type": "mesh",
+        "weighted": false,
+        "influence_bones": [],
+        "vertex_count": 8,
+        "triangle_count": 6,
+        "mesh_dimensions": [
+          67.0,
+          29.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            382,
+            1538
+          ],
+          "size": [
+            67,
+            29
+          ],
+          "orig": [
+            67,
+            29
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": [
+          "Happy_1",
+          "Happy_2",
+          "Heyecan_1",
+          "Relax_1",
+          "idle_loop_2",
+          "k-1_dans",
+          "k-1_idle_3",
+          "k-1_idle_6",
+          "k-1_kaygi",
+          "k-1_kaygi_loop",
+          "k-1_sevinme",
+          "k-1_sevinme_2",
+          "k-1_sevinme_3",
+          "k-1_sevinme _4",
+          "k-1_sevinme_5",
+          "k-1_sevinme_NEW",
+          "k-1_sevinme_NEW_yedek",
+          "k-1_sevinme_NEW_yedek2",
+          "k-1_sevinme_NEW_yedek3",
+          "k-1_uzulme",
+          "k-1 animation",
+          "k-1sevinme_6",
+          "k-2",
+          "kaygı-uzulme"
+        ]
+      },
+      {
+        "slot_index": 19,
+        "slot": "Alt Diş",
+        "setup_attachment": "Alt Diş",
+        "slot_bone": "yuz",
+        "name": "Alt Diş",
+        "type": "mesh",
+        "weighted": false,
+        "influence_bones": [],
+        "vertex_count": 16,
+        "triangle_count": 14,
+        "mesh_dimensions": [
+          69.0,
+          32.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            407,
+            12
+          ],
+          "size": [
+            69,
+            32
+          ],
+          "orig": [
+            69,
+            32
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": [
+          "Happy_1",
+          "Happy_2",
+          "Heyecan_1",
+          "Relax_1",
+          "idle_loop_2",
+          "k-1_idle_3",
+          "k-1_idle_6",
+          "k-1_kaygi",
+          "k-1_kaygi_loop",
+          "k-1_sevinme",
+          "k-1_sevinme_2",
+          "k-1_sevinme_3",
+          "k-1_sevinme _4",
+          "k-1_sevinme_5",
+          "k-1_sevinme_NEW",
+          "k-1_sevinme_NEW_yedek",
+          "k-1_sevinme_NEW_yedek2",
+          "k-1_sevinme_NEW_yedek3",
+          "k-1_uzulme",
+          "k-1 animation",
+          "k-1sevinme_6",
+          "k-2",
+          "kaygı-uzulme"
+        ]
+      },
+      {
+        "slot_index": 20,
+        "slot": "Ağız",
+        "setup_attachment": "Ağız",
+        "slot_bone": "yuz",
+        "name": "Ağız",
+        "type": "mesh",
+        "weighted": true,
+        "influence_bones": [
+          "alt_dudak",
+          "ust_dudak"
+        ],
+        "vertex_count": 62,
+        "triangle_count": 101,
+        "mesh_dimensions": [
+          155.0,
+          72.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            505,
+            973
+          ],
+          "size": [
+            154,
+            72
+          ],
+          "orig": [
+            155,
+            72
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": [
+          "Happy_1",
+          "Happy_2",
+          "Heyecan_1",
+          "Relax_1",
+          "idle_loop_1",
+          "idle_loop_2",
+          "k-1_dans",
+          "k-1_idle_3",
+          "k-1_idle_5",
+          "k-1_idle_6",
+          "k-1_kaygi",
+          "k-1_kaygi_loop",
+          "k-1_sevinme",
+          "k-1_sevinme_2",
+          "k-1_sevinme_3",
+          "k-1_sevinme _4",
+          "k-1_sevinme_5",
+          "k-1_sevinme_NEW",
+          "k-1_sevinme_NEW_yedek",
+          "k-1_sevinme_NEW_yedek2",
+          "k-1_sevinme_NEW_yedek3",
+          "k-1_uzulme",
+          "k-1 animation",
+          "k-1sevinme_6",
+          "k-2",
+          "kaygı-uzulme"
+        ]
+      },
+      {
+        "slot_index": 21,
+        "slot": "Ust Diş",
+        "setup_attachment": "Ust Diş",
+        "slot_bone": "yuz",
+        "name": "Ust Diş",
+        "type": "mesh",
+        "weighted": false,
+        "influence_bones": [],
+        "vertex_count": 8,
+        "triangle_count": 6,
+        "mesh_dimensions": [
+          67.0,
+          26.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            602,
+            8
+          ],
+          "size": [
+            67,
+            26
+          ],
+          "orig": [
+            67,
+            26
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": [
+          "Happy_1",
+          "Happy_2",
+          "Heyecan_1",
+          "Relax_1",
+          "idle_loop_2",
+          "k-1_idle_6",
+          "k-1_kaygi",
+          "k-1_kaygi_loop",
+          "k-1_sevinme",
+          "k-1_sevinme_2",
+          "k-1_sevinme_3",
+          "k-1_sevinme _4",
+          "k-1_sevinme_5",
+          "k-1_sevinme_NEW",
+          "k-1_sevinme_NEW_yedek",
+          "k-1_sevinme_NEW_yedek2",
+          "k-1_sevinme_NEW_yedek3",
+          "k-1_uzulme",
+          "k-1 animation",
+          "k-1sevinme_6",
+          "kaygı-uzulme"
+        ]
+      },
+      {
+        "slot_index": 23,
+        "slot": "Bıyık",
+        "setup_attachment": "Bıyık",
+        "slot_bone": "biyik",
+        "name": "Bıyık",
+        "type": "mesh",
+        "weighted": true,
+        "influence_bones": [
+          "biyik",
+          "biyik_sag_1",
+          "biyik_sag_2",
+          "biyik_sag_3",
+          "biyik_sol_1",
+          "biyik_sol_2",
+          "biyik_sol_3"
+        ],
+        "vertex_count": 56,
+        "triangle_count": 73,
+        "mesh_dimensions": [
+          187.0,
+          87.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            407,
+            100
+          ],
+          "size": [
+            187,
+            87
+          ],
+          "orig": [
+            187,
+            87
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": [
+          "Relax_1",
+          "k-1_kaygi",
+          "k-1_kaygi_loop",
+          "k-1_uzulme",
+          "kaygı-uzulme"
+        ]
+      },
+      {
+        "slot_index": 29,
+        "slot": "Sağ Kaş",
+        "setup_attachment": "Sağ Kaş",
+        "slot_bone": "sag_kas_1",
+        "name": "Sağ Kaş",
+        "type": "mesh",
+        "weighted": true,
+        "influence_bones": [
+          "sag_kas_1",
+          "sag_kas_2"
+        ],
+        "vertex_count": 45,
+        "triangle_count": 54,
+        "mesh_dimensions": [
+          34.0,
+          30.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            382,
+            1842
+          ],
+          "size": [
+            34,
+            30
+          ],
+          "orig": [
+            34,
+            30
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": []
+      },
+      {
+        "slot_index": 31,
+        "slot": "Sol Kaş",
+        "setup_attachment": "Sol Kaş",
+        "slot_bone": "sol_kas_1",
+        "name": "Sol Kaş",
+        "type": "mesh",
+        "weighted": true,
+        "influence_bones": [
+          "sol_kas_1",
+          "sol_kas_2"
+        ],
+        "vertex_count": 31,
+        "triangle_count": 37,
+        "mesh_dimensions": [
+          37.0,
+          31.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            477,
+            9
+          ],
+          "size": [
+            37,
+            31
+          ],
+          "orig": [
+            37,
+            31
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": []
+      }
+    ],
+    "AreaCompleted": [
+      {
+        "slot_index": 44,
+        "slot": "Dil",
+        "setup_attachment": "Dil",
+        "slot_bone": "yuz",
+        "name": "Dil",
+        "type": "mesh",
+        "weighted": false,
+        "influence_bones": [],
+        "vertex_count": 8,
+        "triangle_count": 6,
+        "mesh_dimensions": [
+          67.0,
+          29.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            1843,
+            1684
+          ],
+          "size": [
+            67,
+            29
+          ],
+          "orig": [
+            67,
+            29
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": [
+          "king_area 1",
+          "king_area_2",
+          "king_area_3",
+          "king_area_4",
+          "king_drill_loop",
+          "king_drill_win"
+        ]
+      },
+      {
+        "slot_index": 45,
+        "slot": "Alt Diş",
+        "setup_attachment": "Alt Diş",
+        "slot_bone": "yuz",
+        "name": "Alt Diş",
+        "type": "mesh",
+        "weighted": false,
+        "influence_bones": [],
+        "vertex_count": 16,
+        "triangle_count": 14,
+        "mesh_dimensions": [
+          69.0,
+          32.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            673,
+            855
+          ],
+          "size": [
+            69,
+            32
+          ],
+          "orig": [
+            69,
+            32
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": [
+          "king_area 1",
+          "king_area_2",
+          "king_area_3",
+          "king_area_4",
+          "king_drill_loop",
+          "king_drill_win",
+          "king_drill_win_clap_finish",
+          "king_drill_win_clap_look_loop",
+          "king_drill_win_clap_loop",
+          "king_drill_win_clap_start"
+        ]
+      },
+      {
+        "slot_index": 46,
+        "slot": "Ağız",
+        "setup_attachment": "Ağız",
+        "slot_bone": "yuz",
+        "name": "Ağız",
+        "type": "mesh",
+        "weighted": true,
+        "influence_bones": [
+          "alt_dudak",
+          "ust_dudak"
+        ],
+        "vertex_count": 62,
+        "triangle_count": 101,
+        "mesh_dimensions": [
+          155.0,
+          72.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            1842,
+            26
+          ],
+          "size": [
+            154,
+            72
+          ],
+          "orig": [
+            155,
+            72
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": [
+          "king_area 1",
+          "king_area_2",
+          "king_area_3",
+          "king_area_4",
+          "king_drill_loop",
+          "king_drill_win"
+        ]
+      },
+      {
+        "slot_index": 47,
+        "slot": "Ust Diş",
+        "setup_attachment": "Ust Diş",
+        "slot_bone": "yuz",
+        "name": "Ust Diş",
+        "type": "mesh",
+        "weighted": false,
+        "influence_bones": [],
+        "vertex_count": 8,
+        "triangle_count": 6,
+        "mesh_dimensions": [
+          67.0,
+          26.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            1927,
+            1415
+          ],
+          "size": [
+            67,
+            26
+          ],
+          "orig": [
+            67,
+            26
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": [
+          "king_area 1",
+          "king_area_2",
+          "king_area_3",
+          "king_area_4",
+          "king_drill_loop",
+          "king_drill_win",
+          "king_drill_win_clap_start"
+        ]
+      },
+      {
+        "slot_index": 49,
+        "slot": "Bıyık",
+        "setup_attachment": "Bıyık",
+        "slot_bone": "biyik",
+        "name": "Bıyık",
+        "type": "mesh",
+        "weighted": true,
+        "influence_bones": [
+          "biyik",
+          "biyik_sag_1",
+          "biyik_sag_2",
+          "biyik_sag_3",
+          "biyik_sol_1",
+          "biyik_sol_2",
+          "biyik_sol_3"
+        ],
+        "vertex_count": 56,
+        "triangle_count": 73,
+        "mesh_dimensions": [
+          187.0,
+          87.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            670,
+            33
+          ],
+          "size": [
+            187,
+            87
+          ],
+          "orig": [
+            187,
+            87
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": []
+      },
+      {
+        "slot_index": 54,
+        "slot": "Sağ Kaş",
+        "setup_attachment": "Sağ Kaş",
+        "slot_bone": "sag_kas_1",
+        "name": "Sağ Kaş",
+        "type": "mesh",
+        "weighted": true,
+        "influence_bones": [
+          "sag_kas_1",
+          "sag_kas_2"
+        ],
+        "vertex_count": 45,
+        "triangle_count": 54,
+        "mesh_dimensions": [
+          34.0,
+          30.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            1537,
+            1684
+          ],
+          "size": [
+            34,
+            30
+          ],
+          "orig": [
+            34,
+            30
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": []
+      },
+      {
+        "slot_index": 56,
+        "slot": "Sol Kaş",
+        "setup_attachment": "Sol Kaş",
+        "slot_bone": "sol_kas_1",
+        "name": "Sol Kaş",
+        "type": "mesh",
+        "weighted": true,
+        "influence_bones": [
+          "sol_kas_1",
+          "sol_kas_2"
+        ],
+        "vertex_count": 31,
+        "triangle_count": 37,
+        "mesh_dimensions": [
+          37.0,
+          31.0
+        ],
+        "region_transform": null,
+        "atlas": {
+          "rotate": "false",
+          "xy": [
+            751,
+            1681
+          ],
+          "size": [
+            37,
+            31
+          ],
+          "orig": [
+            37,
+            31
+          ],
+          "offset": [
+            0,
+            0
+          ],
+          "index": "-1"
+        },
+        "deform_animations": []
+      }
+    ]
+  }
+}

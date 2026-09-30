@@ -1,0 +1,1 @@
+PASS 1440 frames at 60 fps, 24 seconds, actual AnimationState crossfades; isolated presentation review.

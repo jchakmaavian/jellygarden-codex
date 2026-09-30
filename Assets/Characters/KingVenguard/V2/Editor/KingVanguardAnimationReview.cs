@@ -228,6 +228,7 @@ namespace RoyalThrone.Characters.EditorTools
                         if (!data) throw new FileNotFoundException("Imported skeleton is missing: " + path);
                         actor = new GameObject(Rigs[rig]); SceneManager.MoveGameObjectToScene(actor, scene);
                         spine = actor.AddComponent<SkeletonAnimation>(); spine.skeletonDataAsset = data; spine.Initialize(false); spine.enabled = false;
+                        if (rig < 2) actor.AddComponent<KingVanguardFaceRig>();
                         if (spine.Skeleton == null) throw new InvalidOperationException("Could not initialize " + path);
                         foreach (var animation in spine.Skeleton.Data.Animations) Clips.Add(new Clip { Name = animation.Name, Duration = animation.Duration, SpineAnimation = animation });
                     }
@@ -271,6 +272,24 @@ namespace RoyalThrone.Characters.EditorTools
             {
                 if (spine)
                 {
+                    // Face proportions are applied after native skinning. Measure the
+                    // emitted mesh so the review camera includes those final vertices.
+                    var faceRig = spine.GetComponent<KingVanguardFaceRig>();
+                    var filter = spine.GetComponent<MeshFilter>();
+                    if (faceRig && faceRig.IsRegistered && filter && filter.sharedMesh)
+                    {
+                        var renderedVertices = filter.sharedMesh.vertices;
+                        var colors = filter.sharedMesh.colors32;
+                        bool found = false;
+                        Bounds mapped = default;
+                        for (int i = 0; i < renderedVertices.Length; i++)
+                        {
+                            if (colors.Length == renderedVertices.Length && colors[i].a == 0) continue;
+                            if (!found) { mapped = new Bounds(renderedVertices[i], Vector3.zero); found = true; }
+                            else mapped.Encapsulate(renderedVertices[i]);
+                        }
+                        if (found) return mapped;
+                    }
                     // Skeleton.GetBounds includes alpha-zero attachment variants. Ignore these for useful visual framing.
                     float minX = float.PositiveInfinity, minY = float.PositiveInfinity, maxX = float.NegativeInfinity, maxY = float.NegativeInfinity;
                     float[] vertices = new float[8];

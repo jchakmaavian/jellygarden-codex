@@ -36,6 +36,7 @@ namespace RoyalThrone.Characters.EditorTools
                 graphic.unscaledTime = true; graphic.raycastTarget = false; graphic.maskable = true;
                 graphic.allowMultipleCanvasRenderers = data.atlasAssets[0].MaterialCount > 1;
                 graphic.Initialize(true);
+                graphic.gameObject.AddComponent<KingVanguardFaceRig>();
                 var character = root.AddComponent<KingVanguardCharacter>();
                 var so = new SerializedObject(character);
                 so.FindProperty("skeletonGraphic").objectReferenceValue = graphic;

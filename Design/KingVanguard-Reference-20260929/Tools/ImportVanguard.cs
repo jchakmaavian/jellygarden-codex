@@ -6,6 +6,10 @@ if(!faceModifier)throw new System.Exception("Missing King Vanguard face shape mo
 // Keep reimports consistent with the verified HUD/Area gaze containment fix.
 var faceSettings=new UnityEditor.SerializedObject(faceModifier);
 faceSettings.FindProperty("pupilScale").floatValue=1.1f;
+// Keep the teeth/tongue assembly registered to its native mouth motion.
+faceSettings.FindProperty("mouthScale").floatValue=1f;
+faceSettings.FindProperty("hideObsoleteBrowShadows").boolValue=true;
+faceSettings.FindProperty("hideObsoleteMoustacheShadow").boolValue=true;
 faceSettings.ApplyModifiedPropertiesWithoutUndo();
 UnityEditor.EditorUtility.SetDirty(faceModifier);
 foreach(var rig in new[]{"King_Vanguard","AreaCompleted_Vanguard","Nightmare_Vanguard"}) {
