@@ -1,0 +1,4 @@
+PASS King: all 32 tracks at 60Hz, row centroid preserved, every pairwise edge uses one scale, no triangle inversion, mixed transitions coherent, source fingerprint unchanged.
+PASS AreaCompleted: all 10 tracks at 60Hz, row centroid preserved, every pairwise edge uses one scale, no triangle inversion, mixed transitions coherent, source fingerprint unchanged.
+PASS 10729 rendered poses, 21458 tooth-row checks, 135 mixed frames; max centroid error 6.078505E-05 source units; max scale spread 5.662441E-05.
+Lip-mask occlusion remains a separate visual/pixel test; this fixture proves actual emitted geometry and source preservation.

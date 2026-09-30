@@ -18,8 +18,12 @@ namespace RoyalThrone.Characters
         SkeletonAnimation animation;
         MeshFilter meshFilter;
         Skeleton skeleton;
+        Skeleton setupSkeleton;
         KingVanguardFaceShapeModifier configuration;
+        KingVanguardAttention attention;
         Bone head, face;
+        Bone chest;
+        [SerializeField] bool stabilizeTeeth = true;
         bool subscribed;
         Dictionary<Attachment, Part>[] partsBySlot;
         readonly List<Part> activeParts = new List<Part>(100);
@@ -34,6 +38,11 @@ namespace RoyalThrone.Characters
         public int LastUnattributedVertices { get; private set; }
         public int ActiveFaceAttachments { get; private set; }
         public bool IsRegistered { get { return skeleton != null && configuration != null; } }
+        public bool StabilizeTeeth { get { return stabilizeTeeth; } set { stabilizeTeeth = value; } }
+        /// <summary>Maximum nonrigid tooth correction, in skeleton units, for the current pose.</summary>
+        public float MaximumToothCorrection { get; private set; }
+        public float GazeInfluence { get; private set; }
+        public float BodyLeanDegrees { get; private set; }
 
         public static KingVanguardFaceRig Ensure(SkeletonGraphic target)
         {
@@ -66,6 +75,7 @@ namespace RoyalThrone.Characters
             animation = graphic ? null : GetComponent<SkeletonAnimation>();
             if (graphic)
             {
+                attention = KingVanguardAttention.Ensure(graphic);
                 graphic.OnRebuild += GraphicRebuilt;
                 graphic.OnPostProcessVertices += MapVertices;
                 graphic.OnMeshAndMaterialsUpdated += GraphicMeshUpdated;
@@ -106,12 +116,14 @@ namespace RoyalThrone.Characters
         void ResetRegistration()
         {
             skeleton = null;
+            setupSkeleton = null;
             configuration = null;
             partsBySlot = null;
             activeParts.Clear();
             uvOwners.Clear();
             pendingBounds.Clear();
-            head = face = null;
+            head = face = chest = null;
+            MaximumToothCorrection = GazeInfluence = BodyLeanDegrees = 0;
             mapped = interpolated = ambiguous = unmatched = 0;
             LastMappedVertices = LastInterpolatedVertices = LastAmbiguousVertices = LastUnattributedVertices = ActiveFaceAttachments = 0;
         }
@@ -125,7 +137,12 @@ namespace RoyalThrone.Characters
             skeleton = current;
             head = current.FindBone("yuz");
             face = current.FindBone("on_yuz");
+            chest = current.FindBone("pelerin") ?? current.RootBone;
             if (head == null || face == null) { configuration = null; return false; }
+            setupSkeleton = new Skeleton(current.Data);
+            setupSkeleton.SetToSetupPose();
+            setupSkeleton.UpdateWorldTransform();
+            if (graphic && !attention) attention = KingVanguardAttention.Ensure(graphic);
             partsBySlot = new Dictionary<Attachment, Part>[current.Slots.Count];
             for (int i = 0; i < partsBySlot.Length; i++) partsBySlot[i] = new Dictionary<Attachment, Part>();
             foreach (var skin in current.Data.Skins)
@@ -139,7 +156,7 @@ namespace RoyalThrone.Characters
             var slotParts = partsBySlot[slotIndex];
             Part part;
             if (slotParts.TryGetValue(attachment, out part)) return part;
-            part = new Part(skeleton.Slots.Items[slotIndex], attachment, name);
+            part = new Part(skeleton.Slots.Items[slotIndex], attachment, name, setupSkeleton);
             slotParts.Add(attachment, part);
             for (int i = 0; i < part.Uvs.Length; i += 2)
             {
@@ -157,7 +174,9 @@ namespace RoyalThrone.Characters
             foreach (var part in activeParts) part.Active = false;
             activeParts.Clear();
             Part mouth = null;
+            Part leftEye = null, rightEye = null;
             ActiveFaceAttachments = 0;
+            MaximumToothCorrection = 0;
             for (int i = 0; i < skeleton.Slots.Count; i++)
             {
                 var slot = skeleton.Slots.Items[i];
@@ -169,6 +188,9 @@ namespace RoyalThrone.Characters
                 activeParts.Add(part);
                 if (part.Feature != Feature.None) ActiveFaceAttachments++;
                 if (part.Name == "Ağız") mouth = part;
+                else if (part.Name == "Sol Göz") leftEye = part;
+                else if (part.Name == "Sağ Göz") rightEye = part;
+                MaximumToothCorrection = Mathf.Max(MaximumToothCorrection, part.PrepareTeeth(face, stabilizeTeeth));
             }
             var scale = configuration.FaceScale;
             var global = Affine.InFrame(face, head.WorldX, head.WorldY, scale.x, scale.y);
@@ -184,9 +206,45 @@ namespace RoyalThrone.Characters
                     part.Map = global.ScaleAroundMappedPoint(part.Center, nose.x, nose.y, face);
                 }
                 else if (part.Feature == Feature.Pupil)
+                {
                     part.Map = global.ScaleAroundMappedPoint(part.Center, configuration.PupilScale, configuration.PupilScale, face);
+                    var eye = part.Name == "Sol  Göz Bebeği" ? leftEye : rightEye;
+                    if (attention && attention.isActiveAndEnabled && eye != null && attention.Influence > 0)
+                    {
+                        var target = PupilTarget(part, eye, attention.Gaze);
+                        var delta = (global.Point(target) - global.Point(part.Center)) * attention.Influence;
+                        part.Map = part.Map.Translated(delta);
+                    }
+                }
             }
+            GazeInfluence = attention && attention.isActiveAndEnabled ? attention.Influence : 0;
+            BodyLeanDegrees = attention && attention.isActiveAndEnabled ? -attention.BodyLean * 2.25f : 0;
             return true;
+        }
+
+        Vector2 PupilTarget(Part pupil, Part white, Vector2 gaze)
+        {
+            // Fit the whole pupil quad into a conservative ellipse INSIDE the eye
+            // white, then blend toward it. Source lids still draw above the iris,
+            // retaining their blink occlusion rather than opening a closed eye.
+            var eye = white.BoundsInFrame(face);
+            var iris = pupil.BoundsInFrame(face);
+            float rx = eye.width * .46f, ry = eye.height * .46f;
+            float hx = iris.width * .5f * configuration.PupilScale;
+            float hy = iris.height * .5f * configuration.PupilScale;
+            float dx = gaze.x * rx * .6f, dy = gaze.y * ry * .6f;
+            float low = 0, high = 1;
+            for (int i = 0; i < 12; i++)
+            {
+                float amount = (low + high) * .5f;
+                float x = (Mathf.Abs(dx * amount) + hx) / Mathf.Max(rx, 1e-6f);
+                float y = (Mathf.Abs(dy * amount) + hy) / Mathf.Max(ry, 1e-6f);
+                if (x * x + y * y <= 1) low = amount; else high = amount;
+            }
+            var local = eye.center + new Vector2(dx, dy) * low;
+            float wx, wy;
+            face.LocalToWorld(local.x, local.y, out wx, out wy);
+            return new Vector2(wx, wy);
         }
 
         void MapVertices(MeshGeneratorBuffers buffers)
@@ -200,6 +258,10 @@ namespace RoyalThrone.Characters
             float inverseScale = 1 / scale;
             var vertices = buffers.vertexBuffer;
             var uvs = buffers.uvBuffer;
+            bool bodyActive = attention && attention.isActiveAndEnabled && attention.HasAttention;
+            float angle = BodyLeanDegrees * Mathf.Deg2Rad;
+            float cosine = Mathf.Cos(angle), sine = Mathf.Sin(angle);
+            float tap = bodyActive ? attention.TapResponse : 0;
             for (int i = 0; i < buffers.vertexCount; i++)
             {
                 var point = new Vector2(vertices[i].x * inverseScale, vertices[i].y * inverseScale);
@@ -211,14 +273,27 @@ namespace RoyalThrone.Characters
                     owner = TriangleOwner(uvs[i], point, out conflict);
                     fallback = true;
                 }
-                if (conflict) { ambiguous++; continue; }
-                if (owner == null) { unmatched++; continue; }
-                if (owner.Feature == Feature.None) continue;
-                var result = owner.Map.Point(point);
-                vertices[i].x = result.x * scale;
-                vertices[i].y = result.y * scale;
-                mapped++;
-                if (fallback) interpolated++;
+                if (conflict) ambiguous++;
+                else if (owner == null) unmatched++;
+                else if (owner.Feature != Feature.None)
+                {
+                    Vector2 toothPoint;
+                    if (owner.TryToothPoint(uvs[i], out toothPoint)) point = toothPoint;
+                    point = owner.Map.Point(point);
+                    mapped++;
+                    if (fallback) interpolated++;
+                }
+                else if (!bodyActive) continue;
+                // A tiny complete-character response follows attention, after all
+                // face maps, without changing the source root/bones or draw order.
+                if (bodyActive)
+                {
+                    float x = (point.x - chest.WorldX) * (1 + tap * .004f);
+                    float y = (point.y - chest.WorldY) * (1 - tap * .008f);
+                    point = new Vector2(chest.WorldX + cosine * x - sine * y, chest.WorldY + sine * x + cosine * y);
+                }
+                vertices[i].x = point.x * scale;
+                vertices[i].y = point.y * scale;
             }
             var bounds = new Bounds();
             if (buffers.vertexCount > 0)
@@ -333,11 +408,15 @@ namespace RoyalThrone.Characters
             readonly RegionAttachment region;
             readonly MeshAttachment mesh;
             readonly Rect uvBounds;
+            readonly float[] restTeeth, currentTeeth, stableTeeth;
+            readonly Vector2 restCenter;
+            readonly float restDenominator;
+            bool teethPrepared;
             public bool Active;
             public Vector2 Center;
             public Affine Map;
 
-            public Part(Slot slot, Attachment attachment, string name)
+            public Part(Slot slot, Attachment attachment, string name, Skeleton setup)
             {
                 this.slot = slot;
                 Name = name;
@@ -354,6 +433,27 @@ namespace RoyalThrone.Characters
                     minY = Mathf.Min(minY, Uvs[i + 1]); maxY = Mathf.Max(maxY, Uvs[i + 1]);
                 }
                 uvBounds = Rect.MinMaxRect(minX, minY, maxX, maxY);
+                if (mesh != null && (name == "Alt Diş" || name == "Ust Diş"))
+                {
+                    restTeeth = new float[World.Length];
+                    currentTeeth = new float[World.Length];
+                    stableTeeth = new float[World.Length];
+                    mesh.ComputeWorldVertices(setup.Slots.Items[slot.Data.Index], restTeeth);
+                    var setupFace = setup.FindBone("on_yuz");
+                    float x = 0, y = 0;
+                    for (int i = 0; i < restTeeth.Length; i += 2)
+                    {
+                        float fx, fy;
+                        setupFace.WorldToLocal(restTeeth[i], restTeeth[i + 1], out fx, out fy);
+                        restTeeth[i] = fx; restTeeth[i + 1] = fy; x += fx; y += fy;
+                    }
+                    restCenter = new Vector2(x * 2 / restTeeth.Length, y * 2 / restTeeth.Length);
+                    for (int i = 0; i < restTeeth.Length; i += 2)
+                    {
+                        x = restTeeth[i] - restCenter.x; y = restTeeth[i + 1] - restCenter.y;
+                        restDenominator += x * x + y * y;
+                    }
+                }
             }
 
             public void UpdateWorld()
@@ -363,6 +463,75 @@ namespace RoyalThrone.Characters
                 float x = 0, y = 0;
                 for (int i = 0; i < World.Length; i += 2) { x += World[i]; y += World[i + 1]; }
                 Center = new Vector2(x * 2 / World.Length, y * 2 / World.Length);
+            }
+
+            public Rect BoundsInFrame(Bone frame)
+            {
+                float minX = float.MaxValue, minY = float.MaxValue, maxX = float.MinValue, maxY = float.MinValue;
+                for (int i = 0; i < World.Length; i += 2)
+                {
+                    float x, y; frame.WorldToLocal(World[i], World[i + 1], out x, out y);
+                    minX = Mathf.Min(minX, x); minY = Mathf.Min(minY, y);
+                    maxX = Mathf.Max(maxX, x); maxY = Mathf.Max(maxY, y);
+                }
+                return Rect.MinMaxRect(minX, minY, maxX, maxY);
+            }
+
+            public float PrepareTeeth(Bone frame, bool enabled)
+            {
+                teethPrepared = enabled && restTeeth != null && restDenominator > 1e-12f;
+                if (!teethPrepared) return 0;
+                float cx = 0, cy = 0;
+                for (int i = 0; i < World.Length; i += 2)
+                {
+                    float x, y; frame.WorldToLocal(World[i], World[i + 1], out x, out y);
+                    currentTeeth[i] = x; currentTeeth[i + 1] = y; cx += x; cy += y;
+                }
+                cx *= 2f / World.Length; cy *= 2f / World.Length;
+                float a = 0, b = 0;
+                for (int i = 0; i < World.Length; i += 2)
+                {
+                    float x = restTeeth[i] - restCenter.x, y = restTeeth[i + 1] - restCenter.y;
+                    a += x * (currentTeeth[i] - cx) + y * (currentTeeth[i + 1] - cy);
+                    b += x * (currentTeeth[i + 1] - cy) - y * (currentTeeth[i] - cx);
+                }
+                a /= restDenominator; b /= restDenominator;
+                float maximum = 0;
+                for (int i = 0; i < World.Length; i += 2)
+                {
+                    float x = restTeeth[i] - restCenter.x, y = restTeeth[i + 1] - restCenter.y;
+                    frame.LocalToWorld(a * x - b * y + cx, b * x + a * y + cy, out stableTeeth[i], out stableTeeth[i + 1]);
+                    x = stableTeeth[i] - World[i]; y = stableTeeth[i + 1] - World[i + 1];
+                    maximum = Mathf.Max(maximum, Mathf.Sqrt(x * x + y * y));
+                }
+                return maximum;
+            }
+
+            public bool TryToothPoint(Vector2 uv, out Vector2 point)
+            {
+                point = Vector2.zero;
+                if (!teethPrepared) return false;
+                for (int i = 0; i < Uvs.Length; i += 2)
+                    if (uv.x == Uvs[i] && uv.y == Uvs[i + 1])
+                    { point = new Vector2(stableTeeth[i], stableTeeth[i + 1]); return true; }
+                // Interpolated UVs (e.g. clipping) use the same stable triangle.
+                for (int i = 0; i < triangles.Length; i += 3)
+                {
+                    int a = triangles[i] * 2, b = triangles[i + 1] * 2, c = triangles[i + 2] * 2;
+                    float bx = Uvs[b] - Uvs[a], by = Uvs[b + 1] - Uvs[a + 1];
+                    float cx = Uvs[c] - Uvs[a], cy = Uvs[c + 1] - Uvs[a + 1];
+                    float determinant = bx * cy - by * cx;
+                    if (Mathf.Abs(determinant) < 1e-12f) continue;
+                    float px = uv.x - Uvs[a], py = uv.y - Uvs[a + 1];
+                    float wb = (px * cy - py * cx) / determinant;
+                    float wc = (bx * py - by * px) / determinant;
+                    float wa = 1 - wb - wc;
+                    if (wa < -1e-5f || wb < -1e-5f || wc < -1e-5f) continue;
+                    point = new Vector2(wa * stableTeeth[a] + wb * stableTeeth[b] + wc * stableTeeth[c],
+                        wa * stableTeeth[a + 1] + wb * stableTeeth[b + 1] + wc * stableTeeth[c + 1]);
+                    return true;
+                }
+                return false;
             }
 
             public bool Contains(Vector2 uv, Vector2 point)
@@ -393,6 +562,7 @@ namespace RoyalThrone.Characters
         {
             float a, b, c, d, x, y;
             public Vector2 Point(Vector2 p) { return new Vector2(a * p.x + b * p.y + x, c * p.x + d * p.y + y); }
+            public Affine Translated(Vector2 offset) { var result = this; result.x += offset.x; result.y += offset.y; return result; }
             public static Affine InFrame(Bone frame, float anchorX, float anchorY, float sx, float sy)
             {
                 float inverse = 1 / (frame.A * frame.D - frame.B * frame.C);

@@ -8,8 +8,12 @@ var faceSettings=new UnityEditor.SerializedObject(faceModifier);
 faceSettings.FindProperty("pupilScale").floatValue=1.1f;
 // Keep the teeth/tongue assembly registered to its native mouth motion.
 faceSettings.FindProperty("mouthScale").floatValue=1f;
-faceSettings.FindProperty("hideObsoleteBrowShadows").boolValue=true;
-faceSettings.FindProperty("hideObsoleteMoustacheShadow").boolValue=true;
+faceSettings.FindProperty("hideObsoleteBrowShadows").boolValue=false;
+faceSettings.FindProperty("hideObsoleteMoustacheShadow").boolValue=false;
+faceSettings.FindProperty("browShadowOpacity").floatValue=.3f;
+faceSettings.FindProperty("moustacheShadowOpacity").floatValue=.32f;
+faceSettings.FindProperty("beardShadowOpacity").floatValue=.45f;
+faceSettings.FindProperty("crownShadowOpacity").floatValue=.42f;
 faceSettings.ApplyModifiedPropertiesWithoutUndo();
 UnityEditor.EditorUtility.SetDirty(faceModifier);
 foreach(var rig in new[]{"King_Vanguard","AreaCompleted_Vanguard","Nightmare_Vanguard"}) {

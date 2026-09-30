@@ -174,3 +174,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea9e69409654dbda0f5ebc147ad42ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoyalThrone.Characters.KingVanguardFaceRig
+  stabilizeTeeth: 1

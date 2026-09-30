@@ -10,6 +10,7 @@ namespace JellyGarden.Scripts.Juice
     public sealed class RoyalHintPresenter : MonoBehaviour
     {
         const int MaxContours=16,MaxCells=128;
+        static RoyalHintPresenter attentionSource;
         sealed class Outline
         {
             public LineRenderer Halo,Core,Glint;
@@ -29,6 +30,21 @@ namespace JellyGarden.Scripts.Juice
         public int BoundaryEdgeCount {get;private set;}
         public LineRenderer ContourRenderer(int index)=>index>=0&&index<activeContours?pool[index].Core:null;
         public RoyalHintPlan CurrentPlan=>plan;
+
+        // Read the same selected pair/tap piece that is currently being presented.
+        // Revalidate here as well as LateUpdate: consumers may run before the
+        // presenter has cleared a hint invalidated by this frame's board change.
+        public static bool TryGetCurrentFocus(LevelManager level,out Vector3 worldPoint)
+        {
+            worldPoint=default;
+            var source=attentionSource;
+            if(!source||!source.isActiveAndEnabled||!level||level!=LevelManager.THIS||
+                !source.CanShow(level,source.plan))return false;
+            var selected=source.plan;
+            worldPoint=selected.Second?(selected.First.transform.position+selected.Second.transform.position)*.5f:
+                selected.First.transform.position;
+            return true;
+        }
 
         void OnEnable()
         {
@@ -82,7 +98,7 @@ namespace JellyGarden.Scripts.Juice
                 outline.Halo.positionCount=outline.Core.positionCount=points.Count;
                 outline.Halo.SetPositions(outline.Points);outline.Core.SetPositions(outline.Points);
             }
-            plan=candidate;activeContours=shape.Loops.Count;BoundaryEdgeCount=shape.BoundaryEdges;shownAt=Time.unscaledTime;
+            plan=candidate;attentionSource=this;activeContours=shape.Loops.Count;BoundaryEdgeCount=shape.BoundaryEdges;shownAt=Time.unscaledTime;
             Animate();return true;
         }
         void EnsureMaterial()
@@ -139,6 +155,7 @@ namespace JellyGarden.Scripts.Juice
         }
         public void Hide()
         {
+            if(attentionSource==this)attentionSource=null;
             if(firstSkin)firstSkin.ClearHintPose();if(secondSkin)secondSkin.ClearHintPose();
             firstSkin=secondSkin=null;plan=null;activeContours=0;BoundaryEdgeCount=0;
             foreach(var outline in pool){outline.Halo.enabled=false;outline.Core.enabled=false;outline.Glint.enabled=false;}

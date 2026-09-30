@@ -17,8 +17,12 @@ namespace RoyalThrone.Characters
         [SerializeField] float pupilScale = 1.1f;
         [SerializeField] float mouthScale = 1f;
         [SerializeField] bool hideObsoleteUpperCrownShadow = true;
-        [SerializeField] bool hideObsoleteBrowShadows = true;
-        [SerializeField] bool hideObsoleteMoustacheShadow = true;
+        [SerializeField] bool hideObsoleteBrowShadows;
+        [SerializeField] bool hideObsoleteMoustacheShadow;
+        [SerializeField, Range(0, 1)] float browShadowOpacity = .3f;
+        [SerializeField, Range(0, 1)] float moustacheShadowOpacity = .32f;
+        [SerializeField, Range(0, 1)] float beardShadowOpacity = .45f;
+        [SerializeField, Range(0, 1)] float crownShadowOpacity = .42f;
         static readonly ConditionalWeakTable<SkeletonData, KingVanguardFaceShapeModifier> Registered =
             new ConditionalWeakTable<SkeletonData, KingVanguardFaceShapeModifier>();
         static readonly HashSet<string> FacialAttachments = new HashSet<string>(StringComparer.Ordinal)
@@ -57,17 +61,27 @@ namespace RoyalThrone.Characters
                 throw new InvalidOperationException("Face modifier needs the King/Area yuz + on_yuz frame.");
             foreach (var skin in data.Skins)
                 foreach (var entry in skin.GetAttachments())
+                {
+                    float opacity = -1;
+                    // Reuse the native animated contact-shadow masks. Their RGB is
+                    // now warm neutral; restrained opacity suits Vanguard's lighter
+                    // beard and brows without opaque ribbons across the skin.
+                    if (entry.Name == "Sağ Kaş Gölge" || entry.Name == "Sol Kaş Gölge") opacity = browShadowOpacity;
+                    else if (entry.Name == "Bıyık Gölge") opacity = moustacheShadowOpacity;
+                    else if (entry.Name == "Sakal Gölge") opacity = beardShadowOpacity;
+                    else if (entry.Name == "Taç Alt Gölge") opacity = crownShadowOpacity;
                     if ((hideObsoleteUpperCrownShadow && entry.Name == "Taç Gölge Ust") ||
                         (hideObsoleteBrowShadows && (entry.Name == "Sağ Kaş Gölge" || entry.Name == "Sol Kaş Gölge")) ||
                         (hideObsoleteMoustacheShadow && entry.Name == "Bıyık Gölge"))
+                        opacity = 0;
+                    if (opacity >= 0)
                     {
-                        // Attachment alpha multiplies slot alpha: source slot-color
-                        // keys cannot restore shadows from the old feature contours.
                         var region = entry.Attachment as RegionAttachment;
                         var mesh = entry.Attachment as MeshAttachment;
-                        if (region != null) region.A = 0;
-                        if (mesh != null) mesh.A = 0;
+                        if (region != null) region.A = Mathf.Clamp01(opacity);
+                        if (mesh != null) mesh.A = Mathf.Clamp01(opacity);
                     }
+                }
             // Re-applying is idempotent. Never write geometry, deformation or bone data.
             Registered.Remove(data);
             Registered.Add(data, this);

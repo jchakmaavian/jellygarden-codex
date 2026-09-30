@@ -1,0 +1,25 @@
+RUNNING: real virtual pointer events, actual visible hint and live gameplay portrait.
+PASS startup: Game view/application focused for input observation
+PASS startup: isolated QA profile started
+PASS startup: Practice board completed
+PASS startup: live main-HUD portrait found
+PASS startup: FaceRig mounted the HUD attention component without fixture assistance
+STAGE moving mouse
+PASS moving mouse: real mouse movement supplies smoothed gaze and subtle body lean
+PASS moving mouse: QA overlay is hidden for Mouse screenshot
+STAGE mouse to actual hint
+PASS mouse to actual hint: practice board has a real legal hint
+PASS mouse to actual hint: the actual hint presenter shows its selected pieces
+PASS mouse to actual hint: visible valid hint exposes focus
+PASS mouse to actual hint: hint focus is exactly the actual swap-pair midpoint/tap piece
+PASS mouse to actual hint: recent mouse wins over a visible hint
+PASS mouse to actual hint: stationary mouse expires and the King looks toward the hint on the board
+PASS mouse to actual hint: QA overlay is hidden for Hint screenshot
+STAGE touch priority
+PASS touch priority: real touchscreen press wins and produces a bounded tap response
+PASS touch priority: held touchscreen stays dominant while the mouse moves elsewhere
+PASS touch priority: QA overlay is hidden for Touch screenshot
+PASS touch priority: input is released normally and portrait-area touch spent no game move
+CHECKS COMPLETE; restoring profile
+PASS touch priority: normal player profile restored
+ALL FINAL PREVIEW CHECKS PASSED

@@ -1,0 +1,706 @@
+stage,time,source,gazeX,gazeY,influence,lean,tap,activity,currentMouse,fixtureMouse,held,boardInput
+startup,29.656,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.663,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.689,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.697,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.715,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.731,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.749,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.767,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.783,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.801,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.818,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.836,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.846,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.866,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,2,-1,False,True
+startup,29.996,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.013,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.021,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.037,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.052,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.071,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.087,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.104,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.120,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.138,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+startup,30.156,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+moving mouse,30.157,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+moving mouse,30.188,Mouse,0.0396,0.0030,0.0507,0.0153,0.0000,Idle,25,25,False,True
+moving mouse,30.196,Mouse,0.0623,0.0047,0.0798,0.0245,0.0000,Idle,25,25,False,True
+moving mouse,30.213,Mouse,0.1075,0.0081,0.1376,0.0434,0.0000,Idle,25,25,False,True
+moving mouse,30.229,Mouse,0.1584,0.0120,0.2027,0.0658,0.0000,Idle,25,25,False,True
+moving mouse,30.246,Mouse,0.2100,0.0159,0.2687,0.0896,0.0000,Idle,25,25,False,True
+moving mouse,30.262,Mouse,0.2632,0.0199,0.3369,0.1152,0.0000,Idle,25,25,False,True
+moving mouse,30.279,Mouse,0.3145,0.0237,0.4025,0.1411,0.0000,Idle,25,25,False,True
+moving mouse,30.295,Mouse,0.3615,0.0273,0.4626,0.1660,0.0000,Idle,25,25,False,True
+moving mouse,30.312,Mouse,0.4071,0.0307,0.5210,0.1912,0.0000,Idle,25,25,False,True
+moving mouse,30.329,Mouse,0.4509,0.0340,0.5771,0.2166,0.0000,Idle,25,25,False,True
+moving mouse,30.346,Mouse,0.4895,0.0370,0.6265,0.2400,0.0000,Idle,25,25,False,True
+moving mouse,30.363,Mouse,0.5251,0.0397,0.6720,0.2627,0.0000,Idle,25,25,False,True
+moving mouse,30.380,Mouse,0.5567,0.0420,0.7124,0.2837,0.0000,Idle,25,25,False,True
+moving mouse,30.398,Mouse,0.5871,0.0443,0.7513,0.3050,0.0000,Idle,25,25,False,True
+moving mouse,30.407,Mouse,0.5996,0.0453,0.7674,0.3141,0.0000,Idle,25,25,False,True
+moving mouse,30.428,Mouse,0.6296,0.0475,0.8058,0.3368,0.0000,Idle,25,25,False,True
+moving mouse,30.443,Mouse,0.6471,0.0489,0.8281,0.3507,0.0000,Idle,25,25,False,True
+moving mouse,30.465,Mouse,0.6696,0.0506,0.8569,0.3696,0.0000,Idle,25,25,False,True
+moving mouse,30.474,Mouse,0.6786,0.0512,0.8685,0.3775,0.0000,Idle,25,25,False,True
+moving mouse,30.492,Mouse,0.6934,0.0524,0.8874,0.3909,0.0000,Idle,25,25,False,True
+moving mouse,30.508,Mouse,0.7052,0.0533,0.9025,0.4022,0.0000,Idle,25,25,False,True
+moving mouse,30.525,Mouse,0.7158,0.0541,0.9161,0.4127,0.0000,Idle,25,25,False,True
+moving mouse,30.542,Mouse,0.7250,0.0547,0.9278,0.4223,0.0000,Idle,25,25,False,True
+moving mouse,30.558,Mouse,0.7328,0.0553,0.9378,0.4308,0.0000,Idle,25,25,False,True
+moving mouse,30.576,Mouse,0.7402,0.0559,0.9473,0.4394,0.0000,Idle,25,25,False,True
+moving mouse,30.594,Mouse,0.7463,0.0564,0.9551,0.4467,0.0000,Idle,25,25,False,True
+moving mouse,30.613,Mouse,0.7521,0.0568,0.9625,0.4541,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.776,Mouse,0.7521,0.0568,0.9625,0.4541,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.802,Mouse,0.7657,0.0578,0.9800,0.4735,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.810,Mouse,0.7669,0.0579,0.9815,0.4754,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.827,Mouse,0.7690,0.0581,0.9842,0.4788,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.845,Mouse,0.7710,0.0582,0.9867,0.4823,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.853,Mouse,0.7718,0.0583,0.9877,0.4836,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.874,Mouse,0.7735,0.0584,0.9899,0.4869,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.890,Mouse,0.7746,0.0585,0.9913,0.4890,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.908,Mouse,0.7757,0.0586,0.9927,0.4913,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.926,Mouse,0.7766,0.0586,0.9939,0.4932,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.943,Mouse,0.7774,0.0587,0.9949,0.4950,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.961,Mouse,0.7781,0.0588,0.9957,0.4965,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.970,Mouse,0.7784,0.0588,0.9960,0.4972,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.991,Mouse,0.7791,0.0588,0.9968,0.4988,0.0000,Idle,25,25,False,True
+mouse to actual hint,30.992,Mouse,0.7791,0.0588,0.9968,0.4988,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.010,Mouse,0.7797,0.0589,0.9973,0.5000,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.028,Mouse,0.7803,0.0589,0.9978,0.5011,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.045,Mouse,0.7808,0.0589,0.9981,0.5020,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.053,Mouse,0.7811,0.0589,0.9983,0.5024,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.074,Mouse,0.7817,0.0590,0.9986,0.5034,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.092,Mouse,0.7822,0.0590,0.9988,0.5042,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.108,Mouse,0.7827,0.0590,0.9990,0.5049,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.125,Mouse,0.7832,0.0591,0.9991,0.5055,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.143,Mouse,0.7838,0.0591,0.9993,0.5062,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.161,Mouse,0.7844,0.0591,0.9994,0.5068,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.170,Mouse,0.7847,0.0591,0.9995,0.5071,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.191,Mouse,0.7853,0.0592,0.9996,0.5078,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.209,Mouse,0.7859,0.0592,0.9996,0.5084,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.226,Mouse,0.7865,0.0592,0.9997,0.5089,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.242,Mouse,0.7870,0.0593,0.9997,0.5094,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.261,Mouse,0.7876,0.0593,0.9998,0.5099,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.269,Mouse,0.7879,0.0593,0.9998,0.5101,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.300,Mouse,0.7890,0.0594,0.9999,0.5109,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.309,Mouse,0.7893,0.0594,0.9999,0.5112,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.325,Mouse,0.7898,0.0594,0.9999,0.5116,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.341,Mouse,0.7903,0.0594,0.9999,0.5120,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.357,Mouse,0.7908,0.0594,0.9999,0.5124,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.376,Mouse,0.7914,0.0595,0.9999,0.5128,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.394,Mouse,0.7919,0.0595,0.9999,0.5132,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.412,Mouse,0.7923,0.0595,1.0000,0.5135,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.424,Mouse,0.7926,0.0595,1.0000,0.5138,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.444,Hint,0.7884,0.0565,1.0000,0.5076,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.463,Hint,0.7766,0.0485,1.0000,0.4916,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.472,Hint,0.7688,0.0432,1.0000,0.4814,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.492,Hint,0.7468,0.0285,1.0000,0.4540,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.508,Hint,0.7267,0.0150,1.0000,0.4303,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.524,Hint,0.7047,0.0003,1.0000,0.4054,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.542,Hint,0.6773,-0.0180,1.0000,0.3759,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.559,Hint,0.6514,-0.0353,1.0000,0.3493,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.576,Hint,0.6243,-0.0533,1.0000,0.3227,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.593,Hint,0.5954,-0.0726,1.0000,0.2957,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.610,Hint,0.5666,-0.0917,1.0000,0.2701,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.627,Hint,0.5390,-0.1101,1.0000,0.2466,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.643,Hint,0.5127,-0.1275,1.0000,0.2253,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.658,Hint,0.4868,-0.1448,1.0000,0.2051,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.675,Hint,0.4612,-0.1618,1.0000,0.1862,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.691,Hint,0.4362,-0.1784,1.0000,0.1684,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.709,Hint,0.4095,-0.1962,1.0000,0.1503,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.725,Hint,0.3858,-0.2119,1.0000,0.1350,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.741,Hint,0.3629,-0.2271,1.0000,0.1208,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.759,Hint,0.3388,-0.2431,1.0000,0.1066,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.775,Hint,0.3177,-0.2572,1.0000,0.0947,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.808,Hint,0.2786,-0.2831,1.0000,0.0742,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.816,Hint,0.2696,-0.2890,1.0000,0.0697,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.832,Hint,0.2516,-0.3010,1.0000,0.0611,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.849,Hint,0.2345,-0.3123,1.0000,0.0533,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.865,Hint,0.2182,-0.3232,1.0000,0.0461,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.882,Hint,0.2027,-0.3334,1.0000,0.0396,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.899,Hint,0.1874,-0.3436,1.0000,0.0335,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.916,Hint,0.1733,-0.3530,1.0000,0.0282,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.933,Hint,0.1602,-0.3617,1.0000,0.0234,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.951,Hint,0.1471,-0.3704,1.0000,0.0189,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.968,Hint,0.1353,-0.3782,1.0000,0.0149,0.0000,Idle,25,25,False,True
+mouse to actual hint,31.985,Hint,0.1241,-0.3856,1.0000,0.0114,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.000,Hint,0.1144,-0.3921,1.0000,0.0085,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.017,Hint,0.1050,-0.3983,1.0000,0.0058,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.033,Hint,0.0963,-0.4040,1.0000,0.0034,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.049,Hint,0.0881,-0.4095,1.0000,0.0013,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.066,Hint,0.0800,-0.4149,1.0000,-0.0008,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.083,Hint,0.0728,-0.4197,1.0000,-0.0025,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.099,Hint,0.0658,-0.4243,1.0000,-0.0041,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.116,Hint,0.0591,-0.4287,1.0000,-0.0055,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.134,Hint,0.0530,-0.4328,1.0000,-0.0068,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.153,Hint,0.0468,-0.4369,1.0000,-0.0081,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.163,Hint,0.0435,-0.4391,1.0000,-0.0087,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.184,Hint,0.0372,-0.4432,1.0000,-0.0098,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.200,Hint,0.0327,-0.4463,1.0000,-0.0106,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.217,Hint,0.0284,-0.4491,1.0000,-0.0113,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.233,Hint,0.0246,-0.4516,1.0000,-0.0119,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.250,Hint,0.0209,-0.4541,1.0000,-0.0125,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.267,Hint,0.0174,-0.4564,1.0000,-0.0130,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.283,Hint,0.0143,-0.4584,1.0000,-0.0134,0.0000,Idle,25,25,False,True
+mouse to actual hint,32.312,Hint,0.0094,-0.4617,1.0000,-0.0140,0.0000,Idle,25,25,False,True
+touch priority,32.462,Hint,0.0094,-0.4617,1.0000,-0.0140,0.0000,Idle,25,25,False,True
+touch priority,32.504,Touch,-0.2495,-0.3137,1.0000,-0.0749,0.0000,Idle,25,25,True,True
+touch priority,32.513,Touch,-0.4789,-0.1781,1.0000,-0.1500,0.4378,Idle,25,25,True,True
+touch priority,32.520,Touch,-0.5116,-0.1588,1.0000,-0.1627,0.5026,Idle,25,25,True,True
+touch priority,32.537,Touch,-0.5762,-0.1205,1.0000,-0.1903,0.6336,Idle,25,25,True,True
+touch priority,32.555,Touch,-0.6390,-0.0835,1.0000,-0.2212,0.7628,Idle,25,25,True,True
+touch priority,32.571,Touch,-0.6835,-0.0572,1.0000,-0.2466,0.8529,Idle,25,25,True,True
+touch priority,32.589,Touch,-0.7248,-0.0330,1.0000,-0.2737,0.9295,Idle,25,25,True,True
+touch priority,32.590,Touch,-0.7248,-0.0330,1.0000,-0.2737,0.9295,Idle,25,25,True,True
+touch priority,32.607,Touch,-0.7595,-0.0126,1.0000,-0.3005,0.9801,Idle,25,25,True,True
+touch priority,32.625,Touch,-0.7868,0.0033,1.0000,-0.3253,0.9997,Idle,25,25,True,True
+touch priority,32.641,Touch,-0.8061,0.0145,1.0000,-0.3458,0.9916,Idle,25,25,True,True
+touch priority,32.657,Touch,-0.8223,0.0240,1.0000,-0.3657,0.9579,Idle,25,25,True,True
+touch priority,32.673,Touch,-0.8352,0.0314,1.0000,-0.3842,0.9000,Idle,25,25,True,True
+touch priority,32.690,Touch,-0.8455,0.0375,1.0000,-0.4016,0.8176,Idle,25,25,True,True
+touch priority,32.706,Touch,-0.8537,0.0422,1.0000,-0.4178,0.7130,Idle,25,25,True,True
+touch priority,32.723,Touch,-0.8602,0.0459,1.0000,-0.4325,0.5904,Idle,25,25,True,True
+touch priority,32.738,Touch,-0.8650,0.0487,1.0000,-0.4455,0.4580,Idle,25,25,True,True
+touch priority,32.754,Touch,-0.8689,0.0510,1.0000,-0.4578,0.3100,Idle,25,25,True,True
+touch priority,32.770,Touch,-0.8719,0.0528,1.0000,-0.4688,0.1572,Idle,25,25,True,True
+touch priority,32.787,Touch,-0.8744,0.0542,1.0000,-0.4795,0.0000,Idle,25,25,True,True
+touch priority,32.819,Touch,-0.8776,0.0560,1.0000,-0.4964,0.0000,Idle,25,25,True,True
+touch priority,32.830,Touch,-0.8784,0.0565,1.0000,-0.5020,0.0000,Idle,25,25,True,True
+touch priority,32.843,Touch,-0.8791,0.0569,1.0000,-0.5071,0.0000,Idle,25,25,True,True
+touch priority,32.860,Touch,-0.8800,0.0574,1.0000,-0.5147,0.0000,Idle,25,25,True,True
+touch priority,32.876,Touch,-0.8806,0.0577,1.0000,-0.5206,0.0000,Idle,25,25,True,True
+touch priority,32.893,Touch,-0.8810,0.0580,1.0000,-0.5262,0.0000,Idle,25,25,True,True
+touch priority,33.040,Touch,-0.8810,0.0580,1.0000,-0.5262,0.0000,Idle,25,25,True,True
+touch priority,33.046,None,-0.8810,0.0580,0.9260,-0.4815,0.0000,Idle,25,25,False,True
+touch priority,33.062,None,-0.8810,0.0580,0.8892,-0.4560,0.0000,Idle,25,25,False,True
+touch priority,33.077,None,-0.8810,0.0580,0.8560,-0.4331,0.0000,Idle,25,25,False,True
+touch priority,33.093,None,-0.8810,0.0580,0.8181,-0.4073,0.0000,Idle,25,25,False,True
+touch priority,33.112,None,-0.8810,0.0580,0.7735,-0.3774,0.0000,Idle,25,25,False,True
+touch priority,33.128,None,-0.8810,0.0580,0.7345,-0.3519,0.0000,Idle,25,25,False,True
+touch priority,33.146,None,-0.8810,0.0580,0.6913,-0.3242,0.0000,Idle,25,25,False,True
+touch priority,33.164,None,-0.8810,0.0580,0.6471,-0.2965,0.0000,Idle,25,25,False,True
+touch priority,33.165,None,-0.8810,0.0580,0.6471,-0.2965,0.0000,Idle,25,25,False,True
+touch priority,33.182,Hint,-0.8774,0.0557,0.6090,-0.2703,0.0000,Idle,25,25,False,True
+touch priority,33.192,Hint,-0.8728,0.0527,0.5942,-0.2580,0.0000,Idle,25,25,False,True
+touch priority,33.213,Hint,-0.8554,0.0416,0.5681,-0.2303,0.0000,Idle,25,25,False,True
+touch priority,33.230,Hint,-0.8373,0.0301,0.5559,-0.2110,0.0000,Idle,25,25,False,True
+touch priority,33.247,Hint,-0.8157,0.0163,0.5493,-0.1930,0.0000,Idle,25,25,False,True
+touch priority,33.264,Hint,-0.7914,0.0008,0.5475,-0.1764,0.0000,Idle,25,25,False,True
+touch priority,33.281,Hint,-0.7659,-0.0154,0.5496,-0.1616,0.0000,Idle,25,25,False,True
+touch priority,33.327,Hint,-0.6884,-0.0647,0.5702,-0.1266,0.0000,Idle,25,25,False,True
+touch priority,33.334,Hint,-0.6758,-0.0727,0.5750,-0.1219,0.0000,Idle,25,25,False,True
+touch priority,33.350,Hint,-0.6490,-0.0898,0.5860,-0.1125,0.0000,Idle,25,25,False,True
+touch priority,33.366,Hint,-0.6208,-0.1077,0.5988,-0.1035,0.0000,Idle,25,25,False,True
+touch priority,33.383,Hint,-0.5923,-0.1258,0.6128,-0.0951,0.0000,Idle,25,25,False,True
+touch priority,33.400,Hint,-0.5648,-0.1434,0.6272,-0.0877,0.0000,Idle,25,25,False,True
+touch priority,33.410,Hint,-0.5474,-0.1544,0.6366,-0.0833,0.0000,Idle,25,25,False,True
+touch priority,33.434,Hint,-0.5098,-0.1783,0.6580,-0.0746,0.0000,Idle,25,25,False,True
+touch priority,33.452,Hint,-0.4811,-0.1965,0.6751,-0.0685,0.0000,Idle,25,25,False,True
+touch priority,33.461,Hint,-0.4670,-0.2056,0.6837,-0.0657,0.0000,Idle,25,25,False,True
+touch priority,33.479,Hint,-0.4408,-0.2222,0.7001,-0.0608,0.0000,Idle,25,25,False,True
+touch priority,33.496,Hint,-0.4166,-0.2376,0.7156,-0.0565,0.0000,Idle,25,25,False,True
+touch priority,33.513,Hint,-0.3942,-0.2518,0.7303,-0.0528,0.0000,Idle,25,25,False,True
+touch priority,33.530,Hint,-0.3727,-0.2655,0.7446,-0.0495,0.0000,Idle,25,25,False,True
+touch priority,33.547,Hint,-0.3516,-0.2789,0.7590,-0.0465,0.0000,Idle,25,25,False,True
+touch priority,33.565,Hint,-0.3306,-0.2923,0.7735,-0.0437,0.0000,Idle,25,25,False,True
+touch priority,33.584,Hint,-0.3102,-0.3052,0.7877,-0.0411,0.0000,Idle,25,25,False,True
+touch priority,33.601,Hint,-0.2917,-0.3170,0.8009,-0.0389,0.0000,Idle,25,25,False,True
+touch priority,33.611,Hint,-0.2821,-0.3231,0.8078,-0.0378,0.0000,Idle,25,25,False,True
+touch priority,33.631,Hint,-0.2627,-0.3355,0.8218,-0.0357,0.0000,Idle,25,25,False,True
+touch priority,33.648,Hint,-0.2480,-0.3447,0.8325,-0.0343,0.0000,Idle,25,25,False,True
+touch priority,33.665,Hint,-0.2337,-0.3539,0.8431,-0.0329,0.0000,Idle,25,25,False,True
+touch priority,33.682,Hint,-0.2204,-0.3623,0.8529,-0.0317,0.0000,Idle,25,25,False,True
+touch priority,33.698,Hint,-0.2083,-0.3700,0.8620,-0.0307,0.0000,Idle,25,25,False,True
+touch priority,33.715,Hint,-0.1966,-0.3775,0.8709,-0.0298,0.0000,Idle,25,25,False,True
+touch priority,33.732,Hint,-0.1855,-0.3845,0.8792,-0.0289,0.0000,Idle,25,25,False,True
+touch priority,33.748,Hint,-0.1754,-0.3909,0.8870,-0.0282,0.0000,Idle,25,25,False,True
+touch priority,33.765,Hint,-0.1656,-0.3972,0.8945,-0.0276,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.767,Hint,-0.1656,-0.3972,0.8945,-0.0276,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.784,None,-0.1656,-0.3972,0.8954,-0.0267,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.814,None,-0.1656,-0.3972,0.8725,-0.0247,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.821,None,-0.1656,-0.3972,0.8634,-0.0241,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.836,None,-0.1656,-0.3972,0.8404,-0.0228,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.853,None,-0.1656,-0.3972,0.8121,-0.0214,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.869,None,-0.1656,-0.3972,0.7820,-0.0201,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.884,None,-0.1656,-0.3972,0.7496,-0.0188,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.900,None,-0.1656,-0.3972,0.7154,-0.0174,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.917,None,-0.1656,-0.3972,0.6795,-0.0161,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.934,None,-0.1656,-0.3972,0.6425,-0.0148,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.950,None,-0.1656,-0.3972,0.6061,-0.0136,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.968,None,-0.1656,-0.3972,0.5693,-0.0124,0.0000,Idle,25,25,False,True
+invalid hint and source idle,33.984,None,-0.1656,-0.3972,0.5336,-0.0113,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.002,None,-0.1656,-0.3972,0.4997,-0.0103,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.019,None,-0.1656,-0.3972,0.4652,-0.0093,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.037,None,-0.1656,-0.3972,0.4315,-0.0083,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.054,None,-0.1656,-0.3972,0.4017,-0.0075,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.071,None,-0.1656,-0.3972,0.3731,-0.0068,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.087,None,-0.1656,-0.3972,0.3467,-0.0062,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.103,None,-0.1656,-0.3972,0.3221,-0.0056,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.120,None,-0.1656,-0.3972,0.2985,-0.0050,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.137,None,-0.1656,-0.3972,0.2765,-0.0045,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.154,None,-0.1656,-0.3972,0.2545,-0.0040,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.170,None,-0.1656,-0.3972,0.2347,-0.0036,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.187,None,-0.1656,-0.3972,0.2167,-0.0033,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.203,None,-0.1656,-0.3972,0.2000,-0.0029,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.220,None,-0.1656,-0.3972,0.1838,-0.0026,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.237,None,-0.1656,-0.3972,0.1696,-0.0023,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.252,None,-0.1656,-0.3972,0.1564,-0.0021,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.268,None,-0.1656,-0.3972,0.1443,-0.0019,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.285,None,-0.1656,-0.3972,0.1327,-0.0017,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.320,None,-0.1656,-0.3972,0.1105,-0.0013,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.328,None,-0.1656,-0.3972,0.1061,-0.0013,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.344,None,-0.1656,-0.3972,0.0976,-0.0011,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.360,None,-0.1656,-0.3972,0.0896,-0.0010,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.376,None,-0.1656,-0.3972,0.0822,-0.0009,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.393,None,-0.1656,-0.3972,0.0753,-0.0008,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.411,None,-0.1656,-0.3972,0.0686,-0.0007,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.428,None,-0.1656,-0.3972,0.0624,-0.0006,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.455,None,-0.1656,-0.3972,0.0542,-0.0005,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.465,None,-0.1656,-0.3972,0.0508,-0.0005,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.475,None,-0.1656,-0.3972,0.0484,-0.0005,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.494,None,-0.1656,-0.3972,0.0438,-0.0004,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.510,None,-0.1656,-0.3972,0.0398,-0.0003,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.527,None,-0.1656,-0.3972,0.0362,-0.0003,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.544,None,-0.1656,-0.3972,0.0330,-0.0003,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.561,None,-0.1656,-0.3972,0.0300,-0.0002,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.578,None,-0.1656,-0.3972,0.0273,-0.0002,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.595,None,-0.1656,-0.3972,0.0247,-0.0002,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.615,None,-0.1656,-0.3972,0.0221,-0.0002,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.633,None,-0.1656,-0.3972,0.0200,-0.0001,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.641,None,-0.1656,-0.3972,0.0191,-0.0001,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.664,None,-0.1656,-0.3972,0.0167,-0.0001,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.681,None,-0.1656,-0.3972,0.0152,-0.0001,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.699,None,-0.1656,-0.3972,0.0137,-0.0001,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.717,None,-0.1656,-0.3972,0.0124,-0.0001,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.725,None,-0.1656,-0.3972,0.0119,-0.0001,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.745,None,-0.1656,-0.3972,0.0105,-0.0001,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.761,None,-0.1656,-0.3972,0.0096,-0.0001,0.0000,Idle,25,25,False,True
+invalid hint and source idle,34.778,None,-0.1656,-0.3972,0.0087,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,34.780,None,-0.1656,-0.3972,0.0087,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,34.798,Mouse,-0.1405,-0.3953,0.0275,0.0049,0.0000,Idle,25,25,False,True
+authored reaction priority,34.829,Mouse,-0.0569,-0.3657,0.1178,0.0295,0.0000,Idle,25,25,False,True
+authored reaction priority,34.837,Mouse,-0.0337,-0.3562,0.1444,0.0371,0.0000,Idle,25,25,False,True
+authored reaction priority,34.854,Mouse,0.0233,-0.3317,0.2111,0.0568,0.0000,Idle,25,25,False,True
+authored reaction priority,34.871,Mouse,0.0805,-0.3061,0.2791,0.0778,0.0000,Idle,25,25,False,True
+authored reaction priority,34.888,Mouse,0.1364,-0.2804,0.3464,0.0996,0.0000,Idle,25,25,False,True
+authored reaction priority,34.897,Mouse,0.1669,-0.2662,0.3835,0.1120,0.0000,Idle,25,25,False,True
+authored reaction priority,34.915,Mouse,0.2223,-0.2401,0.4509,0.1355,0.0000,Idle,25,25,False,True
+authored reaction priority,34.933,Mouse,0.2724,-0.2161,0.5124,0.1580,0.0000,Idle,25,25,False,True
+authored reaction priority,34.950,Mouse,0.3192,-0.1936,0.5699,0.1801,0.0000,Idle,25,25,False,True
+authored reaction priority,34.968,Mouse,0.3621,-0.1727,0.6231,0.2015,0.0000,Idle,25,25,False,True
+authored reaction priority,34.986,Mouse,0.4014,-0.1535,0.6718,0.2221,0.0000,Idle,25,25,False,True
+authored reaction priority,34.997,Mouse,0.4223,-0.1432,0.6978,0.2336,0.0000,Idle,25,25,False,True
+authored reaction priority,35.017,Mouse,0.4593,-0.1250,0.7438,0.2547,0.0000,Idle,25,25,False,True
+authored reaction priority,35.036,Mouse,0.4886,-0.1104,0.7804,0.2725,0.0000,Idle,25,25,False,True
+authored reaction priority,35.054,Mouse,0.5126,-0.0985,0.8104,0.2878,0.0000,Idle,25,25,False,True
+authored reaction priority,35.071,Mouse,0.5331,-0.0883,0.8360,0.3016,0.0000,Idle,25,25,False,True
+authored reaction priority,35.080,Mouse,0.5430,-0.0833,0.8484,0.3085,0.0000,Idle,25,25,False,True
+authored reaction priority,35.104,Mouse,0.5652,-0.0722,0.8763,0.3247,0.0000,Idle,25,25,False,True
+authored reaction priority,35.120,Mouse,0.5785,-0.0655,0.8930,0.3350,0.0000,Idle,25,25,False,True
+authored reaction priority,35.138,Mouse,0.5906,-0.0594,0.9082,0.3448,0.0000,Idle,25,25,False,True
+authored reaction priority,35.150,Mouse,0.5980,-0.0557,0.9174,0.3510,0.0000,Idle,25,25,False,True
+authored reaction priority,35.168,Mouse,0.6079,-0.0507,0.9300,0.3598,0.0000,Idle,25,25,False,True
+authored reaction priority,35.186,Mouse,0.6163,-0.0464,0.9405,0.3676,0.0000,Idle,25,25,False,True
+authored reaction priority,35.187,Mouse,0.6163,-0.0464,0.9405,0.3676,0.0000,Happy,25,25,False,True
+authored reaction priority,35.197,None,0.6163,-0.0464,0.9171,0.3640,0.0000,Happy,25,25,False,True
+authored reaction priority,35.218,None,0.6163,-0.0464,0.7709,0.3256,0.0000,Happy,25,25,False,True
+authored reaction priority,35.235,None,0.6163,-0.0464,0.6195,0.2799,0.0000,Happy,25,25,False,True
+authored reaction priority,35.253,None,0.6163,-0.0464,0.4811,0.2337,0.0000,Happy,25,25,False,True
+authored reaction priority,35.269,None,0.6163,-0.0464,0.3667,0.1918,0.0000,Happy,25,25,False,True
+authored reaction priority,35.286,None,0.6163,-0.0464,0.2741,0.1548,0.0000,Happy,25,25,False,True
+authored reaction priority,35.303,None,0.6163,-0.0464,0.2033,0.1239,0.0000,Happy,25,25,False,True
+authored reaction priority,35.332,None,0.6163,-0.0464,0.1159,0.0812,0.0000,Happy,25,25,False,True
+authored reaction priority,35.339,None,0.6163,-0.0464,0.1003,0.0727,0.0000,Happy,25,25,False,True
+authored reaction priority,35.356,None,0.6163,-0.0464,0.0715,0.0562,0.0000,Happy,25,25,False,True
+authored reaction priority,35.372,None,0.6163,-0.0464,0.0511,0.0436,0.0000,Happy,25,25,False,True
+authored reaction priority,35.389,None,0.6163,-0.0464,0.0364,0.0336,0.0000,Happy,25,25,False,True
+authored reaction priority,35.405,None,0.6163,-0.0464,0.0260,0.0259,0.0000,Happy,25,25,False,True
+authored reaction priority,35.424,None,0.6163,-0.0464,0.0176,0.0193,0.0000,Happy,25,25,False,True
+authored reaction priority,35.434,None,0.6163,-0.0464,0.0140,0.0161,0.0000,Happy,25,25,False,True
+authored reaction priority,35.455,None,0.6163,-0.0464,0.0090,0.0115,0.0000,Happy,25,25,False,True
+authored reaction priority,35.472,None,0.6163,-0.0464,0.0061,0.0085,0.0000,Happy,25,25,False,True
+authored reaction priority,35.490,None,0.6163,-0.0464,0.0042,0.0063,0.0000,Happy,25,25,False,True
+authored reaction priority,35.507,None,0.6163,-0.0464,0.0029,0.0047,0.0000,Happy,25,25,False,True
+authored reaction priority,35.523,None,0.6163,-0.0464,0.0020,0.0036,0.0000,Happy,25,25,False,True
+authored reaction priority,35.539,None,0.6163,-0.0464,0.0014,0.0027,0.0000,Happy,25,25,False,True
+authored reaction priority,35.556,None,0.6163,-0.0464,0.0009,0.0020,0.0000,Happy,25,25,False,True
+authored reaction priority,35.573,None,0.6163,-0.0464,0.0006,0.0015,0.0000,Happy,25,25,False,True
+authored reaction priority,35.590,None,0.6163,-0.0464,0.0004,0.0011,0.0000,Happy,25,25,False,True
+authored reaction priority,35.591,None,0.6163,-0.0464,0.0004,0.0011,0.0000,Happy,25,25,False,True
+authored reaction priority,35.600,None,0.6163,-0.0464,0.0003,0.0009,0.0000,Happy,25,25,False,True
+authored reaction priority,35.622,None,0.6163,-0.0464,0.0002,0.0006,0.0000,Happy,25,25,False,True
+authored reaction priority,35.638,None,0.6163,-0.0464,0.0001,0.0005,0.0000,Happy,25,25,False,True
+authored reaction priority,35.654,None,0.6163,-0.0464,0.0001,0.0003,0.0000,Happy,25,25,False,True
+authored reaction priority,35.671,None,0.6163,-0.0464,0.0001,0.0003,0.0000,Happy,25,25,False,True
+authored reaction priority,35.686,None,0.6163,-0.0464,0.0000,0.0002,0.0000,Happy,25,25,False,True
+authored reaction priority,35.704,None,0.6163,-0.0464,0.0000,0.0001,0.0000,Happy,25,25,False,True
+authored reaction priority,35.720,None,0.6163,-0.0464,0.0000,0.0001,0.0000,Happy,25,25,False,True
+authored reaction priority,35.736,None,0.6163,-0.0464,0.0000,0.0001,0.0000,Happy,25,25,False,True
+authored reaction priority,35.753,None,0.6163,-0.0464,0.0000,0.0001,0.0000,Happy,25,25,False,True
+authored reaction priority,35.769,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.786,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.804,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.833,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.840,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.856,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.873,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.889,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.907,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.923,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.939,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.956,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.973,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,35.990,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.006,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.026,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.044,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.062,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.071,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.091,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.110,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.120,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.144,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.154,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.174,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.192,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.211,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.224,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.244,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.255,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.275,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.293,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.310,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.341,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.350,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.360,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.379,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.392,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.415,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.428,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.450,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.465,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.476,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.499,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.512,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.532,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.544,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.565,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.581,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.603,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.616,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.629,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.651,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.661,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.680,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.697,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.714,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.733,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.742,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.763,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.782,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.793,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.814,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.848,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.858,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.882,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.892,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.914,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.934,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.944,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.965,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.974,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,36.997,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.016,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.025,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.046,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.067,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.080,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.091,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.112,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.130,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.147,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.160,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.182,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.191,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.214,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.225,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.249,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.258,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.279,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.299,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.310,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.323,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.364,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.379,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.394,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.411,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.423,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.440,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.454,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.471,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.487,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.503,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.519,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.533,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.555,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.566,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.589,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.602,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.627,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.638,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.657,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.668,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.689,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.709,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.719,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.740,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.752,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.774,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.786,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.808,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.818,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.854,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.865,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.884,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.900,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.919,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.930,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.950,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.970,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,37.981,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.004,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.017,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.031,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.053,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.065,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.086,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.098,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.119,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.133,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.147,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.161,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.184,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.197,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.217,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.228,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.250,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.270,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.280,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.298,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.318,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.336,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.365,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.375,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.398,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.408,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.429,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.440,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.465,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.475,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.498,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.509,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.530,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.549,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.558,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.577,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.598,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.606,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.627,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.646,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.663,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.680,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.696,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.713,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.730,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.746,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.763,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.779,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.796,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.813,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Happy,25,25,False,True
+authored reaction priority,38.830,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,38.864,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,38.871,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,38.888,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,38.905,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,38.922,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,38.939,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,38.955,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,38.973,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,38.989,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.006,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.022,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.039,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.055,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.072,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.089,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.106,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.115,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.136,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.155,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.165,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.187,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.205,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.222,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.238,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.255,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.271,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.288,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+authored reaction priority,39.304,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+worry strength,39.306,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Idle,25,25,False,True
+worry strength,39.323,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.339,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.368,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.376,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.393,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.402,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.425,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.436,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.458,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.475,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.493,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.502,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.524,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.542,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.559,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.576,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.586,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.604,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.622,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.623,None,0.6163,-0.0464,0.0000,0.0000,0.0000,Worried,25,25,False,True
+worry strength,39.640,Mouse,0.6011,-0.0432,0.0046,-0.0013,0.0000,Worried,25,25,False,True
+worry strength,39.657,Mouse,0.5470,-0.0408,0.0173,-0.0051,0.0000,Worried,25,25,False,True
+worry strength,39.674,Mouse,0.4742,-0.0392,0.0336,-0.0103,0.0000,Worried,25,25,False,True
+worry strength,39.691,Mouse,0.3876,-0.0381,0.0527,-0.0166,0.0000,Worried,25,25,False,True
+worry strength,39.707,Mouse,0.2963,-0.0374,0.0727,-0.0234,0.0000,Worried,25,25,False,True
+worry strength,39.724,Mouse,0.2052,-0.0369,0.0925,-0.0306,0.0000,Worried,25,25,False,True
+worry strength,39.740,Mouse,0.1141,-0.0366,0.1122,-0.0380,0.0000,Worried,25,25,False,True
+worry strength,39.756,Mouse,0.0270,-0.0365,0.1310,-0.0455,0.0000,Worried,25,25,False,True
+worry strength,39.772,Mouse,-0.0547,-0.0365,0.1485,-0.0527,0.0000,Worried,25,25,False,True
+worry strength,39.789,Mouse,-0.1325,-0.0365,0.1653,-0.0600,0.0000,Worried,25,25,False,True
+worry strength,39.807,Mouse,-0.2095,-0.0367,0.1818,-0.0675,0.0000,Worried,25,25,False,True
+worry strength,39.823,Mouse,-0.2735,-0.0368,0.1955,-0.0740,0.0000,Worried,25,25,False,True
+worry strength,39.840,Mouse,-0.3330,-0.0369,0.2082,-0.0803,0.0000,Worried,25,25,False,True
+worry strength,39.866,Mouse,-0.4145,-0.0372,0.2256,-0.0896,0.0000,Worried,25,25,False,True
+worry strength,39.873,Mouse,-0.4347,-0.0373,0.2300,-0.0919,0.0000,Worried,25,25,False,True
+worry strength,39.890,Mouse,-0.4752,-0.0374,0.2386,-0.0969,0.0000,Worried,25,25,False,True
+worry strength,39.907,Mouse,-0.5128,-0.0376,0.2466,-0.1017,0.0000,Worried,25,25,False,True
+worry strength,39.923,Mouse,-0.5463,-0.0377,0.2538,-0.1062,0.0000,Worried,25,25,False,True
+worry strength,39.940,Mouse,-0.5755,-0.0379,0.2600,-0.1103,0.0000,Worried,25,25,False,True
+worry strength,39.957,Mouse,-0.6006,-0.0380,0.2654,-0.1140,0.0000,Worried,25,25,False,True
+worry strength,39.974,Mouse,-0.6229,-0.0381,0.2701,-0.1174,0.0000,Worried,25,25,False,True
+worry strength,39.990,Mouse,-0.6424,-0.0382,0.2743,-0.1205,0.0000,Worried,25,25,False,True
+worry strength,40.006,Mouse,-0.6588,-0.0383,0.2777,-0.1233,0.0000,Worried,25,25,False,True
+worry strength,40.023,Mouse,-0.6731,-0.0384,0.2808,-0.1258,0.0000,Worried,25,25,False,True
+worry strength,40.040,Mouse,-0.6859,-0.0385,0.2835,-0.1282,0.0000,Worried,25,25,False,True
+worry strength,40.056,Mouse,-0.6968,-0.0385,0.2858,-0.1303,0.0000,Worried,25,25,False,True
+worry strength,40.073,Mouse,-0.7063,-0.0386,0.2879,-0.1322,0.0000,Worried,25,25,False,True
+worry strength,40.090,Mouse,-0.7146,-0.0386,0.2896,-0.1340,0.0000,Worried,25,25,False,True
+worry strength,40.106,Mouse,-0.7214,-0.0387,0.2911,-0.1355,0.0000,Worried,25,25,False,True
+worry strength,40.123,Mouse,-0.7277,-0.0387,0.2924,-0.1369,0.0000,Worried,25,25,False,True
+worry strength,40.141,Mouse,-0.7329,-0.0387,0.2935,-0.1382,0.0000,Worried,25,25,False,True
+worry strength,40.159,Mouse,-0.7379,-0.0388,0.2946,-0.1395,0.0000,Worried,25,25,False,True
+worry strength,40.176,Mouse,-0.7418,-0.0388,0.2954,-0.1405,0.0000,Worried,25,25,False,True
+pause visibility reset,40.178,Mouse,-0.7418,-0.0388,0.2954,-0.1405,0.0000,Worried,25,25,False,False
+pause visibility reset,40.188,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.207,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.223,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.240,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.256,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.273,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.289,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.306,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.323,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.340,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.370,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.377,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.393,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,False
+pause visibility reset,40.394,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.413,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.424,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.447,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.459,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.476,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.493,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.510,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.527,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.543,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.560,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.576,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.593,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+pause visibility reset,40.611,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,40.612,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,40.630,Mouse,0.0099,-0.0005,0.0183,0.0037,0.0000,Idle,25,25,False,True
+board identity reset,40.647,Mouse,0.0317,-0.0017,0.0583,0.0123,0.0000,Idle,25,25,False,True
+board identity reset,40.668,Mouse,0.0687,-0.0038,0.1265,0.0277,0.0000,Idle,25,25,False,True
+board identity reset,40.681,Mouse,0.0942,-0.0052,0.1733,0.0387,0.0000,Idle,25,25,False,True
+board identity reset,40.693,Mouse,0.1240,-0.0068,0.2282,0.0521,0.0000,Idle,25,25,False,True
+board identity reset,40.711,Mouse,0.1648,-0.0091,0.3033,0.0713,0.0000,Idle,25,25,False,True
+board identity reset,40.729,Mouse,0.2034,-0.0112,0.3743,0.0903,0.0000,Idle,25,25,False,True
+board identity reset,40.746,Mouse,0.2393,-0.0132,0.4405,0.1090,0.0000,Idle,25,25,False,True
+board identity reset,40.763,Mouse,0.2720,-0.0150,0.5006,0.1267,0.0000,Idle,25,25,False,True
+board identity reset,40.780,Mouse,0.3020,-0.0166,0.5558,0.1438,0.0000,Idle,25,25,False,True
+board identity reset,40.796,Mouse,0.3294,-0.0181,0.6063,0.1602,0.0000,Idle,25,25,False,True
+board identity reset,40.813,Mouse,0.3552,-0.0195,0.6537,0.1762,0.0000,Idle,25,25,False,True
+board identity reset,40.828,Mouse,0.3769,-0.0207,0.6938,0.1905,0.0000,Idle,25,25,False,True
+board identity reset,40.844,Mouse,0.3971,-0.0218,0.7309,0.2042,0.0000,Idle,25,25,False,True
+board identity reset,40.871,Mouse,0.4255,-0.0234,0.7831,0.2248,0.0000,Idle,25,25,False,True
+board identity reset,40.879,Mouse,0.4329,-0.0238,0.7967,0.2304,0.0000,Idle,25,25,False,True
+board identity reset,40.895,Mouse,0.4466,-0.0246,0.8221,0.2412,0.0000,Idle,25,25,False,True
+board identity reset,40.911,Mouse,0.4589,-0.0252,0.8447,0.2513,0.0000,Idle,25,25,False,True
+board identity reset,40.927,Mouse,0.4700,-0.0258,0.8650,0.2608,0.0000,Idle,25,25,False,True
+board identity reset,40.944,Mouse,0.4798,-0.0264,0.8832,0.2697,0.0000,Idle,25,25,False,True
+board identity reset,40.960,Mouse,0.4883,-0.0269,0.8989,0.2777,0.0000,Idle,25,25,False,True
+board identity reset,40.976,Mouse,0.4958,-0.0273,0.9125,0.2850,0.0000,Idle,25,25,False,True
+board identity reset,40.993,Mouse,0.5022,-0.0276,0.9243,0.2916,0.0000,Idle,25,25,False,True
+board identity reset,41.011,Mouse,0.5083,-0.0280,0.9356,0.2983,0.0000,Idle,25,25,False,True
+board identity reset,41.027,Mouse,0.5133,-0.0282,0.9448,0.3039,0.0000,Idle,25,25,False,True
+board identity reset,41.029,Mouse,0.5133,-0.0282,0.9448,0.3039,0.0000,Idle,25,25,False,True
+board identity reset,41.047,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.064,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.080,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.096,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.112,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.128,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.147,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.148,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.158,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.176,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.192,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.210,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.228,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.248,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+board identity reset,41.257,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+QA gate,41.258,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+QA gate,41.279,Mouse,-0.0164,-0.0008,0.0253,-0.0062,0.0000,Idle,25,25,False,True
+QA gate,41.296,Mouse,-0.0452,-0.0021,0.0698,-0.0177,0.0000,Idle,25,25,False,True
+QA gate,41.312,Mouse,-0.0817,-0.0038,0.1263,-0.0329,0.0000,Idle,25,25,False,True
+QA gate,41.330,Mouse,-0.1245,-0.0057,0.1924,-0.0516,0.0000,Idle,25,25,False,True
+QA gate,41.347,Mouse,-0.1685,-0.0078,0.2603,-0.0717,0.0000,Idle,25,25,False,True
+QA gate,41.375,Mouse,-0.2441,-0.0113,0.3771,-0.1085,0.0000,Idle,25,25,False,True
+QA gate,41.384,Mouse,-0.2667,-0.0123,0.4121,-0.1201,0.0000,Idle,25,25,False,True
+QA gate,41.401,Mouse,-0.3068,-0.0142,0.4740,-0.1414,0.0000,Idle,25,25,False,True
+QA gate,41.410,Mouse,-0.3282,-0.0152,0.5072,-0.1533,0.0000,Idle,25,25,False,True
+QA gate,41.436,Mouse,-0.3809,-0.0176,0.5885,-0.1838,0.0000,Idle,25,25,False,True
+QA gate,41.445,Mouse,-0.3993,-0.0184,0.6170,-0.1950,0.0000,Idle,25,25,False,True
+QA gate,41.464,Mouse,-0.4315,-0.0199,0.6667,-0.2153,0.0000,Idle,25,25,False,True
+QA gate,41.482,Mouse,-0.4589,-0.0212,0.7091,-0.2335,0.0000,Idle,25,25,False,True
+QA gate,41.499,Mouse,-0.4843,-0.0224,0.7483,-0.2512,0.0000,Idle,25,25,False,True
+QA gate,41.517,Mouse,-0.5070,-0.0234,0.7834,-0.2679,0.0000,Idle,25,25,False,True
+QA gate,41.535,Mouse,-0.5265,-0.0243,0.8134,-0.2829,0.0000,Idle,25,25,False,True
+QA gate,41.543,Mouse,-0.5347,-0.0247,0.8262,-0.2895,0.0000,Idle,25,25,False,True
+QA gate,41.566,Mouse,-0.5529,-0.0255,0.8543,-0.3046,0.0000,Idle,25,25,False,True
+QA gate,41.583,Mouse,-0.5662,-0.0261,0.8749,-0.3163,0.0000,Idle,25,25,False,True
+QA gate,41.600,Mouse,-0.5778,-0.0267,0.8928,-0.3270,0.0000,Idle,25,25,False,True
+QA gate,41.618,Mouse,-0.5880,-0.0272,0.9085,-0.3369,0.0000,Idle,25,25,False,True
+QA gate,41.636,Mouse,-0.5970,-0.0276,0.9224,-0.3461,0.0000,Idle,25,25,False,True
+QA gate,41.644,Mouse,-0.6004,-0.0277,0.9277,-0.3497,0.0000,Idle,25,25,False,True
+QA gate,41.665,Mouse,-0.6081,-0.0281,0.9396,-0.3582,0.0000,Idle,25,25,False,True
+QA gate,41.665,Mouse,-0.6081,-0.0281,0.9396,-0.3582,0.0000,Idle,25,25,False,True
+QA gate,41.685,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+QA gate,41.705,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+QA gate,41.714,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+QA gate,41.735,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+QA gate,41.753,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
+QA gate,41.771,None,0.0000,0.0000,0.0000,0.0000,0.0000,Idle,25,25,False,True
