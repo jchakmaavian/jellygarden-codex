@@ -1,0 +1,142 @@
+diff --git a/Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs b/Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs
+index 4d434bfd..ac24fe6d 100644
+--- a/Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs
++++ b/Assets/JellyGarden/Scripts/GUI/RoyalGameplayPresentation.cs
+@@ -12,8 +12,10 @@ namespace RoyalThrone.Presentation
+     public sealed class RoyalGameplayPresentation : MonoBehaviour
+     {
+         CanvasGroup group; RectTransform content,king; Image kingImage;Text moves,level,goals;
+-        SpriteRenderer backdrop;float excitement,lastRefresh;bool built,ready;
+-        RoyalThrone.Characters.KingVanguardSlot kingVanguard;bool kingCheering;
++        SpriteRenderer backdrop;float lastRefresh;bool built,ready;
++        RoyalThrone.Characters.KingVanguardSlot kingVanguard;
++        readonly RoyalThrone.Characters.KingVanguardFeedbackQueue kingFeedback=new RoyalThrone.Characters.KingVanguardFeedbackQueue();
++        LevelManager feedbackKingLevel; Transform feedbackKingField; int feedbackKingAttempt;
+         enum PendingKingActivity { None, ExtraMoves, Relief }
+         PendingKingActivity pendingKingActivity;
+         LevelManager pendingKingLevel; Transform pendingKingField; int pendingKingAttempt;
+@@ -69,6 +71,8 @@ namespace RoyalThrone.Presentation
+             RoyalPowerupDirector.Reaction+=React;
+             RoyalThrone.Characters.KingVanguardActivityEvents.ExtraMovesGranted+=KingExtraMoves;
+             RoyalThrone.Characters.KingVanguardActivityEvents.GoalsCompleted+=KingGoalsCompleted;
++            RoyalThrone.Characters.KingVanguardActivityEvents.MatchResolved+=KingMatchResolved;
++            RoyalThrone.Characters.KingVanguardActivityEvents.PowerupCreated+=KingPowerupCreated;
+         }
+         // A level interrupted by the OS (app sent to the background; on devices also focus loss, e.g. the notification
+         // shade) comes back to the pause menu instead of straight into live play. Only while actually playing with no
+@@ -85,14 +89,64 @@ namespace RoyalThrone.Presentation
+             RoyalPowerupDirector.Reaction-=React;
+             RoyalThrone.Characters.KingVanguardActivityEvents.ExtraMovesGranted-=KingExtraMoves;
+             RoyalThrone.Characters.KingVanguardActivityEvents.GoalsCompleted-=KingGoalsCompleted;
+-            ClearKingActivity();
++            RoyalThrone.Characters.KingVanguardActivityEvents.MatchResolved-=KingMatchResolved;
++            RoyalThrone.Characters.KingVanguardActivityEvents.PowerupCreated-=KingPowerupCreated;
++            ClearKingActivity();ClearKingFeedback();
++        }
++        void React(float value)
++        {
++            // Ordinary matches have their own committed event; only stronger power-up feedback uses the VFX signal.
++            if(value>.5f)QueueKingFeedback(LevelManager.THIS,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup);
++        }
++        void KingMatchResolved(LevelManager level,int matchedPieces)
++        {QueueKingFeedback(level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Match);}
++        void KingPowerupCreated(LevelManager level,Item item)
++        {QueueKingFeedback(level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup);}
++        bool CanPresentKingFeedback(LevelManager level)
++        {
++            if(!isActiveAndEnabled||!ready||!level||level!=LevelManager.THIS||level.gameStatus!=GameState.Playing||
++                !level.GameField||!level.GameField.gameObject.activeInHierarchy||!group||group.alpha<=0||
++                (prePlay&&prePlay.gameObject.activeInHierarchy)||!kingVanguard||!kingVanguard.Mounted||
++                !kingVanguard.Character.isActiveAndEnabled||pendingKingActivity!=PendingKingActivity.None||
++                (MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput))return false;
++            var activity=kingVanguard.Character.CurrentActivity;
++            return activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.ExtraMoves&&
++                activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.Relief&&
++                activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.Sad&&
++                activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.Celebration;
++        }
++        void ClearKingFeedback()
++        {kingFeedback.Clear();feedbackKingLevel=null;feedbackKingField=null;feedbackKingAttempt=0;}
++        bool CheckKingFeedbackScope(LevelManager level)
++        {
++            if(!CanPresentKingFeedback(level)){ClearKingFeedback();return false;}
++            if(feedbackKingLevel!=level||feedbackKingField!=level.GameField||feedbackKingAttempt!=level.passLevelCounter)
++            {
++                bool changed=feedbackKingLevel||feedbackKingField;
++                ClearKingFeedback();
++                feedbackKingLevel=level;feedbackKingField=level.GameField;feedbackKingAttempt=level.passLevelCounter;
++                if(changed)kingVanguard.Character.ResetToIdle();
++            }
++            return true;
++        }
++        void QueueKingFeedback(LevelManager level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback feedback)
++        {
++            if(!level||level!=LevelManager.THIS)return;
++            if(CheckKingFeedbackScope(level))kingFeedback.Offer(feedback,Time.unscaledTime);
++        }
++        void PresentKingFeedback(LevelManager level)
++        {
++            if(!CheckKingFeedbackScope(level)||!kingFeedback.TryGet(Time.unscaledTime,out var feedback))return;
++            bool accepted=feedback==RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup
++                ?kingVanguard.PlayHappy():kingVanguard.Character.PlayMatchAcknowledgement();
++            if(accepted)kingFeedback.Accepted(Time.unscaledTime);
+         }
+-        void React(float value){excitement=Mathf.Max(excitement,value);}
+         void KingExtraMoves(LevelManager level){QueueKingActivity(level,PendingKingActivity.ExtraMoves);}
+         void KingGoalsCompleted(LevelManager level){QueueKingActivity(level,PendingKingActivity.Relief);}
+         void QueueKingActivity(LevelManager level,PendingKingActivity activity)
+         {
+             if(!isActiveAndEnabled||!level||level!=LevelManager.THIS||!level.GameField||!level.GameField.gameObject.activeInHierarchy)return;
++            ClearKingFeedback();
+             // One pending action, scoped to the actual board attempt. Goal completion wins over continuation cheers.
+             if(pendingKingActivity==PendingKingActivity.Relief&&pendingKingLevel==level&&pendingKingAttempt==level.passLevelCounter)return;
+             pendingKingActivity=activity;pendingKingLevel=level;pendingKingField=level.GameField;pendingKingAttempt=level.passLevelCounter;
+@@ -109,9 +163,11 @@ namespace RoyalThrone.Presentation
+             if(pendingKingActivity==PendingKingActivity.None||!kingVanguard||!kingVanguard.Mounted||group.alpha<=0)return;
+             // A continue-purchase banner can still be leaving after Playing resumes. Wait until the portrait is uncovered.
+             if(pendingKingActivity==PendingKingActivity.ExtraMoves&&MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput)return;
+-            var action=pendingKingActivity;ClearKingActivity();
+-            if(action==PendingKingActivity.Relief){kingVanguard.SetWorried(false);kingVanguard.Character.PlayRelief();}
+-            else kingVanguard.Character.PlayExtraMoves();
++            ClearKingFeedback();
++            bool accepted;
++            if(pendingKingActivity==PendingKingActivity.Relief){kingVanguard.SetWorried(false);accepted=kingVanguard.Character.PlayRelief();}
++            else accepted=kingVanguard.Character.PlayExtraMoves();
++            if(accepted)ClearKingActivity();
+         }
+         // Each yield only marks a frame boundary for the startup loading screen; run straight through, it is the same build.
+         IEnumerator Build()
+@@ -151,7 +207,7 @@ namespace RoyalThrone.Presentation
+             yield return null;   // the king's rig below is the build's largest single piece: a frame of its own
+             // The fresh APK-derived King Vanguard rig uses the existing UI arch and gold ring.
+             var portraitMask=RoyalGameplayHud.WindowMask(portrait.slot,"King Vanguard portrait mask");
+-            kingVanguard=RoyalThrone.Characters.KingVanguardSlot.Mount(kingImage,RoyalThrone.Characters.KingVanguardCharacter.Framing.Bust,RoyalThrone.Characters.KingVanguardSlot.Mode.Idle,portraitMask.rectTransform,false);
++            kingVanguard=RoyalThrone.Characters.KingVanguardSlot.Mount(kingImage,RoyalThrone.Characters.KingVanguardCharacter.Framing.GameplayPortrait,RoyalThrone.Characters.KingVanguardSlot.Mode.Idle,portraitMask.rectTransform,false);
+             if(!kingVanguard)Destroy(portraitMask.gameObject);
+             yield return null;
+             // Keep the live level label available to existing diagnostics, without adding
+@@ -225,7 +281,7 @@ namespace RoyalThrone.Presentation
+             if(lm.gameStatus==GameState.Pause||lm.gameStatus==GameState.GameOver||lm.gameStatus==GameState.Win||lm.gameStatus==GameState.PreFailed){group.alpha=0;group.blocksRaycasts=false;}
+             // This HUD hides by CanvasGroup, so explicitly close its character slot to clear a stale reaction on return.
+             if(kingVanguard)kingVanguard.SetShown(group.alpha>0);
+-            if(group.alpha<=0){excitement=0;kingCheering=false;}
++            if(group.alpha<=0)ClearKingFeedback();
+             // This overlay canvas sits above the popup canvas, so while any popup is open the HUD must not take its taps.
+             if(MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput)group.blocksRaycasts=false;
+             if(!show)return;
+@@ -243,14 +299,13 @@ namespace RoyalThrone.Presentation
+                 for(int i=0;i<goalIcons.Count;i++){goalIcons[i].gameObject.SetActive(i<shown);goalNumbers[i].gameObject.SetActive(i<shown);}
+                 if(shown>0)LayoutGoals(lm,shown);
+             }
+-            excitement=Mathf.MoveTowards(excitement,0,Time.deltaTime*.8f);
+             if(kingVanguard&&kingVanguard.Mounted)
+             {
+                 // The imported APK KingUi uses its finite positive reaction, then resumes the latest low-move context.
+                 // The packaged StartWorryMoveCount is 3. Time limits are not move counts.
+                 kingVanguard.SetWorried(lm.gameStatus==GameState.Playing&&lm.limitType!=LIMIT.TIME&&lm.Limit<=RoyalThrone.Characters.KingVanguardCharacter.WorryMoveCount);
+                 PresentKingActivity();
+-                bool cheering=excitement>.5f;if(cheering&&!kingCheering)kingVanguard.PlayHappy();kingCheering=cheering;
++                PresentKingFeedback(lm);
+             }
+             else
+             {

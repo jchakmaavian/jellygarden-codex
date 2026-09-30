@@ -1,0 +1,20 @@
+{
+    "capturedUtc":  "2026-09-30T04:58:54.9831884Z",
+    "purpose":  "Immutable pre-mouth-correction installed atlas snapshots",
+    "files":  [
+                  {
+                      "name":  "King_Vanguard",
+                      "source":  "Assets/Characters/KingVenguard/V2/Spine/King_Vanguard.png",
+                      "snapshot":  "Design/KingVanguard-ActivityFix-20260930/Before/Atlases/King_Vanguard.png",
+                      "sha256":  "882b0b4daa1f57bbd4af66da64b8aadfe595a766f3c3a8aa54b1b06399f434c2",
+                      "bytes":  886978
+                  },
+                  {
+                      "name":  "AreaCompleted_Vanguard",
+                      "source":  "Assets/Characters/KingVenguard/V2/Spine/AreaCompleted_Vanguard.png",
+                      "snapshot":  "Design/KingVanguard-ActivityFix-20260930/Before/Atlases/AreaCompleted_Vanguard.png",
+                      "sha256":  "d85e15dadf189b87754e918953e747b17b8597fbaa40e4d3aa091f682e6c2e90",
+                      "bytes":  5126028
+                  }
+              ]
+}

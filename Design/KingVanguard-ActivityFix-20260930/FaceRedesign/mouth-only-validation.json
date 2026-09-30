@@ -1,0 +1,38 @@
+{
+    "generatedUtc":  "2026-09-30T05:01:17.1474813Z",
+    "sourceWorkboard":  "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\KingVanguard-ActivityFix-20260930\\FaceRedesign\\Portrait-mouth-repaired-workboard.png",
+    "sourceWorkboardSha256":  "ddd4133819f04114a95639869fcad365249513e06cb85445753420869e06f19d",
+    "packerSha256":  "ec258dc1373580be35d67fe2c6b5903ddfe1eae328ccba9f2a8c7f5790d2d512",
+    "whitelist":  [
+                      "Ağız"
+                  ],
+    "cell":  20,
+    "baselineManifest":  "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\KingVanguard-ActivityFix-20260930\\Before\\atlas-hashes.json",
+    "assetsModified":  false,
+    "results":  [
+                    {
+                        "name":  "King_Vanguard",
+                        "baselineSha256":  "882b0b4daa1f57bbd4af66da64b8aadfe595a766f3c3a8aa54b1b06399f434c2",
+                        "outputSha256":  "e769a63f610e82b39a325ef8e9573d2664b8c3f424c36a761d5dbb3e2b96fa2e",
+                        "region":  "Ağız",
+                        "changedMouthRgbPixels":  6709,
+                        "otherAtlasPixelsChanged":  0,
+                        "originalFacialRgbFallback":  0,
+                        "savedPngByteDifferences":  0,
+                        "output":  "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\KingVanguard-ActivityFix-20260930\\FaceRedesign\\Packed\\King_Vanguard.png",
+                        "report":  "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\KingVanguard-ActivityFix-20260930\\FaceRedesign\\Packed\\King_Vanguard.pack-report.json"
+                    },
+                    {
+                        "name":  "AreaCompleted_Vanguard",
+                        "baselineSha256":  "d85e15dadf189b87754e918953e747b17b8597fbaa40e4d3aa091f682e6c2e90",
+                        "outputSha256":  "09e909b4016fd87a7450fa2a8ebf75753caf071b280d59370f2b4af0e534ad40",
+                        "region":  "Ağız",
+                        "changedMouthRgbPixels":  7127,
+                        "otherAtlasPixelsChanged":  0,
+                        "originalFacialRgbFallback":  0,
+                        "savedPngByteDifferences":  0,
+                        "output":  "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\KingVanguard-ActivityFix-20260930\\FaceRedesign\\Packed\\AreaCompleted_Vanguard.png",
+                        "report":  "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\KingVanguard-ActivityFix-20260930\\FaceRedesign\\Packed\\AreaCompleted_Vanguard.pack-report.json"
+                    }
+                ]
+}
