@@ -1,0 +1,57 @@
+King_Vanguard: 3.8.84; 29 bones; 35 slots; 32 animations
+Happy_1=3.333333
+Happy_2=3.766667
+Heyecan_1=5.983333
+Relax_1=1.983333
+_3=0
+animation=4.583333
+idle_connect_1=4.583333
+idle_connect_2=4.583333
+idle_loop_1=8.95
+idle_loop_2=5.216667
+idle_loop_3=4.216667
+k-1_dans=4.55
+k-1_idle_3=5.116667
+k-1_idle_4=4.816667
+k-1_idle_5=2.483333
+k-1_idle_6=1
+k-1_kaygi=5.983333
+k-1_kaygi_loop=11.65
+k-1_sevinme=2.816667
+k-1_sevinme_2=2.25
+k-1_sevinme_3=0.7
+k-1_sevinme _4=4.216667
+k-1_sevinme_5=3.766667
+k-1_sevinme_NEW=2.816667
+k-1_sevinme_NEW_yedek=2.816667
+k-1_sevinme_NEW_yedek2=2.816667
+k-1_sevinme_NEW_yedek3=2.816667
+k-1_uzulme=2.816667
+k-1 animation=18.66667
+k-1sevinme_6=3.633333
+k-2=1.916667
+kaygı-uzulme=1.516667
+Setup bounds units -2.138504,0.008421067,4.274004,4.033188
+Skin: default
+AreaCompleted_Vanguard: 3.8.99; 58 bones; 97 slots; 10 animations
+king_area 1=2.65
+king_area_2=2.083333
+king_area_3=6.55
+king_area_4=5.033333
+king_drill_loop=6.516667
+king_drill_win=2.566667
+king_drill_win_clap_finish=0.8166667
+king_drill_win_clap_look_loop=1.866667
+king_drill_win_clap_loop=1.2
+king_drill_win_clap_start=1.466667
+Setup bounds units -8.867059,0.01778487,15.82711,26.49413
+Skin: default
+Nightmare_Vanguard: 3.8.99; 75 bones; 43 slots; 6 animations
+animation=10
+animation2=10
+animation3=11.66667
+animation4=10
+dog_cycle=1.333333
+yedek_cycle=2.333333
+Setup bounds units -4.88,-4.764956,9.76,9.530001
+Skin: default

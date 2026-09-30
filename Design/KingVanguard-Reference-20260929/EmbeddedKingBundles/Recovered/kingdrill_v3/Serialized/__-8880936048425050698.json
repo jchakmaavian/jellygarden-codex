@@ -1,0 +1,39 @@
+{
+  "m_GameObject": {
+    "m_FileID": 0,
+    "m_PathID": -8966585853914693545
+  },
+  "m_Enabled": 1,
+  "m_Script": {
+    "m_FileID": 0,
+    "m_PathID": 8870729569468559531
+  },
+  "m_Name": "",
+  "VertexCurve": {
+    "m_Curve": [
+      {
+        "time": 0.0,
+        "value": 0.0,
+        "inSlope": Infinity,
+        "outSlope": 0.18817351758480072,
+        "weightedMode": 0,
+        "inWeight": 0.0,
+        "outWeight": 0.03128824010491371
+      },
+      {
+        "time": 0.995819091796875,
+        "value": 0.000244140625,
+        "inSlope": -0.20729297399520874,
+        "outSlope": -0.995363712310791,
+        "weightedMode": 0,
+        "inWeight": 0.01835578680038452,
+        "outWeight": 0.0
+      }
+    ],
+    "m_PreInfinity": 2,
+    "m_PostInfinity": 2,
+    "m_RotationOrder": 4
+  },
+  "CurveScale": 0.0,
+  "MaxThreeCheckDisabled": 0
+}

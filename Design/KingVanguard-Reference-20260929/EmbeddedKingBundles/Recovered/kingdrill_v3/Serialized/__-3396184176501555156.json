@@ -1,0 +1,25 @@
+{
+  "m_GameObject": {
+    "m_FileID": 0,
+    "m_PathID": 495648605446209445
+  },
+  "m_Enabled": 1,
+  "m_Script": {
+    "m_FileID": 0,
+    "m_PathID": 7619977496564052230
+  },
+  "m_Name": "",
+  "initialDelay": 0.5,
+  "lightning": {
+    "m_FileID": 0,
+    "m_PathID": 3771248749036064247
+  },
+  "wallAnimator": {
+    "m_FileID": 0,
+    "m_PathID": 6446212602081285829
+  },
+  "mover": {
+    "m_FileID": 0,
+    "m_PathID": -8894112408130404607
+  }
+}

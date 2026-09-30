@@ -1,0 +1,21 @@
+Recovered King animation contact sheets
+Samples: 0%, 33%, 66%, 95%; framing is fixed across each clip.
+King_Vanguard: 31 nonzero tracks; 1 zero-duration tracks skipped.
+  King_Vanguard-page-01.png
+  King_Vanguard-page-02.png
+  King_Vanguard-page-03.png
+  King_Vanguard-page-04.png
+AreaCompleted_Vanguard: 10 nonzero tracks; 0 zero-duration tracks skipped.
+  king_area 1: This original track leaves legacy arm variants active in its setup pose. The review preserves that source result. Use the complete drill/clap loops for a standalone character; the original game's initialization for these older variants is unverified.
+  king_area_2: This original track leaves legacy arm variants active in its setup pose. The review preserves that source result. Use the complete drill/clap loops for a standalone character; the original game's initialization for these older variants is unverified.
+  king_area_3: This source clip contains a large horizontal body trajectory. The review camera includes the complete motion; it does not recenter the character each frame.
+  king_area_4: This source clip contains a large horizontal body trajectory. The review camera includes the complete motion; it does not recenter the character each frame.
+  king_drill_win: This source clip contains a large horizontal body trajectory. The review camera includes the complete motion; it does not recenter the character each frame.
+  king_drill_win_clap_finish: The source body enters/exits vertically by about 1,535 source units. The fixed review camera includes that full trajectory. A persistent UI should fit the stable clap-loop pose and treat this as an entrance/exit.
+  AreaCompleted_Vanguard-page-01.png
+  king_drill_win_clap_start: The source body enters/exits vertically by about 1,535 source units. The fixed review camera includes that full trajectory. A persistent UI should fit the stable clap-loop pose and treat this as an entrance/exit.
+  AreaCompleted_Vanguard-page-02.png
+Nightmare_Vanguard: 6 nonzero tracks; 0 zero-duration tracks skipped.
+  Nightmare_Vanguard-page-01.png
+Native KingDrill: 6 nonzero tracks; 0 zero-duration tracks skipped.
+  Native_KingDrill-page-01.png

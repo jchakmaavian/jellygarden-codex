@@ -1,0 +1,799 @@
+[
+  {
+    "id": -7057731059208680258,
+    "name": "KingDrillCloud_OwnBundle",
+    "components": [
+      [
+        -1793881802523099397,
+        "Transform"
+      ],
+      [
+        6450556592434469833,
+        "MonoBehaviour"
+      ],
+      [
+        3092098518041951627,
+        "SortingGroup"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -7057731059208680258
+      },
+      "m_LocalRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": -1.3799999952316284,
+        "y": -6.210000038146973,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.100000023841858,
+        "y": 1.100000023841858,
+        "z": 1.0
+      },
+      "m_Children": [
+        {
+          "m_FileID": 0,
+          "m_PathID": -5735209144570182371
+        }
+      ],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": 0
+      }
+    }
+  },
+  {
+    "id": -5524732760640954688,
+    "name": "LightningEnd",
+    "components": [
+      [
+        -8144757152186419013,
+        "Transform"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -5524732760640954688
+      },
+      "m_LocalRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.028999999165534973,
+        "y": 0.05999999865889549,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": -1216889618882872893
+      }
+    }
+  },
+  {
+    "id": -4468316998668063549,
+    "name": "edge_4",
+    "components": [
+      [
+        3177227701266976147,
+        "Transform"
+      ],
+      [
+        -5394441916386268963,
+        "SpriteRenderer"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -4468316998668063549
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": -0.5146998763084412,
+        "y": -0.018988054245710373,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 0.26255714893341064,
+        "y": 0.26255714893341064,
+        "z": 0.26255714893341064
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": 405428497804220082
+      }
+    }
+  },
+  {
+    "id": -3541262924711707605,
+    "name": "tile",
+    "components": [
+      [
+        -1989411218008783260,
+        "Transform"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -3541262924711707605
+      },
+      "m_LocalRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.760200023651123,
+        "y": -0.2362000048160553,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": -5735209144570182371
+      }
+    }
+  },
+  {
+    "id": -3186255994260599243,
+    "name": "edge_1",
+    "components": [
+      [
+        8043596758584194592,
+        "Transform"
+      ],
+      [
+        -1776220349899981954,
+        "SpriteRenderer"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -3186255994260599243
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": -0.49499988555908203,
+        "y": 0.03400000184774399,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 0.3277417719364166,
+        "y": 0.3277417719364166,
+        "z": 0.3277417719364166
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": 405428497804220082
+      }
+    }
+  },
+  {
+    "id": -795247272407540092,
+    "name": "body",
+    "components": [
+      [
+        8087230407667104769,
+        "Transform"
+      ],
+      [
+        8751052191869001126,
+        "SpriteRenderer"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -795247272407540092
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": 405428497804220082
+      }
+    }
+  },
+  {
+    "id": -532210526851174464,
+    "name": "Animator",
+    "components": [
+      [
+        405428497804220082,
+        "Transform"
+      ],
+      [
+        -847834250090569048,
+        "Animator"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -532210526851174464
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": -0.7170000076293945,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 8087230407667104769
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 8043596758584194592
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 3765801396036699242
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 5949136126091719377
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 3177227701266976147
+        }
+      ],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": -5068853962808478229
+      }
+    }
+  },
+  {
+    "id": -531602170296115712,
+    "name": "Mover",
+    "components": [
+      [
+        -5068853962808478229,
+        "Transform"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": -531602170296115712
+      },
+      "m_LocalRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 405428497804220082
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": -1216889618882872893
+        }
+      ],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": 4625213716081371458
+      }
+    }
+  },
+  {
+    "id": 680642975460202920,
+    "name": "bg",
+    "components": [
+      [
+        -5735209144570182371,
+        "Transform"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 680642975460202920
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 2.3799996376037598,
+        "y": 1.6642999649047852,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [
+        {
+          "m_FileID": 0,
+          "m_PathID": -3432301696645412939
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": -1654741741658670934
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": -1989411218008783260
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": 4515866352619862332
+        }
+      ],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": -1793881802523099397
+      }
+    }
+  },
+  {
+    "id": 1511765331688192721,
+    "name": "drill_body_gold",
+    "components": [
+      [
+        -7632335140123892155,
+        "Transform"
+      ],
+      [
+        -916613526732464033,
+        "SpriteRenderer"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 1511765331688192721
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.06099987030029297,
+        "y": 0.03099999949336052,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0750000476837158,
+        "z": 1.0
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": 4625213716081371458
+      }
+    }
+  },
+  {
+    "id": 1658275455912467835,
+    "name": "WallDrill",
+    "components": [
+      [
+        4625213716081371458,
+        "Transform"
+      ],
+      [
+        -463331817430913762,
+        "MonoBehaviour"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 1658275455912467835
+      },
+      "m_LocalRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [
+        {
+          "m_FileID": 0,
+          "m_PathID": -7632335140123892155
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": -5068853962808478229
+        }
+      ],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": 4515866352619862332
+      }
+    }
+  },
+  {
+    "id": 1887638532983964156,
+    "name": "drill_1",
+    "components": [
+      [
+        4515866352619862332,
+        "Transform"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 1887638532983964156
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": -0.03799999877810478,
+        "y": 3.880000114440918,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.100000023841858,
+        "y": 1.2999999523162842,
+        "z": 1.100000023841858
+      },
+      "m_Children": [
+        {
+          "m_FileID": 0,
+          "m_PathID": 4625213716081371458
+        }
+      ],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": -5735209144570182371
+      }
+    }
+  },
+  {
+    "id": 1994553981546671167,
+    "name": "LightningStart",
+    "components": [
+      [
+        -2761885707777259850,
+        "Transform"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 1994553981546671167
+      },
+      "m_LocalRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": -1.444000005722046,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": -1216889618882872893
+      }
+    }
+  },
+  {
+    "id": 2724992972506832311,
+    "name": "KingDrillLightning",
+    "components": [
+      [
+        -1216889618882872893,
+        "Transform"
+      ],
+      [
+        -8574895012182197021,
+        "LineRenderer"
+      ],
+      [
+        -8405214122393481667,
+        "MonoBehaviour"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 2724992972506832311
+      },
+      "m_LocalRotation": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [
+        {
+          "m_FileID": 0,
+          "m_PathID": -2761885707777259850
+        },
+        {
+          "m_FileID": 0,
+          "m_PathID": -8144757152186419013
+        }
+      ],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": -5068853962808478229
+      }
+    }
+  },
+  {
+    "id": 5153241157516831547,
+    "name": "edge_3",
+    "components": [
+      [
+        5949136126091719377,
+        "Transform"
+      ],
+      [
+        -5458926795174402249,
+        "SpriteRenderer"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 5153241157516831547
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.44699999690055847,
+        "y": 0.00800000037997961,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 0.9920778870582581,
+        "y": 0.9920778870582581,
+        "z": 0.9920778870582581
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": 405428497804220082
+      }
+    }
+  },
+  {
+    "id": 6859159376982649658,
+    "name": "edge_2",
+    "components": [
+      [
+        3765801396036699242,
+        "Transform"
+      ],
+      [
+        3932360473173420657,
+        "SpriteRenderer"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 6859159376982649658
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": -0.06300020217895508,
+        "y": 0.06400000303983688,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 0.7497780323028564,
+        "y": 0.7497780323028564,
+        "z": 0.7497780323028564
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": 405428497804220082
+      }
+    }
+  },
+  {
+    "id": 7684459294041325577,
+    "name": "duvar_golge",
+    "components": [
+      [
+        -3432301696645412939,
+        "Transform"
+      ],
+      [
+        4982112010911780790,
+        "SpriteRenderer"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 7684459294041325577
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.08429999649524689,
+        "y": -0.2370000034570694,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": -5735209144570182371
+      }
+    }
+  },
+  {
+    "id": 9125571889323404126,
+    "name": "metal",
+    "components": [
+      [
+        -1654741741658670934,
+        "Transform"
+      ],
+      [
+        -5893356032704433106,
+        "SpriteRenderer"
+      ]
+    ],
+    "transform": {
+      "m_GameObject": {
+        "m_FileID": 0,
+        "m_PathID": 9125571889323404126
+      },
+      "m_LocalRotation": {
+        "x": -0.0,
+        "y": -0.0,
+        "z": -0.0,
+        "w": 1.0
+      },
+      "m_LocalPosition": {
+        "x": 0.47699999809265137,
+        "y": 3.7639999389648438,
+        "z": 0.0
+      },
+      "m_LocalScale": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      },
+      "m_Children": [],
+      "m_Father": {
+        "m_FileID": 0,
+        "m_PathID": -5735209144570182371
+      }
+    }
+  }
+]

@@ -1,0 +1,1 @@
+PASS: NativeKingDrillUiSlot and existing native activity/importer sources compiled against installed Unity 6000.5.10f1 references using standalone Roslyn. No Unity editor process launched. Shader and actual UI rendering still require Unity verification.

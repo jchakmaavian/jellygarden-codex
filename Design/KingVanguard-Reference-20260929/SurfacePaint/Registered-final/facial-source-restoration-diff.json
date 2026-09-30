@@ -1,0 +1,18 @@
+{
+  "King_Vanguard": {
+    "rgba_changed_pixels": 13128,
+    "alpha_changed_pixels": 112
+  },
+  "AreaCompleted_Vanguard": {
+    "rgba_changed_pixels": 17233,
+    "alpha_changed_pixels": 393
+  },
+  "Nightmare_Vanguard": {
+    "rgba_changed_pixels": 0,
+    "alpha_changed_pixels": 0
+  },
+  "KingDrill_Vanguard": {
+    "rgba_changed_pixels": 0,
+    "alpha_changed_pixels": 0
+  }
+}
