@@ -1,7 +1,0 @@
-RUNNING: actual rendered pupil triangles, current installed atlas, source versus cardinal attention.
-Atlas 672x1872; opaque pupil threshold 128/255; white/lid coverage 32/255; compare against the same current-art source pose.
-No requirement that transparent pupil-quad margins fit the painted white.
-PASS idle_loop_1 @ 0.000: both pupils move toward all four cardinal targets; opaque spill stays at source baseline or below (AA tolerance stated); original eyelid geometry/order included
-PASS idle_loop_1 @ 3.650: both pupils move toward all four cardinal targets; opaque spill stays at source baseline or below (AA tolerance stated); original eyelid geometry/order included
-PASS k-1_kaygi_loop @ 0.500: both pupils move toward all four cardinal targets; opaque spill stays at source baseline or below (AA tolerance stated); original eyelid geometry/order included
-ALL PUPIL PIXEL CHECKS PASSED (3 source poses, source + centered + 4 cardinal targets; 1053 invariant checks). Actual HUD input/screenshots are verified separately.

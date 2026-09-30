@@ -1,1 +1,0 @@
-PASS low-life teardown restores the exact captured UTC deadline without changing either saved timer key

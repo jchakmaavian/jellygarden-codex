@@ -1,1 +1,0 @@
-Native Unity capture, 30 fps, silent review video; game audio verified separately.

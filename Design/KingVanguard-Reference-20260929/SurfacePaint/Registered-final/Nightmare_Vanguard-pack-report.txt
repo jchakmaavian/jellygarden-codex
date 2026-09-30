@@ -1,7 +1,0 @@
-2048x2048; painted texels=163501; edge matte repairs=0; source edge fallback=1292
-Facial policy: source face, Sakal Surat and Bıyık preserved; crown and costume painted.
-00300_A_left_arm: 27602
-00400_A_body: 84607
-02600_A_right_arm_bottom: 710
-03300_A_right_arm: 39845
-03500_A_hat: 10737

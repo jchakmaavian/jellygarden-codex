@@ -1,9 +1,0 @@
-King_Vanguard PNG SHA256 4bf86f662641e693fed1e87733eda21a491bf8e0d049e17e0ec7214a8b470198
-King_Vanguard imported 672x1872 RGBA32
-King_Vanguard source animation tracks 32
-AreaCompleted_Vanguard PNG SHA256 08d0e5c6266eeb92bb20461ee9aa75600b78fad516a91a14fbfa4487a9556a4c
-AreaCompleted_Vanguard imported 2048x1714 RGBA32
-AreaCompleted_Vanguard source animation tracks 10
-PASS KingVanguard prefab has teeth stabilization enabled
-PASS KingVanguardCelebration prefab has teeth stabilization enabled
-PASS normal profile restored; editor stopped

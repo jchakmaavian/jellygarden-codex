@@ -1,5 +1,0 @@
-Compiler: Unity 6000.5.10f1 bundled Roslyn; current Assembly-CSharp response file and references.
-PASS: Release configuration compilation (UNITY_EDITOR and DEVELOPMENT_BUILD removed), exit 0.
-PASS: Explicit ROYAL_DISABLE_QA compilation, exit 0.
-PASS: RoyalQaMenu and RoyalQaService metadata names absent from Release.dll and Disabled.dll; present in normal editor assembly.
-Scope: C# compilation and QA exclusion check; not an Android build or device test.

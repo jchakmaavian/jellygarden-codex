@@ -1,3 +1,0 @@
-PASS effect-half: command finishes through real board resolver
-FAILED - inspect Console
-Exception: effect-half: charged loop, multiple beams, authored finish observed

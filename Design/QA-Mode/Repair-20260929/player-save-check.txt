@@ -1,3 +1,0 @@
-PASS: zero non-QA gameplay registry keys changed from the pre-test snapshot.
-Only Unity session identifier changed.
-Play Mode stopped; QA routing off.

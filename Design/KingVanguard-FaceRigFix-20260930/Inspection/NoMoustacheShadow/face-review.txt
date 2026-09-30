@@ -1,8 +1,0 @@
-Deterministic face samples, current game assets. Columns 0%, 20%, 40%; second row 60%, 80%, 95%.
-idle_loop_2 duration 5.216667
-k-1_sevinme_3 duration 0.7
-k-1sevinme_6 duration 3.633333
-k-1_kaygi duration 5.983333
-k-1_kaygi_loop duration 11.65
-k-1_uzulme duration 2.816667
-k-1_sevinme_NEW duration 2.816667

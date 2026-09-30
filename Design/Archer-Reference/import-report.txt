@@ -1,6 +1,0 @@
-PASS source curves, times, values and tangents verified after serialization
-ArrowAnimation: 55 curves, 9s, 60 FPS
-ArrowFallAnimation: 34 curves, 0.5s
-Sprites: 6
-Native particle systems: 6
-Native audio: arrow_use

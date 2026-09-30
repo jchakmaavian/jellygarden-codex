@@ -1,1 +1,0 @@
-Exported editable archer clips, controller, prefab, sprites, native VFX, materials and WAV. Game-specific runtime scripts are installed in the main project separately.

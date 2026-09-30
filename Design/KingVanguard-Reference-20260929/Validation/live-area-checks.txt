@@ -1,6 +1,0 @@
-RUNNING area-completion presentation on isolated fixture
-PASS completed area opens original chest ceremony
-PASS chest reward stage opens
-PASS ceremony reaches king celebration
-PASS live ceremony plays imported clap family
-PASS live area character check finished

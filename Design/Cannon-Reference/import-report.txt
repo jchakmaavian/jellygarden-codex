@@ -1,5 +1,0 @@
-Spine 3.8.84
-Size 252.4343 x 248.8468
-gercek_gelis_loop duration=0.3333333
-gercek_patlama duration=0.9
-Bones: root, sag_teker_bone, sol_teker_bone, kafa_bone, govde_bone, fitil_bone, govde_alt_bone, govde_ust_bone, golge_bone

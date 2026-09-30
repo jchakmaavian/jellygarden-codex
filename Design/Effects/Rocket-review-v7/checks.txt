@@ -1,8 +1,0 @@
-Checks completed: 3
-focused Rocket check uses actual game speed 0.5
-horizontal-0.5: real Match-4 detector selects the correct idle Rocket
-horizontal-0.5: Rocket appears in-place as Match-4 finishes (0.242s including gem break)
-Errors: FAIL: horizontal-0.5: reveal has no missing sprite, falling spawn or next-frame scale reset
-Exception: horizontal-0.5: reveal has no missing sprite, falling spawn or next-frame scale reset
-Regression aborted before completion; inspect the Unity Console for the originating exception.
-Editor update p95 ms (not device GPU benchmark): 0

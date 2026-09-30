@@ -1,1 +1,0 @@
-state=RegenLevel falling=True resolving=False

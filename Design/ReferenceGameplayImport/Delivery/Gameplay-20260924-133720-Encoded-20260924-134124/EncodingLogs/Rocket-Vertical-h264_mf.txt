@@ -1,26 +1,0 @@
-Input #0, image2, from 'C:\Users\chakm\Documents\Codex\2026-09-08\144\outputs\JellyGarden-Codex\Design\ReferenceGameplayImport\Gameplay-20260924-133720\Rocket-Vertical\%05d.jpg':
-  Duration: 00:00:04.82, start: 0.000000, bitrate: N/A
-    Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 60 fps, 60 tbr, 60 tbn, 60 tbc
-Guessed Channel Layout for Input Stream #1.0 : stereo
-Input #1, wav, from 'C:\Users\chakm\Documents\Codex\2026-09-08\144\outputs\JellyGarden-Codex\Design\ReferenceGameplayImport\Gameplay-20260924-133720\Rocket-Vertical\audio.wav':
-  Duration: 00:00:04.80, bitrate: 1536 kb/s
-    Stream #1:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 48000 Hz, stereo, s16, 1536 kb/s
-Stream mapping:
-  Stream #0:0 -> #0:0 (mjpeg (native) -> h264 (h264_mf))
-  Stream #1:0 -> #0:1 (pcm_s16le (native) -> aac (native))
-[swscaler @ 0000017F996F6200] deprecated pixel format used, make sure you did set range correctly
-[h264_mf @ 0000017F97897300] MFT name: 'H264 Encoder MFT'
-Output #0, mp4, to 'C:\Users\chakm\Documents\Codex\2026-09-08\144\outputs\JellyGarden-Codex\Design\ReferenceGameplayImport\Delivery\Gameplay-20260924-133720-Encoded-20260924-134124\Clips\Rocket-Vertical.mp4':
-  Metadata:
-    encoder         : Lavf58.45.100
-    Stream #0:0: Video: h264 (h264_mf) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920 [SAR 1:1 DAR 9:16], q=2-31, 4000 kb/s, 60 fps, 15360 tbn, 60 tbc
-    Metadata:
-      encoder         : Lavc58.91.100 h264_mf
-    Stream #0:1: Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 160 kb/s
-    Metadata:
-      encoder         : Lavc58.91.100 aac
-[image2 @ 0000017F978624C0] Thread message queue blocking; consider raising the thread_queue_size option (current value: 8)
-frame=   23 fps=0.0 q=-0.0 size=       0kB time=00:00:00.12 bitrate=   3.0kbits/s speed=0.251x    frame=   51 fps= 50 q=-0.0 size=     256kB time=00:00:00.59 bitrate=3511.5kbits/s speed=0.583x    frame=   80 fps= 52 q=-0.0 size=     512kB time=00:00:01.08 bitrate=3855.4kbits/s speed=0.711x    frame=  108 fps= 53 q=-0.0 size=     768kB time=00:00:01.55 bitrate=4040.1kbits/s speed=0.766x    frame=  137 fps= 54 q=-0.0 size=     768kB time=00:00:02.00 bitrate=3137.6kbits/s speed=0.786x    frame=  165 fps= 54 q=-0.0 size=    1280kB time=00:00:02.47 bitrate=4237.4kbits/s speed=0.806x    frame=  193 fps= 54 q=-0.0 size=    2048kB time=00:00:02.96 bitrate=5657.9kbits/s speed=0.83x    frame=  222 fps= 54 q=-0.0 size=    2304kB time=00:00:03.45 bitrate=5461.4kbits/s speed=0.848x    frame=  250 fps= 55 q=-0.0 size=    2304kB time=00:00:03.92 bitrate=4808.4kbits/s speed=0.857x    frame=  279 fps= 55 q=-0.0 size=    2560kB time=00:00:04.37 bitrate=4795.4kbits/s speed=0.86x    [mp4 @ 0000017F978859C0] Starting second pass: moving the moov atom to the beginning of the file
-frame=  289 fps= 55 q=-0.0 Lsize=    2917kB time=00:00:04.80 bitrate=4978.0kbits/s speed=0.906x    
-video:2820kB audio:90kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.220079%
-[aac @ 0000017F97888E00] Qavg: 195.266

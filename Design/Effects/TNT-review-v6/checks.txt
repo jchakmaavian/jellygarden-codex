@@ -1,8 +1,0 @@
-Checks completed: 3
-TNT Reveal and Idle sequences load (120 + 120 frames)
-Every frame keeps its 512 px canvas with the pivot on the barrel base (256, 32 px) at 100 PPU
-quarter: a valid T match creates TNT through the production match pass
-Errors: FAIL: quarter: the created TNT carries the frame animator
-Exception: quarter: the created TNT carries the frame animator
-Regression aborted before completion; inspect the Unity Console for the originating exception.
-Editor update p95 ms (not device GPU benchmark): 0

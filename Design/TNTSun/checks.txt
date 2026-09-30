@@ -1,7 +1,0 @@
-TNT sun artwork checks
-PASS Menus, shop and board share the sun TNT artwork
-PASS Existing animated lettering layer now renders the sun badge
-PASS Existing TNT activation accepts input
-PASS Pooled TNT reuse retains the sun badge
-PASS Normal player data restored
-ALL CHECKS PASSED

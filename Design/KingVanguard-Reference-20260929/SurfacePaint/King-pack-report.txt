@@ -1,6 +1,0 @@
-672x1872; painted texels=104652; edge matte repairs=16656; source edge fallback=0
-Biyik: 7628
-Pelerin: 44976
-Sakal Surat: 5388
-Taç: 17323
-el_OK: 29337

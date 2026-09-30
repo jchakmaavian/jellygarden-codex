@@ -1,7 +1,0 @@
-PASS: Assembly-CSharp compiled with Unity 6000.5.10f1 Roslyn and current project references.
-PASS: Assembly-CSharp-Editor compiled against the newly built runtime reference assembly.
-Only pre-existing serialization/obsolete-API warnings outside the activity files were emitted.
-PASS: Eight standalone queue timing regressions, extracted from KingVanguardRuntimeChecks.CheckFeedbackQueue, executed on .NET 8.0.21.
-PASS: Source skeleton k-1_sevinme_3 duration is 0.699999988079071 seconds.
-PENDING ROOT UNITY QA: Extended KingVanguardRuntimeChecks.Run, ordinary valid/rejected swaps, VFX disabled, power-up overlap, visibility/board scope, and visual activity recording.
-No Unity process or Unity API was invoked by the implementation agent.

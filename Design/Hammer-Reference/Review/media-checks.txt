@@ -1,8 +1,0 @@
-PASS Original appearance cue plays through the game audio director
-PASS Original hit cue plays at impact
-PASS Recovered native impact emits visible particles
-PASS Pause freezes native particle simulation
-PASS Pause freezes owned hammer sound cues
-PASS Original return cue plays
-PASS Cancellation stops only hammer cues
-PASS Muted sound preference suppresses appearance and hit cues

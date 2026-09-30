@@ -1,9 +1,0 @@
-utc	realSeconds	simulationSeconds	frames	state	dragBlocked	resolving	operations	colorBallPhase	selected	arrivals	conversions	activeBeams	nativeLinks	activeBalls	boardBoosters	boardItems	falling	destroying	nativeVfx
-2026-09-24T07:35:12.6411400Z	0.002	0.000	0	PreWinAnimations	False	False	0	Complete	70	70	0	0	0	0	2	72	0	0	0
-2026-09-24T07:35:17.6533614Z	5.014	5.023	301	PreWinAnimations	True	True	1	Converting	70	29	0	3	5	1	1	42	0	0	14
-2026-09-24T07:35:22.6416399Z	10.003	10.013	600	PreWinAnimations	True	True	1	Converting	70	68	0	3	5	1	1	3	0	0	13
-2026-09-24T07:35:27.6433679Z	15.004	15.013	899	PreWinAnimations	True	True	1	Converting	39	24	0	4	6	1	0	48	0	0	17
-2026-09-24T07:35:32.6619805Z	20.023	20.033	1200	PreWinAnimations	True	True	0	Complete	39	39	0	0	0	0	1	72	0	0	14
-2026-09-24T07:35:37.6424945Z	25.003	25.014	1499	PreWinAnimations	True	True	1	Converting	31	28	0	3	5	1	0	44	0	0	16
-2026-09-24T07:35:42.6541771Z	30.015	30.023	1799	PreWinAnimations	True	True	1	Complete	31	31	0	0	0	0	1	41	0	0	28
-2026-09-24T07:35:44.5497175Z	31.911	31.921	1913	Win	False	False	0	Complete	31	31	0	0	0	0	0	72	0	0	0

@@ -1,1 +1,0 @@
-PASS captured 138 timestamped frames from live HUD. Direct presentation playback; gameplay event tests are separate.

@@ -1,4 +1,0 @@
-PASS runtime dependencies
-Clip: HammerExplodeAnimation2; duration 1; FPS 60
-Impact particle systems: 6
-Original particle shaders: Particles/Standard Unlit, Sprites/Default, Mobile/Particles/Additive

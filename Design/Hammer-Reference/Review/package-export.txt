@@ -1,1 +1,0 @@
-Exported Hammer-Animation-VFX-SFX.unitypackage with native animation, sprite, particle, material, and audio dependencies.

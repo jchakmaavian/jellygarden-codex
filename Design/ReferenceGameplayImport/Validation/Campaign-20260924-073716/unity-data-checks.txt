@@ -1,2 +1,0 @@
-PASS: 50 imported levels, 3933 cells; original payload hashes, authored moves/objectives, resource identity and runtime loader verified. No profile/save changes.
-This validates imported data, not exact reference runtime behavior. See RULE-PROVENANCE.md.
