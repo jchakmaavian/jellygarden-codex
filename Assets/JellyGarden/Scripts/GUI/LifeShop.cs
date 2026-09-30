@@ -38,10 +38,13 @@ namespace JellyGarden.Scripts.GUI
 				nextLife = found.GetComponent<Text> ();
 				if (nextLife == null) return;
 			}
+			// The countdown comes from the one life timer (UpdateLives sets RestLifeTimer) and reads m:ss, as on Home ("4:59"),
+			// rather than the hidden legacy counter's "04:59" (UI polish, 2026-09-30).
 			InitScript.Instance.UpdateLives ();
+			int seconds = Mathf.Max (0, Mathf.CeilToInt (InitScript.RestLifeTimer));
 			nextLife.text = InitScript.lifes >= InitScript.Instance.CapOfLife
 				? "Your lives are full"
-				: "Next life in " + InitScript.timeForReps;
+				: "Next life in " + (seconds / 60) + ":" + (seconds % 60).ToString ("00");
 		}
 	}
 }

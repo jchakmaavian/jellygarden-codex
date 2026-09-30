@@ -1,0 +1,79 @@
+13:54:25.933 == home idle 8 s
+PASS Home idle 8 s: + badges moved 0.000, selected rim alpha 1.00..1.00, area label moved 0.000 (area label 'Area 1')
+13:54:34.105 == areas
+PASS Areas list: 9 locked card(s) say why, e.g. 'Complete Area 1 to unlock'
+13:54:35.035 == team page
+PASS team page open (heading 'Team', art 17106, action 'PLAY LEVEL 34', nav tab 3)
+     recording after_team_page: 35 captured, 35 written, 0 failed 
+13:54:36.239 == collection page
+PASS collection page open (heading 'Collection', art 16492, action 'PLAY LEVEL 34', nav tab 4)
+     recording after_collection_page: 37 captured, 72 written, 0 failed 
+13:54:37.486 == feature PLAY
+PASS feature page PLAY (held scale 0.980) opens the level card and closes the page
+13:54:39.843 == lives dialog
+PASS info dialog copy font 'Display', detail font 'Display'
+13:54:40.978 == settings
+PASS Settings row press: held 0.975, released 1.000
+PASS How to Play from Settings (shown True) returns to Settings (panel 'settings')
+13:54:44.463 == level card idle
+PASS Level Start card idle 5 s: badge moved 0.000, booster glint 0.00, PLAY gloss 0.00
+PASS booster press: held 0.980 (no pop above 1), released 1.000
+PASS PLAY press: scale 0.980, brightness 0.92
+13:54:50.646 == PLAY → level
+PASS PLAY → Playing in 2.76 s (before this pass 3.47 s)
+     recording after_level_start: 187 captured, 259 written, 0 failed 
+13:54:54.493 == tool halo
+     chosen tool scale by frame: 13ms:1.019 33ms:1.038 45ms:1.045 67ms:1.055 81ms:1.058 91ms:1.059 116ms:1.060 130ms:1.060 153ms:1.060 167ms:1.060 177ms:1.060 203ms:1.060 219ms:1.060 230ms:1.060 248ms:1.060 264ms:1.060 
+PASS chosen tool: scale 1.038 after 0.05 s, 1.060 settled, halo alpha 1.00
+     recording after_tool_select: 39 captured, 298 written, 0 failed 
+PASS tool cancelled: halo off, scale 1.000
+13:54:55.646 == so close, no coins
+     So Close offer open True, status PreFailed
+PASS CONTINUE without coins: notice 'Not enough coins (you have 0) / Win levels to earn more', offer still open True, coin shop False
+13:54:57.409 == back on so close
+PASS Back on So Close = END LEVEL: Level Failed card after 0.46 s
+PASS the coins notice leaves with the offer: offer closed 0.46 s, notice gone 0.57 s, Level Failed 0.46 s after Back
+     recording after_so_close_no_coins_and_back: 75 captured, 373 written, 0 failed 
+13:54:59.050 == back on level failed
+PASS Back on Level Failed closes it (status Map)
+13:55:00.789 == win
+PASS win star at x 0: lands from 2.40, dips to 0.86, ends 1.00
+     recording after_win_card: 123 captured, 496 written, 0 failed 
+13:55:06.228 == back on win card
+PASS Back on the win card = CONTINUE (status Map)
+13:55:08.511 == locked tools
+PASS locked tool tap on level 3: 'Arrow / Tools unlock at Level 6' shown True, gone after 2.3 s True
+13:55:16.708 == goals skip
+     recording after_goals_skip: 154 captured, 650 written, 0 failed 
+PASS a tap on the goals card skips it: PLAY → Playing in 2.03 s (untouched 2.76 s)
+13:55:21.934 == life shop
+PASS life shop countdown 'Next life in 4:59' (Home shows '4:59')
+PASS real save unchanged (OpenLevel=34 Lifes=5 Gems=196 RoyalHammer=0 RoyalArrow=1 RoyalCannon=2 RoyalJester=2 Music=1 Sound=1 )
+hitches over 50 ms (24):
+  start: 1376 ms
+  start: 338 ms
+  home idle 8 s: 144 ms
+  areas: 133 ms
+  collection page: 145 ms
+  feature PLAY: 135 ms
+  lives dialog: 112 ms
+  settings: 59 ms
+  settings: 131 ms
+  settings: 139 ms
+  level card idle: 125 ms
+  PLAY → level: 82 ms
+  PLAY → level: 91 ms
+  PLAY → level: 55 ms
+  PLAY → level: 162 ms
+  so close, no coins: 128 ms
+  back on so close: 62 ms
+  back on so close: 61 ms
+  back on so close: 101 ms
+  win: 113 ms
+  locked tools: 173 ms
+  locked tools: 56 ms
+  life shop: 58 ms
+  life shop: 113 ms
+errors 0
+SUMMARY fails=0
+DONE

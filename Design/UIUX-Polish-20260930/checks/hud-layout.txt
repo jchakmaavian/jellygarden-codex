@@ -1,0 +1,14 @@
+RUNNING gameplay layout checks
+PASS Separate QA save active
+PASS Live gameplay HUD is active
+PASS Goal, portrait and Moves panels and the bottom bar are drawn to the gameplay reference
+PASS Four original boost controllers and inventory bindings retained
+PASS In-game booster count, plus and lock connections intact
+PASS Imported hand button selects its original action
+PASS Second button tap cancels selection
+PASS Level 14 piece ownership intact
+PASS Irregular board stays within space between HUD and booster rail
+PASS Imported settings button opens existing pause menu
+PASS Match and refill remain playable with imported HUD
+PASS Normal save restored
+ALL LAYOUT CHECKS PASSED

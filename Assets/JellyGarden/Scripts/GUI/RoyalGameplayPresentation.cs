@@ -13,6 +13,7 @@ namespace RoyalThrone.Presentation
     {
         CanvasGroup group; RectTransform content,king; Image kingImage;Text moves,level,goals;
         SpriteRenderer backdrop; Sprite idle,cheer,think;float excitement,lastRefresh;bool built,ready;
+        float hudFade,backdropFade;
         readonly HashSet<Square> styled=new HashSet<Square>();
         readonly List<CanvasGroup> hidden=new List<CanvasGroup>();
         // Timed levels: the limit header reads "Time" (m:ss) instead of "Moves"; the four rebound rail tools stay
@@ -177,8 +178,12 @@ namespace RoyalThrone.Presentation
             // (WaitForPopup) included; only the goals card, which this overlay would cover, keeps them back.
             bool show=lm.GameField&&lm.gameStatus!=GameState.Map&&lm.GameField.gameObject.activeInHierarchy&&!(prePlay&&prePlay.gameObject.activeInHierarchy);
             if(lm.gameStatus==GameState.Map){framedField=null;framedSquares=null;}
-            group.alpha=show?1:0;group.blocksRaycasts=show;backdrop.enabled=show;
-            if(lm.gameStatus==GameState.Pause||lm.gameStatus==GameState.GameOver||lm.gameStatus==GameState.Win||lm.gameStatus==GameState.PreFailed){group.alpha=0;group.blocksRaycasts=false;}
+            // The HUD and the backdrop fade over 0.25 s (UI polish, 2026-09-30): they popped in at once after the goals card, and the
+            // HUD vanished at once when the pause menu took effect. Taps follow the state at once; the camera's navy stays behind.
+            bool hudShown=show&&!(lm.gameStatus==GameState.Pause||lm.gameStatus==GameState.GameOver||lm.gameStatus==GameState.Win||lm.gameStatus==GameState.PreFailed);
+            hudFade=Mathf.MoveTowards(hudFade,hudShown?1:0,Time.unscaledDeltaTime/.25f);backdropFade=Mathf.MoveTowards(backdropFade,show?1:0,Time.unscaledDeltaTime/.25f);
+            group.alpha=hudFade;group.blocksRaycasts=hudShown;
+            backdrop.enabled=backdropFade>0;if(backdrop.color.a!=backdropFade)backdrop.color=new Color(1,1,1,backdropFade);
             // This overlay canvas sits above the popup canvas, so while any popup is open the HUD must not take its taps.
             if(MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput)group.blocksRaycasts=false;
             if(!show)return;

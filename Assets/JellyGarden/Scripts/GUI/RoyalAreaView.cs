@@ -36,7 +36,7 @@ namespace RoyalThrone.Presentation
         // the empty scene waits 0.6 s after the controls leave; the object rises in about 1 s and holds 1.5 s; the list is back
         // at about 6.2 s (phone) and on the next task about 1.4 s later.
         const float OpenSettle = .2f, StarStagger = .14f, StarFlight = .66f, Shrink = .2f, RowBare = .15f, HudSlide = .35f, PauseBeforeRise = .6f,
-            RiseTime = 1.3f, HoldAfterRise = 1.5f, StreakTime = .8f, TickPop = .3f, RowOut = .3f, RowIn = .3f, Wobble = 1.1f;
+            RiseTime = 1.3f, HoldAfterRise = 1.5f, StreakTime = .8f, TickPop = .3f, RowOut = .3f, RowIn = .3f, LockRelease = .25f;
 
         RoyalHomeScreen home;
         RoyalAreaScene scene;
@@ -309,7 +309,7 @@ namespace RoyalThrone.Presentation
         }
 
         // ---- the Areas tab (A-20)
-        sealed class Card { public int number; public string state; public RectTransform rect; public Image scene; public Text tab, name; public RectTransform bar, barFill, done, lockBadge; public Text barCount; public Button view; public RoyalPanelGraphic tabFace, ribbonFace, frameFace; public RectTransform grey; }
+        sealed class Card { public int number; public string state; public RectTransform rect; public Image scene; public Text tab, name; public RectTransform bar, barFill, done, lockBadge; public Text barCount; public Button view; public RoyalPanelGraphic tabFace, ribbonFace, frameFace; public RectTransform grey, lockNote; public Text lockWords; }
         readonly List<Card> cards = new List<Card>();
         RectTransform page; ScrollRect pageScroll; RectTransform pageContent;
         const float CardPitch = 653, CardTop = 54;
@@ -366,6 +366,10 @@ namespace RoyalThrone.Presentation
             var viewWord = K.Words("Caption", face, "View", 40, K.Cream, TextAnchor.MiddleCenter); K.ButtonCaption(viewWord);
             int n = number; c.view.onClick.AddListener(() => ChooseArea(n));
             c.lockBadge = K.Padlock(c.rect, 360, 350, 220);
+            // Locked: why, in words, on a dark strip across the grey window (UI polish, 2026-09-30; it was a padlock alone).
+            c.lockNote = K.At(K.Node("Lock note", c.rect), 110, 456, 500, 58);
+            var noteStrip = K.Surface("Strip", c.lockNote, new Color(0, .05f, .16f, .55f), new Color(0, .05f, .16f, .45f), 14); K.Inset(noteStrip.rectTransform, 0, 0, 0, 0);
+            c.lockWords = K.Words("Words", c.lockNote, "", 30, K.Cream, TextAnchor.MiddleCenter); K.Inset(c.lockWords.rectTransform, 12, 4, 12, 4); K.Outline(c.lockWords, K.C(10, 20, 45), 2);
             cards.Add(c);
             return c;
         }
@@ -494,7 +498,8 @@ namespace RoyalThrone.Presentation
             var art = ready && area != null ? RoyalAreas.Art(area.before) : null;
             newThumb.sprite = art; newThumb.enabled = art; newGrey.gameObject.SetActive(!art);
             if (art) Window(newThumb, art, newThumbMask);
-            newLock.gameObject.SetActive(!RoyalAreas.AllRestored); newLock.localRotation = Quaternion.identity;
+            newLock.gameObject.SetActive(!RoyalAreas.AllRestored); newLock.localRotation = Quaternion.identity; newLock.localScale = Vector3.one;
+            if (newLock.GetComponent<CanvasGroup>()) newLock.GetComponent<CanvasGroup>().alpha = 1;
             unlock.gameObject.SetActive(ready); unlock.interactable = ready;
             newNoteStrip.gameObject.SetActive(!ready);
             newNote.text = RoyalAreas.AllRestored ? "The whole kingdom shines again." : "This area is being prepared. Keep winning levels: your stars are saved for it.";
@@ -801,9 +806,7 @@ namespace RoyalThrone.Presentation
                 if (Gone) { EndCeremony(false); yield break; }
                 float e = Time.unscaledTime - shown;
                 if (e > 1.2f && !stageHint.gameObject.activeSelf) stageHint.gameObject.SetActive(true);
-                float hop = Motion ? Mathf.Max(0, Mathf.Sin(Mathf.Repeat(e, 1.3f) / .45f * Mathf.PI)) * (Mathf.Repeat(e, 1.3f) < .45f ? 1 : 0) : 0;
-                stageChestRect.anchoredPosition = target + new Vector2(0, hop * 36);
-                stageChestRect.localScale = new Vector3(1 + hop * .04f, 1 - hop * .03f, 1);
+                // The chest waits still; "Tap to Open" invites the tap (no idle hop or squash).
                 yield return null;
             }
             // Tap to Open: the chest pays (once: CollectChest refuses a second time) and its rewards come out over it.
@@ -917,9 +920,10 @@ namespace RoyalThrone.Presentation
         {
             try
             {
-                // The padlock shakes about a second, then the new area is there, with a ring of sparkles.
-                float t = 0, len = Motion ? Wobble : .1f;
-                while (t < len) { t += Time.unscaledDeltaTime; float d = 1 - t / len; newLock.localRotation = Quaternion.Euler(0, 0, Mathf.Sin(t * 26) * 9 * d); yield return null; }
+                // The padlock lets go (a quick shrink and fade, no wobble), then the new area is there, with a ring of sparkles.
+                float t = 0, len = Motion ? LockRelease : .05f;
+                var lockGroup = newLock.GetComponent<CanvasGroup>(); if (!lockGroup) lockGroup = newLock.gameObject.AddComponent<CanvasGroup>();
+                while (t < len) { t += Time.unscaledDeltaTime; float u = Mathf.Clamp01(t / len), e = u * u; newLock.localScale = Vector3.one * Mathf.Lerp(1, .82f, e); lockGroup.alpha = 1 - e; yield return null; }
                 newLock.localRotation = Quaternion.identity;
                 if (!RoyalAreas.Enter()) yield break;
                 home.ClosePanel();
@@ -1053,6 +1057,10 @@ namespace RoyalThrone.Presentation
                 card.bar.gameObject.SetActive(now); card.done.gameObject.SetActive(restored);
                 card.view.gameObject.SetActive(restored && area.Ready); card.view.interactable = restored && area.Ready;
                 card.lockBadge.gameObject.SetActive(card.state == "locked");
+                // The unlock rule in words: areas open one after another, each once the one before it is restored.
+                card.lockNote.gameObject.SetActive(card.state == "locked");
+                if (card.state == "locked")
+                    card.lockWords.text = !area.Ready ? "Coming soon" : n == current && entered < current ? "Unlock it from Home" : "Complete Area " + (n - 1) + " to unlock";
                 if (now) SetBar(card.barFill, card.barCount, RoyalAreas.DoneCount, area.tasks.Length);
                 bool grey = card.state == "locked";
                 card.ribbonFace.topColor = grey ? K.C(150, 160, 176) : K.C(185, 44, 60); card.ribbonFace.bottomColor = grey ? K.C(120, 130, 148) : K.C(176, 34, 52);
@@ -1143,9 +1151,9 @@ namespace RoyalThrone.Presentation
         bool cardDecorated, cardFresh; Vector4 savedLabel;
         void PulseNewArea()
         {
+            // "New Area" stays still: no idle pulse on a control (the label's size and the card say it is new).
             if (!cardFresh || !home || !home.IsHomeVisible || home.dialog.activeSelf) return;
-            float s = Motion ? 1 + .035f * Mathf.Sin(Time.unscaledTime * Mathf.PI * 2 / 1.4f) : 1;
-            home.areaLabel.transform.localScale = new Vector3(s, s, 1);
+            if (home.areaLabel.transform.localScale != Vector3.one) home.areaLabel.transform.localScale = Vector3.one;
         }
     }
 }

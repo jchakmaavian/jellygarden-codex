@@ -41,6 +41,9 @@ namespace RoyalThrone.ReferenceGameplay
         RectTransform hud,shop,prompt;Text message,balance,price,title,body;Image shopIcon;
         RectTransform rail;CanvasGroup railInput;Vector2 railRest;bool railMoving,railBlocks,railInteractable;float railDrop;
         Font font;int buying=-1;bool purchasePending;readonly List<BoostIcon> buttons=new List<BoostIcon>();
+        // UI polish (2026-09-30): the chosen tool eases up to 1.06x over 0.12 s with a soft gold halo behind it, and a tap on a
+        // padlocked tool says when tools unlock, in the tool prompt, for about two seconds.
+        readonly float[] chosen=new float[4];readonly RoyalThrone.Presentation.RoyalCardShape[] halos=new RoyalThrone.Presentation.RoyalCardShape[4];float lockedHintUntil;
         readonly Dictionary<BoostIcon,GameObject> padlocks=new Dictionary<BoostIcon,GameObject>();static Sprite padlockArt,discArt;
         ReferenceHammerSequence hammer;ReferenceArcherSequence archer;ReferenceCannonSequence cannon;Square[] currentBoard;Coroutine operation;bool shuffled;
         LevelManager LM=>LevelManager.THIS;
@@ -206,7 +209,8 @@ namespace RoyalThrone.ReferenceGameplay
         public int Stock(int index)=>RoyalSave.GetInt(Types[index].ToString(),0);
         public void Choose(BoostType type)
         {
-            int index=Array.IndexOf(Types,type);if(index<0||Busy||!LM||LM.gameStatus!=GameState.Playing||Locked)return;
+            int index=Array.IndexOf(Types,type);if(index<0||Busy||!LM||LM.gameStatus!=GameState.Playing)return;
+            if(Locked){LockedHint(index);return;}
             if(ShopOpen)CloseShop();
             if(Selected==index){CancelSelection();return;}
             CancelSelection();if(Stock(index)<=0){OpenShop(type);return;}
@@ -215,7 +219,25 @@ namespace RoyalThrone.ReferenceGameplay
             prompt.gameObject.SetActive(true);prompt.SetAsLastSibling();
             if(index==3){message.text="Jester Hat — tap here to Shuffle";var b=prompt.GetComponent<Button>();if(!b){b=prompt.gameObject.AddComponent<Button>();b.onClick.AddListener(()=>{if(Selected==3)TryUse(null);});}var im=prompt.GetComponent<Image>();if(!im)im=prompt.gameObject.AddComponent<Image>();im.color=Color.clear;im.raycastTarget=true;}
         }
-        public void CancelSelection(){Selected=-1;if(prompt)prompt.gameObject.SetActive(false);}
+        public void CancelSelection(){Selected=-1;lockedHintUntil=0;if(prompt)prompt.gameObject.SetActive(false);}
+        // The unlock rule is the opening levels' (RoyalReferenceCampaign.OpeningLevels): tools open on the level after them.
+        void LockedHint(int index)
+        {
+            if(!prompt||!message)return;CancelSelection();
+            message.text=Titles[index]+"\nTools unlock at Level "+(RoyalThrone.Campaign.RoyalReferenceCampaign.OpeningLevels+1);
+            prompt.gameObject.SetActive(true);prompt.SetAsLastSibling();lockedHintUntil=Time.unscaledTime+2.2f;
+            if(SoundBase.Instance)SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+        }
+        // The halo behind a tool's face: made the first time it is needed, sized to the button.
+        RoyalThrone.Presentation.RoyalCardShape Halo(BoostIcon b,int index)
+        {
+            if(halos[index]||!b)return halos[index];
+            var go=new GameObject("Royal selected halo",typeof(RectTransform));var r=(RectTransform)go.transform;r.SetParent(b.transform,false);r.SetAsFirstSibling();
+            float d=((RectTransform)b.transform).rect.width+22;r.anchorMin=r.anchorMax=new Vector2(.5f,.5f);r.sizeDelta=new Vector2(d,d);r.anchoredPosition=Vector2.zero;
+            var halo=go.AddComponent<RoyalThrone.Presentation.RoyalCardShape>();halo.raycastTarget=false;halo.radius=d*.5f;halo.band=8;halo.softness=7;
+            halo.from=new Color(1,.97f,.78f);halo.to=new Color(1,.8f,.3f);halo.color=new Color(1,1,1,0);
+            return halos[index]=halo;
+        }
         public void OpenShop(BoostType type)
         {
             CancelSelection();buying=Array.IndexOf(Types,type);if(buying<0||Busy)return;
@@ -249,7 +271,16 @@ namespace RoyalThrone.ReferenceGameplay
             ShowPadlocks();
             if(LM.gameStatus!=GameState.Playing||(currentBoard!=null&&currentBoard!=LM.squaresArray))
             {CancelSelection();CloseShop();if(Busy&&(LM.gameStatus==GameState.Map||LM.gameStatus==GameState.PrepareGame||currentBoard!=LM.squaresArray))CancelOperation();currentBoard=LM.squaresArray;return;}
-            foreach(var b in buttons)if(b)b.transform.localScale=Vector3.one*(Selected==Array.IndexOf(Types,b.type)?1.06f:1);
+            if(lockedHintUntil>0&&Time.unscaledTime>=lockedHintUntil){lockedHintUntil=0;if(Selected<0&&prompt)prompt.gameObject.SetActive(false);}
+            // Eased once per tool per frame (a tool's button can be bound more than once), then applied to its buttons.
+            for(int ix=0;ix<chosen.Length;ix++)chosen[ix]=Mathf.MoveTowards(chosen[ix],Selected==ix?1:0,Time.unscaledDeltaTime/.12f);
+            foreach(var b in buttons)
+            {
+                if(!b)continue;int ix=Array.IndexOf(Types,b.type);if(ix<0)continue;
+                float u=1-chosen[ix],e=1-u*u*u;
+                b.transform.localScale=Vector3.one*(1+.06f*e);
+                var halo=chosen[ix]>0||halos[ix]?Halo(b,ix):null;if(halo&&!Mathf.Approximately(halo.color.a,e))halo.color=new Color(1,1,1,e);
+            }
             // Back first closes this bar's shop or cancels a chosen tool, instead of also opening the pause menu.
             if(InputManager.Instance&&InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
             {

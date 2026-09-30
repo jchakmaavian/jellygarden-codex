@@ -170,6 +170,18 @@ namespace JellyGarden.Scripts.GUI
                     CloseMenu();
                     RoyalThrone.Presentation.RoyalBackButton.Consume();
                 }
+                // The level-end cards take Back as their quiet choice: END LEVEL on the So Close offer, closing the Level Failed
+                // card, and CONTINUE on the win card (UI polish, 2026-09-30; Back did nothing on them).
+                else if (name == "PreFailed" && !failedChoiceMade)
+                {
+                    GiveUp();
+                    RoyalThrone.Presentation.RoyalBackButton.Consume();
+                }
+                else if (name == "MenuFailed" || name == "MenuComplete")
+                {
+                    Next();
+                    RoyalThrone.Presentation.RoyalBackButton.Consume();
+                }
                 else if (name == "MenuPause" && !IsOpen("Tutorial"))   // How-to-play on top of the pause menu closes first
                 {
                     // Back first dismisses the leave question; otherwise it resumes, exactly like the Continue button.
@@ -542,6 +554,15 @@ namespace JellyGarden.Scripts.GUI
             MenuManager.Instance.ShowGemsShop(true);
         }
 
+        // Not enough coins for `near` (the button that asked). With purchases available this opens the coin shop, as before;
+        // offline (RoyalOfflineMode) that shop sells nothing, so the card says so beside the button and the player stays on it.
+        void NotEnoughCoins(Transform near)
+        {
+            if (RoyalThrone.RoyalOfflineMode.ServicesEnabled) { BuyGems(); return; }
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            RoyalThrone.Presentation.RoyalNotice.NotEnoughCoins(near ? near : transform, InitScript.Gems);
+        }
+
         public void Buy(GameObject pack)
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
@@ -626,7 +647,7 @@ namespace JellyGarden.Scripts.GUI
             }
             else
             {
-                MenuManager.Instance.ShowGemsShop(true);
+                NotEnoughCoins(button.transform);
             }
 
         }
@@ -659,7 +680,7 @@ namespace JellyGarden.Scripts.GUI
                 }
                 else
                 {
-                    MenuManager.Instance.ShowGemsShop(true);
+                    NotEnoughCoins(button.transform);
                 }
             }
         }
@@ -699,7 +720,7 @@ namespace JellyGarden.Scripts.GUI
             }
             else
             {
-                BuyGems();
+                NotEnoughCoins(transform.Find("Image") ? transform.Find("Image") : transform);
             }
         }
 

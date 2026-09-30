@@ -48,8 +48,8 @@ namespace RoyalThrone.ReferenceGameplay
         const float CardLine=.246f;
         // The reference sky deepens toward the top, behind the resource bar: a veil over the upper 47% of the screen, under the clouds.
         const float SkyDepth=.47f;
-        // Soft attention on the + badges: a 0.6 s swell every 7 s, a little apart. The selected tab breathes over 2.8 s.
-        const float PulsePeriod=7,PulseLength=.6f,PulseAmount=.07f,PulseStagger=.22f,GlowPeriod=2.8f;
+        // The + badges and the selected tab stay still (UI polish, 2026-09-30): no idle swell or breathing on controls; the
+        // selected tab reads by its raised art, its panel, rim and gold line.
         static Sprite Art(int id)=>Resources.Load<Sprite>("ReferenceGameplay/Home/"+id);
         public static void Attach(RoyalHomeScreen home){var v=home.GetComponent<ReferenceHomeLayout>();if(!v)v=home.gameObject.AddComponent<ReferenceHomeLayout>();v.home=home;v.Build();}
         // 0 in place, 1 off the screen: while an area task builds, the resource bar slides up and the cards and tab bar slide down,
@@ -90,6 +90,10 @@ namespace RoyalThrone.ReferenceGameplay
             Pair(parent,16521,0,0,1,1,true);
         }
         void Build(){if(built||!home)return;built=true;
+            // Home's info dialogs speak in the game's display type, like every card (UI polish, 2026-09-30): the subtitle and the
+            // detail were the default font. Navy on the cream; best fit still shrinks a long line.
+            var display=Resources.Load<Font>("RoyalGameplay/Display");
+            if(display){if(home.dialogCopy){home.dialogCopy.font=display;home.dialogCopy.color=new Color(.07f,.2f,.49f);}if(home.dialogDetail){home.dialogDetail.font=display;home.dialogDetail.color=new Color(.14f,.25f,.47f);}}
             ReferenceHomeSky.Attach(home);
             // The background is placed against the card row in LateUpdate instead of centred on the screen.
             sky=home.transform.Find("Castle framing/Royal blue courtyard") as RectTransform;
@@ -189,8 +193,7 @@ namespace RoyalThrone.ReferenceGameplay
             float sink=away*(navH*1.35f+inset+24);home.navigation.sizeDelta=new Vector2(w,navH);home.navigation.anchoredPosition=new Vector2(0,navH*.5f-sink);
             home.navigationBackground.sizeDelta=new Vector2(0,navH+inset);home.navigationBackground.anchoredPosition=new Vector2(home.navigationBackground.anchoredPosition.x,-sink);
             navDepth.rectTransform.offsetMin=new Vector2(0,-inset);navDepth.rectTransform.offsetMax=new Vector2(0,-w*GoldTrim);
-            bool motion=home.MotionEnabled&&home.IsHomeVisible;float time=Time.unscaledTime;
-            float glow=motion?.5f+.5f*Mathf.Sin(time*Mathf.PI*2/GlowPeriod):1;
+            const float glow=1;
             for(int i=0;i<5;i++){var b=home.tabButtons[i];Anchor((RectTransform)b.transform,TabEdges[i],0,TabEdges[i+1],1);
                 float t=emphasis[i];
                 Vector2 rest=IconRest[i],raised=i==2?HomeRaised:new Vector2(.47f,.47f+1.3f*(rest.y-rest.x));
@@ -202,9 +205,7 @@ namespace RoyalThrone.ReferenceGameplay
                 float shine=Mathf.Lerp(.88f,1,glow);tabLine[i].color=new Color(shine,shine,shine,t);
                 int size=Mathf.RoundToInt(Mathf.Lerp(LabelSize,SelectedLabelSize,t));
                 foreach(var label in b.GetComponentsInChildren<Text>(true)){label.enabled=true;label.transform.SetAsLastSibling();Bounds(label.rectTransform,.02f,LabelBox.x,.98f,LabelBox.y);label.fontSize=label.resizeTextMaxSize=size;}}
-            for(int i=0;i<plus.Length;i++){float s=1;
-                if(motion&&!home.dialog.activeSelf){float p=Mathf.Repeat(time-i*PulseStagger,PulsePeriod);if(p<PulseLength)s=1+PulseAmount*Mathf.Sin(p/PulseLength*Mathf.PI);}
-                plus[i].localScale=new Vector3(s,s,1);}
+            for(int i=0;i<plus.Length;i++)if(plus[i].localScale!=Vector3.one)plus[i].localScale=Vector3.one;
             PlaceBackground(inset+w*(ActionsCentre+ActionsHeight*.5f),inset+navH);
             if(fill)fill.fillAmount=home.Progress.areaTotal>0?(float)home.Progress.areaCompleted/home.Progress.areaTotal:0;
             FitDialog();
