@@ -1,0 +1,1585 @@
+[
+  {
+    "name": "LightballItemModel",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem",
+    "index": 8470,
+    "fields": [
+      {
+        "name": "ComboScore",
+        "typeIndex": 23158,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "c030cf45",
+          "value": -1599395
+        }
+      },
+      {
+        "name": "itemView",
+        "typeIndex": 24703
+      },
+      {
+        "name": "lightballStrategy",
+        "typeIndex": 24716
+      }
+    ],
+    "methods": [
+      ".ctor",
+      "get_ItemType",
+      "get_GetMoveType",
+      "UpdateStrategy",
+      "CreateView",
+      "GetItemView",
+      "CanExplodeWithNearMatch",
+      "TryExplode",
+      "Start",
+      "ExplodeSelf",
+      "SwapWith",
+      "ComboWith",
+      "Tap",
+      "GetExplodeScore",
+      "CanSwapWith",
+      "DidStart",
+      "CanReceiveAboveStaticItem",
+      "ExplodeDisabled"
+    ]
+  },
+  {
+    "name": "SuperLightballItemModel",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem",
+    "index": 8471,
+    "fields": [],
+    "methods": [
+      "CreateView",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "LightballEffectedItemExplodeParticles",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View",
+    "index": 8472,
+    "fields": [
+      {
+        "name": "particles",
+        "typeIndex": 11782
+      },
+      {
+        "name": "particleColors",
+        "typeIndex": 11343
+      }
+    ],
+    "methods": [
+      "Play",
+      "GetPoolId",
+      "GetParticleColorFromMatchType",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "LightballItemAssets",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View",
+    "index": 8473,
+    "fields": [],
+    "methods": [
+      "GetViewPrefab",
+      "GetLightballItemRay",
+      "GetExplodePrefabs",
+      "GetLightballItemBg",
+      "GetLightballUseParticles",
+      "GetLightballEffectedItemExplodeParticles",
+      "GetBallBallComboViewPrefab",
+      "GetBallBallComboUseParticles",
+      "GetBallBallComboExplodeParticles",
+      "GetSprite",
+      "CreateItemPools",
+      "ClearItemPools",
+      "CreateSuperLightballPools",
+      "ClearSuperLightballPools",
+      "GetSpriteFromMatchType",
+      "GetLightballExplode",
+      "GetLightballRay1",
+      "GetLightballRay2",
+      "GetLightballRay3",
+      "GetLightballLightballCombo",
+      "GetLightballCreation",
+      "GetLightballStart",
+      "GetSuperLightballColorChangeAudioClip",
+      "GetSuperLightballComboExplodeAudioClip",
+      "GetSuperLightballComboStartAudioClip",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "LightballItemBg",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View",
+    "index": 8474,
+    "fields": [
+      {
+        "name": "colorBg",
+        "typeIndex": 32005
+      },
+      {
+        "name": "whiteBg",
+        "typeIndex": 32005
+      },
+      {
+        "name": "rayTipParticle",
+        "typeIndex": 27329
+      },
+      {
+        "name": "spriteColors",
+        "typeIndex": 11343
+      }
+    ],
+    "methods": [
+      "Init",
+      "PlayRayTipParticle",
+      "GetPoolId",
+      "OnSpawn",
+      "OnRecycle",
+      "GetSpriteColorFromMatchType",
+      "RecycleSelf",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "LightballItemExplodeParticles",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View",
+    "index": 8475,
+    "fields": [
+      {
+        "name": "circleParticle",
+        "typeIndex": 27329
+      }
+    ],
+    "methods": [
+      "Play",
+      "GetPoolId",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "LightballItemRay",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View",
+    "index": 8477,
+    "fields": [
+      {
+        "name": "LightballRayDelay",
+        "typeIndex": 31435
+      },
+      {
+        "name": "RayReachFrameCount",
+        "typeIndex": 23155,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "16241020",
+          "value": 11
+        }
+      },
+      {
+        "name": "RayFinishFrameCount",
+        "typeIndex": 23155,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "24102000",
+          "value": 18
+        }
+      },
+      {
+        "name": "WhiteFadeStartTime",
+        "typeIndex": 23157,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "10200000",
+          "value": 8
+        }
+      },
+      {
+        "name": "WhiteFadeEndTime",
+        "typeIndex": 23157,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "20000000",
+          "value": 16
+        }
+      },
+      {
+        "name": "colorLine",
+        "typeIndex": 24793
+      },
+      {
+        "name": "whiteLine",
+        "typeIndex": 24793
+      },
+      {
+        "name": "colors",
+        "typeIndex": 11343
+      },
+      {
+        "name": "targetModel",
+        "typeIndex": 25491
+      },
+      {
+        "name": "lightballStrategy",
+        "typeIndex": 24717
+      },
+      {
+        "name": "shakeRoutine",
+        "typeIndex": 17915
+      },
+      {
+        "name": "lightballBg",
+        "typeIndex": 24694
+      },
+      {
+        "name": "frozenCell",
+        "typeIndex": 16761
+      },
+      {
+        "name": "rayEnded",
+        "typeIndex": 16205
+      },
+      {
+        "name": "rayWillRecycle",
+        "typeIndex": 16207
+      },
+      {
+        "name": "isCollectCalled",
+        "typeIndex": 16207
+      },
+      {
+        "name": "rayCoroutine",
+        "typeIndex": 17916
+      }
+    ],
+    "methods": [
+      "Init",
+      "SetSorting",
+      "SetWidthForType",
+      "GetPoolId",
+      "OnRecycle",
+      "CreateItemBg",
+      "ShakeItem",
+      "MoveAndDestroy",
+      "EndRayRecycleSelf",
+      "EndRay",
+      "GetColorFromMatchType",
+      ".ctor",
+      ".cctor"
+    ]
+  },
+  {
+    "name": "LightballItemView",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View",
+    "index": 8478,
+    "fields": [
+      {
+        "name": "LightballCreationStateId",
+        "typeIndex": 23147
+      },
+      {
+        "name": "LightballChargerLandStateId",
+        "typeIndex": 23145
+      },
+      {
+        "name": "LightballUseStateId",
+        "typeIndex": 23145
+      },
+      {
+        "name": "LightballDefaultStateId",
+        "typeIndex": 23145
+      },
+      {
+        "name": "viewDelegate",
+        "typeIndex": 22403
+      },
+      {
+        "name": "didStartUseAnimation",
+        "typeIndex": 16205
+      },
+      {
+        "name": "isCreationAnimationFinished",
+        "typeIndex": 16207
+      },
+      {
+        "name": "shakeRoutine",
+        "typeIndex": 17917
+      }
+    ],
+    "methods": [
+      "Init",
+      "Update",
+      "GetCreationSorting",
+      "GetPoolId",
+      "OnSpawn",
+      "OnRecycle",
+      "Explode",
+      "PlayCreationAnimation",
+      "PlayChargerLandAnimation",
+      "IsCreationAnimationPlaying",
+      "PlayBoosterAnimation",
+      "StopCreationAnimation",
+      "PlayUseAnimation",
+      "SwapAnimationStarted",
+      "SetIsUnderNonFallBlockingAboveStaticItem",
+      ".ctor",
+      ".cctor"
+    ]
+  },
+  {
+    "name": "LightballUseParticles",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View",
+    "index": 8479,
+    "fields": [
+      {
+        "name": "backGlowBg",
+        "typeIndex": 27329
+      },
+      {
+        "name": "backGlow",
+        "typeIndex": 27329
+      },
+      {
+        "name": "ring",
+        "typeIndex": 27329
+      }
+    ],
+    "methods": [
+      "Play",
+      "StopEmitting",
+      "GetPoolId",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "SuperLightballItemRay",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View",
+    "index": 8481,
+    "fields": [
+      {
+        "name": "SuperLightballRayDelay",
+        "typeIndex": 31446,
+        "literal": {
+          "primitive": "Single",
+          "raw": "295c8f3d",
+          "value": 0.07000000029802322
+        }
+      },
+      {
+        "name": "FirstRayFrame",
+        "typeIndex": 23155,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "16247b14",
+          "value": 11
+        }
+      },
+      {
+        "name": "SecondRayFrame",
+        "typeIndex": 23155,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "247b142e",
+          "value": 18
+        }
+      },
+      {
+        "name": "BlueWhiteWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "7b142e3e",
+          "value": 0.17000000178813934
+        }
+      },
+      {
+        "name": "BlueColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "85ebd13e",
+          "value": 0.4099999964237213
+        }
+      },
+      {
+        "name": "BlueAlphaColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "85ebd13e",
+          "value": 0.4099999964237213
+        }
+      },
+      {
+        "name": "GreenWhiteWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "ae47e13d",
+          "value": 0.10999999940395355
+        }
+      },
+      {
+        "name": "GreenColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "cdcc0c3f",
+          "value": 0.550000011920929
+        }
+      },
+      {
+        "name": "GreenAlphaColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "85eb113f",
+          "value": 0.5699999928474426
+        }
+      },
+      {
+        "name": "RedWhiteWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "7b142e3e",
+          "value": 0.17000000178813934
+        }
+      },
+      {
+        "name": "RedColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "85ebd13e",
+          "value": 0.4099999964237213
+        }
+      },
+      {
+        "name": "RedAlphaColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "85ebd13e",
+          "value": 0.4099999964237213
+        }
+      },
+      {
+        "name": "YellowWhiteWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "8fc2f53d",
+          "value": 0.11999999731779099
+        }
+      },
+      {
+        "name": "YellowColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "3d0ad73e",
+          "value": 0.41999998688697815
+        }
+      },
+      {
+        "name": "YellowAlphaColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "1f85eb3e",
+          "value": 0.46000000834465027
+        }
+      },
+      {
+        "name": "PinkWhiteWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0ad7233e",
+          "value": 0.1599999964237213
+        }
+      },
+      {
+        "name": "PinkColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "3333b33e",
+          "value": 0.3499999940395355
+        }
+      },
+      {
+        "name": "PinkAlphaColorWidth",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "ec51b83e",
+          "value": 0.36000001430511475
+        }
+      },
+      {
+        "name": "alphaColorLine",
+        "typeIndex": 24793
+      },
+      {
+        "name": "alphaColors",
+        "typeIndex": 11343
+      },
+      {
+        "name": "whiteColors",
+        "typeIndex": 11343
+      },
+      {
+        "name": "targetMatchType",
+        "typeIndex": 25514
+      }
+    ],
+    "methods": [
+      "Init",
+      "SetSorting",
+      "GetAlphaColorFromMatchType",
+      "GetColorFromMatchType",
+      "SetWidthForType",
+      "MoveAndDestroy",
+      "OnRecycle",
+      "GetPoolId",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "BallBallComboExplodeParticles",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View.BallBallCombo",
+    "index": 8482,
+    "fields": [
+      {
+        "name": "circleParticle",
+        "typeIndex": 27329
+      }
+    ],
+    "methods": [
+      "Play",
+      "UpdateSorting",
+      "GetPoolId",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "BallBallComboUseParticles",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View.BallBallCombo",
+    "index": 8483,
+    "fields": [
+      {
+        "name": "backGlowBg",
+        "typeIndex": 27329
+      },
+      {
+        "name": "backGlow",
+        "typeIndex": 27329
+      }
+    ],
+    "methods": [
+      "Play",
+      "GetPoolId",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "BallBallComboView",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View.BallBallCombo",
+    "index": 8486,
+    "fields": [
+      {
+        "name": "animator",
+        "typeIndex": 13128
+      },
+      {
+        "name": "sortingGroup",
+        "typeIndex": 31766
+      },
+      {
+        "name": "black",
+        "typeIndex": 32005
+      },
+      {
+        "name": "maskTransform",
+        "typeIndex": 34116
+      },
+      {
+        "name": "itemFactory",
+        "typeIndex": 23422
+      },
+      {
+        "name": "onAnimationCompleted",
+        "typeIndex": 12678
+      },
+      {
+        "name": "useParticles",
+        "typeIndex": 15820
+      },
+      {
+        "name": "isReady",
+        "typeIndex": 16207
+      },
+      {
+        "name": "normalCellCount",
+        "typeIndex": 23134
+      }
+    ],
+    "methods": [
+      "get_TargetBoltCount",
+      "Init",
+      "PlayComboSfx",
+      "DailyLightningRushCounter",
+      "ClashOfChampionsCounter",
+      "StartUseParticles",
+      "Update",
+      "GetAnimationNormalizedTime",
+      "PlayParticles",
+      "GetPoolId",
+      "OnSpawn",
+      "OnRecycle",
+      ".ctor",
+      "<PlayParticles>b__18_0"
+    ]
+  },
+  {
+    "name": "SuperBallBallComboExplodeInnerParticles",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.View.BallBallCombo",
+    "index": 8487,
+    "fields": [
+      {
+        "name": "circleParticle",
+        "typeIndex": 27329
+      }
+    ],
+    "methods": [
+      "Play",
+      "GetPoolId",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "DefaultLightballStrategy",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.Strategy",
+    "index": 8491,
+    "fields": [
+      {
+        "name": "TriggerDelay",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000003f",
+          "value": 0.5
+        }
+      },
+      {
+        "name": "isUserAction",
+        "typeIndex": 16205
+      },
+      {
+        "name": "clashOfChampionsGameplayCollectView",
+        "typeIndex": 17133
+      }
+    ],
+    "methods": [
+      "Start",
+      "StartLightningRush",
+      "SelectMatchTypeAndStartAfterDelay",
+      "SelectMatchTypeAndStart",
+      "SingleRayReached",
+      "AddMatchItemToList",
+      "StoppedLookingForNewItems",
+      "AllRaysComplete",
+      "CompleteDelayed",
+      "CompleteDelayedSuper",
+      "GetMatchTypeCount",
+      "ExplodeParticles",
+      "ExplodeTouching",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "LightballPropellerStrategy",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.Strategy",
+    "index": 8492,
+    "fields": [
+      {
+        "name": "propellerItem",
+        "typeIndex": 28075
+      }
+    ],
+    "methods": [
+      "get_ComboItemType",
+      "Start",
+      "Reset",
+      "GetReplacedItemForLightball",
+      "CreateBgForReplacedItemForLightball",
+      "SingleRayReached",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "LightballRocketStrategy",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.Strategy",
+    "index": 8493,
+    "fields": [
+      {
+        "name": "rocketItem",
+        "typeIndex": 29146
+      },
+      {
+        "name": "replacedItemsTypes",
+        "typeIndex": 3621
+      },
+      {
+        "name": "lastRocketOrientation",
+        "typeIndex": 23440
+      }
+    ],
+    "methods": [
+      "get_ItemExplodeDelay",
+      "get_PositionOffset",
+      "get_MaxShakeScale",
+      "get_ComboItemType",
+      "Start",
+      "Reset",
+      "AddMatchItemToList",
+      "GetReplacedItemForLightball",
+      "CreateBgForReplacedItemForLightball",
+      "RemoveFromItems",
+      "SingleRayReached",
+      "GetCurrentTiledId",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "LightballSpecialStrategy",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.Strategy",
+    "index": 8495,
+    "fields": [
+      {
+        "name": "<ComboItemType>k__BackingField",
+        "typeIndex": 23463
+      },
+      {
+        "name": "replacedItems",
+        "typeIndex": 7460
+      },
+      {
+        "name": "lightballShakeRoutine",
+        "typeIndex": 17916
+      },
+      {
+        "name": "lightballBg",
+        "typeIndex": 24694
+      },
+      {
+        "name": "lightballCell",
+        "typeIndex": 16763
+      },
+      {
+        "name": "nonConvertedMatchItems",
+        "typeIndex": 7196
+      },
+      {
+        "name": "clashOfChampionsGameplayCollectView",
+        "typeIndex": 17134
+      }
+    ],
+    "methods": [
+      "get_ItemExplodeDelay",
+      "get_ComboItemType",
+      "Start",
+      "Reset",
+      "AddMatchItemToList",
+      "AllRaysComplete",
+      "StoppedLookingForNewItems",
+      "RemoveLightball",
+      "RemoveAnItemFromCell",
+      "RemoveLightballFromCell",
+      "PutItemToCell",
+      "GetReplacedItemForLightball",
+      "CreateBgForReplacedItemForLightball",
+      "LightballReplacedItemExploded",
+      "ExplodeItems",
+      "ExplodeChainAndResetMatchItem",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "LightballStrategy",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.Strategy",
+    "index": 8499,
+    "fields": [
+      {
+        "name": "LightballRayDelay",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "295c8f3d",
+          "value": 0.07000000029802322
+        }
+      },
+      {
+        "name": "MinimumLightballRunTime",
+        "typeIndex": 31445,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000803f",
+          "value": 1.0
+        }
+      },
+      {
+        "name": "randomManager",
+        "typeIndex": 24475
+      },
+      {
+        "name": "touchManager",
+        "typeIndex": 21000
+      },
+      {
+        "name": "gridManager",
+        "typeIndex": 16749
+      },
+      {
+        "name": "itemFactory",
+        "typeIndex": 23424
+      },
+      {
+        "name": "specialItemCreator",
+        "typeIndex": 31897
+      },
+      {
+        "name": "sfxManager",
+        "typeIndex": 20986
+      },
+      {
+        "name": "moveManager",
+        "typeIndex": 26265
+      },
+      {
+        "name": "hapticManager",
+        "typeIndex": 21577
+      },
+      {
+        "name": "iterator",
+        "typeIndex": 21454
+      },
+      {
+        "name": "lightballModel",
+        "typeIndex": 24698
+      },
+      {
+        "name": "lightballView",
+        "typeIndex": 24702
+      },
+      {
+        "name": "lightballUseParticles",
+        "typeIndex": 24725
+      },
+      {
+        "name": "items",
+        "typeIndex": 7197
+      },
+      {
+        "name": "toBeRemovedItems",
+        "typeIndex": 7196
+      },
+      {
+        "name": "rays",
+        "typeIndex": 3625
+      },
+      {
+        "name": "matchType",
+        "typeIndex": 25515
+      },
+      {
+        "name": "oldMatchType",
+        "typeIndex": 25515
+      },
+      {
+        "name": "raySenderRoutine",
+        "typeIndex": 17915
+      },
+      {
+        "name": "incompleteRays",
+        "typeIndex": 23132
+      },
+      {
+        "name": "unCollectedRays",
+        "typeIndex": 23132
+      },
+      {
+        "name": "isLookingForNewItems",
+        "typeIndex": 16205
+      },
+      {
+        "name": "lastRayCollectStartedAt",
+        "typeIndex": 31428
+      },
+      {
+        "name": "isSuper",
+        "typeIndex": 16207
+      },
+      {
+        "name": "<DidStart>k__BackingField",
+        "typeIndex": 16205
+      },
+      {
+        "name": "startTime",
+        "typeIndex": 31430
+      },
+      {
+        "name": "raySoundIndex",
+        "typeIndex": 23132
+      },
+      {
+        "name": "DefaultPositionOffset",
+        "typeIndex": 31435
+      },
+      {
+        "name": "DefaultPositionOffsetDur",
+        "typeIndex": 31435
+      },
+      {
+        "name": "DefaultMinShakeScale",
+        "typeIndex": 31435
+      },
+      {
+        "name": "DefaultMaxShakeScale",
+        "typeIndex": 31435
+      },
+      {
+        "name": "DefaultScaleSpeed",
+        "typeIndex": 31435
+      }
+    ],
+    "methods": [
+      "get_DidStart",
+      "set_DidStart",
+      ".ctor",
+      "Start",
+      "Init",
+      "Reset",
+      "SingleRayReached",
+      "AllRaysComplete",
+      "AddMatchItemToList",
+      "StoppedLookingForNewItems",
+      "AnimationCompleted",
+      "StartShakingLightball",
+      "RayStartedToCollect",
+      "SingleRayComplete",
+      "StartSendingRays",
+      "RemoveFromItems",
+      "SendAllRays",
+      "SendAllSuperRays",
+      "PlaySquashAnimation",
+      "CanSendRayToItem",
+      "MoveRay",
+      "PlayRandomRaySound",
+      "IsReadyForLightball",
+      "FindItemsByType",
+      "FindMostCommonItem",
+      "get_PositionOffset",
+      "get_PositionOffsetDur",
+      "get_MinShakeScale",
+      "get_MaxShakeScale",
+      "get_ScaleSpeed",
+      "ShakeItem",
+      "GetRandomPositionWithOffset",
+      "CreateBg",
+      "GetLightballSorting",
+      "Clear",
+      ".cctor"
+    ]
+  },
+  {
+    "name": "LightballTntStrategy",
+    "namespace": "Royal.Scenes.Game.Mechanics.Items.SpecialItems.LightballItem.Strategy",
+    "index": 8502,
+    "fields": [
+      {
+        "name": "tntItem",
+        "typeIndex": 33762
+      }
+    ],
+    "methods": [
+      "get_ComboItemType",
+      "get_ItemExplodeDelay",
+      "get_ItemExplodeStartDelay",
+      "Start",
+      "Reset",
+      "SingleRayReached",
+      "GetReplacedItemForLightball",
+      "CreateBgForReplacedItemForLightball",
+      "AllRaysComplete",
+      "AllNormalRaysComplete",
+      "AllSuperRaysComplete",
+      "PlayMadnessAnimation",
+      "ExplodeItems",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "FakeFallComponent",
+    "namespace": "Royal.Scenes.Game.Mechanics.Fall",
+    "index": 9766,
+    "fields": [
+      {
+        "name": "masterItem",
+        "typeIndex": 23431
+      }
+    ],
+    "methods": [
+      "get_CurrentSpeed",
+      "set_CurrentSpeed",
+      "get_StateChangedTime",
+      "set_StateChangedTime",
+      ".ctor",
+      "SetFillingCell",
+      "ManualUpdate",
+      "IsItemSteady",
+      "CopyFrom",
+      "CopyFromMaster",
+      "GetIsFallingCross"
+    ]
+  },
+  {
+    "name": "FallComponent",
+    "namespace": "Royal.Scenes.Game.Mechanics.Fall",
+    "index": 9767,
+    "fields": [
+      {
+        "name": "ScrollMaxSpeed",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000e041",
+          "value": 28.0
+        }
+      },
+      {
+        "name": "FloatPrecision",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "6f12833a",
+          "value": 0.0010000000474974513
+        }
+      },
+      {
+        "name": "InitialSpeed",
+        "typeIndex": 31446,
+        "literal": {
+          "primitive": "Single",
+          "raw": "00008040",
+          "value": 4.0
+        }
+      },
+      {
+        "name": "MinimumCrossSpeed",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "00008040",
+          "value": 4.0
+        }
+      },
+      {
+        "name": "StraightAcceleration",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000003f",
+          "value": 0.5
+        }
+      },
+      {
+        "name": "CrossAcceleration",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000003f",
+          "value": 0.5
+        }
+      },
+      {
+        "name": "MaxSpeed",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000a041",
+          "value": 20.0
+        }
+      },
+      {
+        "name": "FillItemFallOffset",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000c03f",
+          "value": 1.5
+        }
+      },
+      {
+        "name": "StraightFallOffset",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000a03f",
+          "value": 1.25
+        }
+      },
+      {
+        "name": "CrossFallOffset",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "9a99d93f",
+          "value": 1.7000000476837158
+        }
+      },
+      {
+        "name": "SpeedMultiplierOnRefill",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "cdcc4c3f",
+          "value": 0.800000011920929
+        }
+      },
+      {
+        "name": "item",
+        "typeIndex": 23431
+      },
+      {
+        "name": "itemMediator",
+        "typeIndex": 23426
+      },
+      {
+        "name": "fillingCell",
+        "typeIndex": 20451
+      },
+      {
+        "name": "currentFallState",
+        "typeIndex": 20355
+      },
+      {
+        "name": "isFallingCross",
+        "typeIndex": 16205
+      },
+      {
+        "name": "sfxManager",
+        "typeIndex": 20984
+      },
+      {
+        "name": "levelManager",
+        "typeIndex": 24460
+      },
+      {
+        "name": "gridManager",
+        "typeIndex": 16746
+      },
+      {
+        "name": "playedSound",
+        "typeIndex": 16205
+      },
+      {
+        "name": "hasEverFallCross",
+        "typeIndex": 16205
+      },
+      {
+        "name": "fallStartPosition",
+        "typeIndex": 35186
+      },
+      {
+        "name": "fallAnimationStarted",
+        "typeIndex": 16205
+      },
+      {
+        "name": "<CurrentSpeed>k__BackingField",
+        "typeIndex": 31428
+      },
+      {
+        "name": "<StateChangedTime>k__BackingField",
+        "typeIndex": 31428
+      }
+    ],
+    "methods": [
+      "get_CurrentSpeed",
+      "set_CurrentSpeed",
+      "get_StateChangedTime",
+      "set_StateChangedTime",
+      ".ctor",
+      "CopyFrom",
+      "CopyFromMaster",
+      "SetFillingCell",
+      "SetFallState",
+      "ManualUpdate",
+      "FallWithConstantSpeed",
+      "FallToFillingCell",
+      "FallToNextCell",
+      "FallStraight",
+      "FallCross",
+      "AngleTo",
+      "SelectNextCell",
+      "GetAcceleratedSpeed",
+      "StopIfReached",
+      "IsItemSteady",
+      "ArrangeIsUnderNonFallBlockingAboveStaticItem",
+      "GetIsFallingCross"
+    ]
+  },
+  {
+    "name": "FallSquash",
+    "namespace": "Royal.Scenes.Game.Mechanics.Fall",
+    "index": 9768,
+    "fields": [
+      {
+        "name": "ScrollSquashMultiplier",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "00002040",
+          "value": 2.5
+        }
+      },
+      {
+        "name": "gridManager",
+        "typeIndex": 16746
+      },
+      {
+        "name": "minWidthOnFall",
+        "typeIndex": 31428
+      },
+      {
+        "name": "maxBouncePosY",
+        "typeIndex": 31428
+      },
+      {
+        "name": "maxBounceUpDur",
+        "typeIndex": 31428
+      },
+      {
+        "name": "maxBounceDownDur",
+        "typeIndex": 31428
+      },
+      {
+        "name": "maxWidthOnStretch",
+        "typeIndex": 31428
+      },
+      {
+        "name": "minHeightOnStretch",
+        "typeIndex": 31428
+      },
+      {
+        "name": "minYPosOnStretch",
+        "typeIndex": 31428
+      },
+      {
+        "name": "maxStretchSpeed",
+        "typeIndex": 31428
+      },
+      {
+        "name": "maxSquashSpeed",
+        "typeIndex": 31428
+      },
+      {
+        "name": "fallStartPosition",
+        "typeIndex": 35186
+      },
+      {
+        "name": "isBouncing",
+        "typeIndex": 16205
+      },
+      {
+        "name": "isFalling",
+        "typeIndex": 16205
+      },
+      {
+        "name": "squashType",
+        "typeIndex": 32085
+      },
+      {
+        "name": "state",
+        "typeIndex": 20355
+      },
+      {
+        "name": "yPosOnStretch",
+        "typeIndex": 31428
+      },
+      {
+        "name": "stretchWidth",
+        "typeIndex": 31428
+      },
+      {
+        "name": "stretchHeight",
+        "typeIndex": 31428
+      },
+      {
+        "name": "stretchSpeed",
+        "typeIndex": 31428
+      },
+      {
+        "name": "squashSpeed",
+        "typeIndex": 31428
+      },
+      {
+        "name": "bounceYPos",
+        "typeIndex": 31428
+      },
+      {
+        "name": "bounceElapsedDur",
+        "typeIndex": 31428
+      },
+      {
+        "name": "squashedOnce",
+        "typeIndex": 16205
+      }
+    ],
+    "methods": [
+      "Awake",
+      "SetParameters",
+      "UpdateState",
+      "Update",
+      "BounceItemAfterFall",
+      "ScaleItemOnFall",
+      ".ctor"
+    ]
+  },
+  {
+    "name": "SquashType",
+    "namespace": "Royal.Scenes.Game.Mechanics.Fall",
+    "index": 9769,
+    "fields": [
+      {
+        "name": "value__",
+        "typeIndex": 23153
+      },
+      {
+        "name": "None",
+        "typeIndex": 32086,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "00020406",
+          "value": 0
+        }
+      },
+      {
+        "name": "Stretch",
+        "typeIndex": 32086,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "02040608",
+          "value": 1
+        }
+      },
+      {
+        "name": "Squash",
+        "typeIndex": 32086,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "0406080a",
+          "value": 2
+        }
+      },
+      {
+        "name": "BounceUp",
+        "typeIndex": 32086,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "06080a00",
+          "value": 3
+        }
+      },
+      {
+        "name": "BounceDown",
+        "typeIndex": 32086,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "080a0002",
+          "value": 4
+        }
+      },
+      {
+        "name": "Done",
+        "typeIndex": 32086,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "0a00026f",
+          "value": 5
+        }
+      }
+    ],
+    "methods": []
+  },
+  {
+    "name": "FallState",
+    "namespace": "Royal.Scenes.Game.Mechanics.Fall",
+    "index": 9770,
+    "fields": [
+      {
+        "name": "value__",
+        "typeIndex": 23153
+      },
+      {
+        "name": "Steady",
+        "typeIndex": 20357,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "00026f12",
+          "value": 0
+        }
+      },
+      {
+        "name": "Falling",
+        "typeIndex": 20357,
+        "literal": {
+          "primitive": "Int32",
+          "raw": "026f1283",
+          "value": 1
+        }
+      }
+    ],
+    "methods": []
+  },
+  {
+    "name": "IFallComponent",
+    "namespace": "Royal.Scenes.Game.Mechanics.Fall",
+    "index": 9771,
+    "fields": [],
+    "methods": [
+      "IsItemSteady",
+      "get_CurrentSpeed",
+      "set_CurrentSpeed",
+      "get_StateChangedTime",
+      "set_StateChangedTime",
+      "ManualUpdate",
+      "SetFillingCell",
+      "CopyFrom",
+      "CopyFromMaster",
+      "GetIsFallingCross"
+    ]
+  },
+  {
+    "name": "MasterFallComponent",
+    "namespace": "Royal.Scenes.Game.Mechanics.Fall",
+    "index": 9772,
+    "fields": [
+      {
+        "name": "FloatPrecision",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "6f12833a",
+          "value": 0.0010000000474974513
+        }
+      },
+      {
+        "name": "InitialSpeed",
+        "typeIndex": 31446,
+        "literal": {
+          "primitive": "Single",
+          "raw": "00008040",
+          "value": 4.0
+        }
+      },
+      {
+        "name": "StraightAcceleration",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000003f",
+          "value": 0.5
+        }
+      },
+      {
+        "name": "MaxSpeed",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000a041",
+          "value": 20.0
+        }
+      },
+      {
+        "name": "StraightFallOffset",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "0000a03f",
+          "value": 1.25
+        }
+      },
+      {
+        "name": "CrossFallOffset",
+        "typeIndex": 31443,
+        "literal": {
+          "primitive": "Single",
+          "raw": "9a99d93f",
+          "value": 1.7000000476837158
+        }
+      },
+      {
+        "name": "item",
+        "typeIndex": 12590
+      },
+      {
+        "name": "itemMediator",
+        "typeIndex": 23426
+      },
+      {
+        "name": "currentFallState",
+        "typeIndex": 20356
+      },
+      {
+        "name": "bounceSequence",
+        "typeIndex": 30434
+      },
+      {
+        "name": "sfxManager",
+        "typeIndex": 20984
+      },
+      {
+        "name": "playedSound",
+        "typeIndex": 16209
+      },
+      {
+        "name": "fallStartPosition",
+        "typeIndex": 35186
+      },
+      {
+        "name": "fallAnimationStarted",
+        "typeIndex": 16205
+      },
+      {
+        "name": "<CurrentSpeed>k__BackingField",
+        "typeIndex": 31428
+      },
+      {
+        "name": "<StateChangedTime>k__BackingField",
+        "typeIndex": 31428
+      }
+    ],
+    "methods": [
+      "get_CurrentSpeed",
+      "set_CurrentSpeed",
+      "get_StateChangedTime",
+      "set_StateChangedTime",
+      ".ctor",
+      "SetFillingCell",
+      "SetFallState",
+      "ManualUpdate",
+      "FallWithConstantSpeed",
+      "FallToNextCell",
+      "FallStraight",
+      "SelectNextCell",
+      "GetAcceleratedSpeed",
+      "StopIfReached",
+      "IsItemSteady",
+      "CopyFrom",
+      "CopyFromMaster",
+      "GetIsFallingCross"
+    ]
+  }
+]

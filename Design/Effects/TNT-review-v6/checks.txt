@@ -1,38 +1,8 @@
-Checks completed: 35
+Checks completed: 3
 TNT Reveal and Idle sequences load (120 + 120 frames)
 Every frame keeps its 512 px canvas with the pivot on the barrel base (256, 32 px) at 100 PPU
 quarter: a valid T match creates TNT through the production match pass
-quarter: the created TNT carries the frame animator
-quarter: the TNT's first rendered frame is Reveal 001, with no static TNT and one frame renderer
-quarter: the pooled reveal actor still holds the new piece in place but draws no procedural pop or glow
-quarter: all 617 rendered frames draw one TNT frame at 1.19x on the barrel-base pivot: no static flash, missing sprite, pop or duplicate
-quarter: Reveal plays once, 001 to 119 over 96 rendered frames (0.40 s approved timing)
-quarter: Idle 001 directly follows the last Reveal frame, and the Reveal never replays
-quarter: Idle loops 120 -> 001 on the 60 fps clock with no skipped or stalled frame (521 frames observed)
-quarter: activation stops Idle (at frame 011): the next rendered frame draws no TNT frame and no board TNT
-quarter: the existing anticipation takes over with one static TNT sprite
-quarter: white-hot ball, gold edge and expanding shockwave
-quarter: colored debris remains visible after the center fades
-quarter: residual light, stars and local impacts overlap falling fragments
-quarter: all pooled effects and debris finish
-normal: a valid T match creates TNT through the production match pass
-normal: the created TNT carries the frame animator
-normal: the TNT's first rendered frame is Reveal 001, with no static TNT and one frame renderer
-normal: the pooled reveal actor still holds the new piece in place but draws no procedural pop or glow
-normal: this Reveal runs on a reused pooled TNT actor and still starts at 001
-normal: all 155 rendered frames draw one TNT frame at 1.19x on the barrel-base pivot: no static flash, missing sprite, pop or duplicate
-normal: Reveal plays once, 001 to 116 over 24 rendered frames (0.40 s approved timing)
-normal: Idle 001 directly follows the last Reveal frame, and the Reveal never replays
-normal: Idle loops 120 -> 001 on the 60 fps clock with no skipped or stalled frame (131 frames observed)
-normal: Idle 001 lands on the static board artwork at 1.19x (TNT 259x309 px; best shift (0, 0), mean channel error 1.68/255)
-normal: activation stops Idle (at frame 011): the next rendered frame draws no TNT frame and no board TNT
-normal: the existing anticipation takes over with one static TNT sprite
-normal: white-hot ball, gold edge and expanding shockwave
-normal: colored debris remains visible after the center fades
-normal: residual light, stars and local impacts overlap falling fragments
-normal: all pooled effects and debris finish
-Pooled TNT actors reset and replay without leftover reveal transforms
-TNT tests preserve coins and lives
-No runtime errors during TNT tests
-Errors: 
+Errors: FAIL: quarter: the created TNT carries the frame animator
+Exception: quarter: the created TNT carries the frame animator
+Regression aborted before completion; inspect the Unity Console for the originating exception.
 Editor update p95 ms (not device GPU benchmark): 0

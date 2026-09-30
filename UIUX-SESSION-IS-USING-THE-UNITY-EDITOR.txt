@@ -1,0 +1,1 @@
+A Claude Code session (Profile redesign) is using the Unity editor for Play Mode tests, 2026-09-30 17:03. Please do not enter Play Mode or recompile until this file is removed.

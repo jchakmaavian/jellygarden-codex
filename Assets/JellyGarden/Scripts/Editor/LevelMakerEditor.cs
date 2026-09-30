@@ -272,23 +272,8 @@ namespace JellyGarden.Scripts.Editor
 
         void SetScriptingDefineSymbols()
         {
-            LevelManager lm = Camera.main.GetComponent<LevelManager>();
-            InitScript initscript = Camera.main.GetComponent<InitScript>();
-            string defines = "";
-            if (initscript.enableUnityAds)
-                defines = defines + "; UNITY_ADS";
-            if (initscript.enableGoogleMobileAds)
-                defines = defines + "; GOOGLE_MOBILE_ADS";
-            if (initscript.enableChartboostAds)
-                defines = defines + "; CHARTBOOST_ADS";
-            if (lm.FacebookEnable)
-                defines = defines + "; FACEBOOK";
-            if (lm.enableInApps)
-                defines = defines + "; UNITY_INAPPS";
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, defines);
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, defines);
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.WP8, defines);
-
+            // Legacy inspector switches must not enable services or replace unrelated defines.
+            RoyalThrone.Editor.RoyalOfflineBuildPolicy.ConfigureCommonTargets();
         }
 
 

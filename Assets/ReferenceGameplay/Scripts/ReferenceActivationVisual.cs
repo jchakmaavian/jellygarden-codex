@@ -23,6 +23,7 @@ namespace RoyalThrone.ReferenceGameplay
         AudioSource voice;
         float gain;
         string queuedState;
+        string viewKind;
         float stateRemaining;
         public bool Active { get; private set; }
         public static int ActiveCount => active.Count;
@@ -36,11 +37,20 @@ namespace RoyalThrone.ReferenceGameplay
             var seat = owner.GetComponent<ReferenceActivationVisual>();
             if (!seat) seat = owner.AddComponent<ReferenceActivationVisual>();
             if (seat.Active) seat.Release();
+            // Projectile actors are shared by boosters. A cached TNT view must not
+            // be reused as the distinct TNT+TNT animation (or another booster).
+            if (seat.view && seat.viewKind != kind)
+            {
+                seat.view.SetActive(false);
+                Destroy(seat.view);
+                seat.view = null; seat.animator = null; seat.source = null;
+            }
             if (!seat.view)
             {
                 seat.previous = owner.GetComponentsInChildren<Renderer>(true);
                 seat.previousMask = new bool[seat.previous.Length];
                 seat.view = Instantiate(prefab, owner.transform, false);
+                seat.viewKind = kind;
                 seat.view.name = "Imported " + kind + " activation";
                 seat.animator = seat.view.GetComponentInChildren<Animator>(true);
                 seat.source = seat.view.transform.Find("Animator/Main") ?? seat.view.transform;
@@ -79,6 +89,12 @@ namespace RoyalThrone.ReferenceGameplay
         public void Hold() { held = true; queuedState = null; if (animator) animator.speed = 0; }
         public void Offset(Vector3 localOffset) { if (view) view.transform.localPosition = localOffset; }
         public void Hide() { if (view) view.SetActive(false); }
+        public Transform Socket(string name)
+        {
+            if (view) foreach (var child in view.GetComponentsInChildren<Transform>(true))
+                if (child.name == name) return child;
+            return source ? source : transform;
+        }
 
         // Only sustained native cues need owner lifetime. Short accents use the shared
         // ReferenceGameplayAudio capped mixer. No imported cue is synthesized or looped.

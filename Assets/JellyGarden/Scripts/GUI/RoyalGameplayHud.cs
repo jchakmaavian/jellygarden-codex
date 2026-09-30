@@ -12,9 +12,11 @@ namespace RoyalThrone.Presentation
     public static class RoyalGameplayHud
     {
         // The top row, in the header box (720 x 270 at the top of the safe area; y from the box's centre).
-        public const float PanelX = 227.7f, PanelY = -34, PanelWidth = 203.3f, PanelHeight = 194, PanelBulge = 12.3f;
-        // The cream body and the header's lower edge, from the panel's centre.
-        public const float BodyY = -21.3f, BodyWidth = 183.3f, BodyHeight = 135.4f, HeaderBottom = 42.4f, HeadingY = 66;
+        public const float PanelX = 227.7f, PanelY = -34, PanelWidth = 203.3f, PanelHeight = 194, PanelBulge = 13;
+        // The cream body (its tan border included) and the lower ends of the header ribbon, from the panel's centre.
+        public const float BodyY = -21.3f, BodyWidth = 187, BodyHeight = 135.4f, HeaderBottom = 20, HeadingY = 70;
+        // The cream's top rises like the ribbon over it, and its top corners are tall, so the ribbon's ends wrap down round them.
+        const float BodyRise = 5, BodyCornerX = 15, BodyCornerY = 22, BodyCornerBottom = 13.5f;
         public const float PortraitY = -16.65f, PortraitWidth = 224, PortraitHeight = 235.3f, PortraitRise = 77, Ring = 7.3f;
         // The bottom bar: its centre sits RailY above the bottom of the safe area; the buttons sit on its centre line.
         public const float RailY = 98.5f, BarWidth = 692, BarHeight = 143, ButtonSize = 116, ButtonStride = 137.5f;
@@ -25,30 +27,65 @@ namespace RoyalThrone.Presentation
 
         // ---- Top row ---------------------------------------------------------------------------------------------------
 
-        // The Goal or Moves panel: a blue frame whose arched header carries a gold rim, and a cream body. `body` is where
-        // the goals or the number go; it is drawn above the panel's layers.
+        // The Goal or Moves panel, as the reference draws it: a deep-blue frame; over its top a ribbon, a little wider than
+        // the frame, with a gold rim along its arch that wraps round the ribbon's ends; and the cream body set into the
+        // ribbon, whose ends hang down round the cream's tall top corners. Flat, saturated colours with one-unit bevel lines,
+        // no gloss. `body` is where the goals or the number go; it is drawn above the panel's layers.
         public static Panel BuildPanel(Transform header, string name, float x, string title, Font font)
         {
             var root = Box(header, name, x, PanelY, PanelWidth, PanelHeight);
-            float w = PanelWidth, h = PanelHeight, top = h * .5f, hb = HeaderBottom;
-            Arch(root, "Shadow", 0, -5, w + 6, h + 6, 15, PanelBulge, 17, C("021648", .55f), C("021648", .55f)).softness = 14;
-            Arch(root, "Outline", 0, 0, w + 3, h + 3, 13.5f, PanelBulge, 15.5f, C("0a276a"), C("081f58"));
-            Arch(root, "Frame", 0, 0, w, h, 12, PanelBulge, 14, C("2c6cd4"), C("1a4eb3"));
-            Shape(root, "Cream edge", 0, BodyY, BodyWidth + 3, BodyHeight + 3, 15, C("c9a96f"), C("a88251"));
-            Shape(root, "Cream", 0, BodyY, BodyWidth, BodyHeight, 13.5f, C("fcf6e3"), C("efe2c1"));
-            // The header's shadow along the top of the cream.
-            Shape(root, "Cream shade", 0, hb - 9, BodyWidth - 4, 18, 8, C("bda274", .55f), C("bda274", 0));
-            float hh = top - hb;
-            Arch(root, "Header edge", 0, hb + hh * .5f + .75f, w + 3, hh + 1.5f, 13.5f, PanelBulge, 0, C("a4600c"), C("a4600c"));
-            Arch(root, "Header gold", 0, hb + hh * .5f, w, hh, 12, PanelBulge, 0, C("ffe066"), C("f0a820"));
-            // The blue band sits 5 units lower than the gold, which shows as the rim along the arc and fades at the corners.
-            Arch(root, "Header", 0, hb + (hh - 5) * .5f, w, hh - 5, 12, PanelBulge, 0, C("3579de"), C("1d5ac4"));
-            Arch(root, "Header gloss", 0, top - 5 - (hh - 5) * .25f, w - 6, (hh - 5) * .5f, 9, PanelBulge, 6, C("ffffff", .18f), C("ffffff", 0));
-            Shape(root, "Header shadow", 0, hb - 1.5f, BodyWidth, 3, 1.5f, C("0c2a66", .45f), C("0c2a66", 0));
-            var heading = Words(root, "Heading", title, 0, HeadingY, 180, 26, font);
-            Style(heading, C("ffffff"), C("f6efdc"), Color.clear, 0, C("0b2a6a", .55f), .6f, C("061a4f", .7f), new Vector2(0, -2.2f));
+            float w = PanelWidth, h = PanelHeight, top = h * .5f, bottom = -top;
+            const float corner = 12, rim = 6.3f;   // the ribbon's rounded top ends; the gold rim's depth at the middle
+            float rw = w + 3, rb = HeaderBottom;
+            Arch(root, "Shadow", 0, -5, rw + 6, h + 6, corner + 3, PanelBulge, 18, C("021648", .55f), C("021648", .55f)).softness = 14;
+
+            // The frame: a navy outline, deep blue that is darker under the ribbon, and a light line round the cream.
+            float frameTop = rb + 20, fy = (frameTop + bottom) * .5f, fh = frameTop - bottom;
+            Shape(root, "Outline", 0, fy, w + 2, fh + 2, 16, C("0a2a6c"), C("08235c"));
+            Shape(root, "Frame", 0, fy, w, fh, 15, C("0a4aac"), C("0a63d0"));
+            Body(root, "Frame light", 2.6f, 4.6f, 2.6f, C("3d95f2", .75f), C("3d95f2", .75f)).band = 1.1f;
+
+            // The ribbon. Its navy outline shows below its ends as their underside, and a darker blue down their sides.
+            Arch(root, "Header outline", 0, (top + 1 + rb - 1) * .5f, rw + 2, top - rb + 2, corner + 1, PanelBulge, 5, C("0a2a6c"), C("0a2a6c"));
+            float blueBottom = rb + 2.5f;
+            Arch(root, "Header side", 0, (top + blueBottom) * .5f, rw, top - blueBottom, corner, PanelBulge, 3, C("0848aa"), C("053c94"));
+            // The gold: a pale top line, polished gold and a deeper orange line where the blue starts. The gold reaches a short
+            // way down the ribbon's ends, round the corners, and tapers away there (its rounded lower corners).
+            float goldBottom = top - PanelBulge - corner - 16;
+            Arch(root, "Header gold outline", 0, (top + 1 + goldBottom) * .5f, rw + 2, top + 1 - goldBottom, corner + 1, PanelBulge, 9, C("9a5a0c"), C("9a5a0c"));
+            Arch(root, "Header gold", 0, (top + goldBottom) * .5f, rw, top - goldBottom, corner, PanelBulge, 8, C("ffd84a"), C("e89a18"));
+            var glint = Arch(root, "Header gold light", 0, (top - .6f + goldBottom) * .5f, rw - 1.2f, top - .6f - goldBottom, corner - .6f, PanelBulge, 7.4f, C("fff7c0", .95f), C("fff7c0", 0));
+            glint.band = 1.2f;
+            // The blue sits `rim` under the gold and 1.2 inside it at the ends, so the rim runs the length of the arch.
+            float blueTop = top - rim, bw = rw - 2.4f;
+            Arch(root, "Header gold shade", 0, (blueTop + 1.3f + goldBottom) * .5f, bw + .6f, blueTop + 1.3f - goldBottom, corner - 1, PanelBulge, 0, C("b8650e"), C("b8650e"));
+            Arch(root, "Header", 0, (blueTop + blueBottom) * .5f, bw, blueTop - blueBottom, corner - 1.2f, PanelBulge, 3, C("0a5ccb"), C("0350b7"));
+            var sheen = Arch(root, "Header light", 0, blueTop - .7f - 12, bw - 1.4f, 24, corner - 1.9f, PanelBulge, 0, C("3a9cff", .85f), C("3a9cff", 0));
+            sheen.band = 1.1f;
+
+            // The cream, set into the ribbon: a navy lip where they meet (a thin line down the sides), a grey-tan bevel that is
+            // deeper along the bottom, a light line inside it, the flat cream and the ribbon's soft shade along its top.
+            Body(root, "Cream lip", 1.5f, 3.5f, 1.5f, C("0a2a6c"), C("0a2a6c"));
+            Body(root, "Cream edge", 0, 0, 0, C("c4b193"), C("a08a72"));
+            Body(root, "Cream light", -4, -1.6f, -4.5f, C("fffbe8"), C("fff6dc"));
+            Body(root, "Cream", -5, -2.4f, -5.6f, C("f9f0d3"), C("f6eacb"));
+            var shade = Body(root, "Cream shade", -5, -2.4f, -5.6f, C("8b6d44", .3f), C("8b6d44", 0));
+            shade.band = .5f; shade.innerSoftness = 9;
+
+            var heading = Words(root, "Heading", title, 0, HeadingY, 180, 27, font);
+            Style(heading, C("ffffff"), C("e6eefa"), Color.clear, 0, C("0a2a6c", .45f), .6f, C("031a52", .75f), new Vector2(0, -2.4f));
             var body = Box(root, "Body", 0, BodyY, BodyWidth, BodyHeight);
             return new Panel { root = root, body = body, heading = heading };
+        }
+
+        // A shape with the cream body's outline, grown by `side` at the sides, `up` at the top and `down` at the bottom
+        // (negative: inset), its corners grown with it.
+        static RoyalArchShape Body(Transform root, string name, float side, float up, float down, Color from, Color to)
+        {
+            float t = BodyY + BodyHeight * .5f + up, b = BodyY - BodyHeight * .5f - down;
+            var shape = Arch(root, name, 0, (t + b) * .5f, BodyWidth + 2 * side, t - b, 0, BodyRise, Mathf.Max(0, BodyCornerBottom + side), from, to);
+            shape.topRadius = Mathf.Max(0, BodyCornerX + side); shape.topRise = Mathf.Max(0, BodyCornerY + up);
+            return shape;
         }
 
         // The king's portrait: an arched window (a half-ellipse over a rounded base) in a polished gold ring, on a deep

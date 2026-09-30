@@ -1,0 +1,18 @@
+PASS
+UTC 2026-09-28T10:01:34.6120348Z
+PASS Entered isolated QA save routing
+PASS Opened only the isolated authored coin level 20
+PASS Authored bonus board contains a collectable coin
+PASS Coin goal is available before the accepted hit
+PASS Repeated contact credits the board coin goal exactly once
+PASS Accepted coin hit claims native particles instead of generic fruit feedback
+PASS Accepted coin hit releases its square through the existing destruction path
+PASS Actual accepted board hit emitted native coin particles
+PASS Board coin particles retire within two seconds
+PASS Original coin object completes its existing destruction lifecycle
+PASS One board coin hit changes no currency or move budget
+PASS Board coin plays the exact collect clip through a live AudioSource
+PASS Board coin leaves no active coin SFX voice
+PASS Checks retain the normal simulation clock
+PASS No new runtime error or exception during coin checks
+PASS Normal runtime and saved coin balance restored after isolated checks

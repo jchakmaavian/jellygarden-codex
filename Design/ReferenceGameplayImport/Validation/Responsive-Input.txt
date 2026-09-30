@@ -42,7 +42,6 @@ PASS A falling piece cannot be moved twice
 PASS Last move cannot be spent twice by rapid taps
 PASS Normal currency and progress preserved by isolated tests
 ALL RESPONSIVE INPUT CHECKS PASSED
-
 RUNNING POINTER EVENT AND CANCELLATION CHECKS
 PASS Input System receives the queued pointer event
 PASS Input System press selects the Rocket through the actual hit-test path
@@ -55,9 +54,9 @@ PASS Settled pieces have unique cell ownership and no input leases
 PASS No duplicate cell occupants
 PASS Effects and resolver finish without a stuck board lock
 PASS Input System receives the queued pointer event
-TRACE press: drag=True, allowed=True, input=True, cell=3,2, pointer=(475.68, 1107.83), moves=98, busy=True
+TRACE press: drag=True, allowed=True, input=True, cell=3,2, pointer=(476.35, 1053.44), moves=98, busy=True
 PASS Input System receives the queued pointer event
-PASS Input System swipe starts a valid normal match while TNT is active (before=98, after=97, drag=False, swapping=1, direction=(0.00, 1.00, 0.00), delta=(0.00, 0.82, 0.00), pointer=(475.68, 979.20))
+PASS Input System swipe starts a valid normal match while TNT is active (before=98, after=97, drag=False, swapping=1, direction=(0.00, 1.00, 0.00), delta=(0.00, 0.82, 0.00), pointer=(476.35, 926.15))
 PASS Input System receives the queued pointer event
 PASS Settled pieces have unique cell ownership and no input leases
 PASS No duplicate cell occupants

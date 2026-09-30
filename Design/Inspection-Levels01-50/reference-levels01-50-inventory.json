@@ -1,0 +1,452 @@
+[
+  {
+    "level": 1,
+    "text_asset_name": "1",
+    "object": 1218,
+    "byte_offset": 8353008,
+    "bytes": 4200,
+    "sha256": "082143359b983027fcb7ab7331e120328fcbd30759e454ee6d857728f80aa009",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 2,
+    "text_asset_name": "2",
+    "object": 8257,
+    "byte_offset": 31951008,
+    "bytes": 1760,
+    "sha256": "c58ae44ce07143a75598039cf3cce997208d0027e266365bf3f3c150b55c5c42",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 3,
+    "text_asset_name": "3",
+    "object": 10715,
+    "byte_offset": 40560264,
+    "bytes": 1760,
+    "sha256": "cbfa2f75c8da4f567acfb62562768ca00de9177d219c17cb2df82b0e44b1deaa",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 4,
+    "text_asset_name": "4",
+    "object": 1976,
+    "byte_offset": 10838456,
+    "bytes": 4296,
+    "sha256": "254ba073ba3e8620f946af76492833c062d7722f0f4d82d2a2d150441c657d93",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 5,
+    "text_asset_name": "5",
+    "object": 4836,
+    "byte_offset": 20162480,
+    "bytes": 2088,
+    "sha256": "da57a67ae4bbafc524a302cbedfc0140ed7bd7ac716ba5ac220514b1e9cf303a",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 6,
+    "text_asset_name": "6",
+    "object": 3175,
+    "byte_offset": 14988272,
+    "bytes": 2092,
+    "sha256": "a05ffff23159a9acc4d8bf78611d72cc9a48a984afe1fd29dd2e695cf3a3295a",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 7,
+    "text_asset_name": "7",
+    "object": 9005,
+    "byte_offset": 34011960,
+    "bytes": 1944,
+    "sha256": "d0d3794ea95c83d0be6b72b750a168c8fb8683176313272d109ebf28dd4243e6",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 8,
+    "text_asset_name": "8",
+    "object": 7825,
+    "byte_offset": 30747240,
+    "bytes": 2076,
+    "sha256": "fc2f2ec06ebb73a589e4ae566064853a232d762fc6ceec33eb39e6cae93d796a",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 9,
+    "text_asset_name": "9",
+    "object": 1378,
+    "byte_offset": 8805704,
+    "bytes": 1552,
+    "sha256": "3d5d93c146f2c2df5c031ca3e38c3fc3e9da29f0ccfb0d929c8d0a5a8754f61d",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 10,
+    "text_asset_name": "10",
+    "object": 6188,
+    "byte_offset": 25323160,
+    "bytes": 1948,
+    "sha256": "a586976fbe2323ba0fde081129d6db33b5f401116bc9029d52809a1b19cbdd80",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 11,
+    "text_asset_name": "11",
+    "object": 5039,
+    "byte_offset": 20706328,
+    "bytes": 1776,
+    "sha256": "47940b8cfeb48c60951b229a9f21ac7515eb3db51b24c51407d8c3e16645f0e4",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 12,
+    "text_asset_name": "12",
+    "object": 3654,
+    "byte_offset": 16910152,
+    "bytes": 1680,
+    "sha256": "c5b6cbf9570c813edcd29cafd45da211cc34d0f2fe920fa4701668135dabdea2",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 13,
+    "text_asset_name": "13",
+    "object": 3373,
+    "byte_offset": 15541512,
+    "bytes": 2460,
+    "sha256": "5888209d1bc106a35fc35b4befd2624cd5c8041985789fe5defee758fe949c4c",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 14,
+    "text_asset_name": "14",
+    "object": 6399,
+    "byte_offset": 26352888,
+    "bytes": 2692,
+    "sha256": "bb07de98a0a890c718a25e183f1241595ce9d98b22dc82858efc77710aa3ebda",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 15,
+    "text_asset_name": "15",
+    "object": 2263,
+    "byte_offset": 11621616,
+    "bytes": 1984,
+    "sha256": "4f51268edcece957d499935cf769d5b3f9ca6dace0fd9371413a061838a83603",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 16,
+    "text_asset_name": "16",
+    "object": 3180,
+    "byte_offset": 15000400,
+    "bytes": 1896,
+    "sha256": "cbaa1b29807ad86137379705732c58f86642b5f26a031bd3810c9b3c723312fe",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 17,
+    "text_asset_name": "17",
+    "object": 6683,
+    "byte_offset": 27142008,
+    "bytes": 2240,
+    "sha256": "1b4041b932a4500806b58f07b03baa9baa3ffb7263b1d20bc65a6439ae35ec99",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 18,
+    "text_asset_name": "18",
+    "object": 1842,
+    "byte_offset": 10472536,
+    "bytes": 1832,
+    "sha256": "ed308886f293f4934389ab8da63475faee6c3d45174d4b05ad1cf4c7d93febc5",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 19,
+    "text_asset_name": "19",
+    "object": 2700,
+    "byte_offset": 12818408,
+    "bytes": 2084,
+    "sha256": "8066a17410105a34dd50de662ceeb4802c5ceca93925a4c6046544ee065c56c3",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 20,
+    "text_asset_name": "20",
+    "object": 13191,
+    "byte_offset": 48161944,
+    "bytes": 1860,
+    "sha256": "0c3ae6b840b96ce829cdc64a0c736aaa08a030781db3af0403ab958c87b07eca",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 21,
+    "text_asset_name": "21",
+    "object": 6265,
+    "byte_offset": 25971000,
+    "bytes": 1584,
+    "sha256": "696f7d8454b354c89f1369b4bc0c3749db5ad56f2da2b1fd2a1462441546de96",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 22,
+    "text_asset_name": "22",
+    "object": 2796,
+    "byte_offset": 13923016,
+    "bytes": 1772,
+    "sha256": "26362ad96bb23c286586b386072dfa3c8f56e76e47d4212ecbef91dcd5606f7d",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 23,
+    "text_asset_name": "23",
+    "object": 4421,
+    "byte_offset": 19025672,
+    "bytes": 1600,
+    "sha256": "3f70b8fd547c7b2b683b05979ed80dec3b20924479412d1d0600297b88c5b25a",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 24,
+    "text_asset_name": "24",
+    "object": 12040,
+    "byte_offset": 44430664,
+    "bytes": 1980,
+    "sha256": "de7c11a56e93acb03a786d3319937b40649e533250250f430ec552ba58b0fae2",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 25,
+    "text_asset_name": "25",
+    "object": 5091,
+    "byte_offset": 20897152,
+    "bytes": 1948,
+    "sha256": "52dd27f1fdb9496f2da28af5f7d2da9e470889da4f76e2c9fc39ca9418047c3f",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 26,
+    "text_asset_name": "26",
+    "object": 4092,
+    "byte_offset": 18102608,
+    "bytes": 1960,
+    "sha256": "b930af178f412d848f890844c94e2d399ce4e50f8e92470c0f9d0af62b44543f",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 27,
+    "text_asset_name": "27",
+    "object": 4456,
+    "byte_offset": 19128752,
+    "bytes": 1728,
+    "sha256": "70f9ee5db38fb80781d7b6721af0cb91f7948e22d0d9f4dd59326dffc77ddb95",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 28,
+    "text_asset_name": "28",
+    "object": 11713,
+    "byte_offset": 43541928,
+    "bytes": 1776,
+    "sha256": "e36038c21536860ddbd4a2fc7041b4b75680e8d6cefcdc61d13a2e675f775d50",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 29,
+    "text_asset_name": "29",
+    "object": 7745,
+    "byte_offset": 30519328,
+    "bytes": 2068,
+    "sha256": "cfad167cceab2992673fea8d8ed2331b927dbc3d813919cf26815aff893eeb21",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 30,
+    "text_asset_name": "30",
+    "object": 4097,
+    "byte_offset": 18119208,
+    "bytes": 1552,
+    "sha256": "ddb9f22cb11356a688fef777a828050905c7840a5c5c6c1a9a838a609a767f2b",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 31,
+    "text_asset_name": "31",
+    "object": 1542,
+    "byte_offset": 9595896,
+    "bytes": 1748,
+    "sha256": "e87106ad7472bc628419e8d510d2faa7cedde36955185bbfec1a3b679223a266",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 32,
+    "text_asset_name": "32",
+    "object": 3549,
+    "byte_offset": 16605696,
+    "bytes": 1900,
+    "sha256": "158e1ec436404fcc8b08f080c030d42ce6a2dad821c21c0d734cd025a575d82a",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 33,
+    "text_asset_name": "33",
+    "object": 5197,
+    "byte_offset": 21180608,
+    "bytes": 1964,
+    "sha256": "947e5a9674c9be9a4dc45f3a5395ed0b95f7a48cebf9b520caa152aca8c3017a",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 34,
+    "text_asset_name": "34",
+    "object": 8219,
+    "byte_offset": 31849008,
+    "bytes": 1912,
+    "sha256": "0700035d331a3fde260771f8dd09a162b5bfe491357edba942128455fdbfc6ab",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 35,
+    "text_asset_name": "35",
+    "object": 8310,
+    "byte_offset": 32089800,
+    "bytes": 1904,
+    "sha256": "56e4b5363cdb9a99c02f91a8df1508ef7218c478696a4173d25cb7becb0fc4ae",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 36,
+    "text_asset_name": "36",
+    "object": 12211,
+    "byte_offset": 45322664,
+    "bytes": 1808,
+    "sha256": "bb2e03fffb7814ee2eb20ffb6eb1f11bc8750b7c43cf29fab83ffb0bbabad215",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 37,
+    "text_asset_name": "37",
+    "object": 5631,
+    "byte_offset": 22394144,
+    "bytes": 1896,
+    "sha256": "5524fdfb9883f1b81d03b88f84dffc5b72c6add7b6becc357d6985884408917c",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 38,
+    "text_asset_name": "38",
+    "object": 3978,
+    "byte_offset": 17782000,
+    "bytes": 2024,
+    "sha256": "c214d51504cc5ecdbf3a7e8ca2a00d7c1e33336c909083fe878b15e634625d56",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 39,
+    "text_asset_name": "39",
+    "object": 5154,
+    "byte_offset": 21069064,
+    "bytes": 1948,
+    "sha256": "7dbfea88a55d4d2fff6abc8f520697449dbe31d388f0e8a541b5b6dee13f7591",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 40,
+    "text_asset_name": "40",
+    "object": 12496,
+    "byte_offset": 46131936,
+    "bytes": 1696,
+    "sha256": "ee63d17492762a53bc543496521ece8be7d21f623c5c8b9332f47f0f490fcf46",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 41,
+    "text_asset_name": "41",
+    "object": 1376,
+    "byte_offset": 8801264,
+    "bytes": 1548,
+    "sha256": "859f57eb88277776e2212d60b04f93e1e467f322eb085e513edbf37afd801b9b",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 42,
+    "text_asset_name": "42",
+    "object": 9981,
+    "byte_offset": 38435864,
+    "bytes": 1584,
+    "sha256": "154253247b90e9734fa4932871b622e874f88c3b9c392e6bc4bb97c0e8998c45",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 43,
+    "text_asset_name": "43",
+    "object": 2301,
+    "byte_offset": 11720712,
+    "bytes": 1776,
+    "sha256": "ed79ee98768d28face80c48707118b1fa1df222eda97ae59b81948658054a33d",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 44,
+    "text_asset_name": "44",
+    "object": 12934,
+    "byte_offset": 47402312,
+    "bytes": 1792,
+    "sha256": "db8a3bf112b6a0dc3689d3f99a105ff3f704351e23db024e11c15e5d0fd35bb2",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 45,
+    "text_asset_name": "45",
+    "object": 5584,
+    "byte_offset": 22273160,
+    "bytes": 1808,
+    "sha256": "b118fba299ba54842bde02f10b52ccc5bf644c830484445ed34f59daef7a96e2",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 46,
+    "text_asset_name": "46",
+    "object": 11459,
+    "byte_offset": 42826376,
+    "bytes": 1692,
+    "sha256": "7b6c3e10df89d4ac72939adc6966bb2da4fa348a301fb2d903d3a625e7144e94",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 47,
+    "text_asset_name": "47",
+    "object": 5597,
+    "byte_offset": 22305888,
+    "bytes": 1924,
+    "sha256": "a30ab9e25fddeff6e7d4ae9bbd84f679b03832ce18e8a02ee24ba118dacc5c4a",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 48,
+    "text_asset_name": "48",
+    "object": 10389,
+    "byte_offset": 39644760,
+    "bytes": 1792,
+    "sha256": "1305c73b781044872fc29c2543c8c4620282419082f782907c719457a503c253",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 49,
+    "text_asset_name": "49",
+    "object": 4642,
+    "byte_offset": 19644568,
+    "bytes": 2132,
+    "sha256": "4ce24a2b3d381b653def38b4b0d988b6875889d9170bc133e2e6e96d08629708",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  },
+  {
+    "level": 50,
+    "text_asset_name": "50",
+    "object": 9272,
+    "byte_offset": 35973456,
+    "bytes": 2208,
+    "sha256": "77eab48336c07b549293a5ef80170997be9fc4ac5f765aa98d073a4a886369c6",
+    "source": "assets/bin/Data/datapack.unity3d -> resources.assets"
+  }
+]

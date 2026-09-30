@@ -55,7 +55,7 @@ namespace RoyalThrone.Editor
                 Configure(importer);
                 importer.SaveAndReimport();
                 var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
-                var sprite = RoyalGameplayArt.Art(key);
+                var sprite = RoyalGameplayArt.LegacyArt(key);
                 if (!texture || !sprite || sprite.texture != texture)
                     throw new InvalidOperationException("Gameplay sprite could not be loaded: " + key +
                         "; path=" + path + "; main asset type=" + AssetDatabase.GetMainAssetTypeAtPath(path) +

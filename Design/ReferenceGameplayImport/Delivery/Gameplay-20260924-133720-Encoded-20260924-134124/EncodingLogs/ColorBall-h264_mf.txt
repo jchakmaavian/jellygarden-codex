@@ -1,0 +1,26 @@
+Input #0, image2, from 'C:\Users\chakm\Documents\Codex\2026-09-08\144\outputs\JellyGarden-Codex\Design\ReferenceGameplayImport\Gameplay-20260924-133720\ColorBall\%05d.jpg':
+  Duration: 00:00:07.02, start: 0.000000, bitrate: N/A
+    Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 60 fps, 60 tbr, 60 tbn, 60 tbc
+Guessed Channel Layout for Input Stream #1.0 : stereo
+Input #1, wav, from 'C:\Users\chakm\Documents\Codex\2026-09-08\144\outputs\JellyGarden-Codex\Design\ReferenceGameplayImport\Gameplay-20260924-133720\ColorBall\audio.wav':
+  Duration: 00:00:07.00, bitrate: 1536 kb/s
+    Stream #1:0: Audio: pcm_s16le ([1][0][0][0] / 0x0001), 48000 Hz, stereo, s16, 1536 kb/s
+Stream mapping:
+  Stream #0:0 -> #0:0 (mjpeg (native) -> h264 (h264_mf))
+  Stream #1:0 -> #0:1 (pcm_s16le (native) -> aac (native))
+[image2 @ 000001FCB0141F40] Thread message queue blocking; consider raising the thread_queue_size option (current value: 8)
+[swscaler @ 000001FCB1E98800] deprecated pixel format used, make sure you did set range correctly
+[h264_mf @ 000001FCB1F20380] MFT name: 'H264 Encoder MFT'
+Output #0, mp4, to 'C:\Users\chakm\Documents\Codex\2026-09-08\144\outputs\JellyGarden-Codex\Design\ReferenceGameplayImport\Delivery\Gameplay-20260924-133720-Encoded-20260924-134124\Clips\ColorBall.mp4':
+  Metadata:
+    encoder         : Lavf58.45.100
+    Stream #0:0: Video: h264 (h264_mf) (avc1 / 0x31637661), yuv420p(progressive), 1080x1920 [SAR 1:1 DAR 9:16], q=2-31, 4000 kb/s, 60 fps, 15360 tbn, 60 tbc
+    Metadata:
+      encoder         : Lavc58.91.100 h264_mf
+    Stream #0:1: Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 160 kb/s
+    Metadata:
+      encoder         : Lavc58.91.100 aac
+frame=   21 fps=0.0 q=-0.0 size=       0kB time=00:00:00.10 bitrate=   3.6kbits/s speed=0.207x    frame=   46 fps= 45 q=-0.0 size=     256kB time=00:00:00.51 bitrate=4096.8kbits/s speed=0.502x    frame=   71 fps= 47 q=-0.0 size=     256kB time=00:00:00.93 bitrate=2234.6kbits/s speed=0.617x    frame=   96 fps= 47 q=-0.0 size=     512kB time=00:00:01.32 bitrate=3171.4kbits/s speed=0.649x    frame=  121 fps= 48 q=-0.0 size=     768kB time=00:00:01.77 bitrate=3553.4kbits/s speed=0.695x    frame=  146 fps= 48 q=-0.0 size=    1024kB time=00:00:02.17 bitrate=3855.2kbits/s speed=0.708x    frame=  163 fps= 45 q=-0.0 size=    1280kB time=00:00:02.47 bitrate=4237.4kbits/s speed=0.689x    frame=  180 fps= 44 q=-0.0 size=    1792kB time=00:00:02.75 bitrate=5334.5kbits/s speed=0.669x    frame=  198 fps= 43 q=-0.0 size=    2048kB time=00:00:03.05 bitrate=5499.6kbits/s speed=0.66x    frame=  216 fps= 42 q=-0.0 size=    2048kB time=00:00:03.34 bitrate=5009.2kbits/s speed=0.651x    frame=  234 fps= 41 q=-0.0 size=    2304kB time=00:00:03.64 bitrate=5174.0kbits/s speed=0.645x    frame=  252 fps= 41 q=-0.0 size=    2560kB time=00:00:03.94 bitrate=5313.8kbits/s speed=0.639x    frame=  270 fps= 40 q=-0.0 size=    2560kB time=00:00:04.24 bitrate=4940.0kbits/s speed=0.635x    frame=  289 fps= 40 q=-0.0 size=    2816kB time=00:00:04.56 bitrate=5053.1kbits/s speed=0.633x    frame=  307 fps= 40 q=-0.0 size=    2816kB time=00:00:04.86 bitrate=4742.8kbits/s speed=0.63x    frame=  325 fps= 39 q=-0.0 size=    3072kB time=00:00:05.16 bitrate=4874.7kbits/s speed=0.627x    frame=  343 fps= 39 q=-0.0 size=    3072kB time=00:00:05.46 bitrate=4608.1kbits/s speed=0.624x    frame=  361 fps= 39 q=-0.0 size=    3072kB time=00:00:05.76 bitrate=4369.1kbits/s speed=0.622x    frame=  380 fps= 39 q=-0.0 size=    3328kB time=00:00:06.05 bitrate=4499.9kbits/s speed=0.619x    frame=  398 fps= 39 q=-0.0 size=    3328kB time=00:00:06.35 bitrate=4288.5kbits/s speed=0.617x    frame=  414 fps= 38 q=-0.0 size=    3328kB time=00:00:06.63 bitrate=4109.2kbits/s speed=0.614x    [mp4 @ 000001FCB01726C0] Starting second pass: moving the moov atom to the beginning of the file
+frame=  421 fps= 38 q=-0.0 Lsize=    3833kB time=00:00:07.00 bitrate=4485.3kbits/s speed=0.631x    
+video:3691kB audio:133kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.230639%
+[aac @ 000001FCB0170400] Qavg: 204.517

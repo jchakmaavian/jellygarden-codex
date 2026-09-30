@@ -1,0 +1,10 @@
+family,count,min_index,max_index
+numeric (level TextAssets),12700,1,12700
+story-<n>,239,1,239
+nobonus-<n>,144,20,12700
+reactivation-<n>,85,231,11805
+extreme-m-<n>,12,999,11999
+propellerlogicimprovement-<n>,1,950,950
+*.skel / *.atlas (Spine),59,,
+*config*,27,,
+other non-numeric,16,,

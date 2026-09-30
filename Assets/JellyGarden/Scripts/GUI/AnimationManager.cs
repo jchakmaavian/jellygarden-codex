@@ -216,13 +216,8 @@ namespace JellyGarden.Scripts.GUI
 
         public void GoRate()
         {
-            #if UNITY_ANDROID//2.1.5 ios rate link
-        Application.OpenURL(InitScript.Instance.RateURL);
-            #elif UNITY_IOS
-		Application.OpenURL(InitScript.Instance.RateURLIOS);
-            #endif
-            PlayerPrefs.SetInt("Rated", 1);
-            PlayerPrefs.Save();
+            // No verified Royal Throne store listing exists for this offline test build.
+            Debug.Log("Royal Throne ratings are unavailable in the offline test build.");
         }
 
         void OnDisable()
@@ -374,7 +369,7 @@ namespace JellyGarden.Scripts.GUI
             {
                 LevelManager.THIS.gameStatus = GameState.Map;
                 LevelManager.THIS.gameStatus = GameState.Map;
-                int nextLevel = LevelManager.THIS.currentLevel + 1;
+                int nextLevel = RoyalThrone.Campaign.RoyalReferenceCampaign.Enabled ? Mathf.Min(50,LevelManager.THIS.currentLevel + 1) : LevelManager.THIS.currentLevel + 1;
                 // After levels 1-5 (the verified opening) CONTINUE stays on Home, where the rewards play, and the player
                 // opens the next level from the Level button, as the reference does. Read before LoadLevel resets it.
                 bool opening = RoyalThrone.Campaign.RoyalReferenceCampaign.Opening;
@@ -565,6 +560,7 @@ namespace JellyGarden.Scripts.GUI
 
         public void Buy(GameObject pack)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
             if (pack.name == "Pack1")
             {
@@ -695,6 +691,7 @@ namespace JellyGarden.Scripts.GUI
                 LevelManager.THIS.Limit += LevelManager.THIS.ExtraFailedSecs;
             GetComponent<Animation>()["bannerFailed"].speed = 1;
             LevelManager.THIS.gameStatus = GameState.Playing;
+            RoyalThrone.Characters.KingVanguardActivityEvents.NotifyExtraMovesGranted(LevelManager.THIS);
         }
 
         public void GiveUp()

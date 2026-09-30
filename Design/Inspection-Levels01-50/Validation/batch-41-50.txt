@@ -1,0 +1,511 @@
+PASS Separate reference QA profile selected
+PASS Level 41: opens and settles
+PASS Level 41: dimensions and moves reach runtime
+PASS Level 41: exact board holes
+PASS Level 41: all goals reach runtime
+PASS Level 41: authored gem 1
+PASS Level 41: authored gem 2
+PASS Level 41: authored gem 3
+PASS Level 41: authored gem 4
+PASS Level 41: authored gem 5
+PASS Level 41: authored gem 6
+PASS Level 41: authored gem 8
+PASS Level 41: shared 2x2 obstacle 9
+PASS Level 41: authored gem 11
+PASS Level 41: authored gem 12
+PASS Level 41: shared 2x2 obstacle 13
+PASS Level 41: authored gem 15
+PASS Level 41: authored gem 16
+PASS Level 41: authored gem 19
+PASS Level 41: authored gem 20
+PASS Level 41: authored gem 23
+PASS Level 41: authored gem 24
+PASS Level 41: authored gem 25
+PASS Level 41: authored gem 26
+PASS Level 41: authored gem 27
+PASS Level 41: authored gem 28
+PASS Level 41: authored gem 29
+PASS Level 41: authored gem 30
+PASS Level 41: authored gem 31
+PASS Level 41: authored gem 32
+PASS Level 41: authored gem 33
+PASS Level 41: authored gem 34
+PASS Level 41: authored gem 35
+PASS Level 41: authored gem 36
+PASS Level 41: authored gem 37
+PASS Level 41: authored gem 38
+PASS Level 41: authored gem 39
+PASS Level 41: authored gem 40
+PASS Level 41: shared 2x2 obstacle 41
+PASS Level 41: authored gem 43
+PASS Level 41: authored gem 44
+PASS Level 41: shared 2x2 obstacle 45
+PASS Level 41: authored gem 47
+PASS Level 41: authored gem 48
+PASS Level 41: authored gem 51
+PASS Level 41: authored gem 52
+PASS Level 41: authored gem 55
+PASS Level 41: authored gem 57
+PASS Level 41: authored gem 58
+PASS Level 41: authored gem 59
+PASS Level 41: authored gem 60
+PASS Level 41: authored gem 61
+PASS Level 41: authored gem 62
+PASS Level 41: settled item ownership
+PASS Level 41: has a legal swap or existing power action
+PASS Level 41: real action spends exactly one move
+PASS Level 41: real action scores through match/blast resolution
+PASS Level 41: real clear, gravity and refill settle with valid ownership
+PASS Level 41: Potion shares state across opposite footprint corners
+PASS Level 41: Potion receives one hit per wave across its 2×2 footprint
+PASS Level 41: Potion releases all footprint cells after its last unit
+PASS Level 41: Potion credits each remaining authored goal unit once
+PASS Level 42: opens and settles
+PASS Level 42: dimensions and moves reach runtime
+PASS Level 42: exact board holes
+PASS Level 42: all goals reach runtime
+PASS Level 42: shared 2x2 obstacle 0
+PASS Level 42: authored gem 6
+PASS Level 42: authored gem 13
+PASS Level 42: shared 2x2 obstacle 16
+PASS Level 42: authored gem 21
+PASS Level 42: shared 2x2 obstacle 32
+PASS Level 42: shared 2x2 obstacle 48
+PASS Level 42: shared 2x2 obstacle 50
+PASS Level 42: shared 2x2 obstacle 52
+PASS Level 42: shared 2x2 obstacle 54
+PASS Level 42: settled item ownership
+PASS Level 42: has a legal swap or existing power action
+PASS Level 42: real action spends exactly one move
+PASS Level 42: real action scores through match/blast resolution
+PASS Level 42: real clear, gravity and refill settle with valid ownership
+PASS Level 42: Potion shares state across opposite footprint corners
+PASS Level 42: Potion receives one hit per wave across its 2×2 footprint
+PASS Level 42: Potion releases all footprint cells after its last unit
+PASS Level 42: Potion credits each remaining authored goal unit once
+PASS Level 42: Egg is excluded from swapping and color matches
+PASS Level 42: Egg credits once through the existing Item destruction path
+PASS Level 43: opens and settles
+PASS Level 43: dimensions and moves reach runtime
+PASS Level 43: exact board holes
+PASS Level 43: all goals reach runtime
+PASS Level 43: shared 2x2 obstacle 0
+PASS Level 43: shared 2x2 obstacle 6
+PASS Level 43: shared 2x2 obstacle 16
+PASS Level 43: shared 2x2 obstacle 22
+PASS Level 43: box health 34
+PASS Level 43: box health 35
+PASS Level 43: box health 36
+PASS Level 43: box health 37
+PASS Level 43: box health 42
+PASS Level 43: box health 43
+PASS Level 43: box health 44
+PASS Level 43: box health 45
+PASS Level 43: shared 2x2 obstacle 48
+PASS Level 43: shared 2x2 obstacle 54
+PASS Level 43: shared 2x2 obstacle 64
+PASS Level 43: shared 2x2 obstacle 70
+PASS Level 43: settled item ownership
+PASS Level 43: has a legal swap or existing power action
+PASS Level 43: real action spends exactly one move
+PASS Level 43: real action scores through match/blast resolution
+PASS Level 43: real clear, gravity and refill settle with valid ownership
+PASS Level 43: box loses one layer from a direct Square hit
+PASS Level 43: same-wave repeated contact cannot remove a second box layer
+PASS Level 43: cleared box releases its cell for normal gravity/refill
+PASS Level 43: all box layers credit exactly one box goal
+PASS Level 43: Potion shares state across opposite footprint corners
+PASS Level 43: Potion receives one hit per wave across its 2×2 footprint
+PASS Level 43: Potion releases all footprint cells after its last unit
+PASS Level 43: Potion credits each remaining authored goal unit once
+PASS Level 44: opens and settles
+PASS Level 44: dimensions and moves reach runtime
+PASS Level 44: exact board holes
+PASS Level 44: all goals reach runtime
+PASS Level 44: authored gem 1
+PASS Level 44: authored gem 2
+PASS Level 44: authored gem 3
+PASS Level 44: authored gem 5
+PASS Level 44: authored gem 7
+PASS Level 44: authored gem 10
+PASS Level 44: shared 2x2 obstacle 11
+PASS Level 44: authored gem 13
+PASS Level 44: authored gem 14
+PASS Level 44: authored gem 18
+PASS Level 44: authored gem 21
+PASS Level 44: authored gem 23
+PASS Level 44: shared 2x2 obstacle 26
+PASS Level 44: shared 2x2 obstacle 28
+PASS Level 44: authored gem 30
+PASS Level 44: shared 2x2 obstacle 41
+PASS Level 44: shared 2x2 obstacle 43
+PASS Level 44: shared 2x2 obstacle 45
+PASS Level 44: shared 2x2 obstacle 56
+PASS Level 44: shared 2x2 obstacle 58
+PASS Level 44: shared 2x2 obstacle 60
+PASS Level 44: shared 2x2 obstacle 62
+PASS Level 44: settled item ownership
+PASS Level 44: has a legal swap or existing power action
+PASS Level 44: real action spends exactly one move
+PASS Level 44: real action scores through match/blast resolution
+PASS Level 44: real clear, gravity and refill settle with valid ownership
+PASS Level 44: Potion shares state across opposite footprint corners
+PASS Level 44: Potion receives one hit per wave across its 2×2 footprint
+PASS Level 44: Potion releases all footprint cells after its last unit
+PASS Level 44: Potion credits each remaining authored goal unit once
+PASS Level 44: mailbox emits at most one mail per wave
+PASS Level 44: mailbox stays fixed after emitting mail
+PASS Level 45: opens and settles
+PASS Level 45: dimensions and moves reach runtime
+PASS Level 45: exact board holes
+PASS Level 45: all goals reach runtime
+PASS Level 45: shared 2x2 obstacle 0
+PASS Level 45: box health 2
+PASS Level 45: box health 5
+PASS Level 45: shared 2x2 obstacle 6
+PASS Level 45: box health 10
+PASS Level 45: box health 13
+PASS Level 45: shared 2x2 obstacle 16
+PASS Level 45: box health 18
+PASS Level 45: box health 21
+PASS Level 45: shared 2x2 obstacle 22
+PASS Level 45: box health 26
+PASS Level 45: box health 29
+PASS Level 45: shared 2x2 obstacle 32
+PASS Level 45: box health 34
+PASS Level 45: box health 37
+PASS Level 45: shared 2x2 obstacle 38
+PASS Level 45: box health 42
+PASS Level 45: box health 45
+PASS Level 45: shared 2x2 obstacle 48
+PASS Level 45: box health 50
+PASS Level 45: box health 53
+PASS Level 45: shared 2x2 obstacle 54
+PASS Level 45: box health 58
+PASS Level 45: box health 61
+PASS Level 45: shared 2x2 obstacle 64
+PASS Level 45: box health 66
+PASS Level 45: box health 69
+PASS Level 45: shared 2x2 obstacle 70
+PASS Level 45: box health 74
+PASS Level 45: box health 77
+PASS Level 45: settled item ownership
+PASS Level 45: has a legal swap or existing power action
+PASS Level 45: real action spends exactly one move
+PASS Level 45: real action scores through match/blast resolution
+PASS Level 45: real clear, gravity and refill settle with valid ownership
+PASS Level 45: box loses one layer from a direct Square hit
+PASS Level 45: same-wave repeated contact cannot remove a second box layer
+PASS Level 45: cleared box releases its cell for normal gravity/refill
+PASS Level 45: all box layers credit exactly one box goal
+PASS Level 45: Cupboard shares state across opposite footprint corners
+PASS Level 45: Cupboard receives one hit per wave across its 2×2 footprint
+PASS Level 45: Cupboard releases all footprint cells after its last unit
+PASS Level 45: Cupboard credits each remaining authored goal unit once
+PASS Level 45: Potion shares state across opposite footprint corners
+PASS Level 45: Potion receives one hit per wave across its 2×2 footprint
+PASS Level 45: Potion releases all footprint cells after its last unit
+PASS Level 45: Potion credits each remaining authored goal unit once
+PASS Level 46: opens and settles
+PASS Level 46: dimensions and moves reach runtime
+PASS Level 46: exact board holes
+PASS Level 46: all goals reach runtime
+PASS Level 46: box health 32
+PASS Level 46: box health 33
+PASS Level 46: box health 34
+PASS Level 46: box health 35
+PASS Level 46: box health 36
+PASS Level 46: box health 37
+PASS Level 46: box health 38
+PASS Level 46: box health 39
+PASS Level 46: box health 40
+PASS Level 46: box health 41
+PASS Level 46: box health 42
+PASS Level 46: box health 43
+PASS Level 46: box health 44
+PASS Level 46: box health 45
+PASS Level 46: box health 46
+PASS Level 46: box health 47
+PASS Level 46: shared 2x2 obstacle 48
+PASS Level 46: shared 2x2 obstacle 50
+PASS Level 46: shared 2x2 obstacle 52
+PASS Level 46: shared 2x2 obstacle 54
+PASS Level 46: settled item ownership
+PASS Level 46: has a legal swap or existing power action
+PASS Level 46: real action spends exactly one move
+PASS Level 46: real action scores through match/blast resolution
+PASS Level 46: real clear, gravity and refill settle with valid ownership
+PASS Level 46: box loses one layer from a direct Square hit
+PASS Level 46: same-wave repeated contact cannot remove a second box layer
+PASS Level 46: cleared box releases its cell for normal gravity/refill
+PASS Level 46: all box layers credit exactly one box goal
+PASS Level 46: Cupboard shares state across opposite footprint corners
+PASS Level 46: Cupboard receives one hit per wave across its 2×2 footprint
+PASS Level 46: Cupboard releases all footprint cells after its last unit
+PASS Level 46: Cupboard credits each remaining authored goal unit once
+PASS Level 46: Egg is excluded from swapping and color matches
+PASS Level 46: Egg credits once through the existing Item destruction path
+PASS Level 47: opens and settles
+PASS Level 47: dimensions and moves reach runtime
+PASS Level 47: exact board holes
+PASS Level 47: all goals reach runtime
+PASS Level 47: authored gem 2
+PASS Level 47: authored gem 3
+PASS Level 47: authored gem 4
+PASS Level 47: authored gem 5
+PASS Level 47: authored gem 6
+PASS Level 47: authored gem 7
+PASS Level 47: box health 9
+PASS Level 47: grass layers 9
+PASS Level 47: box health 10
+PASS Level 47: box health 11
+PASS Level 47: box health 12
+PASS Level 47: box health 13
+PASS Level 47: box health 14
+PASS Level 47: box health 15
+PASS Level 47: box health 16
+PASS Level 47: box health 17
+PASS Level 47: grass layers 17
+PASS Level 47: box health 18
+PASS Level 47: grass layers 18
+PASS Level 47: box health 19
+PASS Level 47: box health 20
+PASS Level 47: box health 21
+PASS Level 47: box health 22
+PASS Level 47: box health 23
+PASS Level 47: box health 24
+PASS Level 47: box health 25
+PASS Level 47: box health 26
+PASS Level 47: grass layers 26
+PASS Level 47: box health 27
+PASS Level 47: grass layers 27
+PASS Level 47: box health 28
+PASS Level 47: box health 29
+PASS Level 47: box health 30
+PASS Level 47: box health 31
+PASS Level 47: box health 32
+PASS Level 47: box health 33
+PASS Level 47: box health 34
+PASS Level 47: box health 35
+PASS Level 47: grass layers 35
+PASS Level 47: box health 36
+PASS Level 47: grass layers 36
+PASS Level 47: box health 37
+PASS Level 47: box health 38
+PASS Level 47: box health 39
+PASS Level 47: box health 40
+PASS Level 47: box health 41
+PASS Level 47: box health 42
+PASS Level 47: box health 43
+PASS Level 47: box health 44
+PASS Level 47: grass layers 44
+PASS Level 47: box health 45
+PASS Level 47: grass layers 45
+PASS Level 47: box health 46
+PASS Level 47: box health 47
+PASS Level 47: box health 48
+PASS Level 47: box health 49
+PASS Level 47: box health 50
+PASS Level 47: box health 51
+PASS Level 47: box health 52
+PASS Level 47: box health 53
+PASS Level 47: grass layers 53
+PASS Level 47: box health 54
+PASS Level 47: grass layers 54
+PASS Level 47: box health 55
+PASS Level 47: box health 56
+PASS Level 47: box health 57
+PASS Level 47: box health 58
+PASS Level 47: box health 59
+PASS Level 47: box health 60
+PASS Level 47: box health 61
+PASS Level 47: box health 62
+PASS Level 47: grass layers 62
+PASS Level 47: box health 63
+PASS Level 47: grass layers 63
+PASS Level 47: box health 64
+PASS Level 47: box health 65
+PASS Level 47: box health 66
+PASS Level 47: box health 67
+PASS Level 47: box health 68
+PASS Level 47: box health 69
+PASS Level 47: box health 70
+PASS Level 47: box health 71
+PASS Level 47: grass layers 71
+PASS Level 47: settled item ownership
+PASS Level 47: has a legal swap or existing power action
+PASS Level 47: real action spends exactly one move
+PASS Level 47: real action scores through match/blast resolution
+PASS Level 47: real clear, gravity and refill settle with valid ownership
+PASS Level 47: box loses one layer from a direct Square hit
+PASS Level 47: same-wave repeated contact cannot remove a second box layer
+PASS Level 47: cleared box releases its cell for normal gravity/refill
+PASS Level 47: all box layers credit exactly one box goal
+PASS Level 47: box loses one layer from a direct Square hit
+PASS Level 47: same-wave repeated contact cannot remove a second box layer
+PASS Level 47: cleared box releases its cell for normal gravity/refill
+PASS Level 47: all box layers credit exactly one box goal
+PASS Level 47: grass loses one layer per contact wave
+PASS Level 47: grass layers credit exactly one grass cell
+PASS Level 47: mailbox emits at most one mail per wave
+PASS Level 47: mailbox stays fixed after emitting mail
+PASS Level 48: opens and settles
+PASS Level 48: dimensions and moves reach runtime
+PASS Level 48: exact board holes
+PASS Level 48: all goals reach runtime
+PASS Level 48: authored gem 4
+PASS Level 48: authored gem 11
+PASS Level 48: authored gem 12
+PASS Level 48: box health 29
+PASS Level 48: box health 30
+PASS Level 48: box health 31
+PASS Level 48: box health 32
+PASS Level 48: box health 33
+PASS Level 48: box health 47
+PASS Level 48: box health 48
+PASS Level 48: box health 49
+PASS Level 48: box health 50
+PASS Level 48: box health 51
+PASS Level 48: box health 65
+PASS Level 48: box health 66
+PASS Level 48: box health 67
+PASS Level 48: box health 68
+PASS Level 48: box health 69
+PASS Level 48: settled item ownership
+PASS Level 48: has a legal swap or existing power action
+PASS Level 48: real action spends exactly one move
+PASS Level 48: real action scores through match/blast resolution
+PASS Level 48: real clear, gravity and refill settle with valid ownership
+PASS Level 48: box loses one layer from a direct Square hit
+PASS Level 48: same-wave repeated contact cannot remove a second box layer
+PASS Level 48: cleared box releases its cell for normal gravity/refill
+PASS Level 48: all box layers credit exactly one box goal
+PASS Level 48: Egg is excluded from swapping and color matches
+PASS Level 48: Egg credits once through the existing Item destruction path
+PASS Level 49: opens and settles
+PASS Level 49: dimensions and moves reach runtime
+PASS Level 49: exact board holes
+PASS Level 49: all goals reach runtime
+PASS Level 49: authored gem 0
+PASS Level 49: authored gem 1
+PASS Level 49: authored gem 2
+PASS Level 49: authored gem 3
+PASS Level 49: authored gem 4
+PASS Level 49: authored gem 5
+PASS Level 49: authored gem 6
+PASS Level 49: authored gem 7
+PASS Level 49: authored gem 8
+PASS Level 49: box health 9
+PASS Level 49: box health 10
+PASS Level 49: box health 11
+PASS Level 49: box health 12
+PASS Level 49: box health 13
+PASS Level 49: box health 14
+PASS Level 49: box health 15
+PASS Level 49: box health 16
+PASS Level 49: box health 17
+PASS Level 49: box health 18
+PASS Level 49: box health 19
+PASS Level 49: box health 20
+PASS Level 49: box health 21
+PASS Level 49: box health 22
+PASS Level 49: box health 23
+PASS Level 49: box health 24
+PASS Level 49: box health 25
+PASS Level 49: box health 26
+PASS Level 49: shared 2x2 obstacle 27
+PASS Level 49: box health 29
+PASS Level 49: box health 30
+PASS Level 49: box health 31
+PASS Level 49: box health 32
+PASS Level 49: box health 33
+PASS Level 49: shared 2x2 obstacle 34
+PASS Level 49: box health 38
+PASS Level 49: box health 39
+PASS Level 49: box health 40
+PASS Level 49: box health 41
+PASS Level 49: box health 42
+PASS Level 49: grass layers 54
+PASS Level 49: grass layers 55
+PASS Level 49: grass layers 56
+PASS Level 49: grass layers 57
+PASS Level 49: grass layers 59
+PASS Level 49: grass layers 60
+PASS Level 49: grass layers 61
+PASS Level 49: grass layers 62
+PASS Level 49: grass layers 63
+PASS Level 49: grass layers 64
+PASS Level 49: grass layers 65
+PASS Level 49: grass layers 66
+PASS Level 49: grass layers 68
+PASS Level 49: grass layers 69
+PASS Level 49: grass layers 70
+PASS Level 49: grass layers 71
+PASS Level 49: grass layers 72
+PASS Level 49: grass layers 73
+PASS Level 49: grass layers 74
+PASS Level 49: grass layers 75
+PASS Level 49: grass layers 77
+PASS Level 49: grass layers 78
+PASS Level 49: grass layers 79
+PASS Level 49: grass layers 80
+PASS Level 49: grass layers 81
+PASS Level 49: grass layers 82
+PASS Level 49: grass layers 83
+PASS Level 49: grass layers 84
+PASS Level 49: grass layers 86
+PASS Level 49: grass layers 87
+PASS Level 49: grass layers 88
+PASS Level 49: grass layers 89
+PASS Level 49: settled item ownership
+PASS Level 49: has a legal swap or existing power action
+PASS Level 49: real action spends exactly one move
+PASS Level 49: real action scores through match/blast resolution
+PASS Level 49: real clear, gravity and refill settle with valid ownership
+PASS Level 49: box loses one layer from a direct Square hit
+PASS Level 49: same-wave repeated contact cannot remove a second box layer
+PASS Level 49: cleared box releases its cell for normal gravity/refill
+PASS Level 49: all box layers credit exactly one box goal
+PASS Level 49: Potion shares state across opposite footprint corners
+PASS Level 49: Potion receives one hit per wave across its 2×2 footprint
+PASS Level 49: Potion releases all footprint cells after its last unit
+PASS Level 49: Potion credits each remaining authored goal unit once
+PASS Level 49: grass loses one layer per contact wave
+PASS Level 49: grass layers credit exactly one grass cell
+PASS Level 49: mailbox emits at most one mail per wave
+PASS Level 49: mailbox stays fixed after emitting mail
+PASS Level 50: opens and settles
+PASS Level 50: dimensions and moves reach runtime
+PASS Level 50: exact board holes
+PASS Level 50: all goals reach runtime
+PASS Level 50: shared 2x2 obstacle 72
+PASS Level 50: settled item ownership
+PASS Level 50: has a legal swap or existing power action
+PASS Level 50: native power activation accepted
+PASS Level 50: real action spends exactly one move
+PASS Level 50: real action scores through match/blast resolution
+PASS Level 50: real clear, gravity and refill settle with valid ownership
+PASS Level 50: Potion shares state across opposite footprint corners
+PASS Level 50: Potion receives one hit per wave across its 2×2 footprint
+PASS Level 50: Potion releases all footprint cells after its last unit
+PASS Level 50: Potion credits each remaining authored goal unit once
+PASS Level 50: Egg is excluded from swapping and color matches
+PASS Level 50: Egg credits once through the existing Item destruction path
+PASS Level 41: unfinished goals at zero moves enter failure offer
+PASS Level 41: actual failure offer exists
+PASS Level 41: failure dialog/state is reachable
+PASS Level 41: retry restores original moves and fresh targets
+PASS Level 41: has a legal swap or existing power action
+PASS Level 41: real action spends exactly one move
+PASS Level 41: real action scores through match/blast resolution
+PASS Level 41: real clear, gravity and refill settle with valid ownership
+PASS Level 41: prepared final-move condition enters production win celebration
+PASS Level 41: production celebration reaches win screen
+PASS Level 41: completion and score save to reference profile
+PASS Level 41: saved completion unlocks next level
+PASS Level 41: native win life reward applies once
+PASS Level 41: idle win frame does not repeat reward
+PASS Level 41: completion survives a fresh board load
+PASS Normal player save unchanged across campaign batch
+PASS Player profile restored
+BATCH PASSED

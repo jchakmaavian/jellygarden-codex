@@ -12,6 +12,7 @@ namespace RoyalThrone.Campaign
         int lastWave = -1;
         bool collected;
         public Sprite Visual => RoyalCampaignBlockers.Art(code == 26 ? "egg" : "coin");
+        public string GoalName => code == 26 ? "Egg" : "Coin";
         public void Configure(int tiledCode)
         {
             item = GetComponent<Item>();

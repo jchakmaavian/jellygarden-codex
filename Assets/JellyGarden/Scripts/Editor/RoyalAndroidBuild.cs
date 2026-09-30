@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
@@ -16,11 +17,16 @@ namespace RoyalThrone.Editor
     {
         public const string OutputDir = "Builds/Android";
         public const string ApkName = "RoyalThrone-Test.apk";
+        public const string LevelsTestApk = "Design/Backup/apk/RoyalThrone-Levels01-50-Test.apk";
+        public const string LevelsTestLog = "Design/Backup/apk/RoyalThrone-Levels01-50-Test-build.log";
+        public const string LevelsTestApplicationId = "com.royalthrone.levelsqa";
         public static string LogPath => Path.Combine(OutputDir, "last-build.log");
 
         /// <summary>Applies the QA build configuration without building.</summary>
         public static string Configure()
         {
+            RoyalHomeScreenBuilder.RequireCopy();
+            RoyalOfflineBuildPolicy.Configure(NamedBuildTarget.Android);
             var log = new StringBuilder();
 
             // Portrait only. The project shipped as AutoRotation, which let the board letterbox
@@ -34,6 +40,7 @@ namespace RoyalThrone.Editor
             // APK, ARM64, IL2CPP: all already the project's settings, restated so a QA build is
             // reproducible from a clean checkout.
             EditorUserBuildSettings.buildAppBundle = false;
+            EditorUserBuildSettings.exportAsGoogleAndroidProject = false;
             PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
 
@@ -63,12 +70,37 @@ namespace RoyalThrone.Editor
         [MenuItem("Royal Throne/Build Android QA APK")]
         public static void BuildAndroid()
         {
+            BuildAndroidTo(Path.Combine(OutputDir, ApkName), LogPath);
+        }
+
+        [MenuItem("Royal Throne/Build Levels 01-50 Test APK")]
+        public static void BuildLevels01To50Test()
+        {
+            RoyalHomeScreenBuilder.RequireCopy();
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                throw new InvalidOperationException("Stop Play Mode before building.");
+            var state = new AndroidBuildState();
+            try
+            {
+                // A distinct package gives QA its own Android data directory and PlayerPrefs.
+                PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, LevelsTestApplicationId);
+                PlayerSettings.productName = "Royal Throne Levels 01-50 Test";
+                BuildAndroidTo(LevelsTestApk, LevelsTestLog, true);
+            }
+            finally
+            {
+                state.Restore();
+                AssetDatabase.SaveAssets();
+            }
+        }
+
+        static void BuildAndroidTo(string apk, string logPath, bool referenceCampaign = false)
+        {
             var started = DateTime.Now;
-            Directory.CreateDirectory(OutputDir);
-            File.WriteAllText(LogPath, "STATUS running\nstarted " + started.ToString("u") + "\n");
+            Directory.CreateDirectory(Path.GetDirectoryName(apk));
+            File.WriteAllText(logPath, "STATUS running\nstarted " + started.ToString("u") + "\n");
 
             string config = Configure();
-            string apk = Path.Combine(OutputDir, ApkName);
 
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             var options = new BuildPlayerOptions
@@ -77,6 +109,7 @@ namespace RoyalThrone.Editor
                 locationPathName = apk,
                 target = BuildTarget.Android,
                 targetGroup = BuildTargetGroup.Android,
+                extraScriptingDefines = referenceCampaign ? new[]{"ROYAL_REFERENCE_CAMPAIGN"} : Array.Empty<string>(),
                 options = BuildOptions.Development | BuildOptions.CompressWithLz4
             };
 
@@ -104,7 +137,53 @@ namespace RoyalThrone.Editor
                 log.Append("STATUS failed\nEXCEPTION ").Append(e.GetType().Name).Append(": ").Append(e.Message.Replace("\n", " ")).Append("\n");
             }
             log.Append("finished ").Append(DateTime.Now.ToString("u")).Append("\n");
-            File.WriteAllText(LogPath, log.ToString());
+            File.WriteAllText(logPath, log.ToString());
+        }
+
+        sealed class AndroidBuildState
+        {
+            readonly string applicationId = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android);
+            readonly string productName = PlayerSettings.productName;
+            readonly UIOrientation orientation = PlayerSettings.defaultInterfaceOrientation;
+            readonly bool portrait = PlayerSettings.allowedAutorotateToPortrait;
+            readonly bool upsideDown = PlayerSettings.allowedAutorotateToPortraitUpsideDown;
+            readonly bool landscapeLeft = PlayerSettings.allowedAutorotateToLandscapeLeft;
+            readonly bool landscapeRight = PlayerSettings.allowedAutorotateToLandscapeRight;
+            readonly ScriptingImplementation backend = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Android);
+            readonly AndroidArchitecture architectures = PlayerSettings.Android.targetArchitectures;
+            readonly bool appBundle = EditorUserBuildSettings.buildAppBundle;
+            readonly bool exportProject = EditorUserBuildSettings.exportAsGoogleAndroidProject;
+            readonly bool development = EditorUserBuildSettings.development;
+            readonly bool debugging = EditorUserBuildSettings.allowDebugging;
+            readonly bool profiler = EditorUserBuildSettings.connectProfiler;
+            readonly bool deepProfiling = EditorUserBuildSettings.buildWithDeepProfilingSupport;
+            readonly MobileTextureSubtarget subtarget = EditorUserBuildSettings.androidBuildSubtarget;
+            readonly bool customKeystore = PlayerSettings.Android.useCustomKeystore;
+            readonly string keystoreName = PlayerSettings.Android.keystoreName;
+            readonly string keyaliasName = PlayerSettings.Android.keyaliasName;
+
+            public void Restore()
+            {
+                PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, applicationId);
+                PlayerSettings.productName = productName;
+                PlayerSettings.defaultInterfaceOrientation = orientation;
+                PlayerSettings.allowedAutorotateToPortrait = portrait;
+                PlayerSettings.allowedAutorotateToPortraitUpsideDown = upsideDown;
+                PlayerSettings.allowedAutorotateToLandscapeLeft = landscapeLeft;
+                PlayerSettings.allowedAutorotateToLandscapeRight = landscapeRight;
+                PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, backend);
+                PlayerSettings.Android.targetArchitectures = architectures;
+                EditorUserBuildSettings.buildAppBundle = appBundle;
+                EditorUserBuildSettings.exportAsGoogleAndroidProject = exportProject;
+                EditorUserBuildSettings.development = development;
+                EditorUserBuildSettings.allowDebugging = debugging;
+                EditorUserBuildSettings.connectProfiler = profiler;
+                EditorUserBuildSettings.buildWithDeepProfilingSupport = deepProfiling;
+                EditorUserBuildSettings.androidBuildSubtarget = subtarget;
+                PlayerSettings.Android.useCustomKeystore = customKeystore;
+                PlayerSettings.Android.keystoreName = keystoreName;
+                PlayerSettings.Android.keyaliasName = keyaliasName;
+            }
         }
     }
 }

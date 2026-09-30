@@ -1,5 +1,5 @@
 Royal Throne Unity home checks
-2026-09-27T11:40:53.6734037Z
+2026-09-27T14:19:34.1163025Z
 Resolution: 1080x1920
 PASS Fresh save starts at level 1 with no stars
 PASS Six completed levels offer level 7 with 18 stars (areas no longer follow levels)
@@ -100,13 +100,13 @@ PASS Hints button immediately updates the shared setting and label
 PASS Home Hints check restores the player's preference
 PASS Play session remains available
 PASS Setting 0 stays on screen
-PASS Setting 0 receives its pointer hit (hits: Setting 0, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 1097.15))
+PASS Setting 0 receives its pointer hit (hits: Setting 0, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 1097.17))
 PASS Setting 1 stays on screen
-PASS Setting 1 receives its pointer hit (hits: Setting 1, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 999.01))
+PASS Setting 1 receives its pointer hit (hits: Setting 1, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 999.04))
 PASS Setting 2 stays on screen
-PASS Setting 2 receives its pointer hit (hits: Setting 2, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 900.87))
+PASS Setting 2 receives its pointer hit (hits: Setting 2, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 900.90))
 PASS Setting 3 Hints stays on screen
-PASS Setting 3 Hints receives its pointer hit (hits: Setting 3 Hints, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 802.74))
+PASS Setting 3 Hints receives its pointer hit (hits: Setting 3 Hints, Royal dialog panel, Home dialog; interactable: True; center: (540.00, 802.77))
 PASS Future tab 1 has no fabricated feature
 PASS Navigation selects tab 1
 PASS Tab 0 shows its name

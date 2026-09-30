@@ -1,0 +1,51 @@
+level,authored_name,width,height,moves,goals,colors,items,layers,predefined_entries
+1,00001v02_L,9,8,30,Box:36,"Blue,Green,Red,Yellow","{""Box1"": 36}",{},90
+2,00002v02_L,9,9,27,Box:36,"Blue,Green,Red,Yellow","{""Box1"": 36}",{},0
+3,00003v02_L,9,9,27,Box:25,"Blue,Green,Red,Yellow","{""Box2"": 25}",{},0
+4,00004v02_L,9,9,30,Grass:49,"Blue,Green,Red,Yellow,Pink",{},"{""grass"": {""0"": 32, ""31"": 49}}",81
+5,00005v02_L,9,9,30,Grass:73,"Blue,Red,Yellow,Pink",{},"{""grass"": {""0"": 8, ""31"": 73}}",0
+6,00006v02_L,9,9,35,Grass:72,"Blue,Red,Yellow,Pink",{},"{""grass"": {""0"": 9, ""31"": 36, ""32"": 36}}",0
+7,00007v03_L,9,9,25,"Box:17, Grass:32","Blue,Red,Yellow,Green","{""Box2"": 17}","{""grass"": {""0"": 49, ""32"": 32}}",0
+8,00008v03_L,9,9,27,"Box:34, Grass:25","Blue,Green,Red,Yellow","{""Box1"": 34}","{""grass"": {""0"": 56, ""32"": 25}}",4
+9,00009v02_L,8,8,30,Box:40,"Blue,Green,Red,Yellow","{""Box1"": 18, ""Box2"": 22}",{},0
+10,00010v03_L,9,9,32,"Box:27, Grass:27","Blue,Green,Red,Yellow","{""Box2"": 27}","{""grass"": {""0"": 54, ""32"": 27}}",0
+11,00011v03_L,9,9,27,Cupboard:40,"Blue,Red,Yellow,Pink,Green","{""CupboardTL"": 4, ""CupboardTR"": 4, ""CupboardBL"": 4, ""CupboardBR"": 4}",{},0
+12,00012v04_L,8,9,30,"Cupboard:40, Box:32","Yellow,Red,Blue,Green","{""Box1"": 32, ""CupboardTL"": 4, ""CupboardTR"": 4, ""CupboardBL"": 4, ""CupboardBR"": 4}",{},0
+13,00013v02_L,9,8,30,"Cupboard:30, Box:40, Grass:12","Yellow,Red,Blue,Green","{""Box1"": 40, ""CupboardTL"": 3, ""CupboardTR"": 3, ""CupboardBL"": 3, ""CupboardBR"": 3}","{""grass"": {""0"": 60, ""32"": 12}}",22
+14,00014v03_L,8,8,27,"Cupboard:60, Box:8, Grass:24","Blue,Red,Yellow,Green","{""Box1"": 8, ""CupboardTL"": 6, ""CupboardTR"": 6, ""CupboardBL"": 6, ""CupboardBR"": 6}","{""grass"": {""0"": 40, ""32"": 24}}",32
+15,00015v04_L,9,9,23,"Box:36, Grass:36","Blue,Red,Yellow,Green","{""Box1"": 36}","{""grass"": {""0"": 45, ""32"": 36}}",0
+16,00016v04_L,8,10,35,"Cupboard:60, Grass:24","Blue,Green,Red,Yellow","{""CupboardTL"": 6, ""CupboardTR"": 6, ""CupboardBL"": 6, ""CupboardBR"": 6}","{""grass"": {""0"": 56, ""32"": 24}}",0
+17,00017v05_L,9,9,23,"Box:63, Cupboard:20","Blue,Red,Yellow,Green","{""Box1"": 63, ""CupboardTL"": 2, ""CupboardTR"": 2, ""CupboardBL"": 2, ""CupboardBR"": 2}",{},14
+18,00018v03_L,8,9,24,"Box:18, Cupboard:40, Grass:16","Blue,Red,Yellow,Green","{""Box1"": 18, ""CupboardTL"": 4, ""CupboardTR"": 4, ""CupboardBL"": 4, ""CupboardBR"": 4}","{""grass"": {""0"": 56, ""32"": 16}}",0
+19,00019v03_L,9,10,27,"Cupboard:40, Box:20, Grass:32","Blue,Red,Yellow,Green","{""Box1"": 20, ""CupboardTL"": 4, ""CupboardTR"": 4, ""CupboardBL"": 4, ""CupboardBR"": 4}","{""grass"": {""0"": 58, ""32"": 32}}",0
+20,00020v02_L,9,9,20,Coin:0,"Blue,Red,Green","{""Tnt"": 2, ""Coin"": 79}",{},0
+21,00021v02_L,8,8,28,Mail:50,"Yellow,Red,Blue,Green,Pink","{""MailBox"": 22}",{},0
+22,00022v01_L,9,9,25,Mail:60,"Yellow,Red,Blue,Green","{""MailBox"": 9}",{},0
+23,00023v02_L,8,8,20,"Box:25, Mail:45","Yellow,Red,Blue,Green","{""Box1"": 25, ""MailBox"": 11}",{},0
+24,00024v03_L,9,9,26,"Grass:32, Mail:40","Yellow,Red,Blue,Pink","{""MailBox"": 9}","{""grass"": {""0"": 49, ""32"": 32}}",0
+25,00025v03_L,9,10,26,"Box:36, Cupboard:30, Mail:30","Yellow,Red,Blue,Green","{""Box1"": 36, ""MailBox"": 6, ""CupboardTL"": 3, ""CupboardTR"": 3, ""CupboardBL"": 3, ""CupboardBR"": 3}",{},0
+26,00026v03_L,9,9,23,"Box:15, Grass:36","Yellow,Red,Blue,Green","{""Box2"": 15}","{""grass"": {""0"": 45, ""32"": 36}}",0
+27,00027v03_L,8,8,21,"Cupboard:40, Box:16, Grass:16","Yellow,Red,Blue,Green","{""Box1"": 16, ""CupboardTL"": 4, ""CupboardTR"": 4, ""CupboardBL"": 4, ""CupboardBR"": 4}","{""grass"": {""0"": 48, ""32"": 16}}",0
+28,00028v03_L,8,10,27,"Cupboard:120, Box:30","Yellow,Red,Blue,Green","{""Box1"": 30, ""CupboardTL"": 12, ""CupboardTR"": 12, ""Lightball"": 2, ""CupboardBL"": 12, ""CupboardBR"": 12}",{},0
+29,00029v03_L,9,10,25,"Box:27, Grass:18, Mail:50","Yellow,Red,Blue,Green","{""Box2"": 27, ""MailBox"": 9}","{""grass"": {""0"": 72, ""32"": 18}}",0
+30,00030v03_L,8,8,22,Mail:200,"Blue,Yellow,Red","{""MailBox"": 36}",{},0
+31,00031v02_L,8,10,28,Egg:60,"Red,Yellow,Blue,Green","{""Egg"": 60}",{},0
+32,00032v02_L,9,10,22,"Egg:36, Box:18","Red,Yellow,Blue,Green","{""Box1"": 18, ""Egg"": 36}",{},0
+33,00033v03_L,9,9,25,"Egg:32, Grass:32","Red,Yellow,Blue,Pink","{""Egg"": 32}","{""grass"": {""0"": 49, ""32"": 32}}",0
+34,00034v03_L,9,10,20,"Egg:54, Mail:50","Red,Yellow,Blue,Green","{""Egg"": 54, ""MailBox"": 14}",{},0
+35,00035v03_L,9,10,20,"Cupboard:30, Egg:48","Red,Yellow,Blue,Green","{""Egg"": 48, ""CupboardTL"": 3, ""CupboardTR"": 3, ""CupboardBL"": 3, ""CupboardBR"": 3}",{},0
+36,00036v03_L,9,9,25,"Box:38, Mail:50","Red,Yellow,Blue,Green","{""Box1"": 38, ""MailBox"": 9}",{},0
+37,00037v04_L,8,10,23,"Box:32, Cupboard:40, Grass:16","Red,Yellow,Blue,Green","{""Box1"": 32, ""CupboardTL"": 4, ""CupboardTR"": 4, ""CupboardBL"": 4, ""CupboardBR"": 4}","{""grass"": {""0"": 64, ""32"": 16}}",0
+38,00038v03_L,8,11,24,"Cupboard:40, Egg:32, Grass:24","Blue,Red,Yellow,Pink","{""Propeller"": 8, ""Egg"": 32, ""CupboardTL"": 4, ""CupboardTR"": 4, ""CupboardBL"": 4, ""CupboardBR"": 4}","{""grass"": {""0"": 64, ""32"": 24}}",0
+39,00039v04_L,9,10,23,"Egg:63, Box:9, Mail:30","Blue,Red,Yellow,Green","{""Box3"": 9, ""Egg"": 63, ""MailBox"": 3}",{},0
+40,00040v02_L,8,9,20,Coin:0,"Blue,Red","{""Lightball"": 2, ""Coin"": 70}",{},0
+41,00041v02_L,8,8,22,Potion:16,"Blue,Red,Yellow,Green","{""PotionTL"": 4, ""PotionTR"": 4, ""PotionBL"": 4, ""PotionBR"": 4}",{},0
+42,00042v03_L,8,8,24,"Potion:28, Egg:27","Blue,Red,Yellow,Green","{""Egg"": 27, ""PotionTL"": 7, ""PotionTR"": 7, ""PotionBL"": 7, ""PotionBR"": 7}",{},0
+43,00043v03_L,8,10,20,"Potion:32, Box:8","Blue,Red,Yellow,Green","{""Box2"": 8, ""PotionTL"": 8, ""PotionTR"": 8, ""PotionBL"": 8, ""PotionBR"": 8}",{},0
+44,00044v05_L,8,10,26,"Potion:40, Mail:40","Blue,Red,Yellow,Green","{""MailBox"": 8, ""PotionTL"": 10, ""PotionTR"": 10, ""PotionBL"": 10, ""PotionBR"": 10}",{},0
+45,00045v04_L,8,10,23,"Potion:20, Box:20, Cupboard:50","Blue,Red,Yellow,Green","{""Box2"": 20, ""CupboardTL"": 5, ""CupboardTR"": 5, ""PotionTL"": 5, ""PotionTR"": 5, ""CupboardBL"": 5, ""CupboardBR"": 5, ""PotionBL"": 5, ""PotionBR"": 5}",{},0
+46,00046v03_L,8,8,30,"Cupboard:40, Box:16, Egg:150","Blue,Red,Yellow","{""Box3"": 16, ""CupboardTL"": 4, ""CupboardTR"": 4, ""CupboardBL"": 4, ""CupboardBR"": 4}",{},0
+47,00047v04_L,9,9,32,"Box:63, Grass:14, Mail:63","Blue,Red,Yellow,Pink","{""Box1"": 49, ""Box3"": 14, ""MailBox"": 7}","{""grass"": {""0"": 67, ""32"": 14}}",0
+48,00048v03_L,9,9,22,"Egg:36, Box:15","Blue,Red,Yellow,Green","{""Box3"": 15, ""Egg"": 36}",{},0
+49,00049v03_L,9,10,26,"Potion:8, Box:28, Grass:32, Mail:40","Blue,Red,Yellow,Green","{""Box1"": 28, ""MailBox"": 4, ""PotionTL"": 2, ""PotionTR"": 2, ""PotionBL"": 2, ""PotionBR"": 2}","{""grass"": {""0"": 58, ""32"": 32}}",0
+50,00050v02_L,9,10,20,"Potion:4, Egg:72","Blue,Red,Yellow,Green","{""VerticalRocket"": 1, ""Egg"": 72, ""PotionTL"": 1, ""PotionTR"": 1, ""PotionBL"": 1, ""PotionBR"": 1}",{},9

@@ -1,0 +1,348 @@
+
+King_Venguard.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+torso
+  rotate: false
+  xy: 0, 0
+  size: 860, 865
+  orig: 860, 865
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 862, 0
+  size: 547, 588
+  orig: 547, 588
+  offset: 0, 0
+  index: -1
+skirt
+  rotate: false
+  xy: 0, 867
+  size: 949, 504
+  orig: 949, 504
+  offset: 0, 0
+  index: -1
+upperarm_R
+  rotate: false
+  xy: 1411, 0
+  size: 344, 423
+  orig: 344, 423
+  offset: 0, 0
+  index: -1
+upperarm_L
+  rotate: false
+  xy: 951, 867
+  size: 345, 422
+  orig: 345, 422
+  offset: 0, 0
+  index: -1
+thigh_L
+  rotate: false
+  xy: 1298, 867
+  size: 331, 396
+  orig: 331, 396
+  offset: 0, 0
+  index: -1
+thigh_R
+  rotate: false
+  xy: 1631, 867
+  size: 328, 396
+  orig: 328, 396
+  offset: 0, 0
+  index: -1
+cape_R
+  rotate: false
+  xy: 0, 1373
+  size: 449, 384
+  orig: 449, 384
+  offset: 0, 0
+  index: -1
+cape_L
+  rotate: false
+  xy: 451, 1373
+  size: 448, 383
+  orig: 448, 383
+  offset: 0, 0
+  index: -1
+hand_R_palm
+  rotate: false
+  xy: 1757, 0
+  size: 266, 355
+  orig: 266, 355
+  offset: 0, 0
+  index: -1
+hand_L_open
+  rotate: false
+  xy: 901, 1373
+  size: 226, 351
+  orig: 226, 351
+  offset: 0, 0
+  index: -1
+forearm_L
+  rotate: false
+  xy: 1129, 1373
+  size: 305, 345
+  orig: 305, 345
+  offset: 0, 0
+  index: -1
+forearm_R
+  rotate: false
+  xy: 1436, 1373
+  size: 303, 345
+  orig: 303, 345
+  offset: 0, 0
+  index: -1
+hand_R_open
+  rotate: false
+  xy: 1741, 1373
+  size: 224, 336
+  orig: 224, 336
+  offset: 0, 0
+  index: -1
+hand_L_fist
+  rotate: false
+  xy: 0, 1759
+  size: 191, 285
+  orig: 191, 285
+  offset: 0, 0
+  index: -1
+hand_R_fist
+  rotate: false
+  xy: 193, 1759
+  size: 198, 285
+  orig: 198, 285
+  offset: 0, 0
+  index: -1
+hand_R_thumbsup
+  rotate: false
+  xy: 393, 1759
+  size: 286, 273
+  orig: 286, 273
+  offset: 0, 0
+  index: -1
+crown
+  rotate: false
+  xy: 681, 1759
+  size: 468, 263
+  orig: 468, 263
+  offset: 0, 0
+  index: -1
+collar
+  rotate: false
+  xy: 1151, 1759
+  size: 711, 234
+  orig: 711, 234
+  offset: 0, 0
+  index: -1
+brow_L_sad
+  rotate: false
+  xy: 1864, 1759
+  size: 124, 114
+  orig: 124, 114
+  offset: 0, 0
+  index: -1
+eyes_wide_L
+  rotate: false
+  xy: 1961, 867
+  size: 73, 81
+  orig: 73, 81
+  offset: 0, 0
+  index: -1
+eyes_wide_R
+  rotate: false
+  xy: 1967, 1373
+  size: 69, 81
+  orig: 69, 81
+  offset: 0, 0
+  index: -1
+iris_L
+  rotate: false
+  xy: 1990, 1759
+  size: 53, 53
+  orig: 53, 53
+  offset: 0, 0
+  index: -1
+
+King_Venguard2.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+pelvis
+  rotate: false
+  xy: 0, 0
+  size: 685, 340
+  orig: 685, 340
+  offset: 0, 0
+  index: -1
+shin_R
+  rotate: false
+  xy: 687, 0
+  size: 214, 326
+  orig: 214, 326
+  offset: 0, 0
+  index: -1
+shin_L
+  rotate: false
+  xy: 903, 0
+  size: 215, 323
+  orig: 215, 323
+  offset: 0, 0
+  index: -1
+chop_R
+  rotate: false
+  xy: 1120, 0
+  size: 187, 178
+  orig: 187, 178
+  offset: 0, 0
+  index: -1
+neck
+  rotate: false
+  xy: 1309, 0
+  size: 555, 178
+  orig: 555, 178
+  offset: 0, 0
+  index: -1
+chop_L
+  rotate: false
+  xy: 0, 342
+  size: 187, 175
+  orig: 187, 175
+  offset: 0, 0
+  index: -1
+foot_R
+  rotate: false
+  xy: 189, 342
+  size: 221, 158
+  orig: 221, 158
+  offset: 0, 0
+  index: -1
+foot_L
+  rotate: false
+  xy: 412, 342
+  size: 222, 157
+  orig: 222, 157
+  offset: 0, 0
+  index: -1
+brow_L_worried
+  rotate: false
+  xy: 1866, 0
+  size: 127, 112
+  orig: 127, 112
+  offset: 0, 0
+  index: -1
+brow_R_worried
+  rotate: false
+  xy: 636, 342
+  size: 122, 112
+  orig: 122, 112
+  offset: 0, 0
+  index: -1
+brow_R_sad
+  rotate: false
+  xy: 760, 342
+  size: 121, 111
+  orig: 121, 111
+  offset: 0, 0
+  index: -1
+mouth_laugh
+  rotate: false
+  xy: 883, 342
+  size: 171, 103
+  orig: 171, 103
+  offset: 0, 0
+  index: -1
+mouth_neutral
+  rotate: false
+  xy: 1056, 342
+  size: 171, 103
+  orig: 171, 103
+  offset: 0, 0
+  index: -1
+mouth_sad
+  rotate: false
+  xy: 1229, 342
+  size: 171, 103
+  orig: 171, 103
+  offset: 0, 0
+  index: -1
+mouth_worried
+  rotate: false
+  xy: 1402, 342
+  size: 171, 103
+  orig: 171, 103
+  offset: 0, 0
+  index: -1
+brow_L
+  rotate: false
+  xy: 1575, 342
+  size: 128, 92
+  orig: 128, 92
+  offset: 0, 0
+  index: -1
+brow_R
+  rotate: false
+  xy: 1705, 342
+  size: 123, 91
+  orig: 123, 91
+  offset: 0, 0
+  index: -1
+cheek_L
+  rotate: false
+  xy: 1830, 342
+  size: 141, 91
+  orig: 141, 91
+  offset: 0, 0
+  index: -1
+cheek_R
+  rotate: false
+  xy: 0, 519
+  size: 141, 91
+  orig: 141, 91
+  offset: 0, 0
+  index: -1
+mustache
+  rotate: false
+  xy: 143, 519
+  size: 304, 89
+  orig: 304, 89
+  offset: 0, 0
+  index: -1
+eyes_closed_L
+  rotate: false
+  xy: 449, 519
+  size: 101, 81
+  orig: 101, 81
+  offset: 0, 0
+  index: -1
+eyes_closed_R
+  rotate: false
+  xy: 552, 519
+  size: 101, 81
+  orig: 101, 81
+  offset: 0, 0
+  index: -1
+eyes_happy_L
+  rotate: false
+  xy: 655, 519
+  size: 101, 81
+  orig: 101, 81
+  offset: 0, 0
+  index: -1
+eyes_happy_R
+  rotate: false
+  xy: 758, 519
+  size: 101, 81
+  orig: 101, 81
+  offset: 0, 0
+  index: -1
+iris_R
+  rotate: false
+  xy: 1973, 342
+  size: 53, 53
+  orig: 53, 53
+  offset: 0, 0
+  index: -1

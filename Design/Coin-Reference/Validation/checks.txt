@@ -1,0 +1,84 @@
+PASS
+UTC 2026-09-28T13:05:21.9103206Z
+PASS Entered isolated QA save routing
+PASS Native sprite frame 0
+PASS Native mirror without squash at frame 0
+PASS Authored slice aspect at frame 0
+PASS Native sprite frame 1
+PASS Native mirror without squash at frame 1
+PASS Authored slice aspect at frame 1
+PASS Native sprite frame 2
+PASS Native mirror without squash at frame 2
+PASS Authored slice aspect at frame 2
+PASS Native sprite frame 3
+PASS Native mirror without squash at frame 3
+PASS Authored slice aspect at frame 3
+PASS Native sprite frame 4
+PASS Native mirror without squash at frame 4
+PASS Authored slice aspect at frame 4
+PASS Native sprite frame 5
+PASS Native mirror without squash at frame 5
+PASS Authored slice aspect at frame 5
+PASS Native sprite frame 6
+PASS Native mirror without squash at frame 6
+PASS Authored slice aspect at frame 6
+PASS Native sprite frame 7
+PASS Native mirror without squash at frame 7
+PASS Authored slice aspect at frame 7
+PASS Native sprite frame 8
+PASS Native mirror without squash at frame 8
+PASS Authored slice aspect at frame 8
+PASS Native sprite frame 9
+PASS Native mirror without squash at frame 9
+PASS Authored slice aspect at frame 9
+PASS Native sprite frame 10
+PASS Native mirror without squash at frame 10
+PASS Authored slice aspect at frame 10
+PASS Native sprite frame 11
+PASS Native mirror without squash at frame 11
+PASS Authored slice aspect at frame 11
+PASS home-30: 10 arrival callbacks, expected 10
+PASS home-30: each arrival ordinal occurs exactly once
+PASS home-30: flights and particle tail retire within two seconds
+PASS home-30: native particles produced visible UI mesh vertices
+PASS home-30: exact appear, counter and collect clips played through live AudioSources
+PASS home-30: no coin SFX voices remain after cleanup
+PASS home-30: simulation clock unchanged
+PASS board-30: 10 arrival callbacks, expected 10
+PASS board-30: each arrival ordinal occurs exactly once
+PASS board-30: flights and particle tail retire within two seconds
+PASS board-30: native particles produced visible UI mesh vertices
+PASS board-30: exact appear, counter and collect clips played through live AudioSources
+PASS board-30: no coin SFX voices remain after cleanup
+PASS board-30: simulation clock unchanged
+PASS home-60: 10 arrival callbacks, expected 10
+PASS home-60: each arrival ordinal occurs exactly once
+PASS home-60: flights and particle tail retire within two seconds
+PASS home-60: native particles produced visible UI mesh vertices
+PASS home-60: exact appear, counter and collect clips played through live AudioSources
+PASS home-60: no coin SFX voices remain after cleanup
+PASS home-60: simulation clock unchanged
+PASS board-60: 10 arrival callbacks, expected 10
+PASS board-60: each arrival ordinal occurs exactly once
+PASS board-60: flights and particle tail retire within two seconds
+PASS board-60: native particles produced visible UI mesh vertices
+PASS board-60: exact appear, counter and collect clips played through live AudioSources
+PASS board-60: no coin SFX voices remain after cleanup
+PASS board-60: simulation clock unchanged
+PASS cancel-before-arrival: cancellation immediately stops coin SFX voices
+PASS cancel-before-arrival: 0 arrival callbacks, expected 0
+PASS cancel-before-arrival: flights and particle tail retire within two seconds
+PASS cancel-before-arrival: no coin SFX voices remain after cleanup
+PASS cancel-before-arrival: simulation clock unchanged
+PASS reuse: 10 arrival callbacks, expected 10
+PASS reuse: each arrival ordinal occurs exactly once
+PASS reuse: flights and particle tail retire within two seconds
+PASS reuse: native particles produced visible UI mesh vertices
+PASS reuse: exact appear, counter and collect clips played through live AudioSources
+PASS reuse: no coin SFX voices remain after cleanup
+PASS reuse: simulation clock unchanged
+PASS Repeated reward reuses the existing coin Image pool
+PASS Previews and cancellation grant no currency
+PASS Checks retain the normal simulation clock
+PASS No new runtime error or exception during coin checks
+PASS Normal runtime and saved coin balance restored after isolated checks

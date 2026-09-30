@@ -1,0 +1,177 @@
+[
+  {
+    "name": "cell_front",
+    "sourceFile": "resources.assets",
+    "sourcePathId": 16827,
+    "sourceTexturePathId": 611,
+    "textureName": "GameplayAtlas",
+    "rect": {
+      "x": 1935.0,
+      "y": 544.0,
+      "width": 36.0,
+      "height": 36.0
+    },
+    "pivot": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "offset": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "border": {
+      "x": 17.0,
+      "y": 17.0,
+      "z": 17.0,
+      "w": 17.0
+    },
+    "pixelsPerUnit": 140.0,
+    "assetPath": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Sprites/cell_front__16827.png",
+    "resourcesPath": "ReferenceGameplay/Sprites/cell_front__16827",
+    "guid": "d4db3d74990edb73e5c530843dba9975",
+    "category": "Board",
+    "width": 36,
+    "height": 36,
+    "sha256": "937f9f18817aa02797e6c2da4ccad149c178ceacf6e553688195f1601be33411"
+  },
+  {
+    "name": "Border-inner_corner",
+    "sourceFile": "resources.assets",
+    "sourcePathId": 16836,
+    "sourceTexturePathId": 611,
+    "textureName": "GameplayAtlas",
+    "rect": {
+      "x": 1824.0,
+      "y": 1148.0,
+      "width": 70.0,
+      "height": 70.0
+    },
+    "pivot": {
+      "x": 0.0,
+      "y": 1.0
+    },
+    "offset": {
+      "x": -35.0,
+      "y": 35.0
+    },
+    "border": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 0.0
+    },
+    "pixelsPerUnit": 140.0,
+    "assetPath": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Sprites/Border-inner_corner__16836.png",
+    "resourcesPath": "ReferenceGameplay/Sprites/Border-inner_corner__16836",
+    "guid": "05d09d7e3886be0166c9a1273c871c4d",
+    "category": "Board",
+    "width": 70,
+    "height": 70,
+    "sha256": "7ac92da0b5bab4e81323827ac365312d840cb3978ad05c4c2a5952aa67462b12"
+  },
+  {
+    "name": "Border-side",
+    "sourceFile": "resources.assets",
+    "sourcePathId": 17165,
+    "sourceTexturePathId": 611,
+    "textureName": "GameplayAtlas",
+    "rect": {
+      "x": 1970.0,
+      "y": 2763.0,
+      "width": 1.0,
+      "height": 20.0
+    },
+    "pivot": {
+      "x": 0.5,
+      "y": 0.0
+    },
+    "offset": {
+      "x": 0.0,
+      "y": -10.0
+    },
+    "border": {
+      "x": 0.0,
+      "y": 20.0,
+      "z": 0.0,
+      "w": 0.0
+    },
+    "pixelsPerUnit": 140.0,
+    "assetPath": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Sprites/Border-side__17165.png",
+    "resourcesPath": "ReferenceGameplay/Sprites/Border-side__17165",
+    "guid": "7266938de992364dc4e6aae03277b812",
+    "category": "Board",
+    "width": 1,
+    "height": 20,
+    "sha256": "708c1384c8aeb22e8b39cc5f5271c2f5f32e0c1d74a87d879c114559e330d150"
+  },
+  {
+    "name": "Border-fill",
+    "sourceFile": "resources.assets",
+    "sourcePathId": 21576,
+    "sourceTexturePathId": 611,
+    "textureName": "GameplayAtlas",
+    "rect": {
+      "x": 1626.0,
+      "y": 163.0,
+      "width": 17.0,
+      "height": 17.0
+    },
+    "pivot": {
+      "x": 0.0,
+      "y": 1.0
+    },
+    "offset": {
+      "x": -8.5,
+      "y": 8.5
+    },
+    "border": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 0.0
+    },
+    "pixelsPerUnit": 140.0,
+    "assetPath": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Sprites/Border-fill__21576.png",
+    "resourcesPath": "ReferenceGameplay/Sprites/Border-fill__21576",
+    "guid": "fe4a03c76cf2804529ac750bbb507841",
+    "category": "Board",
+    "width": 17,
+    "height": 17,
+    "sha256": "fb0f7d7ce82ef4ce850d5b35362587ecd6de0cffe4fa884f45d8567469c79c7c"
+  },
+  {
+    "name": "Border-outer_corner",
+    "sourceFile": "resources.assets",
+    "sourcePathId": 22020,
+    "sourceTexturePathId": 611,
+    "textureName": "GameplayAtlas",
+    "rect": {
+      "x": 1941.0,
+      "y": 289.0,
+      "width": 28.0,
+      "height": 28.0
+    },
+    "pivot": {
+      "x": 0.7142857313156128,
+      "y": 0.2857142984867096
+    },
+    "offset": {
+      "x": 6.0,
+      "y": -6.0
+    },
+    "border": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "w": 0.0
+    },
+    "pixelsPerUnit": 140.0,
+    "assetPath": "Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Sprites/Border-outer_corner__22020.png",
+    "resourcesPath": "ReferenceGameplay/Sprites/Border-outer_corner__22020",
+    "guid": "0b52e677f622d54adb10c6eeb96dcabb",
+    "category": "Board",
+    "width": 28,
+    "height": 28,
+    "sha256": "e200ad904a8dad004cbd19d5545a920d5639c7353dc04a52af204eac94b90658"
+  }
+]

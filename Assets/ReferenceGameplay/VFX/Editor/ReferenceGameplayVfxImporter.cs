@@ -24,13 +24,14 @@ public static class ReferenceGameplayVfxImporter
     static readonly Regex Ptr=new Regex(@"\{\s*""m_FileID""\s*:\s*(-?\d+)\s*,\s*""m_PathID""\s*:\s*(-?\d+)\s*\}");
     [MenuItem("Royal Throne/Reference Gameplay/Import Native VFX")]
     public static void Build() => BuildFile("Design/ReferenceGameplayImport/Media/NativeParticles.json");
-    public static void BuildFile(string sourceFile)
+    public static void BuildFile(string sourceFile) => BuildFile(sourceFile, null);
+    public static void BuildFile(string sourceFile, IDictionary<long,UnityEngine.Object> reusedReferences)
     {
         string project=Path.GetFullPath(Path.Combine(Application.dataPath,".."));
         var source=JsonUtility.FromJson<Document>(File.ReadAllText(Path.Combine(project,sourceFile)));
         var incomplete=new List<string>();
         Directory.CreateDirectory(Base+"AtlasSprites");Directory.CreateDirectory(Base+"Materials");Directory.CreateDirectory(Base+"Resources/ReferenceGameplay/VFX");AssetDatabase.Refresh();
-        var references=new Dictionary<long,UnityEngine.Object>();
+        var references=reusedReferences==null?new Dictionary<long,UnityEngine.Object>():new Dictionary<long,UnityEngine.Object>(reusedReferences);
         foreach(var t in source.textures)
         {
             if(AssetImporter.GetAtPath(t.assetPath) is TextureImporter ti && t.assetPath.StartsWith(Base))

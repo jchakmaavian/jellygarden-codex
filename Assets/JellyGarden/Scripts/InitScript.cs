@@ -233,6 +233,13 @@ using Facebook.Unity;
             MusicBase.Instance.SetVolume(PlayerPrefs.GetInt("Music"));
             SoundBase.Instance.SetVolume(PlayerPrefs.GetInt("Sound"));
 
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled)
+            {
+                enableUnityAds = enableGoogleMobileAds = enableChartboostAds = false;
+                if (facebookButton) facebookButton.SetActive(false);
+                return;
+            }
+
             #if UNITY_ADS //2.1.1
         enableUnityAds = true;
         unityAds = Resources.Load<UnityAdsID>("UnityAdsID");
@@ -282,6 +289,7 @@ using Facebook.Unity;
 
     public void LoadInterstitialAd(string _adUnitId)
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         // Clean up the old ad before loading a new one.
         if (interstitial != null)
         {
@@ -360,6 +368,7 @@ using Facebook.Unity;
 
         public bool GetRewardedUnityAdsReady()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return false;
             #if UNITY_ADS
         return UnityAdsController.Instance.isLoaded;
             #endif
@@ -369,6 +378,7 @@ using Facebook.Unity;
 
         public void ShowRewardedAds()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             #if UNITY_ADS
         Debug.Log("show Unity Rewarded ads video in " + LevelManager.THIS.gameStatus);
 
@@ -411,6 +421,7 @@ using Facebook.Unity;
 
         public void CheckAdsEvents(GameState state)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             //1.4 added
             foreach (AdEvents item in adsEvents)
             {
@@ -447,6 +458,7 @@ using Facebook.Unity;
 
         public void ShowInterstitial()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             Debug.Log("show Unity ads video on " + LevelManager.THIS.gameStatus + "  for Reward ==> " +
                       InitScript.Instance.currentReward);
             #if UNITY_ADS
@@ -461,6 +473,7 @@ using Facebook.Unity;
 
         public void ShowVideo()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             //1.4 added
             #if UNITY_ADS
         Debug.Log("show Unity Rewarded ads video in " + LevelManager.THIS.gameStatus + "  for Reward ==> " +
@@ -480,6 +493,7 @@ using Facebook.Unity;
 
         public void ShowAds(bool chartboost = true)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             if (chartboost)
             {
                 #if CHARTBOOST_ADS
@@ -527,6 +541,7 @@ using Facebook.Unity;
 
         public void ShowRate()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             if (MenuManager.Instance != null)
                 MenuManager.Instance.ShowRate(true);
         }

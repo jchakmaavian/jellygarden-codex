@@ -1,0 +1,52 @@
+[
+  {
+    "name": "GameplayExtensionAtlas",
+    "width": 508,
+    "height": 1728,
+    "format": 48,
+    "block": 4,
+    "stream_offset": 72653744,
+    "stream_size": 877824,
+    "file": "GameplayExtensionAtlas.png"
+  },
+  {
+    "name": "GameplayAtlas",
+    "width": 1972,
+    "height": 2784,
+    "format": 4,
+    "block": 1,
+    "stream_offset": 95518896,
+    "stream_size": 21960192,
+    "file": "GameplayAtlas.png"
+  },
+  {
+    "name": "UiAtlas",
+    "width": 1692,
+    "height": 1876,
+    "format": 4,
+    "block": 1,
+    "stream_offset": 120746128,
+    "stream_size": 12696768,
+    "file": "UiAtlas.png"
+  },
+  {
+    "name": "HomeUiAtlas",
+    "width": 1504,
+    "height": 2044,
+    "format": 4,
+    "block": 1,
+    "stream_offset": 149225808,
+    "stream_size": 12296704,
+    "file": "HomeUiAtlas.png"
+  },
+  {
+    "name": "LevelWinAtlas",
+    "width": 432,
+    "height": 1016,
+    "format": 4,
+    "block": 1,
+    "stream_offset": 169423984,
+    "stream_size": 1755648,
+    "file": "LevelWinAtlas.png"
+  }
+]

@@ -22,8 +22,8 @@ namespace RoyalThrone.Editor
         const string Folder = "Design/Areas/Unity/";
         static readonly List<string> lines = new List<string>();
         static readonly List<string> errors = new List<string>();
-        static readonly string[] RealKeys = { RoyalAreas.CurrentKey, RoyalAreas.DoneKey, RoyalAreas.SpentKey, RoyalAreas.EnteredKey, "Gems", "Stripes", "Packages", "Colorful_bomb", "OpenLevel", "Lifes" };
-        static readonly string[] AreaKeys = { RoyalAreas.CurrentKey, RoyalAreas.DoneKey, RoyalAreas.SpentKey, RoyalAreas.EnteredKey };
+        static readonly string[] RealKeys = { RoyalAreas.CurrentKey, RoyalAreas.DoneKey, RoyalAreas.SpentKey, RoyalAreas.EnteredKey, RoyalAreas.LayoutVersionKey, RoyalAreas.MigrationCreditKey, "Gems", "Stripes", "Packages", "Colorful_bomb", "OpenLevel", "Lifes" };
+        static readonly string[] AreaKeys = { RoyalAreas.CurrentKey, RoyalAreas.DoneKey, RoyalAreas.SpentKey, RoyalAreas.EnteredKey, RoyalAreas.LayoutVersionKey, RoyalAreas.MigrationCreditKey };
 
         [MenuItem("Tools/Royal Throne/Areas/Check areas (Play Mode, QA profile)")]
         public static void Run()
@@ -101,7 +101,7 @@ namespace RoyalThrone.Editor
                 home.ClosePanel(); home.RefreshProgress();
                 yield return Frames(3);
                 var view = home.AreaView; var scene = view.Scene;
-                Check(areas.Length == 10 && areas.Sum(a => a.tasks.Length) == 87 && areas.Sum(a => a.TotalCost) == 208, "Ten areas, 87 tasks, 208 stars in the catalogue");
+                Check(areas.Length == 10 && areas.Sum(a => a.tasks.Length) == 90 && areas.Sum(a => a.TotalCost) == 208, "Ten areas, 90 tasks, unchanged 208-star catalogue budget");
                 Check(areas.All(a => a.tasks.All(t => t.cost >= 1 && t.cost <= 3)), "Every task costs one to three stars");
                 Check(areas[0].Ready && areas[0].tasks.Length == 6 && areas[0].TotalCost == 10, "Area 1 has its art and six tasks for ten stars");
                 Check(scene.Shown == areas[0] && !scene.ShowingRestored, "A fresh profile's Home shows Area 1 unrestored");
@@ -156,17 +156,17 @@ namespace RoyalThrone.Editor
                 Check(layout && layout.HudAway > .99f, "The Home controls slide off while the object is built");
                 // The reference's empty moment: the controls are away and the scene waits without the object; then it rises
                 // with a puff (the reference's puff comes 2.4 s after the tap).
-                Check(!(scene.Patch(0) && scene.Patch(0).enabled), "The scene waits a moment, empty");
-                yield return Until(() => scene.Patch(0) && scene.Patch(0).enabled, 1.5f);
+                Check(scene.NativePlayer && !scene.NativePlayer.Revealing && scene.NativePlayer.CompletedMask == 0, "The native scene waits a moment before revealing the paid task");
+                yield return Until(() => scene.NativePlayer && scene.NativePlayer.Revealing, 1.5f);
                 float rose = Time.unscaledTime - tap;
-                Check(scene.Patch(0) && scene.Patch(0).enabled && scene.Patch(0).sprite && scene.Revealing && rose > 1.6f && rose < 2.8f, "The task's object rises into the scene (" + rose.ToString("0.00") + " s after the tap)");
+                Check(scene.NativePlayer && scene.NativePlayer.CurrentTask == 0 && scene.Revealing && rose > 1.6f && rose < 2.8f, "The native task reveal starts (" + rose.ToString("0.00") + " s after the tap)");
                 yield return Seconds(.5f);
                 yield return Shot("building");
-                yield return Until(() => layout.HudAway < .01f, 4);
+                yield return Until(() => layout.HudAway < .01f, 6);
                 Check(layout.HudAway < .01f, "The controls come back");
                 yield return Until(() => home.areaProgress.text == "1/6", 3);
                 Check(home.areaProgress.text == "1/6" && home.starLabel.text == "9", "The streak lands and the Area card moves on (1/6)");
-                Check(scene.Patch(0).color.a > .99f && scene.Patch(0).rectTransform.localScale == Vector3.one, "The object has risen fully into place");
+                Check(scene.NativePlayer && !scene.NativePlayer.Revealing && (scene.NativePlayer.CompletedMask & 1) != 0, "The authored reveal settles into its completed pose");
                 yield return Until(() => view.Showing == RoyalAreaView.Tasks, 3);
                 Check(view.Showing == RoyalAreaView.Tasks, "The list opens again by itself");
                 yield return Until(() => !view.Building, 4);
@@ -215,20 +215,12 @@ namespace RoyalThrone.Editor
                 yield return Until(() => !view.Ceremony, 3);
                 Check(!view.Ceremony && !home.dialog.activeSelf && !home.SceneViewOpen, "Continue returns to Home");
                 Check(RoyalAreas.Current == 2 && RoyalAreas.DoneCount == 0 && RoyalAreas.Entered == 1 && RoyalAreas.AwaitingEntry, "Area 2 is next, waiting to be unlocked");
-                bool secondReady = areas[1].Ready;
-                Check(!secondReady, "Area 2 has no art yet (its scene is not generated)");
-                Check(scene.Shown == areas[0] && scene.ShowingRestored, "Home keeps restored Area 1 until Area 2 can be entered");
-                Check(home.areaLabel.text == "Area 2" && home.areaProgress.text == "Soon", "Area card shows Area 2 as coming soon");
-                home.areaButton.onClick.Invoke(); yield return Frames(2);
-                Check(view.Showing == RoyalAreaView.Soon && view.UnlockButton && !view.UnlockButton.gameObject.activeSelf, "Its card says it is coming soon, with no Unlock");
-                Check(view.TabClearance >= 0, "Coming Soon sits above the tab bar (" + view.TabClearance.ToString("0") + " px clear)");
-                yield return Shot("coming-soon");
-                home.ClosePanel(); yield return Frames(1);
+                // ---- No "Coming Soon": an area without its own scene yet is restored on a placeholder scene (Area 1's art).
+                Check(areas.All(a => a.Ready), "Every area can be restored (areas without their own scene use a placeholder)");
+                Check(!areas[1].placeholder && areas[1].nativeMotion && areas[1].tasks.Length == 7 && areas[1].tasks[0].name == "Lay the carpet" && areas[1].before != areas[0].before,
+                    "Area 2 has its own native throne room and seven restoration tasks");
 
-                // ---- New Area and Unlock, with Area 1's art borrowed for Area 2 (in memory only: a fixture for the ready path).
-                areas[1].before = areas[0].before; areas[1].after = areas[0].after; areas[1].thumbBefore = areas[0].thumbBefore; areas[1].thumbAfter = areas[0].thumbAfter;
-                areas[1].tasks = areas[0].tasks.Select(t => new RoyalAreaTask { name = t.name, patch = t.patch, cost = t.cost, x0 = t.x0, y0 = t.y0, x1 = t.x1, y1 = t.y1 }).ToArray();
-                Note("fixture: Area 2 borrows Area 1's art for the New Area and Unlock path (memory only, restored afterwards)");
+                // ---- New Area and Unlock.
                 home.RefreshProgress(); yield return Frames(2);
                 Check(home.areaLabel.text == "New Area" && !home.areaProgress.gameObject.activeSelf, "With art, the Area card reads New Area");
                 Check(scene.Shown == areas[0] && scene.ShowingRestored, "Home still shows restored Area 1");
@@ -242,7 +234,7 @@ namespace RoyalThrone.Editor
                 yield return Until(() => !home.dialog.activeSelf, 3);
                 Check(RoyalAreas.Entered == 2 && !RoyalAreas.AwaitingEntry && RoyalAreas.Current == 2, "Unlock enters Area 2, once");
                 yield return Frames(2);
-                Check(scene.Shown == areas[1] && !scene.ShowingRestored && home.areaLabel.text == "Area 2" && home.areaProgress.text == "0/6", "Home shows the new area's scene and 0/6");
+                Check(scene.Shown == areas[1] && !scene.ShowingRestored && scene.NativePlayer.Area == 2 && home.areaLabel.text == "Area 2" && home.areaProgress.text == "0/7", "Home shows the native throne room and 0/7");
                 yield return Shot("area2-unlocked");
 
                 // ---- Persistence: what the profile holds is what the Home shows after a restart (checked from the save).

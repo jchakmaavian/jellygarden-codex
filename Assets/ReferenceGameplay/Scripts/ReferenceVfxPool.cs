@@ -27,6 +27,7 @@ namespace RoyalThrone.ReferenceGameplay
         readonly List<Entry> pool = new List<Entry>();
         static readonly string[] colorNames = { "red", "blue", "yellow", "green", "pink" };
         const int Capacity = 96;
+        public static double LastInstantiationMilliseconds { get; private set; }
         public static int Active { get { int n=0; if(instance) foreach(var e in instance.pool) if(e.active)n++; return n; } }
         public static int ParticleCount { get { int n=0; if(instance)foreach(var e in instance.pool)if(e.active)foreach(var ps in e.particles)if(ps)n+=ps.particleCount;return n; } }
         public static bool Has(string key)
@@ -43,10 +44,12 @@ namespace RoyalThrone.ReferenceGameplay
             if (selected == null)
             {
                 if (instance.pool.Count >= Capacity) return null;
+                var buildClock = System.Diagnostics.Stopwatch.StartNew();
                 var root = Instantiate(prefabs[key], instance.transform);
                 selected = new Entry { key = key, root = root, particles = root.GetComponentsInChildren<ParticleSystem>(true) };
                 selected.pausedByOwner = new bool[selected.particles.Length];
                 instance.pool.Add(selected);
+                LastInstantiationMilliseconds = buildClock.Elapsed.TotalMilliseconds;
             }
             var item = selected; item.lease++; item.active = true; item.sustained = sustained; item.age = 0; item.stopped = false; item.emissionEnd = 0;
             System.Array.Clear(item.pausedByOwner, 0, item.pausedByOwner.Length);

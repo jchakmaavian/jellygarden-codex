@@ -57,6 +57,9 @@ namespace JellyGarden.Scripts.Juice
         {
             if (string.IsNullOrEmpty(name)) return null;
             var campaign = CampaignArt(name); if (campaign) return campaign;
+            // Menus (the Level Start card, the booster guide and shop, How to play) show the Rocket and Color Ball the board
+            // uses now. The older RoyalGameplay/rocket and orb art was removed; the built-in pack covers imports being off.
+            if (name == "rocket" || name == "orb") { var board = RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.Art(name); return board ? board : RoyalGameplayArt.LegacyArt(name); }
             string path = "RoyalGameplay/" + name;
             if (artCache.TryGetValue(path, out var sprite)) return sprite;
             sprite = Resources.Load<Sprite>(path); artCache[path] = sprite; return sprite;

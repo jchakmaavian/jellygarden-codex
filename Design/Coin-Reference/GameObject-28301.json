@@ -1,0 +1,26 @@
+{
+  "m_Component": [
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 66245
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 97176
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 106855
+      }
+    }
+  ],
+  "m_Layer": 0,
+  "m_Name": "CoinHitParticles",
+  "m_Tag": 0,
+  "m_IsActive": true
+}

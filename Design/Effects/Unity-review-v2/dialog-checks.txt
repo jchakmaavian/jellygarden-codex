@@ -6,10 +6,11 @@ PASS BoostShop heading clears close control
 PASS BoostInfo heading clears close control
 PASS Settings heading clears close control
 PASS Tutorial heading clears close control
-PASS Tutorial page 1 formation clears result icon
-PASS Tutorial page 2 formation clears result icon
-PASS Tutorial page 3 formation clears result icon
-PASS Tutorial page 4 formation clears result icon
+PASS Tutorial page 1 plays its lesson clear of its title and rule
+PASS Tutorial page 2 plays its lesson clear of its title and rule
+PASS Tutorial page 3 plays its lesson clear of its title and rule
+PASS Tutorial page 4 plays its lesson clear of its title and rule
+PASS Tutorial page 5 plays its lesson clear of its title and rule
 PASS MenuComplete heading visible; dismissal uses primary action
 PASS MenuFailed heading visible; dismissal uses primary action
 PASS MenuFailed target counts do not overlap

@@ -12,8 +12,14 @@ namespace RoyalThrone.Presentation
     public sealed class RoyalGameplayPresentation : MonoBehaviour
     {
         CanvasGroup group; RectTransform content,king; Image kingImage;Text moves,level,goals;
-        SpriteRenderer backdrop; Sprite idle,cheer,think;float excitement,lastRefresh;bool built,ready;
+        SpriteRenderer backdrop;float lastRefresh;bool built,ready;
         float hudFade,backdropFade;
+        RoyalThrone.Characters.KingVanguardSlot kingVanguard;
+        readonly RoyalThrone.Characters.KingVanguardFeedbackQueue kingFeedback=new RoyalThrone.Characters.KingVanguardFeedbackQueue();
+        LevelManager feedbackKingLevel; Transform feedbackKingField; int feedbackKingAttempt;
+        enum PendingKingActivity { None, ExtraMoves, Relief }
+        PendingKingActivity pendingKingActivity;
+        LevelManager pendingKingLevel; Transform pendingKingField; int pendingKingAttempt;
         readonly HashSet<Square> styled=new HashSet<Square>();
         readonly List<CanvasGroup> hidden=new List<CanvasGroup>();
         // Timed levels: the limit header reads "Time" (m:ss) instead of "Moves"; the four rebound rail tools stay
@@ -24,7 +30,7 @@ namespace RoyalThrone.Presentation
         Sprite tileSprite;
         readonly Dictionary<string,Sprite> cellSprites=new Dictionary<string,Sprite>();
         Vector2 cellSpriteSize;
-        readonly List<Image> goalIcons=new List<Image>();readonly List<Text> goalNumbers=new List<Text>();
+        readonly List<Image> goalIcons=new List<Image>();readonly List<Text> goalNumbers=new List<Text>();readonly float[] goalWidths=new float[4];
         RectTransform goalArea;
         Transform framedField;Square[] framedSquares;Vector2 framedScreen;Rect framedSafeArea;
         Transform prePlay;Square[] styledSquares;float framedSize;Vector3 framedCamera;
@@ -61,7 +67,14 @@ namespace RoyalThrone.Presentation
         // Under the startup loading screen this build runs in frames of its own after the scene's first frame
         // (RoyalTitleScreen.QueueStartupWork); otherwise all at once, here, as before. LateUpdate waits until it is complete.
         void Awake(){var steps=Build();if(!RoyalTitleScreen.QueueStartupWork(this,steps))while(steps.MoveNext()){}}
-        void OnEnable(){RoyalPowerupDirector.Reaction+=React;}
+        void OnEnable()
+        {
+            RoyalPowerupDirector.Reaction+=React;
+            RoyalThrone.Characters.KingVanguardActivityEvents.ExtraMovesGranted+=KingExtraMoves;
+            RoyalThrone.Characters.KingVanguardActivityEvents.GoalsCompleted+=KingGoalsCompleted;
+            RoyalThrone.Characters.KingVanguardActivityEvents.MatchResolved+=KingMatchResolved;
+            RoyalThrone.Characters.KingVanguardActivityEvents.PowerupCreated+=KingPowerupCreated;
+        }
         // A level interrupted by the OS (app sent to the background; on devices also focus loss, e.g. the notification
         // shade) comes back to the pause menu instead of straight into live play. Only while actually playing with no
         // popup open, so the win celebration, the fail offer and result cards are left alone.
@@ -72,8 +85,91 @@ namespace RoyalThrone.Presentation
             var lm=LevelManager.THIS;
             if(lm&&lm.gameStatus==GameState.Playing&&MenuManager.Instance&&!MenuManager.Instance.BlocksBoardInput)MenuManager.Instance.ShowMenuPause(true);
         }
-        void OnDisable(){RoyalPowerupDirector.Reaction-=React;}
-        void React(float value){excitement=Mathf.Max(excitement,value);}
+        void OnDisable()
+        {
+            RoyalPowerupDirector.Reaction-=React;
+            RoyalThrone.Characters.KingVanguardActivityEvents.ExtraMovesGranted-=KingExtraMoves;
+            RoyalThrone.Characters.KingVanguardActivityEvents.GoalsCompleted-=KingGoalsCompleted;
+            RoyalThrone.Characters.KingVanguardActivityEvents.MatchResolved-=KingMatchResolved;
+            RoyalThrone.Characters.KingVanguardActivityEvents.PowerupCreated-=KingPowerupCreated;
+            ClearKingActivity();ClearKingFeedback();
+        }
+        void React(float value)
+        {
+            // Ordinary matches have their own committed event; only stronger power-up feedback uses the VFX signal.
+            if(value>.5f)QueueKingFeedback(LevelManager.THIS,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup);
+        }
+        void KingMatchResolved(LevelManager level,int matchedPieces)
+        {QueueKingFeedback(level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Match);}
+        void KingPowerupCreated(LevelManager level,Item item)
+        {QueueKingFeedback(level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup);}
+        bool CanPresentKingFeedback(LevelManager level)
+        {
+            if(!isActiveAndEnabled||!ready||!level||level!=LevelManager.THIS||level.gameStatus!=GameState.Playing||
+                !level.GameField||!level.GameField.gameObject.activeInHierarchy||!group||group.alpha<=0||
+                (prePlay&&prePlay.gameObject.activeInHierarchy)||!kingVanguard||!kingVanguard.Mounted||
+                !kingVanguard.Character.isActiveAndEnabled||pendingKingActivity!=PendingKingActivity.None||
+                (MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput))return false;
+            var activity=kingVanguard.Character.CurrentActivity;
+            return activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.ExtraMoves&&
+                activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.Relief&&
+                activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.Sad&&
+                activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.Celebration;
+        }
+        void ClearKingFeedback()
+        {kingFeedback.Clear();feedbackKingLevel=null;feedbackKingField=null;feedbackKingAttempt=0;}
+        bool CheckKingFeedbackScope(LevelManager level)
+        {
+            if(!CanPresentKingFeedback(level)){ClearKingFeedback();return false;}
+            if(feedbackKingLevel!=level||feedbackKingField!=level.GameField||feedbackKingAttempt!=level.passLevelCounter)
+            {
+                bool changed=feedbackKingLevel||feedbackKingField;
+                ClearKingFeedback();
+                feedbackKingLevel=level;feedbackKingField=level.GameField;feedbackKingAttempt=level.passLevelCounter;
+                if(changed)kingVanguard.Character.ResetToIdle();
+            }
+            return true;
+        }
+        void QueueKingFeedback(LevelManager level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback feedback)
+        {
+            if(!level||level!=LevelManager.THIS)return;
+            if(CheckKingFeedbackScope(level))kingFeedback.Offer(feedback,Time.unscaledTime);
+        }
+        void PresentKingFeedback(LevelManager level)
+        {
+            if(!CheckKingFeedbackScope(level)||!kingFeedback.TryGet(Time.unscaledTime,out var feedback))return;
+            bool accepted=feedback==RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup
+                ?kingVanguard.PlayHappy():kingVanguard.Character.PlayMatchAcknowledgement();
+            if(accepted)kingFeedback.Accepted(Time.unscaledTime);
+        }
+        void KingExtraMoves(LevelManager level){QueueKingActivity(level,PendingKingActivity.ExtraMoves);}
+        void KingGoalsCompleted(LevelManager level){QueueKingActivity(level,PendingKingActivity.Relief);}
+        void QueueKingActivity(LevelManager level,PendingKingActivity activity)
+        {
+            if(!isActiveAndEnabled||!level||level!=LevelManager.THIS||!level.GameField||!level.GameField.gameObject.activeInHierarchy)return;
+            ClearKingFeedback();
+            // One pending action, scoped to the actual board attempt. Goal completion wins over continuation cheers.
+            if(pendingKingActivity==PendingKingActivity.Relief&&pendingKingLevel==level&&pendingKingAttempt==level.passLevelCounter)return;
+            pendingKingActivity=activity;pendingKingLevel=level;pendingKingField=level.GameField;pendingKingAttempt=level.passLevelCounter;
+        }
+        void ClearKingActivity(){pendingKingActivity=PendingKingActivity.None;pendingKingLevel=null;pendingKingField=null;}
+        void CheckKingActivity(LevelManager level)
+        {
+            if(pendingKingActivity==PendingKingActivity.None)return;
+            bool allowed=pendingKingActivity==PendingKingActivity.Relief?level.gameStatus==GameState.PreWinAnimations:level.gameStatus==GameState.Playing;
+            if(level!=pendingKingLevel||level.passLevelCounter!=pendingKingAttempt||level.GameField!=pendingKingField||!pendingKingField||!pendingKingField.gameObject.activeInHierarchy||!allowed)ClearKingActivity();
+        }
+        void PresentKingActivity()
+        {
+            if(pendingKingActivity==PendingKingActivity.None||!kingVanguard||!kingVanguard.Mounted||group.alpha<=0)return;
+            // A continue-purchase banner can still be leaving after Playing resumes. Wait until the portrait is uncovered.
+            if(pendingKingActivity==PendingKingActivity.ExtraMoves&&MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput)return;
+            ClearKingFeedback();
+            bool accepted;
+            if(pendingKingActivity==PendingKingActivity.Relief){kingVanguard.SetWorried(false);accepted=kingVanguard.Character.PlayRelief();}
+            else accepted=kingVanguard.Character.PlayExtraMoves();
+            if(accepted)ClearKingActivity();
+        }
         // Each yield only marks a frame boundary for the startup loading screen; run straight through, it is the same build.
         IEnumerator Build()
         {
@@ -81,7 +177,6 @@ namespace RoyalThrone.Presentation
             display=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             var font=Resources.Load<Font>("RoyalGameplay/Display");if(font)display=font;
             var menus=GameObject.Find("CanvasGlobal");if(menus)RoyalMenuSkin.Apply(menus.transform,display);
-            idle=RoyalPieceSkin.Art("king-idle");cheer=RoyalPieceSkin.Art("king-cheer");think=RoyalPieceSkin.Art("king-think");
             var root=Rect("Royal gameplay HUD",transform,0,0,1,1);
             var canvas=root.gameObject.AddComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=20;
             var scaler=root.gameObject.AddComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(720,1280);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
@@ -94,7 +189,7 @@ namespace RoyalThrone.Presentation
             // the live objects placed in them below.
             var goalPanel=RoyalGameplayHud.BuildPanel(header,"Royal HUD goal panel",-RoyalGameplayHud.PanelX,"Goal",display);goalPanel.heading.name="Goal heading";
             // The goals sit in the cream body, a little below its centre as in the reference; LayoutGoals places them.
-            goalArea=Rect("Goal contents",goalPanel.body,0,0,1,1);goalArea.offsetMin=new Vector2(5,4);goalArea.offsetMax=new Vector2(-5,-18);
+            goalArea=Rect("Goal contents",goalPanel.body,0,0,1,1);goalArea.offsetMin=new Vector2(5,8);goalArea.offsetMax=new Vector2(-5,-16);
             for(int i=0;i<4;i++){
                 var icon=Rect("Goal icon "+i,goalArea,0,.4f,1,.94f).gameObject.AddComponent<Image>();
                 icon.preserveAspect=true;icon.raycastTarget=false;goalIcons.Add(icon);
@@ -109,8 +204,12 @@ namespace RoyalThrone.Presentation
             RoyalGameplayHud.Style(moves,new Color(.09f,.24f,.53f),new Color(.045f,.14f,.36f),Color.clear,0,Color.clear,0,new Color(1,1,1,.35f),new Vector2(0,-1.6f));
             var portrait=RoyalGameplayHud.BuildPortrait(header);
             king=Rect("King reactions",portrait.slot,.5f,.5f,.5f,.5f);king.sizeDelta=new Vector2(196,217);king.anchoredPosition=new Vector2(0,5);
-            kingImage=king.gameObject.AddComponent<Image>();kingImage.sprite=idle;kingImage.preserveAspect=true;kingImage.raycastTarget=false;
+            kingImage=king.gameObject.AddComponent<Image>();kingImage.enabled=false;kingImage.raycastTarget=false;
             yield return null;   // the king's rig below is the build's largest single piece: a frame of its own
+            // The fresh APK-derived King Vanguard rig uses the existing UI arch and gold ring.
+            var portraitMask=RoyalGameplayHud.WindowMask(portrait.slot,"King Vanguard portrait mask");
+            kingVanguard=RoyalThrone.Characters.KingVanguardSlot.Mount(kingImage,RoyalThrone.Characters.KingVanguardCharacter.Framing.GameplayPortrait,RoyalThrone.Characters.KingVanguardSlot.Mode.Idle,portraitMask.rectTransform,false);
+            if(!kingVanguard)Destroy(portraitMask.gameObject);
             yield return null;
             // Keep the live level label available to existing diagnostics, without adding
             // a heading that is absent from the source gameplay hierarchy.
@@ -174,6 +273,7 @@ namespace RoyalThrone.Presentation
         void LateUpdate()
         {
             var lm=LevelManager.THIS;if(!lm||!ready)return;
+            CheckKingActivity(lm);
             // The board appears with the HUD, the backdrop and its styled cells from the moment it exists, its entrance slide
             // (WaitForPopup) included; only the goals card, which this overlay would cover, keeps them back.
             bool show=lm.GameField&&lm.gameStatus!=GameState.Map&&lm.GameField.gameObject.activeInHierarchy&&!(prePlay&&prePlay.gameObject.activeInHierarchy);
@@ -184,6 +284,9 @@ namespace RoyalThrone.Presentation
             hudFade=Mathf.MoveTowards(hudFade,hudShown?1:0,Time.unscaledDeltaTime/.25f);backdropFade=Mathf.MoveTowards(backdropFade,show?1:0,Time.unscaledDeltaTime/.25f);
             group.alpha=hudFade;group.blocksRaycasts=hudShown;
             backdrop.enabled=backdropFade>0;if(backdrop.color.a!=backdropFade)backdrop.color=new Color(1,1,1,backdropFade);
+            // This HUD hides by CanvasGroup, so explicitly close its character slot to clear a stale reaction on return.
+            if(kingVanguard)kingVanguard.SetShown(group.alpha>0);
+            if(group.alpha<=0)ClearKingFeedback();
             // This overlay canvas sits above the popup canvas, so while any popup is open the HUD must not take its taps.
             if(MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput)group.blocksRaycasts=false;
             if(!show)return;
@@ -194,20 +297,39 @@ namespace RoyalThrone.Presentation
                 nextHudUpdate=Time.unscaledTime+.1f;level.text="LEVEL "+lm.currentLevel;
                 bool timed=lm.limitType==LIMIT.TIME;int limit=Mathf.Max(0,lm.Limit);
                 if(movesHeading)movesHeading.text=timed?"Time":"Moves";
-                moves.text=timed?limit/60+":"+(limit%60).ToString("00"):limit.ToString();
+                string limitText=timed?limit/60+":"+(limit%60).ToString("00"):limit.ToString();
+                if(moves.text!=limitText||moves.resizeTextForBestFit){moves.text=limitText;FitLimit();}
                 foreach(var tool in railTools)if(tool&&!tool.activeSelf)tool.SetActive(true);
                 int shown=lm.targetObject==null?0:Mathf.Min(goalIcons.Count,lm.targetObject.Length);
                 for(int i=0;i<goalIcons.Count;i++){goalIcons[i].gameObject.SetActive(i<shown);goalNumbers[i].gameObject.SetActive(i<shown);}
                 if(shown>0)LayoutGoals(lm,shown);
             }
-            excitement=Mathf.MoveTowards(excitement,0,Time.deltaTime*.8f);
-            kingImage.sprite=excitement>.5f?cheer:lm.Limit<=5?think:idle;
-            bool motion=PlayerPrefs.GetInt("RoyalThrone.HomeMotion",1)!=0;
-            king.localRotation=Quaternion.Euler(0,0,motion?Mathf.Sin(Time.time*5)*Mathf.Min(excitement,1)*3:0);king.localScale=Vector3.one*(1+(motion?Mathf.Sin(Time.time*4)*.006f+Mathf.Sin(excitement*Mathf.PI)*.022f:0));
+            if(kingVanguard&&kingVanguard.Mounted)
+            {
+                // The imported APK KingUi uses its finite positive reaction, then resumes the latest low-move context.
+                // The packaged StartWorryMoveCount is 3. Time limits are not move counts.
+                kingVanguard.SetWorried(lm.gameStatus==GameState.Playing&&lm.limitType!=LIMIT.TIME&&lm.Limit<=RoyalThrone.Characters.KingVanguardCharacter.WorryMoveCount);
+                PresentKingActivity();
+                PresentKingFeedback(lm);
+            }
+            else
+            {
+                kingImage.enabled=false; // a failed new import must never expose the superseded character
+            }
             var cam=Camera.main;if(cam){if(cam.backgroundColor!=BackdropNavy)cam.backgroundColor=BackdropNavy;FrameBoard(lm,cam);backdrop.transform.position=cam.ViewportToWorldPoint(new Vector3(.5f,.5f,18));var bounds=backdrop.sprite.bounds.size;backdrop.transform.localScale=new Vector3(cam.orthographicSize*2*cam.aspect/bounds.x,cam.orthographicSize*2/bounds.y,1);}
             // A new board is styled in its first frame; after that every 0.3 s.
             if(lm.squaresArray!=styledSquares){styledSquares=lm.squaresArray;lastRefresh=0;}
             if(Time.unscaledTime>lastRefresh){lastRefresh=Time.unscaledTime+.3f;StyleBoard(lm);}
+        }
+        // The limit is drawn at the reference's size (74, its "24"); a time ("0:41") or a long count is narrowed until its digits
+        // take at most 70% of the body's width, so it keeps a clear margin. Its capitals stay centred where 74's are.
+        void FitLimit()
+        {
+            moves.resizeTextForBestFit=false;moves.horizontalOverflow=HorizontalWrapMode.Overflow;moves.fontSize=74;
+            float width=moves.preferredWidth,room=RoyalGameplayHud.BodyWidth*.7f;
+            int size=width>room?Mathf.FloorToInt(74*room/width):74;moves.fontSize=size;
+            float y=10.8f-(74-size)*RoyalGameplayHud.CapDrop;
+            moves.rectTransform.offsetMin=new Vector2(4,y);moves.rectTransform.offsetMax=new Vector2(-4,y);
         }
         // The Goals card: one column per goal. The icons share one square size, larger when there are fewer goals (the score
         // star's art fills only 80% x 75% of its square, so its box is larger); the numbers share one font size that fits the
@@ -215,7 +337,7 @@ namespace RoyalThrone.Presentation
         void LayoutGoals(LevelManager lm,int shown)
         {
             float width=goalArea.rect.width,height=goalArea.rect.height,pitch=width/shown;
-            float size=Mathf.Min(shown==1?70:shown==2?64:shown==3?50:40,pitch-8);
+            float size=Mathf.Min(shown<=2?60:shown==3?46:40,pitch-8);   // three: a clear gap between the icons
             int font=shown<=2?30:27;
             for(int i=0;i<shown;i++){
                 var target=lm.targetObject[i];var number=goalNumbers[i];
@@ -223,16 +345,33 @@ namespace RoyalThrone.Presentation
                 // Best fit stays off so every number shares one size; a box shorter than the font's line height would then
                 // truncate the text to nothing, so the numbers overflow vertically.
                 number.resizeTextForBestFit=false;number.horizontalOverflow=HorizontalWrapMode.Overflow;number.verticalOverflow=VerticalWrapMode.Overflow;number.fontSize=30;
-                float at30=number.preferredWidth;
-                while(font>16&&at30*font/30f>pitch-6)font--;
+                goalWidths[i]=number.preferredWidth;
             }
-            float textHeight=font*1.1f,gap=13,group=size+gap+textHeight,bottom=(height-group)*.5f;   // the digits' visual height
+            // One size for every number and one spacing for the columns: the largest size (up to `font`) at which neighbouring
+            // numbers stay 7 units apart and the icons 6, with the row of icons and numbers at least 5 units inside the cream at
+            // both ends. The columns keep the goal area's even share unless a long score (level 32's 5300) needs them drawn a
+            // little closer; the row is then centred on what it draws.
+            const float gap=11,margin=5;
+            float step=pitch,start=pitch*.5f;
+            for(;;font--){
+                float k=font/30f,icon=Mathf.Min(size,height-gap-font*1.1f-4);
+                float halfL=Mathf.Max(icon,goalWidths[0]*k)*.5f,halfR=Mathf.Max(icon,goalWidths[shown-1]*k)*.5f,need=icon+6;
+                for(int i=1;i<shown;i++)need=Mathf.Max(need,(goalWidths[i-1]+goalWidths[i])*k*.5f+7);
+                float room=width-2*margin-halfL-halfR;
+                step=shown>1?Mathf.Min(pitch,room/(shown-1)):pitch;
+                start=width*.5f-((shown-1)*step+halfR-halfL)*.5f;
+                if(font<=16||(shown>1?step>=need:room>=0))break;
+            }
+            float textHeight=font*1.1f;   // the digits' visual height
+            // The icon-over-number group always fits the body with a margin (one goal gets the same icon as two).
+            size=Mathf.Min(size,height-gap-textHeight-4);
+            float group=size+gap+textHeight,bottom=(height-group)*.5f;
             var star=RoyalPieceSkin.Art("star");
             for(int i=0;i<shown;i++){
-                float x=(i+.5f)*pitch;var icon=goalIcons[i];
+                float x=start+i*step;var icon=goalIcons[i];
                 float box=icon.sprite&&icon.sprite==star?size*1.2f:size;
                 Place(icon.rectTransform,x,bottom+textHeight+gap+size*.5f,box,box);
-                goalNumbers[i].fontSize=font;Place(goalNumbers[i].rectTransform,x,bottom+textHeight*.5f,pitch-4,textHeight);
+                goalNumbers[i].fontSize=font;Place(goalNumbers[i].rectTransform,x,bottom+textHeight*.5f,step-4,textHeight);
             }
         }
         static void Place(RectTransform r,float x,float y,float w,float h)

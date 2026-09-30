@@ -1,0 +1,20 @@
+{
+  "m_Component": [
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 82237
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 136366
+      }
+    }
+  ],
+  "m_Layer": 0,
+  "m_Name": "ShopMenuSingleCoinPackageItem",
+  "m_Tag": 0,
+  "m_IsActive": true
+}

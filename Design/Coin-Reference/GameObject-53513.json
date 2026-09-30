@@ -1,0 +1,26 @@
+{
+  "m_Component": [
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 72988
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 130998
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 96997
+      }
+    }
+  ],
+  "m_Layer": 0,
+  "m_Name": "FirstPurchaseBonusCoinButtonBackground",
+  "m_Tag": 0,
+  "m_IsActive": false
+}

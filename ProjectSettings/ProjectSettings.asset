@@ -94,7 +94,7 @@ PlayerSettings:
   audioSpatialExperience: 0
   deferSystemGesturesMode: 0
   hideHomeButton: 0
-  submitAnalytics: 1
+  submitAnalytics: 0
   usePlayerLog: 1
   dedicatedServerOptimizations: 0
   bakeCollisionMeshes: 0
@@ -873,10 +873,10 @@ PlayerSettings:
   webWasm2023: 1
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY
-    Standalone: UNITY_INAPPS;SENTIS_ANALYTICS_ENABLED;APP_UI_EDITOR_ONLY
-    Windows Store Apps: UNITY_ADS
-    iPhone: UNITY_ADS
+    Android: APP_UI_EDITOR_ONLY;SENTIS_ANALYTICS_ENABLED
+    Standalone: APP_UI_EDITOR_ONLY
+    Windows Store Apps: 
+    iPhone: 
   additionalCompilerArguments: {}
   platformArchitecture:
     iPhone: 1

@@ -12,12 +12,26 @@ namespace RoyalThrone.Presentation
         public Color bottomColor = Color.white;
         [Min(0)] public float cornerRadius = 24;
         public bool diamond;
+        public bool sunRosette;
 
         protected override void OnPopulateMesh(VertexHelper mesh)
         {
             mesh.Clear();
             Rect rect = GetPixelAdjustedRect();
             AddVertex(mesh, rect.center, rect);
+            if (sunRosette)
+            {
+                const int points = 24;
+                float sealRadius = Mathf.Min(rect.width, rect.height) * .5f;
+                for (int i = 0; i < points; i++)
+                {
+                    float angle = (90f + i * 360f / points) * Mathf.Deg2Rad;
+                    float reach = sealRadius * (i % 2 == 0 ? 1 : .79f);
+                    AddVertex(mesh, rect.center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * reach, rect);
+                }
+                for (int i = 0; i < points; i++) mesh.AddTriangle(0, i + 1, (i + 1) % points + 1);
+                return;
+            }
             if (diamond)
             {
                 AddVertex(mesh, new Vector2(rect.center.x, rect.yMax), rect);

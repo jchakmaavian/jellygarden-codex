@@ -1,0 +1,1752 @@
+{
+  "name": "TntLightballCreationAnimation",
+  "duration": 0.5,
+  "frameRate": 60.0,
+  "loop": false,
+  "curves": [
+    {
+      "path": "FitilMask",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.18000000715255737,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.05000000074505806,
+          "value": -0.18299999833106995,
+          "inSlope": -0.0899997305870051,
+          "outSlope": -0.0899997279047966
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": -0.20000000298023224,
+          "inSlope": 2.5630049194091953e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": -0.20000000298023224,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": -0.19300000369548798,
+          "inSlope": -2.6226028460030193e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": -0.19300000369548798,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": -0.17599999904632568,
+          "inSlope": 0.3857144560700809,
+          "outSlope": 0.3857143819332123
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": -0.14800000190734863,
+          "inSlope": 0.6269999611149248,
+          "outSlope": 0.6270000338554382
+        },
+        {
+          "time": 0.5,
+          "value": -0.09239999949932098,
+          "inSlope": 4.5108887292144573e-07,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilMask",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.09000000357627869,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.05000000074505806,
+          "value": 0.05900000035762787,
+          "inSlope": 1.5600004369020528,
+          "outSlope": 1.559999942779541
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": 0.11800000071525574,
+          "inSlope": 0.7866665436824021,
+          "outSlope": 0.7866666316986084
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": 0.1770000010728836,
+          "inSlope": 0.8314282439720526,
+          "outSlope": 0.8314286470413208
+        },
+        {
+          "time": 0.25,
+          "value": 0.2150000035762787,
+          "inSlope": 0.29999953372150956,
+          "outSlope": 0.2999996840953827
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.22499999403953552,
+          "inSlope": 0.3428568444364053,
+          "outSlope": 0.3428567945957184
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 0.2800000011920929,
+          "inSlope": 0.1919996523632168,
+          "outSlope": 0.19200022518634796
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 0.2856000065803528,
+          "inSlope": -2.0257639371523695e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.26649999618530273,
+          "inSlope": 2.0313268889182723e-07,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilMask",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.05000000074505806,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilPartikul",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.164000004529953,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.05000000074505806,
+          "value": -0.1850000023841858,
+          "inSlope": 3.427267127875666e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": -0.1720000058412552,
+          "inSlope": 0.3200000880162368,
+          "outSlope": 0.3200000524520874
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": -0.13699999451637268,
+          "inSlope": 0.48857132886144317,
+          "outSlope": 0.48857149481773376
+        },
+        {
+          "time": 0.25,
+          "value": -0.11500000208616257,
+          "inSlope": 0.4274999745402587,
+          "outSlope": 0.4274999499320984
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": -0.07999999821186066,
+          "inSlope": 0.805714018089321,
+          "outSlope": 0.8057142496109009
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": -0.020999999716877937,
+          "inSlope": 0.8057145944664121,
+          "outSlope": 0.8057144284248352
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 0.014000000432133675,
+          "inSlope": 3.780651414153624e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0010000000474974513,
+          "inSlope": -9.536963663236975e-09,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilPartikul",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.1509999930858612,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.05000000074505806,
+          "value": 0.16200000047683716,
+          "inSlope": 0.33000019073486264,
+          "outSlope": 0.33000022172927856
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": 0.2590000033378601,
+          "inSlope": 0.9533330119650207,
+          "outSlope": 0.95333331823349
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": 0.3050000071525574,
+          "inSlope": 0.6514284905365785,
+          "outSlope": 0.6514286398887634
+        },
+        {
+          "time": 0.25,
+          "value": 0.33500000834465027,
+          "inSlope": 0.23999936206014882,
+          "outSlope": 0.23999957740306854
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.34299999475479126,
+          "inSlope": -3.627933659045013e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 0.33799999952316284,
+          "inSlope": -0.17142846431049458,
+          "outSlope": -0.17142844200134277
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 0.29499998688697815,
+          "inSlope": -0.5250000921436704,
+          "outSlope": -0.5249999761581421
+        },
+        {
+          "time": 0.5,
+          "value": 0.2680000066757202,
+          "inSlope": 1.8358146824937194e-07,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilPartikul",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.05000000074505806,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilMask",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilMask",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilMask",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": -12.372000694274902,
+          "inSlope": -146.20499169886165,
+          "outSlope": -146.2050018310547
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": -29.24100112915039,
+          "inSlope": -270.60866272006206,
+          "outSlope": -270.60858154296875
+        },
+        {
+          "time": 0.25,
+          "value": -43.94300079345703,
+          "inSlope": -325.8150434352624,
+          "outSlope": -325.8150329589844
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": -72.6830062866211,
+          "inSlope": -473.1257788562311,
+          "outSlope": -473.125732421875
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": -99.14100646972656,
+          "inSlope": -403.2683637377545,
+          "outSlope": -403.26861572265625
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": -119.73100280761719,
+          "inSlope": -352.0274743634566,
+          "outSlope": -352.0274963378906
+        },
+        {
+          "time": 0.5,
+          "value": -146.0780029296875,
+          "inSlope": 0.0002770957430584531,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilMask",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 40.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 47.75600051879883,
+          "inSlope": 34.89466349196388,
+          "outSlope": 34.8946647644043
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 55.702598571777344,
+          "inSlope": 56.816738287498026,
+          "outSlope": 56.816715240478516
+        },
+        {
+          "time": 0.5,
+          "value": 58.06996154785156,
+          "inSlope": -9.968283180228354e-06,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilMask",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 40.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 40.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 40.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 43.323997497558594,
+          "inSlope": -2.6740908481315273e-05,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilMask",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilGolge",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilGolge",
+      "typeID": 212,
+      "property": "m_Color.a",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.800000011920929,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.05000000074505806,
+          "value": 0.0,
+          "inSlope": -4.673004212918386e-06,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilMask",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Fitil02",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "FitilPartikul",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.003000000026077032,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.003000000026077032,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.15299999713897705,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.15299999713897705,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.02199999988079071,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.02199999988079071,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.08299999684095383,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": -0.08299999684095383,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0010000000474974513,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0010000000474974513,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.10899999737739563,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": -0.10899999737739563,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.014999999664723873,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.014999999664723873,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.16300000250339508,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": -0.16300000250339508,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 9.999999747378752e-05,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 9.999999747378752e-05,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.4180000126361847,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.4180000126361847,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.6760000586509705,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": -0.6760000586509705,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Govde",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "GovdeOn",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0125000476837158,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0125000476837158,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntArka",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntHalka",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "TntYazi",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Main",
+      "typeID": 212,
+      "property": "m_Color.a",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Main/Shadow",
+      "typeID": 212,
+      "property": "m_Color.a",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.3529411852359772,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.5,
+          "value": 0.3529411852359772,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    }
+  ],
+  "missingBindings": [],
+  "pathId": 17029
+}

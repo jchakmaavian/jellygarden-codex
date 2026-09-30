@@ -11,9 +11,9 @@
 // // THE SOFTWARE.
 
 using UnityEngine;
-using UnityEngine.Advertisements;
 
 #if UNITY_ADS
+using UnityEngine.Advertisements;
 namespace JellyGarden.Scripts.Integrations
 {
     public class UnityAdsController : MonoBehaviour, IUnityAdsInitializationListener, IUnityAdsLoadListener,
@@ -30,6 +30,7 @@ namespace JellyGarden.Scripts.Integrations
         
         public void InitAds(string androidID,string iOSID)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
 #if UNITY_ANDROID
             Advertisement.Initialize(androidID, false, this);
 #elif UNITY_IOS
@@ -39,11 +40,13 @@ namespace JellyGarden.Scripts.Integrations
 
         public void ShowAds(string loadAdType)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             Advertisement.Show(loadAdType, this);
         }
 
         public void LoadUnityRewardedAd()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             string videoAdsZone = (Application.platform == RuntimePlatform.IPhonePlayer)
                 ? InitScript.Instance.unityAds.unityRewardedIOS
                 : InitScript.Instance.unityAds.unityRewardedAndroid;
@@ -52,6 +55,7 @@ namespace JellyGarden.Scripts.Integrations
 
         public void LoadUnityInterstitialAd()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             string interstitialAdsZone =
                 (Application.platform == RuntimePlatform.IPhonePlayer)
                     ? InitScript.Instance.unityAds.unityInterstitialIOS

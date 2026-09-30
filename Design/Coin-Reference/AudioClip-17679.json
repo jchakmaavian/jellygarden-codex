@@ -1,0 +1,20 @@
+{
+  "m_Name": "coin_collect",
+  "m_LoadType": 0,
+  "m_Channels": 1,
+  "m_Frequency": 44100,
+  "m_BitsPerSample": 16,
+  "m_Length": 0.3173469305038452,
+  "m_IsTrackerFormat": false,
+  "m_Ambisonic": false,
+  "m_SubsoundIndex": 0,
+  "m_PreloadAudioData": true,
+  "m_LoadInBackground": false,
+  "m_Legacy3D": true,
+  "m_Resource": {
+    "m_Source": "resources.resource",
+    "m_Offset": 3125216,
+    "m_Size": 3360
+  },
+  "m_CompressionFormat": 1
+}

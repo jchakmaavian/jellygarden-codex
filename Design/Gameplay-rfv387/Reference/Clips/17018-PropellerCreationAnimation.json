@@ -1,0 +1,1219 @@
+{
+  "name": "PropellerCreationAnimation",
+  "duration": 1.316666603088379,
+  "frameRate": 60.0,
+  "loop": false,
+  "curves": [
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.009999999776482582,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": -0.009999999776482582,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": -0.009999999776482582,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": -0.009999999776482582,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.0949999988079071,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": -0.13199999928474426,
+          "inSlope": 1.9848347521111975e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": -0.0949999988079071,
+          "inSlope": -6.352820491883904e-10,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": -0.0949999988079071,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.007000000216066837,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.010999999940395355,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": -0.009999999776482582,
+          "inSlope": 2.129870102507425e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 0.00800000037997961,
+          "inSlope": 1.9311906163110848e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5833333134651184,
+          "value": 0.003000000026077032,
+          "inSlope": -3.5698182465626616e-09,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.00800000037997961,
+          "inSlope": -3.915114475672166e-09,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.04899999871850014,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.04500000178813934,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.13239094614982605,
+          "inSlope": 0.3637387549253335,
+          "outSlope": 0.36373934149742126
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 0.14300000667572021,
+          "inSlope": 4.224891214654747e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5833333134651184,
+          "value": 0.0989999994635582,
+          "inSlope": -9.443639248374325e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.11599999666213989,
+          "inSlope": 5.2570073849622645e-09,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.25,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5833333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin01",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.02199999988079071,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.027000000700354576,
+          "inSlope": -2.6822094961742593e-09,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.46666666865348816,
+          "value": 0.027000000700354576,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.02408505044877529,
+          "inSlope": -0.03333333215597714,
+          "outSlope": -0.03333333879709244
+        },
+        {
+          "time": 0.6166666746139526,
+          "value": 0.02199999988079071,
+          "inSlope": -7.1120988959227915e-09,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.02199999988079071,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin01",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.06599999964237213,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.07099995017051697,
+          "inSlope": 0.04285672177159109,
+          "outSlope": 0.042856719344854355
+        },
+        {
+          "time": 0.46666666865348816,
+          "value": 0.10500000417232513,
+          "inSlope": 4.0802883294333014e-09,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0838371217250824,
+          "inSlope": -0.2600000122713281,
+          "outSlope": -0.2600000202655792
+        },
+        {
+          "time": 0.6166666746139526,
+          "value": 0.06599999964237213,
+          "inSlope": 6.763093540751441e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.06599999964237213,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin01",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.46666666865348816,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.6166666746139526,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin02",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.03790000081062317,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.042899999767541885,
+          "inSlope": -2.6822086079958396e-09,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.46666666865348816,
+          "value": 0.042899999767541885,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0399850495159626,
+          "inSlope": -0.033333312287755115,
+          "outSlope": -0.033333323895931244
+        },
+        {
+          "time": 0.6166666746139526,
+          "value": 0.03790000081062317,
+          "inSlope": 3.0206974421798094e-09,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.03790000081062317,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin02",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.15299999713897705,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.15800000727176666,
+          "inSlope": 0.04285723586168159,
+          "outSlope": 0.04285723343491554
+        },
+        {
+          "time": 0.46666666865348816,
+          "value": 0.19200000166893005,
+          "inSlope": -1.588748443914767e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.17083710432052612,
+          "inSlope": -0.2600000917440741,
+          "outSlope": -0.2600000202655792
+        },
+        {
+          "time": 0.6166666746139526,
+          "value": 0.15299999713897705,
+          "inSlope": 8.034667098311132e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.15299999713897705,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin02",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.46666666865348816,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.6166666746139526,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": -5.0,
+          "inSlope": 2.6822091001577064e-06,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 4.450547010037553e-06,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5833333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.7166666388511658,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.9333333373069763,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.149999976158142,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5833333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.7166666388511658,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.9333333373069763,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.149999976158142,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.5833333134651184,
+          "value": 25.0,
+          "inSlope": -0.00029178631302784197,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.7166666388511658,
+          "value": -16.0,
+          "inSlope": 4.6279402795335045e-05,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.9333333373069763,
+          "value": 19.19500160217285,
+          "inSlope": -5.8361523997518816e-05,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.149999976158142,
+          "value": -5.0,
+          "inSlope": -7.543664639797498e-05,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 0.0,
+          "inSlope": 6.612316383325378e-07,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.7166666388511658,
+          "value": 1.0118627548217773,
+          "inSlope": 3.8396028023690576e-10,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.9333333373069763,
+          "value": 1.0,
+          "inSlope": -8.762395253825161e-10,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.7166666388511658,
+          "value": 0.9016333222389221,
+          "inSlope": 2.9975845250440614e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.9333333373069763,
+          "value": 1.0,
+          "inSlope": 9.624786700968002e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.7166666388511658,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.9333333373069763,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 0.8948437571525574,
+          "inSlope": 5.6410207394108625e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 1.0,
+          "inSlope": -1.0222066215703762e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/PinIsik",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan/FanImage",
+      "typeID": 212,
+      "property": "m_Color.a",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.772549033164978,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.3499999940395355,
+          "value": 1.0,
+          "inSlope": -5.042281303602181e-08,
+          "outSlope": 0.0
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan/FanImage",
+      "typeID": 212,
+      "property": "m_Sprite",
+      "isPPtr": true,
+      "keys": [
+        {
+          "time": 0.01666666753590107,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24025
+        },
+        {
+          "time": 0.03333333507180214,
+          "value": 2.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23942
+        },
+        {
+          "time": 0.05000000074505806,
+          "value": 3.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23772
+        },
+        {
+          "time": 0.06666667014360428,
+          "value": 4.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24025
+        },
+        {
+          "time": 0.0833333358168602,
+          "value": 5.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23942
+        },
+        {
+          "time": 0.10000000149011612,
+          "value": 6.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24025
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 7.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23942
+        },
+        {
+          "time": 0.13333334028720856,
+          "value": 8.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23772
+        },
+        {
+          "time": 0.15000000596046448,
+          "value": 9.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24025
+        },
+        {
+          "time": 0.1666666716337204,
+          "value": 10.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23942
+        },
+        {
+          "time": 0.18333333730697632,
+          "value": 11.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24025
+        },
+        {
+          "time": 0.20000000298023224,
+          "value": 12.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23942
+        },
+        {
+          "time": 0.21666666865348816,
+          "value": 13.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23772
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 14.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24025
+        },
+        {
+          "time": 0.25,
+          "value": 15.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23942
+        },
+        {
+          "time": 0.2666666805744171,
+          "value": 16.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23758
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 17.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 23719
+        },
+        {
+          "time": 0.30000001192092896,
+          "value": 18.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24357
+        },
+        {
+          "time": 0.3166666626930237,
+          "value": 19.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24236
+        },
+        {
+          "time": 0.3333333432674408,
+          "value": 20.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 19027
+        },
+        {
+          "time": 0.3499999940395355,
+          "value": 21.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24333
+        },
+        {
+          "time": 0.36666667461395264,
+          "value": 22.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 18943
+        },
+        {
+          "time": 0.38333332538604736,
+          "value": 23.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 18758
+        },
+        {
+          "time": 0.4000000059604645,
+          "value": 24.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24708
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 25.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24642
+        },
+        {
+          "time": 0.4333333373069763,
+          "value": 26.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 18388
+        },
+        {
+          "time": 0.44999998807907104,
+          "value": 27.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24642
+        },
+        {
+          "time": 0.46666666865348816,
+          "value": 28.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24708
+        },
+        {
+          "time": 0.4833333194255829,
+          "value": 29.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 18758
+        },
+        {
+          "time": 0.5,
+          "value": 30.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 18943
+        },
+        {
+          "time": 0.5166666507720947,
+          "value": 31.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 24333
+        },
+        {
+          "time": 0.5333333611488342,
+          "value": 32.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 18558
+        },
+        {
+          "time": 1.2999999523162842,
+          "value": 33.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0,
+          "objectPathId": 18558
+        }
+      ]
+    }
+  ],
+  "missingBindings": [],
+  "pathId": 17018
+}

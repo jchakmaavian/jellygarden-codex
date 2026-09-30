@@ -1,0 +1,501 @@
+PASS Separate reference QA profile selected
+PASS Level 21: opens and settles
+PASS Level 21: dimensions and moves reach runtime
+PASS Level 21: exact board holes
+PASS Level 21: all goals reach runtime
+PASS Level 21: authored gem 1
+PASS Level 21: authored gem 6
+PASS Level 21: authored gem 14
+PASS Level 21: authored gem 17
+PASS Level 21: authored gem 25
+PASS Level 21: authored gem 30
+PASS Level 21: authored gem 37
+PASS Level 21: authored gem 41
+PASS Level 21: authored gem 46
+PASS Level 21: authored gem 50
+PASS Level 21: authored gem 51
+PASS Level 21: authored gem 54
+PASS Level 21: settled item ownership
+PASS Level 21: has a legal swap or existing power action
+PASS Level 21: real action spends exactly one move
+PASS Level 21: real action scores through match/blast resolution
+PASS Level 21: real clear, gravity and refill settle with valid ownership
+PASS Level 21: mailbox emits at most one mail per wave
+PASS Level 21: mailbox stays fixed after emitting mail
+PASS Level 22: opens and settles
+PASS Level 22: dimensions and moves reach runtime
+PASS Level 22: exact board holes
+PASS Level 22: all goals reach runtime
+PASS Level 22: authored gem 24
+PASS Level 22: authored gem 42
+PASS Level 22: authored gem 48
+PASS Level 22: authored gem 51
+PASS Level 22: authored gem 58
+PASS Level 22: authored gem 67
+PASS Level 22: settled item ownership
+PASS Level 22: has a legal swap or existing power action
+PASS Level 22: real action spends exactly one move
+PASS Level 22: real action scores through match/blast resolution
+PASS Level 22: real clear, gravity and refill settle with valid ownership
+PASS Level 22: mailbox emits at most one mail per wave
+PASS Level 22: mailbox stays fixed after emitting mail
+PASS Level 23: opens and settles
+PASS Level 23: dimensions and moves reach runtime
+PASS Level 23: exact board holes
+PASS Level 23: all goals reach runtime
+PASS Level 23: authored gem 3
+PASS Level 23: authored gem 4
+PASS Level 23: authored gem 5
+PASS Level 23: authored gem 6
+PASS Level 23: authored gem 7
+PASS Level 23: authored gem 11
+PASS Level 23: authored gem 12
+PASS Level 23: authored gem 13
+PASS Level 23: authored gem 14
+PASS Level 23: authored gem 15
+PASS Level 23: box health 17
+PASS Level 23: box health 18
+PASS Level 23: box health 19
+PASS Level 23: box health 20
+PASS Level 23: box health 21
+PASS Level 23: authored gem 22
+PASS Level 23: authored gem 23
+PASS Level 23: box health 25
+PASS Level 23: box health 26
+PASS Level 23: box health 27
+PASS Level 23: box health 28
+PASS Level 23: box health 29
+PASS Level 23: authored gem 30
+PASS Level 23: authored gem 31
+PASS Level 23: box health 33
+PASS Level 23: box health 34
+PASS Level 23: box health 35
+PASS Level 23: box health 36
+PASS Level 23: box health 37
+PASS Level 23: authored gem 38
+PASS Level 23: authored gem 39
+PASS Level 23: box health 41
+PASS Level 23: box health 42
+PASS Level 23: box health 43
+PASS Level 23: box health 44
+PASS Level 23: box health 45
+PASS Level 23: box health 49
+PASS Level 23: box health 50
+PASS Level 23: box health 51
+PASS Level 23: box health 52
+PASS Level 23: box health 53
+PASS Level 23: settled item ownership
+PASS Level 23: has a legal swap or existing power action
+PASS Level 23: real action spends exactly one move
+PASS Level 23: real action scores through match/blast resolution
+PASS Level 23: real clear, gravity and refill settle with valid ownership
+PASS Level 23: box loses one layer from a direct Square hit
+PASS Level 23: same-wave repeated contact cannot remove a second box layer
+PASS Level 23: cleared box releases its cell for normal gravity/refill
+PASS Level 23: all box layers credit exactly one box goal
+PASS Level 23: mailbox emits at most one mail per wave
+PASS Level 23: mailbox stays fixed after emitting mail
+PASS Level 24: opens and settles
+PASS Level 24: dimensions and moves reach runtime
+PASS Level 24: exact board holes
+PASS Level 24: all goals reach runtime
+PASS Level 24: grass layers 5
+PASS Level 24: grass layers 6
+PASS Level 24: grass layers 7
+PASS Level 24: grass layers 8
+PASS Level 24: grass layers 14
+PASS Level 24: grass layers 15
+PASS Level 24: grass layers 16
+PASS Level 24: grass layers 17
+PASS Level 24: grass layers 23
+PASS Level 24: grass layers 24
+PASS Level 24: grass layers 25
+PASS Level 24: grass layers 26
+PASS Level 24: grass layers 32
+PASS Level 24: grass layers 33
+PASS Level 24: grass layers 34
+PASS Level 24: grass layers 35
+PASS Level 24: grass layers 50
+PASS Level 24: grass layers 51
+PASS Level 24: grass layers 52
+PASS Level 24: grass layers 53
+PASS Level 24: grass layers 59
+PASS Level 24: grass layers 60
+PASS Level 24: grass layers 61
+PASS Level 24: grass layers 62
+PASS Level 24: grass layers 68
+PASS Level 24: grass layers 69
+PASS Level 24: grass layers 70
+PASS Level 24: grass layers 71
+PASS Level 24: grass layers 77
+PASS Level 24: grass layers 78
+PASS Level 24: grass layers 79
+PASS Level 24: grass layers 80
+PASS Level 24: settled item ownership
+PASS Level 24: has a legal swap or existing power action
+PASS Level 24: real action spends exactly one move
+PASS Level 24: real action scores through match/blast resolution
+PASS Level 24: real clear, gravity and refill settle with valid ownership
+PASS Level 24: grass loses one layer per contact wave
+PASS Level 24: grass layers credit exactly one grass cell
+PASS Level 24: mailbox emits at most one mail per wave
+PASS Level 24: mailbox stays fixed after emitting mail
+PASS Level 25: opens and settles
+PASS Level 25: dimensions and moves reach runtime
+PASS Level 25: exact board holes
+PASS Level 25: all goals reach runtime
+PASS Level 25: authored gem 11
+PASS Level 25: authored gem 19
+PASS Level 25: authored gem 21
+PASS Level 25: authored gem 22
+PASS Level 25: box health 27
+PASS Level 25: box health 28
+PASS Level 25: box health 29
+PASS Level 25: box health 30
+PASS Level 25: box health 31
+PASS Level 25: box health 32
+PASS Level 25: box health 33
+PASS Level 25: box health 34
+PASS Level 25: box health 35
+PASS Level 25: box health 36
+PASS Level 25: box health 37
+PASS Level 25: box health 38
+PASS Level 25: box health 39
+PASS Level 25: box health 40
+PASS Level 25: box health 41
+PASS Level 25: box health 42
+PASS Level 25: box health 43
+PASS Level 25: box health 44
+PASS Level 25: box health 45
+PASS Level 25: box health 46
+PASS Level 25: box health 47
+PASS Level 25: box health 48
+PASS Level 25: box health 49
+PASS Level 25: box health 50
+PASS Level 25: box health 51
+PASS Level 25: box health 52
+PASS Level 25: box health 53
+PASS Level 25: box health 54
+PASS Level 25: box health 55
+PASS Level 25: box health 56
+PASS Level 25: box health 57
+PASS Level 25: box health 58
+PASS Level 25: box health 59
+PASS Level 25: box health 60
+PASS Level 25: box health 61
+PASS Level 25: box health 62
+PASS Level 25: shared 2x2 obstacle 66
+PASS Level 25: shared 2x2 obstacle 68
+PASS Level 25: shared 2x2 obstacle 70
+PASS Level 25: settled item ownership
+PASS Level 25: has a legal swap or existing power action
+PASS Level 25: real action spends exactly one move
+PASS Level 25: real action scores through match/blast resolution
+PASS Level 25: real clear, gravity and refill settle with valid ownership
+PASS Level 25: box loses one layer from a direct Square hit
+PASS Level 25: same-wave repeated contact cannot remove a second box layer
+PASS Level 25: cleared box releases its cell for normal gravity/refill
+PASS Level 25: all box layers credit exactly one box goal
+PASS Level 25: Cupboard shares state across opposite footprint corners
+PASS Level 25: Cupboard receives one hit per wave across its 2×2 footprint
+PASS Level 25: Cupboard releases all footprint cells after its last unit
+PASS Level 25: Cupboard credits each remaining authored goal unit once
+PASS Level 25: mailbox emits at most one mail per wave
+PASS Level 25: mailbox stays fixed after emitting mail
+PASS Level 26: opens and settles
+PASS Level 26: dimensions and moves reach runtime
+PASS Level 26: exact board holes
+PASS Level 26: all goals reach runtime
+PASS Level 26: box health 0
+PASS Level 26: authored gem 2
+PASS Level 26: authored gem 7
+PASS Level 26: box health 8
+PASS Level 26: box health 9
+PASS Level 26: authored gem 10
+PASS Level 26: authored gem 14
+PASS Level 26: authored gem 16
+PASS Level 26: box health 17
+PASS Level 26: box health 18
+PASS Level 26: authored gem 19
+PASS Level 26: authored gem 21
+PASS Level 26: authored gem 22
+PASS Level 26: authored gem 24
+PASS Level 26: box health 26
+PASS Level 26: box health 27
+PASS Level 26: box health 28
+PASS Level 26: box health 29
+PASS Level 26: box health 30
+PASS Level 26: box health 31
+PASS Level 26: box health 32
+PASS Level 26: box health 33
+PASS Level 26: box health 34
+PASS Level 26: box health 35
+PASS Level 26: grass layers 45
+PASS Level 26: grass layers 46
+PASS Level 26: grass layers 47
+PASS Level 26: grass layers 48
+PASS Level 26: grass layers 49
+PASS Level 26: grass layers 50
+PASS Level 26: grass layers 51
+PASS Level 26: grass layers 52
+PASS Level 26: grass layers 53
+PASS Level 26: grass layers 54
+PASS Level 26: grass layers 55
+PASS Level 26: grass layers 56
+PASS Level 26: grass layers 57
+PASS Level 26: grass layers 58
+PASS Level 26: grass layers 59
+PASS Level 26: grass layers 60
+PASS Level 26: grass layers 61
+PASS Level 26: grass layers 62
+PASS Level 26: grass layers 63
+PASS Level 26: grass layers 64
+PASS Level 26: grass layers 65
+PASS Level 26: grass layers 66
+PASS Level 26: grass layers 67
+PASS Level 26: grass layers 68
+PASS Level 26: grass layers 69
+PASS Level 26: grass layers 70
+PASS Level 26: grass layers 71
+PASS Level 26: grass layers 72
+PASS Level 26: grass layers 73
+PASS Level 26: grass layers 74
+PASS Level 26: grass layers 75
+PASS Level 26: grass layers 76
+PASS Level 26: grass layers 77
+PASS Level 26: grass layers 78
+PASS Level 26: grass layers 79
+PASS Level 26: grass layers 80
+PASS Level 26: settled item ownership
+PASS Level 26: has a legal swap or existing power action
+PASS Level 26: real action spends exactly one move
+PASS Level 26: real action scores through match/blast resolution
+PASS Level 26: real clear, gravity and refill settle with valid ownership
+PASS Level 26: box loses one layer from a direct Square hit
+PASS Level 26: same-wave repeated contact cannot remove a second box layer
+PASS Level 26: cleared box releases its cell for normal gravity/refill
+PASS Level 26: all box layers credit exactly one box goal
+PASS Level 26: grass loses one layer per contact wave
+PASS Level 26: grass layers credit exactly one grass cell
+PASS Level 27: opens and settles
+PASS Level 27: dimensions and moves reach runtime
+PASS Level 27: exact board holes
+PASS Level 27: all goals reach runtime
+PASS Level 27: authored gem 3
+PASS Level 27: box health 4
+PASS Level 27: grass layers 4
+PASS Level 27: box health 5
+PASS Level 27: grass layers 5
+PASS Level 27: box health 6
+PASS Level 27: grass layers 6
+PASS Level 27: box health 7
+PASS Level 27: grass layers 7
+PASS Level 27: authored gem 11
+PASS Level 27: box health 12
+PASS Level 27: grass layers 12
+PASS Level 27: box health 13
+PASS Level 27: grass layers 13
+PASS Level 27: box health 14
+PASS Level 27: grass layers 14
+PASS Level 27: box health 15
+PASS Level 27: grass layers 15
+PASS Level 27: authored gem 18
+PASS Level 27: box health 20
+PASS Level 27: grass layers 20
+PASS Level 27: box health 21
+PASS Level 27: grass layers 21
+PASS Level 27: box health 22
+PASS Level 27: grass layers 22
+PASS Level 27: box health 23
+PASS Level 27: grass layers 23
+PASS Level 27: authored gem 27
+PASS Level 27: box health 28
+PASS Level 27: grass layers 28
+PASS Level 27: box health 29
+PASS Level 27: grass layers 29
+PASS Level 27: box health 30
+PASS Level 27: grass layers 30
+PASS Level 27: box health 31
+PASS Level 27: grass layers 31
+PASS Level 27: shared 2x2 obstacle 32
+PASS Level 27: shared 2x2 obstacle 34
+PASS Level 27: authored gem 36
+PASS Level 27: authored gem 37
+PASS Level 27: authored gem 39
+PASS Level 27: authored gem 46
+PASS Level 27: shared 2x2 obstacle 48
+PASS Level 27: shared 2x2 obstacle 50
+PASS Level 27: settled item ownership
+PASS Level 27: has a legal swap or existing power action
+PASS Level 27: real action spends exactly one move
+PASS Level 27: real action scores through match/blast resolution
+PASS Level 27: real clear, gravity and refill settle with valid ownership
+PASS Level 27: Cupboard shares state across opposite footprint corners
+PASS Level 27: Cupboard receives one hit per wave across its 2×2 footprint
+PASS Level 27: Cupboard releases all footprint cells after its last unit
+PASS Level 27: Cupboard credits each remaining authored goal unit once
+PASS Level 27: grass loses one layer per contact wave
+PASS Level 27: grass layers credit exactly one grass cell
+PASS Level 28: opens and settles
+PASS Level 28: dimensions and moves reach runtime
+PASS Level 28: exact board holes
+PASS Level 28: all goals reach runtime
+PASS Level 28: shared 2x2 obstacle 0
+PASS Level 28: box health 2
+PASS Level 28: box health 3
+PASS Level 28: box health 4
+PASS Level 28: box health 5
+PASS Level 28: shared 2x2 obstacle 6
+PASS Level 28: box health 10
+PASS Level 28: box health 11
+PASS Level 28: box health 12
+PASS Level 28: box health 13
+PASS Level 28: shared 2x2 obstacle 16
+PASS Level 28: box health 18
+PASS Level 28: box health 19
+PASS Level 28: box health 20
+PASS Level 28: box health 21
+PASS Level 28: shared 2x2 obstacle 22
+PASS Level 28: box health 26
+PASS Level 28: box health 27
+PASS Level 28: box health 28
+PASS Level 28: box health 29
+PASS Level 28: shared 2x2 obstacle 32
+PASS Level 28: box health 34
+PASS Level 28: box health 37
+PASS Level 28: shared 2x2 obstacle 38
+PASS Level 28: box health 42
+PASS Level 28: box health 43
+PASS Level 28: box health 44
+PASS Level 28: box health 45
+PASS Level 28: shared 2x2 obstacle 48
+PASS Level 28: box health 50
+PASS Level 28: box health 51
+PASS Level 28: box health 52
+PASS Level 28: box health 53
+PASS Level 28: shared 2x2 obstacle 54
+PASS Level 28: box health 58
+PASS Level 28: box health 59
+PASS Level 28: box health 60
+PASS Level 28: box health 61
+PASS Level 28: shared 2x2 obstacle 64
+PASS Level 28: shared 2x2 obstacle 66
+PASS Level 28: shared 2x2 obstacle 68
+PASS Level 28: shared 2x2 obstacle 70
+PASS Level 28: settled item ownership
+PASS Level 28: has a legal swap or existing power action
+PASS Level 28: native power activation accepted
+PASS Level 28: real action spends exactly one move
+PASS Level 28: real action scores through match/blast resolution
+PASS Level 28: real clear, gravity and refill settle with valid ownership
+PASS Level 28: box loses one layer from a direct Square hit
+PASS Level 28: same-wave repeated contact cannot remove a second box layer
+PASS Level 28: cleared box releases its cell for normal gravity/refill
+PASS Level 28: all box layers credit exactly one box goal
+PASS Level 28: Cupboard shares state across opposite footprint corners
+PASS Level 28: Cupboard receives one hit per wave across its 2×2 footprint
+PASS Level 28: Cupboard releases all footprint cells after its last unit
+PASS Level 28: Cupboard credits each remaining authored goal unit once
+PASS Level 29: opens and settles
+PASS Level 29: dimensions and moves reach runtime
+PASS Level 29: exact board holes
+PASS Level 29: all goals reach runtime
+PASS Level 29: grass layers 0
+PASS Level 29: grass layers 1
+PASS Level 29: grass layers 2
+PASS Level 29: grass layers 3
+PASS Level 29: grass layers 4
+PASS Level 29: grass layers 5
+PASS Level 29: grass layers 6
+PASS Level 29: grass layers 7
+PASS Level 29: grass layers 8
+PASS Level 29: grass layers 9
+PASS Level 29: grass layers 10
+PASS Level 29: grass layers 11
+PASS Level 29: grass layers 12
+PASS Level 29: grass layers 13
+PASS Level 29: grass layers 14
+PASS Level 29: grass layers 15
+PASS Level 29: grass layers 16
+PASS Level 29: grass layers 17
+PASS Level 29: authored gem 32
+PASS Level 29: authored gem 36
+PASS Level 29: authored gem 40
+PASS Level 29: authored gem 41
+PASS Level 29: authored gem 46
+PASS Level 29: authored gem 47
+PASS Level 29: authored gem 48
+PASS Level 29: authored gem 49
+PASS Level 29: authored gem 50
+PASS Level 29: authored gem 51
+PASS Level 29: authored gem 52
+PASS Level 29: authored gem 53
+PASS Level 29: box health 54
+PASS Level 29: box health 55
+PASS Level 29: box health 56
+PASS Level 29: box health 57
+PASS Level 29: box health 58
+PASS Level 29: box health 59
+PASS Level 29: box health 60
+PASS Level 29: box health 61
+PASS Level 29: box health 62
+PASS Level 29: box health 63
+PASS Level 29: box health 64
+PASS Level 29: box health 65
+PASS Level 29: box health 66
+PASS Level 29: box health 67
+PASS Level 29: box health 68
+PASS Level 29: box health 69
+PASS Level 29: box health 70
+PASS Level 29: box health 71
+PASS Level 29: box health 72
+PASS Level 29: box health 73
+PASS Level 29: box health 74
+PASS Level 29: box health 75
+PASS Level 29: box health 76
+PASS Level 29: box health 77
+PASS Level 29: box health 78
+PASS Level 29: box health 79
+PASS Level 29: box health 80
+PASS Level 29: settled item ownership
+PASS Level 29: has a legal swap or existing power action
+PASS Level 29: real action spends exactly one move
+PASS Level 29: real action scores through match/blast resolution
+PASS Level 29: real clear, gravity and refill settle with valid ownership
+PASS Level 29: box loses one layer from a direct Square hit
+PASS Level 29: same-wave repeated contact cannot remove a second box layer
+PASS Level 29: cleared box releases its cell for normal gravity/refill
+PASS Level 29: all box layers credit exactly one box goal
+PASS Level 29: grass loses one layer per contact wave
+PASS Level 29: grass layers credit exactly one grass cell
+PASS Level 29: mailbox emits at most one mail per wave
+PASS Level 29: mailbox stays fixed after emitting mail
+PASS Level 30: opens and settles
+PASS Level 30: dimensions and moves reach runtime
+PASS Level 30: exact board holes
+PASS Level 30: all goals reach runtime
+PASS Level 30: settled item ownership
+PASS Level 30: has a legal swap or existing power action
+PASS Level 30: real action spends exactly one move
+PASS Level 30: real action scores through match/blast resolution
+PASS Level 30: real clear, gravity and refill settle with valid ownership
+PASS Level 30: mailbox emits at most one mail per wave
+PASS Level 30: mailbox stays fixed after emitting mail
+PASS Level 21: unfinished goals at zero moves enter failure offer
+PASS Level 21: actual failure offer exists
+PASS Level 21: failure dialog/state is reachable
+PASS Level 21: retry restores original moves and fresh targets
+PASS Level 21: has a legal swap or existing power action
+PASS Level 21: real action spends exactly one move
+PASS Level 21: real action scores through match/blast resolution
+PASS Level 21: real clear, gravity and refill settle with valid ownership
+PASS Level 21: prepared final-move condition enters production win celebration
+PASS Level 21: production celebration reaches win screen
+PASS Level 21: completion and score save to reference profile
+PASS Level 21: saved completion unlocks next level
+PASS Level 21: native win life reward applies once
+PASS Level 21: idle win frame does not repeat reward
+PASS Level 21: completion survives a fresh board load
+PASS Normal player save unchanged across campaign batch
+PASS Player profile restored
+BATCH PASSED

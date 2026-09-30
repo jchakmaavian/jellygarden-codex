@@ -30,6 +30,8 @@ namespace RoyalThrone.Editor
                 yield return new WaitForSecondsRealtime(name=="PreFailed"?2.2f:.85f);yield return new WaitForEndOfFrame();
                 var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+".png",tex.EncodeToPNG());Object.Destroy(tex);
                 var close=menu.Find("Image/Close");var title=menu.Find(name=="PreFailed"?"Banner/Royal heading":"Image/Royal heading");
+                // The ribbon cards (Level Failed, How to Play) carry their title on the ribbon.
+                if(!title)title=menu.Find("Image/Royal ribbon/Royal heading");
                 bool headerSafe=title&&(!close||!Overlap((RectTransform)close,(RectTransform)title));
                 result.Add((headerSafe?"PASS ":"FAIL ")+name+(close?" heading clears close control":" heading visible; dismissal uses primary action"));
                 var icons=menu.GetComponentsInChildren<TargetIcon>();
@@ -39,11 +41,15 @@ namespace RoyalThrone.Editor
                     if(!button.interactable)continue;var r=(RectTransform)button.transform;var corners=new Vector3[4];r.GetWorldCorners(corners);
                     if(corners[0].x<0||corners[2].x>Screen.width||corners[0].y<0||corners[2].y>Screen.height)result.Add("FAIL "+name+" control offscreen "+button.name);
                 }
-                if(name=="Tutorial")for(int page=1;page<5;page++){
+                // Each lesson (RoyalLessonDemo) is a small board playing its lesson on a loop: it must be playing, and its board
+                // must keep clear of the lesson's title and rule.
+                if(name=="Tutorial")for(int page=1;page<RoyalThrone.Presentation.RoyalLessonDemo.Count;page++){
                     menu.GetComponent<Tutorial>().Next();yield return null;yield return new WaitForEndOfFrame();
-                    var lesson=menu.Find("Image/Royal lesson "+page);var power=lesson.Find("Power");bool clear=true;
-                    foreach(Transform child in lesson)if(child.name.StartsWith("Piece")&&Overlap((RectTransform)child,(RectTransform)power))clear=false;
-                    result.Add((clear?"PASS ":"FAIL ")+"Tutorial page "+page+" formation clears result icon");
+                    var lesson=menu.Find("Image/Royal lesson "+page);var stage=lesson?lesson.Find("Stage"):null;
+                    var demo=stage?stage.GetComponent<RoyalThrone.Presentation.RoyalLessonDemo>():null;var board=stage?stage.Find("Board") as RectTransform:null;
+                    var ruleText=lesson?lesson.Find("Rule") as RectTransform:null;var titleText=lesson?lesson.Find("Title") as RectTransform:null;
+                    bool clear=demo&&demo.Playing&&board&&ruleText&&titleText&&!Overlap(board,ruleText)&&!Overlap(board,titleText);
+                    result.Add((clear?"PASS ":"FAIL ")+"Tutorial page "+page+" plays its lesson clear of its title and rule");
                     var shot=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+"Tutorial-"+page+".png",shot.EncodeToPNG());Object.Destroy(shot);
                 }
                 // End-screen dismissal normally advances progress; visual review must not invoke it.

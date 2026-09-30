@@ -21,9 +21,9 @@ namespace RoyalThrone.Presentation
     {
         public int number, rewardCoins;
         public string name, subtitle, rewardBoost, before, after, thumbBefore, thumbAfter;
-        public bool outdoor, placeholder, bakedAtmosphere;
+        public bool outdoor, placeholder, nativeMotion;
         public RoyalAreaTask[] tasks;
-        // An area without its generated scene is listed but cannot be restored yet ("coming soon").
+        // An area needs a scene to be restored; one without its generated scene borrows a placeholder (RoyalAreas.All).
         public bool Ready => !string.IsNullOrEmpty(before) && !string.IsNullOrEmpty(after) && tasks != null && tasks.Length > 0 &&
                              Array.TrueForAll(tasks, t => !string.IsNullOrEmpty(t.patch));
         public int TotalCost { get { int sum = 0; foreach (var t in tasks) sum += t.cost; return sum; } }
@@ -40,10 +40,6 @@ namespace RoyalThrone.Presentation
             EnteredKey = "RoyalThrone.Area.Entered";
         static RoyalAreaInfo[] all;
 
-        // Fast Enter Play Mode can retain static fields after the editor imports a new catalogue.
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetCatalog() { all = null; }
-
         public static RoyalAreaInfo[] All
         {
             get
@@ -51,16 +47,66 @@ namespace RoyalThrone.Presentation
                 if (all != null) return all;
                 var file = Resources.Load<TextAsset>(Folder + "areas");
                 all = file ? JsonUtility.FromJson<CatalogFile>(file.text).areas ?? new RoyalAreaInfo[0] : new RoyalAreaInfo[0];
+                BorrowPlaceholderArt(all);
                 return all;
             }
         }
         public static Sprite Art(string key) => string.IsNullOrEmpty(key) ? null : Resources.Load<Sprite>(Folder + key);
 
+        // An area whose scene is not generated yet borrows the first ready area's art as a placeholder scene (the user's
+        // decision, 2026-09-29), so the player goes on to New Area, Unlock and its tasks, as in the reference, instead of
+        // "Coming Soon". It keeps its own name, tasks and star costs; task i takes the art's patch i, repeating past its last.
+        static void BorrowPlaceholderArt(RoyalAreaInfo[] areas)
+        {
+            var art = Array.Find(areas, a => a.Ready);
+            if (art == null) return;
+            foreach (var area in areas)
+            {
+                if (area.Ready || area.tasks == null || area.tasks.Length == 0) continue;
+                area.placeholder = true;
+                if (string.IsNullOrEmpty(area.before)) area.before = art.before;
+                if (string.IsNullOrEmpty(area.after)) area.after = art.after;
+                if (string.IsNullOrEmpty(area.thumbBefore)) area.thumbBefore = art.thumbBefore;
+                if (string.IsNullOrEmpty(area.thumbAfter)) area.thumbAfter = art.thumbAfter;
+                for (int i = 0; i < area.tasks.Length; i++)
+                {
+                    var task = area.tasks[i]; if (!string.IsNullOrEmpty(task.patch)) continue;
+                    var from = art.tasks[i % art.tasks.Length];
+                    task.patch = from.patch; task.x0 = from.x0; task.y0 = from.y0; task.x1 = from.x1; task.y1 = from.y1;
+                }
+            }
+        }
+
         /// <summary>1-based; one past the last area once every area is restored.</summary>
-        public static int Current => Mathf.Clamp(PlayerPrefs.GetInt(CurrentKey, 1), 1, All.Length + 1);
+        public const string LayoutVersionKey = "RoyalThrone.Area.LayoutVersion";
+        public const string MigrationCreditKey = "RoyalThrone.Area.MigrationCredit";
+        public static int Current
+        {
+            get { var catalog = All; MigrateNativeLayout(); return Mathf.Clamp(PlayerPrefs.GetInt(CurrentKey, 1), 1, catalog.Length + 1); }
+        }
+        // Preserve paid task count and already-complete areas when replacing the old 6/6/7 placeholders with 6/7/9 tasks.
+        // No stars, coins, chest rewards or entered-area state are changed. RoyalSave keeps QA migration isolated.
+        public static int MigratedDoneMask(int area, int mask)
+        {
+            return AreaMotion.AreaProgressMigration.Map(area, mask);
+        }
+        static void MigrateNativeLayout()
+        {
+            if (PlayerPrefs.GetInt(LayoutVersionKey, 0) >= 1) return;
+            int current = PlayerPrefs.GetInt(CurrentKey, 1), mask = PlayerPrefs.GetInt(DoneKey, 0);
+            PlayerPrefs.SetInt(MigrationCreditKey, AreaMotion.AreaProgressMigration.Credit(current, mask));
+            if (current == 2 || current == 3) PlayerPrefs.SetInt(DoneKey, MigratedDoneMask(current, mask));
+            PlayerPrefs.SetInt(LayoutVersionKey, 1); PlayerPrefs.Save();
+        }
         public static RoyalAreaInfo CurrentArea => Current <= All.Length ? All[Current - 1] : null;
         public static bool AllRestored => Current > All.Length;
         public static int Spent => Mathf.Max(0, PlayerPrefs.GetInt(SpentKey, 0));
+        public static int TaskCost(int task)
+        {
+            var area = CurrentArea;
+            if (area == null || task < 0 || task >= area.tasks.Length) return 0;
+            return Mathf.Max(0, area.tasks[task].cost - (task == NextTask ? PlayerPrefs.GetInt(MigrationCreditKey, 0) : 0));
+        }
         public static bool IsDone(int task) => task >= 0 && task < 31 && (PlayerPrefs.GetInt(DoneKey, 0) & (1 << task)) != 0;
         public static int DoneCount
         {
@@ -108,10 +154,11 @@ namespace RoyalThrone.Presentation
             if (IsDone(task)) return BuildResult.AlreadyDone;
             // One task at a time, in order: a later task is not on offer yet.
             if (task != NextTask || AwaitingEntry) return BuildResult.Unavailable;
-            int cost = area.tasks[task].cost;
+            int cost = TaskCost(task);
             if (Available(earned) < cost) return BuildResult.NotEnoughStars;
             PlayerPrefs.SetInt(DoneKey, PlayerPrefs.GetInt(DoneKey, 0) | (1 << task));
             PlayerPrefs.SetInt(SpentKey, Spent + cost);
+            PlayerPrefs.SetInt(MigrationCreditKey, Mathf.Max(0, PlayerPrefs.GetInt(MigrationCreditKey, 0) - area.tasks[task].cost));
             PlayerPrefs.Save();
             TaskBuilt?.Invoke(area.number, task);
             return BuildResult.Built;
@@ -135,6 +182,7 @@ namespace RoyalThrone.Presentation
             if (reward.boost != BoostType.None) PlayerPrefs.SetInt("" + reward.boost, PlayerPrefs.GetInt("" + reward.boost) + 1);
             PlayerPrefs.SetInt(CurrentKey, area.number + 1);
             PlayerPrefs.SetInt(DoneKey, 0);
+            PlayerPrefs.SetInt(MigrationCreditKey, 0);
             // The next area waits behind the Area card's "New Area" until the player unlocks it (Enter).
             PlayerPrefs.SetInt(EnteredKey, area.number);
             PlayerPrefs.Save();

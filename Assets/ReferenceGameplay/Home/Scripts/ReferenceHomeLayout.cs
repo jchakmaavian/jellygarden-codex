@@ -138,7 +138,7 @@ namespace RoyalThrone.ReferenceGameplay
             navDepth=Surface("Royal navigation depth",home.navigation,new Color(0,.33f,.72f),new Color(0,.21f,.52f));Anchor(navDepth.rectTransform,0,0,1,1);navDepth.transform.SetSiblingIndex(1);
             tabArt=new Image[5];tabRim=new RoyalPanelGraphic[5];tabFace=new RoyalPanelGraphic[5];tabLine=new RoyalPanelGraphic[5];emphasis=new float[5];
             // The first tab is the Areas list (the user's decision of 2026-09-28, as in the reference); the book art names it.
-            int[] ids={16927,22238,16525,17106,16492};string[] names={"Areas","Tournaments","Home","Team","Collection"};
+            int[] ids={16927,22238,16525,17106,16492};string[] names={"Areas","Leaderboard","Home","Team","Collection"};
             for(int i=0;i<5;i++){var tab=home.tabButtons[i].transform;
                 tabArt[i]=Pic(tab,ids[i],.13f,.20f,.87f,.94f);tabArt[i].preserveAspect=true;home.tabButtons[i].GetComponent<Image>().enabled=true;home.tabButtons[i].GetComponent<Image>().color=Color.clear;
                 tabRim[i]=Surface("Selected tab rim",tab,new Color(.36f,.64f,1,.9f),new Color(.14f,.40f,.82f,0));tabRim[i].transform.SetSiblingIndex(0);

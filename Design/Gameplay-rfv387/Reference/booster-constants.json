@@ -1,0 +1,524 @@
+[
+  {
+    "type": "RocketType",
+    "field": "Blue",
+    "typeIndex": 23131,
+    "dataIndex": 65420,
+    "raw": "00023853",
+    "primitiveType": "Int32",
+    "value": 0
+  },
+  {
+    "type": "RocketType",
+    "field": "Red",
+    "typeIndex": 23131,
+    "dataIndex": 65421,
+    "raw": "02385370",
+    "primitiveType": "Int32",
+    "value": 1
+  },
+  {
+    "type": "WaterPropellerScoringHelper",
+    "field": "WinningMultiplier",
+    "typeIndex": 31427,
+    "dataIndex": 101408,
+    "raw": "0000c842",
+    "primitiveType": "Single",
+    "value": 100.0
+  },
+  {
+    "type": "WaterPropellerScoringHelper",
+    "field": "BoostMultiplier",
+    "typeIndex": 31427,
+    "dataIndex": 101412,
+    "raw": "00004040",
+    "primitiveType": "Single",
+    "value": 3.0
+  },
+  {
+    "type": "WaterPropellerScoringHelper",
+    "field": "IntersectionBoostMultiplier",
+    "typeIndex": 31427,
+    "dataIndex": 101416,
+    "raw": "00006040",
+    "primitiveType": "Single",
+    "value": 3.5
+  },
+  {
+    "type": "WaterPropellerScoringHelper",
+    "field": "ComboBoostMultiplier",
+    "typeIndex": 31427,
+    "dataIndex": 101420,
+    "raw": "00000040",
+    "primitiveType": "Single",
+    "value": 2.0
+  },
+  {
+    "type": "WaterPropellerScoringHelper",
+    "field": "IntersectionComboBoostMultiplier",
+    "typeIndex": 31427,
+    "dataIndex": 101424,
+    "raw": "00006040",
+    "primitiveType": "Single",
+    "value": 3.5
+  },
+  {
+    "type": "WaterPropellerScoringHelper",
+    "field": "DefaultMultiplier",
+    "typeIndex": 31427,
+    "dataIndex": 101428,
+    "raw": "0000803f",
+    "primitiveType": "Single",
+    "value": 1.0
+  },
+  {
+    "type": "WaterPropellerScoringHelper",
+    "field": "NoBoost",
+    "typeIndex": 23131,
+    "dataIndex": 101432,
+    "raw": "0002045d",
+    "primitiveType": "Int32",
+    "value": 0
+  },
+  {
+    "type": "WaterPropellerScoringHelper",
+    "field": "IntersectionBoost",
+    "typeIndex": 23131,
+    "dataIndex": 101433,
+    "raw": "02045d74",
+    "primitiveType": "Int32",
+    "value": 1
+  },
+  {
+    "type": "WaterPropellerScoringHelper",
+    "field": "AxisBoost",
+    "typeIndex": 23131,
+    "dataIndex": 101434,
+    "raw": "045d74d1",
+    "primitiveType": "Int32",
+    "value": 2
+  },
+  {
+    "type": "TntItemModel",
+    "field": "DefaultExplodeRadius",
+    "typeIndex": 23131,
+    "dataIndex": 102296,
+    "raw": "04b81e05",
+    "primitiveType": "Int32",
+    "value": 2
+  },
+  {
+    "type": "TntItemModel",
+    "field": "SuperLightballSecondExplodeDelay",
+    "typeIndex": 31427,
+    "dataIndex": 102297,
+    "raw": "b81e053f",
+    "primitiveType": "Single",
+    "value": 0.5199999809265137
+  },
+  {
+    "type": "TntItemExplodeParticles",
+    "field": "DefaultBlastEmissionCount",
+    "typeIndex": 23131,
+    "dataIndex": 102301,
+    "raw": "321e040a",
+    "primitiveType": "Int32",
+    "value": 25
+  },
+  {
+    "type": "TntItemExplodeParticles",
+    "field": "DefaultSmokeEmissionCount",
+    "typeIndex": 23131,
+    "dataIndex": 102302,
+    "raw": "1e040a06",
+    "primitiveType": "Int32",
+    "value": 15
+  },
+  {
+    "type": "TntItemExplodeParticles",
+    "field": "DefaultGlareEmissionCount",
+    "typeIndex": 23131,
+    "dataIndex": 102303,
+    "raw": "040a0602",
+    "primitiveType": "Int32",
+    "value": 2
+  },
+  {
+    "type": "TntItemExplodeParticles",
+    "field": "ReducedBlastEmissionCount",
+    "typeIndex": 23131,
+    "dataIndex": 102304,
+    "raw": "0a060200",
+    "primitiveType": "Int32",
+    "value": 5
+  },
+  {
+    "type": "TntItemExplodeParticles",
+    "field": "ReducedSmokeEmissionCount",
+    "typeIndex": 23131,
+    "dataIndex": 102305,
+    "raw": "06020000",
+    "primitiveType": "Int32",
+    "value": 3
+  },
+  {
+    "type": "TntItemExplodeParticles",
+    "field": "ReducedGlareEmissionCount",
+    "typeIndex": 23131,
+    "dataIndex": 102306,
+    "raw": "02000000",
+    "primitiveType": "Int32",
+    "value": 1
+  },
+  {
+    "type": "RocketItemView",
+    "field": "RocketSpeed",
+    "typeIndex": 31427,
+    "dataIndex": 102319,
+    "raw": "00005841",
+    "primitiveType": "Single",
+    "value": 13.5
+  },
+  {
+    "type": "RocketItemView",
+    "field": "RocketAcceleration",
+    "typeIndex": 31427,
+    "dataIndex": 102323,
+    "raw": "ec51383e",
+    "primitiveType": "Single",
+    "value": 0.18000000715255737
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "OutDuration",
+    "typeIndex": 31427,
+    "dataIndex": 102344,
+    "raw": "0000403f",
+    "primitiveType": "Single",
+    "value": 0.75
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "OutLimit",
+    "typeIndex": 31427,
+    "dataIndex": 102348,
+    "raw": "3333333f",
+    "primitiveType": "Single",
+    "value": 0.699999988079071
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "MaxScale",
+    "typeIndex": 31427,
+    "dataIndex": 102352,
+    "raw": "0000c03f",
+    "primitiveType": "Single",
+    "value": 1.5
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "MinOutDegree",
+    "typeIndex": 31427,
+    "dataIndex": 102356,
+    "raw": "0000a041",
+    "primitiveType": "Single",
+    "value": 20.0
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "MaxOutDegree",
+    "typeIndex": 31427,
+    "dataIndex": 102360,
+    "raw": "0000c842",
+    "primitiveType": "Single",
+    "value": 100.0
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "StartOutSpeedConst",
+    "typeIndex": 31427,
+    "dataIndex": 102364,
+    "raw": "cdcc4c3e",
+    "primitiveType": "Single",
+    "value": 0.20000000298023224
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "GoRatio",
+    "typeIndex": 31427,
+    "dataIndex": 102368,
+    "raw": "3333333f",
+    "primitiveType": "Single",
+    "value": 0.699999988079071
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "GoStartSpeed",
+    "typeIndex": 31427,
+    "dataIndex": 102372,
+    "raw": "00000000",
+    "primitiveType": "Single",
+    "value": 0.0
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "DownLimit",
+    "typeIndex": 31427,
+    "dataIndex": 102376,
+    "raw": "9a99993e",
+    "primitiveType": "Single",
+    "value": 0.30000001192092896
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "MaxDeltaTime",
+    "typeIndex": 31427,
+    "dataIndex": 102380,
+    "raw": "0000003f",
+    "primitiveType": "Single",
+    "value": 0.5
+  },
+  {
+    "type": "DefaultPropellerPilot",
+    "field": "ForceExplodeFrameCount",
+    "typeIndex": 23131,
+    "dataIndex": 102384,
+    "raw": "5a000080",
+    "primitiveType": "Int32",
+    "value": 45
+  },
+  {
+    "type": "PropellerPropellerComboPilot",
+    "field": "ComboExpandDistance",
+    "typeIndex": 31427,
+    "dataIndex": 102385,
+    "raw": "0000803f",
+    "primitiveType": "Single",
+    "value": 1.0
+  },
+  {
+    "type": "PropellerSpecialComboPilot",
+    "field": "MaxRootSpeed",
+    "typeIndex": 31427,
+    "dataIndex": 102389,
+    "raw": "00008040",
+    "primitiveType": "Single",
+    "value": 4.0
+  },
+  {
+    "type": "PropellerSpecialComboPilot",
+    "field": "MinRootSpeed",
+    "typeIndex": 31427,
+    "dataIndex": 102393,
+    "raw": "0000003f",
+    "primitiveType": "Single",
+    "value": 0.5
+  },
+  {
+    "type": "PropellerSpecialComboPilot",
+    "field": "MaxPropRootScale",
+    "typeIndex": 31427,
+    "dataIndex": 102397,
+    "raw": "cdcc8c3f",
+    "primitiveType": "Single",
+    "value": 1.100000023841858
+  },
+  {
+    "type": "PropellerSpecialComboPilot",
+    "field": "EdgePropRootScale",
+    "typeIndex": 31427,
+    "dataIndex": 102401,
+    "raw": "0000803f",
+    "primitiveType": "Single",
+    "value": 1.0
+  },
+  {
+    "type": "PropellerSpecialComboPilot",
+    "field": "MinPropRootScale",
+    "typeIndex": 31427,
+    "dataIndex": 102405,
+    "raw": "6666663f",
+    "primitiveType": "Single",
+    "value": 0.8999999761581421
+  },
+  {
+    "type": "PropellerSpecialComboPilot",
+    "field": "RightRootEdge",
+    "typeIndex": 31427,
+    "dataIndex": 102409,
+    "raw": "0000003f",
+    "primitiveType": "Single",
+    "value": 0.5
+  },
+  {
+    "type": "PropellerSpecialComboPilot",
+    "field": "LeftRootEdge",
+    "typeIndex": 31427,
+    "dataIndex": 102413,
+    "raw": "000000bf",
+    "primitiveType": "Single",
+    "value": -0.5
+  },
+  {
+    "type": "PropellerSpecialComboPilot",
+    "field": "ComboExpandDistance",
+    "typeIndex": 31427,
+    "dataIndex": 102417,
+    "raw": "6666a63f",
+    "primitiveType": "Single",
+    "value": 1.2999999523162842
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "Easing",
+    "typeIndex": 23131,
+    "dataIndex": 102421,
+    "raw": "04333333",
+    "primitiveType": "Int32",
+    "value": 2
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "OutDuration",
+    "typeIndex": 31427,
+    "dataIndex": 102422,
+    "raw": "3333333f",
+    "primitiveType": "Single",
+    "value": 0.699999988079071
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "MaxScale",
+    "typeIndex": 31427,
+    "dataIndex": 102426,
+    "raw": "3333b33f",
+    "primitiveType": "Single",
+    "value": 1.399999976158142
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "ScaleUpSpeedConst",
+    "typeIndex": 31427,
+    "dataIndex": 102430,
+    "raw": "00008040",
+    "primitiveType": "Single",
+    "value": 4.0
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "MinDistanceToScaleDown",
+    "typeIndex": 31427,
+    "dataIndex": 102434,
+    "raw": "00000040",
+    "primitiveType": "Single",
+    "value": 2.0
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "MinOutDegree",
+    "typeIndex": 31427,
+    "dataIndex": 102438,
+    "raw": "00007041",
+    "primitiveType": "Single",
+    "value": 15.0
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "MaxOutDegree",
+    "typeIndex": 31427,
+    "dataIndex": 102442,
+    "raw": "0000c842",
+    "primitiveType": "Single",
+    "value": 100.0
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "MaxDeltaTime",
+    "typeIndex": 31427,
+    "dataIndex": 102446,
+    "raw": "0000003f",
+    "primitiveType": "Single",
+    "value": 0.5
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "StartOutSpeedConst",
+    "typeIndex": 31427,
+    "dataIndex": 102450,
+    "raw": "00005041",
+    "primitiveType": "Single",
+    "value": 13.0
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "MinHitDistance",
+    "typeIndex": 31427,
+    "dataIndex": 102454,
+    "raw": "0000803e",
+    "primitiveType": "Single",
+    "value": 0.25
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "GoSpeedMultiplierConst",
+    "typeIndex": 31427,
+    "dataIndex": 102458,
+    "raw": "00002041",
+    "primitiveType": "Single",
+    "value": 10.0
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "MaxGoSpeedConst",
+    "typeIndex": 31427,
+    "dataIndex": 102462,
+    "raw": "00004842",
+    "primitiveType": "Single",
+    "value": 50.0
+  },
+  {
+    "type": "FireworkRocketPilot",
+    "field": "ForceExplodeFrameCount",
+    "typeIndex": 23131,
+    "dataIndex": 102466,
+    "raw": "3c0000c8",
+    "primitiveType": "Int32",
+    "value": 30
+  },
+  {
+    "type": "PropellerRocketStrategy",
+    "field": "TargetExplodeDelay",
+    "typeIndex": 31427,
+    "dataIndex": 102477,
+    "raw": "295c8f3d",
+    "primitiveType": "Single",
+    "value": 0.07000000029802322
+  },
+  {
+    "type": "PropellerThrowItemView",
+    "field": "PropellerMachineItemThrowSorting",
+    "typeIndex": 23131,
+    "dataIndex": 103347,
+    "raw": "8fdc0000",
+    "primitiveType": "Int32",
+    "value": 2030
+  },
+  {
+    "type": "PropellerRocketCombo",
+    "field": "ExtraComboDelay",
+    "typeIndex": 31427,
+    "dataIndex": 109232,
+    "raw": "0ad7a33c",
+    "primitiveType": "Single",
+    "value": 0.019999999552965164
+  },
+  {
+    "type": "TntPropellerCombo",
+    "field": "ExtraComboDelay",
+    "typeIndex": 31427,
+    "dataIndex": 109236,
+    "raw": "0ad7a33c",
+    "primitiveType": "Single",
+    "value": 0.019999999552965164
+  }
+]

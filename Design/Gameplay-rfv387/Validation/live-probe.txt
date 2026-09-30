@@ -1,0 +1,7 @@
+state=Playing scale=1 fixed=48.85998 time=48.86418 delta=0.01999999 colours=5 rand=1
+RegenDiagnosticStage=Complete
+RegenDiagnosticPasses=1047
+RegenDiagnosticMatches=0
+RegenDiagnosticLastColor=1
+RegenDiagnosticColorLimit=5
+RegenDiagnosticLoadedEventCompleted=True

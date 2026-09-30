@@ -1,0 +1,4 @@
+PASS Separate reference QA profile selected
+PASS Bonus 40: zero authored Coin goal does not cause an instant win
+PASS Level 40: prepared final-move condition enters production win celebration
+OUTCOME FAILED - inspect win diagnostics; profile cleanup requested.

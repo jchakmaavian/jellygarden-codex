@@ -1,0 +1,291 @@
+King_Venguard.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+torso
+  rotate: false
+  xy: 0, 0
+  size: 860, 863
+  orig: 860, 863
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 862, 0
+  size: 547, 586
+  orig: 547, 586
+  offset: 0, 0
+  index: -1
+skirt
+  rotate: false
+  xy: 0, 865
+  size: 949, 502
+  orig: 949, 502
+  offset: 0, 0
+  index: -1
+thigh_L
+  rotate: false
+  xy: 1411, 0
+  size: 326, 391
+  orig: 326, 391
+  offset: 0, 0
+  index: -1
+thigh_R
+  rotate: false
+  xy: 951, 865
+  size: 323, 388
+  orig: 323, 388
+  offset: 0, 0
+  index: -1
+cape_R
+  rotate: false
+  xy: 1276, 865
+  size: 449, 384
+  orig: 449, 384
+  offset: 0, 0
+  index: -1
+cape_L
+  rotate: false
+  xy: 0, 1369
+  size: 448, 383
+  orig: 448, 383
+  offset: 0, 0
+  index: -1
+hand_R_palm
+  rotate: false
+  xy: 1739, 0
+  size: 266, 355
+  orig: 266, 355
+  offset: 0, 0
+  index: -1
+hand_L_open
+  rotate: false
+  xy: 1727, 865
+  size: 226, 347
+  orig: 226, 347
+  offset: 0, 0
+  index: -1
+forearm_L
+  rotate: false
+  xy: 450, 1369
+  size: 305, 345
+  orig: 305, 345
+  offset: 0, 0
+  index: -1
+forearm_R
+  rotate: false
+  xy: 757, 1369
+  size: 303, 345
+  orig: 303, 345
+  offset: 0, 0
+  index: -1
+upperarm_R
+  rotate: false
+  xy: 1062, 1369
+  size: 289, 337
+  orig: 289, 337
+  offset: 0, 0
+  index: -1
+upperarm_L
+  rotate: false
+  xy: 1353, 1369
+  size: 289, 337
+  orig: 289, 337
+  offset: 0, 0
+  index: -1
+hand_R_open
+  rotate: false
+  xy: 1644, 1369
+  size: 224, 333
+  orig: 224, 333
+  offset: 0, 0
+  index: -1
+hand_L_fist
+  rotate: false
+  xy: 0, 1754
+  size: 191, 285
+  orig: 191, 285
+  offset: 0, 0
+  index: -1
+hand_R_fist
+  rotate: false
+  xy: 193, 1754
+  size: 198, 285
+  orig: 198, 285
+  offset: 0, 0
+  index: -1
+hand_R_thumbsup
+  rotate: false
+  xy: 393, 1754
+  size: 286, 273
+  orig: 286, 273
+  offset: 0, 0
+  index: -1
+crown
+  rotate: false
+  xy: 681, 1754
+  size: 468, 263
+  orig: 468, 263
+  offset: 0, 0
+  index: -1
+collar
+  rotate: false
+  xy: 1151, 1754
+  size: 711, 230
+  orig: 711, 230
+  offset: 0, 0
+  index: -1
+mouth_laugh
+  rotate: false
+  xy: 1870, 1369
+  size: 171, 103
+  orig: 171, 103
+  offset: 0, 0
+  index: -1
+mouth_sad
+  rotate: false
+  xy: 1864, 1754
+  size: 171, 103
+  orig: 171, 103
+  offset: 0, 0
+  index: -1
+iris_L
+  rotate: false
+  xy: 1955, 865
+  size: 53, 53
+  orig: 53, 53
+  offset: 0, 0
+  index: -1
+
+King_Venguard2.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+pelvis
+  rotate: false
+  xy: 0, 0
+  size: 681, 334
+  orig: 681, 334
+  offset: 0, 0
+  index: -1
+shin_R
+  rotate: false
+  xy: 683, 0
+  size: 209, 318
+  orig: 209, 318
+  offset: 0, 0
+  index: -1
+shin_L
+  rotate: false
+  xy: 894, 0
+  size: 210, 315
+  orig: 210, 315
+  offset: 0, 0
+  index: -1
+chop_R
+  rotate: false
+  xy: 1106, 0
+  size: 191, 182
+  orig: 191, 182
+  offset: 0, 0
+  index: -1
+chop_L
+  rotate: false
+  xy: 1299, 0
+  size: 191, 179
+  orig: 191, 179
+  offset: 0, 0
+  index: -1
+neck
+  rotate: false
+  xy: 0, 336
+  size: 559, 179
+  orig: 559, 179
+  offset: 0, 0
+  index: -1
+foot_R
+  rotate: false
+  xy: 1492, 0
+  size: 221, 158
+  orig: 221, 158
+  offset: 0, 0
+  index: -1
+foot_L
+  rotate: false
+  xy: 1715, 0
+  size: 222, 157
+  orig: 222, 157
+  offset: 0, 0
+  index: -1
+mouth_worried
+  rotate: false
+  xy: 561, 336
+  size: 171, 103
+  orig: 171, 103
+  offset: 0, 0
+  index: -1
+mouth_neutral
+  rotate: false
+  xy: 734, 336
+  size: 171, 103
+  orig: 171, 103
+  offset: 0, 0
+  index: -1
+mustache
+  rotate: false
+  xy: 907, 336
+  size: 304, 89
+  orig: 304, 89
+  offset: 0, 0
+  index: -1
+eyes_happy_R
+  rotate: false
+  xy: 1939, 0
+  size: 101, 81
+  orig: 101, 81
+  offset: 0, 0
+  index: -1
+eyes_closed_L
+  rotate: false
+  xy: 1213, 336
+  size: 101, 81
+  orig: 101, 81
+  offset: 0, 0
+  index: -1
+eyes_closed_R
+  rotate: false
+  xy: 1316, 336
+  size: 101, 81
+  orig: 101, 81
+  offset: 0, 0
+  index: -1
+eyes_happy_L
+  rotate: false
+  xy: 1419, 336
+  size: 101, 81
+  orig: 101, 81
+  offset: 0, 0
+  index: -1
+brow_L
+  rotate: false
+  xy: 1522, 336
+  size: 115, 78
+  orig: 115, 78
+  offset: 0, 0
+  index: -1
+brow_R
+  rotate: false
+  xy: 1639, 336
+  size: 119, 78
+  orig: 119, 78
+  offset: 0, 0
+  index: -1
+iris_R
+  rotate: false
+  xy: 1760, 336
+  size: 53, 53
+  orig: 53, 53
+  offset: 0, 0
+  index: -1

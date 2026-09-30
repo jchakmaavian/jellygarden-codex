@@ -13,6 +13,7 @@ namespace RoyalThrone.Presentation
         static readonly HashSet<Sprite> generated=new HashSet<Sprite>();
         public static Sprite Goal(TargetObject target,bool gameplay=false)
         {
+            if(!string.IsNullOrEmpty(target.referenceGoal))return target.icon;
             if(!RoyalEffectsProfile.Get)return target.icon;
             if(target.type==Target.SCORE)return RoyalPieceSkin.Art("star");
             // Menus once drew goals from the older art set while the board drew the current one,

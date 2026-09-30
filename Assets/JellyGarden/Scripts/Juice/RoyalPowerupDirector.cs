@@ -89,6 +89,7 @@ namespace JellyGarden.Scripts.Juice
         void OnDisable(){ReleaseConversionInput();RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Clear();RoyalAudioDirector.StopReferenceVoices();RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
         void ReleaseConversionInput()
         {
+            RoyalThrone.Boosters.ColorBall.V4.ColorBallChargedTargetV4.ClearAll();
             // Unity stops nested coroutines without reliably disposing their iterators.
             foreach(var item in conversionInputLeases)if(item)item.inputConversionLocks=0;
             conversionInputLeases.Clear();
@@ -251,11 +252,16 @@ namespace JellyGarden.Scripts.Juice
         {
             bool native = RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("TntItemExplodeParticles");
             Vector3 p=origin.transform.position;var visual=native?null:TNT3DAnimator.ActivateAt(origin);
-            var ignition = native ? RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("TntItemFuseParticles",p,worldCell:Cell,sustained:true) : null;
-            var fuse=TakeTntSprite(p);
-            yield return TntAnticipation(fuse);
-            ignition?.Stop();
-            if(fuse!=null){fuse.go.SetActive(false);fuse.used=false;}
+            if (native && radius > 2)
+                yield return NativeTntComboAnticipation(p);
+            else
+            {
+                var ignition = native ? RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("TntItemFuseParticles",p,worldCell:Cell,sustained:true) : null;
+                var fuse=TakeTntSprite(p);
+                yield return TntAnticipation(fuse);
+                ignition?.Stop();
+                if(fuse!=null){fuse.go.SetActive(false);fuse.used=false;}
+            }
             if(visual)visual.Explode(radius>2?1.45f:1);
             if(native)RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play(radius>2?"TntTntComboExplodeParticles":"TntItemExplodeParticles",p,worldCell:Cell);
             RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);
@@ -304,17 +310,37 @@ namespace JellyGarden.Scripts.Juice
             else if(payload==ItemsTypes.HORIZONTAL_STRIPPED||payload==ItemsTypes.VERTICAL_STRIPPED)yield return Rocket(target,payload==ItemsTypes.HORIZONTAL_STRIPPED,1);
             else Hit(target);
         }
+        internal static bool EligibleColorBallTarget(Item item)
+        {
+            // Special pieces can retain their former gem colour. They must not
+            // inflate the majority count or become ordinary colour targets.
+            return item && item.isActiveAndEnabled && !item.destroying && !item.royalConsumed &&
+                item.currentType == ItemsTypes.NONE && item.color >= 0 && item.color < RoyalGameplayArt.BoardColorCount &&
+                item.square && item.square.item == item && !item.square.IsNone() &&
+                item.square.type != SquareTypes.UNDESTROYABLE &&
+                !RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(item);
+        }
+        internal static int MostCommonColorBallColour(IEnumerable<Item> items)
+        {
+            int[] counts = new int[RoyalGameplayArt.BoardColorCount];
+            foreach (var item in items) if (EligibleColorBallTarget(item)) counts[item.color]++;
+            int best = 0;
+            for (int colour = 1; colour < counts.Length; colour++) if (counts[colour] > counts[best]) best = colour;
+            return best; // Preserve the existing tie order; the APK's tie breaker is unverified.
+        }
         IEnumerator Orb(Square origin,ItemsTypes payload,int colour,bool all)
         {
             var lm=LevelManager.THIS;
             while(lm.InputSwaps>0)yield return null;
-            if(colour<0||colour>5){int[] counts=new int[6];foreach(var i in lm.GetItems())if(i&&i.color>=0&&i.color<6)counts[i.color]++;colour=0;for(int k=1;k<6;k++)if(counts[k]>counts[colour])colour=k;}
-            var targets=new List<Square>();for(int r=0;r<lm.maxRows;r++)for(int c=0;c<lm.maxCols;c++){var sq=lm.GetSquare(c,r);if(sq&&(all||sq.item&&sq.item.color==colour))targets.Add(sq);}
+            // A normal-gem swap supplies its explicit colour. Direct activation
+            // and the existing combo rules request a count with the sentinel -1.
+            if(colour<0||colour>=RoyalGameplayArt.BoardColorCount)colour=MostCommonColorBallColour(lm.GetItems());
+            var targets=new List<Square>();for(int r=0;r<lm.maxRows;r++)for(int c=0;c<lm.maxCols;c++){var sq=lm.GetSquare(c,r);if(sq&&(all||EligibleColorBallTarget(sq.item)&&sq.item.color==colour))targets.Add(sq);}
             // Only selected pieces are reserved through conversion/handoff. Everything
             // else remains interactive; overlapping Color Balls own separate leases.
             var leased=new List<Item>();foreach(var sq in targets)if(sq.item){leased.Add(sq.item);conversionInputLeases.Add(sq.item);sq.item.inputConversionLocks++;}
             try {
-            if(payload==ItemsTypes.NONE||payload==ItemsTypes.HORIZONTAL_STRIPPED||payload==ItemsTypes.VERTICAL_STRIPPED)
+            if(payload==ItemsTypes.NONE||payload==ItemsTypes.HORIZONTAL_STRIPPED||payload==ItemsTypes.VERTICAL_STRIPPED||payload==ItemsTypes.HELICOPTER||payload==ItemsTypes.PACKAGE)
             {yield return AnimateColorBallV4Targets(origin,targets,payload);yield break;}
             Creation(origin.transform.position);RoyalAudioDirector.Get?.Play(RoyalCue.Create);
             // The approved Boosting sequence grows out of the cell the ball fired from and holds its

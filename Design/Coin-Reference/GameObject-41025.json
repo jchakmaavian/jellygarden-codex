@@ -1,0 +1,20 @@
+{
+  "m_Component": [
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 85261
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 119215
+      }
+    }
+  ],
+  "m_Layer": 8,
+  "m_Name": "Coin (3)",
+  "m_Tag": 0,
+  "m_IsActive": true
+}

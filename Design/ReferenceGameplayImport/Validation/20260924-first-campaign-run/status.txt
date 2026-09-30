@@ -1,0 +1,2 @@
+STOPPED after 3 batches; inspect the failed batch and Console
+2026-09-24 07:22:48Z

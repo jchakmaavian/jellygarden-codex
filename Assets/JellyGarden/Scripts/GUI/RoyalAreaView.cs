@@ -278,10 +278,10 @@ namespace RoyalThrone.Presentation
             stageHint = K.Words("Hint", mid, "Tap to Open", 46, K.Cream, TextAnchor.MiddleCenter); K.Centre(stageHint.rectTransform, 360, 1168, 600, 70); K.Outline(stageHint, K.Navy, 3);
         }
 
-        RectTransform banner; RectTransform bannerRibbon; Text bannerWord;
+        RectTransform banner; RectTransform bannerRibbon; Text bannerWord; RectTransform kingArea; Image kingSlot;
         void BuildBanner()
         {
-            // "Area Completed!" (A-19): a ribbon across the top half, over confetti.
+            // "Area Completed!" (A-19): a ribbon across the top half and King Vanguard rising with his thumbs-up.
             banner = K.Node("Area completed", root); banner.gameObject.SetActive(false);
             var dim = K.Node("Dim", banner).gameObject.AddComponent<Image>(); dim.color = new Color(.01f, .03f, .08f, .45f);
             var skip = dim.gameObject.AddComponent<Button>(); skip.transition = Selectable.Transition.None; skip.onClick.AddListener(() => stageTapped = true);
@@ -295,6 +295,8 @@ namespace RoyalThrone.Presentation
             var band = K.Surface("Band", bannerRibbon, K.C(252, 206, 0), K.C(233, 124, 0), 14); K.At(band.rectTransform, 40, 24, 640, 112);
             K.Layer("Face", band.transform, 7, K.C(96, 84, 214), K.C(62, 50, 168), 10);
             bannerWord = K.Words("Words", band.transform, "Area Completed!", 58, K.Cream, TextAnchor.MiddleCenter); K.Inset(bannerWord.rectTransform, 20, 8, 20, 8); K.Title(bannerWord);
+            kingArea = K.At(K.Node("King", mid), 100, 930, 520, 700);
+            kingSlot = K.Node("King slot", kingArea).gameObject.AddComponent<Image>(); kingSlot.color = Color.clear; kingSlot.raycastTarget = false;
         }
 
         RectTransform showcase; Text showcaseHint; Button showcaseTap;
@@ -478,7 +480,7 @@ namespace RoyalThrone.Presentation
             if (!has) return;
             var t = area.tasks[task];
             rowArt.sprite = RoyalAreas.Art(string.IsNullOrEmpty(t.icon) ? t.patch : t.icon); rowArt.enabled = rowArt.sprite;
-            rowName.text = t.name; doItCost.text = t.cost.ToString();
+            rowName.text = t.name; doItCost.text = RoyalAreas.TaskCost(task).ToString();
             doIt.gameObject.SetActive(!done); doIt.interactable = !done && building == null; doItRect.localScale = Vector3.one;
             tick.gameObject.SetActive(false);
         }
@@ -596,7 +598,7 @@ namespace RoyalThrone.Presentation
             if (building != null || ceremony != null || rowTask < 0) return;
             var area = RoyalAreas.CurrentArea; int task = rowTask;
             if (area == null || task != RoyalAreas.NextTask) return;
-            int before = home.Progress.available, cost = area.tasks[task].cost;
+            int before = home.Progress.available, cost = RoyalAreas.TaskCost(task);
             // The scene must not redraw from the save while the build stages the new object.
             scene.Hold = true;
             var result = RoyalAreas.Build(task, home.Progress.stars);
@@ -771,6 +773,7 @@ namespace RoyalThrone.Presentation
             stageStep = 0;
             if (home) home.SceneViewOpen = viewing != null;
             if (homeLayout && building == null) homeLayout.HudAway = 0;
+            if (kingSlot) { var king = kingSlot.GetComponent<RoyalThrone.Characters.KingVanguardSlot>(); if (king) king.SetShown(false); }
         }
 
         // The ceremony's dialog was closed under it (Back): it ends where it stands. Before the chest is opened nothing has
@@ -851,6 +854,7 @@ namespace RoyalThrone.Presentation
         void EndCeremony(bool paid)
         {
             ceremony = null; stageStep = 0; heldCoins = -1;
+            if (kingSlot) { var king = kingSlot.GetComponent<RoyalThrone.Characters.KingVanguardSlot>(); if (king) king.SetShown(false); }
             stage.gameObject.SetActive(false); banner.gameObject.SetActive(false); showcase.gameObject.SetActive(false);
             home.SceneViewOpen = false; scene.Hold = false; if (homeLayout) homeLayout.HudAway = 0;
             if (home.dialog.activeSelf) home.ClosePanel();
@@ -863,8 +867,10 @@ namespace RoyalThrone.Presentation
             home.SceneViewOpen = true; outside.gameObject.SetActive(false); navDim.gameObject.SetActive(false);
             StartCoroutine(SlideHud(1));
             banner.gameObject.SetActive(true); banner.SetAsLastSibling();
+            var king = RoyalThrone.Characters.KingVanguardSlot.Mount(kingSlot, RoyalThrone.Characters.KingVanguardCharacter.Framing.Celebration, RoyalThrone.Characters.KingVanguardSlot.Mode.Idle, kingArea, true);
+            if (king) king.SetShown(true);
             RoyalWinSequence.AreaConfetti();
-            float t = 0; stageTapped = false;
+            float t = 0; stageTapped = false; bool happy = false;
             while (t < 4.5f && !(stageTapped && t > 1))
             {
                 if (Gone) yield break;
@@ -872,10 +878,14 @@ namespace RoyalThrone.Presentation
                 float u = Mathf.Clamp01(t / .45f), e = 1 - (1 - u) * (1 - u);
                 bannerRibbon.localScale = new Vector3(Mathf.Lerp(.6f, 1, e), Mathf.Lerp(.6f, 1, e), 1);
                 SetAlpha(bannerRibbon, e);
+                float k = Mathf.Clamp01((t - .25f) / .6f), ke = 1 - (1 - k) * (1 - k);
+                kingArea.anchoredPosition = new Vector2(100, -(930 + (1 - ke) * 700));
+                if (!happy && t > .8f && king) { happy = king.PlayHappy(); }
                 if (stageTapped && t <= 1) stageTapped = false;
                 yield return null;
             }
             stageTapped = false;
+            if (king) king.SetShown(false);
             banner.gameObject.SetActive(false);
         }
 

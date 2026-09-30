@@ -11,7 +11,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4
     {
         public Mesh quad;public Material glow,star,beam;
         public bool referenceV5;public Material beamCore;
-        public sealed class Flight { internal Renderer outer,inner,head,sourceFlare;internal ReferenceVfxPool.Handle native;internal NativeRay[] nativeRays;internal bool visible;internal float opacity;internal Vector3 from,to,drawnSource;internal float age,duration;internal Color tint;internal ColorBallVisualV4 source;internal int sourceLease;internal ColorBallPresentationSettings settings;public bool Active {get;internal set;}public bool Arrived {get;internal set;}public int Lease {get;internal set;}public float Progress=>Mathf.Clamp01(age/duration); }
+        public sealed class Flight { internal Renderer outer,inner,head,sourceFlare;internal ReferenceVfxPool.Handle native;internal NativeRay[] nativeRays;internal bool visible;internal float opacity;internal Vector3 from,to,drawnSource;internal float age,duration;internal Color tint;internal ColorBallVisualV4 source;internal int sourceLease;internal ColorBallPresentationSettings settings;public bool Active {get;internal set;}public bool Arrived {get;internal set;}public int Lease {get;internal set;}public System.Action<int> ArrivalNotice {get;set;}public float Progress=>Mathf.Clamp01(age/duration); }
         internal sealed class NativeRay
         {
             public LineRenderer view; public float width; public GradientColorKey[] colors;
@@ -42,7 +42,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         void Build(){flights=new Flight[BeamCapacity];for(int i=0;i<BeamCapacity;i++)flights[i]=new Flight{outer=Part("Colored moving tail",beam,referenceV5?30:41),inner=Part("White moving core",beamCore?beamCore:beam,referenceV5?31:42),head=Part("Traveling four point head",star,referenceV5?32:43),sourceFlare=referenceV5?Part("Aura discharge",beam,34):null};motes=new Mote[MoteCapacity];for(int i=0;i<MoteCapacity;i++)motes[i]=new Mote{view=Part("Pooled Color Ball accent",star,44)};}
         float Range(float a,float b)=>Mathf.Lerp(a,b,(float)random.NextDouble());
         static Color Tint(int c){switch(c%6){case 0:return new Color(1,.39f,.38f);case 1:return new Color(.38f,.78f,1);case 2:return new Color(1,.82f,.23f);case 3:return new Color(.43f,1,.47f);case 4:return new Color(1,.44f,.92f);default:return new Color(.61f,.51f,1);}}
-        public static Flight Launch(Vector3 from,Vector3 to,int color){Prewarm();foreach(var f in instance.flights)if(!f.visible){f.Lease++;f.Active=f.visible=true;f.Arrived=false;f.age=0;f.from=from+Vector3.back*.9f;f.to=to+Vector3.back*.9f;f.tint=Tint(color);f.source=instance.referenceV5?ColorBallVisualV4.SourceAt(from):null;f.sourceLease=f.source?f.source.Lease:0;f.settings=f.source?f.source.GetComponent<ColorBallV5Presentation>()?.Settings:null;f.duration=Mathf.Clamp(Vector3.Distance(from,to)/ColorBallVisualV4.CellSize/17f,.14f,.37f);instance.NativeBeam(f);instance.Draw(f);return f;}return null;}
+        public static Flight Launch(Vector3 from,Vector3 to,int color){Prewarm();foreach(var f in instance.flights)if(!f.visible){f.Lease++;f.Active=f.visible=true;f.Arrived=false;f.ArrivalNotice=null;f.age=0;f.from=from+Vector3.back*.9f;f.to=to+Vector3.back*.9f;f.tint=Tint(color);f.source=instance.referenceV5?ColorBallVisualV4.SourceAt(from):null;f.sourceLease=f.source?f.source.Lease:0;f.settings=f.source?f.source.GetComponent<ColorBallV5Presentation>()?.Settings:null;f.duration=Mathf.Clamp(Vector3.Distance(from,to)/ColorBallVisualV4.CellSize/17f,.14f,.37f);instance.NativeBeam(f);instance.Draw(f);return f;}return null;}
         void NativeBeam(Flight flight)
         {
             flight.native=null;flight.nativeRays=null;
@@ -138,9 +138,14 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         }
         public static void TargetFlash(Vector3 p){if(instance&&instance.NativeContactAt(p))return;Pulse(p,.48f,.12f,new Color(1,.95f,.77f,.7f));Spark(p,instance&&instance.referenceV5?.24f:.43f,.13f,Color.white);}
         public static void Converted(Vector3 p){if(instance&&instance.NativeContactAt(p))return;Spark(p+Vector3.up*ColorBallVisualV4.CellSize*.25f,.26f,.19f,new Color(1,.92f,.56f));}
-        void Retire(Flight f){if(f.native!=null&&f.native.Valid&&f.nativeRays!=null)foreach(var ray in f.nativeRays)if(ray.view){ray.view.enabled=false;ray.view.widthMultiplier=ray.width;ray.gradient.SetKeys(ray.colors,ray.alpha);ray.view.colorGradient=ray.gradient;}f.native?.Stop();f.native=null;f.nativeRays=null;f.visible=f.Active=false;f.source=null;f.opacity=0;f.outer.enabled=f.inner.enabled=f.head.enabled=false;if(f.sourceFlare)f.sourceFlare.enabled=false;}
+        void Retire(Flight f){f.ArrivalNotice=null;if(f.native!=null&&f.native.Valid&&f.nativeRays!=null)foreach(var ray in f.nativeRays)if(ray.view){ray.view.enabled=false;ray.view.widthMultiplier=ray.width;ray.gradient.SetKeys(ray.colors,ray.alpha);ray.view.colorGradient=ray.gradient;}f.native?.Stop();f.native=null;f.nativeRays=null;f.visible=f.Active=false;f.source=null;f.opacity=0;f.outer.enabled=f.inner.enabled=f.head.enabled=false;if(f.sourceFlare)f.sourceFlare.enabled=false;}
         void Update(){if(ColorBallVisualV4.Paused||flights==null)return;foreach(var f in flights)if(f.visible){
-            f.age+=Time.deltaTime;if(f.age>=f.duration)f.Arrived=true;
+            f.age+=Time.deltaTime;if(!f.Arrived&&f.age>=f.duration){
+                f.Arrived=true;var notice=f.ArrivalNotice;f.ArrivalNotice=null;
+                // Latch contact before this visual can retire/reuse after a long frame.
+                // The gameplay coroutine still owns all hits and conversions.
+                notice?.Invoke(f.Lease);
+            }
             if(f.age>=f.duration+.14f)f.Active=false;
             bool sourceGone=referenceV5&&f.source&&(f.source.Lease!=f.sourceLease||f.source.Current==ColorBallVisualV4.Phase.Free);
             if(sourceGone||f.age>=f.duration+(referenceV5?LinkResidue:.14f))Retire(f);else if(!referenceV5)Draw(f);

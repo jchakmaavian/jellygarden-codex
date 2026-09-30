@@ -1,0 +1,26 @@
+{
+  "m_Component": [
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 64367
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 112697
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 135165
+      }
+    }
+  ],
+  "m_Layer": 5,
+  "m_Name": "RewardIconCoin",
+  "m_Tag": 0,
+  "m_IsActive": true
+}

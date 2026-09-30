@@ -1,0 +1,38 @@
+script start: 2026-09-23 17:54:23.006322300 epoch 1790164463.027953600
+screenrecord started pid=432 at epoch 1790164463.061743800
+force-stop issued at epoch 1790164464.893004300
+T0=1790164466.945388700 (17:54:26.974335000)
+Starting: Intent { cmp=com.dreamgames.royalmatch/com.dreamgames.library.DreamUnityPlayerActivity }
+am start returned at epoch 1790164467.172423500
+shot-0.3.png captured (started at elapsed 0.3, done at 2.79)
+shot-3.5.png captured (started at elapsed 3.5, done at 4.19)
+shot-4.8.png captured (started at elapsed 4.8, done at 5.57)
+shot-6.2.png captured (started at elapsed 6.2, done at 7.08)
+shot-7.7.png captured (started at elapsed 7.7, done at 8.49)
+shot-9.2.png captured (started at elapsed 9.2, done at 11.50)
+shot-12.2.png captured (started at elapsed 12.2, done at 14.61)
+shot-15.3.png captured (started at elapsed 15.3, done at 17.67)
+shot-18.3.png captured (started at elapsed 18.3, done at 21.67)
+shot-22.3.png captured (started at elapsed 22.3, done at 25.00)
+shot-25.7.png captured (started at elapsed 25.7, done at 28.22)
+shot-28.9.png captured (started at elapsed 28.9, done at 31.50)
+shot-32.2.png captured (started at elapsed 32.2, done at 34.66)
+shot-35.3.png captured (started at elapsed 35.3, done at 37.88)
+shot-38.5.png captured (started at elapsed 38.5, done at 41.03)
+shot-41.7.png captured (started at elapsed 41.7, done at 44.12)
+shot-44.8.png captured (started at elapsed 44.8, done at 47.18)
+shot-47.8.png captured (started at elapsed 47.8, done at 50.28)
+shot-51.0.png captured (started at elapsed 51.0, done at 53.39)
+shot-54.1.png captured (started at elapsed 54.1, done at 56.51)
+shot-57.2.png captured (started at elapsed 57.2, done at 59.55)
+shot-60.2.png captured (started at elapsed 60.2, done at 62.69)
+shot-63.4.png captured (started at elapsed 63.4, done at 65.90)
+shot-66.6.png captured (started at elapsed 66.6, done at 69.02)
+shot-69.7.png captured (started at elapsed 69.7, done at 72.12)
+shot-72.8.png captured (started at elapsed 72.8, done at 75.20)
+loop finished at elapsed 75.94
+    mResumedActivity: ActivityRecord{f351b98 u0 com.dreamgames.royalmatch/com.dreamgames.library.DreamUnityPlayerActivity t142}
+screenrecord ended at epoch 1790164543.146393900 (rec duration 80.1 s)
+adb: error: failed to stat remote object 'C:/Program Files/Git/sdcard/rm-coldstart.mp4': No such file or directory
+pulled and removed device recording at 1790164545.382683100
+REC_START_OFFSET_FROM_T0=3.88

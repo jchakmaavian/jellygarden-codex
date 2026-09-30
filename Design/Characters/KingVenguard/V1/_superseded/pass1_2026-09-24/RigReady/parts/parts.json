@@ -1,0 +1,763 @@
+{
+ "source": "Source/magnific/04-neutral-rig-pose-front.png",
+ "size": [
+  1696,
+  2528
+ ],
+ "centre_x": 848,
+ "ground_y": 2320,
+ "joints": {
+  "hips": [
+   848,
+   1700
+  ],
+  "torso": [
+   848,
+   1640
+  ],
+  "chest": [
+   848,
+   1100
+  ],
+  "neck": [
+   848,
+   830
+  ],
+  "head": [
+   848,
+   790
+  ],
+  "crown": [
+   848,
+   395
+  ],
+  "gaze": [
+   848,
+   512
+  ],
+  "iris_R": [
+   778,
+   512
+  ],
+  "iris_L": [
+   918,
+   512
+  ],
+  "brow_R": [
+   765,
+   440
+  ],
+  "brow_L": [
+   931,
+   440
+  ],
+  "mustache": [
+   848,
+   600
+  ],
+  "chop_R": [
+   690,
+   640
+  ],
+  "chop_L": [
+   1006,
+   640
+  ],
+  "mouth": [
+   852,
+   668
+  ],
+  "cape_R": [
+   640,
+   890
+  ],
+  "cape_L": [
+   1056,
+   890
+  ],
+  "skirt": [
+   848,
+   1560
+  ],
+  "shoulder_R": [
+   400,
+   1040
+  ],
+  "elbow_R": [
+   288,
+   1235
+  ],
+  "wrist_R": [
+   178,
+   1432
+  ],
+  "shoulder_L": [
+   1296,
+   1040
+  ],
+  "elbow_L": [
+   1408,
+   1235
+  ],
+  "wrist_L": [
+   1518,
+   1432
+  ],
+  "hip_R": [
+   650,
+   1740
+  ],
+  "knee_R": [
+   680,
+   1995
+  ],
+  "ankle_R": [
+   690,
+   2182
+  ],
+  "hip_L": [
+   1045,
+   1740
+  ],
+  "knee_L": [
+   1010,
+   1995
+  ],
+  "ankle_L": [
+   1005,
+   2182
+  ]
+ },
+ "eye_clip": {
+  "R": [
+   [
+    804.5,
+    512.0
+   ],
+   [
+    803.4,
+    518.2
+   ],
+   [
+    800.2,
+    523.7
+   ],
+   [
+    794.4,
+    527.0
+   ],
+   [
+    789.3,
+    529.3
+   ],
+   [
+    784.8,
+    531.1
+   ],
+   [
+    780.4,
+    532.3
+   ],
+   [
+    776.0,
+    532.1
+   ],
+   [
+    772.0,
+    532.5
+   ],
+   [
+    768.2,
+    531.1
+   ],
+   [
+    764.3,
+    530.5
+   ],
+   [
+    760.3,
+    529.5
+   ],
+   [
+    755.7,
+    528.3
+   ],
+   [
+    749.6,
+    527.0
+   ],
+   [
+    742.9,
+    524.1
+   ],
+   [
+    741.6,
+    518.0
+   ],
+   [
+    741.0,
+    512.0
+   ],
+   [
+    741.6,
+    506.0
+   ],
+   [
+    745.7,
+    501.1
+   ],
+   [
+    749.6,
+    497.0
+   ],
+   [
+    753.6,
+    493.6
+   ],
+   [
+    758.4,
+    491.6
+   ],
+   [
+    762.8,
+    489.8
+   ],
+   [
+    767.4,
+    489.0
+   ],
+   [
+    772.0,
+    487.5
+   ],
+   [
+    776.8,
+    488.0
+   ],
+   [
+    781.6,
+    488.9
+   ],
+   [
+    787.0,
+    489.6
+   ],
+   [
+    792.2,
+    491.8
+   ],
+   [
+    796.5,
+    495.6
+   ],
+   [
+    801.1,
+    499.9
+   ],
+   [
+    804.4,
+    505.6
+   ]
+  ],
+  "L": [
+   [
+    958.5,
+    512.0
+   ],
+   [
+    959.3,
+    519.0
+   ],
+   [
+    956.3,
+    525.4
+   ],
+   [
+    947.3,
+    527.6
+   ],
+   [
+    941.3,
+    529.3
+   ],
+   [
+    935.7,
+    529.5
+   ],
+   [
+    931.1,
+    529.1
+   ],
+   [
+    927.6,
+    530.1
+   ],
+   [
+    924.0,
+    532.5
+   ],
+   [
+    920.0,
+    532.1
+   ],
+   [
+    915.6,
+    532.3
+   ],
+   [
+    911.2,
+    531.1
+   ],
+   [
+    906.7,
+    529.3
+   ],
+   [
+    902.8,
+    526.2
+   ],
+   [
+    898.6,
+    522.5
+   ],
+   [
+    895.6,
+    517.7
+   ],
+   [
+    893.0,
+    512.0
+   ],
+   [
+    892.6,
+    505.8
+   ],
+   [
+    895.8,
+    500.3
+   ],
+   [
+    899.5,
+    495.6
+   ],
+   [
+    904.6,
+    492.6
+   ],
+   [
+    909.0,
+    489.6
+   ],
+   [
+    914.4,
+    488.9
+   ],
+   [
+    919.2,
+    488.0
+   ],
+   [
+    924.0,
+    487.5
+   ],
+   [
+    928.8,
+    488.0
+   ],
+   [
+    933.4,
+    489.4
+   ],
+   [
+    938.2,
+    490.8
+   ],
+   [
+    942.4,
+    493.6
+   ],
+   [
+    947.3,
+    496.4
+   ],
+   [
+    951.7,
+    500.5
+   ],
+   [
+    956.4,
+    505.6
+   ]
+  ]
+ },
+ "parts": {
+  "crown": {
+   "x": 614,
+   "y": 185,
+   "w": 468,
+   "h": 263,
+   "bone": "crown",
+   "fill": null,
+   "seams_closed_px": 1324
+  },
+  "head": {
+   "x": 575,
+   "y": 226,
+   "w": 547,
+   "h": 586,
+   "bone": "head",
+   "fill": "magnific F1 (hair dome), magnific F2 (hair under whiskers), diffusion (forehead under brows, sclera under irises), reflect (forehead under crown band)",
+   "seams_closed_px": 919
+  },
+  "brow_R": {
+   "x": 701,
+   "y": 402,
+   "w": 119,
+   "h": 78,
+   "bone": "brow_R",
+   "fill": null
+  },
+  "brow_L": {
+   "x": 878,
+   "y": 402,
+   "w": 115,
+   "h": 78,
+   "bone": "brow_L",
+   "fill": null
+  },
+  "iris_R": {
+   "x": 752,
+   "y": 486,
+   "w": 53,
+   "h": 53,
+   "bone": "iris_R",
+   "fill": null
+  },
+  "iris_L": {
+   "x": 892,
+   "y": 486,
+   "w": 53,
+   "h": 53,
+   "bone": "iris_L",
+   "fill": null
+  },
+  "eyes_closed_R": {
+   "x": 722,
+   "y": 472,
+   "w": 101,
+   "h": 81,
+   "bone": "head",
+   "fill": "magnific S1"
+  },
+  "eyes_closed_L": {
+   "x": 874,
+   "y": 472,
+   "w": 101,
+   "h": 81,
+   "bone": "head",
+   "fill": "magnific S1"
+  },
+  "eyes_happy_R": {
+   "x": 722,
+   "y": 472,
+   "w": 101,
+   "h": 81,
+   "bone": "head",
+   "fill": "magnific S2"
+  },
+  "eyes_happy_L": {
+   "x": 874,
+   "y": 472,
+   "w": 101,
+   "h": 81,
+   "bone": "head",
+   "fill": "magnific S2"
+  },
+  "mouth_neutral": {
+   "x": 767,
+   "y": 617,
+   "w": 171,
+   "h": 103,
+   "bone": "mouth",
+   "fill": null
+  },
+  "mouth_laugh": {
+   "x": 767,
+   "y": 617,
+   "w": 171,
+   "h": 103,
+   "bone": "mouth",
+   "fill": "magnific S3"
+  },
+  "mouth_worried": {
+   "x": 767,
+   "y": 617,
+   "w": 171,
+   "h": 103,
+   "bone": "mouth",
+   "fill": "magnific S4"
+  },
+  "mouth_sad": {
+   "x": 767,
+   "y": 617,
+   "w": 171,
+   "h": 103,
+   "bone": "mouth",
+   "fill": "magnific S5"
+  },
+  "mustache": {
+   "x": 697,
+   "y": 567,
+   "w": 304,
+   "h": 89,
+   "bone": "mustache",
+   "fill": null
+  },
+  "chop_R": {
+   "x": 579,
+   "y": 588,
+   "w": 191,
+   "h": 182,
+   "bone": "chop_R",
+   "fill": null
+  },
+  "chop_L": {
+   "x": 927,
+   "y": 588,
+   "w": 191,
+   "h": 179,
+   "bone": "chop_L",
+   "fill": null
+  },
+  "neck": {
+   "x": 566,
+   "y": 686,
+   "w": 559,
+   "h": 179,
+   "bone": "neck",
+   "fill": "magnific F4 (neck and shirt collar behind the chin)"
+  },
+  "collar": {
+   "x": 493,
+   "y": 688,
+   "w": 711,
+   "h": 230,
+   "bone": "chest",
+   "fill": "magnific F4 (fur behind the chin and whiskers)",
+   "seams_closed_px": 325
+  },
+  "cape_R": {
+   "x": 261,
+   "y": 790,
+   "w": 449,
+   "h": 384,
+   "bone": "cape_R",
+   "fill": null,
+   "seams_closed_px": 272
+  },
+  "cape_L": {
+   "x": 987,
+   "y": 791,
+   "w": 448,
+   "h": 383,
+   "bone": "cape_L",
+   "fill": null,
+   "seams_closed_px": 275
+  },
+  "torso": {
+   "x": 418,
+   "y": 788,
+   "w": 860,
+   "h": 863,
+   "bone": "belly",
+   "fill": "reflect (coat under the cape's lower and front edges)",
+   "seams_closed_px": 870
+  },
+  "upperarm_R": {
+   "x": 192,
+   "y": 995,
+   "w": 289,
+   "h": 337,
+   "bone": "upperarm_R",
+   "fill": "reflect (sleeve under the cape)",
+   "seams_closed_px": 97
+  },
+  "forearm_R": {
+   "x": 110,
+   "y": 1137,
+   "w": 303,
+   "h": 345,
+   "bone": "forearm_R",
+   "fill": null,
+   "seams_closed_px": 1413
+  },
+  "hand_R_open": {
+   "x": 46,
+   "y": 1368,
+   "w": 224,
+   "h": 333,
+   "bone": "hand_R",
+   "fill": "reflect (wrist continued under the cuff)",
+   "seams_closed_px": 622
+  },
+  "upperarm_L": {
+   "x": 1216,
+   "y": 995,
+   "w": 289,
+   "h": 337,
+   "bone": "upperarm_L",
+   "fill": "reflect (sleeve under the cape)",
+   "seams_closed_px": 87
+  },
+  "forearm_L": {
+   "x": 1282,
+   "y": 1137,
+   "w": 305,
+   "h": 345,
+   "bone": "forearm_L",
+   "fill": null,
+   "seams_closed_px": 1435
+  },
+  "hand_L_open": {
+   "x": 1428,
+   "y": 1354,
+   "w": 226,
+   "h": 347,
+   "bone": "hand_L",
+   "fill": "reflect (wrist continued under the cuff)",
+   "seams_closed_px": 670
+  },
+  "skirt": {
+   "x": 374,
+   "y": 1395,
+   "w": 949,
+   "h": 502,
+   "bone": "skirt",
+   "fill": null,
+   "seams_closed_px": 2441
+  },
+  "thigh_R": {
+   "x": 490,
+   "y": 1704,
+   "w": 323,
+   "h": 388,
+   "bone": "thigh_R",
+   "fill": "reflect (breeches continued under the coat skirt)",
+   "seams_closed_px": 796
+  },
+  "shin_R": {
+   "x": 567,
+   "y": 1897,
+   "w": 209,
+   "h": 318,
+   "bone": "shin_R",
+   "fill": null,
+   "seams_closed_px": 190
+  },
+  "foot_R": {
+   "x": 527,
+   "y": 2156,
+   "w": 221,
+   "h": 158,
+   "bone": "foot_R",
+   "fill": null,
+   "seams_closed_px": 452
+  },
+  "thigh_L": {
+   "x": 883,
+   "y": 1701,
+   "w": 326,
+   "h": 391,
+   "bone": "thigh_L",
+   "fill": "reflect (breeches continued under the coat skirt)",
+   "seams_closed_px": 440
+  },
+  "shin_L": {
+   "x": 917,
+   "y": 1897,
+   "w": 210,
+   "h": 315,
+   "bone": "shin_L",
+   "fill": null,
+   "seams_closed_px": 194
+  },
+  "foot_L": {
+   "x": 949,
+   "y": 2157,
+   "w": 222,
+   "h": 157,
+   "bone": "foot_L",
+   "fill": null,
+   "seams_closed_px": 501
+  },
+  "pelvis": {
+   "x": 508,
+   "y": 1558,
+   "w": 681,
+   "h": 334,
+   "bone": "hips",
+   "fill": "diffusion (ivory hips under the coat skirt, seeded by the visible breeches)",
+   "seams_closed_px": 96
+  },
+  "hand_R_thumbsup": {
+   "x": null,
+   "y": null,
+   "w": 286,
+   "h": 273,
+   "bone": "hand_R",
+   "sheet": true,
+   "wrist_in_image": [
+    116.44,
+    181.22
+   ],
+   "rotation": 0,
+   "fill": null,
+   "source": "Source/magnific/07-hand-replacement-sheet.png"
+  },
+  "hand_R_fist": {
+   "x": null,
+   "y": null,
+   "w": 198,
+   "h": 285,
+   "bone": "hand_R",
+   "sheet": true,
+   "wrist_in_image": [
+    98.39999999999999,
+    186.14
+   ],
+   "rotation": -90,
+   "fill": null,
+   "source": "Source/magnific/07-hand-replacement-sheet.png"
+  },
+  "hand_L_fist": {
+   "x": null,
+   "y": null,
+   "w": 191,
+   "h": 285,
+   "bone": "hand_L",
+   "sheet": true,
+   "wrist_in_image": [
+    95.94,
+    186.14
+   ],
+   "rotation": -90,
+   "fill": null,
+   "source": "Source/magnific/07-hand-replacement-sheet.png"
+  },
+  "hand_R_palm": {
+   "x": null,
+   "y": null,
+   "w": 266,
+   "h": 355,
+   "bone": "hand_R",
+   "sheet": true,
+   "wrist_in_image": [
+    105.36999999999999,
+    258.71
+   ],
+   "rotation": -90,
+   "fill": null,
+   "source": "Source/magnific/07-hand-replacement-sheet.png"
+  }
+ }
+}

@@ -1,0 +1,342 @@
+object,byte_offset,name
+0,3233824,TextMeshPro/Sprite
+1,3234160,Default-Particle
+2,3234376,Default-ParticleSystem
+3,3235456,Sprites-Mask
+4,3235776,Mask-Material
+5,3235928,Sprites-Alpha-Mask-WorldCoords
+6,3236472,RayMaterial
+7,3237888,SunBurstMaskReadMat
+8,3238440,SunBurstMaskWriteMat
+9,3239032,Object3dShadowMat
+10,3239584,Additive Particle Material
+11,3240184,TutorialBlackMasked
+12,3240768,tutorial_hand_Material
+13,3241208,GridVfx
+14,3241840,LightningVfx
+15,3243088,LightningVfxFallback
+16,3244360,ParticleTextureBlend
+17,3244960,export_anim_cannon_Material
+18,3245408,jester_hat_Material
+19,3245848,AncientVaultPatternMat
+20,3247296,Bowling_Pin_Particle_Material
+21,3247784,bowling_ball_Material
+22,3248224,BowlingRackBallTextureMat
+23,3249520,bush_export_Material
+24,3249960,Caldron_Throw_Item
+25,3250784,CandyCaneFallback
+26,3253584,CandyCaneHighAndroid
+27,3256392,CandyCaneHighIos
+28,3259296,Monkey_All_Material
+29,3259736,Choco_Maker_MaskedMaterial
+30,3260184,Choco_Maker_Material
+31,3260624,Clock_Towe_Material_V01
+32,3261408,Clock_Towe_Material_V02
+33,3262192,Clock_Towe_Material_V03
+34,3262976,Clock_Towe_Material_V04
+35,3263760,Clock_Tower_Clock
+36,3264584,Clock_Tower_Pin
+37,3265400,ClockTowerGearShader
+38,3266200,Pin_Material
+39,3268632,Spring_Material
+40,3271064,CoilItemStreakSpriteMaterial
+41,3271664,Cookie_Jar_Material
+42,3272104,Cookie_Jar_MaterialMasked
+43,3272552,CuckooItem_mtl
+44,3274104,Cupboard_Door_Particle
+45,3274928,flower_pot_Material
+46,3275368,Frog_Material
+47,3275800,Cover_Badge_Mtl
+48,3276712,GrassBombExpandPatternMat
+49,3277672,gummy_Material
+50,3278104,gummy_Material_OutsideMask
+51,3278552,double_piggy_Material
+52,3278992,honey_jar_Material
+53,3279432,honey_jar_MaterialMasked
+54,3279872,honey_Material
+55,3280304,bear_item_Material
+56,3280744,JellyGeneratorSpreadMat
+57,3282040,LaserTextureMat
+58,3282816,lightbulb_Material
+59,3283256,LogScrollMat
+60,3284248,FullScroll
+61,3286152,FullScrollFallback
+62,3287624,mailbox_Material
+63,3288056,Parchment_Mtl
+64,3289776,MatchItemOverlayMat
+65,3290960,penguin_Material
+66,3291392,TokenBackMat
+67,3292096,TokenBackOuterMat
+68,3292808,TokenFrontInnerMat
+69,3293544,TokenFrontMat
+70,3294272,TokenInsideMat
+71,3294984,NextBoardRenderTexture
+72,3295904,PotionTubeShaderVfxMat
+73,3297416,pouch_Material
+74,3297848,pouch_Material_masked
+75,3298288,PowerCube_Crown_Cover
+76,3299112,Propeller_Machine_Particle
+77,3299944,shadow_skeleton_Material
+78,3300432,skeleton_Material
+79,3300872,RadarItemPointerMat
+80,3301632,rock_item_shader
+81,3302448,Robot_Glass
+82,3303320,Robot_View_V02
+83,3304136,Royal_Bot_Layers_Material
+84,3304584,RoyalCapsuleBackShaderVfxMat
+85,3305032,RoyalCapsuleItemBackShaderVfxMat
+86,3305488,RoyalCapsuleShaderVfxMat
+87,3306952,Safe_Item_Particle
+88,3307776,SapphireFakeLight
+89,3308568,SeedBox_Material
+90,3309000,Duck_Goal_View
+91,3309816,lightball_ray_mat_add
+92,3310400,Squirrel_Shadow
+93,3310880,Squirrel_pieces_Material
+94,3311320,CrackingMat
+95,3312784,CryptexBackgroundShader
+96,3313464,Curtain_Token_Particle
+97,3314240,DarkHoneyAlphaMasked
+98,3315224,LightningBoltMaterialMesh
+99,3316408,LightningBoltMaterialMeshNoGlow
+100,3317056,ForceFieldFlowMat
+101,3318392,ForceFieldVfxMat
+102,3319704,ForceFieldVfxMat_Low
+103,3320888,LightningShaderMaterial
+104,3321120,IceBorderVfxMatLow
+105,3322720,jelly_Material
+106,3323152,skeleton_Material
+107,3323592,Sword_3D_Shader_Particle
+108,3324416,ShinyReflectMat
+109,3325368,win_logo_animation_Material
+110,3325816,win_logo_animation_Material_Dynamic
+111,3326272,StencilReadMat
+112,3326824,StencilWriteClipNoCullMat
+113,3327424,StencilWriteMat
+114,3327976,Area01-OceanCaustics
+115,3328632,Area01-DitchCaustics
+116,3329288,skeleton_Material
+117,3329784,Area01-PoolCaustics
+118,3330440,Area03PaintingMat
+119,3331216,Area03TableMat
+120,3331984,PoolDistortionMat
+121,3334080,OceanDistortionMat
+122,3334840,AreaBackgroundSaturationMat
+123,3335488,GuaranteedPackShine
+124,3336592,GuaranteedPackWave
+125,3337264,SectionBarShine
+126,3338008,WildCardWaveBase
+127,3339120,WildCardWaveBottom
+128,3340208,WildCardWaveFrame
+129,3341296,episode_chest_Material
+130,3341736,AreaCompleted_Material
+131,3342176,KingsCupShine
+132,3343048,PropellerMadnessCaustics
+133,3343712,PropellerMadnessDistortionMat
+134,3345824,RadialFillMaterial
+135,3346464,ToggleOffBackgroundMaterial
+136,3347896,RoyalPassShine
+137,3348768,TeamTreasureCausticMat
+138,3349544,TeamTreasureSeaDistortionMat
+139,3350312,WonderFestivalWildCardGradientMaterial
+140,3350608,EpisodeRowMaterial
+141,3351264,CrystalFrameMaterial
+142,3351936,ChatHeartDisabledMaterial
+143,3352600,RadialGradientMaterial
+144,3353320,MikadoBlack SDF (UIShiny)
+145,3354936,MikadoBlack SDF MaskedInside
+146,3356512,MikadoBlack SDF MaskedOutside
+147,3358088,MikadoBlack_AreaCompletedBackShadow_Mask
+148,3359672,MikadoBlack_AreaCompletedText_Mask
+149,3361272,MikadoBlack_AreaTitleBack
+150,3362848,MikadoBlack_AreaTitleBackBold
+151,3364424,MikadoBlack_AreaTitleFront
+152,3366032,MikadoBlack_AreaTitleFront_Gray
+153,3367640,MikadoBlack_BlackOutline
+154,3369240,MikadoBlack_BlackOutlineUnderlay2
+155,3370840,MikadoBlack_BlackOutlineUnderlay3
+156,3372440,MikadoBlack_BlackOutlineUnderlay4
+157,3374056,MikadoBlack_BlackOutline_Masked
+158,3375664,MikadoBlack_BlackShadow
+159,3377264,MikadoBlack_BlackShadow_MaskedOutside
+160,3378848,MikadoBlack_BlackUnderlay
+161,3380440,MikadoBlack_BlueOutlineUnderlay1
+162,3382048,MikadoBlack_BlueOutlineUnderlay10
+163,3383664,MikadoBlack_BlueOutlineUnderlay11
+164,3385264,MikadoBlack_BlueOutlineUnderlay12
+165,3386880,MikadoBlack_BlueOutlineUnderlay13
+166,3388496,MikadoBlack_BlueOutlineUnderlay14
+167,3390112,MikadoBlack_BlueOutlineUnderlay15
+168,3391728,MikadoBlack_BlueOutlineUnderlay16 (UIShiny)
+169,3393392,MikadoBlack_BlueOutlineUnderlay16_Masked (UIShiny)
+170,3395064,MikadoBlack_BlueOutlineUnderlay17 (UIShiny)
+171,3396728,MikadoBlack_BlueOutlineUnderlay18
+172,3398328,MikadoBlack_BlueOutlineUnderlay1_Masked
+173,3399944,MikadoBlack_BlueOutlineUnderlay1_MaskedInside
+174,3401568,MikadoBlack_BlueOutlineUnderlay2
+175,3403160,MikadoBlack_BlueOutlineUnderlay2_Masked
+176,3404760,MikadoBlack_BlueOutlineUnderlay3
+177,3406368,MikadoBlack_BlueOutlineUnderlay3_Mask
+178,3407984,MikadoBlack_BlueOutlineUnderlay3_MaskedOutside
+179,3409608,MikadoBlack_BlueOutlineUnderlay4
+180,3411216,MikadoBlack_BlueOutlineUnderlay4_Masked
+181,3412832,MikadoBlack_BlueOutlineUnderlay5
+182,3414440,MikadoBlack_BlueOutlineUnderlay5_Mask
+183,3416056,MikadoBlack_BlueOutlineUnderlay6
+184,3417664,MikadoBlack_BlueOutlineUnderlay7
+185,3419272,MikadoBlack_BlueOutlineUnderlay7_Masked
+186,3420888,MikadoBlack_BlueOutlineUnderlay8
+187,3422496,MikadoBlack_BlueOutlineUnderlay9
+188,3424104,MikadoBlack_Blue_MaskedInside
+189,3425712,MikadoBlack_BonusPrelevelCurvedFront
+190,3427312,MikadoBlack_BrownLightOutlineUnderlay
+191,3428912,MikadoBlack_BrownOutline1 (UIShiny)
+192,3430568,MikadoBlack_BrownOutline1
+193,3432176,MikadoBlack_BrownOutline1_Masked
+194,3433784,MikadoBlack_BrownOutline1_MaskedInside
+195,3435400,MikadoBlack_BrownOutlineUnderlay
+196,3437008,MikadoBlack_CurtainBlue
+197,3438592,MikadoBlack_CurtainGreen
+198,3440176,MikadoBlack_CurtainPink
+199,3441760,MikadoBlack_CurtainRed
+200,3443344,MikadoBlack_CurtainYellow
+201,3444936,MikadoBlack_CurvedAnimatedBack
+202,3446512,MikadoBlack_CurvedAnimatedBack2
+203,3448088,MikadoBlack_CurvedAnimatedBack3
+204,3449664,MikadoBlack_CurvedAnimatedBack_Mask
+205,3451248,MikadoBlack_CurvedAnimatedText
+206,3452840,MikadoBlack_DarkGreenOutline
+207,3454448,MikadoBlack_DarkGreenOutlineUnderlay1 (UIShiny)
+208,3456120,MikadoBlack_DarkGreenOutline_Masked
+209,3457736,MikadoBlack_DarkGreenUnderlay1
+210,3459328,MikadoBlack_DarkGreenUnderlay1_Masked
+211,3460928,MikadoBlack_DarkGreenUnderlay1_MaskedOutside
+212,3462536,MikadoBlack_Default
+213,3464104,MikadoBlack_Default_Mask
+214,3465672,MikadoBlack_Default_MaskInside
+215,3467248,MikadoBlack_GoldName_Brown (UIShiny)
+216,3468904,MikadoBlack_GoldName_Brown (UIShiny_Masked_Vim)
+217,3470576,MikadoBlack_GoldName_Brown
+218,3472168,MikadoBlack_GoldName_Brown_Masked
+219,3473768,MikadoBlack_GrayOutlineUnderlay1
+220,3475376,MikadoBlack_GrayOutlineUnderlay2
+221,3476984,MikadoBlack_GrayOutlineUnderlay2_Masked
+222,3478600,MikadoBlack_GrayOutlineUnderlay2_MaskedInside
+223,3480224,MikadoBlack_GrayOutlineUnderlay3
+224,3481832,MikadoBlack_GrayOutlineUnderlay4
+225,3483424,MikadoBlack_GrayOutlineUnderlay4_Masked
+226,3485024,MikadoBlack_GrayOutlineUnderlay5
+227,3486616,MikadoBlack_GrayOutlineUnderlay5_Masked
+228,3488216,MikadoBlack_Green
+229,3489816,MikadoBlack_GreenDent1
+230,3491400,MikadoBlack_GreenDent2
+231,3492984,MikadoBlack_GreenDent3
+232,3494568,MikadoBlack_GreenOutlineUnderlay1_Mask
+233,3496184,MikadoBlack_GreenOutlineUnderlay2_Mask
+234,3497784,MikadoBlack_GreenOutlineUnderlay3
+235,3499384,MikadoBlack_GreenOutlineUnderlay4 (UIShiny)
+236,3501048,MikadoBlack_GreenOutlineUnderlay4
+237,3502648,MikadoBlack_GreenOutlineUnderlay4_Masked
+238,3504248,MikadoBlack_GreenOutlineUnderlay4_MaskedInside
+239,3505856,MikadoBlack_GreenOutlineUnderlay5
+240,3507456,MikadoBlack_GreenOutlineUnderlay6
+241,3509056,MikadoBlack_GreenOutlineUnderlay7
+242,3510656,MikadoBlack_GreenOutlineUnderlay7_Masked
+243,3512256,MikadoBlack_GreenOutlineUnderlay_Mask
+244,3513856,MikadoBlack_LightBlueDent
+245,3515448,MikadoBlack_LightningBoltCount
+246,3517056,MikadoBlack_LightningRushBlackBg
+247,3518664,MikadoBlack_LightningRushWhiteBg
+248,3520272,MikadoBlack_MadnessBookCount
+249,3521880,MikadoBlack_MadnessPropellerCount
+250,3523496,MikadoBlack_MadnessPropellerCountBg
+251,3525112,MikadoBlack_OrangeDent1
+252,3526696,MikadoBlack_OrangeDent1_Masked
+253,3528288,MikadoBlack_OrangeOutlineUnderlay1
+254,3529904,MikadoBlack_OrangeOutlineUnderlay2
+255,3531520,MikadoBlack_OrangeOutlineUnderlay_Mask
+256,3533136,MikadoBlack_OrangeOutlineUnderlay_MaskInside
+257,3534760,MikadoBlack_PetrolBlueOutlineUnderlay2
+258,3536360,MikadoBlack_PetrolBlueOutlineUnderlay2_Masked
+259,3537968,MikadoBlack_PetrolGreenOutlineUnderlay
+260,3539568,MikadoBlack_Portal_Outline
+261,3541160,MikadoBlack_PurpleOutlineUnderlay2 (UIShiny)
+262,3542824,MikadoBlack_PurpleOutlineUnderlay2
+263,3544424,MikadoBlack_PurpleOutlineUnderlay2_Masked
+264,3546032,MikadoBlack_PurpleOutlineUnderlay2_MaskedInside
+265,3547640,MikadoBlack_PurpleOutlineUnderlay3 (UIShiny) Masked
+266,3549312,MikadoBlack_PurpleOutlineUnderlay3 (UIShiny)
+267,3550976,MikadoBlack_PurpleOutlineUnderlay3
+268,3552576,MikadoBlack_PurpleOutlineUnderlay3_Masked
+269,3554184,MikadoBlack_PurpleOutlineUnderlay4
+270,3555784,MikadoBlack_PurpleOutlineUnderlay5_Masked
+271,3557408,MikadoBlack_PurpleOutlineUnderlay6
+272,3559008,MikadoBlack_RedDent1
+273,3560592,MikadoBlack_RedOutlineUnderlay1
+274,3562200,MikadoBlack_RedOutlineUnderlay1_Mask
+275,3563816,MikadoBlack_RedOutlineUnderlay2 (UiShiny)
+276,3565480,MikadoBlack_RedOutlineUnderlay2
+277,3567088,MikadoBlack_RedOutlineUnderlay2_Masked
+278,3568704,MikadoBlack_RedOutlineUnderlay3
+279,3570312,MikadoBlack_RedOutlineUnderlay3_Masked
+280,3571928,MikadoBlack_RedOutlineUnderlay3_MaskedInside
+281,3573552,MikadoBlack_RedOutlineUnderlay4
+282,3575160,MikadoBlack_RedOutlineUnderlay4_Mask
+283,3576776,MikadoBlack_RedOutlineUnderlay5
+284,3578384,MikadoBlack_RedOutlineUnderlay6
+285,3579992,MikadoBlack_RedOutlineUnderlay6_Mask
+286,3581608,MikadoBlack_RedOutlineUnderlay6_MaskedOutside
+287,3583232,MikadoBlack_RedOutlineUnderlay7
+288,3584840,MikadoBlack_RedOutlineUnderlay8
+289,3586448,MikadoBlack_RewardTextBlueOutline
+290,3588048,MikadoBlack_WallHit
+291,3589656,MikadoBlack_WhiteBorder1 (UIShiny)
+292,3591312,MikadoBlack_WhiteBorder1
+293,3592912,MikadoBlack_WhiteBorder2
+294,3594496,MikadoBlack_WhiteBorder2_Masked
+295,3596088,MikadoBlack_WhiteBorder3
+296,3597672,MikadoBlack_WhiteBorder3_MaskedInside
+297,3599272,MikadoBlack_WhiteBorder3_MaskedOutside
+298,3600872,MikadoBlack_WhiteCountOutline
+299,3602480,MikadoBlack_YellowBlackOutlineUnderlay
+300,3604080,MikadoBlack_YellowDent1
+301,3605664,MikadoBlack_YellowDent1_Masked
+302,3607256,MikadoBlack_YellowDent2
+303,3608840,MikadoBlack_BlueOutlineCristalUnderlay (UIShiny)
+304,3610512,MikadoBlack_BlueOutlineCristalUnderlay_Masked (UIShiny)
+305,3612192,MikadoBlack_BlueOutlineSummerUnderlay (UIShiny)
+306,3613864,MikadoBlack_BlueOutlineSummerUnderlay_Masked (UIShiny)
+307,3615544,MikadoBlack_BlueOutlineUnderlay16 (UIShiny)
+308,3617208,MikadoBlack_BlueOutlineUnderlay16_Masked (UIShiny)
+309,3618880,MikadoBlack_BlueOutlineUnderlay2
+310,3620472,MikadoBlack_BlueOutlineUnderlay3
+311,3622080,MikadoBlack_BlueUnderlayLighted1
+312,3623848,MikadoBlack_BrownOutline1
+313,3625456,MikadoBlack_CrystalNameUnderlay (UIShiny)
+314,3627280,MikadoBlack_CrystalNameUnderlay
+315,3629048,MikadoBlack_CrystalNameUnderlay_Masked (UIShiny)
+316,3630880,MikadoBlack_DarkBlueEasterUnderlay (UIShiny)
+317,3632544,MikadoBlack_DarkBlueEasterUnderlay_Masked (UIShiny)
+318,3634216,MikadoBlack_DarkGreenOutline
+319,3635824,MikadoBlack_DarkPurpleOutlineUnderlay5
+320,3637440,MikadoBlack_Default
+321,3639008,MikadoBlack_Default_Mask
+322,3640576,MikadoBlack_Diamond (UIShiny)
+323,3641744,MikadoBlack_GoldName_Brown (UIShiny)
+324,3643400,MikadoBlack_GoldName_Brown (UIShiny_Masked_Vim)
+325,3645072,MikadoBlack_GreenOutlineUnderlay4 (UIShiny)
+326,3646736,MikadoBlack_GreenUnderlayLighted1
+327,3648512,MikadoBlack_PurpleOutlineHauntedUnderlay (UIShiny)
+328,3650184,MikadoBlack_PurpleOutlineHauntedUnderlay_Masked (UIShiny)
+329,3651848,MikadoBlack_PurpleOutlineUnderlay
+330,3653464,MikadoBlack_PurpleOutlineUnderlay2 (UIShiny)
+331,3655128,MikadoBlack_PurpleOutlineUnderlay3 (UIShiny) Masked
+332,3656800,MikadoBlack_PurpleOutlineUnderlay3 (UIShiny)
+333,3658464,MikadoBlack_RedOutlineCandyUnderlay (UIShiny)
+334,3660136,MikadoBlack_RedOutlineCandyUnderlay_Masked (UIShiny)
+335,3661808,MikadoBlack_RedOutlineUnderlay1
+336,3663416,MikadoBlack_RedOutlineUnderlay2 (UiShiny)
+337,3665080,MikadoBlack_RedOutlineUnderlay2
+338,3666688,MikadoBlack_RedUnderlayLighted1
+339,3668456,MikadoBlack_YellowUnderlayLighted1
+340,3670232,Font Material

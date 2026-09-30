@@ -385,6 +385,7 @@ namespace RoyalThrone.Campaign
         }
 
         // Read-only checks allow editor QA to validate footprint and layer behavior.
+        public static string GoalAt(Square square) => square && states.TryGetValue(square, out var state) ? state.Obstacle?.Goal : null;
         public static int HealthAt(Square square) => square && states.TryGetValue(square, out var state) ? state.Obstacle?.Health ?? 0 : 0;
         public static int GrassAt(Square square) => square && states.TryGetValue(square, out var state) ? state.Grass : 0;
         public static bool SharesObstacle(Square first, Square second) => first && second && states.TryGetValue(first, out var a) && states.TryGetValue(second, out var b) && a.Obstacle != null && a.Obstacle == b.Obstacle;

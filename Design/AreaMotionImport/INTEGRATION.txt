@@ -1,0 +1,27 @@
+Royal Throne — Three-area native motion integration
+30 September 2026 | Unity 6000.5.10f1
+
+Implemented in the main JellyGarden-Codex project:
+- Castle Gardens, Throne Room and Royal Dining Room; 6 / 7 / 9 restoration tasks.
+- 373 layered sprite records, 26 native clips / 6,399 animation curves, skinned meshes and five waving flags.
+- Native reveal VFX, fireplace/candle particles, 27 sound assets and fountain/garden ambience.
+- Water: directional moat/river flow, two moving noise layers, ripples, traveling highlights and previous-frame scene reflections.
+- Fountain: 1.75x emission, 1.22x jet speed relative to the authored emitter scale, 1.08x droplet size. Transparent spray preserves the fountain silhouette. Recovered foreground FX sorting fixes hidden jets and fireplace flames.
+- Existing saves migrate to the new task counts. Previously spent stars are credited against remaining tasks; first-three-area total costs remain 10 / 12 / 15 stars.
+- Home hides its render camera and stops ambience during board gameplay. Motion and Sound settings remain respected.
+
+Verification:
+- Main runtime and editor assemblies compiled with the installed Unity compiler. Existing unrelated warnings remain.
+- The isolated project uses the same Unity version and built-in render pipeline as the main project's active Graphics/Quality settings.
+- Native render checks passed for all 22 task reveals and three area scenes, plus shader compilation, 27 audio decodes, 192 legacy save masks and credit budgets, water changes, fountain particles, hide/show, pause/resume, sound mute and interrupted reveals.
+- Final fountain/material changes compiled and passed the isolated Unity checks. No runtime errors were reported.
+- Unity's isolated-editor Search startup exception is recorded separately in Validation/editor-issues.txt.
+- Shared main editor was not interrupted. Full main-scene end-to-end gameplay and physical Android performance were not run in this session.
+
+Review/Royal-Throne-Areas-Unity-Preview.mp4 is a fresh 30 fps Unity render: selected reveals from each area, restored garden water, then fountain close-up. This review video is silent; the game includes and separately verifies sound playback.
+
+Source accuracy:
+18 task reveals use native clips. Four Dining Room tasks (fireplace, portrait, chairs, servings) use reconstructed timing because the APK drives them through compiled scripts. Water shading and fountain tuning are custom refinements. The three recovered areas contain moat/distant water and fountain cascades; no separate landscape waterfall area was present.
+
+Source APK SHA-256:
+a2cbee4ecf021ee464dc6f17766ba6c0b2addb2d65007f611e5c368532aa8151

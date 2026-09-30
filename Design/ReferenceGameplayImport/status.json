@@ -1,0 +1,49 @@
+{
+    "utc": "2026-09-30T11:10:38.1351782Z",
+    "trackedSinceUtc": "2026-09-30T10:05:59.6493485Z",
+    "lastCommand": "",
+    "commandUtc": "",
+    "result": "Ready; no request received.",
+    "campaignStatus": "Not started",
+    "captureStatus": "idle",
+    "ioError": "",
+    "playing": true,
+    "changingPlayMode": false,
+    "compiling": false,
+    "updating": false,
+    "paused": false,
+    "qaReady": false,
+    "testProfile": false,
+    "referenceCampaign": false,
+    "acceptedCommands": [
+        "import",
+        "refresh",
+        "enter-play",
+        "open-game",
+        "input-checks",
+        "input-event-checks",
+        "palette-checks",
+        "campaign-checks",
+        "campaign-31-40",
+        "campaign-41-50",
+        "capture-gameplay",
+        "exit-play",
+        "status",
+        "reset-tracking"
+    ],
+    "scenes": [
+        {
+            "path": "Assets/JellyGarden/Scenes/main.unity",
+            "loaded": true,
+            "dirty": false
+        },
+        {
+            "path": "Assets/JellyGarden/Scenes/game.unity",
+            "loaded": false,
+            "dirty": false
+        }
+    ],
+    "scenesBeforePlay": [],
+    "errorCount": 0,
+    "recentErrors": []
+}

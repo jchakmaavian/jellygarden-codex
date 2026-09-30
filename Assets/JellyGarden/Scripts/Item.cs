@@ -271,14 +271,16 @@ namespace JellyGarden.Scripts
                         else
                         {
                             StartCoroutine(FallingCor(square, true));
-                            color = Array.IndexOf(items, sprRenderer.sprite);
+                            // The chosen logical colour is independent of imported
+                            // artwork, sprite replacement and renderer callbacks.
+                            color = randColor;
                         }
                     }
                 }
                 else
                 {
                     StartCoroutine(FallingCor(square, true));
-                    color = Array.IndexOf(items, sprRenderer.sprite);
+                    color = randColor;
                 }
             }
 
@@ -811,67 +813,74 @@ namespace JellyGarden.Scripts
                 StartCoroutine(FallingCor(square, true));
         }
 
+        Coroutine landingCor;
+        int fallPoseVersion;
+
+        // Closed-form integration keeps the same speed at 30/60 FPS. Position is
+        // sampled by the render frame; it never extrapolates beyond the destination.
+        internal static float FallDistanceAt(float elapsed, float initialSpeed, float acceleration, float maxSpeed)
+        {
+            elapsed = Mathf.Max(0, elapsed);
+            maxSpeed = Mathf.Max(.01f, maxSpeed);
+            initialSpeed = Mathf.Clamp(initialSpeed, .01f, maxSpeed);
+            acceleration = Mathf.Max(0, acceleration);
+            if (acceleration <= .0001f) return initialSpeed * elapsed;
+            float accelerating = Mathf.Min(elapsed, (maxSpeed - initialSpeed) / acceleration);
+            return initialSpeed * accelerating + .5f * acceleration * accelerating * accelerating +
+                maxSpeed * (elapsed - accelerating);
+        }
+
         IEnumerator FallingCor(Square _square, bool animate)
         {
+            if (!_square || destroying) yield break;
+            int version = ++fallPoseVersion;
+            if (landingCor != null)
+            {
+                StopCoroutine(landingCor); landingCor = null;
+                transform.localScale = juiceBaseScale;
+                suppressIdleScale = false;
+            }
             falling = true;
             Vector3 startPos = transform.position;
             Vector3 endPos = _square.transform.position + Vector3.back * 0.2f;
-            float distance = Vector3.Distance(startPos, _square.transform.position);
+            // Z is render depth, not travel distance. Small/diagonal steps must
+            // animate too; the old half-world-unit gate snapped short moves.
+            float distance = Vector2.Distance(startPos, endPos);
             var cfg = JuiceConfig.Instance;
-
-            if (distance > 0.5f)
+            float elapsed = 0;
+            float speed = cfg.EnableJuice ? cfg.FallSpeed : 10f;
+            float acceleration = cfg.EnableJuice ? cfg.FallAcceleration : 0f;
+            float maxSpeed = cfg.EnableJuice ? cfg.FallMaxSpeed : speed;
+            float travelled = 0;
+            while (distance > .0001f && travelled < distance)
             {
-                if (cfg.EnableJuice)
-                {
-                    // Integrate a real velocity instead of ramping a Lerp factor. This
-                    // makes a long drop genuinely take longer than a short one and gives
-                    // the accelerating weight the old constant-ish speed lacked.
-                    float travelled = 0f;
-                    float vel = cfg.FallSpeed;
-                    while (travelled < distance)
-                    {
-                        vel = Mathf.Min(vel + cfg.FallAcceleration * Time.deltaTime, cfg.FallMaxSpeed);
-                        travelled += vel * Time.deltaTime;
-                        float frac = Mathf.Clamp01(travelled / distance);
-                        transform.position = Vector3.LerpUnclamped(startPos, endPos, frac);
-                        yield return null;
-                    }
-                }
-                else
-                {
-                    float startTime = Time.time;
-                    float speed = 10;
-                    float fracJourney = 0;
-                    while (fracJourney < 1)
-                    {
-                        speed += 0.2f;
-                        float distCovered = (Time.time - startTime) * speed;
-                        fracJourney = distCovered / distance;
-                        transform.position = Vector3.LerpUnclamped(startPos, endPos, fracJourney);
-                        yield return new WaitForFixedUpdate();
-                    }
-                }
+                if (version != fallPoseVersion || destroying) yield break;
+                if (square != _square) { falling = false; StartFalling(); yield break; }
+                if (LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Pause) { yield return null; continue; }
+                elapsed += Time.deltaTime;
+                travelled = FallDistanceAt(elapsed, speed, acceleration, maxSpeed);
+                transform.position = Vector3.Lerp(startPos, endPos, Mathf.Clamp01(travelled / distance));
+                yield return null;
             }
+            if (version != fallPoseVersion || destroying) yield break;
+            if (square != _square) { falling = false; StartFalling(); yield break; }
             transform.position = endPos;
-            if (distance > 0.5f && animate)
+            falling = false;
+            justCreatedItem = false;
+            if (distance > .0001f && animate)
             {
-                if (cfg.EnableJuice)
+                if (cfg.EnableJuice || RoyalPowerupDirector.IsPower(currentType))
                 {
-                    // Code-driven landing squash on the ROOT transform. The old
-                    // anim.SetTrigger("stop") clip ran 258ms on the child Sprite, which
-                    // is well past the tactile window; this lands in ~100ms and cannot
-                    // fight the Animator because they drive different transforms.
-                    StartCoroutine(LandingSquashCor());
+                    landingCor = StartCoroutine(LandingSquashCor());
                 }
-                else
+                else if (anim)
                 {
                     anim.SetTrigger("stop");
                 }
-                SoundBase.Instance.PlaySound(SoundBase.Instance.drop[Random.Range(0, SoundBase.Instance.drop.Length)]);
+                var sound = SoundBase.Instance;
+                if (sound && sound.drop != null && sound.drop.Length > 0)
+                    sound.PlaySound(sound.drop[Random.Range(0, sound.drop.Length)]);
             }
-            falling = false;
-            justCreatedItem = false;
-            transform.position = endPos;//1.6.1
         }
 
         /// <summary>
@@ -887,26 +896,50 @@ namespace JellyGarden.Scripts
             float amount = cfg.LandingSquash;
             if (dur <= 0f || amount <= 0f) yield break;
 
+            int version = fallPoseVersion;
+            var landedSquare = square;
+            var landedType = currentType;
+            bool rigid = RoyalPowerupDirector.IsPower(landedType);
+            Vector3 restPosition = transform.position;
+            Vector3 appliedPosition = restPosition;
+            float cell = LevelManager.THIS ? LevelManager.THIS.squareHeight * Mathf.Abs(LevelManager.THIS.GameField.lossyScale.y) : 1f;
+            if (rigid) StopIdleAnim();
             suppressIdleScale = true;
             float t = 0f;
-            while (t < 1f && !destroying)
+            while (t < 1f && !destroying && !falling && !inputSwapLocked &&
+                version == fallPoseVersion && square == landedSquare && currentType == landedType)
             {
+                if (LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Pause) { yield return null; continue; }
                 t += Time.deltaTime / dur;
                 float k = Mathf.Clamp01(t);
-                // 1.00 -> 0.94 -> 1.02 -> 1.00 on Y, with X taking the inverse.
-                float dip = -Mathf.Sin(k * Mathf.PI * 1.5f) * Mathf.Pow(1f - k, 0.6f);
-                float sy = 1f + dip * amount;
-                float sx = 1f - dip * amount * 0.75f;
-                transform.localScale = new Vector3(juiceBaseScale.x * sx, juiceBaseScale.y * sy, juiceBaseScale.z);
+                if (rigid)
+                {
+                    // Metal boosters settle through translation, never shell deformation.
+                    // Both native child rigs and the detached Color Ball seat follow this root.
+                    appliedPosition = restPosition + Vector3.up * (cell * amount * .45f * Mathf.Sin(k * Mathf.PI) * (1f - k));
+                    transform.position = appliedPosition;
+                }
+                else
+                {
+                    float dip = -Mathf.Sin(k * Mathf.PI * 1.5f) * Mathf.Pow(1f - k, 0.6f);
+                    float sy = 1f + dip * amount;
+                    float sx = 1f - dip * amount * 0.75f;
+                    transform.localScale = new Vector3(juiceBaseScale.x * sx, juiceBaseScale.y * sy, juiceBaseScale.z);
+                }
                 yield return null;
             }
 
-            if (!destroying)
+            if (!destroying && version == fallPoseVersion)
             {
+                // Do not restore position over a new swap/fall that took ownership.
+                if (rigid && !falling && !inputSwapLocked && square == landedSquare &&
+                    (transform.position - appliedPosition).sqrMagnitude < .000001f)
+                    transform.position = restPosition;
                 transform.localScale = juiceBaseScale;
                 xScale = juiceBaseScale.x;
                 yScale = juiceBaseScale.y;
                 suppressIdleScale = false;
+                landingCor = null;
             }
         }
 
@@ -1014,6 +1047,7 @@ namespace JellyGarden.Scripts
         {
             if (RoyalEffectsProfile.Get && NextType != ItemsTypes.NONE)
             {
+                ItemsTypes previousType = currentType;
                 ItemsTypes createdType = NextType;
                 currentType = createdType; debugType = createdType; NextType = ItemsTypes.NONE;
                 if (currentType == ItemsTypes.BOMB) color = 555;
@@ -1033,6 +1067,8 @@ namespace JellyGarden.Scripts
                     sprRenderer.enabled = true; sprRenderer.color = Color.white;
                     royalSkin?.ApplyNow();
                 }
+                if (previousType != currentType)
+                    RoyalThrone.Characters.KingVanguardActivityEvents.NotifyPowerupCreated(LevelManager.THIS, this);
                 if (RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Attach(this, true)) yield break;
                 if (tnt) TNT3DAnimator.RevealSprite(this);
                 else
@@ -1085,9 +1121,13 @@ namespace JellyGarden.Scripts
 
             //     square.DestroyBlock();
 
+            ItemsTypes previousLegacyType = currentType;
             debugType = NextType;
             currentType = NextType;
             NextType = ItemsTypes.NONE;
+
+            if (previousLegacyType != currentType)
+                RoyalThrone.Characters.KingVanguardActivityEvents.NotifyPowerupCreated(LevelManager.THIS, this);
 
         }
 
@@ -1176,6 +1216,7 @@ namespace JellyGarden.Scripts
             bool royalCoin = RoyalThrone.Campaign.RoyalCampaignBlockers.HasCoinPresentation(this);
             if (royalSpecial || royalConsumed || royalCoin)
             {
+                if (royalSpecial) RoyalWinSequence.FinaleBoosterActivated(this);
                 if (!royalConsumed && !royalCoin) RoyalPowerupDirector.Get.Queue(this);
                 sprRenderer.enabled = false; if (anim) anim.enabled = false; SetAnimationDestroyingFinished();
             }
@@ -1280,6 +1321,8 @@ namespace JellyGarden.Scripts
                 i.NextType = NextType;
                 i.SetColor(color);
                 i.ChangeType();
+                // The profile counts the power-ups matches make while the level is played (RoyalProfile).
+                if (LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Playing && Juice.RoyalPowerupDirector.IsPower(i.currentType)) RoyalThrone.RoyalProfile.PowerupMade();
             }
 
             if (destroying)

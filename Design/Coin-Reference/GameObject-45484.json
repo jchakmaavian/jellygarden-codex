@@ -1,0 +1,26 @@
+{
+  "m_Component": [
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 79041
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 137171
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 112626
+      }
+    }
+  ],
+  "m_Layer": 5,
+  "m_Name": "RoyalPassUnclaimedCoinsWithRibbonGreen",
+  "m_Tag": 0,
+  "m_IsActive": true
+}

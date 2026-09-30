@@ -15,6 +15,8 @@ namespace RoyalThrone.ReferenceGameplay
         struct PendingReturn { public string key; public GameObject view; }
         static readonly List<PendingReturn> pendingReturns = new List<PendingReturn>();
         static Transform poolRoot;
+        static bool quitting;
+        static bool CanPool => Application.isPlaying && !quitting;
         Item item;
         GameObject view;
         Animator animator;
@@ -23,6 +25,7 @@ namespace RoyalThrone.ReferenceGameplay
         SpriteRenderer legacyShadow;
         bool nativeHasShadow, shadowMasked, previousShadowMask;
         bool revealing;
+        bool fallAnimating, wasFalling;
         float remaining;
         public bool Revealing => revealing;
         public static int ActiveViews { get; private set; }
@@ -61,6 +64,7 @@ namespace RoyalThrone.ReferenceGameplay
         void Acquire(string name)
         {
             key = name;
+            wasFalling = false; fallAnimating = false;
             if (!pools.TryGetValue(name, out var pool)) pools[name] = pool = new Stack<GameObject>();
             while (pool.Count > 0 && !view) view = pool.Pop();
             if (!view) view = Instantiate(prefabs[name]);
@@ -105,13 +109,23 @@ namespace RoyalThrone.ReferenceGameplay
         }
         void Reveal()
         {
+            fallAnimating = false;
             remaining = Play(RevealState); revealing = remaining > 0;
             RocketBranches();
             ReferenceGameplayAudio.Reveal(item.currentType);
         }
+        public float RevealFromColorBall()
+        {
+            if (!item || item.currentType != ItemsTypes.PACKAGE || !animator) return 0;
+            // This dedicated recovered clip is different from ordinary TNT creation.
+            // ChangeType already owns the creation sound; do not play it twice.
+            remaining = Play("TntLightballCreationAnimation");
+            revealing = remaining > 0;
+            return remaining;
+        }
         void SetIdle()
         {
-            revealing = false;
+            revealing = false; fallAnimating = false;
             if (item.currentType == ItemsTypes.BOMB) Play("LightballDefaultAnimation");
             else { Play(RevealState, 1); if (animator) animator.speed = 0; }
             RocketBranches();
@@ -122,6 +136,14 @@ namespace RoyalThrone.ReferenceGameplay
             RefreshType();
             if (revealing && (!LevelManager.THIS || LevelManager.THIS.gameStatus != GameState.Pause))
             { remaining -= Time.deltaTime; if (remaining <= 0) SetIdle(); }
+            if (key == "Propeller" && (!revealing || fallAnimating) && item.falling != wasFalling)
+            {
+                // Recovered mechanical secondary motion follows the existing fall
+                // owner. Creation keeps priority; a new fall can interrupt settling.
+                wasFalling = item.falling;
+                remaining = Play(wasFalling ? "PropellerStartFallAnimation" : "PropellerEndFallAnimation");
+                fallAnimating = remaining > 0; revealing = fallAnimating;
+            }
             if (animator) animator.speed = LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Pause ? 0 : revealing || item.currentType == ItemsTypes.BOMB ? 1 : 0;
             Pose();
         }
@@ -150,27 +172,28 @@ namespace RoyalThrone.ReferenceGameplay
         }
         static void EnsurePool()
         {
-            if (poolRoot) return;
+            if (poolRoot || !CanPool) return;
             var pool = new GameObject("Reference gameplay visual pool");
             DontDestroyOnLoad(pool); poolRoot = pool.transform;
             pool.AddComponent<ReferencePieceVisualPool>();
         }
         static void ReturnView(string name, GameObject released)
         {
-            if (!released) return;
+            if (!released || !CanPool) return;
             EnsurePool(); released.transform.SetParent(poolRoot, false);
             if (!pools.TryGetValue(name, out var stack)) pools[name] = stack = new Stack<GameObject>();
             if (stack.Count < 24) stack.Push(released); else Destroy(released);
         }
         internal static void FlushReturns()
         {
+            if (!CanPool) { pendingReturns.Clear(); return; }
             foreach (var pending in pendingReturns) ReturnView(pending.key, pending.view);
             pendingReturns.Clear();
         }
         public void Release() { Release(false); }
         void Release(bool deferReparent)
         {
-            revealing = false;
+            revealing = false; fallAnimating = false; wasFalling = false;
             if (shadowMasked && legacyShadow) legacyShadow.forceRenderingOff = previousShadowMask;
             shadowMasked = false;
             if (!view) return;
@@ -179,15 +202,19 @@ namespace RoyalThrone.ReferenceGameplay
             view.SetActive(false);
             // Unity forbids reparenting a child from the parent's SetActive callback.
             // Release ownership now, then detach on the independent pool's LateUpdate.
-            if (deferReparent) { EnsurePool(); pendingReturns.Add(new PendingReturn { key = key, view = view }); }
-            else ReturnView(key, view);
+            if (CanPool)
+            {
+                if (deferReparent) { EnsurePool(); pendingReturns.Add(new PendingReturn { key = key, view = view }); }
+                else ReturnView(key, view);
+            }
             view = null; animator = null; ActiveViews = Mathf.Max(0, ActiveViews - 1);
             if (item && item.sprRenderer && !item.destroying) item.sprRenderer.enabled = true;
         }
         void OnDisable() { Release(true); }
         void OnDestroy() { Release(true); }
+        static void Quitting() { quitting = true; }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void Reset() { prefabs.Clear(); pools.Clear(); pendingReturns.Clear(); poolRoot = null; ActiveViews = 0; }
+        static void Reset() { prefabs.Clear(); pools.Clear(); pendingReturns.Clear(); poolRoot = null; ActiveViews = 0; quitting = false; Application.quitting -= Quitting; Application.quitting += Quitting; }
     }
     // Runtime-only host; the board can be inactive while deferred releases drain.
     sealed class ReferencePieceVisualPool : MonoBehaviour

@@ -1,0 +1,34 @@
+{
+ "junctions": {
+  "idle loop seam (4.0 s -> 0.0 s)": {
+   "max_bone_move_px": 0.0,
+   "max_bone_turn_deg": 0.0,
+   "worst_bone": "root",
+   "attachment_changes": {}
+  },
+  "idle -> happy_thumbs_up start": {
+   "max_bone_move_px": 0.053,
+   "max_bone_turn_deg": 0.014,
+   "worst_bone": "hand_L",
+   "attachment_changes": {}
+  },
+  "happy_thumbs_up end -> idle": {
+   "max_bone_move_px": 0.0,
+   "max_bone_turn_deg": 0.0,
+   "worst_bone": "root",
+   "attachment_changes": {}
+  }
+ },
+ "largest_single_frame_move_px_at_60fps": {
+  "idle": {
+   "px": 1.632,
+   "bone": "iris_L",
+   "at_s": 2.183
+  },
+  "happy_thumbs_up": {
+   "px": 41.136,
+   "bone": "hand_R",
+   "at_s": 1.6
+  }
+ }
+}

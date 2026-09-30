@@ -1,0 +1,22 @@
+[
+  {
+    "source": "Design/Coin-Reference/Textures/rfv387-496-Default-ParticleSystem.png",
+    "assetPath": "Assets/ReferenceGameplay/VFX/Textures/rfv387-496-Default-ParticleSystem.png",
+    "sha256": "e4a1e48db3c80dd59299f848ab733640d8527e15b0ed9848e8e746cb27dec332"
+  },
+  {
+    "source": "Design/Coin-Reference/Textures/rfv387-541-AdditiveParticleAtlas.png",
+    "assetPath": "Assets/ReferenceGameplay/VFX/Textures/rfv387-541-AdditiveParticleAtlas.png",
+    "sha256": "94094726c217e59ebad88aa7128950b3f271f1d38ecca32f075b9802a580107f"
+  },
+  {
+    "source": "Design/Coin-Reference/Audio/coin_counter__rfv387_17638.wav",
+    "assetPath": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_counter__rfv387_17638.wav",
+    "sha256": "36a14f40d73678fd1f2a2f8f07c69e35b05314f69eb9f5ad1957e3abd09e4e8d"
+  },
+  {
+    "source": "Design/Coin-Reference/Audio/coin_appear__rfv387_17675.wav",
+    "assetPath": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/coin_appear__rfv387_17675.wav",
+    "sha256": "570556b631a06a4f780e17e3ce91e3206a4a1e1ffcffd63454679b321af18f9e"
+  }
+]

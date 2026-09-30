@@ -9600,7 +9600,7 @@ MonoBehaviour:
     adType: 0
     everyLevel: 1
     calls: 0
-  enableUnityAds: 1
+  enableUnityAds: 0
   enableGoogleMobileAds: 0
   enableChartboostAds: 0
   rewardedVideoZone: rewardedVideoZone
@@ -9610,13 +9610,13 @@ MonoBehaviour:
   dailyRewardedFrequency: 3
   dailyRewardedFrequencyTime: 2
   dailyRewardedShown: 
-  admobUIDAndroid: ca-app-pub-9974681578637939/6393464263
-  admobUIDIOS: 
-  admobRewardedUIDAndroid: ca-app-pub-9974681578637939/5210526556
-  admobRewardedUIDIOS: ca-app-pub-9974681578637939/5210526556
+  admobUIDAndroid: ""
+  admobUIDIOS: ""
+  admobRewardedUIDAndroid: ""
+  admobRewardedUIDIOS: ""
   LoginEnable: 0
   ShowRateEvery: 5
-  RateURL: market://details?q=pname:com.mycopmany.myapp/
+  RateURL: ""
   rewardedGems: 5
   losingLifeEveryGame: 0
   facebookButton: {fileID: 66756232}
@@ -9638,7 +9638,7 @@ MonoBehaviour:
   OnAdClosedEvent:
     m_PersistentCalls:
       m_Calls: []
-  RateURLIOS: https://itunes.apple.com/app/id378458261
+  RateURLIOS: ""
   unityAds: {fileID: 0}
 --- !u!120 &511786110
 LineRenderer:
@@ -9802,7 +9802,7 @@ MonoBehaviour:
   thrivingBlockPrefab: {fileID: 142200, guid: 4d22c0ca6aa3c2f44a8136e879b88ed3, type: 3}
   lifeShop: {fileID: 285581711}
   GameField: {fileID: 1050245871}
-  enableInApps: 1
+  enableInApps: 0
   maxRows: 5
   maxCols: 9
   squareWidth: 0.82
@@ -9880,12 +9880,8 @@ MonoBehaviour:
     price: 9.99
   - count: 150
     price: 14.99
-  InAppIDs:
-  - com.best2dgamesstudio.jellygarden.10gems
-  - com.best2dgamesstudio.jellygarden.50gems
-  - com.best2dgamesstudio.jellygarden.100gems
-  - com.best2dgamesstudio.jellygarden.150gems
-  GoogleLicenseKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhBxnXNyc+hprmJd0Adr+D66pPnoDfdoqb8o/fw/7KoE8xAe0MlA5leXKqQ/Ib0Iug4wLuFfDrtoee4i/kjq7+sLum0G74+Cpe4VwVeyEH9mq3Tf1o6Eyq/t1vDthsORCxgErSnfJ/EiSn7Uy7HyIvX5C76bmZk5YqLpyZG04yAmJtlLXZvJAiLpSRIUdeN1nuKU0dl6aEBPO3STedKEqP9Yr/z0nmcbpxFpf6mIAZC/kagMmp+nm63ajvzGS2IHatYdtFMyfiLL6p0RXH5rLgamjuJ8/7/8lXwWO/lZFLcxmN0wuCN3RALz4e2wdOtaiu0w9sgdHK0gZ/54ZSsRE+QIDAQAB
+  InAppIDs: []
+  GoogleLicenseKey: ""
   thrivingBlockDestroyed: 0
   BoostColorfullBomb: 0
   BoostPackage: 0
@@ -9896,8 +9892,8 @@ MonoBehaviour:
   emptyBoostIcon: {fileID: 511786113}
   AvctivatedBoostView: {fileID: 0}
   activatedBoost: {fileID: 0}
-  androidSharingPath: https://apps.facebook.com/511910108966112
-  iosSharingPath: https://apps.facebook.com/511910108966112
+  androidSharingPath: ""
+  iosSharingPath: ""
   targetBlocks: 0
   itemExplPool:
   - {fileID: 0}

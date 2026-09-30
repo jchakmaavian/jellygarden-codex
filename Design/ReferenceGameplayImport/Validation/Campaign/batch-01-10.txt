@@ -1,0 +1,1129 @@
+PASS Separate reference QA profile selected
+PASS Level 1: opens and settles
+PASS Level 1: dimensions and moves reach runtime
+PASS Level 1: exact board holes
+PASS Level 1: all goals reach runtime
+PASS Level 1: authored gem 0
+PASS Level 1: authored gem 1
+PASS Level 1: authored gem 2
+PASS Level 1: authored gem 3
+PASS Level 1: authored gem 4
+PASS Level 1: authored gem 5
+PASS Level 1: authored gem 6
+PASS Level 1: authored gem 7
+PASS Level 1: authored gem 8
+PASS Level 1: authored gem 9
+PASS Level 1: authored gem 10
+PASS Level 1: authored gem 11
+PASS Level 1: authored gem 12
+PASS Level 1: authored gem 13
+PASS Level 1: authored gem 14
+PASS Level 1: authored gem 15
+PASS Level 1: authored gem 16
+PASS Level 1: authored gem 17
+PASS Level 1: authored gem 18
+PASS Level 1: authored gem 19
+PASS Level 1: authored gem 20
+PASS Level 1: authored gem 21
+PASS Level 1: authored gem 22
+PASS Level 1: authored gem 23
+PASS Level 1: authored gem 24
+PASS Level 1: authored gem 25
+PASS Level 1: authored gem 26
+PASS Level 1: authored gem 27
+PASS Level 1: authored gem 28
+PASS Level 1: authored gem 29
+PASS Level 1: authored gem 30
+PASS Level 1: authored gem 31
+PASS Level 1: authored gem 32
+PASS Level 1: authored gem 33
+PASS Level 1: authored gem 34
+PASS Level 1: authored gem 35
+PASS Level 1: box health 36
+PASS Level 1: box health 37
+PASS Level 1: box health 38
+PASS Level 1: box health 39
+PASS Level 1: box health 40
+PASS Level 1: box health 41
+PASS Level 1: box health 42
+PASS Level 1: box health 43
+PASS Level 1: box health 44
+PASS Level 1: box health 45
+PASS Level 1: box health 46
+PASS Level 1: box health 47
+PASS Level 1: box health 48
+PASS Level 1: box health 49
+PASS Level 1: box health 50
+PASS Level 1: box health 51
+PASS Level 1: box health 52
+PASS Level 1: box health 53
+PASS Level 1: box health 54
+PASS Level 1: box health 55
+PASS Level 1: box health 56
+PASS Level 1: box health 57
+PASS Level 1: box health 58
+PASS Level 1: box health 59
+PASS Level 1: box health 60
+PASS Level 1: box health 61
+PASS Level 1: box health 62
+PASS Level 1: box health 63
+PASS Level 1: box health 64
+PASS Level 1: box health 65
+PASS Level 1: box health 66
+PASS Level 1: box health 67
+PASS Level 1: box health 68
+PASS Level 1: box health 69
+PASS Level 1: box health 70
+PASS Level 1: box health 71
+PASS Level 1: settled item ownership
+PASS Level 1: has a legal swap or existing power action
+PASS Level 1: real action spends exactly one move
+PASS Level 1: real action scores through match/blast resolution
+PASS Level 1: real clear, gravity and refill settle with valid ownership
+PASS Level 01: box loses one layer from a direct Square hit
+PASS Level 01: same-wave repeated contact cannot remove a second box layer
+PASS Level 01: cleared box releases its cell for normal gravity/refill
+PASS Level 01: all box layers credit exactly one box goal
+PASS Level 2: opens and settles
+PASS Level 2: dimensions and moves reach runtime
+PASS Level 2: exact board holes
+PASS Level 2: all goals reach runtime
+PASS Level 2: authored gem 0
+PASS Level 2: authored gem 1
+PASS Level 2: authored gem 2
+PASS Level 2: authored gem 3
+PASS Level 2: authored gem 4
+PASS Level 2: authored gem 5
+PASS Level 2: authored gem 6
+PASS Level 2: authored gem 7
+PASS Level 2: authored gem 8
+PASS Level 2: box health 9
+PASS Level 2: authored gem 10
+PASS Level 2: authored gem 11
+PASS Level 2: authored gem 12
+PASS Level 2: authored gem 13
+PASS Level 2: authored gem 14
+PASS Level 2: authored gem 15
+PASS Level 2: authored gem 16
+PASS Level 2: authored gem 17
+PASS Level 2: box health 18
+PASS Level 2: box health 19
+PASS Level 2: authored gem 20
+PASS Level 2: authored gem 21
+PASS Level 2: authored gem 22
+PASS Level 2: authored gem 23
+PASS Level 2: authored gem 24
+PASS Level 2: authored gem 25
+PASS Level 2: authored gem 26
+PASS Level 2: box health 27
+PASS Level 2: box health 28
+PASS Level 2: box health 29
+PASS Level 2: authored gem 30
+PASS Level 2: authored gem 31
+PASS Level 2: authored gem 32
+PASS Level 2: authored gem 33
+PASS Level 2: authored gem 34
+PASS Level 2: authored gem 35
+PASS Level 2: box health 36
+PASS Level 2: box health 37
+PASS Level 2: box health 38
+PASS Level 2: box health 39
+PASS Level 2: authored gem 40
+PASS Level 2: authored gem 41
+PASS Level 2: authored gem 42
+PASS Level 2: authored gem 43
+PASS Level 2: authored gem 44
+PASS Level 2: box health 45
+PASS Level 2: box health 46
+PASS Level 2: box health 47
+PASS Level 2: box health 48
+PASS Level 2: box health 49
+PASS Level 2: authored gem 50
+PASS Level 2: authored gem 51
+PASS Level 2: authored gem 52
+PASS Level 2: authored gem 53
+PASS Level 2: box health 54
+PASS Level 2: box health 55
+PASS Level 2: box health 56
+PASS Level 2: box health 57
+PASS Level 2: box health 58
+PASS Level 2: box health 59
+PASS Level 2: authored gem 60
+PASS Level 2: authored gem 61
+PASS Level 2: authored gem 62
+PASS Level 2: box health 63
+PASS Level 2: box health 64
+PASS Level 2: box health 65
+PASS Level 2: box health 66
+PASS Level 2: box health 67
+PASS Level 2: box health 68
+PASS Level 2: box health 69
+PASS Level 2: authored gem 70
+PASS Level 2: authored gem 71
+PASS Level 2: box health 72
+PASS Level 2: box health 73
+PASS Level 2: box health 74
+PASS Level 2: box health 75
+PASS Level 2: box health 76
+PASS Level 2: box health 77
+PASS Level 2: box health 78
+PASS Level 2: box health 79
+PASS Level 2: authored gem 80
+PASS Level 2: settled item ownership
+PASS Level 2: has a legal swap or existing power action
+PASS Level 2: real action spends exactly one move
+PASS Level 2: real action scores through match/blast resolution
+PASS Level 2: real clear, gravity and refill settle with valid ownership
+PASS Level 02: box loses one layer from a direct Square hit
+PASS Level 02: same-wave repeated contact cannot remove a second box layer
+PASS Level 02: cleared box releases its cell for normal gravity/refill
+PASS Level 02: all box layers credit exactly one box goal
+PASS Level 3: opens and settles
+PASS Level 3: dimensions and moves reach runtime
+PASS Level 3: exact board holes
+PASS Level 3: all goals reach runtime
+PASS Level 3: authored gem 0
+PASS Level 3: authored gem 1
+PASS Level 3: authored gem 2
+PASS Level 3: authored gem 3
+PASS Level 3: authored gem 4
+PASS Level 3: authored gem 5
+PASS Level 3: authored gem 6
+PASS Level 3: authored gem 7
+PASS Level 3: authored gem 8
+PASS Level 3: authored gem 9
+PASS Level 3: authored gem 10
+PASS Level 3: authored gem 11
+PASS Level 3: authored gem 12
+PASS Level 3: authored gem 13
+PASS Level 3: authored gem 14
+PASS Level 3: authored gem 15
+PASS Level 3: authored gem 16
+PASS Level 3: authored gem 17
+PASS Level 3: authored gem 18
+PASS Level 3: authored gem 19
+PASS Level 3: authored gem 20
+PASS Level 3: authored gem 21
+PASS Level 3: authored gem 22
+PASS Level 3: authored gem 23
+PASS Level 3: authored gem 24
+PASS Level 3: authored gem 25
+PASS Level 3: authored gem 26
+PASS Level 3: authored gem 27
+PASS Level 3: authored gem 28
+PASS Level 3: authored gem 29
+PASS Level 3: authored gem 30
+PASS Level 3: authored gem 31
+PASS Level 3: authored gem 32
+PASS Level 3: authored gem 33
+PASS Level 3: authored gem 34
+PASS Level 3: authored gem 35
+PASS Level 3: authored gem 36
+PASS Level 3: authored gem 37
+PASS Level 3: authored gem 38
+PASS Level 3: authored gem 39
+PASS Level 3: box health 40
+PASS Level 3: authored gem 41
+PASS Level 3: authored gem 42
+PASS Level 3: authored gem 43
+PASS Level 3: authored gem 44
+PASS Level 3: authored gem 45
+PASS Level 3: authored gem 46
+PASS Level 3: authored gem 47
+PASS Level 3: box health 48
+PASS Level 3: box health 49
+PASS Level 3: box health 50
+PASS Level 3: authored gem 51
+PASS Level 3: authored gem 52
+PASS Level 3: authored gem 53
+PASS Level 3: authored gem 54
+PASS Level 3: authored gem 55
+PASS Level 3: box health 56
+PASS Level 3: box health 57
+PASS Level 3: box health 58
+PASS Level 3: box health 59
+PASS Level 3: box health 60
+PASS Level 3: authored gem 61
+PASS Level 3: authored gem 62
+PASS Level 3: authored gem 63
+PASS Level 3: box health 64
+PASS Level 3: box health 65
+PASS Level 3: box health 66
+PASS Level 3: box health 67
+PASS Level 3: box health 68
+PASS Level 3: box health 69
+PASS Level 3: box health 70
+PASS Level 3: authored gem 71
+PASS Level 3: box health 72
+PASS Level 3: box health 73
+PASS Level 3: box health 74
+PASS Level 3: box health 75
+PASS Level 3: box health 76
+PASS Level 3: box health 77
+PASS Level 3: box health 78
+PASS Level 3: box health 79
+PASS Level 3: box health 80
+PASS Level 3: settled item ownership
+PASS Level 3: has a legal swap or existing power action
+PASS Level 3: real action spends exactly one move
+PASS Level 3: real action scores through match/blast resolution
+PASS Level 3: real clear, gravity and refill settle with valid ownership
+PASS Level 03: box loses one layer from a direct Square hit
+PASS Level 03: same-wave repeated contact cannot remove a second box layer
+PASS Level 03: cleared box releases its cell for normal gravity/refill
+PASS Level 03: all box layers credit exactly one box goal
+PASS Level 4: opens and settles
+PASS Level 4: dimensions and moves reach runtime
+PASS Level 4: exact board holes
+PASS Level 4: all goals reach runtime
+PASS Level 4: authored gem 0
+PASS Level 4: authored gem 1
+PASS Level 4: authored gem 2
+PASS Level 4: authored gem 3
+PASS Level 4: authored gem 4
+PASS Level 4: authored gem 5
+PASS Level 4: authored gem 6
+PASS Level 4: authored gem 7
+PASS Level 4: authored gem 8
+PASS Level 4: authored gem 9
+PASS Level 4: authored gem 10
+PASS Level 4: grass layers 10
+PASS Level 4: authored gem 11
+PASS Level 4: grass layers 11
+PASS Level 4: authored gem 12
+PASS Level 4: grass layers 12
+PASS Level 4: authored gem 13
+PASS Level 4: grass layers 13
+PASS Level 4: authored gem 14
+PASS Level 4: grass layers 14
+PASS Level 4: authored gem 15
+PASS Level 4: grass layers 15
+PASS Level 4: authored gem 16
+PASS Level 4: grass layers 16
+PASS Level 4: authored gem 17
+PASS Level 4: authored gem 18
+PASS Level 4: authored gem 19
+PASS Level 4: grass layers 19
+PASS Level 4: authored gem 20
+PASS Level 4: grass layers 20
+PASS Level 4: authored gem 21
+PASS Level 4: grass layers 21
+PASS Level 4: authored gem 22
+PASS Level 4: grass layers 22
+PASS Level 4: authored gem 23
+PASS Level 4: grass layers 23
+PASS Level 4: authored gem 24
+PASS Level 4: grass layers 24
+PASS Level 4: authored gem 25
+PASS Level 4: grass layers 25
+PASS Level 4: authored gem 26
+PASS Level 4: authored gem 27
+PASS Level 4: authored gem 28
+PASS Level 4: grass layers 28
+PASS Level 4: authored gem 29
+PASS Level 4: grass layers 29
+PASS Level 4: authored gem 30
+PASS Level 4: grass layers 30
+PASS Level 4: authored gem 31
+PASS Level 4: grass layers 31
+PASS Level 4: authored gem 32
+PASS Level 4: grass layers 32
+PASS Level 4: authored gem 33
+PASS Level 4: grass layers 33
+PASS Level 4: authored gem 34
+PASS Level 4: grass layers 34
+PASS Level 4: authored gem 35
+PASS Level 4: authored gem 36
+PASS Level 4: authored gem 37
+PASS Level 4: grass layers 37
+PASS Level 4: authored gem 38
+PASS Level 4: grass layers 38
+PASS Level 4: authored gem 39
+PASS Level 4: grass layers 39
+PASS Level 4: authored gem 40
+PASS Level 4: grass layers 40
+PASS Level 4: authored gem 41
+PASS Level 4: grass layers 41
+PASS Level 4: authored gem 42
+PASS Level 4: grass layers 42
+PASS Level 4: authored gem 43
+PASS Level 4: grass layers 43
+PASS Level 4: authored gem 44
+PASS Level 4: authored gem 45
+PASS Level 4: authored gem 46
+PASS Level 4: grass layers 46
+PASS Level 4: authored gem 47
+PASS Level 4: grass layers 47
+PASS Level 4: authored gem 48
+PASS Level 4: grass layers 48
+PASS Level 4: authored gem 49
+PASS Level 4: grass layers 49
+PASS Level 4: authored gem 50
+PASS Level 4: grass layers 50
+PASS Level 4: authored gem 51
+PASS Level 4: grass layers 51
+PASS Level 4: authored gem 52
+PASS Level 4: grass layers 52
+PASS Level 4: authored gem 53
+PASS Level 4: authored gem 54
+PASS Level 4: authored gem 55
+PASS Level 4: grass layers 55
+PASS Level 4: authored gem 56
+PASS Level 4: grass layers 56
+PASS Level 4: authored gem 57
+PASS Level 4: grass layers 57
+PASS Level 4: authored gem 58
+PASS Level 4: grass layers 58
+PASS Level 4: authored gem 59
+PASS Level 4: grass layers 59
+PASS Level 4: authored gem 60
+PASS Level 4: grass layers 60
+PASS Level 4: authored gem 61
+PASS Level 4: grass layers 61
+PASS Level 4: authored gem 62
+PASS Level 4: authored gem 63
+PASS Level 4: authored gem 64
+PASS Level 4: grass layers 64
+PASS Level 4: authored gem 65
+PASS Level 4: grass layers 65
+PASS Level 4: authored gem 66
+PASS Level 4: grass layers 66
+PASS Level 4: authored gem 67
+PASS Level 4: grass layers 67
+PASS Level 4: authored gem 68
+PASS Level 4: grass layers 68
+PASS Level 4: authored gem 69
+PASS Level 4: grass layers 69
+PASS Level 4: authored gem 70
+PASS Level 4: grass layers 70
+PASS Level 4: authored gem 71
+PASS Level 4: authored gem 72
+PASS Level 4: authored gem 73
+PASS Level 4: authored gem 74
+PASS Level 4: authored gem 75
+PASS Level 4: authored gem 76
+PASS Level 4: authored gem 77
+PASS Level 4: authored gem 78
+PASS Level 4: authored gem 79
+PASS Level 4: authored gem 80
+PASS Level 4: settled item ownership
+PASS Level 4: has a legal swap or existing power action
+PASS Level 4: real action spends exactly one move
+PASS Level 4: real action scores through match/blast resolution
+PASS Level 4: real clear, gravity and refill settle with valid ownership
+PASS Level 04: grass loses one layer per contact wave
+PASS Level 04: grass layers credit exactly one grass cell
+PASS Level 5: opens and settles
+PASS Level 5: dimensions and moves reach runtime
+PASS Level 5: exact board holes
+PASS Level 5: all goals reach runtime
+PASS Level 5: authored gem 0
+PASS Level 5: grass layers 0
+PASS Level 5: authored gem 1
+PASS Level 5: grass layers 1
+PASS Level 5: authored gem 2
+PASS Level 5: grass layers 2
+PASS Level 5: authored gem 3
+PASS Level 5: grass layers 3
+PASS Level 5: authored gem 5
+PASS Level 5: grass layers 5
+PASS Level 5: authored gem 6
+PASS Level 5: grass layers 6
+PASS Level 5: authored gem 7
+PASS Level 5: grass layers 7
+PASS Level 5: authored gem 8
+PASS Level 5: grass layers 8
+PASS Level 5: authored gem 9
+PASS Level 5: grass layers 9
+PASS Level 5: authored gem 10
+PASS Level 5: grass layers 10
+PASS Level 5: authored gem 11
+PASS Level 5: grass layers 11
+PASS Level 5: authored gem 12
+PASS Level 5: grass layers 12
+PASS Level 5: authored gem 14
+PASS Level 5: grass layers 14
+PASS Level 5: authored gem 15
+PASS Level 5: grass layers 15
+PASS Level 5: authored gem 16
+PASS Level 5: grass layers 16
+PASS Level 5: authored gem 17
+PASS Level 5: grass layers 17
+PASS Level 5: authored gem 18
+PASS Level 5: grass layers 18
+PASS Level 5: authored gem 19
+PASS Level 5: grass layers 19
+PASS Level 5: authored gem 20
+PASS Level 5: grass layers 20
+PASS Level 5: authored gem 21
+PASS Level 5: grass layers 21
+PASS Level 5: authored gem 22
+PASS Level 5: grass layers 22
+PASS Level 5: authored gem 23
+PASS Level 5: grass layers 23
+PASS Level 5: authored gem 24
+PASS Level 5: grass layers 24
+PASS Level 5: authored gem 25
+PASS Level 5: grass layers 25
+PASS Level 5: authored gem 26
+PASS Level 5: grass layers 26
+PASS Level 5: authored gem 27
+PASS Level 5: grass layers 27
+PASS Level 5: authored gem 28
+PASS Level 5: grass layers 28
+PASS Level 5: authored gem 29
+PASS Level 5: grass layers 29
+PASS Level 5: authored gem 30
+PASS Level 5: grass layers 30
+PASS Level 5: authored gem 31
+PASS Level 5: grass layers 31
+PASS Level 5: authored gem 32
+PASS Level 5: grass layers 32
+PASS Level 5: authored gem 33
+PASS Level 5: grass layers 33
+PASS Level 5: authored gem 34
+PASS Level 5: grass layers 34
+PASS Level 5: authored gem 35
+PASS Level 5: grass layers 35
+PASS Level 5: authored gem 38
+PASS Level 5: grass layers 38
+PASS Level 5: authored gem 39
+PASS Level 5: grass layers 39
+PASS Level 5: authored gem 40
+PASS Level 5: grass layers 40
+PASS Level 5: authored gem 41
+PASS Level 5: grass layers 41
+PASS Level 5: authored gem 42
+PASS Level 5: grass layers 42
+PASS Level 5: authored gem 45
+PASS Level 5: grass layers 45
+PASS Level 5: authored gem 46
+PASS Level 5: grass layers 46
+PASS Level 5: authored gem 47
+PASS Level 5: grass layers 47
+PASS Level 5: authored gem 48
+PASS Level 5: grass layers 48
+PASS Level 5: authored gem 49
+PASS Level 5: grass layers 49
+PASS Level 5: authored gem 50
+PASS Level 5: grass layers 50
+PASS Level 5: authored gem 51
+PASS Level 5: grass layers 51
+PASS Level 5: authored gem 52
+PASS Level 5: grass layers 52
+PASS Level 5: authored gem 53
+PASS Level 5: grass layers 53
+PASS Level 5: authored gem 54
+PASS Level 5: grass layers 54
+PASS Level 5: authored gem 55
+PASS Level 5: grass layers 55
+PASS Level 5: authored gem 56
+PASS Level 5: grass layers 56
+PASS Level 5: authored gem 57
+PASS Level 5: grass layers 57
+PASS Level 5: authored gem 58
+PASS Level 5: grass layers 58
+PASS Level 5: authored gem 59
+PASS Level 5: grass layers 59
+PASS Level 5: authored gem 60
+PASS Level 5: grass layers 60
+PASS Level 5: authored gem 61
+PASS Level 5: grass layers 61
+PASS Level 5: authored gem 62
+PASS Level 5: grass layers 62
+PASS Level 5: authored gem 63
+PASS Level 5: grass layers 63
+PASS Level 5: authored gem 64
+PASS Level 5: grass layers 64
+PASS Level 5: authored gem 65
+PASS Level 5: grass layers 65
+PASS Level 5: authored gem 66
+PASS Level 5: grass layers 66
+PASS Level 5: authored gem 68
+PASS Level 5: grass layers 68
+PASS Level 5: authored gem 69
+PASS Level 5: grass layers 69
+PASS Level 5: authored gem 70
+PASS Level 5: grass layers 70
+PASS Level 5: authored gem 71
+PASS Level 5: grass layers 71
+PASS Level 5: authored gem 72
+PASS Level 5: grass layers 72
+PASS Level 5: authored gem 73
+PASS Level 5: grass layers 73
+PASS Level 5: authored gem 74
+PASS Level 5: grass layers 74
+PASS Level 5: authored gem 75
+PASS Level 5: grass layers 75
+PASS Level 5: authored gem 77
+PASS Level 5: grass layers 77
+PASS Level 5: authored gem 78
+PASS Level 5: grass layers 78
+PASS Level 5: authored gem 79
+PASS Level 5: grass layers 79
+PASS Level 5: authored gem 80
+PASS Level 5: grass layers 80
+PASS Level 5: settled item ownership
+PASS Level 5: has a legal swap or existing power action
+PASS Level 5: real action spends exactly one move
+PASS Level 5: real action scores through match/blast resolution
+PASS Level 5: real clear, gravity and refill settle with valid ownership
+PASS Level 05: grass loses one layer per contact wave
+PASS Level 05: grass layers credit exactly one grass cell
+PASS Level 6: opens and settles
+PASS Level 6: dimensions and moves reach runtime
+PASS Level 6: exact board holes
+PASS Level 6: all goals reach runtime
+PASS Level 6: authored gem 0
+PASS Level 6: grass layers 0
+PASS Level 6: authored gem 1
+PASS Level 6: grass layers 1
+PASS Level 6: authored gem 2
+PASS Level 6: grass layers 2
+PASS Level 6: authored gem 3
+PASS Level 6: grass layers 3
+PASS Level 6: authored gem 5
+PASS Level 6: grass layers 5
+PASS Level 6: authored gem 6
+PASS Level 6: grass layers 6
+PASS Level 6: authored gem 7
+PASS Level 6: grass layers 7
+PASS Level 6: authored gem 8
+PASS Level 6: grass layers 8
+PASS Level 6: authored gem 9
+PASS Level 6: grass layers 9
+PASS Level 6: authored gem 10
+PASS Level 6: grass layers 10
+PASS Level 6: authored gem 11
+PASS Level 6: grass layers 11
+PASS Level 6: authored gem 12
+PASS Level 6: grass layers 12
+PASS Level 6: authored gem 14
+PASS Level 6: grass layers 14
+PASS Level 6: authored gem 15
+PASS Level 6: grass layers 15
+PASS Level 6: authored gem 16
+PASS Level 6: grass layers 16
+PASS Level 6: authored gem 17
+PASS Level 6: grass layers 17
+PASS Level 6: authored gem 18
+PASS Level 6: grass layers 18
+PASS Level 6: authored gem 19
+PASS Level 6: grass layers 19
+PASS Level 6: authored gem 20
+PASS Level 6: grass layers 20
+PASS Level 6: authored gem 21
+PASS Level 6: grass layers 21
+PASS Level 6: authored gem 23
+PASS Level 6: grass layers 23
+PASS Level 6: authored gem 24
+PASS Level 6: grass layers 24
+PASS Level 6: authored gem 25
+PASS Level 6: grass layers 25
+PASS Level 6: authored gem 26
+PASS Level 6: grass layers 26
+PASS Level 6: authored gem 27
+PASS Level 6: grass layers 27
+PASS Level 6: authored gem 28
+PASS Level 6: grass layers 28
+PASS Level 6: authored gem 29
+PASS Level 6: grass layers 29
+PASS Level 6: authored gem 30
+PASS Level 6: grass layers 30
+PASS Level 6: authored gem 32
+PASS Level 6: grass layers 32
+PASS Level 6: authored gem 33
+PASS Level 6: grass layers 33
+PASS Level 6: authored gem 34
+PASS Level 6: grass layers 34
+PASS Level 6: authored gem 35
+PASS Level 6: grass layers 35
+PASS Level 6: authored gem 36
+PASS Level 6: grass layers 36
+PASS Level 6: authored gem 37
+PASS Level 6: grass layers 37
+PASS Level 6: authored gem 38
+PASS Level 6: grass layers 38
+PASS Level 6: authored gem 39
+PASS Level 6: grass layers 39
+PASS Level 6: authored gem 41
+PASS Level 6: grass layers 41
+PASS Level 6: authored gem 42
+PASS Level 6: grass layers 42
+PASS Level 6: authored gem 43
+PASS Level 6: grass layers 43
+PASS Level 6: authored gem 44
+PASS Level 6: grass layers 44
+PASS Level 6: authored gem 45
+PASS Level 6: grass layers 45
+PASS Level 6: authored gem 46
+PASS Level 6: grass layers 46
+PASS Level 6: authored gem 47
+PASS Level 6: grass layers 47
+PASS Level 6: authored gem 48
+PASS Level 6: grass layers 48
+PASS Level 6: authored gem 50
+PASS Level 6: grass layers 50
+PASS Level 6: authored gem 51
+PASS Level 6: grass layers 51
+PASS Level 6: authored gem 52
+PASS Level 6: grass layers 52
+PASS Level 6: authored gem 53
+PASS Level 6: grass layers 53
+PASS Level 6: authored gem 54
+PASS Level 6: grass layers 54
+PASS Level 6: authored gem 55
+PASS Level 6: grass layers 55
+PASS Level 6: authored gem 56
+PASS Level 6: grass layers 56
+PASS Level 6: authored gem 57
+PASS Level 6: grass layers 57
+PASS Level 6: authored gem 59
+PASS Level 6: grass layers 59
+PASS Level 6: authored gem 60
+PASS Level 6: grass layers 60
+PASS Level 6: authored gem 61
+PASS Level 6: grass layers 61
+PASS Level 6: authored gem 62
+PASS Level 6: grass layers 62
+PASS Level 6: authored gem 63
+PASS Level 6: grass layers 63
+PASS Level 6: authored gem 64
+PASS Level 6: grass layers 64
+PASS Level 6: authored gem 65
+PASS Level 6: grass layers 65
+PASS Level 6: authored gem 66
+PASS Level 6: grass layers 66
+PASS Level 6: authored gem 68
+PASS Level 6: grass layers 68
+PASS Level 6: authored gem 69
+PASS Level 6: grass layers 69
+PASS Level 6: authored gem 70
+PASS Level 6: grass layers 70
+PASS Level 6: authored gem 71
+PASS Level 6: grass layers 71
+PASS Level 6: authored gem 72
+PASS Level 6: grass layers 72
+PASS Level 6: authored gem 73
+PASS Level 6: grass layers 73
+PASS Level 6: authored gem 74
+PASS Level 6: grass layers 74
+PASS Level 6: authored gem 75
+PASS Level 6: grass layers 75
+PASS Level 6: authored gem 77
+PASS Level 6: grass layers 77
+PASS Level 6: authored gem 78
+PASS Level 6: grass layers 78
+PASS Level 6: authored gem 79
+PASS Level 6: grass layers 79
+PASS Level 6: authored gem 80
+PASS Level 6: grass layers 80
+PASS Level 6: settled item ownership
+PASS Level 6: has a legal swap or existing power action
+PASS Level 6: real action spends exactly one move
+PASS Level 6: real action scores through match/blast resolution
+PASS Level 6: real clear, gravity and refill settle with valid ownership
+PASS Level 06: grass loses one layer per contact wave
+PASS Level 06: grass layers credit exactly one grass cell
+PASS Level 7: opens and settles
+PASS Level 7: dimensions and moves reach runtime
+PASS Level 7: exact board holes
+PASS Level 7: all goals reach runtime
+PASS Level 7: authored gem 0
+PASS Level 7: authored gem 1
+PASS Level 7: authored gem 2
+PASS Level 7: authored gem 3
+PASS Level 7: box health 4
+PASS Level 7: authored gem 5
+PASS Level 7: authored gem 6
+PASS Level 7: authored gem 7
+PASS Level 7: authored gem 8
+PASS Level 7: authored gem 9
+PASS Level 7: authored gem 10
+PASS Level 7: authored gem 11
+PASS Level 7: authored gem 12
+PASS Level 7: box health 13
+PASS Level 7: authored gem 14
+PASS Level 7: authored gem 15
+PASS Level 7: authored gem 16
+PASS Level 7: authored gem 17
+PASS Level 7: authored gem 18
+PASS Level 7: authored gem 19
+PASS Level 7: authored gem 20
+PASS Level 7: authored gem 21
+PASS Level 7: box health 22
+PASS Level 7: authored gem 23
+PASS Level 7: authored gem 24
+PASS Level 7: authored gem 25
+PASS Level 7: authored gem 26
+PASS Level 7: authored gem 27
+PASS Level 7: authored gem 28
+PASS Level 7: authored gem 29
+PASS Level 7: authored gem 30
+PASS Level 7: box health 31
+PASS Level 7: authored gem 32
+PASS Level 7: authored gem 33
+PASS Level 7: authored gem 34
+PASS Level 7: authored gem 35
+PASS Level 7: box health 36
+PASS Level 7: box health 37
+PASS Level 7: box health 38
+PASS Level 7: box health 39
+PASS Level 7: box health 40
+PASS Level 7: box health 41
+PASS Level 7: box health 42
+PASS Level 7: box health 43
+PASS Level 7: box health 44
+PASS Level 7: grass layers 45
+PASS Level 7: grass layers 46
+PASS Level 7: grass layers 47
+PASS Level 7: grass layers 48
+PASS Level 7: box health 49
+PASS Level 7: grass layers 50
+PASS Level 7: grass layers 51
+PASS Level 7: grass layers 52
+PASS Level 7: grass layers 53
+PASS Level 7: grass layers 54
+PASS Level 7: grass layers 55
+PASS Level 7: grass layers 56
+PASS Level 7: grass layers 57
+PASS Level 7: box health 58
+PASS Level 7: grass layers 59
+PASS Level 7: grass layers 60
+PASS Level 7: grass layers 61
+PASS Level 7: grass layers 62
+PASS Level 7: grass layers 63
+PASS Level 7: grass layers 64
+PASS Level 7: grass layers 65
+PASS Level 7: grass layers 66
+PASS Level 7: box health 67
+PASS Level 7: grass layers 68
+PASS Level 7: grass layers 69
+PASS Level 7: grass layers 70
+PASS Level 7: grass layers 71
+PASS Level 7: grass layers 72
+PASS Level 7: grass layers 73
+PASS Level 7: grass layers 74
+PASS Level 7: grass layers 75
+PASS Level 7: box health 76
+PASS Level 7: grass layers 77
+PASS Level 7: grass layers 78
+PASS Level 7: grass layers 79
+PASS Level 7: grass layers 80
+PASS Level 7: settled item ownership
+PASS Level 7: has a legal swap or existing power action
+PASS Level 7: real action spends exactly one move
+PASS Level 7: real action scores through match/blast resolution
+PASS Level 7: real clear, gravity and refill settle with valid ownership
+PASS Level 07: box loses one layer from a direct Square hit
+PASS Level 07: same-wave repeated contact cannot remove a second box layer
+PASS Level 07: cleared box releases its cell for normal gravity/refill
+PASS Level 07: all box layers credit exactly one box goal
+PASS Level 07: grass loses one layer per contact wave
+PASS Level 07: grass layers credit exactly one grass cell
+PASS Level 8: opens and settles
+PASS Level 8: dimensions and moves reach runtime
+PASS Level 8: exact board holes
+PASS Level 8: all goals reach runtime
+PASS Level 8: authored gem 0
+PASS Level 8: authored gem 1
+PASS Level 8: authored gem 2
+PASS Level 8: authored gem 3
+PASS Level 8: authored gem 4
+PASS Level 8: authored gem 5
+PASS Level 8: authored gem 6
+PASS Level 8: authored gem 7
+PASS Level 8: authored gem 8
+PASS Level 8: authored gem 9
+PASS Level 8: authored gem 10
+PASS Level 8: authored gem 11
+PASS Level 8: authored gem 12
+PASS Level 8: authored gem 13
+PASS Level 8: authored gem 14
+PASS Level 8: authored gem 15
+PASS Level 8: authored gem 16
+PASS Level 8: authored gem 17
+PASS Level 8: box health 18
+PASS Level 8: box health 19
+PASS Level 8: box health 20
+PASS Level 8: box health 21
+PASS Level 8: box health 22
+PASS Level 8: box health 23
+PASS Level 8: box health 24
+PASS Level 8: box health 25
+PASS Level 8: box health 26
+PASS Level 8: box health 36
+PASS Level 8: grass layers 36
+PASS Level 8: box health 37
+PASS Level 8: grass layers 37
+PASS Level 8: box health 38
+PASS Level 8: grass layers 38
+PASS Level 8: box health 39
+PASS Level 8: grass layers 39
+PASS Level 8: box health 40
+PASS Level 8: grass layers 40
+PASS Level 8: box health 41
+PASS Level 8: grass layers 41
+PASS Level 8: box health 42
+PASS Level 8: grass layers 42
+PASS Level 8: box health 43
+PASS Level 8: grass layers 43
+PASS Level 8: box health 44
+PASS Level 8: grass layers 44
+PASS Level 8: box health 46
+PASS Level 8: grass layers 46
+PASS Level 8: box health 47
+PASS Level 8: grass layers 47
+PASS Level 8: box health 48
+PASS Level 8: grass layers 48
+PASS Level 8: box health 49
+PASS Level 8: grass layers 49
+PASS Level 8: box health 50
+PASS Level 8: grass layers 50
+PASS Level 8: box health 51
+PASS Level 8: grass layers 51
+PASS Level 8: box health 52
+PASS Level 8: grass layers 52
+PASS Level 8: box health 56
+PASS Level 8: grass layers 56
+PASS Level 8: box health 57
+PASS Level 8: grass layers 57
+PASS Level 8: box health 58
+PASS Level 8: grass layers 58
+PASS Level 8: box health 59
+PASS Level 8: grass layers 59
+PASS Level 8: box health 60
+PASS Level 8: grass layers 60
+PASS Level 8: box health 66
+PASS Level 8: grass layers 66
+PASS Level 8: box health 67
+PASS Level 8: grass layers 67
+PASS Level 8: box health 68
+PASS Level 8: grass layers 68
+PASS Level 8: box health 76
+PASS Level 8: grass layers 76
+PASS Level 8: settled item ownership
+PASS Level 8: has a legal swap or existing power action
+PASS Level 8: real action spends exactly one move
+PASS Level 8: real action scores through match/blast resolution
+PASS Level 8: real clear, gravity and refill settle with valid ownership
+PASS Level 08: grass loses one layer per contact wave
+PASS Level 08: grass layers credit exactly one grass cell
+PASS Level 9: opens and settles
+PASS Level 9: dimensions and moves reach runtime
+PASS Level 9: exact board holes
+PASS Level 9: all goals reach runtime
+PASS Level 9: box health 0
+PASS Level 9: box health 1
+PASS Level 9: authored gem 2
+PASS Level 9: authored gem 3
+PASS Level 9: authored gem 4
+PASS Level 9: authored gem 5
+PASS Level 9: box health 6
+PASS Level 9: box health 7
+PASS Level 9: box health 8
+PASS Level 9: box health 9
+PASS Level 9: authored gem 10
+PASS Level 9: authored gem 11
+PASS Level 9: authored gem 12
+PASS Level 9: authored gem 13
+PASS Level 9: box health 14
+PASS Level 9: box health 15
+PASS Level 9: box health 16
+PASS Level 9: box health 17
+PASS Level 9: authored gem 18
+PASS Level 9: authored gem 19
+PASS Level 9: authored gem 20
+PASS Level 9: authored gem 21
+PASS Level 9: box health 22
+PASS Level 9: box health 23
+PASS Level 9: box health 24
+PASS Level 9: box health 25
+PASS Level 9: authored gem 26
+PASS Level 9: authored gem 27
+PASS Level 9: authored gem 28
+PASS Level 9: authored gem 29
+PASS Level 9: box health 30
+PASS Level 9: box health 31
+PASS Level 9: box health 32
+PASS Level 9: box health 33
+PASS Level 9: authored gem 34
+PASS Level 9: authored gem 35
+PASS Level 9: authored gem 36
+PASS Level 9: authored gem 37
+PASS Level 9: box health 38
+PASS Level 9: box health 39
+PASS Level 9: box health 40
+PASS Level 9: box health 41
+PASS Level 9: authored gem 42
+PASS Level 9: authored gem 43
+PASS Level 9: authored gem 44
+PASS Level 9: authored gem 45
+PASS Level 9: box health 46
+PASS Level 9: box health 47
+PASS Level 9: box health 48
+PASS Level 9: box health 49
+PASS Level 9: box health 50
+PASS Level 9: box health 51
+PASS Level 9: box health 52
+PASS Level 9: box health 53
+PASS Level 9: box health 54
+PASS Level 9: box health 55
+PASS Level 9: box health 56
+PASS Level 9: box health 57
+PASS Level 9: box health 58
+PASS Level 9: box health 59
+PASS Level 9: box health 60
+PASS Level 9: box health 61
+PASS Level 9: box health 62
+PASS Level 9: box health 63
+PASS Level 9: settled item ownership
+PASS Level 9: has a legal swap or existing power action
+PASS Level 9: real action spends exactly one move
+PASS Level 9: real action scores through match/blast resolution
+PASS Level 9: real clear, gravity and refill settle with valid ownership
+PASS Level 09: box loses one layer from a direct Square hit
+PASS Level 09: same-wave repeated contact cannot remove a second box layer
+PASS Level 09: cleared box releases its cell for normal gravity/refill
+PASS Level 09: all box layers credit exactly one box goal
+PASS Level 10: opens and settles
+PASS Level 10: dimensions and moves reach runtime
+PASS Level 10: exact board holes
+PASS Level 10: all goals reach runtime
+PASS Level 10: authored gem 0
+PASS Level 10: authored gem 1
+PASS Level 10: authored gem 2
+PASS Level 10: box health 3
+PASS Level 10: grass layers 3
+PASS Level 10: box health 4
+PASS Level 10: grass layers 4
+PASS Level 10: box health 5
+PASS Level 10: grass layers 5
+PASS Level 10: authored gem 6
+PASS Level 10: authored gem 7
+PASS Level 10: authored gem 8
+PASS Level 10: authored gem 9
+PASS Level 10: authored gem 10
+PASS Level 10: authored gem 11
+PASS Level 10: box health 12
+PASS Level 10: grass layers 12
+PASS Level 10: box health 13
+PASS Level 10: grass layers 13
+PASS Level 10: box health 14
+PASS Level 10: grass layers 14
+PASS Level 10: authored gem 15
+PASS Level 10: authored gem 16
+PASS Level 10: authored gem 17
+PASS Level 10: authored gem 18
+PASS Level 10: authored gem 19
+PASS Level 10: authored gem 20
+PASS Level 10: box health 21
+PASS Level 10: grass layers 21
+PASS Level 10: box health 22
+PASS Level 10: grass layers 22
+PASS Level 10: box health 23
+PASS Level 10: grass layers 23
+PASS Level 10: authored gem 24
+PASS Level 10: authored gem 25
+PASS Level 10: authored gem 26
+PASS Level 10: authored gem 27
+PASS Level 10: authored gem 28
+PASS Level 10: authored gem 29
+PASS Level 10: box health 30
+PASS Level 10: grass layers 30
+PASS Level 10: box health 31
+PASS Level 10: grass layers 31
+PASS Level 10: box health 32
+PASS Level 10: grass layers 32
+PASS Level 10: authored gem 33
+PASS Level 10: authored gem 34
+PASS Level 10: authored gem 35
+PASS Level 10: authored gem 36
+PASS Level 10: authored gem 37
+PASS Level 10: authored gem 38
+PASS Level 10: box health 39
+PASS Level 10: grass layers 39
+PASS Level 10: box health 40
+PASS Level 10: grass layers 40
+PASS Level 10: box health 41
+PASS Level 10: grass layers 41
+PASS Level 10: authored gem 42
+PASS Level 10: authored gem 43
+PASS Level 10: authored gem 44
+PASS Level 10: authored gem 45
+PASS Level 10: authored gem 46
+PASS Level 10: authored gem 47
+PASS Level 10: box health 48
+PASS Level 10: grass layers 48
+PASS Level 10: box health 49
+PASS Level 10: grass layers 49
+PASS Level 10: box health 50
+PASS Level 10: grass layers 50
+PASS Level 10: authored gem 51
+PASS Level 10: authored gem 52
+PASS Level 10: authored gem 53
+PASS Level 10: authored gem 54
+PASS Level 10: authored gem 55
+PASS Level 10: authored gem 56
+PASS Level 10: box health 57
+PASS Level 10: grass layers 57
+PASS Level 10: box health 58
+PASS Level 10: grass layers 58
+PASS Level 10: box health 59
+PASS Level 10: grass layers 59
+PASS Level 10: authored gem 60
+PASS Level 10: authored gem 61
+PASS Level 10: authored gem 62
+PASS Level 10: authored gem 63
+PASS Level 10: authored gem 64
+PASS Level 10: authored gem 65
+PASS Level 10: box health 66
+PASS Level 10: grass layers 66
+PASS Level 10: box health 67
+PASS Level 10: grass layers 67
+PASS Level 10: box health 68
+PASS Level 10: grass layers 68
+PASS Level 10: authored gem 69
+PASS Level 10: authored gem 70
+PASS Level 10: authored gem 71
+PASS Level 10: authored gem 72
+PASS Level 10: authored gem 73
+PASS Level 10: authored gem 74
+PASS Level 10: box health 75
+PASS Level 10: grass layers 75
+PASS Level 10: box health 76
+PASS Level 10: grass layers 76
+PASS Level 10: box health 77
+PASS Level 10: grass layers 77
+PASS Level 10: authored gem 78
+PASS Level 10: authored gem 79
+PASS Level 10: authored gem 80
+PASS Level 10: settled item ownership
+PASS Level 10: has a legal swap or existing power action
+PASS Level 10: real action spends exactly one move
+PASS Level 10: real action scores through match/blast resolution
+PASS Level 10: real clear, gravity and refill settle with valid ownership
+PASS Level 10: box loses one layer from a direct Square hit
+PASS Level 10: same-wave repeated contact cannot remove a second box layer
+PASS Level 10: cleared box releases its cell for normal gravity/refill
+PASS Level 10: all box layers credit exactly one box goal
+PASS Level 10: grass loses one layer per contact wave
+PASS Level 10: grass layers credit exactly one grass cell
+PASS Level 1: unfinished goals at zero moves enter failure offer
+PASS Level 1: actual failure offer exists
+PASS Level 1: failure dialog/state is reachable
+PASS Level 1: retry restores original moves and fresh targets
+PASS Level 1: has a legal swap or existing power action
+PASS Level 1: real action spends exactly one move
+PASS Level 1: real action scores through match/blast resolution
+PASS Level 1: real clear, gravity and refill settle with valid ownership
+PASS Level 1: prepared final-move condition enters production win celebration
+PASS Level 1: production celebration reaches win screen
+PASS Level 1: completion and score save to reference profile
+PASS Level 1: saved completion unlocks next level
+PASS Level 1: native win life reward applies once
+PASS Level 1: idle win frame does not repeat reward
+PASS Level 1: completion survives a fresh board load
+PASS Normal player save unchanged across campaign batch
+PASS Player profile restored
+BATCH PASSED

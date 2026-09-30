@@ -50,6 +50,8 @@ namespace RoyalThrone.Presentation
         RoyalPanelGraphic[] tabSurfaces;
         float[] tabEmphasis;
         bool presentationPolished;
+        Image dogPortrait, stewardPortrait;
+        RoyalPanelGraphic throneSeal;
         RoyalAreaScene areaScene;
         RoyalAreaView areaView;
         public RoyalAreaView AreaView => areaView;
@@ -66,6 +68,10 @@ namespace RoyalThrone.Presentation
             runtimeInitialized = true;
             ApplyPresentationPolish();
             RoyalThrone.ReferenceGameplay.ReferenceHomeLayout.Attach(this);
+            // King Vanguard (APK Spine) takes the profile portrait. Mounted after the reference layout has placed and re-enabled
+            // the portrait image, which stays assigned underneath as the recoverable previous king.
+            var kingPortrait = resourceButtons != null && resourceButtons.Length > 0 && resourceButtons[0] ? resourceButtons[0].transform.Find("King portrait") : null;
+            if (kingPortrait) RoyalThrone.Characters.KingVanguardSlot.Mount(kingPortrait.GetComponent<Image>(), RoyalThrone.Characters.KingVanguardCharacter.Framing.Avatar);
             legacyCanvas = globalMenus.GetComponent<Canvas>();
             levelButton.onClick.AddListener(OpenNextLevel);
             areaButton.onClick.AddListener(() => OpenPanel("area", areaButton.gameObject));
@@ -239,7 +245,7 @@ namespace RoyalThrone.Presentation
             string title = "", copy = "", detail = ""; int icon = 0;
             switch (panel)
             {
-                case "profile": title = "Your Majesty"; copy = "Welcome to your kingdom"; detail = Count(Progress.completed, "level", "levels") + " completed\n" + Count(Progress.stars, "star", "stars") + " earned"; icon = 0; break;
+                case "profile": title = RoyalOfflineMode.KingName; copy = "Welcome to Royal Throne"; detail = Count(Progress.completed, "level", "levels") + " completed\n" + Count(Progress.stars, "star", "stars") + " earned"; icon = 0; break;
                 case "coins": title = Count(InitScript.Gems, "coin", "coins"); copy = "A little help for your next challenge"; detail = "Use your balance for boosts and extra moves during a level."; icon = 1; break;
                 case "lives": title = "Royal lives"; copy = "One heart, one new adventure"; icon = 2; break;
                 case "stars": title = Count(Progress.available, "star", "stars") + " to spend"; copy = "Restore your kingdom"; detail = "Win levels to earn up to three stars each, then spend them on area tasks. " + Count(Progress.stars, "star", "stars") + " earned so far."; icon = 3; break;
@@ -252,6 +258,7 @@ namespace RoyalThrone.Presentation
                 case "collection": title = "Royal Collection"; copy = "Treasures of the kingdom"; detail = "Collectible cards and sets are coming soon."; icon = 10; break;
             }
             dialogTitle.text = title; dialogCopy.text = copy; dialogDetail.text = detail; dialogIcon.sprite = icons[icon];
+            ShowRoyalCompanions(panel == "profile" || panel == "story");
             dialog.SetActive(true); controls.interactable = controls.blocksRaycasts = false;
             RefreshResources(); RefreshLayout(); Click();
             if (EventSystem.current) EventSystem.current.SetSelectedGameObject(closeButton.gameObject);
@@ -322,7 +329,7 @@ namespace RoyalThrone.Presentation
             navCanvas.overrideSorting = true; navCanvas.sortingOrder = 20;
             if (!navigation.GetComponent<GraphicRaycaster>()) navigation.gameObject.AddComponent<GraphicRaycaster>();
             var navFace = CreateSurface("Navigation clean blue", navigation,
-                new Color(.07f, .36f, .78f), new Color(.03f, .21f, .56f), 0);
+                new Color(.06f, .29f, .64f), new Color(.025f, .14f, .38f), 0);
             navFace.transform.SetAsFirstSibling();
             var navTrim = CreateSurface("Navigation fine gold edge", navFace.transform,
                 new Color(1, .92f, .48f), new Color(.87f, .57f, .12f), 0);
@@ -355,10 +362,10 @@ namespace RoyalThrone.Presentation
                 new Color(1, .89f, .42f), new Color(.71f, .36f, .035f), 26);
             depth.transform.SetAsFirstSibling();
             var face = CreateSurface("Play green face", depth.transform,
-                new Color(.56f, .82f, .10f), new Color(.19f, .49f, .025f), 22);
+                new Color(.055f, .65f, .56f), new Color(.025f, .32f, .34f), 22);
             face.rectTransform.offsetMin = new Vector2(5, 8); face.rectTransform.offsetMax = new Vector2(-5, -5);
             var highlight = CreateSurface("Play upper highlight", face.transform,
-                new Color(.9f, 1, .65f, .24f), Color.clear, 18);
+                new Color(.73f, 1, .9f, .24f), Color.clear, 18);
             highlight.rectTransform.anchorMin = new Vector2(0, .52f);
             levelLabel.rectTransform.anchorMin = new Vector2(.07f, .09f);
             levelLabel.rectTransform.anchorMax = new Vector2(.93f, .91f);
@@ -381,12 +388,73 @@ namespace RoyalThrone.Presentation
             // (a tapped button keeps the focus, so a focus scale stayed enlarged after every tap).
             foreach (var motion in GetComponentsInChildren<RoyalButtonMotion>(true))
             { motion.pressScale = .975f; motion.hoverScale = 1; motion.response = 20; }
+            ApplyCampaignArtwork();
             UpdateNavigation(true);
+        }
+
+        public void ApplyCampaignArtwork()
+        {
+            var palace = RoyalPieceSkin.CampaignArt("palace");
+            var background = transform.Find("Castle framing/Royal blue courtyard");
+            if (palace && background)
+            {
+                var image = background.GetComponent<Image>();
+                if (image) { image.sprite = palace; image.color = Color.white; }
+                var fitter = background.GetComponent<AspectRatioFitter>();
+                if (fitter) fitter.aspectRatio = palace.rect.width / palace.rect.height;
+                // The inherited glow was positioned over a different castle's fountain.
+                if (waterGlow) waterGlow.enabled = false;
+            }
+            var coin = RoyalPieceSkin.CampaignArt("coin");
+            if (coin && resourceButtons != null && resourceButtons.Length > 1)
+            {
+                if (icons != null && icons.Length > 1) icons[1] = coin;
+                var picture = resourceButtons[1].transform.Find("Coins icon");
+                if (picture) picture.GetComponent<Image>().sprite = coin;
+            }
+            var crown = RoyalPieceSkin.CampaignArt("crown");
+            if (crown && tabIcons != null && tabIcons.Length > 2) tabIcons[2].sprite = crown;
+            if (!dialogIcon) return;
+            dogPortrait = CompanionPortrait("Royal dog portrait", "dog", -.70f, .15f);
+            stewardPortrait = CompanionPortrait("Royal steward portrait", "steward", .85f, 1.70f);
+            throneSeal = CreateSurface("Royal sun rosette", dialogRect,
+                new Color(1, .87f, .43f), new Color(.79f, .48f, .13f), 0);
+            throneSeal.sunRosette = true; throneSeal.color = new Color(1, 1, 1, .27f);
+            throneSeal.transform.SetSiblingIndex(dialogIcon.transform.GetSiblingIndex());
+            ShowRoyalCompanions(openPanel == "profile" || openPanel == "story");
+        }
+
+        Image CompanionPortrait(string name, string art, float left, float right)
+        {
+            var sprite = RoyalPieceSkin.CampaignArt(art);
+            if (!sprite) return null;
+            var existing = dialogIcon.transform.Find(name);
+            var go = existing ? existing.gameObject : new GameObject(name, typeof(RectTransform));
+            go.layer = 5; go.transform.SetParent(dialogIcon.transform, false);
+            var image = go.GetComponent<Image>(); if (!image) image = go.AddComponent<Image>();
+            image.sprite = sprite; image.preserveAspect = true; image.raycastTarget = false;
+            image.rectTransform.anchorMin = new Vector2(left, .025f); image.rectTransform.anchorMax = new Vector2(right, .93f);
+            image.rectTransform.offsetMin = image.rectTransform.offsetMax = Vector2.zero;
+            return image;
+        }
+
+        void ShowRoyalCompanions(bool visible)
+        {
+            // King Vanguard (APK Spine) stands in the dialog whenever the king is its subject; other panels keep their own icons.
+            if (Application.isPlaying && dialogIcon)
+            {
+                var vanguard = visible ? RoyalThrone.Characters.KingVanguardSlot.Mount(dialogIcon, RoyalThrone.Characters.KingVanguardCharacter.Framing.Bust)
+                                       : dialogIcon.GetComponent<RoyalThrone.Characters.KingVanguardSlot>();
+                if (vanguard) vanguard.SetShown(visible, !visible);
+            }
+            if (dogPortrait) dogPortrait.gameObject.SetActive(visible);
+            if (stewardPortrait) stewardPortrait.gameObject.SetActive(visible);
+            if (throneSeal) throneSeal.gameObject.SetActive(visible);
         }
 
         void UpdateNavigation(bool immediate)
         {
-            if (tabIcons == null) return;
+            if (tabButtons == null || tabIcons == null || tabLabels == null || tabSurfaces == null || tabEmphasis == null || tabIcons.Length != tabButtons.Length || tabLabels.Length != tabButtons.Length || tabSurfaces.Length != tabButtons.Length || tabEmphasis.Length != tabButtons.Length) return;
             float step = immediate || !MotionEnabled ? 1 : 1 - Mathf.Exp(-19 * Time.unscaledDeltaTime);
             for (int i = 0; i < tabButtons.Length; i++)
             {
@@ -456,6 +524,12 @@ namespace RoyalThrone.Presentation
                 SetVertical(dialogTitle.rectTransform, tallDialog ? .68f : .58f, tallDialog ? .80f : .74f);
                 SetVertical(dialogCopy.rectTransform, tallDialog ? .62f : .48f, tallDialog ? .68f : .58f);
                 SetVertical(dialogButton.GetComponent<RectTransform>(), tallDialog ? .035f : .07f, tallDialog ? .14f : .21f);
+                if (throneSeal)
+                {
+                    throneSeal.rectTransform.anchorMin = new Vector2(.35f, dialogIcon.rectTransform.anchorMin.y);
+                    throneSeal.rectTransform.anchorMax = new Vector2(.65f, dialogIcon.rectTransform.anchorMax.y);
+                    throneSeal.rectTransform.offsetMin = throneSeal.rectTransform.offsetMax = Vector2.zero;
+                }
             }
             // In Play Mode the imported layout replaces this placement every frame; apply it now so callers read what is drawn.
             var reference = GetComponent<RoyalThrone.ReferenceGameplay.ReferenceHomeLayout>();

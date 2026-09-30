@@ -1,0 +1,102 @@
+PASS
+UTC 2026-09-28T13:04:08.2663432Z
+PASS Entered isolated QA save routing
+PASS Arrival amount 64/10 at 0 = 0 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 1 = 6 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 2 = 12 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 3 = 18 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 4 = 24 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 5 = 30 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 6 = 36 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 7 = 42 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 8 = 48 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 9 = 54 (floor increment, final remainder)
+PASS Arrival amount 64/10 at 10 = 64 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 0 = 0 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 1 = 1 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 2 = 2 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 3 = 3 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 4 = 4 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 5 = 5 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 6 = 6 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 7 = 7 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 8 = 8 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 9 = 9 (floor increment, final remainder)
+PASS Arrival amount 15/10 at 10 = 15 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 0 = 0 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 1 = 2 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 2 = 4 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 3 = 6 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 4 = 8 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 5 = 10 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 6 = 12 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 7 = 14 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 8 = 16 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 9 = 18 (floor increment, final remainder)
+PASS Arrival amount 25/10 at 10 = 25 (floor increment, final remainder)
+PASS Arrival amount 15/6 at 0 = 0 (floor increment, final remainder)
+PASS Arrival amount 15/6 at 1 = 2 (floor increment, final remainder)
+PASS Arrival amount 15/6 at 2 = 4 (floor increment, final remainder)
+PASS Arrival amount 15/6 at 3 = 6 (floor increment, final remainder)
+PASS Arrival amount 15/6 at 4 = 8 (floor increment, final remainder)
+PASS Arrival amount 15/6 at 5 = 10 (floor increment, final remainder)
+PASS Arrival amount 15/6 at 6 = 15 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 0 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 1 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 2 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 3 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 4 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 5 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 6 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 7 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 8 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 9 = 0 (floor increment, final remainder)
+PASS Arrival amount 3/10 at 10 = 3 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 0 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 1 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 2 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 3 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 4 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 5 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 6 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 7 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 8 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 9 = 0 (floor increment, final remainder)
+PASS Arrival amount 0/10 at 10 = 0 (floor increment, final remainder)
+PASS Real flow uses authored opening level 1 in isolated saves
+PASS Completing goals enters the real pre-win sequence
+PASS Remaining-move sequence completes to Win within 30 seconds
+PASS Multiple accepted booster events emit finale coins and drain every assigned value
+PASS Actual Win credits and persists exactly the existing payout before presentation
+PASS Duplicate Win assignment cannot repeat coin or life credit
+PASS Opening win queues the actual Home reward presentation
+PASS Actual win card is visible before Continue
+PASS Actual Continue returns to Home
+PASS Actual Home reward flow finishes within its bounded timeout
+PASS Home star begins first and remains in flight when the coin pile becomes visible
+PASS Home star reaches its counter before the first coin arrival
+PASS Actual Home counter records ten arrival updates
+PASS Actual Home arrival 1 applies its floor increment or final remainder
+PASS Actual Home arrival 2 applies its floor increment or final remainder
+PASS Actual Home arrival 3 applies its floor increment or final remainder
+PASS Actual Home arrival 4 applies its floor increment or final remainder
+PASS Actual Home arrival 5 applies its floor increment or final remainder
+PASS Actual Home arrival 6 applies its floor increment or final remainder
+PASS Actual Home arrival 7 applies its floor increment or final remainder
+PASS Actual Home arrival 8 applies its floor increment or final remainder
+PASS Actual Home arrival 9 applies its floor increment or final remainder
+PASS Actual Home arrival 10 applies its floor increment or final remainder
+PASS Actual Home visuals do not duplicate the persisted Win reward
+PASS Home display settles at the live saved balance with no coin flight remaining
+PASS Captured the actual Continue/Home sequence for 5.5 seconds with realtime timestamps
+PASS Ten live preview callbacks map 64 to nine increments of six and the final remainder
+PASS Renderer amount preview changes neither runtime currency nor its saved value
+PASS Partial cancellation occurs after exactly three arrivals and 18 displayed coins
+PASS Partial cancellation immediately retires active coin SFX
+PASS No callback or remainder adjustment arrives after partial cancellation
+PASS Partial cancellation leaves no coin flights, particle leases or voices
+PASS Partial cancellation never changes runtime or saved currency
+PASS Checks retain the normal simulation clock
+PASS No new runtime error or exception during coin checks
+PASS Normal runtime and saved coin balance restored after isolated checks
+PASS Normal economy, level, score, booster and preference keys preserved

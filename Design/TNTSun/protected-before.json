@@ -1,0 +1,1426 @@
+[
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips.meta",
+    "Hash": "71F3FFDC8BED6C345B83040E6BED1461F8B6961FAB17CBF231E133B81EC2D8A3"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers.meta",
+    "Hash": "209954AFE4FC94DF936EC053EB3EDBD4DA27FB2532F71458073925321C632E2F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Editor.meta",
+    "Hash": "1E251EDE8B190B48E186F107691BCF4D5802E87554E485E40F6826BCEC0B4928"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources.meta",
+    "Hash": "E9519A7F0DBECE80C55FAC1122BFE4E4CD55E27A2EBB40B625B4CBA4F0DC1B80"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\BallBallExplodeAnimation.anim",
+    "Hash": "32747E3C8526A3B46A449B2C5A141819BB25B0DEC190A4C320EBAC13F3BB035F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\BallBallExplodeAnimation.anim.meta",
+    "Hash": "4C637E6924F32112233BF1E36C8A3148A086A82EC356893E24033CFBEB0CF047"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\HorizontalRocketCreationAnimation.anim",
+    "Hash": "D152239F4543D9E8528FD7577A55DB6AE563966CE531536ABE22635EFCA00E09"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\HorizontalRocketCreationAnimation.anim.meta",
+    "Hash": "6892E95E4C7FFA2D32F5D9E34AB82B8615E55FCD550D75553A1FECB55A1CD220"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\LightballChargerLandAnimation.anim",
+    "Hash": "04B7195FC2C959C95C468C94DF16CAEC35A7BF1773E7B43D71B3DAA1E98837AD"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\LightballChargerLandAnimation.anim.meta",
+    "Hash": "56CA3F38AF5C87E10B0B9078557DFB1A15FD3BC38CEBD77AB476E7B47483AE48"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\LightballCreationAnimation.anim",
+    "Hash": "E48C6B63B8F9849ABD68018C74E08E71F426186594F38D805CD098B4254985AB"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\LightballCreationAnimation.anim.meta",
+    "Hash": "F43C3D2C9E74B13BB61E762FB64250D7EFD0A7D4F36024E663E6C5D8BF739809"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\LightballDefaultAnimation.anim",
+    "Hash": "DCEB1A3F4FC09C6EFA820958DB0A5D9B2143923551D85D5D8F31646A6C81300B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\LightballDefaultAnimation.anim.meta",
+    "Hash": "8B0B419CCDAA6D7262536C0C5BE7AD4A86C7823EB2A260F35D50B2CA18F15B1A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\LightballUseAnimation.anim",
+    "Hash": "3EC25803AE78C06E7053C4CB423546C4D3BE16BC8E29F8D27D018081F26B3569"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\LightballUseAnimation.anim.meta",
+    "Hash": "A5489CBB09A51F2C631CD58CF5B87926ED6D6A31DD0374CF0D4CD05174F7B991"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerCreationAnimation.anim",
+    "Hash": "1E8F5EAA281CEA30049D080A654E05582DDF7E540D32C25722943808DF01FD97"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerCreationAnimation.anim.meta",
+    "Hash": "859AC7246B5156579DE0B150962B695E9EDC9A1623CB64DDAF3E0579245EC576"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerEndFallAltAnimation.anim",
+    "Hash": "3B852B6D816C13FB1813463EAAE7499DF7738F60ED98D4D152D2069912D39954"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerEndFallAltAnimation.anim.meta",
+    "Hash": "6ABEE33FD7F293E57D81FB028CE0F4E767319130E6C467A6DF9AC10907868825"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerEndFallAnimation.anim",
+    "Hash": "89E82D7F5791BC9548E7EFDFE90201546573527529AD871D56886627DC0AFD9D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerEndFallAnimation.anim.meta",
+    "Hash": "7858CEBBA31022304FDE01A31622C569CAD27748A6D599CAB3D37CEA2A3DB8BF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerFlyAnimation.anim",
+    "Hash": "6630AC6612C6902BD7E08020CAF3E2A507354F0460ABD724D5AF850267AAA221"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerFlyAnimation.anim.meta",
+    "Hash": "14CA36FACCC01523BD8426F35ADFB7BC62FD71AD8142084632731023570260E5"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerStartFallAnimation.anim",
+    "Hash": "7FDD9DA0A71F7AB1F0A74566121FBE13A5013BEF32CBD5C5F36BEDD10B684109"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerStartFallAnimation.anim.meta",
+    "Hash": "4811312332BCFE4FD7202104412EABABCFA6AE1945B85D913899BF8B3A7BF7D8"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerSwipeStartFlyAnimation.anim",
+    "Hash": "DC47A472AC85B10A083F84AE0637CAE957D912C42D5678311D5B396723FCFD6B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerSwipeStartFlyAnimation.anim.meta",
+    "Hash": "10D70839285276CC868C1F2737A3BAEB390D87DC2E7B39FD743925DBB522447D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerTapStartFlyAnimation.anim",
+    "Hash": "6B5BA4EDDE53F4DDDA28E324196DF876C26D936D94D9CFBD255FDF08AA111C2B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\PropellerTapStartFlyAnimation.anim.meta",
+    "Hash": "43FB710DB95CD6016B58C47FC2A1CCCF8C9F8C6BA9F49C722E436E7BBE85928C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\TntBoosterAnimation.anim",
+    "Hash": "7496E32334834C2AE1A98AD5B5D7D2CE8405A13D9D98773C3E64A36E7AC40A3A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\TntBoosterAnimation.anim.meta",
+    "Hash": "B7B84B96822175A25D205C7B2BCF30B123AA531183CA7701149E17451B1BDF71"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\TntCreationAnimation.anim",
+    "Hash": "CF195123B8C8DE9E61804FB7812E8D253D24D2C4C6ED60603CB16649162996FC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\TntCreationAnimation.anim.meta",
+    "Hash": "24CE88A8E388B01AC3DC1AAF24BCBB4FC7AB46484E772D07258724DDB630C784"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\TntLightballCreationAnimation.anim",
+    "Hash": "1332FB7324C3041D8650AFA18DAEF0E69F16E7270A495727DEDB36B9295DEF30"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\TntLightballCreationAnimation.anim.meta",
+    "Hash": "F29BE62F03C598530C1DB621EDCB555ADED18037C3DF5E0579BA5325A0BF0754"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\TntTntComboExplodeAnimation.anim",
+    "Hash": "27198A8DD8FDF4B31A90CFE403C1D4D35B2E8A20B922AF744910D2494B58482C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\TntTntComboExplodeAnimation.anim.meta",
+    "Hash": "43879D9D46AE17493BF4ECFC7076522D53C49EB731AFDB2CF3BC3F514023F9A9"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\VerticalRocketCreationAnimation.anim",
+    "Hash": "A8DC5ACB89644B7D95E5B7EADCA14446BE0197556C5E47F3AE69C5D5D8045107"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Clips\\VerticalRocketCreationAnimation.anim.meta",
+    "Hash": "16D9B04EBB9B128ED7ED83FB107242CD57F56821C3E30813B1F22E69768921D2"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\BallBallComboAnimator.controller",
+    "Hash": "76A1D320B77EAA12C43A02222C28126AFBD54E34BA145FB6946233BA5940E5D9"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\BallBallComboAnimator.controller.meta",
+    "Hash": "12912B771858B4F48B337213A585BC42FDC4750924ABE28F90B185EB9DC50DD1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\LightballAnimator.controller",
+    "Hash": "7B2C817833B1599C3B8B6B258E03AC335726F36267D6826A54D0446C2492C635"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\LightballAnimator.controller.meta",
+    "Hash": "9167048DE236E18979D99B3517C3624848E9D2EA7CB802629D4B3D645FAE3F20"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\PropellerAnimator.controller",
+    "Hash": "6ED65493073D16CA901DC8E794FFF652E5E880FA7EE3529CF3071BEBB374FFBC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\PropellerAnimator.controller.meta",
+    "Hash": "A25196425E21950E805BC94C85BBFF108E31CEB34E726CA71B55BF5FC8D3D25D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\RocketAnimator.controller",
+    "Hash": "CE4F6E23154B53B1EAAF489CB12D2468E08D51B1FF3428E364295D18F4E9827E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\RocketAnimator.controller.meta",
+    "Hash": "64D6FB3B903B6B566232DA9C71438B762E5C0FFA882FEDB82797933B1E86037C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\TntItemAnimator.controller",
+    "Hash": "64F9E39D4B293BBB9A5E05E3432BFBADB3DE4921CA3FFE8449BA7796802F48D7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\TntItemAnimator.controller.meta",
+    "Hash": "04BD58BF7850953AB2102A092BA08C4DE62A1989F889F80E627BC3E528E094D3"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\TntTntComboAnimator.controller",
+    "Hash": "CF5784DB3569566FE6FF31400B662785ECBF43B3166193E1A8D222897D28D04A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Controllers\\TntTntComboAnimator.controller.meta",
+    "Hash": "2A8226EF895C14963BD64F6CE0FFED7FC7C37076C3D4BF5554D3C58C6EC8F31E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Editor\\ReferenceGameplayMediaImporter.cs",
+    "Hash": "0149F1D40D7F1C9859784B74FB851CC398C3371F5A3E97733B645AADDB3FE1E4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Editor\\ReferenceGameplayMediaImporter.cs.meta",
+    "Hash": "149512ABA2D2A8E8F3439F7548A88D87128EB1B55EB0FAFC937B882C3D256C3D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay.meta",
+    "Hash": "26924CF6060914AC96AFFDE0691626692B215E57908129446EA6FB0CD05CDB3E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals.meta",
+    "Hash": "980090C566412D5F7AD7304F884A7B693971C0D70BB442C8DF741B3F6B067B75"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\ColorBall.prefab",
+    "Hash": "B5412C1D4BB4BC4ECD1603DF5F7A164BAB65BD3BB759017CFF0CAEA34AF40EF3"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\ColorBall.prefab.meta",
+    "Hash": "B5BA726093516265967D3432A0178B73A31ADD431763A77C209A963469832E05"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\ColorBallColorBallCombo.prefab",
+    "Hash": "87EBBA1994E275791463A0A3BD2A264843178D2295B86D29645DD0DAFF4E1688"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\ColorBallColorBallCombo.prefab.meta",
+    "Hash": "90CAA97038D85BD8CA30FB4AD7562D3B830148649BAA3C21D96D27C4CD8399EA"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\Propeller.prefab",
+    "Hash": "07934B497EBEEDA4813AF4436AECEB9B9DFC2DDAB20DA37F6EC1E9812CD0AC26"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\Propeller.prefab.meta",
+    "Hash": "E53D7D3A220A854B8191D4E20FF138F2216352D3E68009EB62BB10CD0C41B5B0"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\Rocket.prefab",
+    "Hash": "4F9D675E11AD3FB0419F424B8FE764B2B57312BCA2B607C95A37EECE0192036B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\Rocket.prefab.meta",
+    "Hash": "4FD8A925910940D222D80C450F9D5DA34460A6A60EC85EC92D7D636A8033FB80"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\TNT.prefab",
+    "Hash": "D52017D783749F5BA15B2CEF2B61242C42AFFD222FADC9CB25463F5CCDDF108B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\TNT.prefab.meta",
+    "Hash": "F24F8B1EE146C1EB663F2FF9665C9E6C08730F3183C2E6DEA59D9C992CF86210"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\TNTTNTCombo.prefab",
+    "Hash": "3A53B865EA9D06A87727FA4E3D9D43D388F7B02D46BEFFEFBBBB788D4CA2B1C3"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\Animation\\Resources\\ReferenceGameplay\\Visuals\\TNTTNTCombo.prefab.meta",
+    "Hash": "E3280D651C1F961CB064FB26459DB9686D9E893B2C4388A3207BE9A01EC4BD3C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites.meta",
+    "Hash": "A4ABAD451B71A8D85916DF9F26D0367DF769E5C4E29FB6A3D9DD3FD631CE6C22"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Editor.meta",
+    "Hash": "58DBA164DA3736A2F31FF57010A88B2967E88CDE60EE2372B09F35C7B527E88B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Materials.meta",
+    "Hash": "55A38CFE134CE77DE13890EDFFACF09528702F92D2A4A19B1C59B43CC57A6601"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Meshes.meta",
+    "Hash": "9B78F3CD259776A066D32F7F81F58AA99F6BA73EE39583D3060D12165BC9B764"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources.meta",
+    "Hash": "EDAC59B6889E0CB3918AF519E97BAA00B25AAAD276B9600D05E4FAFBF916866B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Textures.meta",
+    "Hash": "DC57ED430DE92F66E190680167C7A8DD54F9BC057F245B1EEBE95A0A142E93EF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16244.asset",
+    "Hash": "C2622B84D8CB25735C8AC1F1A122A7D77294FAAF7F3B3415103702CCACB079D7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16244.asset.meta",
+    "Hash": "8B01F7EAA0EA084ED9C2D0A5B816C842A7F10C21E90DAD5817918EA7EA1694CA"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16247.asset",
+    "Hash": "C4670B5919C8C73476AC1A3E0B5916994690E87B62F35C905B2AC442FA185229"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16247.asset.meta",
+    "Hash": "301A0ED9D15BD5299128153C2EFFD6702AFE38A98D77A86ED00E9B2EE2F00FE1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16263.asset",
+    "Hash": "2C0A0930EC4DDB4AEDC9B1133A6C9E140C01AA0B6AF255D1CA41F77AE008A895"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16263.asset.meta",
+    "Hash": "D2BFC567326849635D4D3B006F08E5B665BB89527BA030241083872249EE3C1A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16277.asset",
+    "Hash": "50C2A33158C409C69D5753D809B8977170988D615514DFB0300B7680AC7505BF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16277.asset.meta",
+    "Hash": "116C8E3571D37D38EEAD7AB2D988490DD96B88DD623511CF25832A4EA7865A8F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16319.asset",
+    "Hash": "D7259CCDA93F03F01E4DFD6F92336A1078B83811BE359FEAFCB262341EEFD4CF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16319.asset.meta",
+    "Hash": "61DD6E406409862A3DC9867CE299D7CB4652F6CB3F7375B85B057E911274F779"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16336.asset",
+    "Hash": "14890C466830565A1F86D15DD11F08C0DC31046D063FB360BE61C52D69B7DBD4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16336.asset.meta",
+    "Hash": "E1DA8EACA4A8666DD6D3403456F2EFAC35C3A43C9B1B97A97FE4A3BD911F969C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16351.asset",
+    "Hash": "5D2BD057616324BE8D4A9E4B9A7EACB6294A3CEFE9BECB654BCDE573E5B51808"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16351.asset.meta",
+    "Hash": "CFAA02AC3BE1271A0E8987FC0AC8CC0FBCC8D49BD60AB5165041639E6CAE2173"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16360.asset",
+    "Hash": "B0E2020D868336DDC1EE8522878768E7BABF2DD3E31BE42DD4358B7ED2D2A531"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16360.asset.meta",
+    "Hash": "095AE9C84C179288B04C4F0FD3B4C7C4DDD7D4780A420F5D45D51717828876CC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16373.asset",
+    "Hash": "B1B7BE1075B5570529130744117618B37D5DF8B3236EA5C68B0A579B3DF02383"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16373.asset.meta",
+    "Hash": "5EE9DAAE5328FA951758AC78B5A154CD353AAA043060A8CD702167D9B4CF2B75"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16380.asset",
+    "Hash": "E6F460B5C883B371C51DD035F8719BDDC0AB5CB32932AFA414A4F4B13B32EEDE"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16380.asset.meta",
+    "Hash": "67423883B6E6B724D4EB9E269EAB8000E24C55DCB048900E56365109203E4DE4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16382.asset",
+    "Hash": "73494D8BD19DA268B91B71AF4A94BBA01B843F5057F7F764F194E7AB6E4EBB86"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16382.asset.meta",
+    "Hash": "6AFB861FA1779FF4F031D96E2AE190279150EB13E152A0CC276781EEB7746DF3"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16386.asset",
+    "Hash": "13A48D76071B71C4BAFE01946159C94A4B18812FD9B77485F5D238A1C31585C2"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16386.asset.meta",
+    "Hash": "6CB8521D4854D7689874C9A76422B6B66185AB48D9EBE4FCE4BC3B62C813322F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16418.asset",
+    "Hash": "045379A1ACE37671F98393DB0976D052D5BFA090F11DFE03983C84DDA9AEE3D1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16418.asset.meta",
+    "Hash": "E32C1BF2C69B7BDA51D4193F76681557427F259C79A4E09E1CE1BAEB5D9237B4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16463.asset",
+    "Hash": "49905B839C169A68F5DED162E0FFB60C475EFE50A7109BADB2485EAF5B655F20"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16463.asset.meta",
+    "Hash": "81E38226F5C616459E002A173F9D2FA185D1DB8FC7D04A00E5573A2B3F22F8CC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16484.asset",
+    "Hash": "CFBFD70C389CCD89505615CE7630F323BF1742B27E1473BE8C9926EC055E283F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16484.asset.meta",
+    "Hash": "CFC1377ABAA8DC2EA0C9E14CF168D82B2927AC30F0652CAEC769E6464056702C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16490.asset",
+    "Hash": "446D81F1AC33634198F1D65CFDC0EFF3ED3EAF2666E9CAD56F82FA1C0ABD7F9C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16490.asset.meta",
+    "Hash": "04D44653F9DECEFA6A5A03EAEA7554A1963930C56D51AF5C1170C2DEF800035B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16540.asset",
+    "Hash": "F57E21041545EAC263B83F7F7B57C945FCE3FE21D14476290A6DF277F1DFB3A4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16540.asset.meta",
+    "Hash": "0870C9076508332E326E184514F24B915B42DD84678E58711DB73613E83F4C88"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16582.asset",
+    "Hash": "603CC19D84AA6CF60AC329A70D3FB5C59B8F85496FCBAF52051D306B5EB5E229"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16582.asset.meta",
+    "Hash": "C12202DB271262B49FEDD0B14D03CE8C10CFFE13F72A27B64CFC40BBC71290C6"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16596.asset",
+    "Hash": "C033BA9360B6144113F667912B5AF93E079645154305A8C5470DD9BC005E95E7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16596.asset.meta",
+    "Hash": "F1802979EA7935C5A9044916AFA32AA4D84611F76C620BEA30C54BA3C29F75A9"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16648.asset",
+    "Hash": "01151248C5F5B198969CBE92D55263F163BB73E43FAAD214F6358F1E9C83480A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16648.asset.meta",
+    "Hash": "1A3D488BC5E4173EE01E09CCBF622B26A0DDC7F292D6A0F37DC3E850FEBF18E1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16677.asset",
+    "Hash": "6852F7AD65AFED3CDEA5ECD998E14A4E0CC122015130A52FE7DF0CE57909B275"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16677.asset.meta",
+    "Hash": "AAB36FCF61EE646B4EC12079188F6453BC9AA098BA15BEFA8EDF6D72FC6300B7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16739.asset",
+    "Hash": "D654E6A7DA7343E0A84D53D5A247750F0A35E6B9723992FC3E80E16021040084"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16739.asset.meta",
+    "Hash": "C2934662FDAF89963C0342C1E87F3150112FDC04508D961B42A5941B400771CF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16763.asset",
+    "Hash": "4A890BFD12FE3E2961EAE5D71CF1A9E1B4FB4041417F68E55DD7DA6460F91F57"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16763.asset.meta",
+    "Hash": "21CB70B980B95E4845073DE036D46967E68E4D51543BF29278B1ED51AFBF1C1C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16784.asset",
+    "Hash": "624280C21C8212BC8D801D60D26D4EE8748020BF046C1735F3EFE620AE2635E3"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16784.asset.meta",
+    "Hash": "55DFD9CE1E79CE1DD6D6245AC768BF3C3B700B54A66A5F64130106D02A211E64"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16803.asset",
+    "Hash": "ED6A08EAB3F47E9CBB189EAE9D0E32DD27983FD93C062EB46E3351CB5F5D8BC4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16803.asset.meta",
+    "Hash": "156B7C2FEE4BB303365566A0D578FDA990AFDF6360E13D03622402310D4C20E8"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16814.asset",
+    "Hash": "DCD058C65CDCC39EC14E52A0DB90FE9AD5633C881C3975D12AEA010791EE7FD4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16814.asset.meta",
+    "Hash": "558EF8548C8561989F0C97792293709B268B7406FFF8073AD75B171D53899BBF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16820.asset",
+    "Hash": "941E5862D886625B5B5AA2E2F63B48508883684467103015767748D6CEC44B9C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16820.asset.meta",
+    "Hash": "2A1CAFAB3B3B72AB697C785EB960B39FD305586BC05F8D887E2A1C5DC2A36EC7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16846.asset",
+    "Hash": "438DDDF7F50A666B82A46C8BB9C265E70A97DE1BE04E67D16767F93C80976082"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16846.asset.meta",
+    "Hash": "9C96CC2FC6F8C218FA4DB0B6FC6E238D49C5BE5DFA51217650BBD4024D7B5B08"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16863.asset",
+    "Hash": "D092881BB445C3B884AAA42C72911BB4359955328DD1C3663C8C824F45D65CCB"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16863.asset.meta",
+    "Hash": "ED11C57D11C1E02ADBF2B325671042A9604C70AFE5A7933DA15FE8A7CB38D2CC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16882.asset",
+    "Hash": "CEE1C25003C4B0B568B3FEF3A6DEAB91B3D66FBB2D7081F360360C66CCE9F1AA"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16882.asset.meta",
+    "Hash": "DE19236F1527258D442287B7DFBDAD886E8D7D3FB6C3DB7594E249C30E0C1512"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16889.asset",
+    "Hash": "F9836ABF05ACDEF2009FFC3FA8718059BDD7906C4709DE4A41DE3470C05A3362"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16889.asset.meta",
+    "Hash": "66E8AF43B52654D775D1BC282F54600918324967B2701D736F7A78CBE0BE5149"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16901.asset",
+    "Hash": "B2AFD894F7A94E6C65949FF031785B9FEC813C1FEE2FFD0CF8B6CFCA7B3B9148"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16901.asset.meta",
+    "Hash": "7EA3792CDC65CD05A17323C29C2D63F286AED57FC272F7C8BCB773C4DCD16688"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16906.asset",
+    "Hash": "5F95C4CDF8B22CD6E939B1AC7FFA65ECA7F0D2A0429AB59B289D4E8F3E7C451B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16906.asset.meta",
+    "Hash": "B89C83FA886F6A438DFF6D433ABE41F4DB993AC606FBAB0384AEE21F6DC9A5ED"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16925.asset",
+    "Hash": "B5F58AD575AFCA3DA2E178481B3C49F5DC7148A16AF87DCC6A8534C69C4E3943"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16925.asset.meta",
+    "Hash": "EE1A715819315D50A779C7F38922EA964DDA09980C0ACC0EE10590B84D2D2208"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16947.asset",
+    "Hash": "370B96F31A70721E95603F12D75A24D19A6567F89C0F70DF4C08EC047F33BD17"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\16947.asset.meta",
+    "Hash": "6F68FAF32FD9B8E54A8832D0AD91A69F14B5A421FF4055A60ADEB43E4033E1B9"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17041.asset",
+    "Hash": "94784F0C232BD12341EA325A03737E69E7FDF6C4F61A0C0FC91E2BE171F13C27"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17041.asset.meta",
+    "Hash": "2D4384AE210A9D2BCEA142F90CD873F3F36C6E292E690B4732FB46EFA30F8726"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17042.asset",
+    "Hash": "0B9C779ECBE5F24FEFD833F53AE02908EDC8DF2B0985F13F9C7527C6AC62D345"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17042.asset.meta",
+    "Hash": "F6D8C299AF7816E503DF51CAD829DFF0C9FF59104AC9C8587F80429E0D5B38C5"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17061.asset",
+    "Hash": "9839281B62C46ED5F7FBCDC30DF85DC01B6D03CC86741B895961B1B9879C24C6"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17061.asset.meta",
+    "Hash": "7C57E2BC89BF77A495EF4DFF9C692968DCCE1417B86F8D7AD6F897547B30A97C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17121.asset",
+    "Hash": "0AE5804E0D30EB682A68F8F43E5CF86635506825B315D914945B9B91DE88CCEE"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17121.asset.meta",
+    "Hash": "FD38A7E8EEDF47D6AFBB80B4EA9B260A62F825CB03605A2CB6A0A917CE23C023"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17123.asset",
+    "Hash": "7DF2EAE9172EEB56FC52DF7F82F9568426B3C202AD1D5E9A4761B309A24915ED"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17123.asset.meta",
+    "Hash": "BE6F4CA5E4F56FFE8F4C5648380224828954FED8CA66A7915C2E2FDCF8FC1758"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17147.asset",
+    "Hash": "867C26B046CD669F94AFD174E7EC27AAAAF0FA4E5226CF7836FF674E573C2EA7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17147.asset.meta",
+    "Hash": "FA5D96E7CE7EC3042509D3598A21CD935363934ADF94CA37C3E4BED71D1B7FB9"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17199.asset",
+    "Hash": "672DB93EC8D1475285EFAAB2960EA4B48D4DD5E95C9EAD72420730006814BA2D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17199.asset.meta",
+    "Hash": "7E76CD8B067BA7062B7B3B8B0376B39C9C63ACE9E64E402AC082374089F31E3B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17204.asset",
+    "Hash": "671FC315D4326CE5DB9D334E7184C577D1A8BF13CCDB13663B538042EEF5B01D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17204.asset.meta",
+    "Hash": "0DF3098A02147343C562252EFA8C7E4913A440EED2E48DB9656AD83DF6803EB0"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17217.asset",
+    "Hash": "DD289F51F4D218B680BF3857A390476065AF61853FC8138479B70E4A8CB669BD"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\17217.asset.meta",
+    "Hash": "1D83D9EF1ECD5FBA82F5DF02E04AACA4CF676C0F48600AF3548FBDFF0696FADB"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21165.asset",
+    "Hash": "C0A87CF18EBFE144FADFBDE48DE05FE28D8A8E2D49BF889AB6FC97A14B83A39A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21165.asset.meta",
+    "Hash": "92E80987BC40C802795C3B4A875FC3B491D4A46942460450DED3ADA718C51206"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21171.asset",
+    "Hash": "B01C70A5B664FF416808B62A64482379415507D4203F1651993030069BDEC351"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21171.asset.meta",
+    "Hash": "E79DE70F8554BC47FA78CE572EDB8DCF11E169727746A1D5CCCB0291B180069A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21211.asset",
+    "Hash": "D0EE32DDAACBCFD468FCB6B6755F1AE782289DBE101E42E92460EF5AAC3E6E66"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21211.asset.meta",
+    "Hash": "0D4E23A73E70A731C03815E37ED44390331459571D6C882CED309185B77B7184"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21245.asset",
+    "Hash": "E0F3BB727D6376718B880E079F4423E8519CD151B042B65DD7B926F344FAAD34"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21245.asset.meta",
+    "Hash": "4C8EA3E894627F53FAD7B109222270E98D0ED253D275E0AA6ED8CFE82F76B15B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21266.asset",
+    "Hash": "D2DD509B390A2FA25FD4FD78CEEE1063A69E7F9F701B8EEE0DA45158C93B505F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21266.asset.meta",
+    "Hash": "1DD31AC0F5E0A11E7A7F54E0EA189D5A07FD46ED360FA42CE376F6378D468EE6"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21373.asset",
+    "Hash": "C19920DC78011FACECDA8F20AD7A076DB8CFE1DDE6F188685CF1C1664C920564"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21373.asset.meta",
+    "Hash": "A11543925DED50C6CCF55C1343B4B99F986CE424D81ABB9371294B6FB6F6BDFF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21375.asset",
+    "Hash": "F9A59A482993BA51D4346B42D8240ECD9F4F686548AE87D959FEBA781F859FEB"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21375.asset.meta",
+    "Hash": "9E536BE42EC8626B3BC64ECF19ACE3BD6E351920A414888C25C7D488E18018CF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21388.asset",
+    "Hash": "9A7EDF59F4EF36203899D78FE2AC5A57CA6388BC70B29B38847A109E2BA18F73"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21388.asset.meta",
+    "Hash": "7402E2C612FC33AFAC7D13058B8C42B877A032F8267BD2191E5419B543ECDE0E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21395.asset",
+    "Hash": "935D2F0F1C61B4BA9DAFB13CB5C320DFF34EBB8079B780C0A70C41BD78E47C3F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21395.asset.meta",
+    "Hash": "1F7CF828BD74C801259AD1FB167C0272A3F0950A348B9BB229FFBB8AD54F956F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21403.asset",
+    "Hash": "C18AE0DBCAFC8D6C9C84E75ED8A1BD8D71E4C5DE5C175997098C65E6D8BF2F8E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21403.asset.meta",
+    "Hash": "2BD001F1E225E0AD2A096ED6A17E6FCF9FDF6C03EF850961CD7B8BB8702F4111"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21437.asset",
+    "Hash": "A05945D280B09014AE5C2B06F15C0401DEF5F23FD898174290ABAD06CB43239E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21437.asset.meta",
+    "Hash": "8826FA2C8DE160BB2CB246AFDE124B98A59C17CBE4A27E301A706146050E6C02"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21461.asset",
+    "Hash": "F46C90AD110C9F537F5F5F0BF786B2FC16C9A5DCBB71A917DA41B4F6E2CE1E5B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21461.asset.meta",
+    "Hash": "3B469572DEEA99AB087073CEF3E592FCA8711F5C6C7728585DCB4B5B5120E192"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21483.asset",
+    "Hash": "78833DC8B19C66D60423846321A0739F761A24ABBD010CCE47B95C0547ACCF2C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21483.asset.meta",
+    "Hash": "E478964223E27364B6EA934099E05B12A2B477C0F3BBEE727C07F1A409B6B8E9"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21527.asset",
+    "Hash": "7468FCB96BDBAB54CCE1E089F83B76C46FED74C1EB0825E53DF83914209A72F5"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21527.asset.meta",
+    "Hash": "4CEA65C6727803E83C5DA56287405E09DBB903F7538B2414C3FF823DF5A63A89"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21554.asset",
+    "Hash": "609CDD721FE501F81AEB825796FCDF25BE0124BE6FBAC22274B08E1E17C3F40B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21554.asset.meta",
+    "Hash": "19ECF616E82BE92F207DB91E4070B8C61EE81A9FA8312CD9A7E74807F395DDEE"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21569.asset",
+    "Hash": "8BAF8FBB2BAAC8DBAB5EE607F29B5A12CCA412810C19A550E34DEDA8B60D2B92"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21569.asset.meta",
+    "Hash": "22B1085BD709F2F57AF4D7E12BBC2508777981147D1CE79E291B30B02AABBF52"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21582.asset",
+    "Hash": "080C5B14ADC8325CC672777B884240B9F0C84966E5FDF1BE417DF4CFCC0CB6D2"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21582.asset.meta",
+    "Hash": "9C783E9C3D2F4C05667F729C1BBBFCF5FC9F0C992D1076537B171AAD384AFE41"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21609.asset",
+    "Hash": "745281D40100B97FCE14B26701CD29B88E382566EDB4AEB1D425F5069E936333"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21609.asset.meta",
+    "Hash": "262E06773CD4C77A2DA4B589307DF6C2EE01DC19810B27D85EECE2C5C8614404"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21612.asset",
+    "Hash": "E4941009AE8A7EC503DE4D3FE4987C1FC0556C0282A2AF12F805DC2ECFE4E431"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21612.asset.meta",
+    "Hash": "1ABD3A4B94A97D13E81CC435B8DE212356675DCB579EAEAE6A5B6F8707CF7048"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21636.asset",
+    "Hash": "C199C867235FD94318B0660234244F2271C262F7C1605651D02B2E39B5F66808"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21636.asset.meta",
+    "Hash": "81DD18174F09196FEA321F40AA53F900BFBE71C811EFA2F82027A5A3438CCC58"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21650.asset",
+    "Hash": "2C06ABAB359F3171E6A7FE69EAB90374E491DE8C1AFEB2738C423C8C71599CBD"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21650.asset.meta",
+    "Hash": "8813DEF4425420CE65E8BC56F26A2EDDAB2C236EA992ACF03089593B349BCE75"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21696.asset",
+    "Hash": "D2D3E83D8F86C5D057CC6A87481C16C8003E3A1D1B91FE47B5A14E3DE88771E1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21696.asset.meta",
+    "Hash": "88B16E18242B804982CDEB7C4A8F264BE14AFA51F444226E4FB999D7AEA683ED"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21708.asset",
+    "Hash": "D70B80DBF07C6A8C4E5B8468078ECE85D917BDCFE4F70BF2C42A166B71B67A7D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21708.asset.meta",
+    "Hash": "194BEE2950FD4F2A3FE1F0B4B1ADFE4D883440CDF604FE6A5709288DC6F2674E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21721.asset",
+    "Hash": "A5777DF1DCE4C292E4B4EA24FCB69D9AAEB4814A1674334FAF2D394F0879CC37"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21721.asset.meta",
+    "Hash": "B5CF48D6046045E847DF22FCCFB97119002092D32F4C9699D831B96B3FE95CB7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21732.asset",
+    "Hash": "F4A4FA2CEA04AE693061282DAC11AA7C34F48AEE91F1BA9A1A025AF8111E4355"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21732.asset.meta",
+    "Hash": "B854E00DC2C09DA2FB381133B1B8EFDB7BA3ECEDFA24D9515C83F369FF035FEC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21737.asset",
+    "Hash": "DD4DA52C382EA35CE3B07FDC797D4BDBA667B995B518D504D434D7DA16162C5B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21737.asset.meta",
+    "Hash": "C4CEBCF98DB96D85FDE56C58150DE0A058478275D1A4ADA90D535918F5EB4263"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21738.asset",
+    "Hash": "2D75C3CED757A3F96C921DCD3FA953DE513A439BE2D93C742A15D00779290049"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21738.asset.meta",
+    "Hash": "AE54A181C414303CCBA329E5F105801D5D4E6C6955D606B6C146ED550561864A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21752.asset",
+    "Hash": "63B6DCEE7A42EF2AD7123B77A4BB07574492DC60BA0C5F5FEBCDC27F090FB0CC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21752.asset.meta",
+    "Hash": "6220FD57A44E5EB3EBD436B30574F12036BA1F463A01934D38A610C62A2B4785"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21792.asset",
+    "Hash": "894510D368F337777348F15E3D7030183945AF03A17C7E27F94420E98EBB292D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21792.asset.meta",
+    "Hash": "788854395B66A749971FA599D6BD088F4E4808B8B70CC901AE04F78AE70E77F8"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21795.asset",
+    "Hash": "E4CA19D341D531681ADB0952F045FB66DB9CEFB7A86BA36845B618D92BB039FC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21795.asset.meta",
+    "Hash": "2B33DB811425B8D4AB373CC1C0AE66BB89388C9275D0C92ABED9A98AFF130212"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21804.asset",
+    "Hash": "038CA991620917A26D667C0563E9896283CC0E58D5F4624735FA3F9B92505406"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21804.asset.meta",
+    "Hash": "E763AACAC74E4BC04693365B60907BD10C806BB314250FF4D52D34AA3EC536A9"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21820.asset",
+    "Hash": "4A9E6ED39ED3677C5643F8018863CC4F45F19E6DE031DABAAE656F39EBAE85CF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21820.asset.meta",
+    "Hash": "76616E84BDB8D95007FD0CD5411D32BDBC6CB3DFF525224C762024FBE0D57D11"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21869.asset",
+    "Hash": "D6349E9FAD0F37A4D756E2AA0E18E443E1C61F69048D4E3FA7495522588CCEEC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21869.asset.meta",
+    "Hash": "97FB4D8FF4D141F51A3186BB7E0B7D2FE4D0352DB59848B7FE55A3CA775FD3D7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21919.asset",
+    "Hash": "E06E8933578650B8387E05FA2C4A79C9CCD692EEB950E5B56BEF1EBAF07F0F53"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21919.asset.meta",
+    "Hash": "331D1DBE34409518D0B15459C043C797B5CCD02DDB200A6B5FC11F25C798E6FF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21940.asset",
+    "Hash": "358AB7B1E8DA6033E4CBF9DAAE8AC6651E6DFDA88186246E1C67B1374BA5BC1D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21940.asset.meta",
+    "Hash": "C6D94CBBF95604E9ABA5E35CD4787CE795A026EE0FD0E78E2541A70B61CF9B49"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21951.asset",
+    "Hash": "DC710EC6DF24671839A298B47AD999CCCC6F5C46D8FDB702FA69AC66A1C4C398"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21951.asset.meta",
+    "Hash": "099BD9630901686CCDC73047C563877D6C82EC46E5BAEA10E08CB24B7AE7AAB4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21954.asset",
+    "Hash": "C854213C5D6669C8B8C574C7B10BBDBA58797C2CB0CEFAF64740CDB01E2DC5C7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21954.asset.meta",
+    "Hash": "85C22E97DB872EE1DD1EEE5896F363D9DF7CC3DA2C564DF9ED5B6063C52BC334"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21975.asset",
+    "Hash": "021D51C50F18D90C024EB2C7DF50C62BF33755EB56DFDDC3758A5B48B350CDF9"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21975.asset.meta",
+    "Hash": "898A345BC6A6731EC3F6CE2187664B2FF24BE23DE16AA42ECA6B35561FF893CC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21976.asset",
+    "Hash": "91F45A90B8A2BE90BBD71AF5FF37587BE29C816D22197170C454DCF03DA5C10F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21976.asset.meta",
+    "Hash": "59402FC6CB35AA5B419E29B642177046BE8C3C63499BF3B7943BD480C7E338D6"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21983.asset",
+    "Hash": "7B97BA77E81C93E36C9EA0593BB0DAF9A17CA42AEA5CF47787F993D8FFF9D5DB"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21983.asset.meta",
+    "Hash": "468F81201A1539E1BC24B4076073DFDDC7DB7CAC40A211D35991B8D904F1DC2E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21995.asset",
+    "Hash": "1ECDC600B17DC15D79EE5C55AF5AFEA92F5FB0C6B3C387B922F8A7797C332AC7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\21995.asset.meta",
+    "Hash": "2D88C47F07BFA557EDB7CFEE0C1804EBF326B74E16B24929B75A1CF12ABD477E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22023.asset",
+    "Hash": "35A5667D48A895802CD1D01BF709095C6ED441E079649DC4574BC4D12CE60586"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22023.asset.meta",
+    "Hash": "5A197C95E46087A2D2074F7A9E97796BAC4A1FAB7C4858D3BE359A7919329C7A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22024.asset",
+    "Hash": "DB0426DF36C3BDE7F0C66F0CD29282BF11EF3CF3AE29C5FA502C17845F843A57"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22024.asset.meta",
+    "Hash": "A0AA147897BBD6230E3CC0D70B0DE88EB88997D905AA9038336E9472556B9D17"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22032.asset",
+    "Hash": "A74591FF376B2EB083D3030E0CA5D8D525FDCC1DF7D514267B1BCB2CB77E6808"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22032.asset.meta",
+    "Hash": "A2F4FE073CFB30D7F4FD1D0A3D63B2115EC223CFFF34614E6580E993171DA77D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22034.asset",
+    "Hash": "4DA359984375F2717DD1AFDFC7254CC190A5C76D7D4253D50BE51122EA704F6A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22034.asset.meta",
+    "Hash": "7522D911376456695F7CFF23350649DAD96887FDB0BB41B2E040C8B0A423B5FB"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22043.asset",
+    "Hash": "12EC9D2FAA92F15222CEF75E4109976B8A37F987593C80622FC928F7A9EB2D77"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22043.asset.meta",
+    "Hash": "3FDD3040CCF0532BE748AEA4E2F2F6C26DB192537FCD692D36EBDFD90D43680D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22075.asset",
+    "Hash": "67E48782D7E42DD8473AE4DE9A34AC17B6034DECF025983CD923187557EC3261"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22075.asset.meta",
+    "Hash": "B1C00544985512D54FAF4E62C829E20E3C07AD5BEC9CAD2D4EACBA6CDD1D5907"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22101.asset",
+    "Hash": "581068AED1ADBC819346E1D35263C415BDE95523B6F61FC428F2B918475D1402"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22101.asset.meta",
+    "Hash": "D91EE9284B977BFA2F78194EAF969866C2439F2FA3DBF8201E472D225EBB7510"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22105.asset",
+    "Hash": "FE0A495E39BBCAC11EC16145DF6F3CB696A9DC7BEA7CE30F6F50F609141039B1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22105.asset.meta",
+    "Hash": "F92D0E79C95275E4D9CE2549BFA003937FAF248EE32747FBCF5167C329681628"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22106.asset",
+    "Hash": "E13D385A03F9FE4D6D1D320E49C2E9A588915E7195621350CFA9C5F9BCBA7363"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22106.asset.meta",
+    "Hash": "200DE1631BEE70360F7803306602165861E3FF5BECFD91654CA75F549349108E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22116.asset",
+    "Hash": "51E51E9B32594146393D57D425C3C4E6A3456EC75BC00564CF59151EF7BADCBF"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22116.asset.meta",
+    "Hash": "A7C440707A14A80065586C2CFEB99DB791FEEC3899FC1CA9A1AD84C3E175990B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22129.asset",
+    "Hash": "5500E653A5D2CAD2E810A595096FC79F511A8B240524143EE301BE7AB76CDD32"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22129.asset.meta",
+    "Hash": "3FB11CD475FA9AF7827A6D901CA97FB9173BE2F5218BC7D6369AFB55C302D50F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22134.asset",
+    "Hash": "3D5F585CA64BDACDA8C1F8A13F53C9B5CA5C86E06C657E055C2BDB2C2558793A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22134.asset.meta",
+    "Hash": "403BB1BDB000A5B763E30B9D442B0EE13A3E4B5423AB0A72F518283942672FD6"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22145.asset",
+    "Hash": "81EC482F1A7CF8C6DFE7E496C58190FA10929AAB9BB1EAEA0676A74A7A05066F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22145.asset.meta",
+    "Hash": "788C212B95AC09F5D98476258A6878B2DFF3042F20B6C7BB546004CD6C80F849"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22177.asset",
+    "Hash": "DCACE8A4BC2B87E175C093F6F8F49754D9287620ECA3B9A863B7B7092054B920"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22177.asset.meta",
+    "Hash": "7B38312F31F8F4596D50845FE63F6D39D7D9FA65228C9DF79DFE58D043844056"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22180.asset",
+    "Hash": "172E53477A6933708108F4CC84B879E9BB77E871414A5CB8D76F0A8B07C21326"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22180.asset.meta",
+    "Hash": "F88D3680E7E67BF1661E6EB65CCD0A303E33CF73532DAE58872F9CC54E3A2037"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22205.asset",
+    "Hash": "9ACFBD2B0C939C871C963F3F176D323DF5BAC80ECEE952A272642287213D20A2"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22205.asset.meta",
+    "Hash": "B81BB2BEA845662EA18E2471EE59A3B50BBEF8939DC99E6AD4E972CB15B3BB4F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22223.asset",
+    "Hash": "C7E1CDF7FDB7E1F76A2F59B53A1678C6E9A3BAF8F72AFA4BB3BCCDDEFB084FD8"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\AtlasSprites\\22223.asset.meta",
+    "Hash": "051B3D959BD9AEF067542F5A8F648CBE783802A127FC13287BF629F350E59ECE"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Editor\\ReferenceGameplayVfxImporter.cs",
+    "Hash": "C9AEBEDE063E04D67F3301672387BFDF2E6BA1C2A953E708962ECEB3CF73C77F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Editor\\ReferenceGameplayVfxImporter.cs.meta",
+    "Hash": "ACA14F439D86499367878E1431F3DEB497EF73C6EF9291F9EDB659464DC0E68B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Materials\\11.mat",
+    "Hash": "FB5DEFDC5D1D81F57060E115C00CD29A1F57AD94D043907145BBF33E08482949"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Materials\\11.mat.meta",
+    "Hash": "E8E3127968BAE0082935EE9993C8ED1272A523BD6469ABCF6907CB9C1140FDCE"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Materials\\3.mat",
+    "Hash": "4DC8F6162AEDDC9A9F6C3B356666B23D358A915D6D4595FE7CE912953F4D4FB7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Materials\\3.mat.meta",
+    "Hash": "988E38F984B0767A72A7735E4E78F1C223DC3C6991005F57C81CBFC7842BC78F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Materials\\92.mat",
+    "Hash": "C19E1442A0EF4EF68C22E5A37218964328A58E07C848D483E638016416A10DD8"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Materials\\92.mat.meta",
+    "Hash": "C49DBFEF31A18FA2AB79D88FABBDC434ED8AC51A88A98A5A6679822410823227"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Meshes\\DOOR_LP__835.obj",
+    "Hash": "01DF7F59B388ED286822C5AAC95E33D96FE7C8D110C8BAB40D9522C91FAA0E24"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Meshes\\DOOR_LP__835.obj.meta",
+    "Hash": "E93936FBA8B1B25C28313774AE54EA27F969233AA045C5CDF236886AAB0D8BB6"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Meshes\\DOOR_LP1__823.obj",
+    "Hash": "9E3E47496F5023EBBC6EC6A4DD135E78E032B45FDDAFE04BC951CBA55DE688D5"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Meshes\\DOOR_LP1__823.obj.meta",
+    "Hash": "8F79A35B52352D1D18FE83356AA6EB440437B87B07BFCA4F64336F0A3F50DA66"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay.meta",
+    "Hash": "5246631D07AB12789528B8ECE12B842819A1EB4A4C5A0CA86121C87E37A6EDC1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX.meta",
+    "Hash": "862ED2A96319BABF586B50FB2F771C0BEE35247E788A4B3EC74F4E8AF06065A2"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\BoxItemExplodeParticles.prefab",
+    "Hash": "4A6C5CC0B7503E5B836FB9961FD4C69872C1F1B3D66149088AB07E2E5FC590B7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\BoxItemExplodeParticles.prefab.meta",
+    "Hash": "FC4BF355528312E1718586B8968C3E48CF5D6D0CB55D43341F77699E677E64F3"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\CupboardItemExplodeParticles.prefab",
+    "Hash": "7AB9B1F046CAC8C1CCCEEEAB7059581CD7A24576FD800DB7F8A8C4328D905EBB"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\CupboardItemExplodeParticles.prefab.meta",
+    "Hash": "D2ED28AC9825551A6A7FC01C1F6CB1028A9C9E13FB4D1B3700F841178C4727F4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\CupboardItemSingleExplodeParticles.prefab",
+    "Hash": "D48BAF4F24A6E13DB7162BEDB9918810A6CE16D2ED2BBFC755CC675602F0FD3F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\CupboardItemSingleExplodeParticles.prefab.meta",
+    "Hash": "C3DA58EAF561D8E0C7A09CD84513F35B8CAD3FF439F2612F634A141AE743E57A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\EggItemExplodeParticles.prefab",
+    "Hash": "3D72771EA2AAE0028DF73B74D8AA9EE25AF4926564F5CCD67A2725C8B56F7ED0"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\EggItemExplodeParticles.prefab.meta",
+    "Hash": "7AAC36E01DDBADBC0F052D78E67BE3E05705E26FC650F2C74072F87DEAE6E096"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\GrassItemExplodeParticles.prefab",
+    "Hash": "1032B1CF3E57567940D7A47D1357D62812F4FB80C8075FB31EE837A7A23C837C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\GrassItemExplodeParticles.prefab.meta",
+    "Hash": "AE504BAB9C8CED1EA39BC0CBB112902E568C05BA2ABDDBF8A0846C5F10A26FB4"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\GrassItemTapParticles.prefab",
+    "Hash": "D3AE1E15F65D4D316E7A22D321F89671496B4E9F9FADB31C458CA191B5D701FA"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\GrassItemTapParticles.prefab.meta",
+    "Hash": "559B5A143F6DA353CB450BA3335230DAE554D50C9BCAB9238E854B53AA71E34A"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\LightballEffectedItemExplodeParticles.prefab",
+    "Hash": "DAE874DAD7AA00AAAA56831651A5E4F05A0BFE3A16631B028B33A1D82D6DBAAA"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\LightballEffectedItemExplodeParticles.prefab.meta",
+    "Hash": "248791E583F6E73AAA90F58B3A33664548B02B504125D20F4B20C9E2F550AF6F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\LightballItemExplodeParticles.prefab",
+    "Hash": "DFA7F40F5E29F37DB6D94B19641C405C1BFC48C3E70E4CD30CF1A83F6FA0C09D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\LightballItemExplodeParticles.prefab.meta",
+    "Hash": "5C28063F4DA7E57CC1B5F3FC2FF563E1D12E080C37E715B70421A80FA3069C5E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\LightballRayPrefab.prefab",
+    "Hash": "695C182246ACFCF1093E1ADB7E6A5D1DD7B62BCACDEAA6B81F821BE4F3122A3B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\LightballRayPrefab.prefab.meta",
+    "Hash": "32F87763EFFF08BABDCF2F3FFFB049DECB34A67F11B55A908171F68AA4ED2578"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\LightballUseParticles.prefab",
+    "Hash": "A3DEED5035551890E46B5F2E12362F59A672E3526C1C5DEBB6799DC82022E76C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\LightballUseParticles.prefab.meta",
+    "Hash": "A7A4F30D67292A2140E329F78DE874F503304D19F47254585B2E923C7C8733A2"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\MatchItemExplodeParticles.prefab",
+    "Hash": "D86FE2C1A245A066EE47D75D19707CDC1CE0B93819737F89DB0082B3E8BC707F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\MatchItemExplodeParticles.prefab.meta",
+    "Hash": "94D313431309D841CE07810C8FD01B641390EC7EFA3211F818668637AE7B83CE"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\MatchItemSwapParticles.prefab",
+    "Hash": "DCD9FC1355967729C6388B14A6BBAA6F85CD6F3765B8C26D233CB8CD20BA950E"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\MatchItemSwapParticles.prefab.meta",
+    "Hash": "ED4AD78C441546208035DFC482A19BE3109558C636B1C2E5A45CA2DB4274D34C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PotionItemExplodeParticles.prefab",
+    "Hash": "87C84B6371C7B6C428AD99203B969294D86C9B7E20EDDF17789AE3131F28922B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PotionItemExplodeParticles.prefab.meta",
+    "Hash": "34687229ADAA28EB6DA95D5D6E06B9C15D921895177CB59BBB6FBC63D97228D0"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PotionItemSingleExplodeParticles.prefab",
+    "Hash": "C359E067BB42B74ABE2775D4E6F1A7A5CCFC89F708C4AF86D489635F860DC3BA"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PotionItemSingleExplodeParticles.prefab.meta",
+    "Hash": "02B15F6E0952743DBF731706300CCA5D6EA4C04679052B3B5B80970BD37ACF34"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PropellerItemExplodeParticles.prefab",
+    "Hash": "2CE1CBAD9B7E5723CC6BC95192F07DF005DEC771A8ED87E9C61AF742979A29D1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PropellerItemExplodeParticles.prefab.meta",
+    "Hash": "13290CFB0114CD3CFAE808A4D7A023DB7CE17F6A9ED86EB68968278BB3F8AB02"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PropellerRocketComboParticles.prefab",
+    "Hash": "9894E95DE03275C52522C8416A78E38459FBF0E1ED50E301B07C2C5C60D9297F"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PropellerRocketComboParticles.prefab.meta",
+    "Hash": "54F76E5BE659883D3869DDF71FCBF0BB7268FD917E5BCAE51AE2E7EDB12A0E31"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PropellerTargetExplodeParticles.prefab",
+    "Hash": "31EE537CC3C6462B305F95B6DDB2E0C3865DE449E688AE207B3213F617A3FE1C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PropellerTargetExplodeParticles.prefab.meta",
+    "Hash": "4CEBF0A2316D2CEE2BEFA3BC6FFF5F4EFAD2B96DBCDD4BA705D6FDCE8BC0870C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PurpleGrassItemExplodeParticles.prefab",
+    "Hash": "4542213650355BCAD20E9449A9E784946CFC77C876A70F29C53559902A667376"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PurpleGrassItemExplodeParticles.prefab.meta",
+    "Hash": "546532372E52527ED73AB62BF2F84E540DAED581C1E64E5A919BA1DF1F9CEF94"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PurpleGrassItemTapParticles.prefab",
+    "Hash": "1DCAAF36B5C2BEE8D4638596739BA42AC13AD6CCAF9A06E1A02B7A6B92FBD4DC"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\PurpleGrassItemTapParticles.prefab.meta",
+    "Hash": "1510750327F1D241D3624575AC38CC470C85FDBDF63817808DAD9CAE40E2829B"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\RemainingMovesHitParticles.prefab",
+    "Hash": "C2A5A902DAA83E41E34BBCED26989F169AB9E3D6702821E6FCE61F9935554316"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\RemainingMovesHitParticles.prefab.meta",
+    "Hash": "CD4656D6171B0E43CE1B614985E6D70125BD52EB0A78EB837C678209C1C4D7A3"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\RemainingMovesParticles.prefab",
+    "Hash": "8F4D193641A0BB04487AAF7B469D4CE784E90012FE785A7AC8D9C2E75E76866C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\RemainingMovesParticles.prefab.meta",
+    "Hash": "47BE05736BC57741584BAD922B792265F8104296FA03AE0BACF5E4C13A3E8206"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\RocketItemParticles.prefab",
+    "Hash": "459A003587AC93A2367AFAFA8F33D1DF87FDD611605F7EBE9D0D7656E424941C"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\RocketItemParticles.prefab.meta",
+    "Hash": "7253EE16B520580BF13DFDC9EDA2101705CACF8EEF5DA2E120DFD826D832916D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntItemExplodeParticles.prefab",
+    "Hash": "339AF053611E8E8E9E930D81718E73A09344311487F6BE08AC6B8D32FB3A4BB0"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntItemExplodeParticles.prefab.meta",
+    "Hash": "9A79D685E4D79796C20B24E7488F6443D78698B23815BB7C4117BA285EB5A2F1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntItemFuseParticles.prefab",
+    "Hash": "F2321D5705D70A7D3AF3E1A098FF659A1BFFB9B35B992F74F0E2AE8BCDD393BB"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntItemFuseParticles.prefab.meta",
+    "Hash": "8219D1CCA712D18712E9578F7074D9197C646CB07CAA3503D194BC9AC66639F8"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntPropellerComboFuseParticles.prefab",
+    "Hash": "1DE6A6BFADBB5855421BA78B1EB6D540A27BC76521460DE86C86219135DB7CA5"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntPropellerComboFuseParticles.prefab.meta",
+    "Hash": "8291EAECDA5BA89527CF883CC76C757378BD25946661118AA592E1163C43D1CE"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntRocketComboParticles.prefab",
+    "Hash": "5A88C36AFC465C75B696C450256AA64CD5E88C178F9F172DB116FD4D6577BE23"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntRocketComboParticles.prefab.meta",
+    "Hash": "5FDAF993CEB180D75E517CA74F3E0047C360B241E1300A89092E4028A93858C7"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntRocketComboUseParticles.prefab",
+    "Hash": "F8A4E7B8814FDBD3DB113BE6E1E4D4B9B31F8B50BB2059CC46F5D56FA4E52BBB"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntRocketComboUseParticles.prefab.meta",
+    "Hash": "D00EF731CD840EEE7D20CA1460A54A2B6696C9A95FB21943CA21AAA932E5335D"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntTntComboExplodeParticles.prefab",
+    "Hash": "15E73D164071CD7BDCB22396042BCAE96C20693EDB6B47ABFEB470732F43F1D5"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Resources\\ReferenceGameplay\\VFX\\TntTntComboExplodeParticles.prefab.meta",
+    "Hash": "81D049F72E87A66231930E8A38D634561171BD4549C3A34F965AE42D68471905"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Textures\\16041-cubemap.png",
+    "Hash": "99C07723B465F5F53FDC455C82D09FA6341FF564B977FB19BA60D023146E6B03"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Textures\\16041-cubemap.png.meta",
+    "Hash": "6957B4D6711264AC90B2B850CE3788DD6593A4D2663B8BF9C2803BD9F8A8A6D1"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Textures\\433-Default-ParticleSystem.png",
+    "Hash": "E4A1E48DB3C80DD59299F848AB733640D8527E15B0ED9848E8E746CB27DEC332"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Textures\\433-Default-ParticleSystem.png.meta",
+    "Hash": "BB499CF10CE68C021E74C2AED46FAD2806FA14DDB3857AE55B430CE6E4F0D0DE"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Textures\\571-CupBoard_Base_color.png",
+    "Hash": "7720633FE2D3D10C06A78F51D87B97A9EC1EE70AD57CFD083CE174CA3EBF0964"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Textures\\571-CupBoard_Base_color.png.meta",
+    "Hash": "7AE48AFFF9132F1C884B36C21DC3FE09ED4C5EEFB45213B3496A8A38C764ACD0"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Textures\\707-lightball_ray_1.png",
+    "Hash": "9F27E7FA5F2B888C3AEE9D838E6CF8BCE077CE686A5C38DA258BF20F414ECB74"
+  },
+  {
+    "Path": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Assets\\ReferenceGameplay\\VFX\\Textures\\707-lightball_ray_1.png.meta",
+    "Hash": "369DB1532D89AC948BF354CDD0A5EF5D3CCCFE7FCC02C796950CFD24877CF981"
+  }
+]

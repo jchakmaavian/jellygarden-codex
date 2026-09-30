@@ -1,0 +1,55 @@
+"result":"opening level 1; testing=True"
+"result":"busy=False status=Completed: Open level completed=4 failed=4 lm=Playing cells=45/45 limit=6 testing=True level=1 powerupBusy=False"
+### Practice board (practice)
+"diagnostics":[]
+"result":"requested Practice board; busy=True status=Running: Practice board"
+"result":"busy=False status=Completed: Practice board completed=5 failed=4 lm=Playing cells=64/64 limit=99 testing=True level=1 powerupBusy=False"
+"result":"limit=99 status=Playing cells=64"
+### Spawn TNT (p-tnt-spawn)
+"diagnostics":[]
+"result":"requested Spawn TNT; busy=True status=Running: Spawn TNT"
+"result":"busy=False status=Completed: Spawn TNT completed=6 failed=4 lm=Playing cells=64/64 limit=99 testing=True level=1 powerupBusy=False"
+### Activate selected (p-tnt-activate)
+"diagnostics":[]
+"result":"requested Activate selected; busy=True status=Running: Activate selected"
+"result":"busy=False status=Completed: Activate selected completed=7 failed=4 lm=Playing cells=64/64 limit=98 testing=True level=1 powerupBusy=False"
+### Spawn rocket H (p-rocket-spawn)
+"diagnostics":[]
+"result":"requested Spawn rocket H; busy=True status=Running: Spawn rocket H"
+"result":"busy=False status=Completed: Spawn rocket H completed=8 failed=4 lm=Playing cells=64/64 limit=98 testing=True level=1 powerupBusy=False"
+### Activate selected (p-rocket-activate)
+"diagnostics":[]
+"result":"requested Activate selected; busy=True status=Running: Activate selected"
+"result":"busy=False status=Completed: Activate selected completed=9 failed=4 lm=Playing cells=64/64 limit=97 testing=True level=1 powerupBusy=False"
+### Spawn propeller (p-propeller-spawn)
+"diagnostics":[]
+"result":"requested Spawn propeller; busy=True status=Running: Spawn propeller"
+"result":"busy=False status=Completed: Spawn propeller completed=10 failed=4 lm=Playing cells=64/64 limit=97 testing=True level=1 powerupBusy=False"
+### Activate selected (p-propeller-activate)
+"diagnostics":[]
+"result":"requested Activate selected; busy=True status=Running: Activate selected"
+"result":"busy=False status=Completed: Activate selected completed=11 failed=4 lm=Playing cells=64/64 limit=96 testing=True level=1 powerupBusy=False"
+### Spawn color ball (p-colorball-spawn)
+"diagnostics":[]
+"result":"requested Spawn color ball; busy=True status=Running: Spawn color ball"
+"result":"busy=False status=Completed: Spawn color ball completed=12 failed=4 lm=Playing cells=64/64 limit=96 testing=True level=1 powerupBusy=False"
+### Activate selected (p-colorball-activate)
+"diagnostics":[]
+"result":"requested Activate selected; busy=True status=Running: Activate selected"
+"result":"busy=False status=Completed: Activate selected completed=13 failed=4 lm=Playing cells=64/64 limit=95 testing=True level=1 powerupBusy=False"
+### Combine selected (p-combo-tnt-rocket)
+"diagnostics":[]
+"result":"requested Combine selected; busy=True status=Running: Combine selected"
+"result":"busy=False status=Completed: Combine selected completed=14 failed=4 lm=Playing cells=64/64 limit=95 testing=True level=1 powerupBusy=False"
+### Combine selected (p-combo-colorball-tnt)
+"diagnostics":[]
+"result":"requested Combine selected; busy=True status=Running: Combine selected"
+"result":"busy=False status=Completed: Combine selected completed=15 failed=4 lm=Playing cells=64/64 limit=95 testing=True level=1 powerupBusy=False"
+### Combine selected (p-combo-propeller-rocket)
+"diagnostics":[]
+"result":"requested Combine selected; busy=True status=Running: Combine selected"
+"result":"busy=False status=Completed: Combine selected completed=16 failed=4 lm=Playing cells=64/64 limit=95 testing=True level=1 powerupBusy=False"
+"result":"busy=False status=Completed: Combine selected completed=16 failed=4 lm=Playing cells=64/64 limit=95 testing=True level=1 powerupBusy=False"
+errors since 1649: "returned":1
+
+[exited with code 0]

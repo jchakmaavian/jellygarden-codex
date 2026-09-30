@@ -23,6 +23,7 @@ namespace JellyGarden.Scripts.Juice
         public int RocketSparkParticlesEmitted { get; private set; }
         public float LastRocketSweepDuration { get; private set; }
         public float LastRocketAnticipation { get; private set; }
+        public float LastRocketMaxFlightFrame { get; private set; }
         public int RocketScreenExits { get; private set; }
         public readonly Vector3[] RocketExitViewports = new Vector3[128];
         public bool RocketVisualsActive { get { if(RocketParticleCount>0)return true;if(flyers!=null)foreach(var f in flyers)if(f.used&&f.rocket)return true;return false; } }
@@ -322,9 +323,11 @@ namespace JellyGarden.Scripts.Juice
                 f.nativeRocket = RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("RocketItemParticles",f.go.transform.position,worldCell:pitch,sustained:true);
             }
             float distance=0;int stepDone=-1,sparkStepDone=-1;
+            LastRocketMaxFlightFrame = 0;
             while(distance<maxExit)
             {
                 if(Paused){yield return null;continue;}
+                LastRocketMaxFlightFrame = Mathf.Max(LastRocketMaxFlightFrame, Time.unscaledDeltaTime);
                 // Anticipation owns ignition. Flight then keeps one constant velocity through board and screen.
                 distance=Mathf.Min(maxExit,distance+speed*Time.deltaTime);int index=0;
                 // Contact follows the nose of the directional flight sprite.

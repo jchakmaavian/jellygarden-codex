@@ -1,0 +1,719 @@
+{
+  "name": "PropellerEndFallAnimation",
+  "duration": 0.550000011920929,
+  "frameRate": 60.0,
+  "loop": false,
+  "curves": [
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.009999999776482582,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": -0.009999999776482582,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": -0.009999999776482582,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": -0.08799999952316284,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": -0.13199999928474426,
+          "inSlope": -1.4613274945673993e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": -0.0949999988079071,
+          "inSlope": 1.2541303973101492e-07,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.00800000037997961,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.00800000037997961,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.00800000037997961,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.15199999511241913,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.08799996972084045,
+          "inSlope": 2.8104198879219666e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.11599999666213989,
+          "inSlope": 6.062643387316768e-08,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin01",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.02199999988079071,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.02199999988079071,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.02199999988079071,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin01",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.10199999809265137,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.03799999877810478,
+          "inSlope": -2.5301563866264587e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.06599999964237213,
+          "inSlope": 8.287884001312307e-08,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin01",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin02",
+      "typeID": 4,
+      "property": "m_LocalPosition.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.03790000081062317,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.03790000081062317,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.03790000081062317,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin02",
+      "typeID": 4,
+      "property": "m_LocalPosition.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.21299999952316284,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.1369999647140503,
+          "inSlope": 1.9465985667821428e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.15299999713897705,
+          "inSlope": -3.5033004275319968e-09,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Pin02",
+      "typeID": 4,
+      "property": "m_LocalPosition.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": -5.0,
+          "inSlope": -1.3146757453341706e-05,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 0.0,
+          "inSlope": 1.3146757453341706e-05,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.03333333507180214,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.15000000596046448,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.03333333507180214,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.15000000596046448,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "localEulerAnglesRaw.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.03333333507180214,
+          "value": 10.0,
+          "inSlope": -0.00014596064556826605,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.15000000596046448,
+          "value": -9.0,
+          "inSlope": 1.2574907259477186e-05,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.28333333134651184,
+          "value": 6.0,
+          "inSlope": -5.091268576506991e-05,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.4166666567325592,
+          "value": -3.0,
+          "inSlope": -1.1119051805508207e-05,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 0.0,
+          "inSlope": -9.69357557778494e-07,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.023800015449524,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 0.8948437571525574,
+          "inSlope": -3.278026907693743e-07,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 1.0,
+          "inSlope": 5.110330487667625e-07,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Body",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.11666666716337204,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        },
+        {
+          "time": 0.23333333432674408,
+          "value": 1.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/PinIsik",
+      "typeID": 1,
+      "property": "m_IsActive",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0.23333333432674408,
+          "value": 0.0,
+          "inSlope": 0.0,
+          "outSlope": 0.0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan/FanImage",
+      "typeID": 212,
+      "property": "m_Sprite",
+      "isPPtr": true,
+      "keys": [
+        {
+          "time": 0,
+          "value": 0.0,
+          "inSlope": 0,
+          "outSlope": 0,
+          "objectPathId": 18558
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalScale.x",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalScale.y",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan",
+      "typeID": 4,
+      "property": "m_LocalScale.z",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    },
+    {
+      "path": "Main/Fan/FanImage",
+      "typeID": 212,
+      "property": "m_Color.a",
+      "isPPtr": false,
+      "keys": [
+        {
+          "time": 0,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        },
+        {
+          "time": 0.550000011920929,
+          "value": 1.0,
+          "inSlope": 0,
+          "outSlope": 0
+        }
+      ]
+    }
+  ],
+  "missingBindings": [],
+  "pathId": 17020
+}

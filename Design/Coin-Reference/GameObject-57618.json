@@ -1,0 +1,26 @@
+{
+  "m_Component": [
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 60648
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 132834
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 112779
+      }
+    }
+  ],
+  "m_Layer": 0,
+  "m_Name": "ShopSectionCoinsItem",
+  "m_Tag": 0,
+  "m_IsActive": true
+}

@@ -14,10 +14,6 @@ namespace RoyalThrone.Editor
     {
         public const string OutputPath = "Builds/Android/RoyalThrone-QA.apk";
 
-        // Ads, purchases, social and backend integrations are not configured for this copy.
-        // Their inherited IDs belong to the original game, so QA builds must not enable them.
-        static readonly string[] ServiceDefines = { "UNITY_ADS", "UNITY_INAPPS", "GOOGLE_MOBILE_ADS", "CHARTBOOST_ADS", "FACEBOOK", "PLAYFAB", "GAMESPARKS" };
-
         [MenuItem("Tools/Royal Throne/Build/Android QA APK")]
         public static void BuildQaApk()
         {
@@ -25,14 +21,7 @@ namespace RoyalThrone.Editor
             if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play Mode before building.");
             if (!BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Android, BuildTarget.Android)) throw new BuildFailedException("Android Build Support is not installed for this Unity version.");
 
-            // The inherited PostImporting script used to force UNITY_ADS on after imports, so strip service defines here rather than trusting settings.
-            var defines = PlayerSettings.GetScriptingDefineSymbols(NamedBuildTarget.Android).Split(';').Select(d => d.Trim()).Where(d => d.Length > 0).ToArray();
-            var enabledServices = defines.Intersect(ServiceDefines).ToArray();
-            if (enabledServices.Length > 0)
-            {
-                PlayerSettings.SetScriptingDefineSymbols(NamedBuildTarget.Android, string.Join(";", defines.Except(ServiceDefines)));
-                Debug.LogWarning("[Royal Throne] Removed Android scripting defines for the QA build: " + string.Join(", ", enabledServices));
-            }
+            RoyalOfflineBuildPolicy.Configure(NamedBuildTarget.Android);
 
             EditorUserBuildSettings.buildAppBundle = false;
             EditorUserBuildSettings.exportAsGoogleAndroidProject = false;

@@ -1,0 +1,40 @@
+script start: 2026-09-23 17:58:24.543772100 epoch 1790164704.566509500
+screenrecord started pid=1827 at epoch 1790164706.980956300
+force-stop returned at epoch 1790164709.368634800
+T0=1790164711.439370400 (17:58:31.466046100)
+Starting: Intent { cmp=com.dreamgames.royalmatch/com.dreamgames.library.DreamUnityPlayerActivity }
+am start returned at epoch 1790164711.663210100
+shot-0.2.png (screencap started at elapsed 0.2, finished at 3.18)
+shot-3.6.png (screencap started at elapsed 3.6, finished at 4.34)
+shot-4.7.png (screencap started at elapsed 4.7, finished at 5.53)
+shot-5.9.png (screencap started at elapsed 5.9, finished at 6.76)
+shot-7.1.png (screencap started at elapsed 7.1, finished at 8.05)
+shot-8.4.png (screencap started at elapsed 8.4, finished at 9.27)
+shot-9.7.png (screencap started at elapsed 9.7, finished at 10.55)
+shot-10.9.png (screencap started at elapsed 10.9, finished at 13.59)
+shot-14.0.png (screencap started at elapsed 14.0, finished at 16.95)
+shot-17.4.png (screencap started at elapsed 17.4, finished at 19.95)
+shot-20.3.png (screencap started at elapsed 20.3, finished at 24.24)
+shot-24.6.png (screencap started at elapsed 24.6, finished at 27.52)
+shot-27.9.png (screencap started at elapsed 27.9, finished at 30.71)
+shot-31.1.png (screencap started at elapsed 31.1, finished at 33.94)
+shot-34.3.png (screencap started at elapsed 34.3, finished at 37.04)
+shot-37.4.png (screencap started at elapsed 37.4, finished at 40.34)
+shot-40.7.png (screencap started at elapsed 40.7, finished at 43.49)
+shot-43.9.png (screencap started at elapsed 43.9, finished at 46.77)
+shot-47.2.png (screencap started at elapsed 47.2, finished at 49.96)
+shot-50.3.png (screencap started at elapsed 50.3, finished at 53.27)
+shot-53.7.png (screencap started at elapsed 53.7, finished at 56.66)
+shot-57.0.png (screencap started at elapsed 57.0, finished at 59.74)
+shot-60.1.png (screencap started at elapsed 60.1, finished at 62.82)
+shot-63.2.png (screencap started at elapsed 63.2, finished at 65.92)
+shot-66.3.png (screencap started at elapsed 66.3, finished at 68.92)
+shot-69.3.png (screencap started at elapsed 69.3, finished at 71.92)
+shot-72.3.png (screencap started at elapsed 72.3, finished at 75.12)
+loop finished at elapsed 75.53
+    mResumedActivity: ActivityRecord{5a225a8 u0 com.dreamgames.royalmatch/com.dreamgames.library.DreamUnityPlayerActivity t143}
+screenrecord process ended at epoch 1790164798.157250300 (wall duration since REC_START: 91.2 s)
+adb: error: cannot create file/directory '/c/Users/chakm/Documents/Codex/2026-09-08/144/outputs/JellyGarden-Codex/Design/Inspection-ReferenceBaseline/device/royalmatch-38174-coldstart/rm-coldstart.mp4': No such file or directory
+pulled+removed device recording at 1790164800.377944700
+T0_MINUS_REC_START=4.46
+FORCESTOP_RETURN_MINUS_REC_START=2.39

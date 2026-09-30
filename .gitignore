@@ -122,3 +122,37 @@ InitTestScene*.unity*
 /Design/Effects/Unity-review-v2/*.png
 /Design/Effects/Unity-review-v3/*.png
 /Design/Branding/Home-Unity/*-622x1245.png
+
+# Local backups and checkpoints (several GB, including third-party and
+# tampered reference APKs). They stay on this machine only.
+/Design/Backup/
+
+# Unity crash-recovery scenes.
+/[Aa]ssets/_Recovery/
+/[Aa]ssets/_Recovery.meta
+
+# Python bytecode caches from the Design tools.
+__pycache__/
+*.py[cod]
+
+# One-off validation and inspection builds and compiler response files.
+/Design/**/*.dll
+/Design/**/*.exe
+/Design/**/*.rsp
+/Design/**/*.pending
+
+# Raw capture frames and recordings; the picked review frames and clips are versioned.
+/Design/KingVanguard-*/After/MotionFrames/
+/Design/RoyalMatchReference/**/recordings/
+/Design/ReferenceGameplayImport/Gameplay-*/
+
+# Data extracted from reference game builds.
+/Design/**/*.unity3d
+/Design/**/*.unity3d_data/
+/Design/**/*.assets
+/Design/**/*.ab
+/Design/**/*.fsb
+/Design/Inspection-*/ReferencePackage/
+
+# Editor PlayerPrefs registry exports (save snapshots).
+/Design/**/*.reg

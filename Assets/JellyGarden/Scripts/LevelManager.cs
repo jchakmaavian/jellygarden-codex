@@ -154,6 +154,8 @@ namespace JellyGarden.Scripts
                         else
                             LevelManager.THIS.Limit += 30;
 
+                        RoyalThrone.Characters.KingVanguardActivityEvents.NotifyExtraMovesGranted(this);
+
                         ActivatedBoost = null;
                     }
 
@@ -306,6 +308,8 @@ namespace JellyGarden.Scripts
             }
             set
             {
+                // Repeated completion notifications must not pay the same win twice.
+                if (value == GameState.Win && GameStatus == GameState.Win) return;
                 GameStatus = value;
                 InitScript.Instance.CheckAdsEvents(value);
 
@@ -588,6 +592,8 @@ namespace JellyGarden.Scripts
 
             squaresArray = new Square[maxCols * maxRows];
             LoadLevel();
+            // The profile's first-try wins (RoyalProfile): an attempt at this level begins here, once per attempt.
+            RoyalThrone.RoyalProfile.AttemptStarted(currentLevel, PlayerPrefs.GetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), 0) > 0);
             for (int row = 0; row < maxRows; row++)
             {
                 for (int col = 0; col < maxCols; col++)
@@ -751,6 +757,7 @@ namespace JellyGarden.Scripts
             stars = 1;
             string starsKey = string.Format("Level.{0:000}.StarsCount", currentLevel);
             StarsGained = PlayerPrefs.GetInt(starsKey, 0) > 0 ? 0 : 1;
+            RoyalThrone.RoyalProfile.Won(StarsGained == 1);
             committedCoinsBefore = InitScript.Gems;
             committedCoins = Juice.RoyalWinSequence.Coins(stars);
             InitScript.Instance.AddGems(committedCoins);
@@ -782,6 +789,7 @@ namespace JellyGarden.Scripts
 
             preWinAnimationRunning = true;
             SkipWinCelebration = false;
+            RoyalThrone.Characters.KingVanguardActivityEvents.NotifyGoalsCompleted(this);
 
             // The reference order (Design/RoyalMatchReference/OBSERVATIONS.md): the celebration (the logo under pennants,
             // fireworks, confetti, the complete fanfare) as soon as the goals are done, before the moves left are used. It
@@ -1380,12 +1388,16 @@ namespace JellyGarden.Scripts
             int i = 0;
             do
             {
+                // A 2x2 is discovered from more than one cell. Recolouring the
+                // same piece twice in this pass can undo its first change forever.
+                var recoloured = new HashSet<Item>();
                 foreach (List<Item> comb in combs)
                 {
                     int colorOffset = 0;
                     foreach (Item item in comb)
                     {
-                        item.GenColor(item.color + colorOffset);
+                        if (item && recoloured.Add(item))
+                            item.GenColor(item.color + colorOffset);
                         colorOffset++;
                     }
                 }
@@ -1701,6 +1713,12 @@ namespace JellyGarden.Scripts
                 if(RoyalThrone.Campaign.RoyalReferenceCampaign.Active)RoyalThrone.Campaign.RoyalCampaignBlockers.BeginMatchWave();
                 foreach (List<Item> desrtoyItems in combinedItems)
                 {
+
+                    // The resolved group is the gameplay event. Keep character feedback independent of the VFX toggle;
+                    // failed swaps and groups without three live pieces never acknowledge a match.
+                    int matchedPieces = 0;
+                    foreach (var piece in desrtoyItems) if (piece) matchedPieces++;
+                    RoyalThrone.Characters.KingVanguardActivityEvents.NotifyMatchResolved(this, matchedPieces);
 
                     //				if (lastDraggedItem == null) {  //1.6
                     //					if (desrtoyItems.Count == 4) {

@@ -24,7 +24,20 @@ The reference is 941 x 1672 px. Scaled to 1080 x 1920 it gives these sizes, in H
   - Goal and Moves panels: 203 x 194 units, centred 228 units either side of the middle.
   - The portrait: 224 x 235, centred.
   - All three share one baseline, and the row ends 269 units down.
-  - Each panel: a blue frame with an arched header (12-unit rise, 5-unit gold rim) over a cream body of 183 x 135.
+  - Each panel (polished 2026-09-29 to the reference's measured pixels):
+    - A deep-blue frame, darker under the ribbon, with a navy outline and a light line round the cream.
+    - Over its top, a ribbon 1.5 units wider than the frame on each side. Its arch rises 13 units and has 12-unit rounded
+      ends.
+    - The ribbon's gold rim is 6.3 units deep: a pale top line, polished gold and a deeper orange line where the blue
+      starts. It wraps round the ribbon's ends and tapers away a short way down them.
+    - The ribbon's blue is flat and saturated (#0a5ccb to #0350b7), with a one-unit light line under the gold. It has no
+      gloss. Its ends hang down to 20 units above the panel's centre, with a navy underside.
+  - The cream body is 187 x 135, set into the ribbon:
+    - Its top rises 5 units like the arch above it, and its top corners are tall (15 x 22 units), so the ribbon's ends
+      wrap down round them.
+    - It has a navy lip where the ribbon meets it, a grey-tan bevel that is deeper along the bottom, and a light line
+      inside the bevel.
+    - The cream itself is flat (#f9f0d3), with only the ribbon's soft shade along its top edge.
   - The portrait: a half-ellipse window 77 units tall over a rounded base, in a 7.3-unit gold ring.
   - The whole row sits 19 units higher than in the reference. Level 23 has 11 rows plus the key exits, one more row
     than the reference shows, so this keeps its cells close to the reference's size.
@@ -41,10 +54,16 @@ The reference is 941 x 1672 px. Scaled to 1080 x 1920 it gives these sizes, in H
 - **Backdrop**: a royal-blue gradient, #2b79da at the top centre fading to #0c357d at the sides and bottom, with no
   scenery.
 - **Lettering**: the game's display font, BorisBlackBloxx, which is close to the reference's.
-  - "Goal" and "Moves" are cream with a navy outline.
-  - The goal icons are 70 / 64 / 50 / 40 units for one to four goals; the numbers are dark blue, 30 units for one or two
-    goals and 27 for more.
-  - The Moves number is dark blue, 74 units, and the strongest text in its panel.
+  - "Goal" and "Moves" (or "Time") are white, 27 units, with a navy shadow.
+  - The goal icons are 60 / 60 / 46 / 40 units for one to four goals, always fitted inside the cream body with a margin.
+    Three goals get a clear gap between their icons. The numbers are dark blue and share one size: 30 for one or two
+    goals, up to 27 for more.
+    - That size is the largest at which neighbouring numbers stay 7 units apart and the whole row stays 5 units inside
+      the cream.
+    - A long score has the columns drawn a little closer, with the row centred, instead of shrinking every number:
+      level 32's 35 / 40 / 5300 are 22.
+  - The Moves number is dark blue, 74 units, and the strongest text in its panel. A time ("0:41") or a long count is
+    narrowed until its digits take at most 64% of the body's width, so it keeps a clear margin.
 
 ## Level start
 

@@ -89,7 +89,11 @@ Results are in `checks/`.
 
 - **The three failures predate this pass:** each comes from other sessions' 09-29 work, and each check is out of date,
   not the game. The checks were not changed.
-- **Real save:** unchanged by every run of this pass (each run compares it before and after).
+- **Real save:** each run compares its game values before and after (level, lives, coins, boosters, sound), and none
+  changed them.
+  - Correction (later on 2026-09-30): the dialog review runs in the real profile. Opening the coin shop, the life shop
+    and the So Close offer turns three rewarded-video day counters (`GetGems`, `GetLifes`, `GetGoOn`). They were put
+    back to their 11:14 values. This build has no ads, so they had no effect.
   - It did change between 12:02 and 13:24, while this pass was waiting for the shared editor: level 33 won, coins
     186 → 196, 2 Cannons, lives full.
   - None of this pass's runs was playing then, so the change was left as it is.

@@ -1,0 +1,32 @@
+{
+  "m_Component": [
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 60664
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 135154
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 95788
+      }
+    },
+    {
+      "component": {
+        "m_FileID": 0,
+        "m_PathID": 112613
+      }
+    }
+  ],
+  "m_Layer": 5,
+  "m_Name": "TeamBattleCoinRewardClaimPanel",
+  "m_Tag": 20000,
+  "m_IsActive": true
+}

@@ -5,9 +5,8 @@ using UnityEngine.UI;
 
 namespace RoyalThrone.Presentation
 {
-    // The Home background is the current area: its unrestored scene with the restored object of every finished task laid
-    // over it, and the whole restored scene once the area is complete. A new task's object fades in; build animations are
-    // meant to replace that fade later (RoyalAreas.TaskBuilt).
+    // Areas 1-3 render their native layers and reveal clips; the remaining catalog keeps its existing patch renderer.
+    // Save state and star spending stay in RoyalAreas, independent of presentation and restoration replays.
     [DisallowMultipleComponent]
     public sealed class RoyalAreaScene : MonoBehaviour
     {
@@ -18,13 +17,17 @@ namespace RoyalThrone.Presentation
         readonly List<float> fadeStart = new List<float>();
         RoyalAreaInfo shown;
         bool restored;
+        RoyalHomeScreen home;
+        AreaMotion.RoyalAreaMotionPlayer native;
+        bool wasHomeVisible;
+        public AreaMotion.RoyalAreaMotionPlayer NativePlayer => native;
 
         int shownState = int.MinValue;
         /// <summary>While set (a restored area is being viewed from the list), saved-state changes do not redraw the scene.</summary>
         public bool Hold { get; set; }
         public RoyalAreaInfo Shown => shown;
         public bool ShowingRestored => restored;
-        public bool Revealing { get { if (rising > 0 || replay != null) return true; foreach (float t in fadeStart) if (t >= 0) return true; return false; } }
+        public bool Revealing { get { if (rising > 0 || replay != null || (native && native.Revealing)) return true; foreach (float t in fadeStart) if (t >= 0) return true; return false; } }
         public Image Patch(int task) => task >= 0 && task < patches.Count ? patches[task] : null;
 
         public static RoyalAreaScene Attach(RoyalHomeScreen home)
@@ -34,6 +37,7 @@ namespace RoyalThrone.Presentation
             var view = background.GetComponent<RoyalAreaScene>();
             if (!view) view = background.gameObject.AddComponent<RoyalAreaScene>();
             view.scene = background.GetComponent<Image>();
+            view.home = home;
             return view;
         }
 
@@ -49,6 +53,8 @@ namespace RoyalThrone.Presentation
         public void Show(RoyalAreaInfo area, bool asRestored)
         {
             if (area == null || !area.Ready || !scene) return;
+            if (area.nativeMotion && ShowNative(area, asRestored)) return;
+            if (native) { native.enabled = false; if (native.Surface) native.Surface.enabled = false; }
             var sprite = RoyalAreas.Art(asRestored ? area.after : area.before);
             if (!sprite) return;
             shown = area; restored = asRestored; shownState = SavedState();
@@ -71,10 +77,7 @@ namespace RoyalThrone.Presentation
                 fadeStart[i] = -1; patch.color = Color.white;
             }
             foreach (Transform child in transform)
-            {
-                if (child.name.StartsWith("Sky cloud ")) child.gameObject.SetActive(area.outdoor && !area.bakedAtmosphere);
-                if (child.name == "Royal sky depth") child.gameObject.SetActive(!area.bakedAtmosphere);
-            }
+                if (child.name.StartsWith("Sky cloud ")) child.gameObject.SetActive(area.outdoor);
         }
 
         /// <summary>Fades in a task that was just paid for; a completed area then settles on its restored scene.</summary>
@@ -83,6 +86,7 @@ namespace RoyalThrone.Presentation
             var area = RoyalAreas.CurrentArea;
             if (area == null || !area.Ready) return;
             if (shown != area || restored) Show(area, false);
+            if (native && native.enabled) { StartCoroutine(Rise(task, home && !home.MotionEnabled ? .3f : 1.3f)); return; }
             if (task < 0 || task >= patches.Count) return;
             Place(patches[task], area.tasks[task], true);
             patches[task].color = new Color(1, 1, 1, 0);
@@ -100,6 +104,13 @@ namespace RoyalThrone.Presentation
             var area = RoyalAreas.CurrentArea;
             if (area == null || !area.Ready || task < 0 || task >= area.tasks.Length) yield break;
             if (shown != area || restored) Show(area, false);
+            if (native && native.enabled)
+            {
+                rising++;
+                try { yield return native.Reveal(task, duration > .3f && (!home || home.MotionEnabled)); }
+                finally { rising--; shownState = SavedState(); if (RoyalAreas.Complete && shown == RoyalAreas.CurrentArea) Show(shown, true); }
+                yield break;
+            }
             if (task >= patches.Count) yield break;
             var patch = patches[task]; Place(patch, area.tasks[task], true);
             var r = patch.rectTransform; r.pivot = new Vector2(.5f, 0);
@@ -138,9 +149,21 @@ namespace RoyalThrone.Presentation
             if (area == null || !area.Ready) return;
             replay = StartCoroutine(RunReplay(area, motion));
         }
-        public void StopReplay() { if (replay != null) { StopCoroutine(replay); replay = null; } }
+        public void StopReplay() { if (replay != null) { StopCoroutine(replay); replay = null; if (native && native.enabled && shown != null) native.SetProgress((1 << shown.tasks.Length) - 1); } }
         IEnumerator RunReplay(RoyalAreaInfo area, bool motion)
         {
+            if (area.nativeMotion)
+            {
+                Show(area, true);
+                if (native && native.enabled)
+                {
+                    if (!motion) { replay = null; yield break; }
+                    native.SetProgress(0);
+                    yield return new WaitForSecondsRealtime(.6f);
+                    for (int i = 0; i < area.tasks.Length; i++) { yield return native.Reveal(i, true); yield return new WaitForSecondsRealtime(.3f); }
+                    Show(area, true); replay = null; yield break;
+                }
+            }
             var sprite = RoyalAreas.Art(area.before);
             if (!sprite || !motion) { Show(area, true); replay = null; yield break; }
             Show(area, false);
@@ -188,6 +211,13 @@ namespace RoyalThrone.Presentation
 
         void Update()
         {
+            if (native && native.enabled)
+            {
+                bool visible = !home || home.IsHomeVisible;
+                native.SetVisible(visible); native.MotionEnabled = !home || home.MotionEnabled; native.SoundEnabled = RoyalThrone.Testing.RoyalSave.GetInt("Sound", 1) != 0;
+                if (visible && !wasHomeVisible && !Hold && !Revealing) ShowCurrent();
+                wasHomeVisible = visible;
+            }
             bool finished = false;
             for (int i = 0; i < fadeStart.Count; i++)
             {
@@ -199,5 +229,29 @@ namespace RoyalThrone.Presentation
             if (finished && !Revealing && RoyalAreas.Complete && shown == RoyalAreas.CurrentArea) Show(shown, true);
             if (!Hold && !Revealing && SavedState() != shownState) ShowCurrent();
         }
+
+        bool ShowNative(RoyalAreaInfo area, bool asRestored)
+        {
+            if (!AreaMotion.RoyalAreaMotionPlayer.Available(area.number)) return false;
+            if (!native) native = gameObject.AddComponent<AreaMotion.RoyalAreaMotionPlayer>();
+            native.enabled = true; native.MotionEnabled = !home || home.MotionEnabled;
+            native.SoundEnabled = RoyalThrone.Testing.RoyalSave.GetInt("Sound", 1) != 0;
+            int mask = asRestored ? (1 << area.tasks.Length) - 1 : area.number == RoyalAreas.Current ? RoyalThrone.Testing.RoyalSave.GetInt(RoyalAreas.DoneKey, 0) : 0;
+            if (!native.Load(area.number, mask)) return false;
+            native.Surface.enabled = true;
+            shown = area; restored = asRestored; shownState = SavedState(); scene.color = Color.clear;
+            if (!art) { art = new GameObject("Area task art", typeof(RectTransform)).GetComponent<RectTransform>(); art.gameObject.layer = 5; art.SetParent(transform, false); art.anchorMin = Vector2.zero; art.anchorMax = Vector2.one; art.offsetMin = art.offsetMax = Vector2.zero; }
+            for (int i = 0; i < Mathf.Max(patches.Count, area.tasks.Length); i++)
+            {
+                var patch = i < patches.Count ? patches[i] : NewPatch(i);
+                if (i < area.tasks.Length) Place(patch, area.tasks[i], false);
+                patch.enabled = false; fadeStart[i] = -1;
+            }
+            // Native clouds are already part of the area, including their authored animation.
+            foreach (Transform child in transform) if (child.name.StartsWith("Sky cloud ") || child.name.Contains("Sky veil")) child.gameObject.SetActive(false);
+            return true;
+        }
+        void OnEnable() { shownState = int.MinValue; }
+        void OnDisable() { StopReplay(); rising = 0; for (int i = 0; i < fadeStart.Count; i++) fadeStart[i] = -1; }
     }
 }

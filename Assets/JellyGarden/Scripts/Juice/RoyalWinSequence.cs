@@ -17,7 +17,7 @@ namespace JellyGarden.Scripts.Juice
     ///    <see cref="EndFinale"/> lands the rest.
     /// 3. <see cref="Reward"/> on the win card: a sparkle as each star appears; on the verified opening levels (1-5), which
     ///    award one star, a single large star drops onto the card in place of the star row and the score.
-    /// 4. After CONTINUE, on Home: a tip card for the piece the next levels teach, then the coins and the star fly into the
+    /// 4. After CONTINUE, on Home: a tip card for the piece the next levels teach, then the star and overlapping coins fly into the
     ///    Home counters, which count up as they land, and the Area task list opens if its next task is affordable.
     /// Presentation only: LevelManager credits the coins and stars before the card opens. Nothing here takes input. A tap
     /// shortens the celebration (LevelManager.SkipWinCelebration). No squash or overshoot, like the cards around it.
@@ -39,6 +39,16 @@ namespace JellyGarden.Scripts.Juice
         public static int RewardShown => instance ? instance.rewardShown : 0;
         public static bool HomeRewardsPending => instance && (instance.pending != null || instance.homeRunning);
         public static int HomeCoinsShown => instance ? instance.homeCoins : 0;
+        public static int HomeRewardStarsInFlight => instance && instance.homeRunning ? instance.flights.FindAll(f => !f.turning && !f.landed).Count : 0;
+        public static int HomeRewardCoinsInFlight => instance && instance.homeRunning ? instance.flights.FindAll(f => f.turning && !f.landed).Count : 0;
+        // Ten representative coins, equal integer increments, remainder on the last arrival.
+        // This changes the displayed balance only; LevelManager saves the award once.
+        public static int CoinAmountAtArrival(int total, int arrived, int count)
+        {
+            total = Mathf.Max(0, total);
+            if (count <= 0 || arrived <= 0) return 0;
+            return arrived >= count ? total : (total / count) * arrived;
+        }
 
         // ---------------------------------------------------------------- overlay
 
@@ -257,11 +267,13 @@ namespace JellyGarden.Scripts.Juice
         {
             public Image image; public Vector2 from, burst, control, to;
             public float start, fly, size, hold; public global::System.Action land;
+            public Transform receiver;
             public bool landed, turning, started, trail;
             public ReferenceCoinParticles.Handle tracer;
         }
         readonly List<Flight> flights = new List<Flight>();
         readonly Stack<Image> coinImages = new Stack<Image>();
+        readonly global::System.Random coinRandom = new global::System.Random(6019);
         float nextCoinContactSound, nextCoinAppearSound;
         int previewGeneration;
         sealed class CoinPulse { public RectTransform rect; public Vector3 rest; public float age; }
@@ -286,10 +298,12 @@ namespace JellyGarden.Scripts.Juice
         }
         public static int ActiveCoinFlights => instance ? instance.flights.FindAll(f => f.turning && !f.landed).Count : 0;
 
-        void Fly(Sprite art, Vector2 from, Vector2 to, float delay, float size, float fly, global::System.Action land, bool turning = true, float spread = 120, float hold = 0, bool trail = true)
+        void Fly(Sprite art, Vector2 from, Vector2 to, float delay, float size, float fly, global::System.Action land, bool turning = true, float spread = 120, float hold = 0, bool trail = true, Transform receiver = null)
         {
-            float a = Random.Range(0, Mathf.PI * 2), r = Random.Range(spread * .4f, spread);
-            var f = new Flight { from = from, burst = from + new Vector2(Mathf.Cos(a) * r, Mathf.Sin(a) * r * .75f), to = to, start = Time.unscaledTime + delay, fly = turning ? .6f : fly, land = land, turning = turning, size = size, hold = hold, trail = trail };
+            // Presentation must not consume the board's random sequence during its refill.
+            float a = turning ? (float)coinRandom.NextDouble() * Mathf.PI * 2 : Random.Range(0, Mathf.PI * 2);
+            float r = turning ? Mathf.Lerp(spread * .4f, spread, (float)coinRandom.NextDouble()) : Random.Range(spread * .4f, spread);
+            var f = new Flight { from = from, burst = from + new Vector2(Mathf.Cos(a) * r, Mathf.Sin(a) * r * .75f), to = to, start = Time.unscaledTime + delay, fly = Mathf.Max(.01f, fly), land = land, turning = turning, size = size, hold = hold, trail = trail, receiver = receiver };
             // Native metadata verifies the final .6s accelerating vector; control points are reconstructed
             // from the observed outward pop / curved collection, not recovered IL2CPP method bodies.
             f.control = turning
@@ -310,6 +324,7 @@ namespace JellyGarden.Scripts.Juice
             {
                 var f = flights[k];
                 if (f.landed || !f.image) { RetireFlight(f); flights.RemoveAt(k); continue; }
+                if (f.receiver) f.to = Local(f.receiver);
                 float e = now - f.start; if (e < 0) continue;
                 float burstTime = f.turning ? .55f + f.hold : .2f;
                 if (!f.started)
@@ -361,8 +376,11 @@ namespace JellyGarden.Scripts.Juice
             foreach (var f in flights) RetireFlight(f); flights.Clear();
             ReferenceCoinParticles.Clear(root); nextCoinContactSound = nextCoinAppearSound = 0;
             foreach (var p in coinPulses) if (p.rect) p.rect.localScale = p.rest; coinPulses.Clear();
-            foreach (var name in new[] { "coin_appear__rfv387_17675", "coin_counter__rfv387_17638", "coin_collect__15714" })
-                RoyalAudioDirector.Get?.StopClip(ReferenceGameplayAudio.Load(name));
+            // During scene shutdown Get would create a new audio object merely to stop it.
+            // Retire only already-existing coin voices, leaving music and other cues alone.
+            var audio = FindAnyObjectByType<RoyalAudioDirector>();
+            if (audio) foreach (var name in new[] { "coin_appear__rfv387_17675", "coin_counter__rfv387_17638", "coin_collect__15714" })
+                audio.StopClip(ReferenceGameplayAudio.Load(name));
         }
 
         /// <summary>QA uses the actual reward renderer. Currency is never awarded by this presentation.</summary>
@@ -466,7 +484,12 @@ namespace JellyGarden.Scripts.Juice
         // ---------------------------------------------------------------- 2. the finale: a Reward counter in the HUD
 
         RectTransform rewardContents; Text rewardCount; Image rewardIcon; Text goalHeading; GameObject goalContents; string goalWords;
-        bool finale; int rewardShown, rewardTarget; float nextCoin; LevelManager finaleLevel;
+        bool finale, finaleDraining; int rewardShown, rewardTarget, finaleBase; LevelManager finaleLevel;
+        float finaleReserved, finaleArrived;
+        Vector2 lastFinaleSource;
+        readonly HashSet<Item> finaleSources = new HashSet<Item>();
+        public static int FinaleBurstCount => instance ? instance.finaleSources.Count : 0;
+        public static float FinalePendingCoinValue => instance && instance.finale && instance.finaleReserved - instance.finaleArrived > .0001f ? instance.finaleReserved - instance.finaleArrived : 0;
 
         /// <summary>The goal panel becomes a Reward coin counter for the booster session.</summary>
         public static void BeginFinale(LevelManager lm) { Get(lm).StartFinale(lm); }
@@ -501,47 +524,64 @@ namespace JellyGarden.Scripts.Juice
                 rewardCount.color = Color.white; rewardCount.raycastTarget = false; rewardCount.text = "0";
                 var o = rewardCount.gameObject.AddComponent<Outline>(); o.effectColor = Navy; o.effectDistance = new Vector2(2, -2);
             }
-            rewardShown = 0; rewardTarget = Coins(lm.stars); finale = true; finaleLevel = lm; nextCoin = Time.unscaledTime + .4f;
-            // The booster session takes about 0.3 s per move left (a flight every 0.12 s, then each rocket 0.18 s apart), so
-            // the coins are spread over it rather than all leaving in its first seconds.
-            coinGap = Mathf.Clamp(.3f * Mathf.Max(1, lm.Limit) / Mathf.Max(1, rewardTarget - 3), .15f, .8f);
+            rewardTarget = Coins(lm.stars); finaleBase = Mathf.Min(10, rewardTarget);
+            rewardShown = finaleBase; if (rewardCount) rewardCount.text = rewardShown.ToString();
+            finale = true; finaleDraining = false; finaleLevel = lm;
+            finaleReserved = finaleArrived = 0; finaleSources.Clear();
         }
-        float coinGap = .25f;
 
-        // While the booster session runs, a coin leaves a random board piece for the Reward counter every coinGap seconds,
-        // keeping a few in hand for the end; each adds one to the counter as it lands.
+        // Only accepted booster activations can emit finale coins. No random live-piece timer.
         void UpdateFinale()
         {
             if (!finale) return;
             var lm = finaleLevel;
             if (!lm || (lm.gameStatus != GameState.PreWinAnimations && lm.gameStatus != GameState.Win)) { finale = false; RestoreHud(); return; }
-            if (lm.gameStatus != GameState.PreWinAnimations) return;
-            rewardTarget = Mathf.Max(rewardTarget, Coins(lm.stars));
-            if (Time.unscaledTime < nextCoin || !rewardIcon) return;
-            nextCoin = Time.unscaledTime + (lm.SkipWinCelebration ? .08f : coinGap);
-            int inFlight = 0; foreach (var f in flights) if (!f.landed) inFlight++;
-            if (rewardShown + inFlight >= rewardTarget - 3) return;
-            var items = lm.GetItems(); if (items == null || items.Count == 0) return;
-            var it = items[Random.Range(0, items.Count)]; if (!it) return;
-            Fly(coin, World(it.transform.position), Local(rewardIcon.transform), 0, 54, .6f, () => { rewardShown = Mathf.Min(rewardTarget, rewardShown + 1); if (rewardCount) rewardCount.text = rewardShown.ToString(); if (rewardIcon) PulseCoin(rewardIcon.rectTransform); });
+        }
+
+        public static void FinaleBoosterActivated(Item item)
+        {
+            if (!instance || !item) return;
+            var s = instance; var lm = s.finaleLevel;
+            if (!s.finale || s.finaleDraining || !lm || lm.gameStatus != GameState.PreWinAnimations || !s.rewardIcon ||
+                !RoyalPowerupDirector.IsPower(item.currentType) || !s.finaleSources.Add(item)) return;
+            s.rewardTarget = Mathf.Max(s.rewardTarget, Coins(lm.stars));
+            s.lastFinaleSource = s.World(item.transform.position);
+            int remaining = lm.GetItems().FindAll(i => i && !i.destroying && RoyalPowerupDirector.IsPower(i.currentType)).Count;
+            if (lm.limitType == LIMIT.MOVES) remaining += Mathf.Max(0, lm.Limit);
+            // Allocate the EXISTING award across actual booster bursts. The reference's full
+            // per-booster economy is not recovered; this must never manufacture currency.
+            float unassigned = Mathf.Max(0, s.rewardTarget - s.finaleBase - s.finaleReserved);
+            s.EmitFinaleCoins(s.lastFinaleSource, unassigned / (remaining + 1));
+        }
+
+        void EmitFinaleCoins(Vector2 source, float amount)
+        {
+            if (amount <= .00001f || !rewardIcon) return;
+            finaleReserved += amount;
+            const int count = 10; // RemainingMovesCoinCollectAnimation.Count
+            int generation = previewGeneration;
+            for (int i = 0; i < count; i++)
+                Fly(coin, source, Local(rewardIcon.transform), i * .02f, 54, .6f, () =>
+                {
+                    if (!finale || generation != previewGeneration) return;
+                    finaleArrived += amount / count;
+                    rewardShown = Mathf.Min(rewardTarget, finaleBase + Mathf.FloorToInt(finaleArrived + .0001f));
+                    if (rewardCount) rewardCount.text = rewardShown.ToString();
+                    if (rewardIcon) PulseCoin(rewardIcon.rectTransform);
+                }, true, 90, 0, true, rewardIcon.transform);
         }
 
         IEnumerator FinishFinale(LevelManager lm)
         {
             if (!finale || !rewardIcon) yield break;
+            finaleDraining = true;
             rewardTarget = Mathf.Max(rewardTarget, Coins(lm.stars));
-            int inFlight = 0; foreach (var f in flights) if (!f.landed) inFlight++;
-            int left = rewardTarget - rewardShown - inFlight;
-            var from = lm.GameField ? World(lm.GameField.position) : Vector2.zero;
-            if (lm.GameField && lm.maxRows > 0) from = World(lm.GameField.position + new Vector3((lm.maxCols - 1) * lm.squareWidth * .5f, -(lm.maxRows - 1) * lm.squareHeight * .5f, 0));
-            int n = Mathf.Clamp(left, 0, 8), each = n > 0 ? left / n : 0, extra = n > 0 ? left - each * n : 0;
-            for (int i = 0; i < n; i++)
-            {
-                int amount = each + (i < extra ? 1 : 0);
-                Fly(coin, from, Local(rewardIcon.transform), i * .05f, 54, .5f, () => { rewardShown = Mathf.Min(rewardTarget, rewardShown + amount); if (rewardCount) rewardCount.text = rewardShown.ToString(); });
-            }
-            float end = Time.unscaledTime + 2.4f;
-            while (Time.unscaledTime < end && rewardShown < rewardTarget && lm.gameStatus == GameState.PreWinAnimations) yield return null;
+            float left = Mathf.Max(0, rewardTarget - finaleBase - finaleReserved);
+            if (finaleSources.Count > 0) EmitFinaleCoins(lastFinaleSource, left);
+            // A no-booster win has no invented board origin. Its fixed award still settles here.
+            float end = Time.unscaledTime + 4.8f;
+            while (Time.unscaledTime < end && FinalePendingCoinValue > .0001f && lm.gameStatus == GameState.PreWinAnimations) yield return null;
+            if (lm.gameStatus != GameState.PreWinAnimations) yield break;
             rewardShown = rewardTarget; if (rewardCount) rewardCount.text = rewardShown.ToString();
             yield return new WaitForSecondsRealtime(.25f);
         }
@@ -582,6 +622,7 @@ namespace JellyGarden.Scripts.Juice
             // Rewards are already saved by LevelManager. Retire presentation ownership without
             // invoking arrival callbacks or carrying an old balance into another level/profile.
             pending = null;
+            finaleReserved = finaleArrived = 0;
             ReleaseHomeHold();
             if (reward != null) StopCoroutine(reward);
             if (homeReward != null) StopCoroutine(homeReward);
@@ -656,16 +697,17 @@ namespace JellyGarden.Scripts.Juice
             float wait = Time.unscaledTime + .32f;
             while (card.gameObject.activeInHierarchy && Time.unscaledTime < wait) yield return null;
             pillGroup.alpha = 1; pill.anchoredPosition = new Vector2(0, PillY);
-            int flightsN = reduced ? 6 : 10, landedN = 0; coin = coin ? coin : RoyalPieceSkin.Art("coin");
+            int flightsN = 10, landedN = 0; coin = coin ? coin : RoyalPieceSkin.Art("coin");
             for (int i = 0; i < flightsN; i++)
                 Fly(coin, starRow, PillCoin, .02f * i, 66, .6f, () =>
                 {
-                    landedN++; int shown = landedN >= flightsN ? before + coins : before + Mathf.RoundToInt(coins * (float)landedN / flightsN);
+                    landedN++; int shown = before + CoinAmountAtArrival(coins, landedN, flightsN);
                     if (pillValue) pillValue.text = shown.ToString(); flash = 1;
                     if (landedN == 1) risingReward = StartCoroutine(RisePlus(coins));
                     if (landedN == 1) ReferenceGameplayAudio.Play("coin_counter__rfv387_17638", .55f);
                 }, true, 100, i * .09f, false);
             while (card.gameObject.activeInHierarchy && landedN < flightsN) yield return null;
+            if (!card.gameObject.activeInHierarchy) ClearFlights();
             if (pillValue) pillValue.text = (before + coins).ToString();
             while (card.gameObject.activeInHierarchy) yield return null;
             float fade = 0; var g = pill ? pill.GetComponent<CanvasGroup>() : null;
@@ -755,6 +797,7 @@ namespace JellyGarden.Scripts.Juice
         IEnumerator HomeRewards(LevelManager lm)
         {
             homeRunning = true; var p = pending; pending = null;
+            bool completed = false;
             try
             {
                 reduced = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0;
@@ -768,39 +811,72 @@ namespace JellyGarden.Scripts.Juice
                 try
                 {
                     if (Tip(p.level, out var title, out var power, out var length, out var square, out var corner)) yield return ShowTip(title, power, length, square, corner);
+                    if (lm.gameStatus != GameState.Map) yield break;
+                    // Reference: the star launches first; the coin pile appears beneath it
+                    // while it is still airborne. Currency remains saved independently.
+                    bool starLanded = p.stars <= 0 || !home.starLabel;
+                    if (!starLanded)
+                    {
+                        var starParent = home.starLabel.transform.parent;
+                        var starReceiver = starParent.Find("Imported 16674") ?? starParent.Find("Stars icon");
+                        var starTo = starReceiver ? Local(starReceiver) : Local(home.starLabel.transform) + new Vector2(-60, 0);
+                        var starArt = RoyalThrone.Presentation.RoyalAreaKit.Star ? RoyalThrone.Presentation.RoyalAreaKit.Star : star;
+                        Fly(starArt, new Vector2(0, -Half.y * .18f), starTo, .1f, 110, .7f,
+                            () => { starLanded = true; starsShown = starsNow; RoyalAudioDirector.Get?.Play(RoyalCue.Create); },
+                            false, 60, 0, false, starReceiver);
+                        float coinStart = Time.unscaledTime + .6f;
+                        while (Time.unscaledTime < coinStart && lm.gameStatus == GameState.Map) yield return null;
+                    }
+                    if (lm.gameStatus != GameState.Map) yield break;
                     // The coins: "+N" over the scene, then the coins fly to the coin counter, which counts up as they land.
                     var receiver = (home.coinLabel.transform.parent.Find("Imported 22081") ?? home.coinLabel.transform.parent.Find("Coins icon")) as RectTransform;
                     var coinTo = receiver ? Local(receiver) : Local(home.coinLabel.transform) + new Vector2(-70, 0); var from = new Vector2(0, -Half.y * .18f);
-                    var plus = Words("Coins won", root, "+" + p.coins, 64, from, new Vector2(300, 90), Gold, 3);
+                    var plus = Words("Coins won", root, "+" + p.coins, 64, from + new Vector2(0, 55), new Vector2(300, 90), Gold, 3);
                     TrackRewardObject(plus.gameObject);
-                    int flightsN = reduced ? 6 : 10, landedN = 0; coin = coin ? coin : RoyalPieceSkin.Art("coin");
+                    int flightsN = 10, landedN = 0; coin = coin ? coin : RoyalPieceSkin.Art("coin");
                     for (int i = 0; i < flightsN; i++)
                     {
                         Fly(coin, from, coinTo, .25f + i * .02f, 70, .6f, () =>
                         {
-                            landedN++; homeCoins = landedN >= flightsN ? p.before + p.coins : p.before + Mathf.RoundToInt(p.coins * (float)landedN / flightsN);
+                            landedN++; homeCoins = p.before + CoinAmountAtArrival(p.coins, landedN, flightsN);
                             PulseCoin(receiver);
                             if (landedN == 1) ReferenceGameplayAudio.Play("coin_counter__rfv387_17638", .55f);
-                        }, true, 48, i * .09f, false);
+                        }, true, 48, i * .09f, false, receiver);
                     }
-                    float t = 0; while (landedN < flightsN && t < 4) { t += Time.unscaledDeltaTime; if (plus) { plus.rectTransform.anchoredPosition = from + new Vector2(0, 40 * EaseOut(t / .8f)); plus.color = new Color(Gold.r, Gold.g, Gold.b, 1 - Mathf.Clamp01((t - .9f) / .4f)); } yield return null; }
-                    homeCoins = p.before + p.coins; if (plus) Destroy(plus.gameObject);
-                    // The star: from the middle of the scene to the star counter.
-                    if (p.stars > 0 && home.starLabel)
+                    plus.rectTransform.SetAsLastSibling();
+                    float t = 0;
+                    while ((landedN < flightsN || !starLanded) && t < 4.8f && lm.gameStatus == GameState.Map)
                     {
-                        bool starLanded = false; var starTo = Local(home.starLabel.transform) + new Vector2(-60, 0);
-                        Fly(star, new Vector2(0, -Half.y * .05f), starTo, .1f, 110, .7f, () => { starLanded = true; starsShown = starsNow; RoyalAudioDirector.Get?.Play(RoyalCue.Create); }, false, 60);
-                        t = 0; while (!starLanded && t < 3) { t += Time.unscaledDeltaTime; yield return null; }
-                        starsShown = starsNow;
+                        t += Time.unscaledDeltaTime;
+                        if (plus)
+                        {
+                            plus.rectTransform.anchoredPosition = from + new Vector2(0, 55 + 18 * EaseOut(t / .8f));
+                            // Keep the amount readable through the pile and initial arrivals.
+                            plus.color = new Color(Gold.r, Gold.g, Gold.b, 1 - Mathf.Clamp01((t - 1.8f) / .5f));
+                        }
+                        yield return null;
                     }
+                    if (lm.gameStatus != GameState.Map) yield break;
+                    homeCoins = p.before + p.coins; if (plus) Destroy(plus.gameObject);
+                    starsShown = starsNow;
                     yield return new WaitForSecondsRealtime(.25f);
+                    completed = landedN == flightsN && starLanded;
                 }
                 finally { ReleaseHomeHold(); }
                 // The task list opens by itself when the current area's next task can be paid for.
                 // The very first time, the reference points at the Area card instead (RoyalAreaView.GuideFirstTask).
                 if (lm.gameStatus == GameState.Map && Affordable(starsNow) && home.areaButton && !(home.AreaView && home.AreaView.GuideFirstTask())) home.OpenPanel("area", home.areaButton.gameObject);
             }
-            finally { homeRunning = false; homeReward = null; ReleaseHomeHold(); }
+            finally
+            {
+                if (!completed)
+                {
+                    ClearFlights();
+                    foreach (var obj in rewardObjects) if (obj) Destroy(obj);
+                    rewardObjects.Clear();
+                }
+                homeRunning = false; homeReward = null; ReleaseHomeHold();
+            }
         }
 
         static bool Affordable(int starsLeft)
@@ -990,7 +1066,9 @@ namespace JellyGarden.Scripts.Juice
         }
         IEnumerator RunAreaReward(Transform from, Transform to, int pieces, Sprite art, bool coins, global::System.Action land)
         {
+            int generation = previewGeneration;
             yield return Scaled();
+            if (generation != previewGeneration) yield break;
             if (!from || !to) { for (int i = 0; i < pieces; i++) land?.Invoke(); yield break; }
             Vector2 a = Local(from), b = Local(to) + new Vector2(-60, 0);
             for (int i = 0; i < pieces; i++) Fly(art, a, b, i * .05f, 76, .6f, () => { RoyalAudioDirector.Get?.Play(RoyalCue.Click); land?.Invoke(); }, coins);

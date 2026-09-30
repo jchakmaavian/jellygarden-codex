@@ -1,0 +1,33 @@
+"result":"visible=False busy=False"
+### Spawn TNT (v-tnt-spawn)
+"diagnostics":[]
+"result":"requested Spawn TNT; busy=True status=Running: Spawn TNT"
+"result":"busy=False status=Completed: Spawn TNT completed=17 failed=4 lm=Playing cells=64/64 limit=95 testing=True level=1 powerupBusy=False"
+### Activate selected (v-tnt-activate)
+"diagnostics":[]
+"result":"requested Activate selected; busy=True status=Running: Activate selected"
+"result":"busy=False status=Completed: Activate selected completed=18 failed=4 lm=Playing cells=64/64 limit=94 testing=True level=1 powerupBusy=False"
+### Spawn propeller (v-prop-spawn)
+"diagnostics":[]
+"result":"requested Spawn propeller; busy=True status=Running: Spawn propeller"
+"result":"busy=False status=Completed: Spawn propeller completed=19 failed=4 lm=Playing cells=64/64 limit=94 testing=True level=1 powerupBusy=False"
+### Activate selected (v-prop-activate)
+"diagnostics":[]
+"result":"requested Activate selected; busy=True status=Running: Activate selected"
+"result":"busy=False status=Completed: Activate selected completed=20 failed=4 lm=Playing cells=64/64 limit=93 testing=True level=1 powerupBusy=False"
+### Spawn color ball (v-cb-spawn)
+"diagnostics":[]
+"result":"requested Spawn color ball; busy=True status=Running: Spawn color ball"
+"result":"busy=False status=Completed: Spawn color ball completed=21 failed=4 lm=Playing cells=64/64 limit=93 testing=True level=1 powerupBusy=False"
+### Activate selected (v-cb-activate)
+"diagnostics":[]
+"result":"requested Activate selected; busy=True status=Running: Activate selected"
+"result":"busy=False status=Completed: Activate selected completed=22 failed=4 lm=Playing cells=64/64 limit=92 testing=True level=1 powerupBusy=False"
+### Combine selected (v-combo-cb-rocket)
+"diagnostics":[]
+"result":"requested Combine selected; busy=True status=Running: Combine selected"
+"result":"busy=False status=Completed: Combine selected completed=23 failed=4 lm=Playing cells=64/64 limit=92 testing=True level=1 powerupBusy=False"
+"result":"busy=False status=Completed: Combine selected completed=23 failed=4 lm=Playing cells=64/64 limit=92 testing=True level=1 powerupBusy=False"
+errors since 1649: "returned":1
+
+[exited with code 0]
