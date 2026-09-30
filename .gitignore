@@ -156,3 +156,10 @@ __pycache__/
 
 # Editor PlayerPrefs registry exports (save snapshots).
 /Design/**/*.reg
+
+# Superseded Rocket review screenshot series (v5-v7 replace them).
+/Design/Effects/Rocket-review-v1/
+/Design/Effects/Rocket-review-v2/
+/Design/Effects/Rocket-review-v3/
+/Design/Effects/Rocket-review-v4/
+/Design/Effects/Rocket-review-v4-before/

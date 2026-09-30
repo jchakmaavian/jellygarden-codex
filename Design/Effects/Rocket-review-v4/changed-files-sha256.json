@@ -1,9 +1,0 @@
-{
-  "Assets/JellyGarden/Shaders/RoyalRocketFire.shader": "ac74bdb4588219cc13fc403ba66fac7bd77dd907cf3c3d4e9e111d9b5feb7e53",
-  "Assets/JellyGarden/Scripts/Editor/RoyalEffectsChecks.cs": "fc5a9b9f3c804ab46651a542ccd0e7d543ebbe15a90c091e6335ac4697430aaf",
-  "Assets/JellyGarden/Scripts/Editor/RoyalRocketChecks.cs": "446913f2c17729224fbb5d369f626fb8bc78fbb5ffb89917e647895aa523779d",
-  "Assets/JellyGarden/Scripts/Juice/RoyalPowerupDirector.cs": "cdd51479b58c9f493f44012f77943e5161f3e65714a1ab908a74a440cee2c7e9",
-  "Assets/JellyGarden/Scripts/Juice/RoyalRocketSequence.cs": "a0a13fe34d829c81ca32b99cbefaca66c6ff0e5c4918626a6d4e55921059f718",
-  "Assets/JellyGarden/Resources/RoyalRocketFX/WhiteSmoke.mat": "7698795ae2b14144f3a61d16fcfa3a31d08f13cadb8a6a06ee6a04bb4a4c9ee1",
-  "Assets/JellyGarden/Resources/RoyalRocketFX/WhiteSmoke.mat.meta": "02d9328948f0ed39e13a38677adb496f2ae8db2362e13d268f23438a894051ea"
-}
