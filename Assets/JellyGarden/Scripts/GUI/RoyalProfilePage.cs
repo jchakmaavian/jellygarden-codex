@@ -135,7 +135,7 @@ namespace RoyalThrone.Presentation
             statValues[5].text = best.ToString("N0");
         }
 
-        const float NameLeft = -84, NameWidth = 290, NameSize = 54, Avatar = 210;
+        const float NameLeft = -84, NameWidth = 280, NameSize = 54, Avatar = 210;
 
         // ---- Building ----------------------------------------------------------------------------------------------------
 
