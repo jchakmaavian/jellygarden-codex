@@ -1,0 +1,22 @@
+{
+  "schema": "royal-throne.laugh-art-plan.v1",
+  "status": "art-development-not-runtime-ready",
+  "reference": "King-Loud-Laugh-Target.png",
+  "space": "normalized per sprite; x right, y down",
+  "parts": [
+    {"file":"Parts/Mouth-Peak.png", "role":"peak laugh mouth pose", "parent":"mouth-root", "pivot":[0.5,0.25], "notes":"Pin upper lip and teeth to skull. Move lower-lip vertices with jaw; do not uniformly scale teeth. Cavity is opaque."},
+    {"file":"Parts/Moustache-Lifted.png", "role":"raised moustache", "parent":"nose-root", "pivot":[0.5,0.4], "notes":"Central roots follow philtrum. Tips lift with cheeks. Draw above mouth while leaving upper lip visible."},
+    {"file":"Parts/Eyes-Joy.png", "role":"paired compressed eyelids and cheeks", "parent":"skull", "pivot":[0.5,0.5], "notes":"Split into left/right atlas regions before use. Preserve native eye positions. Suppress pupils and native lids beneath these closed-eye poses."},
+    {"file":"Parts/Jaw-Beard.png", "role":"lower beard and chin", "parent":"jaw", "pivot":[0.5,0.2], "notes":"Move with lower lip; transparent central cutout reveals mouth. Separate or replace baked resting beard before compositing."}
+  ],
+  "pivots_are": "initial fitting suggestions, not verified attachment coordinates",
+  "draw_order_back_to_front": ["torso", "hair-and-skull", "jaw-beard", "mouth", "eyes-and-cheeks", "moustache", "nose", "brows", "crown"],
+  "timing": {
+    "driver":"same three Ho syllable events as voice",
+    "anticipation":"gentle inhale and head lift",
+    "attack":"jaw drops, cheeks lift, eyes compress, shoulders lift",
+    "settle":"jaw recovers between syllables; beard follows with smaller delay",
+    "recovery":"blend to original idle or worry; restore gaze tracking"
+  },
+  "required_before_import": ["fit to actual skeleton", "replace baked beard underlay", "UV regions and meshes", "transition poses", "15/30/60fps animation review", "HUD-size render review"]
+}

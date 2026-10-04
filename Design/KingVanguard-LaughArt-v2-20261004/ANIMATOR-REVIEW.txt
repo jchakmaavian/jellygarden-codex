@@ -1,0 +1,80 @@
+King Vanguard - hearty laughter art revision
+
+Status: visual development and replacement artwork, not a tested runtime rig.
+Keep the approved Royal Signature IV costume and fitted crown.
+
+Observed in the existing 512px Unity laugh frame (00045.png):
+1. Mouth opening is too small to sell a loud belly laugh.
+2. Eyes look like a held blink; the cheek lift does not support their closure.
+3. Moustache obscures most of the upper lip and the mouth corners.
+4. Beard remains close to its resting silhouette when the mouth opens.
+5. Overall pose reads as a gentle chuckle rather than three forceful Ho beats.
+
+Confirmed in source:
+KingVanguardFaceSkin hides the native independent cheeks and uses baked
+cheeks plus a continuous beard. KingVanguardLaughter samples native blink
+timelines and applies small whole-body motion (0.65 degrees sway, 1.2 percent
+squash). The mouth opens inside this largely unchanged facial silhouette.
+These are presentation limitations; the earlier tooth containment checks
+passing does not prove the laugh is expressive or visually satisfactory.
+
+New construction:
+The generated target, King-Loud-Laugh-Target.png, establishes the expression.
+It shows an upper lip beneath lifted moustache lobes, a connected upper tooth
+row, shaded cavity, low tongue, cheek compression and lowered beard. Its
+head tilt is a pose reference, not a suitable bind pose: replacement pieces
+must be painted level and front-on. Avoid copying the tilt into each sprite.
+- Skull group: crown, hair, ears, nose, brows, upper teeth.
+- Cheek group: warm cheek lift plus the matching lower eyelid compression.
+- Moustache: raised corners and a clear central opening above the upper lip.
+- Mouth module: visible upper lip, shaded cavity, one anchored upper tooth
+  row, low tongue and lower lip. Keep these coherent through every pose.
+- Jaw group: lower lip, chin transition and lower beard move together.
+- Crown remains rigid relative to skull; never bounce it independently.
+- Drive jaw, cheeks and shoulder impulses from the same three syllable
+  events. Use delayed, smaller beard follow-through rather than detached
+  mouth movement. Blend in/out; restore normal tracking after the laugh.
+
+Acceptance checks required before replacement in the main game:
+- Mouth silhouette readable in the small HUD, not only a large portrait.
+- Upper teeth attached to upper gum; lower lip follows jaw without sliding.
+- No double teeth, skin seams, eye gaps, white fringe or opaque background.
+- Moustache does not cover the upper lip throughout the three Ho peaks.
+- Crown stays fitted across lean, bounce and recovery.
+- Test transitions, interruption, pause and recovery at 15/30/60 fps.
+- Validate alpha, attachment pivots and draw order after actual atlas import.
+
+The old laughter staging package is superseded as a visual target. Do not
+install it merely because its numerical containment tests passed.
+
+Generated asset review:
+Mouth-Peak is a single coherent painted mouth pose. Teeth cannot slide as
+separately transformed sprites in this pose. It is not a complete viseme
+set: a narrow Ho pose and a recovery pose are still needed for animation.
+Use mesh rows or separate poses to keep tooth height constant as the jaw
+moves. Uniformly scaling the entire mouth would squash the teeth again.
+The generated art has near-opaque interiors (alpha approximately 252-253)
+and very faint edge pixels. Inspect edges after atlas packing; the PNG
+alpha check alone does not establish clean appearance in game.
+
+Delivery verification:
+Four source PNGs decode successfully as RGBA, have genuinely transparent
+corners, and retain padding around their alpha>=8 silhouettes. See
+art-validation.json and rerun validate_art.py to reproduce these checks.
+An image-generation edge refinement was applied to mouth and eyes. It
+reduced but did not eliminate all saturated edge candidates. Final source
+inspection still found 688 yellow candidates on the eye image and 160 on
+the mouth (alpha>=128); mouth red pixels may include legitimate shading.
+Do not describe this as a finished clean-edge atlas or production-ready rig.
+The paired eyelids need atlas separation. Jaw/beard and lips need fitting
+against a clean face underlay. Runtime movement and HUD readability have
+not been tested for these new assets. No main Assets files were changed.
+
+Files:
+King-Loud-Laugh-Target.png - composed visual target, not a runtime sprite.
+Parts/Mouth-Peak.png - visible lips, cavity, upper teeth and low tongue.
+Parts/Moustache-Lifted.png - raised two-lobed moustache.
+Parts/Eyes-Joy.png - paired compressed eyelids and raised cheek pads.
+Parts/Jaw-Beard.png - separate lower jaw beard with open-mouth cutout.
+rig-plan.json - proposed hierarchy and attachment notes; not a Unity asset.
+PROMPTS.txt and PART-PROMPTS.txt - exact built-in image_gen prompts.
