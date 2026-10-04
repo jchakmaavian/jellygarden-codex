@@ -1,0 +1,1 @@
+Installed in the main JellyGarden-Codex project. Main compilation, 309 rig/live checks and visual review passed. Normal player profile restored; editor returned to Edit Mode. No Android build or device verification for this revision.

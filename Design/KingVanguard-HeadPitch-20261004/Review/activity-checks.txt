@@ -1,0 +1,7 @@
+PASS new artwork is installed from initialization
+PASS isolated attention driver mounted; live input tested separately
+PASS old visual rig hidden during idle
+PASS new portrait does not intercept board input
+PASS continuous head rotation reaches its full angle
+PASS 660 frames rendered with live transitions and no forced reset between activities
+PASS all reactions remain silent

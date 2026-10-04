@@ -1,1 +1,1 @@
-Prepared and tested in the isolated character project. Main Unity is reserved by the APK build session; installation and live input verification are pending release. The approved generated PNG remains byte-identical.
+Superseded by Design/KingVanguard-HeadPitch-20261004 after the user rejected the two-image fade. This seven-image bow revision was never installed in the main game. Its source PNG and preview are preserved as historical references. The replacement uses a continuous single-surface head projection and retains the six existing expressions.

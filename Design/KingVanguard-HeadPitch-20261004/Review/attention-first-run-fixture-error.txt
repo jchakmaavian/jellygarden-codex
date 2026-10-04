@@ -1,0 +1,22 @@
+RUNNING: real virtual pointer events, actual visible hint and live gameplay portrait.
+PASS startup: Game view/application focused for input observation
+PASS startup: isolated QA profile started
+PASS startup: Practice board completed
+PASS startup: live main-HUD portrait found
+PASS startup: new portrait mounted production HUD attention without fixture assistance
+STAGE autonomous board and frame scan
+PASS autonomous board and frame scan: live King looks across lower board center, left and right
+PASS autonomous board and frame scan: live King reaches all four frame corners
+PASS autonomous board and frame scan: live board scan reaches approved full bowed-head pose
+PASS autonomous board and frame scan: head lifts for corner inspection
+STAGE bow pause and pointer interruption
+PASS bow pause and pointer interruption: new idle cycle bends whole head
+PASS bow pause and pointer interruption: QA overlay is hidden for Full-Bow screenshot
+FAIL bow pause and pointer interruption: pause freezes bent head without resetting pose
+ERROR System.Exception: pause freezes bent head without resetting pose
+  at PipelineEvaluation.PipelineEval_036db0ed+<>c__DisplayClass0_0.<Execute>g__Check|0 (System.Boolean ok, System.String text) [0x0004f] in <ed60ea0f2cd1496a84571958d465a56f>:0
+  at PipelineEvaluation.PipelineEval_036db0ed+<>c__DisplayClass0_0+<<Execute>g__Cases|9>d.MoveNext () [0x007f9] in <ed60ea0f2cd1496a84571958d465a56f>:0
+  at PipelineEvaluation.PipelineEval_036db0ed+<>c__DisplayClass0_0+<<Execute>g__Guarded|11>d.MoveNext () [0x00079] in <ed60ea0f2cd1496a84571958d465a56f>:0
+INCOMPLETE; restoring profile
+PASS bow pause and pointer interruption: normal player profile restored
+RUN FAILED; profile restored

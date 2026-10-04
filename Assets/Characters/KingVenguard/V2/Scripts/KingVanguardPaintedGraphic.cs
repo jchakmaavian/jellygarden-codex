@@ -43,6 +43,7 @@ namespace RoyalThrone.Characters {
    target.SetVector("_Positive",new Vector4(performance.Happy,performance.Excited,0,0));
    target.SetVector("_Gaze",new Vector4(Gaze.x,Gaze.y,0,0));
    target.SetVector("_Lids",new Vector4(performance.Lids.x,performance.Lids.y,performance.Head.w,0));
+   target.SetFloat("_HeadPitch",performance.Bow);
   }
   protected override void OnPopulateMesh(VertexHelper vh){
    vh.Clear();if(!Ready)return;
@@ -56,6 +57,7 @@ namespace RoyalThrone.Characters {
     Vector2 p=source*n+KingVanguardFaceMesh.Worried[i]*w+KingVanguardFaceMesh.Sad[i]*s+KingVanguardFaceMesh.Happy[i]*h+KingVanguardFaceMesh.Excited[i]*e+KingVanguardFaceMesh.Laugh[i]*l;
     float left=EyeMask(source,new Vector2(516,443)),right=EyeMask(source,new Vector2(690,415));
     p=Vector2.Lerp(p,KingVanguardFaceMesh.Laugh[i],Mathf.Max(left*performance.Lids.x,right*performance.Lids.y)*(1-l));
+    p=KingVanguardHeadPitch.Project(p,source,performance.Bow);
     float head=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(760,1030,source.y));
     Vector2 offset=p-new Vector2(627,880);float a=angle*head+body.y*Mathf.Deg2Rad*(1-head);
     p=new Vector2(627+Mathf.Cos(a)*offset.x-Mathf.Sin(a)*offset.y,880+Mathf.Sin(a)*offset.x+Mathf.Cos(a)*offset.y);

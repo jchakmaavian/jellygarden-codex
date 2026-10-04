@@ -18,7 +18,7 @@ namespace RoyalThrone.Characters
             }
         }
 
-        Spring worry, sad, happy, excited, laugh, eyeX, eyeY, headX, headY, roll, bodyY, bodyRoll, jaw, brow, wink;
+        Spring worry, sad, happy, excited, laugh, eyeX, eyeY, headX, headY, roll, bodyY, bodyRoll, jaw, brow, wink, bow;
         KingVanguardCharacter.Activity previous;
         float clock, idleAge, gestureAge = 99, nextGesture = 3.2f;
         float tapAge = 99, previousTap, lastTap = -10, blinkAt = 3.1f, blinkAge = 99;
@@ -60,6 +60,7 @@ namespace RoyalThrone.Characters
         public float Worry => worry.value;
         public float Sad => sad.value;
         public float Jaw => jaw.value;
+        public float Bow => Mathf.Clamp01(bow.value);
         public Vector2 Eyes => new Vector2(eyeX.value, eyeY.value);
         public Vector4 Head => new Vector4(headX.value, headY.value, roll.value, brow.value);
         public Vector2 Body => new Vector2(bodyY.value, bodyRoll.value);
@@ -69,7 +70,7 @@ namespace RoyalThrone.Characters
 
         public void Reset()
         {
-            worry = sad = happy = excited = laugh = eyeX = eyeY = headX = headY = roll = bodyY = bodyRoll = jaw = brow = wink = default;
+            worry = sad = happy = excited = laugh = eyeX = eyeY = headX = headY = roll = bodyY = bodyRoll = jaw = brow = wink = bow = default;
             clock = idleAge = previousTap = 0;
             gestureAge = tapAge = blinkAge = 99; lastTap = -10; nextGesture = 3.2f; blinkAt = 3.1f;
             gesture = variation = blinkIndex = sourceLast = 0; GestureCount = 0;
@@ -183,6 +184,11 @@ namespace RoyalThrone.Characters
             if (total > 1) { worry.value /= total; sad.value /= total; happy.value /= total; excited.value /= total; laugh.value /= total; }
 
             UpdateLookAround(dt,idle && source==0 && gaze.sqrMagnitude<.01f);
+            // The approved whole-head bow accompanies board inspection. Fresh input
+            // and authored reactions retire it through the same continuous spring.
+            float bowTarget=idle && LookStage>=0 && LookStage<=3 ? 1 :
+                idle && source==3 && gaze.y<-.3f ? .85f : 0;
+            bow.Step(bowTarget,bowTarget>Bow?.30f:.24f,dt);
             float autonomy = free && source == 0 && gaze.sqrMagnitude < .01f ? 1 : 0;
             Vector2 idleLook = LookStage>=0 ? LookTarget : new Vector2(curious * -.3f, curious * -.22f + greeting * .08f);
             Vector2 targetEyes = gaze + autonomy * idleLook;

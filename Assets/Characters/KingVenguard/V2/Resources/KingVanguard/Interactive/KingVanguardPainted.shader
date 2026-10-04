@@ -3,6 +3,7 @@ Shader "RoyalThrone/KingVanguardPainted" {
   [PerRendererData] _MainTex ("Neutral",2D)="white"{}
   _WorriedTex ("Worried",2D)="white"{} _SadTex ("Sad",2D)="white"{} _LaughTex ("Laugh",2D)="white"{}
   _HappyTex ("Happy",2D)="white"{} _ExcitedTex ("Excited",2D)="white"{}
+  _HeadPitch ("Head pitch",Range(0,1))=0
   _Color ("Tint",Color)=(1,1,1,1)
   _StencilComp ("Stencil Comparison",Float)=8 _Stencil ("Stencil ID",Float)=0
   _StencilOp ("Stencil Operation",Float)=0 _StencilWriteMask ("Stencil Write Mask",Float)=255 _StencilReadMask ("Stencil Read Mask",Float)=255
@@ -24,14 +25,14 @@ Shader "RoyalThrone/KingVanguardPainted" {
    #include "UnityUI.cginc"
    struct appdata {float4 vertex:POSITION;float4 color:COLOR;float4 uv:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;};
    struct v2f {float4 vertex:SV_POSITION;fixed4 color:COLOR;float4 uv:TEXCOORD0;float4 uv1:TEXCOORD1;float4 uv2:TEXCOORD2;float4 world:TEXCOORD3;};
-   sampler2D _MainTex,_WorriedTex,_SadTex,_LaughTex,_HappyTex,_ExcitedTex;float4 _Color,_ClipRect,_Expression,_Gaze,_Positive,_Lids;
+   sampler2D _MainTex,_WorriedTex,_SadTex,_LaughTex,_HappyTex,_ExcitedTex;float4 _Color,_ClipRect,_Expression,_Gaze,_Positive,_Lids;float _HeadPitch;
    v2f vert(appdata v){v2f o;o.world=v.vertex;o.vertex=UnityObjectToClipPos(v.vertex);o.uv=v.uv;o.uv1=v.uv1;o.uv2=v.uv2;o.color=v.color*_Color;return o;}
    float ellipse(float2 p,float2 center,float2 radius){return length((p-center)/radius);}
    float2 attended(float2 texcoord){
     float2 p=float2(texcoord.x,1-texcoord.y)*1254;
     float left=1-smoothstep(.48,1,ellipse(p,float2(516,446),float2(52,32)));
     float right=1-smoothstep(.48,1,ellipse(p,float2(690,416),float2(52,32)));
-    p-=float2(_Gaze.x*8,-_Gaze.y*5)*max(left,right)*(1-_Expression.z);
+    p-=float2(_Gaze.x*8,-_Gaze.y*lerp(5,13,_HeadPitch))*max(left,right)*(1-_Expression.z);
     float brows=1-smoothstep(.3,1,min(ellipse(p,float2(497,349),float2(85,55)),ellipse(p,float2(698,322),float2(80,55))));
     p.y+=brows*_Lids.z;
     return float2(p.x/1254,1-p.y/1254);
