@@ -1,0 +1,93 @@
+PASS ordinary match is not a laugh
+PASS creation keeps normal cheer
+PASS rocket/TNT/huge impact 0.8 selects laugh
+PASS rocket/TNT/huge impact 1 selects laugh
+PASS rocket/TNT/huge impact 1.4 selects laugh
+PASS impact outranks match and bypasses normal cheer spacing
+PASS accepted chain has no backlog
+PASS stale impact expires
+PASS 15fps impact interrupts small acknowledgement
+PASS new art rig is installed
+PASS 15fps voice-driven jaw articulation
+PASS 15fps returns to clean idle
+PASS 15fps impact cooldown blocks immediate replay
+PASS explicit QA laugh starts
+PASS failure restores attachments immediately
+PASS laugh returns to low-move worry
+PASS goal completion interrupts laugh
+PASS 30fps impact interrupts small acknowledgement
+PASS new art rig is installed
+PASS 30fps voice-driven jaw articulation
+PASS 30fps returns to clean idle
+PASS 30fps impact cooldown blocks immediate replay
+PASS explicit QA laugh starts
+PASS failure restores attachments immediately
+PASS laugh returns to low-move worry
+PASS goal completion interrupts laugh
+PASS 60fps impact interrupts small acknowledgement
+PASS new art rig is installed
+PASS 60fps voice-driven jaw articulation
+PASS 60fps returns to clean idle
+PASS 60fps impact cooldown blocks immediate replay
+PASS explicit QA laugh starts
+PASS failure restores attachments immediately
+PASS laugh returns to low-move worry
+PASS goal completion interrupts laugh
+PASS jaw/chin overlap maintained; upper teeth fixed to skull across voice pulses; max drift 2.457562E-07
+PASS 315 frames; 193 new-art frames; 15/30/60fps; all impact laugh checks passed.
+
+PASS match waits without being consumed while actor is busy
+PASS stronger feedback replaces one pending match and cannot be downgraded
+PASS accepted power-up applies cooldown
+PASS expired feedback is not replayed after a long animation
+PASS fresh stronger feedback survives short acknowledgement cooldown
+PASS weaker matches cannot keep an old strong reaction alive
+PASS a slow frame cannot decay a fresh power-up event below its threshold
+PASS new visible board clears old pending feedback and cooldown
+PASS both new prefabs exist
+PASS all 32 portrait tracks load
+PASS reopen starts first idle
+PASS next idle queued at animation boundary
+PASS match acknowledgement uses the original 0.7 second clip
+PASS ordinary match starts its short acknowledgement
+PASS simultaneous groups cannot restart acknowledgement
+PASS acknowledgement returns to newly entered low-move context
+PASS normal match can acknowledge while worried
+PASS acknowledgement resumes established worry without repeating entrance
+PASS failure overrides acknowledgement and blocks later ordinary feedback
+PASS acknowledgement starts before reset test
+PASS reset invalidates an old acknowledgement completion
+PASS idle variations continue with a bounded next clip after thirty seconds
+PASS positive reaction starts
+PASS exact serialized KingUi happy binding
+PASS cascade cannot restart active reaction
+PASS worry context does not interrupt positive action
+PASS new low-move context starts worry after reaction
+PASS deferred worry entrance reaches loop
+PASS positive action can interrupt established worry
+PASS established worry resumes without repeated entrance
+PASS extra moves recover idle
+PASS worry entrance plays
+PASS worry entrance reaches loop
+PASS persistent low moves do not restart worry
+PASS failure overrides worry
+PASS failure holds final sad expression
+PASS reopen clears stale state
+PASS generic cheer before committed gameplay event
+PASS committed extra moves override generic cheer
+PASS committed goals override pending positive reaction
+PASS relief finishes and returns to neutral context
+PASS portrait uses uniform scale
+PASS external UI owns decoration Frame Background3
+PASS external UI owns decoration sol frame
+PASS external UI owns decoration sag frame
+PASS all 10 area tracks load in independent area rig
+PASS area clap begins
+PASS area clap cannot stack
+PASS area clap finishes and returns to area idle
+PASS area decoration removed background
+PASS area decoration removed ipad_background
+PASS area decoration removed borazan
+PASS area decoration removed new_flama_rulo
+PASS area decoration removed Group 1 copy
+PASS neither rig intercepts input

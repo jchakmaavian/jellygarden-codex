@@ -1,0 +1,26 @@
+King Vanguard impact laughter - 2026-10-04
+
+The gameplay portrait now performs a 2.42-second, three-syllable Ho Ho Ho after TNT, rockets, Color Ball and other strong impact events. Impact strength >= 0.75 selects laughter; ordinary matches and power-up creation keep their smaller responses. A four-second cooldown prevents repeated cascade voices. Level failure and completion take priority.
+
+Visual refinement
+- New laugh mouth, lifted moustache, closed joyful eyes and articulated beard, attached to the existing face frame.
+- Feathered eyelid/mouth skin edges; fuller moustache; pinned upper teeth; lower lip and beard share the jaw motion without the blue gap.
+- Smoothed voice-driven jaw pulses, small body chuckles and delayed beard-tip movement.
+- Preserved the fitted crown, approved outfit and normal expressions. Original layers restore on interruption and completion.
+- Corrected imported-texture UV scaling and cleared the old single-renderer mesh when switching to multiple artwork pages. Removed unsafe reassignment of renderer-owned meshes.
+- Laugh animation and voice share scaled game time, including pause/resume. The normal portrait clock is restored afterward. Muting, hiding or losing focus retires the voice without stale replay.
+
+Verification completed
+315 sampled rig frames at 15/30/60 FPS and all existing portrait/area activity checks passed. Five live board cases passed: TNT, horizontal rocket, vertical rocket, TNT combo, Color Ball. Maximum sampled audio/mouth timing difference: 32.8 ms. Pause drift: zero. Mute/unmute, hide, focus loss, failure, completion and profile restoration passed. Final live Unity console: zero errors.
+
+Verification evidence
+Design/KingVanguard-ImpactLaugh-20261004/Validation/main-rig-checks.txt
+Design/KingVanguard-ImpactLaugh-20261004/Validation/live-checks.txt
+Design/KingVanguard-ImpactLaugh-20261004/Review/canvas-check.txt
+Design/KingVanguard-ImpactLaugh-20261004/Review/King-Impact-Laugh-v2.mp4
+Design/KingVanguard-ImpactLaugh-20261004/Review/HUD-*.png
+
+The preview uses actual Unity-rendered frames with the voice muxed at its animation lead-in; HUD screenshots are from live gameplay. Main-project QA uses isolated saves and restores the normal profile. Android/device performance is not yet verified.
+
+Audio provenance
+CC0 recorded performance by Joseph SARDIN, BigSoundBank #2078, edited to three syllables. Source and license travel with HoHoHo.wav in Resources/KingVanguard. This is recorded audio, not ElevenLabs-generated speech.

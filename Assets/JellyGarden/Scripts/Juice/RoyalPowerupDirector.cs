@@ -265,6 +265,7 @@ namespace JellyGarden.Scripts.Juice
             if(visual)visual.Explode(radius>2?1.45f:1);
             if(native)RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play(radius>2?"TntTntComboExplodeParticles":"TntItemExplodeParticles",p,worldCell:Cell);
             RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);
+            Reaction?.Invoke(radius>2?1.45f:1f);
             yield return Wait(.012f);
             var lm=LevelManager.THIS;
             for(int distance=0;distance<=radius;distance++)

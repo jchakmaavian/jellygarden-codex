@@ -1,0 +1,41 @@
+RUNNING
+PASS Game view focused
+PASS QA Practice board completed
+PASS HUD King found
+PASS QA Practice board completed
+PASS TNT actual board action completed
+PASS TNT impact triggered new-art laugh
+PASS TNT voice follows mouth within 160ms; max 0.0320442
+PASS QA Practice board completed
+PASS Rocket-H actual board action completed
+PASS Rocket-H impact triggered new-art laugh
+PASS Rocket-H voice follows mouth within 160ms; max 0.02955061
+PASS QA Practice board completed
+PASS Rocket-V actual board action completed
+PASS Rocket-V impact triggered new-art laugh
+PASS Rocket-V voice follows mouth within 160ms; max 0.03273994
+PASS QA Practice board completed
+PASS TNT-Combo actual board action completed
+PASS TNT-Combo impact triggered new-art laugh
+PASS TNT-Combo voice follows mouth within 160ms; max 0.02406892
+PASS QA Practice board completed
+PASS Color-Ball actual board action completed
+PASS Color-Ball impact triggered new-art laugh
+PASS Color-Ball voice follows mouth within 160ms; max 0.02018452
+PASS QA Practice board completed
+PASS audio lifecycle test starts
+PASS live voice and new artwork active
+PASS mute stops voice
+PASS unmute does not replay stale voice
+PASS pause freezes laugh and voice; drift 0
+PASS resume continues current voice
+PASS failure cancels artwork and audio
+PASS normal portrait clock restored after interruption
+PASS hidden King retires laugh
+PASS focus loss stops voice
+PASS focus return does not replay voice
+PASS goal completion takes priority
+PASS complete performance leaves no stale layers or sound
+PASS normal portrait clock restored after completion
+PASS normal player profile restored
+ALL LIVE IMPACT LAUGHTER CHECKS PASSED

@@ -6,6 +6,7 @@ namespace RoyalThrone.Characters {
  [ExecuteAlways,DisallowMultipleComponent]
  public sealed class KingVanguardMouthRig:MonoBehaviour {
   const int Columns=21,Rows=5,PatchVertices=Columns*Rows,TotalVertices=PatchVertices*3;
+  KingVanguardLaughter laughter;
   ISkeletonAnimation animator;Skeleton skeleton;MeshAttachment mouth;float[] sourceWorld;
   public float Opening {get;private set;} public float Width {get;private set;}
   public float MaximumToothEscape {get;private set;}
@@ -39,6 +40,10 @@ namespace RoyalThrone.Characters {
    var upper=(Point(24)+Point(25)+Point(26))/3f;var lower=(Point(34)+Point(35)+Point(36))/3f;
    float rawOpening=Mathf.Max(0,Vector2.Dot(upper-lower,up));
    Opening=Mathf.Clamp(rawOpening,.008f,Width*.65f);
+   if(!laughter)laughter=GetComponent<KingVanguardLaughter>();
+   float laugh=laughter&&laughter.Active?laughter.Intensity:0;
+   Width*=Mathf.Lerp(1,.87f,laugh);
+   Opening=Mathf.Lerp(Opening,Width*(.14f+.67f*(laughter?laughter.Pulse:0)),laugh);
    float rim=Width*.045f,height=Opening+rim*2;
    var center=(left+right)*.5f;
    // Center in the live lip gap rather than averaging all vertices of a skin patch.

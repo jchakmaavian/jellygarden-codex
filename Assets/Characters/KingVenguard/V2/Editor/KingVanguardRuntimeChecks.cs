@@ -109,10 +109,13 @@ namespace RoyalThrone.Characters.EditorTools
 
         static void Advance(KingVanguardCharacter king, float seconds)
         {
+            // Edit-mode previews are not player behaviours; SendMessage asserts in Unity 6.
+            var lateUpdate = typeof(KingVanguardCharacter).GetMethod("LateUpdate",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             for (float t = 0; t < seconds; t += 1f / 60)
             {
                 king.Graphic.Update(1f / 60);
-                king.SendMessage("LateUpdate",SendMessageOptions.RequireReceiver);
+                lateUpdate.Invoke(king, null);
             }
         }
 

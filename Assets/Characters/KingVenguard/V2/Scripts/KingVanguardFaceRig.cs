@@ -21,6 +21,7 @@ namespace RoyalThrone.Characters
         Skeleton setupSkeleton;
         KingVanguardFaceShapeModifier configuration;
         KingVanguardAttention attention;
+        KingVanguardLaughter laughter;
         Bone head, face;
         Bone chest;
         [SerializeField] bool stabilizeTeeth = true;
@@ -340,6 +341,8 @@ namespace RoyalThrone.Characters
             var vertices = buffers.vertexBuffer;
             var uvs = buffers.uvBuffer;
             bool bodyActive = attention && attention.isActiveAndEnabled && attention.HasAttention;
+            if (!laughter) laughter = GetComponent<KingVanguardLaughter>();
+            bool laughing = laughter && laughter.isActiveAndEnabled && laughter.Active;
             float angle = BodyLeanDegrees * Mathf.Deg2Rad;
             float cosine = Mathf.Cos(angle), sine = Mathf.Sin(angle);
             float tap = bodyActive ? attention.TapResponse : 0;
@@ -364,7 +367,7 @@ namespace RoyalThrone.Characters
                     mapped++;
                     if (fallback) interpolated++;
                 }
-                else if (!bodyActive) continue;
+                else if (!bodyActive && !laughing) continue;
                 // A tiny complete-character response follows attention, after all
                 // face maps, without changing the source root/bones or draw order.
                 if (bodyActive)
@@ -373,6 +376,7 @@ namespace RoyalThrone.Characters
                     float y = (point.y - chest.WorldY) * (1 - tap * .008f);
                     point = new Vector2(chest.WorldX + cosine * x - sine * y, chest.WorldY + sine * x + cosine * y);
                 }
+                if (laughing) point = laughter.MoveBody(point, chest);
                 vertices[i].x = point.x * scale;
                 vertices[i].y = point.y * scale;
             }
@@ -443,21 +447,10 @@ namespace RoyalThrone.Characters
                     var mesh = source.GetLastMesh();
                     if (mesh) { mesh.bounds = pendingBounds[0]; source.canvasRenderer.SetMesh(mesh); }
                 }
-                else
-                {
-                    // This Spine version does not expose its multi-renderer meshes.
-                    // Unity 6 exposes the assigned mesh through CanvasRenderer.GetMesh;
-                    // never reflect private fields or change the UI RectTransform.
-                    int count = Mathf.Min(pendingBounds.Count, source.canvasRenderers.Count);
-                    for (int i = 0; i < count; i++)
-                    {
-                        var renderer = source.canvasRenderers[i];
-                        var mesh = renderer.GetMesh();
-                        if (!mesh) continue;
-                        mesh.bounds = pendingBounds[i];
-                        renderer.SetMesh(mesh);
-                    }
-                }
+                // Multi-page CanvasRenderer.GetMesh returns renderer-owned geometry.
+                // Reassigning that native mesh can crash Unity 6. Spine owns those
+                // meshes and updates them every frame; preserve that ownership.
+
             }
             CompleteMesh();
         }
@@ -546,7 +539,7 @@ namespace RoyalThrone.Characters
                 }
                 uvBounds = Rect.MinMaxRect(minX, minY, maxX, maxY);
                 RegisterPaintedContour(attachment);
-                if (mesh != null && mesh.Path != KingVanguardFaceSkin.MouthPath && (name == "Alt Diş" || name == "Ust Diş"))
+                if (mesh != null && mesh.Path != KingVanguardFaceSkin.MouthPath && !mesh.Path.StartsWith("Vanguard Laugh") && (name == "Alt Diş" || name == "Ust Diş"))
                 {
                     restTeeth = new float[World.Length];
                     currentTeeth = new float[World.Length];

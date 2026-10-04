@@ -96,8 +96,9 @@ namespace RoyalThrone.Presentation
         }
         void React(float value)
         {
-            // Ordinary matches have their own committed event; only stronger power-up feedback uses the VFX signal.
-            if(value>.5f)QueueKingFeedback(LevelManager.THIS,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup);
+            // Actual blast/rocket impacts get the laugh; creation and ordinary matches retain smaller responses.
+            var feedback=RoyalThrone.Characters.KingVanguardFeedbackQueue.FromImpactStrength(value);
+            if(feedback!=RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.None)QueueKingFeedback(LevelManager.THIS,feedback);
         }
         void KingMatchResolved(LevelManager level,int matchedPieces)
         {QueueKingFeedback(level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Match);}
@@ -133,12 +134,14 @@ namespace RoyalThrone.Presentation
         void QueueKingFeedback(LevelManager level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback feedback)
         {
             if(!level||level!=LevelManager.THIS)return;
+            if(kingVanguard&&kingVanguard.Character&&kingVanguard.Character.CurrentActivity==RoyalThrone.Characters.KingVanguardCharacter.Activity.Laughing)return;
             if(CheckKingFeedbackScope(level))kingFeedback.Offer(feedback,Time.unscaledTime);
         }
         void PresentKingFeedback(LevelManager level)
         {
             if(!CheckKingFeedbackScope(level)||!kingFeedback.TryGet(Time.unscaledTime,out var feedback))return;
-            bool accepted=feedback==RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup
+            bool accepted=feedback==RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Impact
+                ?kingVanguard.Character.PlayImpactReaction():feedback==RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup
                 ?kingVanguard.PlayHappy():kingVanguard.Character.PlayMatchAcknowledgement();
             if(accepted)kingFeedback.Accepted(Time.unscaledTime);
         }

@@ -11,7 +11,7 @@ namespace RoyalThrone.Characters
     public sealed class KingVanguardCharacter : MonoBehaviour
     {
         public enum Framing { Bust, Avatar, Celebration, GameplayPortrait }
-        public enum Activity { Idle, Worried, Happy, Sad, Excited, Relief, ExtraMoves, Celebration, MatchAcknowledgement }
+        public enum Activity { Idle, Worried, Happy, Sad, Excited, Relief, ExtraMoves, Celebration, MatchAcknowledgement, Laughing }
         public const int WorryMoveCount = 3;
         public const string IdleAnimation = "idle_loop_1";
         public const string HappyAnimation = "k-1sevinme_6";
@@ -46,6 +46,7 @@ namespace RoyalThrone.Characters
         KingVanguardFaceRig faceRig;
         int sequence, idleIndex;
         Activity activity;
+        float nextLaughAt = float.NegativeInfinity;
 
         public SkeletonGraphic Graphic => skeletonGraphic;
         public bool IsAreaRig => areaRig;
@@ -80,6 +81,7 @@ namespace RoyalThrone.Characters
         public void ResetToIdle()
         {
             if (!Ready) return;
+            StopLaughter();
             sequence++; worried = false; worryEntered = false; idleIndex = 0;
             skeletonGraphic.AnimationState.ClearTracks();
             skeletonGraphic.Skeleton.SetToSetupPose();
@@ -95,6 +97,7 @@ namespace RoyalThrone.Characters
 
         void StartIdle(bool first)
         {
+            StopLaughter();
             activity = Activity.Idle;
             var state = skeletonGraphic.AnimationState;
             state.SetAnimation(0, areaRig ? AreaIdleAnimation : first ? IdleAnimation : NextIdle(), areaRig);
@@ -123,6 +126,7 @@ namespace RoyalThrone.Characters
 
         void StartWorry(bool entrance)
         {
+            StopLaughter();
             worryEntered = true;
             activity = Activity.Worried;
             var state = skeletonGraphic.AnimationState;
@@ -140,6 +144,7 @@ namespace RoyalThrone.Characters
         {
             if (!Ready || (IsReacting && !priority)) return false;
             if (skeletonGraphic.Skeleton.Data.FindAnimation(animation) == null) return false;
+            StopLaughter();
             int stamp = ++sequence; activity = next;
             var entry = skeletonGraphic.AnimationState.SetAnimation(0, animation, false);
             if (!hold) entry.Complete += completed => ReturnToContext(stamp);
@@ -147,6 +152,39 @@ namespace RoyalThrone.Characters
         }
 
         public bool PlayHappy() { return areaRig ? PlayCelebration() : React(HappyAnimation, Activity.Happy); }
+        void StopLaughter()
+        {
+            if (!skeletonGraphic) return;
+            skeletonGraphic.GetComponent<KingVanguardLaughter>()?.Cancel();
+            skeletonGraphic.GetComponent<KingVanguardLaughAudio>()?.StopVoice();
+        }
+
+        public bool PlayLaughter()
+        {
+            bool interruptCheer = activity == Activity.Happy || activity == Activity.MatchAcknowledgement || activity == Activity.Excited;
+            if (areaRig || !React("Happy_1", Activity.Laughing, false, interruptCheer)) return false;
+            var entry = skeletonGraphic.AnimationState.GetCurrent(0);
+            entry.TimeScale = entry.Animation.Duration / KingVanguardLaughTiming.Duration;
+            var laugh = skeletonGraphic.GetComponent<KingVanguardLaughter>();
+            if (!laugh) laugh = skeletonGraphic.gameObject.AddComponent<KingVanguardLaughter>();
+            laugh.Begin(entry);
+            var voice = skeletonGraphic.GetComponent<KingVanguardLaughAudio>();
+            if (!voice) voice = skeletonGraphic.gameObject.AddComponent<KingVanguardLaughAudio>();
+            voice.Begin(laugh);
+            nextLaughAt = Time.unscaledTime + ImpactLaughCooldown;
+            return true;
+        }
+        public const float ImpactLaughCooldown = 4f;
+        public bool PlayImpactReaction()
+        {
+            return !areaRig && Time.unscaledTime >= nextLaughAt && PlayLaughter();
+        }
+        public bool PlayPowerupCelebration()
+        {
+            if (!areaRig && Time.unscaledTime >= nextLaughAt) return PlayLaughter();
+            return PlayHappy();
+        }
+
         public bool PlayMatchAcknowledgement() { return !areaRig && React(MatchAcknowledgementAnimation, Activity.MatchAcknowledgement); }
         public bool PlayThumbsUp() { return !areaRig && React("Happy_2", Activity.Happy); }
         public bool PlayExcited() { return !areaRig && React("Heyecan_1", Activity.Excited); }
