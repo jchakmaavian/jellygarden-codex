@@ -40,6 +40,6 @@ for name in names:
     results.append(result)
 report = {'scope':'PNG decode, real alpha, padding and file identity only; not rig or animation QA',
           'pass':all(r['pass'] for r in results),'assets':results}
-(root/'art-validation.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+(root/'art-validation.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8', newline='\n')
 print(json.dumps(report,indent=2))
 raise SystemExit(0 if report['pass'] else 1)
