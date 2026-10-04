@@ -168,9 +168,7 @@ namespace RoyalThrone.Characters
             var laugh = skeletonGraphic.GetComponent<KingVanguardLaughter>();
             if (!laugh) laugh = skeletonGraphic.gameObject.AddComponent<KingVanguardLaughter>();
             laugh.Begin(entry);
-            var voice = skeletonGraphic.GetComponent<KingVanguardLaughAudio>();
-            if (!voice) voice = skeletonGraphic.gameObject.AddComponent<KingVanguardLaughAudio>();
-            voice.Begin(laugh);
+            // The King keeps his visual celebration without laughter audio.
             nextLaughAt = Time.unscaledTime + ImpactLaughCooldown;
             return true;
         }
