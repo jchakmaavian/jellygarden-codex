@@ -1,0 +1,77 @@
+PASS 15fps idle curiosity, pleased nod and greeting variations
+PASS 15fps touch warms the expression
+PASS 15fps fresh pointer wins over autonomous glances
+PASS 15fps hint acquisition nod occurs once
+PASS 15fps interrupted motion has bounded velocity: 5.847638
+PASS 15fps interrupted face has bounded blend: 0.2929552
+PASS 15fps worry settles without stale smiling/laughter
+PASS 15fps zero-time activity switch does not jump
+PASS 15fps disappointment settles into gentle slump
+PASS 15fps board reset clears all motion
+PASS 30fps idle curiosity, pleased nod and greeting variations
+PASS 30fps touch warms the expression
+PASS 30fps fresh pointer wins over autonomous glances
+PASS 30fps hint acquisition nod occurs once
+PASS 30fps interrupted motion has bounded velocity: 2.91506
+PASS 30fps interrupted face has bounded blend: 0.1520603
+PASS 30fps worry settles without stale smiling/laughter
+PASS 30fps zero-time activity switch does not jump
+PASS 30fps disappointment settles into gentle slump
+PASS 30fps board reset clears all motion
+PASS 60fps idle curiosity, pleased nod and greeting variations
+PASS 60fps touch warms the expression
+PASS 60fps fresh pointer wins over autonomous glances
+PASS 60fps hint acquisition nod occurs once
+PASS 60fps interrupted motion has bounded velocity: 1.461481
+PASS 60fps interrupted face has bounded blend: 0.07629508
+PASS 60fps worry settles without stale smiling/laughter
+PASS 60fps zero-time activity switch does not jump
+PASS 60fps disappointment settles into gentle slump
+PASS 60fps board reset clears all motion
+PASS 120fps idle curiosity, pleased nod and greeting variations
+PASS 120fps touch warms the expression
+PASS 120fps fresh pointer wins over autonomous glances
+PASS 120fps hint acquisition nod occurs once
+PASS 120fps interrupted motion has bounded velocity: 0.72873
+PASS 120fps interrupted face has bounded blend: 0.03828585
+PASS 120fps worry settles without stale smiling/laughter
+PASS 120fps zero-time activity switch does not jump
+PASS 120fps disappointment settles into gentle slump
+PASS 120fps board reset clears all motion
+PASS expression morph shader compiles
+PASS ordinary match is not a laugh
+PASS creation keeps normal cheer
+PASS rocket/TNT/huge impact 0.8 selects laugh
+PASS rocket/TNT/huge impact 1 selects laugh
+PASS rocket/TNT/huge impact 1.4 selects laugh
+PASS impact outranks match and bypasses normal cheer spacing
+PASS accepted chain has no backlog
+PASS stale impact expires
+PASS 15fps impact interrupts small acknowledgement
+PASS new interactive art rig is installed
+PASS 15fps silent reference-pose articulation
+PASS 15fps returns to clean idle
+PASS 15fps impact cooldown blocks immediate replay
+PASS explicit QA laugh starts
+PASS failure interrupts laughter while retaining new artwork
+PASS laugh returns to low-move worry
+PASS goal completion interrupts laugh
+PASS 30fps impact interrupts small acknowledgement
+PASS new interactive art rig is installed
+PASS 30fps silent reference-pose articulation
+PASS 30fps returns to clean idle
+PASS 30fps impact cooldown blocks immediate replay
+PASS explicit QA laugh starts
+PASS failure interrupts laughter while retaining new artwork
+PASS laugh returns to low-move worry
+PASS goal completion interrupts laugh
+PASS 60fps impact interrupts small acknowledgement
+PASS new interactive art rig is installed
+PASS 60fps silent reference-pose articulation
+PASS 60fps returns to clean idle
+PASS 60fps impact cooldown blocks immediate replay
+PASS explicit QA laugh starts
+PASS failure interrupts laughter while retaining new artwork
+PASS laugh returns to low-move worry
+PASS goal completion interrupts laugh
+PASS 315 frames; 272 new-art frames; 15/30/60fps; all impact laugh checks passed.

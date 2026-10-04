@@ -1,0 +1,1 @@
+Verified in isolated project. Main Assets import is awaiting release of SOCLOSE-SESSION-IS-USING-THE-UNITY-EDITOR.txt. No main code modified by this refinement yet.

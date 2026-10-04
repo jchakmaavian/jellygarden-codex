@@ -1,0 +1,2 @@
+PASS 210300 triangle checks; zero inverted triangles.
+All expression pairs, partial blinks, winks, and 200 seeded interrupted blends.
