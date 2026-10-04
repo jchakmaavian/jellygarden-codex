@@ -1,6 +1,6 @@
 
 AreaCompleted_Vanguard.png
-size: 2048,1714
+size: 2048,2034
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -583,5 +583,12 @@ sol_omuz_sari_3
   xy: 205, 42
   size: 182, 197
   orig: 182, 197
+  offset: 0, 0
+  index: -1
+Vanguard Crown
+  rotate: false
+  xy: 8, 1722
+  size: 496, 288
+  orig: 496, 288
   offset: 0, 0
   index: -1

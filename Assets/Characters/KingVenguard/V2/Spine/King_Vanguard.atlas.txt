@@ -1,6 +1,6 @@
 
 King_Vanguard.png
-size: 672,1872
+size: 672,2192
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
@@ -269,4 +269,11 @@ table game frame
   size: 213, 403
   orig: 216, 405
   offset: 3, 2
+  index: -1
+Vanguard Crown
+  rotate: false
+  xy: 8, 1880
+  size: 496, 288
+  orig: 496, 288
+  offset: 0, 0
   index: -1

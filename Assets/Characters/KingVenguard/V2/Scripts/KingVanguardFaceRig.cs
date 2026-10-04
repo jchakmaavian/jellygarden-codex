@@ -43,6 +43,10 @@ namespace RoyalThrone.Characters
         public float MaximumToothCorrection { get; private set; }
         public float GazeInfluence { get; private set; }
         public float BodyLeanDegrees { get; private set; }
+        public int ActivePaintedEyeContours { get; private set; }
+        public float MinimumIrisScale { get; private set; }
+        /// <summary>Current left/right iris scale, for temporal and visual diagnostics.</summary>
+        public Vector2 IrisScales { get; private set; }
 
         public static KingVanguardFaceRig Ensure(SkeletonGraphic target)
         {
@@ -124,6 +128,9 @@ namespace RoyalThrone.Characters
             pendingBounds.Clear();
             head = face = chest = null;
             MaximumToothCorrection = GazeInfluence = BodyLeanDegrees = 0;
+            MinimumIrisScale = 0;
+            IrisScales = Vector2.zero;
+            ActivePaintedEyeContours = 0;
             mapped = interpolated = ambiguous = unmatched = 0;
             LastMappedVertices = LastInterpolatedVertices = LastAmbiguousVertices = LastUnattributedVertices = ActiveFaceAttachments = 0;
         }
@@ -176,6 +183,9 @@ namespace RoyalThrone.Characters
             Part mouth = null;
             Part leftEye = null, rightEye = null;
             ActiveFaceAttachments = 0;
+            ActivePaintedEyeContours = 0;
+            MinimumIrisScale = float.MaxValue;
+            IrisScales = Vector2.zero;
             MaximumToothCorrection = 0;
             for (int i = 0; i < skeleton.Slots.Count; i++)
             {
@@ -184,6 +194,7 @@ namespace RoyalThrone.Characters
                 var part = AddPart(i, slot.Attachment, slot.Attachment.Name);
                 if (part == null) continue;
                 part.UpdateWorld();
+                if (part.UpdatePaintedContour(face)) ActivePaintedEyeContours++;
                 part.Active = true;
                 activeParts.Add(part);
                 if (part.Feature != Feature.None) ActiveFaceAttachments++;
@@ -199,6 +210,14 @@ namespace RoyalThrone.Characters
             foreach (var part in activeParts)
             {
                 part.Map = global;
+                Part eye = part.EyeSide < 0 ? leftEye : part.EyeSide > 0 ? rightEye : null;
+                if (eye != null)
+                {
+                    // White, lids, lashes, brows and their shadows share one map.
+                    // Its optical center follows the original animated white.
+                    var center = eye.PaintedCenterWorld(face);
+                    part.Map = global.ScaleAroundMappedPoint(center, configuration.EyeScale.x, configuration.EyeScale.y, face);
+                }
                 if (part.Feature == Feature.Mouth) part.Map = mouthMap;
                 else if (part.Feature == Feature.Nose)
                 {
@@ -207,13 +226,17 @@ namespace RoyalThrone.Characters
                 }
                 else if (part.Feature == Feature.Pupil)
                 {
-                    part.Map = global.ScaleAroundMappedPoint(part.Center, configuration.PupilScale, configuration.PupilScale, face);
-                    var eye = part.Name == "Sol  Göz Bebeği" ? leftEye : rightEye;
-                    if (attention && attention.isActiveAndEnabled && eye != null && attention.Influence > 0)
+                    if (eye != null)
                     {
-                        var target = PupilTarget(part, eye, attention.Gaze);
-                        var delta = (global.Point(target) - global.Point(part.Center)) * attention.Influence;
-                        part.Map = part.Map.Translated(delta);
+                        float irisScale;
+                        var target = ContainedPupilCenter(part, eye, out irisScale);
+                        MinimumIrisScale = Mathf.Min(MinimumIrisScale, irisScale);
+                        var scales = IrisScales;
+                        if (part.EyeSide < 0) scales.x = irisScale; else scales.y = irisScale;
+                        IrisScales = scales;
+                        var eyeMap = part.Map;
+                        part.Map = eyeMap.ScaleAroundMappedPoint(part.Center, irisScale, irisScale, face);
+                        part.Map = part.Map.Translated(eyeMap.Point(target) - eyeMap.Point(part.Center));
                     }
                 }
             }
@@ -222,26 +245,60 @@ namespace RoyalThrone.Characters
             return true;
         }
 
-        Vector2 PupilTarget(Part pupil, Part white, Vector2 gaze)
+        Vector2 ContainedPupilCenter(Part pupil, Part white, out float irisScale)
         {
-            // Fit the whole pupil quad into a conservative ellipse INSIDE the eye
-            // white, then blend toward it. Source lids still draw above the iris,
-            // retaining their blink occlusion rather than opening a closed eye.
-            var eye = white.BoundsInFrame(face);
-            var iris = pupil.BoundsInFrame(face);
-            float rx = eye.width * .46f, ry = eye.height * .46f;
-            float hx = iris.width * .5f * configuration.PupilScale;
-            float hy = iris.height * .5f * configuration.PupilScale;
-            float dx = gaze.x * rx * .6f, dy = gaze.y * ry * .6f;
-            float low = 0, high = 1;
-            for (int i = 0; i < 12; i++)
+            // The painted iris is oval; transparent quad corners do not define
+            // containment. Registered alpha contours are transformed by the same
+            // UV triangles as the visible mesh. This runs for SOURCE gaze too.
+            irisScale = configuration.PupilScale;
+            if (pupil.PaintedHull == null || white.PaintedHull == null)
             {
-                float amount = (low + high) * .5f;
-                float x = (Mathf.Abs(dx * amount) + hx) / Mathf.Max(rx, 1e-6f);
-                float y = (Mathf.Abs(dy * amount) + hy) / Mathf.Max(ry, 1e-6f);
-                if (x * x + y * y <= 1) low = amount; else high = amount;
+                // Explicit conservative fallback for an unregistered replacement
+                // skin; no texture readability or synchronous GPU readback needed.
+                irisScale = Mathf.Min(irisScale, 1.1f);
+                return white.Center;
             }
-            var local = eye.center + new Vector2(dx, dy) * low;
+            float px, py;
+            face.WorldToLocal(pupil.Center.x, pupil.Center.y, out px, out py);
+            var sourceCenter = new Vector2(px, py);
+            var neutral = white.PaintedBounds.center;
+            var boundary = white.PaintedHull;
+            var iris = pupil.PaintedHull;
+            float sign = white.PaintedArea >= 0 ? 1 : -1;
+            float scaleLimit = float.MaxValue;
+            for (int i = 0; i < boundary.Length; i++)
+            {
+                var a = boundary[i]; var edge = boundary[(i + 1) % boundary.Length] - a;
+                var normal = new Vector2(edge.y * sign, -edge.x * sign);
+                float support = float.MinValue;
+                for (int j = 0; j < iris.Length; j++) support = Mathf.Max(support, Vector2.Dot(normal, iris[j] - sourceCenter));
+                if (support > 1e-10f)
+                    scaleLimit = Mathf.Min(scaleLimit, Vector2.Dot(normal, a - neutral) / support);
+            }
+            if (scaleLimit < irisScale) irisScale = Mathf.Max(.01f, scaleLimit * .995f);
+            var desired = sourceCenter;
+            if (attention && attention.isActiveAndEnabled && attention.Influence > 0)
+            {
+                var gaze = attention.Gaze;
+                var target = neutral + new Vector2(gaze.x * white.PaintedBounds.width * .5f, gaze.y * white.PaintedBounds.height * .5f);
+                desired = Vector2.Lerp(sourceCenter, target, attention.Influence);
+            }
+            // Intersect the center's ray with the eroded white half-planes. The
+            // support term accounts for the complete painted iris at this pose.
+            var direction = desired - neutral;
+            float fraction = 1;
+            for (int i = 0; i < boundary.Length; i++)
+            {
+                var a = boundary[i]; var edge = boundary[(i + 1) % boundary.Length] - a;
+                var normal = new Vector2(edge.y * sign, -edge.x * sign);
+                float travel = Vector2.Dot(normal, direction);
+                if (travel <= 1e-10f) continue;
+                float support = float.MinValue;
+                for (int j = 0; j < iris.Length; j++) support = Mathf.Max(support, Vector2.Dot(normal, iris[j] - sourceCenter));
+                float available = Vector2.Dot(normal, a - neutral) - support * irisScale;
+                fraction = Mathf.Min(fraction, available / travel);
+            }
+            var local = neutral + direction * Mathf.Clamp01(fraction);
             float wx, wy;
             face.LocalToWorld(local.x, local.y, out wx, out wy);
             return new Vector2(wx, wy);
@@ -340,6 +397,9 @@ namespace RoyalThrone.Characters
         {
             if (first == null || ReferenceEquals(first, second)) return false;
             if (first.Feature != second.Feature) return true;
+            // The paired eyes now have independent animated optical centers;
+            // their Face feature tag alone no longer means an identical map.
+            if (first.EyeSide != second.EyeSide) return true;
             // Both pupils have the same scale but different animated centers.
             return first.Feature == Feature.Pupil || first.Feature == Feature.Nose;
         }
@@ -397,11 +457,34 @@ namespace RoyalThrone.Characters
 
         struct VertexOwner { public Part Part; public int Coordinate; }
 
+        static int EyeSideFor(string name)
+        {
+            switch (name)
+            {
+                case "Sol Göz": case "Sol  Göz Bebeği": case "Sol Göz kapağı":
+                case "Sol Kirpik": case "Sol Kaş": case "Sol Kaş Gölge": return -1;
+                case "Sağ Göz": case "Sağ Göz Bebeği": case "Sağ Göz Kapağı":
+                case "Sağ Kirpik": case "Sağ Kaş": case "Sağ Kaş Gölge": return 1;
+                default: return 0;
+            }
+        }
+
+        // Registered painted contours in upright cropped-region UV coordinates.
+        // Generated from the installed alpha masks; see eye-alpha-registration.json.
+        static readonly Dictionary<string, Vector2[]> PaintedEyeContours = new Dictionary<string, Vector2[]>
+        {
+            { "Sol Göz", new[] { new Vector2(0.067567568f, 0.438775510f), new Vector2(0.121621622f, 0.316326531f), new Vector2(0.175675676f, 0.234693878f), new Vector2(0.229729730f, 0.173469388f), new Vector2(0.256756757f, 0.153061224f), new Vector2(0.337837838f, 0.112244898f), new Vector2(0.391891892f, 0.091836735f), new Vector2(0.608108108f, 0.091836735f), new Vector2(0.662162162f, 0.112244898f), new Vector2(0.743243243f, 0.153061224f), new Vector2(0.797297297f, 0.214285714f), new Vector2(0.851351351f, 0.295918367f), new Vector2(0.878378378f, 0.357142857f), new Vector2(0.905405405f, 0.438775510f), new Vector2(0.905405405f, 0.704081633f), new Vector2(0.878378378f, 0.785714286f), new Vector2(0.851351351f, 0.826530612f), new Vector2(0.770270270f, 0.887755102f), new Vector2(0.662162162f, 0.928571429f), new Vector2(0.364864865f, 0.928571429f), new Vector2(0.283783784f, 0.908163265f), new Vector2(0.202702703f, 0.867346939f), new Vector2(0.148648649f, 0.826530612f), new Vector2(0.094594595f, 0.744897959f), new Vector2(0.067567568f, 0.622448980f) } },
+            { "Sağ Göz", new[] { new Vector2(0.071428571f, 0.447916667f), new Vector2(0.128571429f, 0.281250000f), new Vector2(0.242857143f, 0.156250000f), new Vector2(0.271428571f, 0.135416667f), new Vector2(0.385714286f, 0.093750000f), new Vector2(0.614285714f, 0.093750000f), new Vector2(0.671428571f, 0.114583333f), new Vector2(0.814285714f, 0.218750000f), new Vector2(0.842857143f, 0.260416667f), new Vector2(0.900000000f, 0.385416667f), new Vector2(0.928571429f, 0.468750000f), new Vector2(0.928571429f, 0.718750000f), new Vector2(0.900000000f, 0.781250000f), new Vector2(0.842857143f, 0.843750000f), new Vector2(0.814285714f, 0.864583333f), new Vector2(0.700000000f, 0.906250000f), new Vector2(0.614285714f, 0.927083333f), new Vector2(0.385714286f, 0.927083333f), new Vector2(0.300000000f, 0.906250000f), new Vector2(0.242857143f, 0.885416667f), new Vector2(0.128571429f, 0.802083333f), new Vector2(0.100000000f, 0.718750000f), new Vector2(0.071428571f, 0.614583333f) } },
+            { "Sol  Göz Bebeği", new[] { new Vector2(0.000000000f, 0.421052632f), new Vector2(0.071428571f, 0.263157895f), new Vector2(0.285714286f, 0.105263158f), new Vector2(0.428571429f, 0.052631579f), new Vector2(0.571428571f, 0.052631579f), new Vector2(0.714285714f, 0.105263158f), new Vector2(0.928571429f, 0.263157895f), new Vector2(0.928571429f, 0.736842105f), new Vector2(0.857142857f, 0.842105263f), new Vector2(0.714285714f, 0.947368421f), new Vector2(0.285714286f, 0.947368421f), new Vector2(0.071428571f, 0.789473684f), new Vector2(0.000000000f, 0.631578947f) } },
+            { "Sağ Göz Bebeği", new[] { new Vector2(0.071428571f, 0.277777778f), new Vector2(0.142857143f, 0.166666667f), new Vector2(0.214285714f, 0.111111111f), new Vector2(0.357142857f, 0.055555556f), new Vector2(0.642857143f, 0.055555556f), new Vector2(0.785714286f, 0.111111111f), new Vector2(0.857142857f, 0.166666667f), new Vector2(0.928571429f, 0.277777778f), new Vector2(0.928571429f, 0.666666667f), new Vector2(0.857142857f, 0.833333333f), new Vector2(0.785714286f, 0.888888889f), new Vector2(0.642857143f, 0.944444444f), new Vector2(0.428571429f, 0.944444444f), new Vector2(0.285714286f, 0.888888889f), new Vector2(0.142857143f, 0.777777778f), new Vector2(0.071428571f, 0.666666667f) } },
+        };
+
         sealed class Part
         {
             static readonly int[] RegionTriangles = { 0, 1, 2, 2, 3, 0 };
             public readonly string Name;
             public readonly Feature Feature;
+            public readonly int EyeSide;
             public readonly float[] Uvs, World;
             readonly int[] triangles;
             readonly Slot slot;
@@ -412,6 +495,10 @@ namespace RoyalThrone.Characters
             readonly Vector2 restCenter;
             readonly float restDenominator;
             bool teethPrepared;
+            PaintedBinding[] paintedBindings;
+            public Vector2[] PaintedHull;
+            public Rect PaintedBounds;
+            public float PaintedArea;
             public bool Active;
             public Vector2 Center;
             public Affine Map;
@@ -421,6 +508,7 @@ namespace RoyalThrone.Characters
                 this.slot = slot;
                 Name = name;
                 Feature = KingVanguardFaceShapeModifier.Classify(name);
+                EyeSide = EyeSideFor(name);
                 region = attachment as RegionAttachment;
                 mesh = attachment as MeshAttachment;
                 Uvs = region != null ? region.UVs : mesh.UVs;
@@ -433,6 +521,7 @@ namespace RoyalThrone.Characters
                     minY = Mathf.Min(minY, Uvs[i + 1]); maxY = Mathf.Max(maxY, Uvs[i + 1]);
                 }
                 uvBounds = Rect.MinMaxRect(minX, minY, maxX, maxY);
+                RegisterPaintedContour(attachment);
                 if (mesh != null && (name == "Alt Diş" || name == "Ust Diş"))
                 {
                     restTeeth = new float[World.Length];
@@ -476,6 +565,69 @@ namespace RoyalThrone.Characters
                 }
                 return Rect.MinMaxRect(minX, minY, maxX, maxY);
             }
+
+            void RegisterPaintedContour(Attachment attachment)
+            {
+                Vector2[] contour;
+                if (!PaintedEyeContours.TryGetValue(Name, out contour)) return;
+                var hasRegion = attachment as IHasRendererObject;
+                var atlas = hasRegion == null ? null : hasRegion.RendererObject as AtlasRegion;
+                // Both recovered rigs pack these four islands upright. Any new
+                // rotated registration must supply an explicitly checked profile.
+                if (atlas == null || atlas.degrees != 0) return;
+                var bindings = new PaintedBinding[contour.Length];
+                for (int p = 0; p < contour.Length; p++)
+                {
+                    var uv = new Vector2(Mathf.Lerp(atlas.u, atlas.u2, contour[p].x), Mathf.Lerp(atlas.v, atlas.v2, contour[p].y));
+                    bool found = false;
+                    for (int t = 0; t < triangles.Length; t += 3)
+                    {
+                        int a = triangles[t] * 2, b = triangles[t + 1] * 2, c = triangles[t + 2] * 2;
+                        float bx = Uvs[b] - Uvs[a], by = Uvs[b + 1] - Uvs[a + 1];
+                        float cx = Uvs[c] - Uvs[a], cy = Uvs[c + 1] - Uvs[a + 1];
+                        float determinant = bx * cy - by * cx;
+                        if (Mathf.Abs(determinant) < 1e-12f) continue;
+                        float x = uv.x - Uvs[a], y = uv.y - Uvs[a + 1];
+                        float wb = (x * cy - y * cx) / determinant, wc = (bx * y - by * x) / determinant, wa = 1 - wb - wc;
+                        if (wa < -1e-5f || wb < -1e-5f || wc < -1e-5f) continue;
+                        bindings[p] = new PaintedBinding { A = a, B = b, C = c, WA = wa, WB = wb, WC = wc };
+                        found = true; break;
+                    }
+                    if (!found) return;
+                }
+                paintedBindings = bindings;
+                PaintedHull = new Vector2[bindings.Length];
+            }
+
+            public bool UpdatePaintedContour(Bone frame)
+            {
+                if (paintedBindings == null) return false;
+                float minX = float.MaxValue, minY = float.MaxValue, maxX = float.MinValue, maxY = float.MinValue;
+                for (int i = 0; i < paintedBindings.Length; i++)
+                {
+                    var p = paintedBindings[i];
+                    float wx = p.WA * World[p.A] + p.WB * World[p.B] + p.WC * World[p.C];
+                    float wy = p.WA * World[p.A + 1] + p.WB * World[p.B + 1] + p.WC * World[p.C + 1];
+                    float x, y; frame.WorldToLocal(wx, wy, out x, out y);
+                    PaintedHull[i] = new Vector2(x, y);
+                    minX = Mathf.Min(minX, x); minY = Mathf.Min(minY, y); maxX = Mathf.Max(maxX, x); maxY = Mathf.Max(maxY, y);
+                }
+                PaintedBounds = Rect.MinMaxRect(minX, minY, maxX, maxY);
+                PaintedArea = 0;
+                for (int i = 0; i < PaintedHull.Length; i++)
+                { var a = PaintedHull[i]; var b = PaintedHull[(i + 1) % PaintedHull.Length]; PaintedArea += a.x * b.y - a.y * b.x; }
+                return true;
+            }
+
+            public Vector2 PaintedCenterWorld(Bone frame)
+            {
+                if (PaintedHull == null) return Center;
+                var point = PaintedBounds.center;
+                float x, y; frame.LocalToWorld(point.x, point.y, out x, out y);
+                return new Vector2(x, y);
+            }
+
+            struct PaintedBinding { public int A, B, C; public float WA, WB, WC; }
 
             public float PrepareTeeth(Bone frame, bool enabled)
             {

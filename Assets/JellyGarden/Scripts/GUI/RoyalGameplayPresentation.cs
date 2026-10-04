@@ -308,7 +308,11 @@ namespace RoyalThrone.Presentation
             {
                 // The imported APK KingUi uses its finite positive reaction, then resumes the latest low-move context.
                 // The packaged StartWorryMoveCount is 3. Time limits are not move counts.
-                kingVanguard.SetWorried(lm.gameStatus==GameState.Playing&&lm.limitType!=LIMIT.TIME&&lm.Limit<=RoyalThrone.Characters.KingVanguardCharacter.WorryMoveCount);
+                // A pause/fail fade or an automatic board shuffle does not improve
+                // the remaining moves. Preserve that context until live play resumes;
+                // committed relief explicitly clears it in PresentKingActivity.
+                if(lm.gameStatus==GameState.Playing)
+                    kingVanguard.SetWorried(lm.limitType!=LIMIT.TIME&&lm.Limit<=RoyalThrone.Characters.KingVanguardCharacter.WorryMoveCount);
                 PresentKingActivity();
                 PresentKingFeedback(lm);
             }
