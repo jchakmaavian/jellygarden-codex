@@ -13,7 +13,7 @@ using RoyalThrone.Characters;
 public static class KingImpactLaughChecks {
  public static string Run(){
   string reportRoot=Path.GetFullPath(Path.Combine(Application.dataPath,".."));if(reportRoot.EndsWith("KingVanguard-RigPreview-20261004"))reportRoot=Path.GetFullPath(Path.Combine(reportRoot,"../JellyGarden-Codex"));
-  string initialReport=Path.Combine(reportRoot,"Design/KingVanguard-ReferenceLaugh-20261004/Review/rig-checks.txt");Directory.CreateDirectory(Path.GetDirectoryName(initialReport));File.WriteAllText(initialReport,"RUNNING "+DateTime.UtcNow.ToString("o")+"\n");
+  string initialReport=Path.Combine(reportRoot,"Design/KingVanguard-ProportionFix-20261004/Review/rig-checks.txt");Directory.CreateDirectory(Path.GetDirectoryName(initialReport));File.WriteAllText(initialReport,"RUNNING "+DateTime.UtcNow.ToString("o")+"\n");
   var report=new StringBuilder();int frames=0,posed=0;
   void Check(bool ok,string text){if(!ok)throw new Exception(text);report.AppendLine("PASS "+text);}
   Check(KingVanguardFeedbackQueue.FromImpactStrength(.45f)==KingVanguardFeedbackQueue.Feedback.None,"ordinary match is not a laugh");
@@ -40,7 +40,10 @@ public static class KingImpactLaughChecks {
       posed++;active++;if(art.RenderedPartCount!=1)throw new Exception("Reference portrait missing");
       if(!art.Portrait||art.Portrait.mainTexture.name!="ReferenceLaugh")throw new Exception("Wrong reference art");
       float t=graphic.GetComponent<KingVanguardLaughter>().Time;
-      if(t>.23f&&t<2.1f&&graphic.color.a>.001f)throw new Exception("Old face still visible under reference");
+      if(t>.23f&&t<2.1f&&graphic.color.a<.99f)throw new Exception("Native crown/body were hidden");
+      if(graphic.Skeleton.FindSlot("Pelerin").Attachment==null)throw new Exception("Original body replaced");
+      if(graphic.Skeleton.Slots.Items[27].Attachment==null)throw new Exception("Original crown replaced");
+      if(graphic.Skeleton.Slots.Items[24].Attachment!=null)throw new Exception("Native nose doubled");
       if(graphic.GetComponent<KingVanguardLaughAudio>())throw new Exception("Laughter audio was reintroduced");
       jawMin=Mathf.Min(jawMin,art.JawDrop);jawMax=Mathf.Max(jawMax,art.JawDrop);
       if(king.PlayImpactReaction())throw new Exception("Chain restarted active laugh");
@@ -60,6 +63,6 @@ public static class KingImpactLaughChecks {
    report.AppendLine("PASS "+frames+" frames; "+posed+" new-art frames; 15/30/60fps; all impact laugh checks passed.");
   }finally{EditorSceneManager.ClosePreviewScene(scene);}
   string project=Path.GetFullPath(Path.Combine(Application.dataPath,".."));if(project.EndsWith("KingVanguard-RigPreview-20261004"))project=Path.GetFullPath(Path.Combine(project,"../JellyGarden-Codex"));
-  string output=Path.Combine(project,"Design/KingVanguard-ReferenceLaugh-20261004/Review/rig-checks.txt");Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());Debug.Log(report.ToString());return report.ToString();
+  string output=Path.Combine(project,"Design/KingVanguard-ProportionFix-20261004/Review/rig-checks.txt");Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());Debug.Log(report.ToString());return report.ToString();
  }
 }
