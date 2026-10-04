@@ -1,0 +1,117 @@
+King Vanguard facial rig repair — 4 October 2026
+
+Installed and tested in JellyGarden-Codex using Unity 6000.5.10f1.
+The earlier screenshots did not show a readable upper lip. The line identified
+as a lip was a teeth/moustache boundary. That assessment was incorrect.
+
+BUG LIST AND REPAIRS
+
+1. Missing readable upper lip and mouth opening.
+   Replaced the broad skin-patch mouth with a painted cavity and thin upper and
+   lower lips. The original animated mouth geometry drives their position,
+   width, opening and corner movement, including native animation crossfades.
+
+2. Teeth drifted, stretched and crossed the lips.
+   Upper and lower teeth now share the mouth coordinate system. Their physical
+   height is stable and their visible geometry is constrained to the painted
+   cavity. Lower teeth disappear when the opening is too small. The first
+   regression run caught upper-tooth crossing in Happy_1; contour bounds fixed it.
+
+3. A large exposed jaw/skin patch looked pasted over the beard.
+   Removed the old visible mouth patch. A continuous head/beard underlay provides
+   the skin beneath the new mouth, including the rounded central chin area.
+
+4. The moustache had disconnected tips, clipped contours and a hard seam.
+   Added a connected moustache sprite and a new weighted mesh registered to its
+   complete silhouette. It follows the source bones without reusing the old
+   incompatible hair deformation mask. Added a small matching contact shadow.
+
+5. Temple gaps, hard cheek patches and beard seams broke facial continuity.
+   Replaced the head/beard underlay and ear artwork. Cheek color is part of the
+   continuous underlay; the old independent cheek patches are hidden.
+
+6. Crown shadow was detached/diagonal and made the fitted crown look misplaced.
+   Retained the calibrated full crown fit and rebuilt its contact shadow from
+   the crown's own bottom geometry and weights. Removed obsolete facial shadows.
+
+7. Eyes had rough low-resolution rims/irises and mismatched detail.
+   Registered new eye whites with integrated socket edging and independent
+   240-pixel iris artwork. Preserved native eyelids/lashes and their blink curves;
+   generated lids were rejected during visual QA because they did not register.
+
+8. Upward gaze was nearly blocked during one dance pose.
+   The test found the neutral pupil center used the eye bounding box, which can
+   lie too close to the curved opening. It now uses the center of the actual
+   valid pupil-placement area. Pupil scale remains 1.3 throughout the tests.
+
+9. New artwork was being constrained by old asset silhouettes.
+   New parts have their own atlas regions and weighted registration. They are
+   not cut by the old masks. Original atlas content and existing GUIDs remain.
+
+10. Runtime lifecycle/visibility could leave an uninitialized or ghost mouth.
+    The mouth initializes on activation, hides when its native driver is absent,
+    and follows the driver's slot fade. Every actor owns separate mutable
+    geometry, so a second King cannot change the first King's expression.
+
+ACTIVITY AND UI VERIFICATION
+
+Existing production activity routing was retained and retested with the new
+face. Virtual mouse/touch devices used the production input actions. The main
+game's real solver supplied the visible match hint. Tests verified smooth
+attention retirement, fresh versus held touch boundaries, pause/focus cleanup,
+low-move worry persistence, and committed relief/failure priority. State-only
+probes tested priority without granting win rewards or triggering popups.
+
+Main HUD captures show idle and two-thumbs-up celebration in the gold arch.
+Canvas tests also cover native UI material, RectMask2D, four expressions and
+serialized component activation. Normal player progress was restored after
+each live test. No unrelated gameplay or save implementation was changed.
+
+EVIDENCE
+
+All paths below are relative to Design/KingVanguard-FaceRepair-20261004/.
+
+- Validation/face-repair-checks.txt: PASS, both installed main-game rigs, all
+  42 clips sampled, 1,272 frames, 16,585 opaque tooth-containment samples,
+  zero normalized tooth escape; real crossfades and actor independence.
+- Validation/Eyes/: PASS, 207 poses / 64,184 sparse invariants.
+- Validation/EyesTemporal/: PASS, 10,679 poses at 60 Hz, 150 real mix frames,
+  stable iris scale. Tests use dense sampled opaque pixels, not every texel.
+- Validation/MeshMotion/: PASS, 1,275 frames including 135 real mix frames.
+- Validation/crown-checks.txt: PASS, 210 poses, normalized weights, full UVs,
+  idempotent registration. Repeated against installed main-game assets.
+- Validation/activity-refinement-checks.txt: ALL CHECKS PASSED, 756 live
+  observed frames; normal player profile restored.
+- Review/canvas-check.txt: PASS. Review/Main-HUD-idle.png and
+  Review/Main-HUD-cheer.png: inspected actual 1080 x 1920 gameplay captures.
+- Review/Before-After-Face-Rig.mp4: 22-second, 30 fps comparison, old on left.
+  Review/King-Face-Repaired-Motion.mp4: final face motion alone.
+- Review/All-Clips-1.png through All-Clips-3.png: inspected samples of all clips.
+- Main editor compile/runtime error count after live tests: 0.
+
+ART AND IMPLEMENTATION
+
+Art/face-parts-clean.png and Art/head-underlay-final.png were made with the
+built-in image_gen tool. Exact successful prompts are in Art/prompts.txt.
+Technical scripts crop/register/pack those images; they do not synthesize art.
+The final images are installed in Assets/Characters/KingVenguard/V2/Spine/
+King_Vanguard.png and AreaCompleted_Vanguard.png. Runtime changes are in that
+folder's Scripts/KingVanguardFaceSkin.cs, KingVanguardMouthRig.cs, FaceRig,
+FaceShapeModifier, CrownSkin and generated contour data.
+
+The original skeleton binaries and animation clips remain intact. New meshes
+retain source bone motion, but incompatible original facial FFD masks are not
+blindly applied to new silhouettes. Native mouth and eyelid deformation remains
+the animation driver. The approved Royal Signature IV outfit remains installed.
+
+LIMITS / RECOVERED SOURCE TRACKS
+
+The raw recovered area-king_area 1 and area-king_area_2 tracks still show extra
+arm/sleeve variants when played without their original scene setup. portrait-_3
+is a source layout/transform track with unsuitable standalone framing. These
+tracks are not routed by the production character controller and were not
+converted into new game activities in this facial repair. The production area
+idle/win/clap routes were included in inspection. Do not interpret mathematical
+checks across all 42 clips as artistic approval of those source-only tracks.
+
+Android/device rendering and performance were not tested in this pass.

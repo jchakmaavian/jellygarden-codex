@@ -30,7 +30,10 @@ namespace RoyalThrone.Characters.EditorTools
                 var region = crown == null ? null : crown.RendererObject as AtlasRegion;
                 Require(region != null && region.name == "Vanguard Crown", "Crown replacement missing");
                 Require(crown.WorldVerticesLength == 40 && crown.Triangles.Length == 72, "Incomplete crown grid");
-                Require(region.v > region.v2 && region.v < .2f && region.v2 >= 0, "Crown samples the wrong atlas rows");
+                int row = name == "King" ? 1880 : 1722;
+                Require(Mathf.Abs(region.v-(1f-(float)row/region.page.height))<.00001f &&
+                    Mathf.Abs(region.v2-(1f-(float)(row+288)/region.page.height))<.00001f,
+                    "Crown samples the wrong atlas rows");
                 foreach (var entry in data.DefaultSkin.GetAttachments())
                     if (entry.SlotIndex == slotIndex && entry.Name == "Taç")
                         Require(ReferenceEquals(entry.Attachment, crown), "Skin lookup and enumeration disagree");

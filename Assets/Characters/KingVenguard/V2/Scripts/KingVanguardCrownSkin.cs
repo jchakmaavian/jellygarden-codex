@@ -35,7 +35,7 @@ namespace RoyalThrone.Characters
                     if (region == null || region.name == "Vanguard Crown") continue;
                     int oldHeight = region.page.name.StartsWith("King_") ? 1872 :
                         region.page.name.StartsWith("AreaCompleted_") ? 1714 : 0;
-                    if (oldHeight == 0 || region.page.height != oldHeight + AddedHeight) continue;
+                    if (oldHeight == 0 || region.page.height < oldHeight + AddedHeight) continue;
                     var page = region.page;
                     var replacementRegion = new AtlasRegion {
                         name = "Vanguard Crown", page = page, x = Padding, y = oldHeight + Padding,
@@ -57,6 +57,9 @@ namespace RoyalThrone.Characters
         }
 
         static MeshAttachment Rebind(MeshAttachment source, Slot slot, Skeleton setup, AtlasRegion region)
+        { return RebindArt(source,slot,setup,region,"Vanguard Crown",new Rect(FitLeft,FitTop,FitWidth,FitHeight),5,4); }
+
+        internal static MeshAttachment RebindArt(MeshAttachment source, Slot slot, Skeleton setup, AtlasRegion region,string path,Rect fit,int columns,int rows)
         {
             var world = new float[source.WorldVerticesLength]; source.ComputeWorldVertices(slot, world);
             var uv = source.RegionUVs;
@@ -80,13 +83,12 @@ namespace RoyalThrone.Characters
                     weights[i][bone]=weight;
                 }
             }
-            const int columns=5,rows=4;
             var targetUv=new float[columns*rows*2];var bones=new List<int>();var vertices=new List<float>();var triangles=new List<int>();
             for(int y=0;y<rows;y++)for(int x=0;x<columns;x++)
             {
                 float u=(float)x/(columns-1),v=(float)y/(rows-1);int id=y*columns+x;
                 targetUv[id*2]=u;targetUv[id*2+1]=v;
-                var point=new Vector2(FitLeft+u*FitWidth,FitTop+v*FitHeight);
+                var point=new Vector2(fit.x+u*fit.width,fit.y+v*fit.height);
                 Vector3 affine=Bary(point,Uv(uv,ia),Uv(uv,ib),Uv(uv,ic));
                 Vector2 position=Uv(world,ia)*affine.x+Uv(world,ib)*affine.y+Uv(world,ic)*affine.z;
                 int aBest=ia,bBest=ib,cBest=ic;Vector3 blend=Vector3.zero;float distance=float.MaxValue;
@@ -111,9 +113,9 @@ namespace RoyalThrone.Characters
                 }
                 if(x<columns-1&&y<rows-1){triangles.Add(id);triangles.Add(id+1);triangles.Add(id+columns);triangles.Add(id+1);triangles.Add(id+columns+1);triangles.Add(id+columns);}
             }
-            var mesh=new MeshAttachment(Crown){Path="Vanguard Crown",WorldVerticesLength=targetUv.Length,
+            var mesh=new MeshAttachment(source.Name){Path=path,WorldVerticesLength=targetUv.Length,
                 Bones=bones.ToArray(),Vertices=vertices.ToArray(),RegionUVs=targetUv,Triangles=triangles.ToArray(),
-                Width=source.Width*FitWidth,Height=source.Height*FitHeight,R=source.R,G=source.G,B=source.B,A=source.A};
+                Width=source.Width*fit.width,Height=source.Height*fit.height,R=source.R,G=source.G,B=source.B,A=source.A};
             mesh.SetRegion(region);return mesh;
         }
         static void Accumulate(SortedDictionary<int,float> target,Dictionary<int,float> source,float scale)

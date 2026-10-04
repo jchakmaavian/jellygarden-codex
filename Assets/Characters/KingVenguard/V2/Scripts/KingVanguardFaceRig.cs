@@ -29,6 +29,8 @@ namespace RoyalThrone.Characters
         readonly List<Part> activeParts = new List<Part>(100);
         readonly Dictionary<Vector2, List<VertexOwner>> uvOwners = new Dictionary<Vector2, List<VertexOwner>>(2048);
         readonly List<Bounds> pendingBounds = new List<Bounds>(8);
+        readonly List<Vector2> pupilCenters = new List<Vector2>(96);
+        readonly List<Vector2> clippedCenters = new List<Vector2>(96);
         int mapped, interpolated, ambiguous, unmatched;
 
         public int LastMappedVertices { get; private set; }
@@ -62,6 +64,7 @@ namespace RoyalThrone.Characters
 
         static KingVanguardFaceRig EnsureOn(GameObject target)
         {
+            KingVanguardMouthRig.Ensure(target);
             var component = target.GetComponent<KingVanguardFaceRig>();
             if (!component) component = target.AddComponent<KingVanguardFaceRig>();
             if (component.isActiveAndEnabled) component.Bind();
@@ -92,6 +95,7 @@ namespace RoyalThrone.Characters
                 animation.OnMeshAndMaterialsUpdated += AnimationMeshUpdated;
             }
             else return;
+            KingVanguardMouthRig.Ensure(gameObject);
             subscribed = true;
             ResetRegistration();
         }
@@ -276,6 +280,26 @@ namespace RoyalThrone.Characters
                     scaleLimit = Mathf.Min(scaleLimit, Vector2.Dot(normal, a - neutral) / support);
             }
             if (scaleLimit < irisScale) irisScale = Mathf.Max(.01f, scaleLimit * .995f);
+            // A bounding-box center is not the center of an almond-shaped eye's
+            // available gaze range. Center the eroded white polygon so looking up
+            // cannot start already against the upper rim in an authored expression.
+            pupilCenters.Clear();pupilCenters.AddRange(boundary);
+            for (int i=0;i<boundary.Length&&pupilCenters.Count>0;i++)
+            {
+                var a=boundary[i];var edge=boundary[(i+1)%boundary.Length]-a;
+                var normal=new Vector2(edge.y*sign,-edge.x*sign);float support=float.MinValue;
+                for(int j=0;j<iris.Length;j++)support=Mathf.Max(support,Vector2.Dot(normal,iris[j]-sourceCenter));
+                float limit=Vector2.Dot(normal,a)-support*irisScale;
+                clippedCenters.Clear();var prev=pupilCenters[pupilCenters.Count-1];float dp=Vector2.Dot(normal,prev)-limit;
+                foreach(var point in pupilCenters){float d=Vector2.Dot(normal,point)-limit;
+                    if((dp<=0)!=(d<=0))clippedCenters.Add(Vector2.LerpUnclamped(prev,point,dp/(dp-d)));
+                    if(d<=0)clippedCenters.Add(point);prev=point;dp=d;}
+                pupilCenters.Clear();pupilCenters.AddRange(clippedCenters);
+            }
+            if(pupilCenters.Count>=3){float area=0;var centroid=Vector2.zero;
+                for(int i=0;i<pupilCenters.Count;i++){var a=pupilCenters[i];var b=pupilCenters[(i+1)%pupilCenters.Count];float cross=a.x*b.y-a.y*b.x;area+=cross;centroid+=(a+b)*cross;}
+                if(Mathf.Abs(area)>1e-10f)neutral=centroid/(3*area);
+            }
             var desired = sourceCenter;
             if (attention && attention.isActiveAndEnabled && attention.Influence > 0)
             {
@@ -522,7 +546,7 @@ namespace RoyalThrone.Characters
                 }
                 uvBounds = Rect.MinMaxRect(minX, minY, maxX, maxY);
                 RegisterPaintedContour(attachment);
-                if (mesh != null && (name == "Alt Diş" || name == "Ust Diş"))
+                if (mesh != null && mesh.Path != KingVanguardFaceSkin.MouthPath && (name == "Alt Diş" || name == "Ust Diş"))
                 {
                     restTeeth = new float[World.Length];
                     currentTeeth = new float[World.Length];
@@ -572,6 +596,9 @@ namespace RoyalThrone.Characters
                 if (!PaintedEyeContours.TryGetValue(Name, out contour)) return;
                 var hasRegion = attachment as IHasRendererObject;
                 var atlas = hasRegion == null ? null : hasRegion.RendererObject as AtlasRegion;
+                if (atlas != null && atlas.name.StartsWith("Vanguard Face"))
+                    KingVanguardFaceContours.Values.TryGetValue(Name, out contour);
+                if (contour == null) return;
                 // Both recovered rigs pack these four islands upright. Any new
                 // rotated registration must supply an explicitly checked profile.
                 if (atlas == null || atlas.degrees != 0) return;

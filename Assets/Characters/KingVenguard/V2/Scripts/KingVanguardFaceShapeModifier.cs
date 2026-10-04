@@ -13,9 +13,9 @@ namespace RoyalThrone.Characters
     public sealed class KingVanguardFaceShapeModifier : SkeletonDataModifierAsset
     {
         [SerializeField] Vector2 faceScale = new Vector2(1.15f, .92f);
-        [SerializeField] Vector2 noseScale = new Vector2(1.05f, .85f);
+        [SerializeField] Vector2 noseScale = new Vector2(.8f, .7f);
         [SerializeField] Vector2 eyeScale = new Vector2(1f, .88f);
-        [SerializeField] float pupilScale = 1.75f;
+        [SerializeField] float pupilScale = 1.3f;
         [SerializeField] float mouthScale = 1f;
         [SerializeField] bool hideObsoleteUpperCrownShadow = true;
         [SerializeField] bool hideObsoleteBrowShadows;
@@ -87,6 +87,7 @@ namespace RoyalThrone.Characters
             // Re-applying is idempotent. Only the redesigned crown receives new
             // render geometry; source bones and animation data remain unchanged.
             KingVanguardCrownSkin.Apply(data);
+            KingVanguardFaceSkin.Apply(data);
             Registered.Remove(data);
             Registered.Add(data, this);
         }

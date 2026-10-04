@@ -1,6 +1,6 @@
 
 AreaCompleted_Vanguard.png
-size: 2048,2034
+size: 2048, 3826
 format: RGBA8888
 filter: Linear,Linear
 repeat: none

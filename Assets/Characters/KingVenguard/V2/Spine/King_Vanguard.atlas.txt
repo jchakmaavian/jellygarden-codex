@@ -1,6 +1,6 @@
 
 King_Vanguard.png
-size: 672,2192
+size: 2048, 3984
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
