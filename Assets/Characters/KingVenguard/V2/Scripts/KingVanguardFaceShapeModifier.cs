@@ -14,7 +14,8 @@ namespace RoyalThrone.Characters
     {
         [SerializeField] Vector2 faceScale = new Vector2(1.15f, .92f);
         [SerializeField] Vector2 noseScale = new Vector2(1.05f, .85f);
-        [SerializeField] float pupilScale = 1.1f;
+        [SerializeField] Vector2 eyeScale = new Vector2(1f, .88f);
+        [SerializeField] float pupilScale = 1.75f;
         [SerializeField] float mouthScale = 1f;
         [SerializeField] bool hideObsoleteUpperCrownShadow = true;
         [SerializeField] bool hideObsoleteBrowShadows;
@@ -36,6 +37,7 @@ namespace RoyalThrone.Characters
         };
         public Vector2 FaceScale { get { return faceScale; } }
         public Vector2 NoseScale { get { return noseScale; } }
+        public Vector2 EyeScale { get { return eyeScale; } }
         public float PupilScale { get { return pupilScale; } }
         public float MouthScale { get { return mouthScale; } }
         internal enum Feature { None, Face, Mouth, Nose, Pupil }
@@ -55,7 +57,7 @@ namespace RoyalThrone.Characters
         public override void Apply(SkeletonData data)
         {
             if (data == null) throw new ArgumentNullException("data");
-            if (faceScale.x <= 0 || faceScale.y <= 0 || noseScale.x <= 0 || noseScale.y <= 0 || pupilScale <= 0 || mouthScale <= 0)
+            if (faceScale.x <= 0 || faceScale.y <= 0 || noseScale.x <= 0 || noseScale.y <= 0 || eyeScale.x <= 0 || eyeScale.y <= 0 || pupilScale <= 0 || mouthScale <= 0)
                 throw new InvalidOperationException("King Vanguard face scales must be positive.");
             if (data.FindBone("yuz") == null || data.FindBone("on_yuz") == null)
                 throw new InvalidOperationException("Face modifier needs the King/Area yuz + on_yuz frame.");

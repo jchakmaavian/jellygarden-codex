@@ -24,7 +24,7 @@ namespace RoyalThrone.Characters
         Transform scopedField;
         Square[] scopedBoard;
         int scopedAttempt, mouseDeviceId;
-        bool mouseSeeded, pressedLastFrame, waitForRelease = true;
+        bool mouseSeeded, pressedLastFrame, waitForRelease = true, applicationPaused, retireOnResume;
         Vector2 lastMousePosition, recentMousePosition, gazeVelocity;
         float mouseMovedAt = float.NegativeInfinity, tapAt = float.NegativeInfinity, leanVelocity, influenceVelocity;
 
@@ -56,10 +56,18 @@ namespace RoyalThrone.Characters
         }
 
         void Awake() { character = GetComponent<KingVanguardCharacter>(); }
-        void OnEnable() { ResetAttention(); }
+        void OnEnable() { applicationPaused = false; ResetAttention(); }
         void OnDisable() { ResetAttention(); }
-        void OnApplicationFocus(bool focused) { if (!focused) ResetAttention(); }
-        void OnApplicationPause(bool paused) { if (paused) ResetAttention(); }
+        void OnApplicationFocus(bool focused) { if (!focused) BeginApplicationRetirement(); }
+        void OnApplicationPause(bool paused) { applicationPaused = paused; if (paused) BeginApplicationRetirement(); }
+
+        void BeginApplicationRetirement()
+        {
+            // The OS may stop Update immediately. Keep the pending return across
+            // suspension instead of reacquiring a hint with the old influence.
+            retireOnResume = HasAttention;
+            ClearPointerHistory();
+        }
 
         /// <summary>Clear pointer history and require a release before accepting a held press.</summary>
         public void ResetAttention()
@@ -67,17 +75,21 @@ namespace RoyalThrone.Characters
             Gaze = Vector2.zero; Influence = BodyLean = TapResponse = 0; Source = TargetSource.None;
             gazeVelocity = Vector2.zero; leanVelocity = influenceVelocity = 0;
             scopedLevel = null; scopedField = null; scopedBoard = null; scopedAttempt = 0;
+            retireOnResume = false;
+            ClearPointerHistory();
+        }
+
+        void ClearPointerHistory()
+        {
+            Source = TargetSource.None; gazeVelocity = Vector2.zero;
             mouseSeeded = pressedLastFrame = false; waitForRelease = true; mouseDeviceId = 0;
             mouseMovedAt = tapAt = float.NegativeInfinity;
         }
 
-        bool CanObserve(LevelManager level)
+        bool IsVisiblePortrait()
         {
             if (!IsGameplayPortrait(character) || !character.isActiveAndEnabled || !character.Graphic ||
-                !character.Graphic.isActiveAndEnabled || !level || level != LevelManager.THIS ||
-                !level.GameField || !level.GameField.gameObject.activeInHierarchy ||
-                !level.BoardInputAllowed || RoyalThrone.Testing.RoyalSave.BlockGameplayInput ||
-                !Application.isFocused) return false;
+                !character.Graphic.isActiveAndEnabled) return false;
             GetComponentsInParent(true, groups);
             foreach (var group in groups)
             {
@@ -86,6 +98,22 @@ namespace RoyalThrone.Characters
                 if (group.ignoreParentGroups) break;
             }
             return true;
+        }
+
+        void RetireAttention(float delta)
+        {
+            // The HUD remains visible during its exit fade and transient board locks.
+            // Blend back to the authored pose; do not snap the pupils/body to neutral.
+            // Discard the old press/target so it cannot replay when input returns.
+            ClearPointerHistory();
+            // A spring that was still accelerating toward the pointer must not lean
+            // farther toward that lost target during its first retirement frames.
+            if (influenceVelocity > 0) influenceVelocity = 0;
+            if (BodyLean * leanVelocity > 0) leanVelocity = 0;
+            Influence = Mathf.Clamp01(Mathf.SmoothDamp(Influence, 0, ref influenceVelocity, .08f, 12, delta));
+            BodyLean = Mathf.SmoothDamp(BodyLean, 0, ref leanVelocity, .1f, 8, delta);
+            TapResponse = Mathf.MoveTowards(TapResponse, 0, delta / .08f);
+            if (Influence < .001f && Mathf.Abs(BodyLean) < .001f && TapResponse == 0) retireOnResume = false;
         }
 
         static bool DeviceAllowed(InputManager input, InputDevice device)
@@ -138,7 +166,9 @@ namespace RoyalThrone.Characters
         void Update()
         {
             var level = LevelManager.THIS;
-            if (!CanObserve(level)) { ResetAttention(); return; }
+            // A hidden actor or a missing/replaced board has no visible continuity to
+            // preserve. Input restrictions on a still-visible actor are handled below.
+            if (!IsVisiblePortrait() || !level || !level.GameField) { ResetAttention(); return; }
             if (scopedLevel != level || scopedField != level.GameField || scopedBoard != level.squaresArray || scopedAttempt != level.passLevelCounter)
             {
                 ResetAttention(); scopedLevel = level; scopedField = level.GameField;
@@ -146,23 +176,28 @@ namespace RoyalThrone.Characters
             }
             var input = InputManager.Instance;
             float now = Time.unscaledTime, delta = Mathf.Min(Time.unscaledDeltaTime, 1f / 15);
-            if (!input.isActiveAndEnabled || input.Gameplay?.PrimaryTouch == null || !input.Gameplay.PrimaryTouch.enabled)
-            { ResetAttention(); return; }
-            if (character.IsReacting)
+            if (applicationPaused || !Application.isFocused || !level.GameField.gameObject.activeInHierarchy ||
+                !level.BoardInputAllowed || RoyalThrone.Testing.RoyalSave.BlockGameplayInput ||
+                !input.isActiveAndEnabled || input.Gameplay?.PrimaryTouch == null || !input.Gameplay.PrimaryTouch.enabled ||
+                character.IsReacting)
             {
-                // An authored reaction owns the performance. Retire external motion
-                // quickly without a one-frame pupil/body jump, and discard input history.
-                Source = TargetSource.None; mouseSeeded = pressedLastFrame = false; waitForRelease = true;
-                mouseMovedAt = tapAt = float.NegativeInfinity;
-                Influence = Mathf.SmoothDamp(Influence, 0, ref influenceVelocity, .08f, 12, delta);
-                BodyLean = Mathf.SmoothDamp(BodyLean, 0, ref leanVelocity, .1f, 8, delta);
-                TapResponse = Mathf.MoveTowards(TapResponse, 0, delta / .08f);
+                RetireAttention(delta);
                 return;
             }
             var touch = AllowedDevice(input, Touchscreen.current);
             bool touching = touch != null && touch.primaryTouch.press.isPressed;
             bool pressed = touching || input.IsTouching;
-            if (!pressed) waitForRelease = false;
+            // A genuinely new press on the first frame after a reaction/lock is valid.
+            // A press already held across that boundary still needs a release first.
+            bool newPress = touching ? touch.primaryTouch.press.wasPressedThisFrame : input.WasTouchPressed;
+            if (retireOnResume)
+            {
+                // A fresh gesture may take over immediately. An old held gesture or
+                // passive hint waits for the suspended attention to retire first.
+                if (newPress) retireOnResume = false;
+                else { RetireAttention(delta); return; }
+            }
+            if (!pressed || newPress) waitForRelease = false;
             var mouse = AllowedDevice(input, Mouse.current);
             if (mouse != null)
             {
@@ -212,6 +247,7 @@ namespace RoyalThrone.Characters
             // Preserve the last target direction while its blend fades back to the
             // source eye animation; pulling direction to zero too would move twice.
             if (Source != TargetSource.None) Gaze = Vector2.ClampMagnitude(Vector2.SmoothDamp(Gaze, target, ref gazeVelocity, smooth, 8, delta), 1);
+            else gazeVelocity = Vector2.zero;
             Influence = Mathf.Clamp01(Mathf.SmoothDamp(Influence, Source == TargetSource.None ? 0 : strength,
                 ref influenceVelocity, smooth, 8, delta));
             BodyLean = Mathf.SmoothDamp(BodyLean, target.x * .65f * strength, ref leanVelocity, .24f, 4, delta);
