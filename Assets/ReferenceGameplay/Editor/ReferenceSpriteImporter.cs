@@ -32,16 +32,12 @@ namespace RoyalThrone.ReferenceGameplay.Editor
                 importer.mipmapEnabled = false;
                 importer.npotScale = TextureImporterNPOTScale.None;
                 importer.textureCompression = TextureImporterCompression.Uncompressed;
-                importer.maxTextureSize = assetPath.EndsWith("/mailbox.png", StringComparison.Ordinal) ? 512 : 4096;
+                bool mailbox = assetPath.EndsWith("/mailbox.png", StringComparison.Ordinal);
+                importer.maxTextureSize = mailbox ? 512 : 4096;
+                // Desktop keeps the exact RGBA; phones get ASTC (6x6 for the particle atlases), which keeps the alpha and
+                // costs a quarter of RGBA32 or less in the APK and in memory.
                 foreach (var platform in new[] { "Standalone", "Android", "iPhone" })
-                {
-                    var p = importer.GetPlatformTextureSettings(platform);
-                    p.overridden = true;
-                    p.maxTextureSize = importer.maxTextureSize;
-                    p.format = TextureImporterFormat.RGBA32;
-                    p.textureCompression = TextureImporterCompression.Uncompressed;
-                    importer.SetPlatformTextureSettings(p);
-                }
+                    SetPlatform(importer, platform, mailbox ? TextureImporterFormat.ASTC_4x4 : TextureImporterFormat.ASTC_6x6);
                 return;
             }
             if (!assetPath.StartsWith(Root, StringComparison.Ordinal)) return;
@@ -73,14 +69,18 @@ namespace RoyalThrone.ReferenceGameplay.Editor
             importer.filterMode = FilterMode.Bilinear;
             importer.wrapMode = TextureWrapMode.Clamp;
             foreach (var platform in new[] { "Standalone", "Android", "iPhone" })
-            {
-                var p = importer.GetPlatformTextureSettings(platform);
-                p.overridden = true;
-                p.maxTextureSize = importer.maxTextureSize;
-                p.format = TextureImporterFormat.RGBA32;
-                p.textureCompression = TextureImporterCompression.Uncompressed;
-                importer.SetPlatformTextureSettings(p);
-            }
+                SetPlatform(importer, platform, TextureImporterFormat.ASTC_4x4);
+        }
+
+        static void SetPlatform(TextureImporter importer, string platform, TextureImporterFormat mobile)
+        {
+            var p = importer.GetPlatformTextureSettings(platform);
+            p.overridden = true;
+            p.maxTextureSize = importer.maxTextureSize;
+            bool phone = platform != "Standalone";
+            p.format = phone ? mobile : TextureImporterFormat.RGBA32;
+            p.textureCompression = phone ? TextureImporterCompression.Compressed : TextureImporterCompression.Uncompressed;
+            importer.SetPlatformTextureSettings(p);
         }
     }
 }

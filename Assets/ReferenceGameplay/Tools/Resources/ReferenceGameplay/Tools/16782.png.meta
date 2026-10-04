@@ -47,9 +47,9 @@ TextureImporter:
   spriteExtrude: 0
   spriteMeshType: 0
   alignment: 9
-  spritePivot: {x: 1.0, y: 0.5}
+  spritePivot: {x: 1, y: 0.5}
   spritePixelsToUnits: 140
-  spriteBorder: {x: 144.0, y: 1329.0, z: 0.0, w: 0.0}
+  spriteBorder: {x: 144, y: 1329, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 0
@@ -97,9 +97,9 @@ TextureImporter:
     buildTarget: Android
     maxTextureSize: 1024
     resizeAlgorithm: 0
-    textureFormat: 4
+    textureFormat: 48
     textureCompression: 0
-    compressionQuality: 100
+    compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 1

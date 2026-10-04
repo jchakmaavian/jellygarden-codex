@@ -1,1 +1,0 @@
-PASS TNT creation, tap, explosion, per-cell destruction and cleanup; no errors.

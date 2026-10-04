@@ -14,7 +14,7 @@ namespace RoyalThrone.Editor
         public float pixelsPerUnit = 160;
         [Tooltip("Copy visible colour under fully transparent pixels, as Alpha Is Transparency does, so bilinear edges and block compression do not pull in black. Alpha and visible pixels are unchanged.")]
         public bool bleedTransparentEdges;
-        [Tooltip("Android/iOS: ASTC 6x6 instead of desktop BC3, which phone GPUs would decompress to RGBA32. Used by frame sequences.")]
+        [Tooltip("Android/iOS: ASTC 6x6 instead of ASTC 4x4. Used by frame sequences.")]
         public bool astcOnMobile;
         public override void OnImportAsset(AssetImportContext ctx)
         {
@@ -39,9 +39,11 @@ namespace RoyalThrone.Editor
             texture.name = Path.GetFileNameWithoutExtension(ctx.assetPath);
             texture.filterMode = FilterMode.Bilinear; texture.wrapMode = TextureWrapMode.Clamp;
             if (bleedTransparentEdges) BleedTransparentEdges(texture);
-            // Desktop BC3 by default; opted-in sequences use ASTC on phones. Other platform exports remain deferred.
-            bool mobile = astcOnMobile && (ctx.selectedBuildTarget == BuildTarget.Android || ctx.selectedBuildTarget == BuildTarget.iOS);
-            EditorUtility.CompressTexture(texture, mobile ? TextureFormat.ASTC_6x6 : TextureFormat.DXT5, TextureCompressionQuality.Best);
+            // Phones always get ASTC: phone GPUs have no BC3, so a DXT5 texture was expanded to RGBA32 at load (and one
+            // whose size is not a multiple of 4 shipped as RGBA32). Opted-in sequences use 6x6, everything else 4x4.
+            bool mobile = ctx.selectedBuildTarget == BuildTarget.Android || ctx.selectedBuildTarget == BuildTarget.iOS;
+            var format = !mobile ? TextureFormat.DXT5 : astcOnMobile ? TextureFormat.ASTC_6x6 : TextureFormat.ASTC_4x4;
+            EditorUtility.CompressTexture(texture, format, TextureCompressionQuality.Best);
             texture.Apply(false, true);
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f), pixelsPerUnit, 0, SpriteMeshType.FullRect);
             sprite.name = texture.name;

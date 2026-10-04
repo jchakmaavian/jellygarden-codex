@@ -21,8 +21,8 @@ namespace RoyalThrone.Editor
         public static IEnumerator Run(LevelManager lm,Action seed,Action colours,Action<bool,string> check)
         {
             Directory.CreateDirectory(Folder);
-            ColorBallFrameAnimator.Prewarm();ColorBallTargetVfx.Prewarm();
-            check(ColorBallFrameAnimator.Ready&&ColorBallTargetVfx.Ready,"Approved Color Ball frames and separate beam/glow/impact clips load");
+            ColorBallFrameAnimator.PrewarmBoost();ColorBallTargetVfx.Prewarm();
+            check(ColorBallFrameAnimator.BoostReady&&ColorBallTargetVfx.Ready,"Approved Color Ball frames and separate beam/glow/impact clips load");
             check(ColorBallFrameAnimator.RevealFrameCount==60&&ColorBallFrameAnimator.BoostFrameCount==108,"Approved 60/120/108 frame contracts");
             var director=RoyalPowerupDirector.Get;
             ColorBallBoostView firstView=null;

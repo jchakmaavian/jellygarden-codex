@@ -36,7 +36,7 @@ namespace JellyGarden.Scripts.Juice
         const string ResourceRoot = "RoyalColorBall/Frames/";
 
         static Sprite[] revealFrames, idleFrames, boostFrames;
-        static bool missing;
+        static bool missing, boostMissing;
 
         /// <summary>3.0 -> 2.0 -> 1.3 -> 1.0 over the tail of the Reveal, smooth and flat at both ends.</summary>
         static readonly AnimationCurve revealZoomCurve = BuildRevealZoom();
@@ -87,13 +87,27 @@ namespace JellyGarden.Scripts.Juice
         int startFrame = -1;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetStatics() { missing = false; SeatedWorldScale = 0; }
+        static void ResetStatics() { missing = boostMissing = false; SeatedWorldScale = 0; }
 
         public static bool Ready => Loaded(revealFrames, RevealFrameCount) && Loaded(idleFrames, IdleFrameCount) && Loaded(boostFrames, BoostFrameCount);
         static bool Loaded(Sprite[] frames, int count) => frames != null && frames.Length == count && frames[0] && frames[count - 1];
         public static Sprite RevealFrame(int index) => Ready ? revealFrames[Mathf.Clamp(index, 0, RevealFrameCount - 1)] : null;
         public static Sprite IdleFrame(int index) => Ready ? idleFrames[Mathf.Clamp(index, 0, IdleFrameCount - 1)] : null;
-        public static Sprite BoostFrame(int index) => Ready ? boostFrames[Mathf.Clamp(index, 0, BoostFrameCount - 1)] : null;
+        public static bool BoostReady => Loaded(boostFrames, BoostFrameCount);
+        public static Sprite BoostFrame(int index) => BoostReady ? boostFrames[Mathf.Clamp(index, 0, BoostFrameCount - 1)] : null;
+
+        /// <summary>Loads only the Boosting sequence, the one the ColorBall+ColorBall combo draws. Reveal and Idle are
+        /// superseded by the V5 prefab and no longer ship.</summary>
+        public static bool PrewarmBoost()
+        {
+            if (BoostReady) return true;
+            if (boostMissing) return false;
+            boostFrames = Load("Boosting/ColorBall_Boosting_", BoostFrameCount);
+            if (BoostReady) return true;
+            boostMissing = true;
+            Debug.LogWarning("Color Ball Boosting frames are missing under Resources/" + ResourceRoot + "; the combo plays without them.");
+            return false;
+        }
 
         /// <summary>Loads the three sequences once. Without them the ball keeps its static artwork.</summary>
         public static bool Prewarm()

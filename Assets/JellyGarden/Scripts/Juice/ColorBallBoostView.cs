@@ -70,7 +70,7 @@ namespace JellyGarden.Scripts.Juice
         /// </summary>
         public static ColorBallBoostView Begin(Vector3 position)
         {
-            if (!Application.isPlaying || !RoyalEffectsProfile.Get || !ColorBallFrameAnimator.Prewarm()) return null;
+            if (!Application.isPlaying || !RoyalEffectsProfile.Get || !ColorBallFrameAnimator.PrewarmBoost()) return null;
             ColorBallBoostView view = null;
             foreach (var candidate in pool) if (candidate && candidate.Current == Phase.Idle) { view = candidate; break; }
             if (!view)

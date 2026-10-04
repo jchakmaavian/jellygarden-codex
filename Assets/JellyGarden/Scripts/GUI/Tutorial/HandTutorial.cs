@@ -43,6 +43,9 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 			Vector2 startPos = transform.position + offset;
 			Vector2 endPos = transform.position + AI.THIS.vDirection + offset;
 			float distance = Vector3.Distance (startPos, endPos);
+			// A hint without a swipe direction gives zero distance: the lerp below would divide by it, set a NaN position
+			// (an error each physics step) and re-arm at once. Rest the hand on the piece instead.
+			if (distance < .001f) { transform.position = startPos; yield return new WaitForSeconds (1f); PrepareAnimateHand (); yield break; }
 			float fracJourney = 0;
 			float startTime = Time.time;
 

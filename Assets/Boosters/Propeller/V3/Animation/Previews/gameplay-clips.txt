@@ -1,5 +1,0 @@
-file 'C:/Users/chakm/Documents/Codex/2026-09-08/144/outputs/JellyGarden-Codex/Assets/Boosters/Propeller/V3/Animation/Previews/normal-speed.mp4'
-file 'C:/Users/chakm/Documents/Codex/2026-09-08/144/outputs/JellyGarden-Codex/Assets/Boosters/Propeller/V3/Animation/Previews/corner-target.mp4'
-file 'C:/Users/chakm/Documents/Codex/2026-09-08/144/outputs/JellyGarden-Codex/Assets/Boosters/Propeller/V3/Animation/Previews/edge-target.mp4'
-file 'C:/Users/chakm/Documents/Codex/2026-09-08/144/outputs/JellyGarden-Codex/Assets/Boosters/Propeller/V3/Animation/Previews/five-simultaneous.mp4'
-file 'C:/Users/chakm/Documents/Codex/2026-09-08/144/outputs/JellyGarden-Codex/Assets/Boosters/Propeller/V3/Animation/Previews/propeller-plus-tnt.mp4'

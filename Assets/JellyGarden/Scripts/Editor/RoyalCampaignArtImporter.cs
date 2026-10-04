@@ -51,8 +51,8 @@ namespace RoyalThrone.Editor
             importer.wrapMode = TextureWrapMode.Clamp;
             var android = importer.GetPlatformTextureSettings("Android");
             android.overridden = true; android.maxTextureSize = maxSize;
-            android.format = TextureImporterFormat.RGBA32;
-            android.textureCompression = TextureImporterCompression.Uncompressed;
+            android.format = TextureImporterFormat.ASTC_4x4;
+            android.textureCompression = TextureImporterCompression.Compressed;
             importer.SetPlatformTextureSettings(android);
         }
 
@@ -90,7 +90,7 @@ namespace RoyalThrone.Editor
                 var android = importer.GetPlatformTextureSettings("Android");
                 if (importer.spriteImportMode != SpriteImportMode.Single || importer.textureCompression != TextureImporterCompression.Uncompressed ||
                     importer.maxTextureSize != maxSize || importer.isReadable || importer.mipmapEnabled || !importer.alphaIsTransparency ||
-                    !android.overridden || android.format != TextureImporterFormat.RGBA32 || android.maxTextureSize != maxSize)
+                    !android.overridden || android.format != TextureImporterFormat.ASTC_4x4 || android.maxTextureSize != maxSize)
                     throw new InvalidOperationException("Unexpected campaign texture memory, alpha or compression settings: " + key);
                 if (Vector2.Distance(sprite.pivot, sprite.rect.size * .5f) > .01f ||
                     sprite.rect.width != sprite.texture.width || sprite.rect.height != sprite.texture.height)
