@@ -214,7 +214,7 @@ using Facebook.Unity;
                 //First lauching
                 lifes = CapOfLife;
                 PlayerPrefs.SetInt("Lifes", lifes);
-                Gems = FirstGems;
+                Gems = Juice.RoyalEconomy.StartingCoins;   // the coin rules' starting purse, not the inspector's FirstGems
                 PlayerPrefs.SetInt("Gems", Gems);
                 PlayerPrefs.SetInt("Music", 1);
                 PlayerPrefs.SetInt("Sound", 1);

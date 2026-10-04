@@ -95,6 +95,8 @@ namespace JellyGarden.Scripts
         public int TargetScore = 1000;
         public int currentLevel = 1;
         public int FailedCost;
+        /// <summary>Continues bought in this attempt: each one costs more (RoyalEconomy.ContinueCost).</summary>
+        [HideInInspector] public int ContinuesBought;
         public int ExtraFailedMoves = 5;
         public int ExtraFailedSecs = 30;
         public List<GemProduct> gemsProducts = new List<GemProduct>();
@@ -558,7 +560,7 @@ namespace JellyGarden.Scripts
             ActivatedBoost = null;
             Score = 0;
             stars = 0;
-            winCommitted = false; StarsGained = 0;
+            winCommitted = false; StarsGained = 0; committedCoins = 0; ContinuesBought = 0;
             moveID = 0;
             // These survive a level otherwise: a win celebration interrupted by leaving the level
             // leaves preWinAnimationRunning set, and every later win then hangs before the banner.
@@ -806,9 +808,12 @@ namespace JellyGarden.Scripts
         /// A win's lasting effects, once per attempt, the moment its goals are met: before the celebration and the finale,
         /// which only present them, so a kill during the finale cannot lose the win (the reference keeps it by then too).
         /// A win is worth exactly one star (the reference: one per win, whatever the score; the user's decision, 2026-09-29)
-        /// and 10 coins plus 5 per star (the user's decision, 2026-09-27). It refunds the life spent on Play, saves the
+        /// and 50 coins plus 5 per move left, up to 100 (RoyalEconomy; the user's decision, 2026-10-05). It refunds the
+        /// life spent on Play, saves the
         /// star that unlocks the next level and the best score, then flushes the save.
         /// </summary>
+        /// <summary>The coins this attempt's win paid (0 until its goals are met); the win card and its flights show them.</summary>
+        public int CommittedCoins => winCommitted ? committedCoins : 0;
         void CommitWin()
         {
             if (winCommitted) return;
@@ -818,7 +823,7 @@ namespace JellyGarden.Scripts
             StarsGained = PlayerPrefs.GetInt(starsKey, 0) > 0 ? 0 : 1;
             RoyalThrone.RoyalProfile.Won(StarsGained == 1);
             committedCoinsBefore = InitScript.Gems;
-            committedCoins = Juice.RoyalWinSequence.Coins(stars);
+            committedCoins = Juice.RoyalEconomy.WinCoins(this);
             InitScript.Instance.AddGems(committedCoins);
             if (!InitScript.Instance.losingLifeEveryGame)
                 InitScript.Instance.AddLife(1);

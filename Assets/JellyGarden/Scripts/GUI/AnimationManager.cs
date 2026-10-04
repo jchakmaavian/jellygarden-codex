@@ -678,6 +678,7 @@ namespace JellyGarden.Scripts.GUI
                 if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
                 {
                     InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));
+                    LevelManager.THIS.ContinuesBought++;   // the next Continue in this attempt costs more
                     button.GetComponent<Button>().interactable = false;
                     GoOnFailed();
                 }

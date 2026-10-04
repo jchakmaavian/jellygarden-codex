@@ -23,7 +23,8 @@ namespace JellyGarden.Scripts.GUI
 		// Use this for initialization
 		void OnEnable ()
 		{
-			FailedCost = LevelManager.THIS.FailedCost;
+			// The Continue price rises with each one bought in this attempt (RoyalEconomy: 150, 250, then 400).
+			FailedCost = LevelManager.THIS.FailedCost = Juice.RoyalEconomy.ContinueCost (LevelManager.THIS.ContinuesBought);
 			transform.Find ("Buy/Price").GetComponent<Text> ().text = "" + FailedCost;
 			if (LevelManager.THIS.limitType == LIMIT.MOVES)
 				buyButton.sprite = buyButtons [0];

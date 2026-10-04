@@ -22,6 +22,7 @@ namespace JellyGarden.Scripts.GUI
 		// Use this for initialization
 		void OnEnable ()
 		{
+			CostIfRefill = Juice.RoyalEconomy.LivesRefill;   // the coin rules, not the inspector value
 			transform.Find ("Image/BuyLife/Price").GetComponent<Text> ().text = "" + CostIfRefill;
 			// A refill costs gems, not real money. Hiding it with the real-money packs left the
 			// out-of-lives popup with a heart, one line of text and no action at all.

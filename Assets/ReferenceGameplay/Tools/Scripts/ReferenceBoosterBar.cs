@@ -254,9 +254,8 @@ namespace RoyalThrone.ReferenceGameplay
         // Do not invent APK prices or migrate unrelated old booster inventories.
         public void Offer(int index,out int count,out int cost)
         {
-            var existing=GameObject.Find("CanvasGlobal").GetComponentInChildren<BoostShop>(true);
-            int source=(int)(index==0?BoostType.Bomb:index==3?BoostType.Random_color:BoostType.Stripes);
-            var product=existing.boostProducts[source];count=product.count[0];cost=product.GemPrices[0];
+            // Tool packs come from the coin rules (JellyGarden.Scripts.Juice.RoyalEconomy.ToolPack), not borrowed shop rows.
+            JellyGarden.Scripts.Juice.RoyalEconomy.ToolPack(index,out count,out cost);
         }
         public bool Buy()
         {

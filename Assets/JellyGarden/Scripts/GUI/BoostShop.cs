@@ -58,6 +58,7 @@ namespace JellyGarden.Scripts.GUI
         {
             if(RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.IsTool(_boostType)){RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Instance.OpenShop(_boostType);return;}
             boostType = _boostType;
+            Juice.RoyalEconomy.Apply(boostProducts);   // pack sizes and prices come from the coin rules
             gameObject.SetActive( true );
             icon.sprite = boostProducts[(int)_boostType].icon;
             if(Juice.RoyalEffectsProfile.Get){

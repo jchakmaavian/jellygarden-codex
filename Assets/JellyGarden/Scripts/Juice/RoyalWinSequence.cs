@@ -26,7 +26,9 @@ namespace JellyGarden.Scripts.Juice
     {
         // The user's decision (2026-09-27): a win pays 10 coins plus 5 per star. (The reference's own amounts vary with
         // the finale and were not inferred.)
-        public static int Coins(int stars) => 10 + 5 * Mathf.Clamp(stars, 1, 3);
+        // The reward is decided once, when the goals are met (LevelManager.CommitWin, RoyalEconomy.WinCoins: 50 plus 5 per
+        // move left, up to 100). The finale spends the moves left, so its coin flights read the committed amount.
+        public static int Coins(LevelManager lm) => lm && lm.CommittedCoins > 0 ? lm.CommittedCoins : RoyalEconomy.WinCoins(lm);
 
         static RoyalWinSequence instance;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)] static void ResetStatics() { instance = null; }
@@ -524,7 +526,7 @@ namespace JellyGarden.Scripts.Juice
                 rewardCount.color = Color.white; rewardCount.raycastTarget = false; rewardCount.text = "0";
                 var o = rewardCount.gameObject.AddComponent<Outline>(); o.effectColor = Navy; o.effectDistance = new Vector2(2, -2);
             }
-            rewardTarget = Coins(lm.stars); finaleBase = Mathf.Min(10, rewardTarget);
+            rewardTarget = Coins(lm); finaleBase = Mathf.Min(10, rewardTarget);
             rewardShown = finaleBase; if (rewardCount) rewardCount.text = rewardShown.ToString();
             finale = true; finaleDraining = false; finaleLevel = lm;
             finaleReserved = finaleArrived = 0; finaleSources.Clear();
@@ -544,7 +546,7 @@ namespace JellyGarden.Scripts.Juice
             var s = instance; var lm = s.finaleLevel;
             if (!s.finale || s.finaleDraining || !lm || lm.gameStatus != GameState.PreWinAnimations || !s.rewardIcon ||
                 !RoyalPowerupDirector.IsPower(item.currentType) || !s.finaleSources.Add(item)) return;
-            s.rewardTarget = Mathf.Max(s.rewardTarget, Coins(lm.stars));
+            s.rewardTarget = Mathf.Max(s.rewardTarget, Coins(lm));
             s.lastFinaleSource = s.World(item.transform.position);
             int remaining = lm.GetItems().FindAll(i => i && !i.destroying && RoyalPowerupDirector.IsPower(i.currentType)).Count;
             if (lm.limitType == LIMIT.MOVES) remaining += Mathf.Max(0, lm.Limit);
@@ -575,7 +577,7 @@ namespace JellyGarden.Scripts.Juice
         {
             if (!finale || !rewardIcon) yield break;
             finaleDraining = true;
-            rewardTarget = Mathf.Max(rewardTarget, Coins(lm.stars));
+            rewardTarget = Mathf.Max(rewardTarget, Coins(lm));
             float left = Mathf.Max(0, rewardTarget - finaleBase - finaleReserved);
             if (finaleSources.Count > 0) EmitFinaleCoins(lastFinaleSource, left);
             // A no-booster win has no invented board origin. Its fixed award still settles here.

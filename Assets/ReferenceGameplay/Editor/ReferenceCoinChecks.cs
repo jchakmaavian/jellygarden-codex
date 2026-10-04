@@ -248,7 +248,7 @@ namespace RoyalThrone.ReferenceGameplay.Editor
             float until = Time.realtimeSinceStartup + 30;
             while (lm.gameStatus != GameState.Win && Time.realtimeSinceStartup < until) yield return null;
             Check(lm.gameStatus == GameState.Win, "Remaining-move sequence completes to Win within 30 seconds");
-            flow.reward = RoyalWinSequence.Coins(lm.stars);
+            flow.reward = RoyalWinSequence.Coins(lm);
             flow.coinsAfterWin = InitScript.Gems;
             flow.finaleBursts = RoyalWinSequence.FinaleBurstCount;
             Check(flow.finaleBursts >= 3 && RoyalWinSequence.FinalePendingCoinValue == 0, "Multiple accepted booster events emit finale coins and drain every assigned value");
