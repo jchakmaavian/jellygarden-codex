@@ -1,0 +1,28 @@
+RUNNING: real virtual pointer events, actual visible hint and live gameplay portrait.
+PASS startup: Game view/application focused for input observation
+PASS startup: isolated QA profile started
+PASS startup: Practice board completed
+PASS startup: live main-HUD portrait found
+PASS startup: new portrait mounted production HUD attention without fixture assistance
+STAGE autonomous board and frame scan
+PASS autonomous board and frame scan: live King looks across lower board center, left and right
+PASS autonomous board and frame scan: live King reaches all four frame corners
+STAGE moving mouse
+PASS moving mouse: real mouse movement supplies smoothed gaze and subtle body lean
+PASS moving mouse: new character replaces the old portrait
+PASS moving mouse: new rendered eyes settle to live mouse attention within 650ms; error=0.01612542
+PASS moving mouse: moving mouse cancels corner scan
+PASS moving mouse: QA overlay is hidden for Mouse screenshot
+STAGE mouse to actual hint
+PASS mouse to actual hint: practice board has a real legal hint
+PASS mouse to actual hint: the actual hint presenter shows its selected pieces
+PASS mouse to actual hint: visible valid hint exposes focus
+PASS mouse to actual hint: hint focus is exactly the actual swap-pair midpoint/tap piece
+FAIL mouse to actual hint: recent mouse wins over a visible hint
+ERROR System.Exception: recent mouse wins over a visible hint
+  at PipelineEvaluation.PipelineEval_7405eb17+<>c__DisplayClass0_0.<Execute>g__Check|0 (System.Boolean ok, System.String text) [0x0004f] in <1d16edcfbc4347eab8ef530273e5f939>:0
+  at PipelineEvaluation.PipelineEval_7405eb17+<>c__DisplayClass0_0+<<Execute>g__Cases|9>d.MoveNext () [0x009bf] in <1d16edcfbc4347eab8ef530273e5f939>:0
+  at PipelineEvaluation.PipelineEval_7405eb17+<>c__DisplayClass0_0+<<Execute>g__Guarded|11>d.MoveNext () [0x00079] in <1d16edcfbc4347eab8ef530273e5f939>:0
+INCOMPLETE; restoring profile
+PASS mouse to actual hint: normal player profile restored
+RUN FAILED; profile restored

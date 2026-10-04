@@ -1,0 +1,9 @@
+Replacement bow acceptance criteria
+- Head-angle changes expose the top of the cap and crown; no vertical scaling of face or beard.
+- Eye/nose/moustache occlusion changes in the direction of the approved downward reference.
+- Single opaque animation frame at a time; no whole-portrait image dissolve.
+- The character keeps the same identity, outfit and frame registration.
+- Input and authored activity can reverse the bend from its current progress.
+- Pose time freezes when paused, resets with the board, and never consumes input.
+- Validate idle-to-bow, reverse at mid-bow, full return, and interruption by a major reaction.
+- Preserve the prior version for rollback and do not deploy unreviewed generated art.

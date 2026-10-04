@@ -1,0 +1,1 @@
+PARTIAL: rejected squash removed and undistorted interactive portrait restored in main; 230 checks passed. True head-bend sequence is not generated/installed. First sheet rejected for identity drift/background. Magnific upload approval remains pending. Old version backed up. Normal profile restored and editor returned to Edit Mode.
