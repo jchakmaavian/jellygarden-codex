@@ -136,16 +136,11 @@ namespace RoyalThrone.Presentation
             own.overrideSorting = true; own.sortingOrder = 15;   // over Home (10), under its navigation bar (20) and the popups (30)
             group = go.GetComponent<CanvasGroup>();
 
-            // The backdrop, as on the Settings page: a royal-blue fall with the castle hall faintly behind it; it takes every
+            // The backdrop, as on the Settings page: a royal-blue fall; it takes every
             // tap the page does not, so nothing on Home underneath reacts.
             var backdrop = Inset(page, "Backdrop", 0, 0, C("2256c6"), C("0a2a78"));
             backdrop.raycastTarget = true;
-            var hall = RoyalMenuSkin.Art(page, "Castle hall", "home-castle", 0, 0, Column, MinHeight);
-            Stretch(hall.rectTransform, 0);
-            hall.preserveAspect = false; hall.color = C("9dbcff", .14f);
-            var fitter = hall.gameObject.AddComponent<AspectRatioFitter>();
-            fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-            if (hall.sprite) fitter.aspectRatio = hall.sprite.rect.width / hall.sprite.rect.height;
+            // The palace picture that showed faintly here was removed from the project (2026-10-04).
             Inset(page, "Hall veil", 0, 0, C("0d3596", .25f), C("061f5c", .55f));
 
             // The column: anchored at the top edge, 0 tall, so every row is placed by its distance from the top.

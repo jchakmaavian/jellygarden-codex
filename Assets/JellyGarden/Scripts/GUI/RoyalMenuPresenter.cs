@@ -16,17 +16,16 @@ namespace RoyalThrone.Presentation
         {
             var root=transform as RectTransform;var banner=transform.Find("Banner");if(!root||!banner)return;
             root.anchorMin=Vector2.zero;root.anchorMax=Vector2.one;root.offsetMin=root.offsetMax=Vector2.zero;
-            // Keep the castle visible throughout the transition. The inherited scene
-            // had no fullscreen background here, leaving a black frame around its banner.
-            var castle=RoyalMenuSkin.Art(root,"Royal castle journey","home-castle",0,0,720,1280);
+            // A fullscreen background behind the banner (the inherited scene had none, leaving a black frame around it): the
+            // gameplay's royal-blue backdrop, so the board then slides in over the same blue. It was the palace picture until
+            // the user removed that from the project (2026-10-04).
+            var castle=RoyalMenuSkin.Art(root,"Royal journey backdrop","",0,0,720,1280);castle.sprite=RoyalThrone.Presentation.RoyalGameplayHud.Backdrop();
             var cr=castle.rectTransform;cr.anchorMin=Vector2.zero;cr.anchorMax=Vector2.one;cr.offsetMin=cr.offsetMax=Vector2.zero;castle.preserveAspect=false;
-            var fitter=castle.gameObject.AddComponent<AspectRatioFitter>();fitter.aspectMode=AspectRatioFitter.AspectMode.EnvelopeParent;
-            if(castle.sprite)fitter.aspectRatio=castle.sprite.rect.width/castle.sprite.rect.height;
             castle.transform.SetAsFirstSibling();
-            var veil=new GameObject("Royal journey shade",typeof(RectTransform),typeof(Image));veil.transform.SetParent(root,false);veil.transform.SetSiblingIndex(1);
-            var vr=(RectTransform)veil.transform;vr.anchorMin=Vector2.zero;vr.anchorMax=Vector2.one;vr.offsetMin=vr.offsetMax=Vector2.zero;veil.GetComponent<Image>().color=new Color(.015f,.06f,.17f,.5f);veil.GetComponent<Image>().raycastTarget=false;
+            // No shade over it: the banner and the board's backdrop are then the same picture, so the level start cover
+            // (RoyalScreenCover) lifts onto it and the banner leaves onto the board's own backdrop without a change of light.
             foreach(var group in GetComponentsInChildren<TargetsGroup>(true))group.transform.SetParent(banner,false);
-            foreach(Transform child in root)if(child!=banner&&child!=castle.transform&&child!=veil.transform)Hide(child);
+            foreach(Transform child in root)if(child!=banner&&child!=castle.transform)Hide(child);
             foreach(Transform child in banner)if(!child.GetComponent<TargetsGroup>())Hide(child);
             // The goals card, built like every other card (RoyalCardKit), over the castle.
             RoyalCards.Journey(root,banner);

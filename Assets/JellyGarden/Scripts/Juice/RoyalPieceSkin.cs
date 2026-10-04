@@ -11,7 +11,7 @@ namespace JellyGarden.Scripts.Juice
         static readonly Dictionary<string,Sprite> artCache=new Dictionary<string,Sprite>();
         public const string CampaignResourceRoot = "RoyalCampaignArt/";
         public static readonly string[] CampaignKeys = {
-            "king-idle", "king-cheer", "king-think", "dog", "steward", "palace",
+            "king-idle", "king-cheer", "king-think", "dog", "steward",
             "ruby", "shield", "crown", "leaf", "lily", "gem", "coin",
             "box1", "box2", "box3", "grass", "cupboard", "mailbox", "egg", "potion"
         };
@@ -32,7 +32,6 @@ namespace JellyGarden.Scripts.Juice
             if (string.IsNullOrEmpty(name)) return null;
             switch (name)
             {
-                case "home-castle": name = "palace"; break;
                 case "avatar-king": name = "king-idle"; break;
                 case "vase": name = "gem"; break;
                 case "icon-coin": name = "coin"; break;

@@ -1034,7 +1034,12 @@ namespace JellyGarden.Scripts
                 yOffset = 0.3f;
             Animation anim = GameField.GetComponent<Animation>();
             AnimationClip clip = new AnimationClip();
-            AnimationCurve curveX = new AnimationCurve(new Keyframe(0, pos.x + 15), new Keyframe(0.7f, pos.x - 0.2f), new Keyframe(0.8f, pos.x));
+            // The board glides in from the right and settles without overshoot: ease-out cubic over 0.7 s, the Hermite
+            // tangents of 1 - (1 - t)^3 (2026-10-04, the user: the game start transition must be smooth). It used to run
+            // past its place by 0.2 and spring back. It waits 0.18 s first: the level's start (InitLevel, the warm-up)
+            // makes the first frames long, and the glide is fastest at its start, so it jumped.
+            const float travel = 15, wait = .18f, settle = .7f;
+            AnimationCurve curveX = new AnimationCurve(new Keyframe(0, pos.x + travel, 0, 0), new Keyframe(wait, pos.x + travel, 0, -3 * travel / settle), new Keyframe(wait + settle, pos.x, 0, 0));
             AnimationCurve curveY = new AnimationCurve(new Keyframe(0, pos.y + yOffset), new Keyframe(1, pos.y + yOffset));
             clip.legacy = true;//2.1.6
             clip.SetCurve("", typeof(Transform), "localPosition.x", curveX);

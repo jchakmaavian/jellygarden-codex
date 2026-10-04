@@ -102,9 +102,8 @@ namespace RoyalThrone.Editor
                         sha256 = BitConverter.ToString(sha.ComputeHash(File.ReadAllBytes(path))).Replace("-", "").ToLowerInvariant(),
                         width = sprite.texture.width, height = sprite.texture.height });
             }
-            if (RoyalGameplayArt.Art("vase") != RoyalPieceSkin.CampaignArt("gem") ||
-                RoyalPieceSkin.Art("home-castle") != RoyalPieceSkin.CampaignArt("palace"))
-                throw new InvalidOperationException("Campaign piece or palace alias failed.");
+            if (RoyalGameplayArt.Art("vase") != RoyalPieceSkin.CampaignArt("gem"))
+                throw new InvalidOperationException("Campaign piece alias failed.");
             Directory.CreateDirectory(Path.GetDirectoryName(ManifestPath));
             File.WriteAllText(ManifestPath, JsonUtility.ToJson(new ArtManifest { assets = records.ToArray() }, true));
             Debug.Log("[Royal Throne Art] Verified " + records.Count + " original PNGs, catalog preference, centered sprites, alpha and GPU-only import settings. Manifest: " + ManifestPath);

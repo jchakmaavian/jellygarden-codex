@@ -394,17 +394,9 @@ namespace RoyalThrone.Presentation
 
         public void ApplyCampaignArtwork()
         {
-            var palace = RoyalPieceSkin.CampaignArt("palace");
-            var background = transform.Find("Castle framing/Royal blue courtyard");
-            if (palace && background)
-            {
-                var image = background.GetComponent<Image>();
-                if (image) { image.sprite = palace; image.color = Color.white; }
-                var fitter = background.GetComponent<AspectRatioFitter>();
-                if (fitter) fitter.aspectRatio = palace.rect.width / palace.rect.height;
-                // The inherited glow was positioned over a different castle's fountain.
-                if (waterGlow) waterGlow.enabled = false;
-            }
+            // The courtyard's palace picture was removed from the project (2026-10-04); the courtyard shows the sky and the
+            // current area (ReferenceHomeSky, RoyalAreaScene). The inherited glow belonged to another castle's fountain.
+            if (waterGlow) waterGlow.enabled = false;
             var coin = RoyalPieceSkin.CampaignArt("coin");
             if (coin && resourceButtons != null && resourceButtons.Length > 1)
             {

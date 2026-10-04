@@ -7,7 +7,7 @@ namespace RoyalThrone.Presentation
 {
     // Motion for the Level Start card (built by RoyalLevelCard), replacing the inherited squash and stretch with solid,
     // quiet feedback that leads the eye from LEVEL to the goals, the optional boosters and PLAY:
-    // - Entrance: the dim fades in while the card scales 0.96 -> 1 and fades in (0.22 s, ease-out cubic, no overshoot);
+    // - Entrance: the dim eases in (0.3 s) while the card scales 0.96 -> 1 and fades in (0.22 s, ease-out cubic, no overshoot);
     //   LEVEL, the goals, the boosters and PLAY follow 0.05 s apart, all settled by 0.40 s.
     // - The goal icons brighten once to 1.1x and back, 0.05 s apart.
     // - Boosters hold still; a faint glint crosses the row now and then, and the badges pulse gently (1.06x) only while
@@ -45,7 +45,7 @@ namespace RoyalThrone.Presentation
         // The inherited entrance clip ("Menu", 0.35 s): its events and their times.
         static readonly float[] clipEventTimes = { .25f, .33f, .35f };
         static readonly string[] clipEvents = { "PlaySoundButton", "PlaySoundButton", "OnFinished" };
-        const float CardIn = .22f, RevealIn = .20f, Rise = 8, EntranceEnd = .45f;
+        const float CardIn = .22f, CardFade = .26f, DimIn = .30f, RevealIn = .20f, Rise = 8, EntranceEnd = .45f;
         const float GoalGlowAt = .30f, GoalGlowStep = .05f, GoalGlowTime = .36f, GoalGlowPeak = .10f;
         // A pressed booster eases down to 0.98 (0.08 s in, 0.14 s out) like every card control; no pop, and no idle badge pulse.
         const float PressIn = .08f, PressOut = .14f, PressScale = .98f, SwapTime = .16f, SelectTime = .15f;
@@ -142,9 +142,13 @@ namespace RoyalThrone.Presentation
         {
             if (entranceDone) return;
             float e = EaseOutCubic(t / CardIn);
-            if (dim) { var c = dimColor; c.a *= e; dim.color = c; }
+            // The dim eases in and out (smoothstep over 0.3 s; 2026-10-04): with the card's ease-out it reached half its
+            // darkness in the first frame, which read as a cut.
+            if (dim) { var c = dimColor; c.a *= Mathf.SmoothStep(0, 1, t / DimIn); dim.color = c; }
             if (card) card.localScale = Vector3.one * Mathf.Lerp(.96f, 1, e);
-            if (cardGroup) cardGroup.alpha = e;
+            // Its opacity eases in (smoothstep over 0.26 s): the first frames are long while the card is built, and with the
+            // ease-out it was half there in the first one.
+            if (cardGroup) cardGroup.alpha = Mathf.SmoothStep(0, 1, t / CardFade);
             if (reveals != null)
                 foreach (var r in reveals)
                 {

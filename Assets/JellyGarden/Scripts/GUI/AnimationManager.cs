@@ -459,9 +459,16 @@ namespace JellyGarden.Scripts.GUI
             {
                 if (InitScript.lifes > 0)
                 {
+                    // The level starts under a royal-blue cover that fades in over this card and Home and then lifts off the
+                    // goals banner (RoyalScreenCover; 2026-10-04, the user: the game start transition must be smooth). A tap
+                    // while the cover runs is ignored, so no second life is spent.
+                    if (RoyalThrone.Presentation.RoyalScreenCover.Busy) return;
                     InitScript.Instance.SpendLife(1);
-                    LevelManager.THIS.gameStatus = GameState.PrepareGame;
-                    CloseMenu();
+                    RoyalThrone.Presentation.RoyalScreenCover.Play(() =>
+                    {
+                        LevelManager.THIS.gameStatus = GameState.PrepareGame;
+                        CloseMenu();
+                    });
                     //Application.LoadLevel( "game" );
                 }
                 else

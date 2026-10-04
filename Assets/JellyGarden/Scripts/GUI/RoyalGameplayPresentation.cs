@@ -336,7 +336,13 @@ namespace RoyalThrone.Presentation
             // The HUD and the backdrop fade over 0.25 s (UI polish, 2026-09-30): they popped in at once after the goals card, and the
             // HUD vanished at once when the pause menu took effect. Taps follow the state at once; the camera's navy stays behind.
             bool hudShown=show&&!(lm.gameStatus==GameState.Pause||lm.gameStatus==GameState.GameOver||lm.gameStatus==GameState.Win||lm.gameStatus==GameState.PreFailed);
-            hudFade=Mathf.MoveTowards(hudFade,hudShown?1:0,Time.unscaledDeltaTime/.25f);backdropFade=Mathf.MoveTowards(backdropFade,show?1:0,Time.unscaledDeltaTime/.25f);
+            // The backdrop also comes up under the goals banner (2026-10-04), which shows the same picture: when the banner closes
+            // the backdrop is already there, instead of fading in from the camera's navy.
+            // (The board itself is still switched off under the banner, so this follows the banner, not the board.)
+            bool board=lm.gameStatus!=GameState.Map&&prePlay&&prePlay.gameObject.activeInHierarchy;
+            // Each frame's step is capped at a 30 fps frame: the level's first frames are long, and the HUD came up in two jumps.
+            float fadeStep=Mathf.Min(Time.unscaledDeltaTime,1f/30)/.25f;
+            hudFade=Mathf.MoveTowards(hudFade,hudShown?1:0,fadeStep);backdropFade=Mathf.MoveTowards(backdropFade,show||board?1:0,fadeStep);
             group.alpha=hudFade;group.blocksRaycasts=hudShown;
             backdrop.enabled=backdropFade>0;if(backdrop.color.a!=backdropFade)backdrop.color=new Color(1,1,1,backdropFade);
             // This HUD hides by CanvasGroup, so explicitly close its character slot to clear a stale reaction on return.
