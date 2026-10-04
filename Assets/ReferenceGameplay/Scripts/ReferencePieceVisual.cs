@@ -177,6 +177,24 @@ namespace RoyalThrone.ReferenceGameplay
             DontDestroyOnLoad(pool); poolRoot = pool.transform;
             pool.AddComponent<ReferencePieceVisualPool>();
         }
+        /// <summary>
+        /// Loads a power-up's view and parks up to <paramref name="count"/> idle copies in the pool, so the first Rocket, TNT,
+        /// Color Ball or Propeller a level makes does not load its art and instantiate mid-cascade. Builds at most one copy
+        /// per call; returns true while more are wanted.
+        /// </summary>
+        public static bool Prewarm(ItemsTypes type, int count)
+        {
+            if (!CanPool || !Has(type)) return false;
+            string name = Key(type);
+            if (!pools.TryGetValue(name, out var stack)) pools[name] = stack = new Stack<GameObject>();
+            if (stack.Count >= Mathf.Min(count, 24)) return false;
+            EnsurePool();
+            var view = Instantiate(prefabs[name], poolRoot, false);
+            foreach (var ps in view.GetComponentsInChildren<ParticleSystem>(true)) ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            view.SetActive(false);
+            stack.Push(view);
+            return stack.Count < count;
+        }
         static void ReturnView(string name, GameObject released)
         {
             if (!released || !CanPool) return;

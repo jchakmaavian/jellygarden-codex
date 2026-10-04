@@ -69,39 +69,70 @@ namespace RoyalThrone.Presentation
             layer.triangles.Add(first);layer.triangles.Add(first+1);layer.triangles.Add(first+2);
             layer.triangles.Add(first);layer.triangles.Add(first+2);layer.triangles.Add(first+3);
         }
-        // One side's band of the gold frame (the gameplay reference): `size` is its thickness across and length along the
-        // side; the texture's cross-section runs from the cells outwards.
-        void Edge(string name,Vector3 centre,Vector2 size)
+        // ---- The gold frame (2026-10-04): one continuous stroke round the board's silhouette ---------------------------
+        // The stroke lies outside the cells, `t` wide. Its texture is the cross-section from the cells (v 0) outwards (v 1):
+        // a soft blue seam, a light gold highlight, polished gold, a deeper orange lip and a thin dark rim, each edge faded
+        // over a few per cent so it reads smooth without MSAA. Corners that wrap the cells are rounded (the inner edge hugs
+        // a cell corner of radius `round`, the outer edge `round + t`); corners that turn into the board are mitred, so the
+        // stroke always meets the cells with no gap.
+        const int StrokeTexels=96, ArcSteps=12;
+        static Texture2D strokeTexture;
+        static Color StrokeProfile(float v)
         {
-            float angle=name=="bottom"?180:name=="left"?90:name=="right"?-90:0;
-            if(name=="left"||name=="right")size=new Vector2(size.y,size.x);
-            Quad(TextureLayer(name,RoyalGameplayHud.FrameEdge(),2,Color.white),centre,size,new Rect(0,0,1,1),angle);EdgeCount++;
+            Color c;
+            if(v<.1f)c=Color.Lerp(new Color(.17f,.29f,.62f),new Color(.98f,.86f,.45f),Mathf.SmoothStep(0,1,v/.1f));
+            else if(v<.3f)c=Color.Lerp(new Color(1f,.95f,.69f),new Color(1f,.86f,.42f),(v-.1f)/.2f);
+            else if(v<.66f)c=Color.Lerp(new Color(1f,.82f,.29f),new Color(.95f,.68f,.17f),(v-.3f)/.36f);
+            else if(v<.84f)c=Color.Lerp(new Color(.91f,.6f,.13f),new Color(.8f,.47f,.1f),(v-.66f)/.18f);
+            else c=Color.Lerp(new Color(.55f,.3f,.07f),new Color(.1f,.16f,.38f),(v-.84f)/.16f);
+            c.a=Mathf.SmoothStep(0,1,Mathf.Clamp01(v/.05f))*Mathf.SmoothStep(0,1,Mathf.Clamp01((1-v)/.07f));
+            return c;
         }
-        bool Occupied(int col,int row)=>occupied.Contains(new Vector2Int(col,row));
-        // The frame around one cell: a band `t` wide outside each exposed side. Where the silhouette turns outwards the two
-        // bands meet in a rounded corner (a quarter ring, radius t to 2t, about a point inside the cell); where it turns
-        // inwards, in a mitred square. The bands stop short of both by t. Outer corners belong to the cell they wrap; inner
-        // corners are drawn from the cells' top and bottom sides.
-        void Frame(Vector3 p,int col,int row,float w,float h,float t)
+        public static Texture2D StrokeTexture()
         {
-            bool up=!Occupied(col,row-1),down=!Occupied(col,row+1),left=!Occupied(col-1,row),right=!Occupied(col+1,row);
-            // An end is shortened at an outer corner (the side beside it is open too) or an inner one (the cells beside and
-            // beyond it are both there); otherwise the band runs straight on into the next cell's.
-            float End(bool besideOpen,int col2,int row2)=>besideOpen||Occupied(col2,row2)?t:0;
-            if(up){float a=End(left,col-1,row-1),b=End(right,col+1,row-1);Edge("top",p+new Vector3((a-b)*.5f,h*.5f+t*.5f),new Vector2(w-a-b,t));}
-            if(down){float a=End(left,col-1,row+1),b=End(right,col+1,row+1);Edge("bottom",p+new Vector3((a-b)*.5f,-h*.5f-t*.5f),new Vector2(w-a-b,t));}
-            if(left){float a=End(up,col-1,row-1),b=End(down,col-1,row+1);Edge("left",p+new Vector3(-w*.5f-t*.5f,(b-a)*.5f),new Vector2(t,h-a-b));}
-            if(right){float a=End(up,col+1,row-1),b=End(down,col+1,row+1);Edge("right",p+new Vector3(w*.5f+t*.5f,(b-a)*.5f),new Vector2(t,h-a-b));}
-            var outer=RoyalGameplayHud.OuterCornerUV;var inner=RoyalGameplayHud.InnerCornerUV;var size=new Vector2(2*t,2*t);var square=new Vector2(t,t);
-            Layer Corners()=>TextureLayer("corners",RoyalGameplayHud.FrameCorners(),2,Color.white);
-            if(up&&left)Quad(Corners(),p+new Vector3(-w*.5f,h*.5f),size,outer,0);
-            if(up&&right)Quad(Corners(),p+new Vector3(w*.5f,h*.5f),size,outer,-90);
-            if(down&&right)Quad(Corners(),p+new Vector3(w*.5f,-h*.5f),size,outer,180);
-            if(down&&left)Quad(Corners(),p+new Vector3(-w*.5f,-h*.5f),size,outer,90);
-            if(up&&!left&&Occupied(col-1,row-1))Quad(Corners(),p+new Vector3(-w*.5f+t*.5f,h*.5f+t*.5f),square,inner,-90);
-            if(up&&!right&&Occupied(col+1,row-1))Quad(Corners(),p+new Vector3(w*.5f-t*.5f,h*.5f+t*.5f),square,inner,0);
-            if(down&&!left&&Occupied(col-1,row+1))Quad(Corners(),p+new Vector3(-w*.5f+t*.5f,-h*.5f-t*.5f),square,inner,180);
-            if(down&&!right&&Occupied(col+1,row+1))Quad(Corners(),p+new Vector3(w*.5f-t*.5f,-h*.5f-t*.5f),square,inner,90);
+            if(strokeTexture)return strokeTexture;
+            strokeTexture=new Texture2D(4,StrokeTexels,TextureFormat.RGBA32,false){name="Royal board frame stroke",wrapMode=TextureWrapMode.Clamp,filterMode=FilterMode.Bilinear,hideFlags=HideFlags.DontSave};
+            var pixels=new Color[4*StrokeTexels];
+            for(int y=0;y<StrokeTexels;y++){var c=StrokeProfile((y+.5f)/StrokeTexels);for(int x=0;x<4;x++)pixels[y*4+x]=c;}
+            strokeTexture.SetPixels(pixels);strokeTexture.Apply(false,true);return strokeTexture;
+        }
+        // One loop of the silhouette (grid points, cells on the left of every edge) as a closed strip of inner/outer pairs.
+        void Stroke(Layer layer,List<Vector2Int> loop,System.Func<Vector2,Vector3> local,float t,float round)
+        {
+            var corners=new List<Vector2Int>();
+            for(int i=0;i<loop.Count;i++){
+                var previous=loop[(i+loop.Count-1)%loop.Count];var here=loop[i];var next=loop[(i+1)%loop.Count];
+                if(here-previous!=next-here)corners.Add(here);   // only the turns
+            }
+            if(corners.Count<4)return;
+            var inner=new List<Vector3>();var outer=new List<Vector3>();
+            for(int i=0;i<corners.Count;i++){
+                var a=corners[(i+corners.Count-1)%corners.Count];var p=corners[i];var b=corners[(i+1)%corners.Count];
+                Vector2 dIn=((Vector2)(p-a)).normalized,dOut=((Vector2)(b-p)).normalized;
+                Vector2 nIn=new Vector2(dIn.y,-dIn.x),nOut=new Vector2(dOut.y,-dOut.x);   // outward: the right of each edge
+                Vector3 P=local(p);Vector3 NIn=local(p+nIn)-P,NOut=local(p+nOut)-P;            // one cell along each normal
+                NIn=NIn.normalized;NOut=NOut.normalized;
+                if(dIn.x*dOut.y-dIn.y*dOut.x>0){   // a left turn wraps the cells: a rounded corner
+                    var centre=P-(NIn+NOut)*round;
+                    float from=Mathf.Atan2(NIn.y,NIn.x),to=Mathf.Atan2(NOut.y,NOut.x);
+                    float sweep=Mathf.DeltaAngle(from*Mathf.Rad2Deg,to*Mathf.Rad2Deg)*Mathf.Deg2Rad;
+                    for(int s=0;s<=ArcSteps;s++){
+                        float angle=from+sweep*s/ArcSteps;var r=new Vector3(Mathf.Cos(angle),Mathf.Sin(angle));
+                        inner.Add(centre+r*round);outer.Add(centre+r*(round+t));
+                    }
+                }else{inner.Add(P);outer.Add(P+(NIn+NOut)*t);}   // a right turn goes into the board: mitred
+            }
+            int first=layer.vertices.Count,n=inner.Count;float along=0;
+            for(int i=0;i<n;i++){
+                if(i>0)along+=Vector3.Distance(inner[i],inner[i-1]);
+                layer.vertices.Add(inner[i]);layer.vertices.Add(outer[i]);
+                layer.uv.Add(new Vector2(along,0));layer.uv.Add(new Vector2(along,1));
+            }
+            for(int i=0;i<n;i++){
+                int j=(i+1)%n;int a0=first+2*i,a1=a0+1,b0=first+2*j,b1=b0+1;
+                layer.triangles.Add(a0);layer.triangles.Add(b0);layer.triangles.Add(b1);
+                layer.triangles.Add(a0);layer.triangles.Add(b1);layer.triangles.Add(a1);
+            }
         }
         public void RebuildIfNeeded(LevelManager lm)
         {
@@ -111,15 +142,16 @@ namespace RoyalThrone.Presentation
             if(!white){white=new Texture2D(1,1);white.SetPixel(0,0,Color.white);white.Apply();}
             foreach(var entry in layers){var layer=entry.Value;EnsureRenderer(entry.Key,layer);layer.vertices.Clear();layer.uv.Clear();layer.triangles.Clear();layer.mesh.Clear();}
             foreach(var square in squares)if(square&&square.type!=SquareTypes.NONE)occupied.Add(new Vector2Int(square.col,square.row));
-            // The frame band is a tenth of a cell, outside the cells (RoyalGameplayPresentation leaves the board room for it).
-            float w=lm.squareWidth,h=lm.squareHeight,thickness=Mathf.Min(w,h)*.1f;
-            // The cell art is a rounded square, so four neighbouring corners leave a small
-            // concave gap. A square shadow quad showed through those gaps as dark specks over
-            // the whole board. Grout fills the gaps with a board tone and the shadow now takes
-            // the rounded cell silhouette, so it only reads along the board's outer edge.
+            // The frame is a fine stroke, 8% of a cell, outside the cells (RoyalGameplayPresentation leaves the board room for
+            // a tenth).
+            float w=lm.squareWidth,h=lm.squareHeight,thickness=Mathf.Min(w,h)*.08f;
+            // The cell art is a rounded square, so four neighbouring corners leave a small concave gap. The grout under the
+            // cells is the cells' own lavender (between the light and dark cell), so those gaps read as one continuous
+            // surface. The drop shadow lies under the grout (2026-10-04): above it, it showed through every four-cell gap and
+            // along the cells' soft edges as navy dots and lines; now it only reads outside the board's silhouette.
             var cell=RoyalGameplayArt.Art("cell-light");
-            var grout=GetLayer("grout",null,-2,new Color(.34f,.39f,.62f,1f));
-            var shadow=GetLayer("shadow",cell,-1,new Color(.015f,.04f,.12f,.75f));
+            var grout=GetLayer("grout",null,-3,new Color(.57f,.65f,.89f,1f));
+            var shadow=GetLayer("shadow",cell,-4,new Color(.015f,.04f,.12f,.75f));
             foreach(var square in squares)
             {
                 if(!square)continue;
@@ -134,7 +166,17 @@ namespace RoyalThrone.Presentation
                 // under interior cells put a dark dot in every corner gap instead.
                 if(!occupied.Contains(new Vector2Int(col0,row0+1))||!occupied.Contains(new Vector2Int(col0+1,row0))||!occupied.Contains(new Vector2Int(col0+1,row0+1)))
                     Quad(shadow,p+new Vector3(.025f*w,-.065f*h,.1f),new Vector2(w*1.04f,h*1.04f),cell);
-                Frame(p,col0,row0,w,h,thickness);
+            }
+            // The frame: the silhouette's loops (outline and holes) in grid points, y up, mapped through one square's place.
+            Square anchor=null;foreach(var square in squares)if(square&&square.type!=SquareTypes.NONE){anchor=square;break;}
+            if(anchor)
+            {
+                var grid=new List<Vector2Int>();foreach(var c in occupied)grid.Add(new Vector2Int(c.x,-c.y));
+                var shape=JellyGarden.Scripts.Juice.RoyalHintContour.Build(grid);EdgeCount=shape.BoundaryEdges;
+                var origin=transform.InverseTransformPoint(anchor.transform.position);origin.z=-.04f;
+                Vector3 Local(Vector2 g)=>origin+new Vector3((g.x-anchor.col-.5f)*w,(g.y+anchor.row-.5f)*h,0);
+                var frame=TextureLayer("frame",StrokeTexture(),2,Color.white);
+                foreach(var loop in shape.Loops)Stroke(frame,loop,Local,thickness,Mathf.Min(w,h)*.06f);
             }
             foreach(var layer in layers.Values){layer.mesh.SetVertices(layer.vertices);layer.mesh.SetUVs(0,layer.uv);layer.mesh.SetTriangles(layer.triangles,0);layer.mesh.RecalculateBounds();}
         }

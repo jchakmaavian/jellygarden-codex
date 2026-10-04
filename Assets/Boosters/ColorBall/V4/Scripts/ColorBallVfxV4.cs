@@ -127,10 +127,14 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         }
         void Draw(Mote m){float t=Mathf.Clamp01(m.age/m.life),fade=1-Mathf.SmoothStep(0,1,m.contact?(m.age-.055f)/(m.life-.055f):t);var c=m.tint;c.a*=fade;Paint(m.view,m.position+m.velocity*m.age,Vector3.one*(ColorBallVisualV4.CellSize*m.size*(m.contact?1:Mathf.Lerp(1,.45f,t))),m.angle+t*18,c);if(m.contact){m.view.GetPropertyBlock(props);props.SetFloat("_Contact",1);props.SetFloat("_ContactAge",m.age);props.SetFloat("_Detail",m.detail);m.view.SetPropertyBlock(props);}}
         public static void Stars(Vector3 p,int count,float radius){Prewarm();float cell=ColorBallVisualV4.CellSize;for(int i=0;i<count;i++){float a=instance.Range(0,Mathf.PI*2);Vector3 dir=new Vector3(Mathf.Cos(a),Mathf.Sin(a),0);instance.Emit(p+dir*cell*radius,dir*cell*.22f,instance.Range(.10f,.18f),instance.Range(.18f,.32f),i%3==0?new Color(1,.84f,.34f):new Color(1,1,.90f),true);}}
-        public static void Contact(Vector3 p,int color){
+        // shaped: an ordinary gem that ColorBallChargedTargetV4 will hold. It flashes and glows in its own shape, so the
+        // imported contact's round white burst and ring are left out (2026-10-04, the user: not a solid white blob).
+        public static void Contact(Vector3 p,int color,bool shaped=false){
             Prewarm();
             var native=ReferenceVfxPool.Play("LightballEffectedItemExplodeParticles",p,color,ColorBallVisualV4.CellSize);
-            if(native!=null&&native.Valid){instance.nativeContacts[instance.nativeContactCursor++%BeamCapacity]=new NativeContact{position=p,until=Time.time+.5f};return;}
+            if(native!=null&&native.Valid){
+                if(shaped)foreach(var ps in native.GameObject.GetComponentsInChildren<ParticleSystem>())if(ps.name=="bang_blast"||ps.name=="ring")ps.Stop(false,ParticleSystemStopBehavior.StopEmittingAndClear);
+                instance.nativeContacts[instance.nativeContactCursor++%BeamCapacity]=new NativeContact{position=p,until=Time.time+.5f};return;}
             if(!instance.referenceV5){Spark(p,.19f,.085f,Color.white);return;}
             Pulse(p,.38f,.085f,new Color(1,1,.94f,.85f));Spark(p,.21f,.12f,new Color(1,1,.91f));
             // Color remains a local visual parameter; authoritative target conversion stays in the director.

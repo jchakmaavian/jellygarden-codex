@@ -15,6 +15,8 @@ namespace JellyGarden.Scripts.Juice
         Sprite[] rocketHeads;
         Mesh rocketFlameMesh;
         float rocketClock;
+        /// <summary>The profile's Rocket animation rate (0.95x since 2026-10-04), applied to everything after the Reveal.</summary>
+        static float RocketAnimationRate=>RoyalEffectsProfile.Get?Mathf.Clamp(RoyalEffectsProfile.Get.rocketAnimationRate,.5f,1.5f):1f;
         const float RocketExhaustSampleCells=.075f;
         const float RocketPassingCellLength=.64f;
         public int RocketCellImpacts { get; private set; }
@@ -130,7 +132,7 @@ namespace JellyGarden.Scripts.Juice
         }
         void UpdateRocketVfx()
         {
-            if(!Paused){rocketClock+=Time.deltaTime;if(rocketFireMaterial)rocketFireMaterial.SetFloat("_FxTime",rocketClock);if(rocketRibbonMaterial)rocketRibbonMaterial.SetFloat("_FxTime",rocketClock);}
+            if(!Paused){rocketClock+=Time.deltaTime*RocketAnimationRate;if(rocketFireMaterial)rocketFireMaterial.SetFloat("_FxTime",rocketClock);if(rocketRibbonMaterial)rocketRibbonMaterial.SetFloat("_FxTime",rocketClock);}
             if(rocketSystems==null)return;
             foreach(var ps in rocketSystems){if(Paused&&!ps.isPaused)ps.Pause(false);else if(!Paused&&ps.isPaused)ps.Play(false);}
         }
@@ -211,7 +213,7 @@ namespace JellyGarden.Scripts.Juice
             // The actual moving head reaches the square first. Keep the intact asset
             // visible for the white contact flash before invoking existing destruction.
             float contact=0;
-            while(contact<.055f){yield return null;if(!Paused)contact+=Time.deltaTime;}
+            while(contact<.055f/RocketAnimationRate){yield return null;if(!Paused)contact+=Time.deltaTime;}
             if(!sq || sq.type==SquareTypes.UNDESTROYABLE)yield break;
             RocketBreakTimes[slot]=Time.time;RocketBreaks++;
             if(sq.item && sq.item.currentType!=ItemsTypes.INGREDIENT)
@@ -250,7 +252,9 @@ namespace JellyGarden.Scripts.Juice
         {
             RocketExitViewports[RocketScreenExits++%RocketExitViewports.Length]=Camera.main?Camera.main.WorldToViewportPoint(position):position;
         }
-        IEnumerator Rocket(Square origin,bool horizontal,int lanes,bool clearCells=true)
+        // releaseBoard: a Rocket fired by a tap or a swap combo lets the board fall once its last cell is hit. Propeller
+        // payloads and previews keep holding it until they leave the screen, as before.
+        IEnumerator Rocket(Square origin,bool horizontal,int lanes,bool clearCells=true,bool releaseBoard=false)
         {
             if(!origin)yield break;
             var lm=LevelManager.THIS;Vector3 p=origin.transform.position;
@@ -263,7 +267,7 @@ namespace JellyGarden.Scripts.Juice
             float reach=Mathf.Max(negative,positive)+.8f;
             // One constant cells-per-second speed. Origin, axis and direction never change it,
             // so horizontal and vertical sweeps read at the same pace and the same trail length.
-            float speed=Mathf.Max(1,RoyalEffectsProfile.Get.rocketCellsPerSecond);
+            float speed=Mathf.Max(1,RoyalEffectsProfile.Get.rocketCellsPerSecond*RocketAnimationRate);
             float duration=reach/speed;
             LastRocketSweepDuration=duration;LastRocketAnticipation=Mathf.Max(0,RoyalEffectsProfile.Get.rocketAnticipation);
             RocketLaunches++;
@@ -321,8 +325,10 @@ namespace JellyGarden.Scripts.Juice
             {
                 f.trail.emitting = false; f.core.emitting = false; f.flame.enabled = false; f.exhaust.enabled = false;
                 f.nativeRocket = RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("RocketItemParticles",f.go.transform.position,worldCell:pitch,sustained:true);
+                // The imported trail keeps pace with the Rocket's animation rate.
+                if (f.nativeRocket?.GameObject) foreach (var ps in f.nativeRocket.GameObject.GetComponentsInChildren<ParticleSystem>(true)) { var main = ps.main; main.simulationSpeed = RocketAnimationRate; }
             }
-            float distance=0;int stepDone=-1,sparkStepDone=-1;
+            float distance=0;int stepDone=-1,sparkStepDone=-1;bool boardReleased=false;
             LastRocketMaxFlightFrame = 0;
             while(distance<maxExit)
             {
@@ -364,9 +370,12 @@ namespace JellyGarden.Scripts.Juice
                     }
                 }
                 stepDone=Mathf.FloorToInt(noseDistance);sparkStepDone=Mathf.FloorToInt(distance/RocketExhaustSampleCells);
+                // Every cell it can reach has been struck: the rest of the flight is decoration, and gravity need not wait for it.
+                if(releaseBoard&&clearCells&&!boardReleased&&stepDone>=Mathf.Max(negative,positive)){boardReleased=true;rocketTails++;}
                 yield return null;
             }
             foreach(var f in active)if(f!=null&&f.sprite.enabled){RecordRocketExit(f.go.transform.position);RocketImpact(f.go.transform.position,true);StartCoroutine(Retire(f));}
+            if(boardReleased)rocketTails=Mathf.Max(0,rocketTails-1);
             Reaction?.Invoke(.8f);
         }
     }

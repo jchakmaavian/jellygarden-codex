@@ -69,12 +69,12 @@ namespace RoyalThrone.Presentation.AreaMotion
             var noise=Resources.Load<Texture2D>(Folder+"VFX/distortion");
             for(int i=0;i<meshes.Length;i++){
                 var s=data.sprites[i];textures[i]=Resources.Load<Texture2D>(Folder+s.texture);if(!textures[i])throw new InvalidOperationException("Missing area sprite "+s.texture);
-                meshes[i]=NewMesh(s.positions,s.uv,s.indices,s.name);materials[i]=new Material(shader){name=s.name,mainTexture=textures[i]};materials[i].SetFloat("_Water",s.water?1:0);materials[i].SetFloat("_FlowKind",s.flow);materials[i].SetTexture("_NoiseTex",noise);
+                meshes[i]=NewMesh(s.positions,s.uv,s.indices,s.name);materials[i]=new Material(shader){name=s.name,mainTexture=textures[i]};bool water=Water(s);materials[i].SetFloat("_Water",water?1:0);materials[i].SetFloat("_FlowKind",s.flow);materials[i].SetTexture("_NoiseTex",noise);if(water)materials[i].SetVector("_WaterSize",Extent(s.positions));
             }
             nodes=new Transform[data.nodes.Length];pose=new Pose[nodes.Length];
             for(int i=0;i<nodes.Length;i++){
                 var n=data.nodes[i];var go=new GameObject(n.name);go.layer=31;nodes[i]=go.transform;nodes[i].SetParent(n.parent>=0?nodes[n.parent]:stage,false);pose[i]=new Pose();
-                if(n.sortingGroupOrder!=int.MinValue)go.AddComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder=n.sortingGroupOrder/4;
+                if(n.sortingGroupOrder!=int.MinValue)go.AddComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder=SortingOrder(n.sortingGroupOrder);
                 if(n.sprite>=0){var layer=new Layer{node=i,filter=go.AddComponent<MeshFilter>(),renderer=go.AddComponent<MeshRenderer>()};layer.renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;layer.renderer.receiveShadows=false;layer.renderer.lightProbeUsage=UnityEngine.Rendering.LightProbeUsage.Off;layer.renderer.reflectionProbeUsage=UnityEngine.Rendering.ReflectionProbeUsage.Off;layers.Add(layer);AssignSprite(layer,n.sprite);}
             }
             if(area==1){flags=JsonUtility.FromJson<FlagData>(Resources.Load<TextAsset>(Folder+"flags").text);var f=flags.frames[0].meshes[0];flagMesh=NewMesh(f.positions,f.uv,f.indices,"Native waving flags");flagMaterial=new Material(shader){mainTexture=Resources.Load<Texture2D>(Folder+"VFX/flags")};for(int i=0;i<nodes.Length;i++)if(data.nodes[i].flag){nodes[i].gameObject.AddComponent<MeshFilter>().sharedMesh=flagMesh;var r=nodes[i].gameObject.AddComponent<MeshRenderer>();r.sharedMaterial=flagMaterial;r.sortingOrder=29000;}}
@@ -85,6 +85,15 @@ namespace RoyalThrone.Presentation.AreaMotion
             fountainAudio.clip=Resources.Load<AudioClip>(Folder+"Audio/area_1_fountain_idle");
             Resize();ApplyPose();UpdateEffects();stage.gameObject.SetActive(Visible);UpdateAudio();dirty=true;return true;
         }
+        // The import flags the shore's land ("deniz_land", the hills along the sea) as water by its name; rippling it made the
+        // hills' edge wobble against the sea. Land is drawn as plain art.
+        static bool Water(SpriteData s)=>s.water&&s.name.IndexOf("_land",StringComparison.OrdinalIgnoreCase)<0;
+        // A scene order as a renderer's sorting order, unscaled. Overlays sit one step above their base (the sea's caustics at
+        // 201 over the sea at 200); dividing by 4 gave the pair one key, Unity then drew them in either order from frame to
+        // frame and the water flickered. Scene orders stay below the particles' foreground band (28000 and up).
+        public static int SortingOrder(int order)=>Mathf.Clamp(order,-27000,27000);
+        // A sprite mesh's width and height in scene units: the water shader sizes its ripples and highlights by it.
+        static Vector4 Extent(Vector3[] positions){if(positions==null||positions.Length==0)return new Vector4(1,1,0,0);Vector3 a=positions[0],b=a;foreach(var p in positions){a=Vector3.Min(a,p);b=Vector3.Max(b,p);}return new Vector4(Mathf.Max(.01f,b.x-a.x),Mathf.Max(.01f,b.y-a.y),0,0);}
         Mesh NewMesh(Vector3[] positions,Vector2[] uv,int[] indices,string name)
         {
             var m=new Mesh{name=name};m.MarkDynamic();m.vertices=positions;m.uv=uv;m.triangles=indices;
@@ -141,12 +150,12 @@ namespace RoyalThrone.Presentation.AreaMotion
             }
             foreach(var c in data.clips)if(c.loop)ApplyClip(c,clock%c.duration);
             for(int i=0;i<nodes.Length;i++){var p=pose[i];nodes[i].localPosition=p.position;nodes[i].localRotation=p.eulerChanged?Quaternion.Euler(p.euler):p.rotation;nodes[i].localScale=new Vector3(p.scale.x*(p.flipX?-1:1),p.scale.y*(p.flipY?-1:1),p.scale.z);if(nodes[i].gameObject.activeSelf!=p.active)nodes[i].gameObject.SetActive(p.active);}
-            foreach(var l in layers){var p=pose[l.node];AssignSprite(l,p.sprite);l.renderer.enabled=p.enabled&&p.sprite>=0;if(p.sprite<0)continue;l.renderer.sortingOrder=Mathf.Clamp(p.order/4,-32700,32700);var s=data.sprites[p.sprite];var n=data.nodes[l.node];
+            foreach(var l in layers){var p=pose[l.node];AssignSprite(l,p.sprite);l.renderer.enabled=p.enabled&&p.sprite>=0;if(p.sprite<0)continue;l.renderer.sortingOrder=SortingOrder(p.order);var s=data.sprites[p.sprite];var n=data.nodes[l.node];
                 if(l.work!=null&&nodes[l.node].gameObject.activeInHierarchy){for(int j=0;j<l.bones.Length;j++){int b=n.bones[j];l.bones[j]=b>=0&&j<s.bindposes.Length?nodes[l.node].worldToLocalMatrix*nodes[b].localToWorldMatrix*s.bindposes[j].Matrix:Matrix4x4.identity;}
                     for(int j=0;j<l.work.Length;j++){Vector3 v=Vector3.zero;for(int k=0;k<4;k++){float w=s.weights[j][k];int b=(int)s.boneIndices[j][k];if(w!=0&&b>=0&&b<l.bones.Length)v+=l.bones[b].MultiplyPoint3x4(s.positions[j])*w;}l.work[j]=v;}l.mesh.vertices=l.work;l.mesh.RecalculateBounds();}
                 l.properties.Clear();l.properties.SetColor("_Color",p.color);l.properties.SetFloat("_Clock",clock);l.properties.SetFloat("_MaskMode",0);
                 if(n.maskInteraction>0)for(int j=0;j<data.nodes.Length;j++){var mask=data.nodes[j];if(mask.maskSprite<0||!nodes[j].gameObject.activeInHierarchy||p.order<mask.maskBack||p.order>mask.maskFront)continue;var b=meshes[mask.maskSprite].bounds;l.properties.SetFloat("_MaskMode",n.maskInteraction);l.properties.SetVector("_MaskRect",new Vector4(b.min.x,b.min.y,b.max.x,b.max.y));l.properties.SetMatrix("_WorldToMask",nodes[j].worldToLocalMatrix);break;}
-                if(s.water)l.properties.SetFloat("_WaterLine",cameraView.WorldToViewportPoint(l.renderer.bounds.max).y);
+                if(Water(s))l.properties.SetFloat("_WaterLine",cameraView.WorldToViewportPoint(l.renderer.bounds.max).y);
                 l.renderer.SetPropertyBlock(l.properties);
             }
             if(flagMesh&&flags.frames.Length>0){int frame=Mathf.FloorToInt(clock%flags.duration*flags.fps)%flags.frames.Length;flagMesh.vertices=flags.frames[frame].meshes[0].positions;flagMesh.RecalculateBounds();}

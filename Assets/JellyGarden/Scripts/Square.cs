@@ -286,7 +286,9 @@ namespace JellyGarden.Scripts
             {
                 Juice.RoyalPowerupDirector.Get?.Chip(transform.position);
                 var currentBlock = block[block.Count - 1];
-                if (rocketClear)
+                // Ice cracks and bursts in place (RoyalIceBreak); a gem popping on it may already have broken it this hit.
+                bool ice = Juice.RoyalIceBreak.OnDestroyed(currentBlock, rocketClear ? 1.25f : 1f);
+                if (rocketClear && !ice)
                 {
                     var rocketVisual = currentBlock.GetComponent<SpriteRenderer>();
                     Juice.CandyShatterService.Instance.Shatter(rocketVisual, 1f, true, true);
@@ -320,9 +322,10 @@ namespace JellyGarden.Scripts
                     }
                     else
                     {
-                        SoundBase.Instance.PlaySound(SoundBase.Instance.block_destroy);
+                        if (!ice) SoundBase.Instance.PlaySound(SoundBase.Instance.block_destroy);
 
-                        if(Juice.RoyalEffectsProfile.Get){
+                        if(ice){}
+                        else if(Juice.RoyalEffectsProfile.Get){
                             var visual=currentBlock.GetComponent<SpriteRenderer>();
                             if (!rocketClear) Juice.CandyShatterService.Instance.Shatter(visual,.75f,true);visual.enabled=false;
                         }else{

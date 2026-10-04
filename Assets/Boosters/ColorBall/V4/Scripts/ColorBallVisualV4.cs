@@ -59,7 +59,8 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         public static bool Paused=>LevelManager.THIS&&LevelManager.THIS.gameStatus==GameState.Pause;
         public static float CellSize=>ColorBallFrameAnimator.Cell;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]static void Reset(){pool.Clear();serial=0;Event=null;UseV4Baseline=false;}
-        public static void Prewarm(){if(pool.Count>0)return;var prefab=Prefab;if(!prefab)throw new InvalidOperationException("ColorBall V4 prefab is missing.");for(int i=0;i<12;i++){var v=Instantiate(prefab).GetComponent<ColorBallVisualV4>();v.gameObject.SetActive(false);pool.Add(v);}ColorBallVfxV4.Prewarm();ColorBallAudioV4.Prewarm();}
+        // count lets the level-start warm-up build the pool one visual per frame (RoyalGameplayWarmup); first use still fills all 12.
+        public static void Prewarm(int count=12){if(pool.Count>=count)return;var prefab=Prefab;if(!prefab)throw new InvalidOperationException("ColorBall V4 prefab is missing.");while(pool.Count<count){var v=Instantiate(prefab).GetComponent<ColorBallVisualV4>();v.gameObject.SetActive(false);pool.Add(v);}ColorBallVfxV4.Prewarm();ColorBallAudioV4.Prewarm();}
         public static ColorBallVisualV4 Take(Vector3 position,bool reveal=false){
             Prewarm();ColorBallVisualV4 v=null;foreach(var c in pool)if(c&&c.Current==Phase.Free){v=c;break;}
             if(!v){v=Instantiate(Prefab).GetComponent<ColorBallVisualV4>();pool.Add(v);}

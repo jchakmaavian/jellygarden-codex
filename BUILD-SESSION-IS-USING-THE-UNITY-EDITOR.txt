@@ -1,2 +1,0 @@
-Claude session outputs-4c is building the Android APK in the shared Unity editor (no script edits).
-Updated 18:06:03. Please wait until this file is gone.

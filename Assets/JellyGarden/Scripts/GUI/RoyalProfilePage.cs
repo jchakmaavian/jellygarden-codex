@@ -297,19 +297,21 @@ namespace RoyalThrone.Presentation
 
         // ---- Home's portrait ---------------------------------------------------------------------------------------------
 
-        // King Vanguard's live portrait stays while he is the avatar; any other avatar is drawn over the portrait's place
-        // (inside Home's own frame), and the King's portrait is set aside until he is chosen again.
+        // The chosen avatar is drawn over the portrait's place (inside Home's own frame), and Home's King portrait is set aside:
+        // since 2026-10-04 the King is no longer one of the avatars.
         void SyncHomePortrait()
         {
             if (!home || home.resourceButtons == null || home.resourceButtons.Length == 0 || !home.resourceButtons[0]) return;
             string id = RoyalProfile.Avatar;
-            if (!portraitDirty && id == portraitShown) return;
+            // Home's layout switches off every graphic on its resource buttons when it builds, which can come after the
+            // portrait was drawn (now that an avatar is always drawn here): a portrait found switched off is drawn again.
+            var shownArt = portraitOverlay ? portraitOverlay.Find("Portrait/Art") : null;
+            bool switchedOff = shownArt && portraitOverlay.gameObject.activeSelf && !shownArt.GetComponent<Image>().enabled;
+            if (!portraitDirty && id == portraitShown && !switchedOff) return;
             portraitDirty = false; portraitShown = id;
             var button = home.resourceButtons[0].transform;
             var king = button.Find("King portrait") as RectTransform;
-            bool isKing = id == RoyalProfile.DefaultAvatar;
-            if (king && king.gameObject.activeSelf != isKing) king.gameObject.SetActive(isKing);
-            if (isKing) { if (portraitOverlay) portraitOverlay.gameObject.SetActive(false); return; }
+            if (king && king.gameObject.activeSelf) king.gameObject.SetActive(false);
             var place = king ? king : (RectTransform)button;
             if (!portraitOverlay)
             {
@@ -323,6 +325,7 @@ namespace RoyalThrone.Presentation
             portraitOverlay.anchoredPosition = place.anchoredPosition; portraitOverlay.sizeDelta = place.sizeDelta;
             portraitOverlay.SetSiblingIndex(place.GetSiblingIndex() + 1);
             Art.SetAvatar(portraitOverlay, RoyalProfileArt.Find(id));
+            foreach (var g in portraitOverlay.GetComponentsInChildren<Graphic>()) g.enabled = true;   // the parts in use only
         }
     }
 }

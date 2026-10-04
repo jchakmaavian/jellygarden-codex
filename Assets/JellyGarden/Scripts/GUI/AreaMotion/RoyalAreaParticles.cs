@@ -63,7 +63,7 @@ namespace RoyalThrone.Presentation.AreaMotion
             var renderer=ps.GetComponent<ParticleSystemRenderer>();renderer.sharedMaterial=d.additive?additive:alpha;
             renderer.renderMode=d.renderMode==1?ParticleSystemRenderMode.Stretch:ParticleSystemRenderMode.Billboard;
             // The source's foreground FX layer sits above area artwork even when its local order is zero.
-            renderer.lengthScale=d.lengthScale;renderer.velocityScale=d.velocityScale;renderer.sortingOrder=Mathf.Clamp((d.sortingLayer>0?28000:0)+d.order/4,-32700,32700);
+            renderer.lengthScale=d.lengthScale;renderer.velocityScale=d.velocityScale;renderer.sortingOrder=d.sortingLayer>0?Mathf.Clamp(28000+d.order/4,-32700,32700):RoyalAreaMotionPlayer.SortingOrder(d.order);
             renderer.alignment=ParticleSystemRenderSpace.View;renderer.maxParticleSize=.2f;
             if(count==0)renderer.enabled=false;
             systems.Add(ps);

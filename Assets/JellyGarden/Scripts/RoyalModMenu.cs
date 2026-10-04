@@ -45,7 +45,7 @@ namespace RoyalThrone.Testing
         string stage = "Reveal";
         int changes;
         bool shown, stepping;
-        float restoreSpeed = 1f;
+        float restoreSpeed = 1f, nextAttach;
         readonly HashSet<int> attached = new HashSet<int>();
 
         /// <summary>Stages the lab offers per object. Only what each booster actually plays.</summary>
@@ -732,6 +732,10 @@ namespace RoyalThrone.Testing
         /// <summary>Adds the MOD entry beside the existing Settings controls, only while mods are on.</summary>
         void AttachEntries()
         {
+            // Two scene-wide searches: twice a second is plenty for a button that is added once per screen. Every frame
+            // they cost about 1.3 ms in the editor, a fifth of a level frame, and more on a phone's Development build.
+            if (Time.unscaledTime < nextAttach) return;
+            nextAttach = Time.unscaledTime + .5f;
             foreach (var home in FindObjectsByType<RoyalHomeScreen>(FindObjectsInactive.Include))
             {
                 if (!home.settingsGroup || home.settingButtons == null || home.settingButtons.Length < 4) continue;

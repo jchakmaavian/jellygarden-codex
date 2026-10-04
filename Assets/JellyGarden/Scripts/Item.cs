@@ -816,6 +816,39 @@ namespace JellyGarden.Scripts
         Coroutine landingCor;
         int fallPoseVersion;
 
+        // The refill's entrance (2026-10-04, the user asked for a gentler fill): LevelManager.GenerateNewItems stacks new
+        // pieces above the top edge of their column's run of cells, so a column fills as one stream entering from the board's
+        // edge, and gives each column a small delay (a soft wave from the centre out). Each piece fades in as it crosses the
+        // edge instead of popping into view. Presentation only: the piece already owns its target square.
+        internal float royalEntryEdge = float.NaN, royalFallDelay;
+        SpriteRenderer[] entryRenderers; float[] entryAlphas;
+        void BeginEntryFade()
+        {
+            if (entryRenderers != null) return;   // a restarted fall keeps the alphas captured first
+            var all = GetComponentsInChildren<SpriteRenderer>(true);
+            var list = new global::System.Collections.Generic.List<SpriteRenderer>();
+            foreach (var r in all) if (r && r.name != "Royal contact shadow") list.Add(r);   // the shadow follows sprRenderer
+            entryRenderers = list.ToArray(); entryAlphas = new float[entryRenderers.Length];
+            for (int i = 0; i < entryRenderers.Length; i++) entryAlphas[i] = entryRenderers[i].color.a;
+        }
+        void ApplyEntryFade()
+        {
+            if (entryRenderers == null || float.IsNaN(royalEntryEdge)) return;
+            float cell = LevelManager.THIS ? LevelManager.THIS.squareHeight * Mathf.Abs(LevelManager.THIS.GameField.lossyScale.y) : 1f;
+            // Hidden while the piece is wholly above the edge; whole once its centre is a fifth of a cell inside.
+            float a = Mathf.Clamp01((royalEntryEdge + cell * .5f - transform.position.y) / (cell * .7f));
+            a = a * a * (3f - 2f * a);
+            for (int i = 0; i < entryRenderers.Length; i++)
+                if (entryRenderers[i]) { var c = entryRenderers[i].color; c.a = entryAlphas[i] * a; entryRenderers[i].color = c; }
+        }
+        void EndEntryFade()
+        {
+            if (entryRenderers != null)
+                for (int i = 0; i < entryRenderers.Length; i++)
+                    if (entryRenderers[i]) { var c = entryRenderers[i].color; c.a = entryAlphas[i]; entryRenderers[i].color = c; }
+            entryRenderers = null; entryAlphas = null; royalEntryEdge = float.NaN;
+        }
+
         // Closed-form integration keeps the same speed at 30/60 FPS. Position is
         // sampled by the render frame; it never extrapolates beyond the destination.
         internal static float FallDistanceAt(float elapsed, float initialSpeed, float acceleration, float maxSpeed)
@@ -841,6 +874,18 @@ namespace JellyGarden.Scripts
                 suppressIdleScale = false;
             }
             falling = true;
+            bool entering = !float.IsNaN(royalEntryEdge);
+            if (entering) { BeginEntryFade(); ApplyEntryFade(); }
+            if (royalFallDelay > 0f)
+            {
+                float wait = royalFallDelay; royalFallDelay = 0f;
+                while (wait > 0f)
+                {
+                    if (version != fallPoseVersion || destroying) yield break;
+                    if (!(LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Pause)) wait -= Time.deltaTime;
+                    yield return null;
+                }
+            }
             Vector3 startPos = transform.position;
             Vector3 endPos = _square.transform.position + Vector3.back * 0.2f;
             // Z is render depth, not travel distance. Small/diagonal steps must
@@ -860,18 +905,24 @@ namespace JellyGarden.Scripts
                 elapsed += Time.deltaTime;
                 travelled = FallDistanceAt(elapsed, speed, acceleration, maxSpeed);
                 transform.position = Vector3.Lerp(startPos, endPos, Mathf.Clamp01(travelled / distance));
+                if (entering) ApplyEntryFade();
                 yield return null;
             }
             if (version != fallPoseVersion || destroying) yield break;
             if (square != _square) { falling = false; StartFalling(); yield break; }
             transform.position = endPos;
+            if (entering) EndEntryFade();
             falling = false;
             justCreatedItem = false;
             if (distance > .0001f && animate)
             {
                 if (cfg.EnableJuice || RoyalPowerupDirector.IsPower(currentType))
                 {
-                    landingCor = StartCoroutine(LandingSquashCor());
+                    // The bounce follows how hard the piece lands: its speed against the fall's top speed, and how far it fell.
+                    float cell = LevelManager.THIS ? LevelManager.THIS.squareHeight * Mathf.Abs(LevelManager.THIS.GameField.lossyScale.y) : 1f;
+                    float impact = Mathf.Min(maxSpeed, speed + acceleration * elapsed);
+                    float strength = Mathf.Clamp01(impact / Mathf.Max(.01f, maxSpeed)) * Mathf.Clamp01(distance / Mathf.Max(.01f, cell));
+                    landingCor = StartCoroutine(LandingSquashCor(strength));
                 }
                 else if (anim)
                 {
@@ -884,17 +935,20 @@ namespace JellyGarden.Scripts
         }
 
         /// <summary>
-        /// Subtle impact on landing: Y dips then overshoots slightly and settles.
-        /// Runs alongside gameplay - it never blocks the falling/cascade pipeline.
+        /// Landing bounce (2026-10-04, the user asked for a realistic one): the piece meets its cell and squashes, hops up,
+        /// lands again with a hop at 30% of the first, then rests. <paramref name="strength"/> (0-1) is how hard it landed,
+        /// so a long drop bounces more than a one-cell step. Gems squash and stretch; boosters only move.
+        /// Runs alongside gameplay - it never blocks the falling/cascade pipeline, and a new fall, swap or destroy takes over.
         /// </summary>
-        IEnumerator LandingSquashCor()
+        IEnumerator LandingSquashCor(float strength)
         {
             if (destroying) yield break;
 
             var cfg = JuiceConfig.Instance;
             float dur = cfg.LandingSquashDuration;
             float amount = cfg.LandingSquash;
-            if (dur <= 0f || amount <= 0f) yield break;
+            strength = Mathf.Clamp01(strength);
+            if (dur <= 0f || strength <= 0f || amount <= 0f && cfg.LandingBounce <= 0f) yield break;
 
             int version = fallPoseVersion;
             var landedSquare = square;
@@ -903,6 +957,7 @@ namespace JellyGarden.Scripts
             Vector3 restPosition = transform.position;
             Vector3 appliedPosition = restPosition;
             float cell = LevelManager.THIS ? LevelManager.THIS.squareHeight * Mathf.Abs(LevelManager.THIS.GameField.lossyScale.y) : 1f;
+            float hop1 = cell * cfg.LandingBounce * strength, hop2 = hop1 * .3f;
             if (rigid) StopIdleAnim();
             suppressIdleScale = true;
             float t = 0f;
@@ -912,18 +967,29 @@ namespace JellyGarden.Scripts
                 if (LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Pause) { yield return null; continue; }
                 t += Time.deltaTime / dur;
                 float k = Mathf.Clamp01(t);
-                if (rigid)
+                // Timeline (fractions of the landing time): contact 0-.16, first hop .16-.68, second hop .68-1. Hops are
+                // parabolas, as under gravity. squash > 0 flattens a gem, < 0 stretches it; every term starts and ends at 0.
+                float lift = 0f, squash;
+                if (k < .16f) squash = Mathf.Sin(k / .16f * Mathf.PI) * strength;
+                else if (k < .68f)
                 {
-                    // Metal boosters settle through translation, never shell deformation.
-                    // Both native child rigs and the detached Color Ball seat follow this root.
-                    appliedPosition = restPosition + Vector3.up * (cell * amount * .45f * Mathf.Sin(k * Mathf.PI) * (1f - k));
-                    transform.position = appliedPosition;
+                    float u = (k - .16f) / .52f;
+                    lift = hop1 * 4f * u * (1f - u);
+                    squash = -.3f * strength * Mathf.Sin(Mathf.Min(u / .5f, 1f) * Mathf.PI);     // stretched while it rises
                 }
                 else
                 {
-                    float dip = -Mathf.Sin(k * Mathf.PI * 1.5f) * Mathf.Pow(1f - k, 0.6f);
-                    float sy = 1f + dip * amount;
-                    float sx = 1f - dip * amount * 0.75f;
+                    float u = (k - .68f) / .32f;
+                    lift = hop2 * 4f * u * (1f - u);
+                    squash = .35f * strength * Mathf.Sin(Mathf.Min(u / .3f, 1f) * Mathf.PI);    // the second, softer touch
+                }
+                // Boosters keep their shape (metal shells); both native child rigs and the Color Ball seat follow this root.
+                appliedPosition = restPosition + Vector3.up * lift;
+                transform.position = appliedPosition;
+                if (!rigid)
+                {
+                    float sy = 1f - squash * amount;
+                    float sx = 1f + squash * amount * 0.75f;
                     transform.localScale = new Vector3(juiceBaseScale.x * sx, juiceBaseScale.y * sy, juiceBaseScale.z);
                 }
                 yield return null;
@@ -932,7 +998,7 @@ namespace JellyGarden.Scripts
             if (!destroying && version == fallPoseVersion)
             {
                 // Do not restore position over a new swap/fall that took ownership.
-                if (rigid && !falling && !inputSwapLocked && square == landedSquare &&
+                if (!falling && !inputSwapLocked && square == landedSquare &&
                     (transform.position - appliedPosition).sqrMagnitude < .000001f)
                     transform.position = restPosition;
                 transform.localScale = juiceBaseScale;
@@ -1538,6 +1604,7 @@ namespace JellyGarden.Scripts
 
             var shatter = cfg.EnableCandyShatter ? CandyShatterService.Instance : null;
             bool didShatter = false;
+            RoyalIceBreak.Early(square);
             if (shatter != null && sprRenderer != null && sprRenderer.enabled && sprRenderer.sprite != null)
             {
                 // Hand the candy's own SpriteRenderer to the shatter service and hide the

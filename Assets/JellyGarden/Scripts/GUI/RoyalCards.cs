@@ -255,7 +255,7 @@ namespace RoyalThrone.Presentation
             buttons.Add(Feedback(Button(hint, "MATCHING HINTS ON", 0, top - hintRow, 500, 76, Kind.Secondary), false));
             if (paused)
             {
-                Wrap(Words(p, "Royal hint description", "A gentle clue after a few quiet seconds", 0, top - hintRow - 56, 520, 19, Ink.Body), 540, 30);
+                Wrap(Words(p, "Royal hint description", "Always shows the best move on the board", 0, top - hintRow - 56, 520, 19, Ink.Body), 540, 30);
                 // HELP opens the existing How-to-play lessons. The pause menu has no Info object, so the button is made here,
                 // beside HOME. The lessons' motion runs on the unscaled clock, so it plays while the game is paused.
                 if (!info)

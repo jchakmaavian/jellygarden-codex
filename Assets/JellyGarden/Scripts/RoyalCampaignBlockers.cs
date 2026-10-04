@@ -290,7 +290,8 @@ namespace RoyalThrone.Campaign
             return true;
         }
 
-        public static bool IsSpecialItem(Item item) => item && item.GetComponent<RoyalCampaignItem>();
+        // TryGetComponent: matching asks this of every piece, and a GetComponent that finds nothing allocates in the editor.
+        public static bool IsSpecialItem(Item item) => item && item.TryGetComponent(out RoyalCampaignItem _);
         public static bool HasCoinPresentation(Item item) => item && collectedCoinPresentation.Contains(item);
         public static void OnItemDestroying(Item item)
         {

@@ -91,7 +91,8 @@ namespace JellyGarden.Scripts.Juice
         void Update()
         {
             if(voices==null)return;
-            int count=0; foreach(var v in voices){ if(v.isPlaying)count++; if(PlayerPrefs.GetInt("Sound",1)==0)v.Stop(); }
+            int count=0; bool soundOff=PlayerPrefs.GetInt("Sound",1)==0;   // one read per frame, not one per voice
+            foreach(var v in voices){ if(v.isPlaying)count++; if(soundOff)v.Stop(); }
             PeakVoices=Mathf.Max(PeakVoices,count);
             BalanceVoices();
             if(!clips[6])return;

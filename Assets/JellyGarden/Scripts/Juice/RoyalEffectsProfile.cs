@@ -5,8 +5,12 @@ namespace JellyGarden.Scripts.Juice
     public sealed class RoyalEffectsProfile : ScriptableObject
     {
         [Header("Launch and impact — seconds")]
-        [Range(.03f,.3f)] public float rocketAnticipation=.12f;
+        // 0: a tapped Rocket launches in the tap's own frame, with no hold before ignition (the user's decision, 2026-10-04).
+        [Range(0f,.3f)] public float rocketAnticipation=0f;
         [Range(8,50)] public float rocketCellsPerSecond=15;
+        // Every Rocket animation after its Reveal runs at this rate: travel, exhaust and trails, the imported rocket particles
+        // and the cell contact (the user's decision, 2026-10-04: 0.95x). The Reveal and Idle keep their own timing.
+        [Range(.5f,1.5f)] public float rocketAnimationRate=.95f;
         [Range(.05f,.5f)] public float tntAnticipation=.16f;
         [Range(.005f,.10f)] public float blastWavePerCell=.025f;
         [Range(.1f,.6f)] public float helicopterLift=.22f;

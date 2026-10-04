@@ -74,8 +74,9 @@ namespace RoyalThrone.Boosters.Propeller.V5
         void Update()
         {
             bool pause=LevelManager.THIS&&LevelManager.THIS.gameStatus==GameState.Pause;
+            bool soundOff=RoyalSave.GetInt("Sound",1)==0;   // one read per frame, not one per voice
             foreach(var v in voices){
-                if(RoyalSave.GetInt("Sound",1)==0){v.source.Stop();v.paused=false;continue;}
+                if(soundOff){v.source.Stop();v.paused=false;continue;}
                 if(pause&&v.source.isPlaying){v.source.Pause();v.paused=true;}
                 else if(!pause&&v.paused){v.source.UnPause();v.paused=false;}
                 if(v.source.loop&&v.owner){float power=Mathf.Clamp01(v.owner.RotorSpeed/PropellerVisualV5.FlightDegreesPerSecond);v.source.pitch=Mathf.Lerp(v.source.pitch,.42f+.58f*power,1-Mathf.Exp(-Time.deltaTime*32));}

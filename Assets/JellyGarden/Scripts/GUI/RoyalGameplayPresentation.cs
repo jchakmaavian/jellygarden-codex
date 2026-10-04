@@ -66,7 +66,43 @@ namespace RoyalThrone.Presentation
         }
         // Under the startup loading screen this build runs in frames of its own after the scene's first frame
         // (RoyalTitleScreen.QueueStartupWork); otherwise all at once, here, as before. LateUpdate waits until it is complete.
-        void Awake(){var steps=Build();if(!RoyalTitleScreen.QueueStartupWork(this,steps))while(steps.MoveNext()){}}
+        void Awake(){current=this;var steps=Build();if(!RoyalTitleScreen.QueueStartupWork(this,steps))while(steps.MoveNext()){}}
+
+        // Collected goal pieces fly into this HUD's Goal panel (2026-10-04, the user: they landed beside the Moves panel,
+        // where the hidden imported header keeps its own goal icons). LevelManager.FlyToGoal draws the flight on a layer of
+        // this canvas above the panels; the icon pops as each piece lands, and its number counts down then, not at launch.
+        static RoyalGameplayPresentation current;
+        RectTransform flights;
+        readonly float[] goalLanded={-9,-9,-9,-9};
+        readonly List<KeyValuePair<JellyGarden.Scripts.Targets.TargetObject,float>> inFlight=new List<KeyValuePair<JellyGarden.Scripts.Targets.TargetObject,float>>();
+        public static bool GoalIcon(JellyGarden.Scripts.Targets.TargetObject target,out RectTransform icon,out RectTransform layer)
+        {
+            icon=layer=null;var hud=current;var lm=LevelManager.THIS;
+            if(!hud||!hud.group||hud.group.alpha<=0||!lm||lm.targetObject==null||target==null)return false;
+            int i=global::System.Array.IndexOf(lm.targetObject,target);
+            if(i<0||i>=hud.goalIcons.Count||!hud.goalIcons[i].gameObject.activeInHierarchy)return false;
+            if(!hud.flights){hud.flights=hud.Rect("Collected goal flights",hud.group.transform,0,0,1,1);}
+            hud.flights.SetAsLastSibling();
+            icon=hud.goalIcons[i].rectTransform;layer=hud.flights;return true;
+        }
+        // A piece on its way: its goal's number still counts it until it lands (or, should the flight be cut short, a little
+        // after it was due).
+        public static void GoalLaunched(JellyGarden.Scripts.Targets.TargetObject target,float duration)
+        {if(current)current.inFlight.Add(new KeyValuePair<JellyGarden.Scripts.Targets.TargetObject,float>(target,Time.unscaledTime+duration+.5f));}
+        public static void GoalLanded(JellyGarden.Scripts.Targets.TargetObject target)
+        {
+            var hud=current;if(!hud)return;
+            int k=hud.inFlight.FindIndex(p=>p.Key==target);if(k>=0)hud.inFlight.RemoveAt(k);
+            var lm=LevelManager.THIS;int i=lm&&lm.targetObject!=null?global::System.Array.IndexOf(lm.targetObject,target):-1;
+            if(i>=0&&i<hud.goalLanded.Length)hud.goalLanded[i]=Time.unscaledTime;
+            hud.nextHudUpdate=0;
+        }
+        int Flying(JellyGarden.Scripts.Targets.TargetObject target)
+        {
+            int n=0;float now=Time.unscaledTime;
+            for(int k=inFlight.Count-1;k>=0;k--){if(inFlight[k].Value<now){inFlight.RemoveAt(k);continue;}if(inFlight[k].Key==target)n++;}
+            return n;
+        }
         void OnEnable()
         {
             RoyalPowerupDirector.Reaction+=React;
@@ -74,6 +110,8 @@ namespace RoyalThrone.Presentation
             RoyalThrone.Characters.KingVanguardActivityEvents.GoalsCompleted+=KingGoalsCompleted;
             RoyalThrone.Characters.KingVanguardActivityEvents.MatchResolved+=KingMatchResolved;
             RoyalThrone.Characters.KingVanguardActivityEvents.PowerupCreated+=KingPowerupCreated;
+            RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.ToolUsed+=KingToolUsed;
+            RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.ToolStruck+=KingToolStruck;
         }
         // A level interrupted by the OS (app sent to the background; on devices also focus loss, e.g. the notification
         // shade) comes back to the pause menu instead of straight into live play. Only while actually playing with no
@@ -92,7 +130,21 @@ namespace RoyalThrone.Presentation
             RoyalThrone.Characters.KingVanguardActivityEvents.GoalsCompleted-=KingGoalsCompleted;
             RoyalThrone.Characters.KingVanguardActivityEvents.MatchResolved-=KingMatchResolved;
             RoyalThrone.Characters.KingVanguardActivityEvents.PowerupCreated-=KingPowerupCreated;
-            ClearKingActivity();ClearKingFeedback();
+            RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.ToolUsed-=KingToolUsed;
+            RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.ToolStruck-=KingToolStruck;
+            ClearKingActivity();ClearKingFeedback();kingToolUntil=0;
+        }
+        // The bottom-bar tools (2026-10-04, the user: the King must react really excited when one is used). On the tap that
+        // commits a tool he gets excited (Heyecan_1; tried for a second in case a lighter cheer is still finishing), and when
+        // the tool strikes he laughs: the impact reaction, which cuts in over a cheer and keeps its own 4 s cooldown.
+        float kingToolUntil;
+        void KingToolUsed(int tool){kingToolUntil=Time.unscaledTime+1f;}
+        void KingToolStruck(int tool){kingToolUntil=0;QueueKingFeedback(LevelManager.THIS,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Impact);}
+        void PresentKingTool(LevelManager level)
+        {
+            if(kingToolUntil<=0)return;
+            if(Time.unscaledTime>kingToolUntil){kingToolUntil=0;return;}
+            if(CheckKingFeedbackScope(level)&&kingVanguard.Character.PlayExcited())kingToolUntil=0;
         }
         void React(float value)
         {
@@ -307,6 +359,11 @@ namespace RoyalThrone.Presentation
                 for(int i=0;i<goalIcons.Count;i++){goalIcons[i].gameObject.SetActive(i<shown);goalNumbers[i].gameObject.SetActive(i<shown);}
                 if(shown>0)LayoutGoals(lm,shown);
             }
+            // A landing piece makes its goal icon bounce: up to 1.22x and back over a quarter second.
+            for(int i=0;i<goalIcons.Count&&i<goalLanded.Length;i++){
+                float since=Time.unscaledTime-goalLanded[i],pop=since<.26f?1+.22f*Mathf.Sin(since/.26f*Mathf.PI)*(1-since/.26f*.35f):1;
+                var s=goalIcons[i].rectTransform.localScale.x;if(!Mathf.Approximately(s,pop))goalIcons[i].rectTransform.localScale=Vector3.one*pop;
+            }
             if(kingVanguard&&kingVanguard.Mounted)
             {
                 // The imported APK KingUi uses its finite positive reaction, then resumes the latest low-move context.
@@ -317,6 +374,7 @@ namespace RoyalThrone.Presentation
                 if(lm.gameStatus==GameState.Playing)
                     kingVanguard.SetWorried(lm.limitType!=LIMIT.TIME&&lm.Limit<=RoyalThrone.Characters.KingVanguardCharacter.WorryMoveCount);
                 PresentKingActivity();
+                PresentKingTool(lm);
                 PresentKingFeedback(lm);
             }
             else
@@ -348,7 +406,7 @@ namespace RoyalThrone.Presentation
             int font=shown<=2?30:27;
             for(int i=0;i<shown;i++){
                 var target=lm.targetObject[i];var number=goalNumbers[i];
-                goalIcons[i].sprite=RoyalVisualCatalog.Goal(target,true);number.text=Mathf.Max(0,target.GetCount()).ToString();
+                goalIcons[i].sprite=RoyalVisualCatalog.Goal(target,true);number.text=Mathf.Max(0,target.GetCount()+Flying(target)).ToString();
                 // Best fit stays off so every number shares one size; a box shorter than the font's line height would then
                 // truncate the text to nothing, so the numbers overflow vertically.
                 number.resizeTextForBestFit=false;number.horizontalOverflow=HorizontalWrapMode.Overflow;number.verticalOverflow=VerticalWrapMode.Overflow;number.fontSize=30;
@@ -455,12 +513,31 @@ namespace RoyalThrone.Presentation
                 if(!sq)continue;var sr=sq.GetComponent<SpriteRenderer>();if(!sr)continue;
                 if(sq.type==SquareTypes.NONE){sr.enabled=false;styled.Remove(sq);continue;}
                 var size=new Vector2(lm.squareWidth,lm.squareHeight);
+                if(sq.block!=null)foreach(var block in sq.block)FitBlock(block,size);
                 var sprite=CellSprite((sq.row+sq.col)%2==0?"cell-light":"cell-dark",size);
                 if(!styled.Add(sq)&&sr.sprite==sprite)continue;
                 sr.sprite=sprite;sr.drawMode=Mathf.Approximately(size.x,size.y)?SpriteDrawMode.Simple:SpriteDrawMode.Sliced;
-                sr.size=size;sr.color=Color.white;sr.enabled=true;
+                // Cells sit one step under the blocks (0 and 1), so an ice tile that reaches over a neighbouring cell is
+                // always drawn above it; the board's shadow and grout lie further back (RoyalBoardSurface).
+                sr.size=size;sr.color=Color.white;sr.sortingOrder=-1;sr.enabled=true;
             }
         }
-        void OnDestroy(){foreach(var sprite in cellSprites.Values)if(sprite)Destroy(sprite);}
+
+        // Ice blocks fill their cell edge to edge (2026-10-04): the ice art (its body is about 95% of its sprite, with
+        // rounded corners) is drawn 18% larger than the cell, so neighbouring tiles overlap well past their rounded corners and
+        // no lavender shows between them. Only blocks still standing (Square.block): a broken one flies off with its own
+        // animation, and other block kinds (crates, stone, chains) keep their size.
+        public const float BlockFill=1.18f;
+        static void FitBlock(GameObject block,Vector2 cell)
+        {
+            if(!block)return;var r=block.GetComponent<SpriteRenderer>();if(!r||!r.sprite)return;
+            string n=r.sprite.name;if(n!="block"&&n!="block_02")return;
+            var b=r.sprite.bounds.size;var parent=block.transform.parent;var ps=parent?parent.lossyScale:Vector3.one;
+            float sx=cell.x*BlockFill/Mathf.Max(.0001f,b.x*Mathf.Abs(ps.x)),sy=cell.y*BlockFill/Mathf.Max(.0001f,b.y*Mathf.Abs(ps.y));
+            var s=block.transform.localScale;
+            if(Mathf.Abs(s.x-sx)>.0005f||Mathf.Abs(s.y-sy)>.0005f)block.transform.localScale=new Vector3(sx,sy,s.z==0?1:s.z);
+            if(r.drawMode!=SpriteDrawMode.Simple)r.drawMode=SpriteDrawMode.Simple;
+        }
+        void OnDestroy(){if(current==this)current=null;foreach(var sprite in cellSprites.Values)if(sprite)Destroy(sprite);}
     }
 }

@@ -33,6 +33,20 @@ namespace JellyGarden.Scripts.Juice
             return instance.Present(achievement);
         }
 
+        // The same banner with a word of its own (RoyalShuffle's "SHUFFLE!"), shown while the board is being rearranged
+        // (gameStatus RegenLevel) as well as in play. It ignores the cooldown between celebrations and plays no fanfare.
+        string word;
+        public static bool PlayWord(string text)
+        {
+            var level = LevelManager.THIS;
+            if (!level || (level.gameStatus != GameState.Playing && level.gameStatus != GameState.RegenLevel) || !JuiceConfig.Instance.EnableJuice) return false;
+            if (!instance) instance = level.gameObject.AddComponent<RoyalCelebration>();
+            instance.word = text; instance.nextAllowed = 0;
+            bool shown = instance.Present(0, false);
+            instance.word = null;
+            return shown;
+        }
+
         static RectTransform Rect(string name, Transform parent, Vector2 size)
         {
             var rect = new GameObject(name, typeof(RectTransform)).GetComponent<RectTransform>();
@@ -68,12 +82,12 @@ namespace JellyGarden.Scripts.Juice
             textRect.gameObject.AddComponent<RoyalCelebrationGradient>();
         }
 
-        bool Present(int achievement)
+        bool Present(int achievement, bool fanfare = true)
         {
             if (Time.unscaledTime < nextAllowed) return false;
             nextAllowed = Time.unscaledTime + 2.4f; age=0; Presentations++;
             reduced=PlayerPrefs.GetInt("RoyalThrone.HomeMotion",1)==0;
-            title.text=achievement>=6?"BRILLIANT!":achievement>=5?"FANTASTIC!":achievement>=4?"BRAVO!":"GREAT!";
+            title.text=word??(achievement>=6?"BRILLIANT!":achievement>=5?"FANTASTIC!":achievement>=4?"BRAVO!":"GREAT!");
             // Deterministic decoration never consumes the board's random sequence.
             for (int i=0;i<SparkleCount;i++)
             {
@@ -83,7 +97,7 @@ namespace JellyGarden.Scripts.Juice
                 spark.spin=(i%2==0?1:-1)*(55+i*11); spark.size=10+i%4*5;
                 spark.image.enabled=!reduced||i%4==0;
             }
-            RoyalAudioDirector.Get?.Play(RoyalCue.Celebrate);
+            if (fanfare) RoyalAudioDirector.Get?.Play(RoyalCue.Celebrate);
             Render(); return true;
         }
 
@@ -93,7 +107,7 @@ namespace JellyGarden.Scripts.Juice
             var level=LevelManager.THIS;
             if(!level) { Cancel(); return; }
             if(level.gameStatus==GameState.Pause) { group.alpha=0; return; }
-            if(level.gameStatus!=GameState.Playing) { Cancel(); return; }
+            if(level.gameStatus!=GameState.Playing&&level.gameStatus!=GameState.RegenLevel) { Cancel(); return; }
             if(!IsShowing) { group.alpha=0; return; }
             age+=Time.deltaTime; Render();
         }

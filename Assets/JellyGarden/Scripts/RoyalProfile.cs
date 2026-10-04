@@ -18,7 +18,7 @@ namespace RoyalThrone
         public const string NameKey = Prefix + "Name", AvatarKey = Prefix + "Avatar", FrameKey = Prefix + "Frame", StyleKey = Prefix + "NameStyle";
         public const string SinceKey = Prefix + "Since", FirstTryKey = Prefix + "FirstTryWins", PowerupsKey = Prefix + "PowerupsMade";
         public const int NameMin = 3, NameMax = 14;
-        public const string DefaultAvatar = "king";
+        public const string DefaultAvatar = "01-royal-queen";   // the first avatar; a saved id that no longer exists falls back to it
 
         /// <summary>Raised after the profile is saved (the page and Home's portrait redraw).</summary>
         public static event System.Action Changed;

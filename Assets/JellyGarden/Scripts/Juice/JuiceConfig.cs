@@ -125,6 +125,9 @@ namespace JellyGarden.Scripts.Juice
 
         // ------------------------------------------------------------------
         [Header("Falling")]
+        // The JuiceConfig asset holds the live values. Since 2026-10-04 the fall is gentle (the user found 12 / 55 / 32 too
+        // fast and rough): 4 / 40 / 24, so a piece starts almost at rest and builds speed, as a real drop does; softened
+        // again the same day to 4 / 32 / 19 with the refill entering from the board's top edge (LevelManager.GenerateNewItems).
         [Tooltip("Initial fall speed in world units/sec.")]
         [Range(1f, 30f)] public float FallSpeed = 9f;
         [Tooltip("Gravity applied while falling (world units/sec^2).")]
@@ -133,13 +136,16 @@ namespace JellyGarden.Scripts.Juice
         [Range(5f, 60f)] public float FallMaxSpeed = 26f;
 
         [Header("Landing")]
-        // 0.075 rather than 0.06: the (1-k)^0.6 damping envelope in LandingSquashCor
-        // caps the actual dip at ~79.8% of this value, so 0.075 lands the requested
-        // 1.00 -> 0.94 -> 1.02 -> 1.00 shape.
-        [Tooltip("Landing squash depth. 0.075 => scale Y dips to ~0.94 after damping.")]
+        // Since 2026-10-04 a landing is a small bounce (the user asked for a realistic one; asset values softened the same
+        // day to squash .05, bounce .06, time .21 when they asked for a gentler fall): contact squash, a first hop,
+        // a second hop at 30% of its height, then rest. Squash and hop height scale with the impact speed and the drop
+        // distance, so a long drop bounces more than a one-cell step. Boosters hop without deforming.
+        [Tooltip("Gem squash depth at a full-speed landing. 0.075 => scale Y dips to ~0.93.")]
         [Range(0f, 0.25f)] public float LandingSquash = 0.075f;
-        [Tooltip("Total landing squash+rebound time.")]
-        [Range(0.03f, 0.3f)] public float LandingSquashDuration = 0.1f;
+        [Tooltip("Total landing time: contact, first hop, second hop. Keep it under ~0.22 s: the fall checks expect rest by 0.24 s.")]
+        [Range(0.03f, 0.3f)] public float LandingSquashDuration = 0.19f;
+        [Tooltip("First hop height at a full-speed landing, in cells.")]
+        [Range(0f, 0.25f)] public float LandingBounce = 0.08f;
 
         // ------------------------------------------------------------------
         [Header("Hit-stop")]

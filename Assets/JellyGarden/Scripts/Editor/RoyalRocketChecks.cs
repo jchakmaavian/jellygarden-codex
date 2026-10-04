@@ -34,6 +34,8 @@ namespace RoyalThrone.Editor
 #endif
             }
         }
+        // The Rocket's travel speed with the profile's animation rate (15 cells/s x 0.95 since 2026-10-04).
+        static float RocketCps=>RoyalEffectsProfile.Get.rocketCellsPerSecond*RoyalEffectsProfile.Get.rocketAnimationRate;
         static IEnumerator FocusedAtSpeed(LevelManager lm,Action seed,Action colours,Action<bool,string> check,float labSpeed)
         {
             Directory.CreateDirectory(Folder);
@@ -100,7 +102,7 @@ namespace RoyalThrone.Editor
                             attached&=Vector3.Distance(ribbon.GetPosition(1),head.transform.position)<.001f;
                             shader&=ribbon.sharedMaterial&&ribbon.sharedMaterial.shader.isSupported&&ribbon.sharedMaterial.shader.name=="RoyalThrone/RocketFire";
                             var core=head.transform.Find("White-hot rocket core").GetComponent<TrailRenderer>();
-                            lifetime&=Mathf.Abs(core.time*15f-7f)<.01f&&Mathf.Abs(head.GetComponent<TrailRenderer>().time*15f-7f)<.01f;
+                            lifetime&=Mathf.Abs(core.time*RocketCps-7f)<.01f&&Mathf.Abs(head.GetComponent<TrailRenderer>().time*RocketCps-7f)<.01f;
                             if(previous.TryGetValue(head,out var old)&&Time.time>previousTime[head])
                             {
                                 float velocity=Vector3.Distance(old,head.transform.position)/(Time.time-previousTime[head])/pitch;
@@ -136,9 +138,9 @@ namespace RoyalThrone.Editor
                     check(continues,name+": Idle -> Launch continues the idle Rocket in place on the first frame (length "+firstAlong.ToString("F3")+", no lag or pop)");
                     check(minAlong<=.90f&&maxAlong>=1.20f&&compressAt<stretchAt,name+": launch compresses to "+minAlong.ToString("F2")+" then stretches to "+maxAlong.ToString("F2")+" along its travel axis");
                     check(switched&&noGap&&standInFrames>=2,name+": Launch -> Passing switches in one frame with no missing or doubled Rocket ("+standInFrames+" anticipation frames)");
-                    check(switchAt-activation>=.10f&&switchAt-activation<=.18f,name+": anticipation and launch transition take "+(switchAt-activation).ToString("F3")+" s");
+                    check(switchAt-activation>=0f&&switchAt-activation<=.04f,name+": the launch follows the tap at once ("+(switchAt-activation).ToString("F3")+" s)");
                     check(fx.RocketLaunches==launchStart+1,name+": exactly one two-headed Rocket sequence launches");
-                    check(Mathf.Abs(fx.LastRocketAnticipation-.12f)<.001f,name+": launch anticipation is exactly 0.18 / 1.5 seconds");
+                    check(fx.LastRocketAnticipation<.001f,name+": a tapped Rocket launches with no anticipation hold");
                     check(directional&&seenDirections.SetEquals(vertical?new[]{"up","down"}:new[]{"left","right"}),name+": both dedicated directional sprites launch without rotation or missing artwork");
                     check(flightFit,name+": Passing artwork has its independent 0.64-cell size");
                     check(maxRibbon>=6.75f&&maxRibbon<=7.015f,name+": mature FireExhaust measures about seven actual cells");
@@ -146,7 +148,7 @@ namespace RoyalThrone.Editor
                     check(lifetime,name+": trailLifetime equals seven cells divided by the fixed speed");
                     check(shader,name+": custom layered Rocket shader is active and supported");
                     check(captures>0,name+": captured mid-flight frames with the mature exhaust visible");
-                    check(minVelocity<float.PositiveInfinity&&Mathf.Abs((minVelocity+maxVelocity)*.5f-15f)<.65f&&maxVelocity/minVelocity<1.12f,name+": projectile holds constant 15 cells/sec (measured "+minVelocity.ToString("F2")+"–"+maxVelocity.ToString("F2")+")");
+                    check(minVelocity<float.PositiveInfinity&&Mathf.Abs((minVelocity+maxVelocity)*.5f-RocketCps)<.65f&&maxVelocity/minVelocity<1.12f,name+": projectile holds constant "+RocketCps.ToString("F2")+" cells/sec (measured "+minVelocity.ToString("F2")+"–"+maxVelocity.ToString("F2")+")");
                     check(fx.RocketSparkParticlesEmitted-sparkStart>=200,name+": dense spatial four-point stars fill the plume");
                     check(!RoyalPowerupDirector.Busy&&!fx.RocketVisualsActive&&fx.RocketParticleCount==0&&fx.RocketLaunchStandInsActive==0,name+": Rocket, stand-in, trails, smoke and sparkles return to pools");
                     check(CandyShatterService.Instance.ActiveFragments==0,name+": coloured debris returns to its pool");

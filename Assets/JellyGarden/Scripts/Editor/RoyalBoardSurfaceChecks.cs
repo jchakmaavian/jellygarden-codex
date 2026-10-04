@@ -17,10 +17,10 @@ namespace RoyalThrone.Editor
         static Dictionary<string,Mesh> Meshes(MeshRenderer[] renderers)=>renderers.ToDictionary(r=>r.name,r=>r.GetComponent<MeshFilter>().sharedMesh);
         static Dictionary<string,Material> Materials(MeshRenderer[] renderers)=>renderers.ToDictionary(r=>r.name,r=>r.sharedMaterial);
         // The complete 8x8 fixture: grout under all 64 cells, the drop shadow only under the 15 cells of the bottom row and
-        // right column (the only silhouette that can show it), eight segments on each gold edge and the frame's four rounded
-        // outer corners.
-        static int FixtureVertices(string name)=>name.EndsWith("grout")?64*4:name.EndsWith("shadow")?15*4:name.EndsWith("corners")?4*4:8*4;
-        static int SortingOrder(string name)=>name.EndsWith("grout")?-2:name.EndsWith("shadow")?-1:2;
+        // right column (the only silhouette that can show it), and one continuous frame stroke whose four rounded corners
+        // are 13 inner/outer pairs each (2026-10-04: the stroke replaced the per-side bands and corner pieces).
+        static int FixtureVertices(string name)=>name.EndsWith("grout")?64*4:name.EndsWith("shadow")?15*4:4*13*2;
+        static int SortingOrder(string name)=>name.EndsWith("grout")?-3:name.EndsWith("shadow")?-4:2;
         public static IEnumerator Run(LevelManager lm,Action<bool,string> check)
         {
             if(!lm.GameField||!lm.GameField.name.StartsWith("Royal workshop test board"))throw new InvalidOperationException("Board surface checks require the disposable workshop board.");
@@ -73,20 +73,20 @@ namespace RoyalThrone.Editor
                 }
 
                 surface.RebuildIfNeeded(lm);var renderers=Renderers(surface);
-                var expected=new HashSet<string>{"Board surface - grout","Board surface - shadow","Board surface - top","Board surface - bottom","Board surface - left","Board surface - right","Board surface - corners"};
-                check(surface.RenderLayerCount==7&&renderers.Length==7&&expected.SetEquals(renderers.Select(r=>r.name)),
-                    "Board surface renders exactly the grout, shadow, four gold edge layers and the frame's corners");
+                var expected=new HashSet<string>{"Board surface - grout","Board surface - shadow","Board surface - frame"};
+                check(surface.RenderLayerCount==3&&renderers.Length==3&&expected.SetEquals(renderers.Select(r=>r.name)),
+                    "Board surface renders exactly the grout, the shadow and the continuous gold frame stroke");
                 check(surface.EdgeCount==32,"Complete 8x8 board has exactly 32 exposed frame edges");
                 var meshes=Meshes(renderers);var materials=Materials(renderers);var rendererIds=renderers.ToDictionary(r=>r.name,r=>r.GetEntityId());
                 check(meshes.Values.All(m=>m&&m.vertexCount>0)&&materials.Values.All(m=>m&&m.mainTexture)&&
-                    meshes.Values.Select(m=>m.GetEntityId()).Distinct().Count()==7&&materials.Values.Select(m=>m.GetEntityId()).Distinct().Count()==7,
-                    "All seven board layers have live textured materials and independent cached meshes");
+                    meshes.Values.Select(m=>m.GetEntityId()).Distinct().Count()==3&&materials.Values.Select(m=>m.GetEntityId()).Distinct().Count()==3,
+                    "All three board layers have live textured materials and independent cached meshes");
                 check(renderers.All(r=>r.enabled&&r.sortingOrder==SortingOrder(r.name)),
                     "Board grout and shadow stay behind cells and gold edges remain visible above the board");
                 check(meshes.All(p=>p.Value.vertexCount==FixtureVertices(p.Key)),
-                    "Surface geometry covers 64 cells, shadows the 15 bottom-right silhouette cells, has eight segments on each outside edge and four rounded corners");
+                    "Surface geometry covers 64 cells, shadows the 15 bottom-right silhouette cells, and strokes the outline in one loop with four rounded corners");
                 for(int i=0;i<3;i++)surface.RebuildIfNeeded(lm);
-                check(Renderers(surface).All(r=>r.GetEntityId()==rendererIds[r.name]&&r.GetComponent<MeshFilter>().sharedMesh==meshes[r.name]&&r.sharedMaterial==materials[r.name])&&Renderers(surface).Length==7,
+                check(Renderers(surface).All(r=>r.GetEntityId()==rendererIds[r.name]&&r.GetComponent<MeshFilter>().sharedMesh==meshes[r.name]&&r.sharedMaterial==materials[r.name])&&Renderers(surface).Length==3,
                     "Repeated same-board rebuild checks reuse renderer, mesh and material IDs without duplication");
 
                 // EnableMap clears GameField children in production. Exercise that
@@ -95,12 +95,12 @@ namespace RoyalThrone.Editor
                 check(Renderers(surface).Length==0&&squareObjects.All(s=>s)&&items.All(i=>i),
                     "Surface renderer cleanup removes only decorative children and preserves the fixture board");
                 surface.RebuildIfNeeded(lm);renderers=Renderers(surface);
-                check(surface.EdgeCount==32&&surface.RenderLayerCount==7&&renderers.Length==7&&expected.SetEquals(renderers.Select(r=>r.name)),
-                    "Same-field same-array rebuild recreates all seven renderers after level cleanup");
+                check(surface.EdgeCount==32&&surface.RenderLayerCount==3&&renderers.Length==3&&expected.SetEquals(renderers.Select(r=>r.name)),
+                    "Same-field same-array rebuild recreates all three renderers after level cleanup");
                 check(renderers.All(r=>r.GetEntityId()!=rendererIds[r.name]&&r.GetComponent<MeshFilter>().sharedMesh==meshes[r.name]&&r.sharedMaterial==materials[r.name]),
                     "Recovered renderers keep the original mesh and material IDs instead of allocating replacement assets");
                 surface.RebuildIfNeeded(lm);
-                check(Renderers(surface).Length==7&&Renderers(surface).All(r=>r.GetComponent<MeshFilter>().sharedMesh.vertexCount==FixtureVertices(r.name)),
+                check(Renderers(surface).Length==3&&Renderers(surface).All(r=>r.GetComponent<MeshFilter>().sharedMesh.vertexCount==FixtureVertices(r.name)),
                     "Recovery followed by another rebuild creates no duplicate renderer or mesh geometry");
                 if(outlines.Length>0)check(outlines.All(t=>t&&!t.GetComponent<SpriteRenderer>().enabled),
                     "Serialized board outline objects remain present while their old renderers are hidden");

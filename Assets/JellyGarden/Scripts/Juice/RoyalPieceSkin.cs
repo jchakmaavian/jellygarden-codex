@@ -115,7 +115,7 @@ namespace JellyGarden.Scripts.Juice
             var source=item.sprRenderer;
             contactShadow.sortingLayerID=source.sortingLayerID;
             contactShadow.sortingOrder=source.sortingOrder-1;
-            contactShadow.color=new Color(.02f,.05f,.16f,ShadowAlpha);
+            contactShadow.color=new Color(.02f,.05f,.16f,ShadowAlpha*source.color.a);   // fades with its piece (the refill's entrance)
             float scale=Mathf.Abs(transform.lossyScale.x)<.0001f?1:Mathf.Abs(transform.lossyScale.x);
             var tr=contactShadow.transform;
             tr.localRotation=Quaternion.identity;
@@ -127,8 +127,7 @@ namespace JellyGarden.Scripts.Juice
         {
             if(!ready){item=GetComponent<Item>();if(!item||!item.sprRenderer)return; originalScale=item.sprRenderer.transform.localScale;hitBox=GetComponent<BoxCollider2D>();ready=true;}
             var sprite=For(item.currentType,item.color);
-            var campaignItem=item.GetComponent<RoyalThrone.Campaign.RoyalCampaignItem>();
-            if(campaignItem&&item.currentType==ItemsTypes.NONE)sprite=campaignItem.Visual;
+            if(item.currentType==ItemsTypes.NONE&&item.TryGetComponent(out RoyalThrone.Campaign.RoyalCampaignItem campaignItem)&&campaignItem)sprite=campaignItem.Visual;
             if(item.currentType==ItemsTypes.INGREDIENT)sprite=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(item.sprRenderer.sprite,true);
             if(!sprite)return;
             item.sprRenderer.sprite=sprite;

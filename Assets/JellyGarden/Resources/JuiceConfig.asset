@@ -45,11 +45,12 @@ MonoBehaviour:
   CenterRingDuration: 0.24
   CenterRingEndScale: 1.15
   CenterStarCount: 5
-  FallSpeed: 12
-  FallAcceleration: 55
-  FallMaxSpeed: 32
-  LandingSquash: 0.075
-  LandingSquashDuration: 0.1
+  FallSpeed: 4
+  FallAcceleration: 32
+  FallMaxSpeed: 19
+  LandingSquash: 0.05
+  LandingSquashDuration: 0.21
+  LandingBounce: 0.06
   EnableHitStop: 0
   HitStopDuration: 0.045
   HitStopScale: 0.12

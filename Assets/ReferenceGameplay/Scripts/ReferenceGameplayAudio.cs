@@ -41,6 +41,15 @@ namespace RoyalThrone.ReferenceGameplay
             RoyalAudioDirector.Get?.PlayClip(Load(name), .72f, 60, 1);
         }
         public static void Play(string nativeName, float gain = .72f) => RoyalAudioDirector.Get?.PlayClip(Load(nativeName), gain, 90, 1);
+        /// <summary>Every gameplay voice For() and Reveal() can pick, for the level-start warm-up.</summary>
+        public static IEnumerable<AudioClip> GameplayClips()
+        {
+            if (!ReferenceGameplayCatalog.Available) yield break;
+            foreach (var name in matches) yield return Load(name);
+            foreach (var name in new[] { "fall_hit_1__15531", "rocket_explode__15712", "tnt_explode__15838", "propeller_take_off__15745",
+                "lightball_creation__15586", "tnt_creation__15882", "propeller_creation__15500", "rocket_creation__15581" })
+                yield return Load(name);
+        }
         public static bool Owns(AudioClip clip)
         {
             if (!clip) return false;

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e6eb9d58319734980c64d0f82ebb6e, type: 3}
   m_Name: EffectsProfile
   m_EditorClassIdentifier: Assembly-CSharp::JellyGarden.Scripts.Juice.RoyalEffectsProfile
-  rocketAnticipation: 0.12
+  rocketAnticipation: 0
   rocketCellsPerSecond: 15
+  rocketAnimationRate: 0.95
   tntAnticipation: 0.16
   blastWavePerCell: 0.025
   helicopterLift: 0.22

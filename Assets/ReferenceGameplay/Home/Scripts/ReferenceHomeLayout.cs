@@ -168,10 +168,13 @@ namespace RoyalThrone.ReferenceGameplay
             d.sizeDelta=new Vector2(d.sizeDelta.x,fit);d.anchoredPosition=new Vector2(d.anchoredPosition.x,y);fittedHeight=fit;}
         // Never stretched and always covering the screen; at 16:9 this lifts the castle so the card row meets the courtyard as in
         // the reference. Taller screens enlarge it just enough to keep that line and still cover the top.
-        void PlaceBackground(float cardTop,float navTop){if(!sky)return;var art=sky.GetComponent<Image>().sprite;if(!art)return;var root=((RectTransform)home.transform).rect;
+        void PlaceBackground(float cardTop,float navTop,float away=0){if(!sky)return;var art=sky.GetComponent<Image>().sprite;if(!art)return;var root=((RectTransform)home.transform).rect;
             float aspect=art.rect.width/art.rect.height,h=Mathf.Max(root.width/aspect,Mathf.Max(root.height,(root.height-cardTop)/(1-CardLine))),bottom=cardTop-CardLine*h;
             // Its lower edge stays hidden behind the tab bar.
             if(bottom>navTop){bottom=navTop;h=Mathf.Max(h,root.height-bottom);}
+            // With the HUD and the tab bar put away (a restored area viewed full screen) nothing hides the lower edge: the scene
+            // moves down to the screen's bottom edge. It is at least the screen's height, so its top still covers the screen.
+            if(away>0){float full=Mathf.Min(bottom,0);bottom=Mathf.Lerp(bottom,full,away);h=Mathf.Max(h,root.height-bottom);}
             sky.anchorMin=sky.anchorMax=new Vector2(.5f,0);sky.pivot=new Vector2(.5f,0);sky.sizeDelta=new Vector2(h*aspect,h);sky.anchoredPosition=new Vector2(0,bottom);
             if(skyDepth)Anchor(skyDepth.rectTransform,0,(root.height*(1-SkyDepth)-bottom)/h,1,(root.height-bottom)/h);}
         // A panel anchored at the tab's bottom centre, reaching below the screen edge so only its top corners show.
@@ -206,7 +209,7 @@ namespace RoyalThrone.ReferenceGameplay
                 int size=Mathf.RoundToInt(Mathf.Lerp(LabelSize,SelectedLabelSize,t));
                 foreach(var label in b.GetComponentsInChildren<Text>(true)){label.enabled=true;label.transform.SetAsLastSibling();Bounds(label.rectTransform,.02f,LabelBox.x,.98f,LabelBox.y);label.fontSize=label.resizeTextMaxSize=size;}}
             for(int i=0;i<plus.Length;i++)if(plus[i].localScale!=Vector3.one)plus[i].localScale=Vector3.one;
-            PlaceBackground(inset+w*(ActionsCentre+ActionsHeight*.5f),inset+navH);
+            PlaceBackground(inset+w*(ActionsCentre+ActionsHeight*.5f),inset+navH,away);
             if(fill)fill.fillAmount=home.Progress.areaTotal>0?(float)home.Progress.areaCompleted/home.Progress.areaTotal:0;
             FitDialog();
         }

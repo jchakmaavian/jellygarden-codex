@@ -17,7 +17,7 @@ namespace JellyGarden.Scripts.Juice
         Flyer[] flyers;
         readonly HashSet<Square> reserved=new HashSet<Square>();
         readonly HashSet<Item> conversionInputLeases=new HashSet<Item>();
-        int pending;
+        int pending, rocketTails;
         GameState previousState;
         bool observedState;
         float lastCoreFlash = -10f, lastFireworkSound = -10f;
@@ -27,7 +27,9 @@ namespace JellyGarden.Scripts.Juice
         public int Impacts {get;private set;}
         public int PeakProjectiles {get;private set;}
         public int ActiveOperations=>pending;
-        public static bool Busy=>instance&&instance.pending>0;
+        // A tapped or combined Rocket stops holding the board once its last cell is hit; its flight off the board is
+        // decoration (rocketTails), so pieces fall in behind it instead of waiting for it to leave the screen.
+        public static bool Busy=>instance&&instance.pending-instance.rocketTails>0;
         public static event Action<float> Reaction;
         public static bool IsPower(ItemsTypes t)=>t!=ItemsTypes.NONE&&t!=ItemsTypes.INGREDIENT;
         public static RoyalPowerupDirector Get
@@ -86,7 +88,7 @@ namespace JellyGarden.Scripts.Juice
         }
         void StartOperation(IEnumerator sequence){pending++;StartCoroutine(Own(sequence));}
         IEnumerator Own(IEnumerator sequence){try{yield return sequence;}finally{pending=Mathf.Max(0,pending-1);}}
-        void OnDisable(){ReleaseConversionInput();RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Clear();RoyalAudioDirector.StopReferenceVoices();RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
+        void OnDisable(){ReleaseConversionInput();RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Clear();RoyalAudioDirector.StopReferenceVoices();RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;rocketTails=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
         void ReleaseConversionInput()
         {
             RoyalThrone.Boosters.ColorBall.V4.ColorBallChargedTargetV4.ClearAll();
@@ -141,7 +143,7 @@ namespace JellyGarden.Scripts.Juice
         IEnumerator Single(ItemsTypes type,Square origin,int colour)
         {
             if(!origin)yield break;
-            if(type==ItemsTypes.HORIZONTAL_STRIPPED||type==ItemsTypes.VERTICAL_STRIPPED)yield return Rocket(origin,type==ItemsTypes.HORIZONTAL_STRIPPED,1);
+            if(type==ItemsTypes.HORIZONTAL_STRIPPED||type==ItemsTypes.VERTICAL_STRIPPED)yield return Rocket(origin,type==ItemsTypes.HORIZONTAL_STRIPPED,1,true,true);
             else if(type==ItemsTypes.PACKAGE)yield return Explosion(origin,2);
             else if(type==ItemsTypes.HELICOPTER)yield return Helicopter(origin,ItemsTypes.NONE,1);
             else if(type==ItemsTypes.BOMB)yield return Orb(origin,ItemsTypes.NONE,colour,false);
@@ -152,7 +154,7 @@ namespace JellyGarden.Scripts.Juice
             if(a==ItemsTypes.HELICOPTER||b==ItemsTypes.HELICOPTER){yield return Helicopter(origin,a==ItemsTypes.HELICOPTER?b:a,a==b?3:1);yield break;}
             if(a==ItemsTypes.PACKAGE&&b==ItemsTypes.PACKAGE){yield return Explosion(origin,4);yield break;}
             int lanes=a==ItemsTypes.PACKAGE||b==ItemsTypes.PACKAGE?3:1;
-            StartOperation(Rocket(origin,true,lanes));yield return Rocket(origin,false,lanes);
+            StartOperation(Rocket(origin,true,lanes,true,true));yield return Rocket(origin,false,lanes,true,true);
         }
         Flyer Take(string art,Vector3 p,float scale=1)
         {

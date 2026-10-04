@@ -41,7 +41,7 @@ namespace JellyGarden.Scripts.Juice
                     }}
                     for(int i=0;i<flights.Count;){
                         var f=flights[i];if(!f.square||!f.item||f.item.destroying||f.square.item!=f.item){if(f.item)f.item.transform.localScale=f.rest;if(f.charge)f.charge.Release(f.chargeLease);if(f.beam.Lease==f.lease)f.beam.ArrivalNotice=null;flights.RemoveAt(i);continue;}
-                        if(!f.hit&&f.arrivalNotified){f.hit=true;f.contactAge=0;ColorBallBeamArrivals++;ColorBallVfxV4.Contact(f.square.transform.position,f.item.color);ball.Send(ColorBallEvent.ColorBallBeamHit,f.square.transform.position);
+                        if(!f.hit&&f.arrivalNotified){f.hit=true;f.contactAge=0;ColorBallBeamArrivals++;ColorBallVfxV4.Contact(f.square.transform.position,f.item.color,!convert&&f.item.currentType==ItemsTypes.NONE);ball.Send(ColorBallEvent.ColorBallBeamHit,f.square.transform.position);
                             if(!convert&&f.item.currentType==ItemsTypes.NONE){f.charge=ColorBallChargedTargetV4.Hold(f.item);if(f.charge)f.chargeLease=f.charge.Lease;}
                             i++;continue;}
                         if(f.hit){

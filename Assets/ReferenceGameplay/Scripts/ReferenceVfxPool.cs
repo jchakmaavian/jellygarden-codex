@@ -76,6 +76,44 @@ namespace RoyalThrone.ReferenceGameplay
             }
             return new Handle(item);
         }
+        /// <summary>
+        /// Loads an effect and parks up to <paramref name="count"/> idle copies in the pool, with their materials, textures and
+        /// meshes touched, so the first Rocket, match or blast of a session does not load or instantiate in the middle of play.
+        /// Builds at most one copy per call; returns true while more are wanted.
+        /// </summary>
+        public static bool Prewarm(string key, int count)
+        {
+            if (!Application.isPlaying || !Has(key)) return false;
+            if (!instance) { var go = new GameObject("Imported gameplay VFX pool"); instance = go.AddComponent<ReferenceVfxPool>(); DontDestroyOnLoad(go); }
+            int have = 0; foreach (var e in instance.pool) if (e.key == key && e.root) have++;
+            if (have >= count || instance.pool.Count >= Capacity) return false;
+            var root = Instantiate(prefabs[key], instance.transform);
+            var entry = new Entry { key = key, root = root, particles = root.GetComponentsInChildren<ParticleSystem>(true) };
+            entry.pausedByOwner = new bool[entry.particles.Length];
+            foreach (var ps in entry.particles) ps.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+            foreach (var renderer in root.GetComponentsInChildren<ParticleSystemRenderer>(true))
+            {
+                foreach (var material in renderer.sharedMaterials) Touch(material);
+                Touch(renderer.trailMaterial);
+                if (renderer.mesh) _ = renderer.mesh.vertexCount;
+            }
+            foreach (var ps in entry.particles)
+            {
+                var sheet = ps.textureSheetAnimation;
+                if (sheet.enabled && sheet.mode == ParticleSystemAnimationMode.Sprites)
+                    for (int i = 0; i < sheet.spriteCount; i++) { var sprite = sheet.GetSprite(i); if (sprite) Touch(sprite.texture); }
+            }
+            root.SetActive(false);
+            instance.pool.Add(entry);
+            return have + 1 < count;
+        }
+        static void Touch(Material material)
+        {
+            if (!material) return;
+            foreach (int id in material.GetTexturePropertyNameIDs()) Touch(material.GetTexture(id));
+        }
+        // Reading a property makes the editor load an asset it would otherwise load on the effect's first render.
+        static void Touch(Texture texture) { if (texture) _ = texture.width; }
         static void StopEmission(Entry item)
         {
             item.stopped = true; item.sustained = false;

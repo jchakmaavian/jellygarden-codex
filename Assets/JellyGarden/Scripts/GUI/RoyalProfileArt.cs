@@ -8,8 +8,9 @@ using static RoyalThrone.Presentation.RoyalCardKit;
 namespace RoyalThrone.Presentation
 {
     // The profile's art (2026-09-30), drawn with the card kit. It holds:
-    // - the avatars: King Vanguard (his approved "excited" pose), the corgi and the steward, cropped to their heads, plus
-    //   every sprite placed in Resources/RoyalProfile/Avatars (square portraits, shown whole) — new avatars need no code;
+    // - the avatars: every sprite in Resources/RoyalProfile/Avatars (square portraits, shown whole), in file-name order. The
+    //   ten generated on 2026-10-04 replaced the first set (King Vanguard, the corgi, the steward); a file's "NN-" prefix
+    //   sets its place and is left out of its name ("01-royal-queen" is "Royal Queen"). New avatars need no code;
     // - the five frames and four name styles the player can choose;
     // - the framed avatar tile, the level pennant, the drawn icons and the tabs the Profile page and its Edit card share.
     public sealed class RoyalAvatar
@@ -47,16 +48,13 @@ namespace RoyalThrone.Presentation
 
         static List<RoyalAvatar> avatars;
 
-        /// <summary>Every avatar the player can choose, the built-in three first.</summary>
+        /// <summary>Every avatar the player can choose, in file-name order (the first is the default).</summary>
         public static List<RoyalAvatar> Avatars
         {
             get
             {
                 if (avatars != null && (avatars.Count == 0 || avatars[0].sprite)) return avatars;
                 avatars = new List<RoyalAvatar>();
-                Add("king", "King Vanguard", Resources.Load<Sprite>("RoyalLeaderboard/king-venguard-excited"), new Vector2(.45f, .165f), .55f, C("4a8cf0"), C("163f9e"));
-                Add("corgi", "Royal Corgi", RoyalPieceSkin.CampaignArt("dog"), new Vector2(.43f, .28f), .56f, C("ffd76a"), C("ef8a2a"));
-                Add("steward", "The Steward", RoyalPieceSkin.CampaignArt("steward"), new Vector2(.39f, .12f), .36f, C("4fd0bd"), C("137a82"));
                 var extra = new List<Sprite>(Resources.LoadAll<Sprite>(AvatarFolder));
                 extra.Sort((a, b) => string.CompareOrdinal(a.name, b.name));
                 foreach (var s in extra) Add(s.name, Pretty(s.name), s, new Vector2(.5f, .5f), 1, C("5a8ee8"), C("1a3f9a"));
@@ -70,9 +68,11 @@ namespace RoyalThrone.Presentation
             avatars.Add(new RoyalAvatar { id = id, name = name, sprite = sprite, centre = centre, size = size, from = from, to = to });
         }
 
-        // "court-knight" -> "Court Knight"
+        // "court-knight" -> "Court Knight"; "01-royal-queen" -> "Royal Queen" (the order prefix is dropped)
         static string Pretty(string file)
         {
+            int dash = file.IndexOf('-');
+            if (dash > 0 && int.TryParse(file.Substring(0, dash), out _)) file = file.Substring(dash + 1);
             var words = file.Replace('_', ' ').Replace('-', ' ').Split(' ');
             for (int i = 0; i < words.Length; i++) if (words[i].Length > 0) words[i] = char.ToUpperInvariant(words[i][0]) + words[i].Substring(1);
             return string.Join(" ", words).Trim();

@@ -53,7 +53,9 @@ namespace JellyGarden.Scripts
 		int visibleHintMove;
 		Juice.RoyalHintPresenter hintPresenter;
 		public int VisibleHintCount => hintPresenter && hintPresenter.IsVisible ? hintPresenter.VisibleSwapCount : 0;
-		public const float HintIdleSeconds = 4f;
+		// The hint always shows the best move (2026-10-04): it appears once the board has been still for a second and stays
+		// until the player touches the board or the board changes.
+		public const float HintIdleSeconds = 1f;
 		void OnEnable() { Juice.RoyalHintSettings.Changed += HintPreferenceChanged; }
 		void OnDisable()
 		{
@@ -179,10 +181,22 @@ namespace JellyGarden.Scripts
 				if (LevelManager.THIS.gameStatus != GameState.Playing)
 					yield break;
 
+				// The hint solver decides (2026-10-04): the best colour match is the tip; with no colour match the board
+				// shuffles (LevelManager.NoMatches -> RoyalShuffle), even when power-ups could be tapped. The legacy pattern
+				// scan below is kept for reference but no longer runs.
+				var royalPlan = Juice.RoyalHintSolver.Find(LevelManager.THIS);
+				bool royalDecided = true;
+				if (royalPlan != null)
+				{
+					nextMoveItems.Add(royalPlan.First); if (royalPlan.Second) nextMoveItems.Add(royalPlan.Second);
+					tipItem = royalPlan.First; showTip(nextMoveItems); yield break;
+				}
+
 				// Get item component from the prefab
 				Item it = LevelManager.THIS.itemPrefab.GetComponent<Item>();
 
 				//Iteration for search possible combination
+				if (!royalDecided)
 				for (int COLOR = 0; COLOR < it.items.Length; COLOR++)
 				{
 					for (int col = 0; col < LevelManager.THIS.maxCols; col++)
@@ -536,7 +550,7 @@ namespace JellyGarden.Scripts
 
 
 				}
-				if (Juice.RoyalEffectsProfile.Get)
+				if (!royalDecided && Juice.RoyalEffectsProfile.Get)
 				{
 					var royalHint = Juice.RoyalPatterns.ExtraHint();
 					if (royalHint != null) { nextMoveItems = royalHint; tipItem = royalHint[0]; showTip(royalHint); yield break; }
@@ -571,6 +585,9 @@ namespace JellyGarden.Scripts
 			// Discovery must remain true even when visual hints are disabled: otherwise
 			// the no-moves solver would incorrectly shuffle a perfectly playable board.
 			gotTip = true;
+			// A hint already showing for this board stays: several finders start at once (entering Playing, the level start,
+			// the end of a cascade) and each used to cancel and restart it, so it blinked.
+			if (hintRoutine != null && hintPresenter && hintPresenter.IsVisible && LevelManager.THIS && visibleHintMove == LevelManager.THIS.moveID) return;
 			if (hintRoutine != null) StopCoroutine(hintRoutine);
 			CancelVisibleHint();
 			hintRoutine = StartCoroutine(showTipCor(new List<Item>(nextMoveItems)));
@@ -612,8 +629,7 @@ namespace JellyGarden.Scripts
 					visibleHintMove = tipID;
 					visibleHintItems.Add(plan.First);
 					if (plan.Second) visibleHintItems.Add(plan.Second);
-					float until = Time.unscaledTime + 2.4f;
-					while (hintPresenter.IsVisible && Time.unscaledTime < until) yield return null;
+					while (hintPresenter.IsVisible) yield return null;
 				}
 			}
 			CancelVisibleHint();

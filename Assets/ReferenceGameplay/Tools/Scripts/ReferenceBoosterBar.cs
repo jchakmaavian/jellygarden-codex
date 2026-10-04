@@ -46,6 +46,11 @@ namespace RoyalThrone.ReferenceGameplay
         readonly float[] chosen=new float[4];readonly RoyalThrone.Presentation.RoyalCardShape[] halos=new RoyalThrone.Presentation.RoyalCardShape[4];float lockedHintUntil;
         readonly Dictionary<BoostIcon,GameObject> padlocks=new Dictionary<BoostIcon,GameObject>();static Sprite padlockArt,discArt;
         ReferenceHammerSequence hammer;ReferenceArcherSequence archer;ReferenceCannonSequence cannon;Square[] currentBoard;Coroutine operation;bool shuffled;
+        // The King cheers the tools (2026-10-04): ToolUsed when a tool is committed, ToolStruck at its first hit (the
+        // Jester's when the shuffled pieces settle). Presentation only; RoyalGameplayPresentation listens.
+        public static event Action<int> ToolUsed,ToolStruck;
+        int usingTool=-1;bool struck;
+        static void Notify(Action<int> handlers,int tool){try{handlers?.Invoke(tool);}catch(Exception e){Debug.LogException(e);}}
         LevelManager LM=>LevelManager.THIS;
         public static Sprite Art(int index)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+Icons[index]);
         static Sprite Sprite(int id)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+id);
@@ -306,6 +311,7 @@ namespace RoyalThrone.ReferenceGameplay
             if(type==0&&!ReferenceHammerSequence.Available){Status="Hammer animation assets are unavailable.";return false;}
             if(type==1&&!ReferenceArcherSequence.Available){Status="Archer animation assets are unavailable.";return false;}
             InitScript.Instance.SpendBoost(Types[type]);CancelSelection();Busy=true;LM.DragBlocked=true;currentBoard=LM.squaresArray;LastHitCount=0;
+            usingTool=type;struck=false;Notify(ToolUsed,type);
             operation=StartCoroutine(Use(type,affected));return true;
         }
         List<Item> Movable()=>LM.GetItems().Where(i=>i&&!i.destroying&&!i.falling&&i.square.CanGoOut()&&i.currentType!=ItemsTypes.INGREDIENT&&!RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(i)).ToList();
@@ -317,6 +323,7 @@ namespace RoyalThrone.ReferenceGameplay
                 if(type==3){
                     shuffled=false;yield return Shuffle();
                     if(!shuffled){InitScript.Instance.BuyBoost(Types[type],0,Stock(type)+1);Status="No safe shuffle available; hat returned.";yield break;}
+                    struck=true;Notify(ToolStruck,type);
                 }
                 else
                 {
@@ -339,11 +346,12 @@ namespace RoyalThrone.ReferenceGameplay
                 while((LM.IsResolvingMatches||RoyalPowerupDirector.Busy||LM.GetItems().Where(i=>i).Any(i=>i.falling||i.destroying))&&Time.realtimeSinceStartup<deadline)yield return null;
                 Status="Completed "+Titles[type];
             }
-            finally{Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(archer)archer.Cancel();if(cannon)cannon.Cancel();operation=null;}
+            finally{Busy=false;usingTool=-1;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(archer)archer.Cancel();if(cannon)cannon.Cancel();operation=null;}
         }
         void HitCell(Square s)
         {
             if(!s||s.type==SquareTypes.UNDESTROYABLE)return;
+            if(!struck&&usingTool>=0){struck=true;Notify(ToolStruck,usingTool);}
             if(s.item&&s.item.currentType!=ItemsTypes.INGREDIENT){s.item.royalBlastClear=true;s.item.DestroyItem(true);LastHitCount++;}
             else if(s.block.Count>0){s.DestroyBlock();LastHitCount++;}
         }
@@ -385,7 +393,7 @@ namespace RoyalThrone.ReferenceGameplay
             for(float t=0;t<.5f;t+=Time.deltaTime){float u=Mathf.SmoothStep(0,1,t/.5f);for(int n=0;n<pieces.Count;n++)if(pieces[n])pieces[n].transform.position=Vector3.Lerp(start[n],pieces[n].square.transform.position,u)+Vector3.up*Mathf.Sin(u*Mathf.PI)*.18f;yield return null;}
             foreach(var p in pieces)if(p)p.transform.position=p.square.transform.position;LastHitCount=0;
         }
-        void CancelOperation(){if(operation!=null)StopCoroutine(operation);operation=null;Busy=false;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(archer)archer.Cancel();if(cannon)cannon.Cancel();}
+        void CancelOperation(){if(operation!=null)StopCoroutine(operation);operation=null;Busy=false;usingTool=-1;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(archer)archer.Cancel();if(cannon)cannon.Cancel();}
         void OnDisable(){CancelSelection();CloseShop();CancelOperation();}
     }
 }

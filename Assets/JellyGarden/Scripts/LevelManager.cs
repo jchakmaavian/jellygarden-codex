@@ -325,6 +325,8 @@ namespace JellyGarden.Scripts
 
                     InitLevel();
                     OnLevelLoaded();
+                    // While the level card is up: load what the first match, Rocket and booster would otherwise load mid-play.
+                    Juice.RoyalGameplayWarmup.Begin(this);
 
 
                 }
@@ -621,15 +623,24 @@ namespace JellyGarden.Scripts
 
         public void CheckCollectedTarget(GameObject _item)
         {
-            void AnimateCollectedItem(Vector2 pos)
+            void AnimateCollectedItem(TargetObject objectTarget)
             {
-                GameObject item = new GameObject();
-                item.transform.position = _item.transform.position;
+                var piece = _item.GetComponent<Item>();
+                var spriteRenderer = piece && piece.sprRenderer ? piece.sprRenderer : _item.GetComponentInChildren<SpriteRenderer>();
+                float height = spriteRenderer ? spriteRenderer.bounds.size.y : squareHeight;
                 // Keep the destruction coroutine alive while its visual clone flies to the goal.
                 foreach (var renderer in _item.GetComponentsInChildren<SpriteRenderer>()) renderer.enabled = false;
+                // The goal shown in the HUD's Goal panel; the old flight (to the imported header's hidden icon) is the fallback.
+                if (spriteRenderer && RoyalThrone.Presentation.RoyalGameplayPresentation.GoalIcon(objectTarget, out var icon, out var layer))
+                {
+                    StartCoroutine(FlyToGoal(objectTarget, spriteRenderer.sprite, _item.transform.position, height, icon, layer));
+                    return;
+                }
+                Vector2 pos = objectTarget.guiObj.transform.position;
+                GameObject item = new GameObject();
+                item.transform.position = _item.transform.position;
                 item.transform.localScale = Vector3.one / 2f;
                 SpriteRenderer spr = item.AddComponent<SpriteRenderer>();
-                var spriteRenderer = _item.GetComponentInChildren<SpriteRenderer>();
                 spr.sprite = spriteRenderer.sprite;
                 spr.sortingLayerName = "UI";
                 spr.sortingOrder = 1;
@@ -642,7 +653,7 @@ namespace JellyGarden.Scripts
                 if(!objectTarget.Done())
                 {
                     if(objectTarget.SetOff(_item))
-                        AnimateCollectedItem(objectTarget.guiObj.transform.position);
+                        AnimateCollectedItem(objectTarget);
                 }
             }
         }
@@ -681,6 +692,48 @@ namespace JellyGarden.Scripts
             return null;
         }
 
+        // A collected goal piece flies into its goal in the HUD's Goal panel, drawn above the panels: it lifts and swells a
+        // little, bends away, then sweeps in with growing speed while shrinking to the icon's size; the icon then pops and its
+        // number counts the piece (RoyalGameplayPresentation.GoalLanded). The ending is the old flight's.
+        IEnumerator FlyToGoal(TargetObject target, Sprite sprite, Vector3 world, float worldHeight, RectTransform icon, RectTransform layer)
+        {
+            ingredientFly = true;
+            var cam = Camera.main;
+            var rect = new GameObject("Collected goal piece", typeof(RectTransform)).GetComponent<RectTransform>();
+            rect.SetParent(layer, false);
+            var image = rect.gameObject.AddComponent<Image>(); image.sprite = sprite; image.preserveAspect = true; image.raycastTarget = false;
+            Vector2 Local(Vector2 screen) { RectTransformUtility.ScreenPointToLocalPointInRectangle(layer, screen, null, out var p); return p; }
+            float unit = Mathf.Max(.0001f, layer.lossyScale.y);
+            Vector2 from = cam ? Local(cam.WorldToScreenPoint(world)) : Vector2.zero;
+            float startSize = cam ? Mathf.Abs(cam.WorldToScreenPoint(world + Vector3.up * worldHeight).y - cam.WorldToScreenPoint(world).y) / unit : 70;
+            float aspect = sprite ? sprite.rect.width / Mathf.Max(1, sprite.rect.height) : 1;
+            // A little variety from where the piece was collected; the board's random sequence is left alone.
+            float vary = Mathf.Repeat(world.x * 7.31f + world.y * 3.17f, 1f);
+            float duration = .62f + .12f * vary, turn = (vary - .5f) * 40f, age = 0;
+            RoyalThrone.Presentation.RoyalGameplayPresentation.GoalLaunched(target, duration);
+            rect.localPosition = from; rect.sizeDelta = new Vector2(startSize * aspect, startSize);
+            while (age < duration && layer && gameStatus != GameState.Map)
+            {
+                yield return null;
+                if (gameStatus != GameState.Pause) age += Time.deltaTime;
+                float t = Mathf.Clamp01(age / duration);
+                Vector2 to = icon ? Local(RectTransformUtility.WorldToScreenPoint(null, icon.position)) : from;
+                float endSize = icon ? icon.rect.height * icon.lossyScale.y / unit : startSize * .5f;
+                Vector2 bend = from + new Vector2((from.x - to.x) * .3f, (to.y - from.y) * .2f + startSize * 1.1f);
+                float e = t < .5f ? 2 * t * t : 1 - Mathf.Pow(2 - 2 * t, 2) * .5f;
+                rect.localPosition = (1 - e) * (1 - e) * from + 2 * (1 - e) * e * bend + e * e * to;
+                float size = t < .16f ? Mathf.Lerp(startSize, startSize * 1.22f, Mathf.SmoothStep(0, 1, t / .16f))
+                                      : Mathf.Lerp(startSize * 1.22f, endSize, Mathf.SmoothStep(0, 1, (t - .16f) / .84f));
+                rect.sizeDelta = new Vector2(size * aspect, size);
+                rect.localRotation = Quaternion.Euler(0, 0, turn * Mathf.Sin(t * Mathf.PI));
+            }
+            if (rect) Destroy(rect.gameObject);
+            RoyalThrone.Presentation.RoyalGameplayPresentation.GoalLanded(target);
+            if (gameStatus == GameState.Playing && !IsIngredientFalling())
+                CheckWinLose();
+            ingredientFly = false;
+        }
+
         IEnumerator StartAnimateIngredient(GameObject item, Vector2 pos)
         {
             ingredientFly = true;
@@ -699,12 +752,18 @@ namespace JellyGarden.Scripts
             Vector3 startPos = item.transform.localPosition;
             float speed = UnityEngine.Random.Range(0.4f, 0.6f);
             float distCovered = 0;
+            Vector3 baseScale = item.transform.localScale;
+            float turn = UnityEngine.Random.Range(-1f, 1f) * 30f;
             while (distCovered < 0.5f)
             {
                 distCovered = (Time.time - startTime) * speed;
+                float k = Mathf.Clamp01(distCovered / 0.5f);
                 item.transform.localPosition = new Vector3(curveX.Evaluate(distCovered), curveY.Evaluate(distCovered), 0);
-                item.transform.Rotate(Vector3.back, Time.deltaTime * 1000);
-                yield return new WaitForFixedUpdate();
+                // Pops up to 1.25x in the first fifth, then settles to 0.8x as it lands in the goal.
+                float pop = k < .2f ? Mathf.Lerp(1f, 1.25f, Mathf.SmoothStep(0, 1, k / .2f)) : Mathf.Lerp(1.25f, .8f, Mathf.SmoothStep(0, 1, (k - .2f) / .8f));
+                item.transform.localScale = baseScale * pop;
+                item.transform.localRotation = Quaternion.Euler(0, 0, turn * Mathf.Sin(k * Mathf.PI));
+                yield return null;
             }
             //     SoundBase.Instance.audio.PlayOneShot(SoundBase.Instance.getStarIngr);
             Destroy(item);
@@ -1306,8 +1365,15 @@ namespace JellyGarden.Scripts
 
         void GenerateNewItems(bool falling = true)
         {
+            // A gentle refill (2026-10-04): the new pieces of each column's run of cells are stacked just above that run's top
+            // edge, the lowest first, so they enter from the board's edge as one stream and fade in as they cross it
+            // (Item.royalEntryEdge); the columns start in a soft wave from the centre out (Item.royalFallDelay).
+            bool gentle = falling && Juice.JuiceConfig.Instance.EnableJuice;
+            float cellWorld = squareHeight * (GameField ? Mathf.Abs(GameField.lossyScale.y) : 1f);
+            var stacked = new Dictionary<int, int>();
             for (int col = 0; col < maxCols; col++)
             {
+                stacked.Clear();
                 for (int row = maxRows - 1; row >= 0; row--)
                 {
                     if (GetSquare(col, row) != null)
@@ -1316,7 +1382,18 @@ namespace JellyGarden.Scripts
                         {
                             if ((GetSquare(col, row).item == null && !GetSquare(col, row).IsHaveSolidAbove()) || !falling)
                             {
-                                GetSquare(col, row).GenItem(falling);
+                                var created = GetSquare(col, row).GenItem(falling);
+                                if (gentle && created)
+                                {
+                                    int top = row;
+                                    while (top > 0 && GetSquare(col, top - 1) != null && !GetSquare(col, top - 1).IsNone()) top--;
+                                    stacked.TryGetValue(top, out int k); stacked[top] = k + 1;
+                                    var topPosition = GetSquare(col, top).transform.position;
+                                    var target = GetSquare(col, row).transform.position;
+                                    created.transform.position = new Vector3(target.x, topPosition.y + cellWorld * (k + 1), target.z - 0.2f);
+                                    created.royalEntryEdge = topPosition.y + cellWorld * .5f;
+                                    created.royalFallDelay = .022f * Mathf.Abs(col - (maxCols - 1) * .5f);
+                                }
                             }
                         }
                     }
@@ -1335,9 +1412,18 @@ namespace JellyGarden.Scripts
             if (gameStatus == GameState.Playing)
             {
                 SoundBase.Instance.PlaySound(SoundBase.Instance.noMatch);
-
-                MenuManager.Instance.ShowNoMoreMatches(true);
+                // No swap matches: shuffle the gems already on the board (RoyalShuffle) so the player always has a move.
+                // Power-ups and obstacles stay put. The old rebuild (new gems, no guaranteed move) is only the fallback.
                 gameStatus = GameState.RegenLevel;
+                bool shuffled = false;
+                yield return Juice.RoyalShuffle.Run(this, ok => shuffled = ok);
+                if (shuffled)
+                {
+                    DragBlocked = false;
+                    gameStatus = GameState.Playing;   // starts the hint search again
+                    yield break;
+                }
+                MenuManager.Instance.ShowNoMoreMatches(true);
                 yield return new WaitForSeconds(1);
                 ReGenLevel();
             }
@@ -1839,7 +1925,7 @@ namespace JellyGarden.Scripts
                 while (!IsAllDestoyFinished())
                 {
                     if (waveRevision != inputRevision && InputSwaps == 0) break;
-                    yield return new WaitForSeconds(0.1f);
+                    yield return null;   // every frame: a 0.1 s poll left cleared cells empty for up to 0.1 s more
                 }
 
                 // A new move during the effects needs its matches resolved before gravity.
