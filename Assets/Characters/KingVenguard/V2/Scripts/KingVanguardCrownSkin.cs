@@ -16,9 +16,9 @@ namespace RoyalThrone.Characters
         const string Crown = "Taç";
         const int PackedWidth = 496, PackedHeight = 288, Padding = 8, AddedHeight = 320;
         // Calibrated in the original crown's upright UV frame. The lower band
-        // follows the temple line: narrower, centered over the cranium, and tall
-        // enough to preserve the redesigned crown's shape without flattening it.
-        const float FitLeft = .05f, FitTop = .02f, FitWidth = 1f, FitHeight = .82f;
+        // seats around the repaired head at both temples. The wider, taller fit
+        // restores the crown proportions and keeps its center over the face.
+        const float FitLeft = .015f, FitTop = -.10f, FitWidth = 1.10f, FitHeight = .98f;
 
         public static void Apply(SkeletonData data)
         {

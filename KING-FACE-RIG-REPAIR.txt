@@ -115,3 +115,21 @@ idle/win/clap routes were included in inspection. Do not interpret mathematical
 checks across all 42 clips as artistic approval of those source-only tracks.
 
 Android/device rendering and performance were not tested in this pass.
+
+CROWN FIT FOLLOW-UP — 4 October 2026
+
+The repaired face exposed the old crown's narrow, short registration. Refitted
+the existing crown mesh 10% wider and approximately 20% taller, centered over
+the repaired face, with its lower band seated slightly farther down at the
+temples. The contact shadow follows the same fitted mesh automatically.
+
+Installed and checked in the main game. Crown validation passed 210 poses;
+the isolated mesh-motion check passed 1,275 frames including 135 real mixing
+frames. Recorded 660 continuous frames at 30 fps and inspected idle, blink,
+worry and cheer. Actual HUD idle/cheer captures show clearance inside the arch.
+Main Unity errors: 0. Temporary QA profile ended; normal progress restored.
+
+Evidence: Design/KingVanguard-CrownRefit-20261004/Review/Crown-Before-After.mp4
+(old left, fitted right; old recording scaled/padded to match the wider review
+camera), Crown-Refit-Motion.mp4, Main-HUD-idle.png and Main-HUD-cheer.png.
+Numeric reports are in that task's Validation/ directory. No new art generation.
