@@ -15,6 +15,10 @@ namespace RoyalThrone.Characters
     {
         const string Crown = "Taç";
         const int PackedWidth = 496, PackedHeight = 288, Padding = 8, AddedHeight = 320;
+        // Calibrated in the original crown's upright UV frame. The lower band
+        // follows the temple line: narrower, centered over the cranium, and tall
+        // enough to preserve the redesigned crown's shape without flattening it.
+        const float FitLeft = .05f, FitTop = .02f, FitWidth = 1f, FitHeight = .82f;
 
         public static void Apply(SkeletonData data)
         {
@@ -82,9 +86,7 @@ namespace RoyalThrone.Characters
             {
                 float u=(float)x/(columns-1),v=(float)y/(rows-1);int id=y*columns+x;
                 targetUv[id*2]=u;targetUv[id*2+1]=v;
-                // New silhouette is broader and shallower. Its inner center rim
-                // seats at the native forehead line, instead of at the old top tip.
-                var point=new Vector2(-.06f+u*1.12f,.08f+v*.72f);
+                var point=new Vector2(FitLeft+u*FitWidth,FitTop+v*FitHeight);
                 Vector3 affine=Bary(point,Uv(uv,ia),Uv(uv,ib),Uv(uv,ic));
                 Vector2 position=Uv(world,ia)*affine.x+Uv(world,ib)*affine.y+Uv(world,ic)*affine.z;
                 int aBest=ia,bBest=ib,cBest=ic;Vector3 blend=Vector3.zero;float distance=float.MaxValue;
@@ -111,7 +113,7 @@ namespace RoyalThrone.Characters
             }
             var mesh=new MeshAttachment(Crown){Path="Vanguard Crown",WorldVerticesLength=targetUv.Length,
                 Bones=bones.ToArray(),Vertices=vertices.ToArray(),RegionUVs=targetUv,Triangles=triangles.ToArray(),
-                Width=source.Width*1.12f,Height=source.Height*.72f,R=source.R,G=source.G,B=source.B,A=source.A};
+                Width=source.Width*FitWidth,Height=source.Height*FitHeight,R=source.R,G=source.G,B=source.B,A=source.A};
             mesh.SetRegion(region);return mesh;
         }
         static void Accumulate(SortedDictionary<int,float> target,Dictionary<int,float> source,float scale)

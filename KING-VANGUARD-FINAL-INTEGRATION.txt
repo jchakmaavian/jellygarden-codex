@@ -62,3 +62,19 @@ Assets/Characters/KingVenguard/V2/Spine/ and
 Assets/Characters/KingVenguard/V2/Activities/KingDrill/Textures/.
 Prompts and technical registration scripts are retained in
 Design/KingVanguard-FinalIntegration-20261004/Art/ and Tools/.
+
+Crown fit follow-up - 4 October 2026
+- Narrowed the replacement crown by 10.7 percent, recentered it over the
+  cranium, and restored 13.9 percent height. The lower band now follows the
+  temple line. Native crown/head bone weighting and the approved art remain.
+- Re-rendered 16 portrait/area clips and visually inspected idle, worry,
+  sadness, celebration and the supported area clap loop.
+- Crown validation passed 210 poses. Temporal verification passed 1,275 mesh
+  frames including 135 real crossfade frames. The 660-frame, 30 fps motion
+  preview was encoded and decode-checked.
+- Installed main-game HUD checked at 1080x1920 in idle and thumbs-up poses:
+  the crown fits inside the arch. Unity reported no console errors.
+- Isolated QA session ended and normal player progress was restored.
+- Evidence: Design/KingVanguard-CrownFit-20261004/Review/ and Validation/.
+  Motion/contact-sheet sources: Design/KingVanguard-Refinement-20261004/After/
+  CrownFit/ and CrownFitMotion/. Android device validation was not repeated.
