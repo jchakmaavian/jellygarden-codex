@@ -13,8 +13,8 @@ using RoyalThrone.Characters;
 public static class KingImpactLaughChecks {
  public static string Run(){
   string reportRoot=Path.GetFullPath(Path.Combine(Application.dataPath,".."));if(reportRoot.EndsWith("KingVanguard-RigPreview-20261004"))reportRoot=Path.GetFullPath(Path.Combine(reportRoot,"../JellyGarden-Codex"));
-  string initialReport=Path.Combine(reportRoot,"Design/KingVanguard-ImpactLaugh-20261004/Validation/rig-checks.txt");Directory.CreateDirectory(Path.GetDirectoryName(initialReport));File.WriteAllText(initialReport,"RUNNING "+DateTime.UtcNow.ToString("o")+"\n");
-  var report=new StringBuilder();int frames=0,posed=0;float maxToothDrift=0;
+  string initialReport=Path.Combine(reportRoot,"Design/KingVanguard-ReferenceLaugh-20261004/Review/rig-checks.txt");Directory.CreateDirectory(Path.GetDirectoryName(initialReport));File.WriteAllText(initialReport,"RUNNING "+DateTime.UtcNow.ToString("o")+"\n");
+  var report=new StringBuilder();int frames=0,posed=0;
   void Check(bool ok,string text){if(!ok)throw new Exception(text);report.AppendLine("PASS "+text);}
   Check(KingVanguardFeedbackQueue.FromImpactStrength(.45f)==KingVanguardFeedbackQueue.Feedback.None,"ordinary match is not a laugh");
   Check(KingVanguardFeedbackQueue.FromImpactStrength(.6f)==KingVanguardFeedbackQueue.Feedback.Powerup,"creation keeps normal cheer");
@@ -33,28 +33,20 @@ public static class KingImpactLaughChecks {
     var king=go.AddComponent<KingVanguardCharacter>();var so=new SerializedObject(king);so.FindProperty("skeletonGraphic").objectReferenceValue=graphic;so.ApplyModifiedPropertiesWithoutUndo();king.ResetToIdle();
     Check(king.PlayMatchAcknowledgement()&&king.PlayImpactReaction(),fps+"fps impact interrupts small acknowledgement");
     var art=graphic.GetComponent<KingVanguardLaughArt>();Check(art!=null,"new art rig is installed");
-    Vector2? upper=null;float jawMin=99,jawMax=-99;int active=0;
+    float jawMin=99,jawMax=-99;int active=0;
     for(int i=0;i<fps*3;i++){
      graphic.Update(i==0?0:1f/fps);graphic.LateUpdate();frames++;
      if(art.IsShowing){
-      posed++;active++;if(art.RenderedPartCount!=6)throw new Exception("Incomplete attachment set");
-      var slot=graphic.Skeleton.FindSlot("Ust Diş");var mouth=slot.Attachment as MeshAttachment;
-      if(mouth==null||mouth.Path!="Vanguard Laugh Mouth-Peak")throw new Exception("Old mouth still visible");
-      var points=new float[mouth.WorldVerticesLength];mouth.ComputeWorldVertices(slot,points);var face=graphic.Skeleton.FindBone("on_yuz");
-      int tooth=(3*17+8)*2;float x,y;face.WorldToLocal(points[tooth],points[tooth+1],out x,out y);var p=new Vector2(x,y);
-      if(!upper.HasValue)upper=p;else maxToothDrift=Mathf.Max(maxToothDrift,Vector2.Distance(upper.Value,p));
+      posed++;active++;if(art.RenderedPartCount!=1)throw new Exception("Reference portrait missing");
+      if(!art.Portrait||art.Portrait.mainTexture.name!="ReferenceLaugh")throw new Exception("Wrong reference art");
+      float t=graphic.GetComponent<KingVanguardLaughter>().Time;
+      if(t>.23f&&t<2.1f&&graphic.color.a>.001f)throw new Exception("Old face still visible under reference");
+      if(graphic.GetComponent<KingVanguardLaughAudio>())throw new Exception("Laughter audio was reintroduced");
       jawMin=Mathf.Min(jawMin,art.JawDrop);jawMax=Mathf.Max(jawMax,art.JawDrop);
-      var beardSlot=graphic.Skeleton.FindSlot("Sakal G\u00f6lge");var beard=beardSlot.Attachment as MeshAttachment;
-      var beardPoints=new float[beard.WorldVerticesLength];beard.ComputeWorldVertices(beardSlot,beardPoints);
-      int lowerLip=(16*17+8)*2,chin=(8*17+8)*2;float mouthX,mouthY,chinX,chinY;
-      face.WorldToLocal(points[lowerLip],points[lowerLip+1],out mouthX,out mouthY);
-      face.WorldToLocal(beardPoints[chin],beardPoints[chin+1],out chinX,out chinY);
-      if(chinY-mouthY<.02f||chinY-mouthY>.15f)throw new Exception("Lower lip detached from jaw/beard: "+(chinY-mouthY));
-      if(graphic.Skeleton.FindSlot("Sol  Göz Bebeği").Attachment!=null||graphic.Skeleton.FindSlot("Sağ Göz Bebeği").Attachment!=null)throw new Exception("Pupil visible through laugh eyelid");
       if(king.PlayImpactReaction())throw new Exception("Chain restarted active laugh");
      }
     }
-    Check(active>fps&&jawMax-jawMin>.08f,fps+"fps voice-driven jaw articulation");
+    Check(active>fps&&jawMax-jawMin>2f,fps+"fps silent reference-pose articulation");
     Check(king.CurrentActivity==KingVanguardCharacter.Activity.Idle&&!art.IsShowing,fps+"fps returns to clean idle");
     Check(!king.PlayImpactReaction(),fps+"fps impact cooldown blocks immediate replay");
     Check(king.PlayLaughter(),"explicit QA laugh starts");graphic.Update(.4f);graphic.LateUpdate();
@@ -64,10 +56,10 @@ public static class KingImpactLaughChecks {
     king.ResetToIdle();king.PlayLaughter();graphic.Update(.4f);graphic.LateUpdate();Check(king.PlayRelief()&&!art.IsShowing,"goal completion interrupts laugh");
     UnityEngine.Object.DestroyImmediate(go);
    }
-   Check(maxToothDrift<.0001f,"jaw/chin overlap maintained; upper teeth fixed to skull across voice pulses; max drift "+maxToothDrift);
+
    report.AppendLine("PASS "+frames+" frames; "+posed+" new-art frames; 15/30/60fps; all impact laugh checks passed.");
   }finally{EditorSceneManager.ClosePreviewScene(scene);}
   string project=Path.GetFullPath(Path.Combine(Application.dataPath,".."));if(project.EndsWith("KingVanguard-RigPreview-20261004"))project=Path.GetFullPath(Path.Combine(project,"../JellyGarden-Codex"));
-  string output=Path.Combine(project,"Design/KingVanguard-ImpactLaugh-20261004/Validation/rig-checks.txt");Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());Debug.Log(report.ToString());return report.ToString();
+  string output=Path.Combine(project,"Design/KingVanguard-ReferenceLaugh-20261004/Review/rig-checks.txt");Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());Debug.Log(report.ToString());return report.ToString();
  }
 }

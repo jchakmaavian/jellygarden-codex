@@ -2,9 +2,13 @@ using UnityEngine;
 namespace RoyalThrone.Characters {
  public static class KingVanguardLaughTiming {
   public const float LeadIn=.22f, AudioDuration=1.75f, Duration=2.42f;
-  static readonly float[] Envelope={0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0767f,0.1954f,0.3130f,0.3967f,0.4975f,0.6220f,0.7071f,0.7795f,0.8021f,0.8083f,0.7707f,0.7190f,0.6397f,0.5705f,0.5158f,0.4696f,0.3993f,0.2842f,0.1727f,0.0705f,0.0074f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0290f,0.1328f,0.2573f,0.3323f,0.3930f,0.4571f,0.5416f,0.6129f,0.6675f,0.6806f,0.6682f,0.6189f,0.5571f,0.4920f,0.4748f,0.4206f,0.3307f,0.1909f,0.0841f,0.0201f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0851f,0.2109f,0.3187f,0.3904f,0.4473f,0.5146f,0.5828f,0.6441f,0.6739f,0.6821f,0.6564f,0.6196f,0.5824f,0.5472f,0.5176f,0.5058f,0.4956f,0.4893f,0.4859f,0.4853f,0.4844f,0.4847f,0.4855f,0.4840f,0.4908f,0.4833f,0.4766f,0.4676f,0.4528f,0.4461f,0.4114f,0.4271f,0.4144f,0.4101f,0.3742f,0.3752f,0.3834f,0.3877f,0.3770f,0.3544f,0.3478f,0.3632f,0.3570f,0.3428f,0.3069f,0.2937f,0.2775f,0.2645f,0.2529f,0.2454f,0.2376f,0.2317f,0.2314f,0.2299f,0.2232f,0.2079f,0.1911f,0.1743f,0.1583f,0.1529f,0.1506f,0.1499f,0.1394f,0.1279f,0.1137f,0.1038f,0.0862f,0.0717f,0.0599f,0.0570f,0.0513f,0.0385f,0.0293f,0.0171f,0.0114f,0.0012f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f,0.0000f};
-  public static float Pulse(float time){float f=(time-LeadIn)*100; if(f<0||f>=Envelope.Length-1)return 0;int i=(int)f;return Mathf.Lerp(Envelope[i],Envelope[i+1],f-i);}
-  public static float PosePulse(float time){return .25f*Pulse(time-.025f)+.5f*Pulse(time)+.25f*Pulse(time+.025f);}
-  public static float Intensity(float time){return Mathf.SmoothStep(0,1,time/.22f)*(1-Mathf.SmoothStep(0,1,(time-(LeadIn+AudioDuration-.15f))/.5f));}
+  public static float Pulse(float time)=>PosePulse(time);
+  // A held, joyful open-mouth pose with two small chuckles, independent of the removed audio.
+  public static float PosePulse(float time){
+   float a=(time-.66f)/.24f,b=(time-1.28f)/.27f;
+   return Mathf.Clamp01(.35f+.65f*Mathf.Exp(-a*a)+.50f*Mathf.Exp(-b*b));
+  }
+  public static float Intensity(float time)=>Mathf.SmoothStep(0,1,time/.3f)*(1-Mathf.SmoothStep(0,1,(time-1.88f)/.54f));
+  public static float PortraitOpacity(float time)=>time>=.16f&&time<2.22f?1:0;
  }
 }

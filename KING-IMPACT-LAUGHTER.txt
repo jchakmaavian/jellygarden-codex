@@ -1,6 +1,6 @@
 King Vanguard impact laughter - 2026-10-04
 
-UPDATE: Laughter audio playback removed at the user's request. The visual reaction, mouth movement and impact triggers remain. The audio checks and voiced preview below document the earlier version; the current game no longer starts the laughter AudioSource.
+CURRENT VERSION: The laugh now uses the exact King-Loud-Laugh-Target.png painting through a clipped, deforming Unity portrait mesh. This preserves its full face, head tilt, mouth proportions, lip, teeth, tongue, moustache, beard and outfit. New review media and checks are under Design/KingVanguard-ReferenceLaugh-20261004/Review. Laughter remains silent. The earlier composite parts, audio checks and voiced preview below are historical.
 
 The gameplay portrait now performs a 2.42-second, three-syllable Ho Ho Ho after TNT, rockets, Color Ball and other strong impact events. Impact strength >= 0.75 selects laughter; ordinary matches and power-up creation keep their smaller responses. A four-second cooldown prevents repeated cascade voices. Level failure and completion take priority.
 
