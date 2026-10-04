@@ -1,0 +1,11 @@
+King Vanguard unified interactive portrait - 2026-10-04
+
+The neutral and reaction portrait now share the realistic generated King identity, proportions, fitted crown, beard, blue/gold outfit and materials. The old Spine renderer stays hidden in every portrait state. The imported state machine still owns activity, timing and priority; area actors continue using their separate full-body rig.
+
+New art: neutral, worried and sad transparent portraits generated with built-in imagegen from the approved laugh reference. The original laugh reference remains unchanged. Source images and prompts are included. One live deforming portrait mesh renders this artwork family throughout idle, gaze, blinking, touch response, worry, happy, impact laughter, failure and relief. This is interactive 2D artwork, not a new 3D model or a passive looping movie.
+
+Input: the existing KingVanguardAttention component observes the normal mouse/touch action devices and visible legal hint. Its bounded smoothed vector drives the new eyes and head; touch adds a small response. The rendering layer does not consume input or alter gameplay. Reaction priority, worry context and save isolation remain owned by existing gameplay.
+
+Mesh: 2025 vertices; body breathing, neck-weighted head movement, coherent crown movement, jaw chuckles. The expression shader blends only facial regions and moves irises within fixed eye apertures. Eyelid artwork closes during blinks. The neutral crown, outfit and silhouette remain stable throughout expression changes. Clock follows scaled animation time. Laughter stays silent.
+
+Verification: isolated-checks.txt and all-rig-checks.txt cover rendering, attachment lifecycle and 15/30/60 FPS. King-Interactive-Preview.mp4 is the actual isolated Unity render using scripted attention vectors, not live device input. Main-project input and impact results are recorded separately. Android device performance is not verified.

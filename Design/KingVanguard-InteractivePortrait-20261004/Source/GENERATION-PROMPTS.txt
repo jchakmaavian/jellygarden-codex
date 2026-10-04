@@ -1,0 +1,15 @@
+Generated with the built-in imagegen tool, 2026-10-04. No fallback API was used.
+
+Neutral edit target: Design/KingVanguard-LaughArt-v2-20261004/King-Loud-Laugh-Target.png
+Prompt:
+Edit target: supplied King Vanguard portrait. Create the neutral interactive idle expression of EXACTLY THIS king for a game, preserving this character's face identity, round cheeks, broad nose, white moustache and beard texture, royal blue and gold outfit, crown, camera, scale, silhouette and lighting. Change ONLY the expression: open both eyes naturally, warm brown irises looking straight at the viewer, relaxed friendly brows and a small closed-mouth smile with natural upper lip beneath moustache. Keep the same slightly tilted head pose and same fitted crown, same shoulders, same costume and two gold sapphire brooches plus chest jewel. Preserve the full composition and proportions. No toothy grin, no open mouth. This is the SAME realistic polished 3D animated-film character, not a different simplified cartoon. Remove the plain background to true transparent alpha with clean antialiased hair/crown edges, no shadow on background, no checkerboard drawn into pixels. One single large square portrait, no labels or panels. Intended as the neutral pose matching the exact laugh reference for layered interactive animation.
+
+Worried and Sad edit target: Source/King-Neutral.png
+Shared prompt:
+Use case identity-preserve game portrait edit. Edit ONLY the facial expression of this exact King Vanguard. Keep all non-facial pixels, crown, head angle, hairstyle, beard outline, shoulders, royal blue gold costume, composition, scale and transparent background exactly matched. Same warm polished realistic 3D animated-film rendering, same brown eyes and white moustache. No text, no panels. Single square transparent portrait for expression blending in a game.
+Worried addition:
+Make a subtle concerned expression for only 3 moves left: inner eyebrows raised slightly, eyes attentive and gently worried looking ahead, closed mouth corners slightly downturned. Sympathetic, never angry, no tears. Keep nose and cheek size unchanged.
+Sad addition:
+Make a gentle disappointed expression after level failure: inner brows raised, outer brows relaxed down, eyes softly downcast but still open, closed mouth subtle frown. Kind, sympathetic, not exaggerated, no tears. Keep nose and cheek size unchanged.
+
+The original approved laugh painting is reused unchanged. Runtime meshes and the shader provide interactive eye, head, breathing and jaw motion while preserving these raster source images.
