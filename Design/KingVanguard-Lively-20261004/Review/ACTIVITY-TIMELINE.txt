@@ -1,5 +1,5 @@
 King-Lively-Preview.mp4: 42 seconds, 30 FPS, silent Unity render.
-0-18s: breathing, curious board glance, pleased nod, greeting wink, varied blinking
+0-18s: lower-board center/left/right scan, all four frame corners, breathing, pleased nod, greeting wink and varied blinking
 18-20s: mouse attention, eye lead and delayed head/shoulder follow
 20-22s: hint attention and one acquisition nod
 22-24s: touch response and warm smile

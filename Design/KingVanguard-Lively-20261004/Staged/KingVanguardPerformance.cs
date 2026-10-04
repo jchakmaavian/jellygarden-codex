@@ -24,6 +24,36 @@ namespace RoyalThrone.Characters
         float tapAge = 99, previousTap, lastTap = -10, blinkAt = 3.1f, blinkAge = 99;
         int gesture, variation, blinkIndex, sourceLast;
         bool initialized;
+        float lookTime;
+        // Screen convention: negative Y looks toward the board below the portrait.
+        static readonly Vector2[] LookRoute = {
+            new Vector2(0,-.78f),new Vector2(-.62f,-.70f),new Vector2(.62f,-.70f),
+            new Vector2(0,-.75f),Vector2.zero,
+            new Vector2(-.72f,.62f),new Vector2(-.72f,-.62f),
+            new Vector2(.72f,-.62f),new Vector2(.72f,.62f),Vector2.zero
+        };
+        static readonly float[] LookHolds = {1.5f,1.65f,1.65f,1.1f,.9f,1.45f,1.45f,1.45f,1.45f,1.2f};
+        public Vector2 LookTarget { get; private set; }
+        public int LookStage { get; private set; } = -1;
+
+        void UpdateLookAround(float delta, bool allowed)
+        {
+            if (!allowed) { lookTime=0; LookTarget=Vector2.zero; LookStage=-1; return; }
+            lookTime+=delta;
+            float at=Mathf.Repeat(lookTime,20.2f)-1.8f;
+            LookTarget=Vector2.zero; LookStage=-1;
+            if(at<0)return;
+            for(int i=0;i<LookRoute.Length;i++)
+            {
+                if(at<LookHolds[i])
+                {
+                    LookStage=i;
+                    LookTarget=Vector2.Lerp(i==0?Vector2.zero:LookRoute[i-1],LookRoute[i],Mathf.SmoothStep(0,1,at/.52f));
+                    return;
+                }
+                at-=LookHolds[i];
+            }
+        }
         public float Happy => happy.value;
         public float Excited => excited.value;
         public float Laugh => laugh.value;
@@ -44,6 +74,7 @@ namespace RoyalThrone.Characters
             gestureAge = tapAge = blinkAge = 99; lastTap = -10; nextGesture = 3.2f; blinkAt = 3.1f;
             gesture = variation = blinkIndex = sourceLast = 0; GestureCount = 0;
             previous = KingVanguardCharacter.Activity.Idle; initialized = true; Lids = Vector2.zero;
+            lookTime=0; LookTarget=Vector2.zero; LookStage=-1;
         }
 
         static float Bell(float age, float start, float duration)
@@ -151,8 +182,10 @@ namespace RoyalThrone.Characters
             float total = worry.value + sad.value + happy.value + excited.value + laugh.value;
             if (total > 1) { worry.value /= total; sad.value /= total; happy.value /= total; excited.value /= total; laugh.value /= total; }
 
+            UpdateLookAround(dt,idle && source==0 && gaze.sqrMagnitude<.01f);
             float autonomy = free && source == 0 && gaze.sqrMagnitude < .01f ? 1 : 0;
-            Vector2 targetEyes = gaze + autonomy * new Vector2(curious * -.3f, curious * -.22f + greeting * .08f);
+            Vector2 idleLook = LookStage>=0 ? LookTarget : new Vector2(curious * -.3f, curious * -.22f + greeting * .08f);
+            Vector2 targetEyes = gaze + autonomy * idleLook;
             if (failed) targetEyes = new Vector2(-.03f, -.22f);
             if (!free && !failed) targetEyes *= 1 - Mathf.Max(happy.value, excited.value, laugh.value);
             targetEyes = Vector2.ClampMagnitude(targetEyes, 1);

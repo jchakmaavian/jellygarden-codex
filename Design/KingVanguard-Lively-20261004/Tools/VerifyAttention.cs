@@ -76,9 +76,22 @@ System.Collections.IEnumerator Cases()
  touch=UnityEngine.InputSystem.InputSystem.AddDevice<UnityEngine.InputSystem.Touchscreen>("Vanguard attention QA touch");
  input.inputActionAsset.devices=new UnityEngine.InputSystem.InputDevice[]{mouse,touch};
  MouseAt(.5f,.84f);yield return Observe(.15f);
- Begin("moving mouse");MouseAt(.85f,.84f);yield return Observe(.45f);
+ Begin("autonomous board and frame scan");
+ var scanRig=king.Graphic.GetComponent<RoyalThrone.Characters.KingVanguardPaintedRig>();
+ bool[] looked=new bool[10];float until=UnityEngine.Time.realtimeSinceStartup+22;
+ string[] scanNames={"Board-Center","Board-Left","Board-Right","Board-Return","Center","Corner-Top-Left","Corner-Bottom-Left","Corner-Bottom-Right","Corner-Top-Right","Return"};
+ while(UnityEngine.Time.realtimeSinceStartup<until){
+  var performance=scanRig.Portrait.Performance;int which=performance.LookStage;var eyes=performance.Eyes;
+  if(which>=0&&!looked[which]&&(eyes-performance.LookTarget).magnitude<.025f&&((which<=3&&eyes.y<-.55f)||(which>=5&&which<=8&&UnityEngine.Mathf.Abs(eyes.x)>.6f&&UnityEngine.Mathf.Abs(eyes.y)>.5f))){
+   looked[which]=true;UnityEngine.ScreenCapture.CaptureScreenshot(output+"/Look-"+scanNames[which]+".png");
+  }
+  Sample();yield return null;
+ }
+ Check(looked[0]&&looked[1]&&looked[2],"live King looks across lower board center, left and right");
+ Check(looked[5]&&looked[6]&&looked[7]&&looked[8],"live King reaches all four frame corners");
+ Begin("moving mouse");MouseAt(.85f,.84f);yield return Observe(.65f);
  Check(attention.Source==RoyalThrone.Characters.KingVanguardAttention.TargetSource.Mouse&&attention.Gaze.x>.2f&&attention.Influence>.8f&&attention.BodyLean>.06f,"real mouse movement supplies smoothed gaze and subtle body lean");
- var painted=king.Graphic.GetComponent<RoyalThrone.Characters.KingVanguardPaintedRig>();Check(painted&&painted.IsReady&&king.Graphic.color.a==0,"new character replaces the old portrait");Check((painted.RenderedGaze-attention.Gaze*attention.Influence).magnitude<.05f,"new rendered eyes consume live mouse attention");
+ var painted=king.Graphic.GetComponent<RoyalThrone.Characters.KingVanguardPaintedRig>();Check(painted&&painted.IsReady&&king.Graphic.color.a==0,"new character replaces the old portrait");Check((painted.RenderedGaze-attention.Gaze*attention.Influence).magnitude<.05f,"new rendered eyes settle to live mouse attention within 650ms; error="+(painted.RenderedGaze-attention.Gaze*attention.Influence).magnitude);Check(painted.Portrait.Performance.LookStage==-1,"moving mouse cancels corner scan");
  yield return Capture("Mouse");
  Begin("mouse to actual hint");
  var plan=JellyGarden.Scripts.Juice.RoyalHintSolver.Find(lm);Check(plan!=null,"practice board has a real legal hint");

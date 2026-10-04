@@ -7,8 +7,8 @@ namespace RoyalThrone.Characters {
  [ExecuteAlways, DisallowMultipleComponent]
  public sealed class KingVanguardPaintedRig : MonoBehaviour {
   SkeletonGraphic graphic; KingVanguardCharacter owner; KingVanguardAttention attention;
-  KingVanguardPaintedGraphic portrait; TrackEntry previousTrack;
-  float previousTime, clock; Color originalColor; bool bound, originalUnscaledTime;
+  KingVanguardPaintedGraphic portrait;
+  float previousSkeletonTime, clock; Color originalColor; bool bound, originalUnscaledTime;
   public KingVanguardPaintedGraphic Portrait => portrait;
   public bool IsReady => portrait && portrait.Ready;
   public Vector2 RenderedGaze => portrait ? portrait.Gaze : Vector2.zero;
@@ -36,22 +36,23 @@ namespace RoyalThrone.Characters {
    attention=KingVanguardAttention.Ensure(graphic);
    graphic.UpdateComplete+=Pose;bound=true;portrait.gameObject.SetActive(true);ResetPresentation();
   }
-  public void ResetPresentation(){clock=0;previousTrack=null;previousTime=0;if(portrait)portrait.ApplyPose(owner.CurrentActivity,0,0,0,Vector2.zero,0,0,0,true);}
+  public void ResetPresentation(){clock=0;previousSkeletonTime=graphic&&graphic.Skeleton!=null?graphic.Skeleton.Time:0;if(portrait)portrait.ApplyPose(owner.CurrentActivity,0,0,0,Vector2.zero,0,0,0,true);}
   void Pose(ISkeletonAnimation unused){
    if(!bound||!portrait)return;
-   var track=graphic.AnimationState.GetCurrent(0);float delta=0;
-   if(track!=null){if(ReferenceEquals(previousTrack,track))delta=Mathf.Clamp((track.TrackTime-previousTime)/Mathf.Max(.001f,track.TimeScale),0,.1f);previousTime=track.TrackTime;}
-   previousTrack=track;clock+=delta;
+   var track=graphic.AnimationState.GetCurrent(0);
+   // Skeleton time is continuous across clip swaps and worry loops; track phase is not.
+   float now=graphic.Skeleton.Time;
+   float delta=Mathf.Clamp(now-previousSkeletonTime,0,.1f);previousSkeletonTime=now;clock+=delta;
    if(!attention)attention=KingVanguardAttention.Ensure(graphic);
    var gaze=attention?attention.Gaze*attention.Influence:Vector2.zero;
    var laugh=graphic.GetComponent<KingVanguardLaughter>();
    float laughTime=laugh&&laugh.Active?laugh.Time:0;
    float phase=track!=null?Mathf.Clamp01(track.AnimationTime/Mathf.Max(.01f,track.Animation.Duration)):0;
-   portrait.ApplyPose(owner.CurrentActivity,clock,delta,phase,gaze,attention?attention.BodyLean:0,attention?attention.TapResponse:0,laughTime,false);
+   portrait.ApplyPose(owner.CurrentActivity,clock,delta,phase,gaze,attention?attention.BodyLean:0,attention?attention.TapResponse:0,laughTime,false,attention?(int)attention.Source:0);
   }
   void OnDisable(){
    if(bound&&graphic){graphic.GetComponent<KingVanguardLaughter>()?.Cancel();graphic.UpdateComplete-=Pose;graphic.color=originalColor;graphic.unscaledTime=originalUnscaledTime;}
-   bound=false;previousTrack=null;if(portrait)portrait.gameObject.SetActive(false);
+   bound=false;if(portrait)portrait.gameObject.SetActive(false);
   }
   void OnDestroy(){if(portrait){if(Application.isPlaying)Destroy(portrait.gameObject);else DestroyImmediate(portrait.gameObject);}}
  }

@@ -4,16 +4,18 @@ using UnityEngine.UI;
 namespace RoyalThrone.Characters {
  public sealed class KingVanguardPaintedGraphic : MaskableGraphic {
   Texture2D neutral,worried,sad,laugh,happy,excited; Material ownedMaterial;
-  float clock,lean,tap,cheer,worryWeight,sadWeight,blink,jaw,pulse,happyWeight,excitedWeight,positiveBob;
+  readonly KingVanguardPerformance performance = new KingVanguardPerformance();
+  public KingVanguardPerformance Performance => performance;
   public bool Ready => neutral&&worried&&sad&&laugh&&happy&&excited&&ownedMaterial;
-  public Vector2 Gaze {get;private set;}
-  public float LaughWeight {get;private set;}
-  public float Blink => blink;
-  public float HappyWeight => happyWeight;
-  public float ExcitedWeight => excitedWeight;
-  public float JawOffset => jaw;
+  public Vector2 Gaze => performance.Eyes;
+  public float LaughWeight => performance.Laugh;
+  public float Blink => performance.Lids.x;
+  public float HappyWeight => performance.Happy;
+  public float ExcitedWeight => performance.Excited;
+  public float JawOffset => performance.Jaw;
   public override Texture mainTexture => neutral?neutral:Texture2D.whiteTexture;
   public bool InitializeArtwork(){
+   if(canvas)canvas.additionalShaderChannels |= AdditionalCanvasShaderChannels.TexCoord1 | AdditionalCanvasShaderChannels.TexCoord2;
    if(Ready)return true;
    neutral=Resources.Load<Texture2D>("KingVanguard/Interactive/King-Neutral");
    worried=Resources.Load<Texture2D>("KingVanguard/Interactive/King-Worried");
@@ -27,54 +29,50 @@ namespace RoyalThrone.Characters {
    ownedMaterial.SetTexture("_WorriedTex",worried);ownedMaterial.SetTexture("_SadTex",sad);ownedMaterial.SetTexture("_LaughTex",laugh);ownedMaterial.SetTexture("_HappyTex",happy);ownedMaterial.SetTexture("_ExcitedTex",excited);material=ownedMaterial;
    return true;
   }
-  public void ApplyPose(KingVanguardCharacter.Activity activity,float time,float delta,float phase,Vector2 gaze,float bodyLean,float touch,float laughTime,bool immediate){
-   clock=time;Gaze=Vector2.ClampMagnitude(gaze,1);lean=bodyLean;tap=Mathf.Clamp01(touch);
-   float targetWorry=activity==KingVanguardCharacter.Activity.Worried?1:0;
-   float targetSad=activity==KingVanguardCharacter.Activity.Sad?1:0;
-   float targetLaugh=activity==KingVanguardCharacter.Activity.Laughing?KingVanguardLaughTiming.Intensity(laughTime):0;
-   float envelope=Mathf.SmoothStep(0,1,phase/.16f)*(1-Mathf.SmoothStep(0,1,(phase-.70f)/.3f));
-   bool happyPose=activity==KingVanguardCharacter.Activity.Happy||activity==KingVanguardCharacter.Activity.MatchAcknowledgement||activity==KingVanguardCharacter.Activity.Relief;
-   bool excitedPose=activity==KingVanguardCharacter.Activity.Excited||activity==KingVanguardCharacter.Activity.ExtraMoves;
-   float blend=immediate?1:1-Mathf.Exp(-delta*18);
-   happyWeight=Mathf.Lerp(happyWeight,happyPose?envelope:0,blend);excitedWeight=Mathf.Lerp(excitedWeight,excitedPose?envelope:0,blend);
-   positiveBob=Mathf.Sin(phase*Mathf.PI)*(excitedWeight*8+happyWeight*3);
-   worryWeight=Mathf.Lerp(worryWeight,targetWorry,blend);sadWeight=Mathf.Lerp(sadWeight,targetSad,blend);
-   LaughWeight=activity==KingVanguardCharacter.Activity.Laughing?targetLaugh:Mathf.Lerp(LaughWeight,targetLaugh,blend);
-   pulse=activity==KingVanguardCharacter.Activity.Laughing?KingVanguardLaughTiming.PosePulse(laughTime):Mathf.Sin(phase*Mathf.PI);
-   cheer=(activity==KingVanguardCharacter.Activity.MatchAcknowledgement||activity==KingVanguardCharacter.Activity.Relief)?Mathf.Sin(phase*Mathf.PI):0;
-   // A quick close, short hold and gentler opening. All timing follows the actor's scaled clock.
-   float cycle=Mathf.Repeat(clock,4.7f);
-   blink=Mathf.SmoothStep(0,1,(cycle-3.55f)/.085f)*(1-Mathf.SmoothStep(0,1,(cycle-3.67f)/.13f));
-   blink*=1-Mathf.Max(LaughWeight,sadWeight);
-   jaw=LaughWeight*(1-pulse)*6;
+  public void ApplyPose(KingVanguardCharacter.Activity activity,float time,float delta,float phase,Vector2 gaze,float bodyLean,float touch,float laughTime,bool immediate,int attentionSource=0){
+   if(immediate)performance.Reset();
+   else performance.Step(activity,delta,phase,gaze,bodyLean,touch,laughTime,attentionSource);
    if(ownedMaterial){
-    ownedMaterial.SetVector("_Expression",new Vector4(worryWeight,sadWeight,LaughWeight,blink));
-    ownedMaterial.SetVector("_Positive",new Vector4(happyWeight,excitedWeight,0,0));
-    ownedMaterial.SetVector("_Gaze",new Vector4(Gaze.x,Gaze.y,0,0));
-    // Stencil materials are cached copies. Update the rendered instance as well.
-    var render=materialForRendering;if(render!=ownedMaterial){render.SetVector("_Expression",new Vector4(worryWeight,sadWeight,LaughWeight,blink));render.SetVector("_Positive",new Vector4(happyWeight,excitedWeight,0,0));render.SetVector("_Gaze",new Vector4(Gaze.x,Gaze.y,0,0));}
+    ApplyMaterial(ownedMaterial);
+    var render=materialForRendering;if(render!=ownedMaterial)ApplyMaterial(render);
    }
    SetVerticesDirty();
   }
+  void ApplyMaterial(Material target){
+   target.SetVector("_Expression",new Vector4(performance.Worry,performance.Sad,performance.Laugh,0));
+   target.SetVector("_Positive",new Vector4(performance.Happy,performance.Excited,0,0));
+   target.SetVector("_Gaze",new Vector4(Gaze.x,Gaze.y,0,0));
+   target.SetVector("_Lids",new Vector4(performance.Lids.x,performance.Lids.y,performance.Head.w,0));
+  }
   protected override void OnPopulateMesh(VertexHelper vh){
    vh.Clear();if(!Ready)return;
-   const int columns=44,rows=44;
    Rect rect=rectTransform.rect;float size=rect.width*1.28f,unit=size/1254;
-   float breathe=Mathf.Sin(clock*1.65f)*1.7f;
-   float angle=(Gaze.x*1.25f+lean*.65f+Mathf.Sin(clock*1.2f)*.18f+LaughWeight*Mathf.Sin(clock*5)*.5f)*Mathf.Deg2Rad;
-   for(int y=0;y<=rows;y++)for(int x=0;x<=columns;x++){
-    Vector2 source=new Vector2(x*1254f/columns,y*1254f/rows),p=source;
-    float head=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(760,1030,p.y));
-    Vector2 offset=p-new Vector2(627,880);float a=angle*head;
+   Vector4 pose=performance.Head;Vector2 body=performance.Body;
+   float angle=pose.z*Mathf.Deg2Rad;
+   float w=performance.Worry,s=performance.Sad,h=performance.Happy,e=performance.Excited,l=performance.Laugh;
+   float n=Mathf.Max(0,1-w-s-h-e-l);
+   for(int i=0;i<KingVanguardFaceMesh.Neutral.Length;i++){
+    Vector2 source=KingVanguardFaceMesh.Neutral[i];
+    Vector2 p=source*n+KingVanguardFaceMesh.Worried[i]*w+KingVanguardFaceMesh.Sad[i]*s+KingVanguardFaceMesh.Happy[i]*h+KingVanguardFaceMesh.Excited[i]*e+KingVanguardFaceMesh.Laugh[i]*l;
+    float left=EyeMask(source,new Vector2(516,443)),right=EyeMask(source,new Vector2(690,415));
+    p=Vector2.Lerp(p,KingVanguardFaceMesh.Laugh[i],Mathf.Max(left*performance.Lids.x,right*performance.Lids.y)*(1-l));
+    float head=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(760,1030,source.y));
+    Vector2 offset=p-new Vector2(627,880);float a=angle*head+body.y*Mathf.Deg2Rad*(1-head);
     p=new Vector2(627+Mathf.Cos(a)*offset.x-Mathf.Sin(a)*offset.y,880+Mathf.Sin(a)*offset.x+Mathf.Cos(a)*offset.y);
-    p.x+=Gaze.x*6*head;
-    p.y-=Gaze.y*3*head+tap*7*head+cheer*5*head+positiveBob*head+breathe*(.3f+.7f*head)+LaughWeight*pulse*5;
+    p.x+=pose.x*head;p.y-=pose.y*head+body.x*(1-head);
     float mouth=Mathf.Exp(-Mathf.Pow((source.x-627)/210,2))*Mathf.SmoothStep(0,1,(source.y-580)/120)*(1-Mathf.SmoothStep(0,1,(source.y-850)/150));
-    p.y-=jaw*mouth;
-    var v=UIVertex.simpleVert;v.position=new Vector3(rect.center.x+(p.x-627)*unit,rect.yMax-12-p.y*unit,0);v.uv0=new Vector2(source.x/1254,1-source.y/1254);v.color=color;vh.AddVert(v);
+    p.y-=performance.Jaw*mouth;
+    var v=UIVertex.simpleVert;v.position=new Vector3(rect.center.x+(p.x-627)*unit,rect.yMax-12-p.y*unit,0);
+    v.uv0=Pair(source,KingVanguardFaceMesh.Worried[i]);
+    v.uv1=Pair(KingVanguardFaceMesh.Sad[i],KingVanguardFaceMesh.Happy[i]);
+    v.uv2=Pair(KingVanguardFaceMesh.Excited[i],KingVanguardFaceMesh.Laugh[i]);
+    v.color=color;vh.AddVert(v);
    }
-   for(int y=0;y<rows;y++)for(int x=0;x<columns;x++){int a=y*(columns+1)+x,b=a+1,c=a+columns+1,d=c+1;vh.AddTriangle(a,c,b);vh.AddTriangle(b,c,d);}
+   var triangles=KingVanguardFaceMesh.Triangles;
+   for(int i=0;i<triangles.Length;i+=3)vh.AddTriangle(triangles[i],triangles[i+2],triangles[i+1]);
   }
+  static Vector4 Pair(Vector2 first,Vector2 second)=>new Vector4(first.x/1254,1-first.y/1254,second.x/1254,1-second.y/1254);
+  static float EyeMask(Vector2 p,Vector2 center){float d=new Vector2((p.x-center.x)/72,(p.y-center.y)/48).magnitude;return 1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(.6f,1.2f,d));}
   protected override void OnDestroy(){base.OnDestroy();if(ownedMaterial){if(Application.isPlaying)Destroy(ownedMaterial);else DestroyImmediate(ownedMaterial);}}
  }
 }

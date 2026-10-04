@@ -4,13 +4,15 @@ CURRENT VERSION: The approved realistic King is used for the entire gameplay por
 
 TNT, horizontal and vertical rockets, TNT combos, Color Ball and other strong impact events trigger the 2.42-second laugh. Ordinary matches and power-up creation retain smaller dedicated expressions. Existing reaction priorities, cooldowns, pause and save handling are preserved. Full-body area actors remain on their separate rig.
 
+Lively refinement: the King scans the lower board and every frame corner when idle. His eyes lead his head and shoulders, with eased target changes and a rest between cycles. Fresh mouse/touch input, hints and gameplay reactions take priority. Continuous motion, aligned facial expression geometry, touch smiles, nods, blinking and body follow-through keep the approved character responsive.
+
 Current review and verification:
-Design/KingVanguard-InteractivePortrait-20261004/Review/King-All-Activities.mp4
-Design/KingVanguard-InteractivePortrait-20261004/Review/main-rig-checks.txt
-Design/KingVanguard-InteractivePortrait-20261004/Review/attention-checks.txt
-Design/KingVanguard-InteractivePortrait-20261004/Review/live-checks.txt
-Design/KingVanguard-InteractivePortrait-20261004/Review/positive-checks.txt
-Design/KingVanguard-InteractivePortrait-20261004/Review/IMPLEMENTATION.txt
+Design/KingVanguard-Lively-20261004/Review/King-Lively-Preview.mp4
+Design/KingVanguard-Lively-20261004/Review/main-rig-checks.txt
+Design/KingVanguard-Lively-20261004/Review/attention-checks.txt
+Design/KingVanguard-Lively-20261004/Review/live-checks.txt
+Design/KingVanguard-Lively-20261004/Review/positive-checks.txt
+Design/KingVanguard-Lively-20261004/Review/IMPLEMENTATION.txt
 
 Old character backup:
 Design/Backup/King-Before-Interactive-20261004/Old-King-Complete.zip

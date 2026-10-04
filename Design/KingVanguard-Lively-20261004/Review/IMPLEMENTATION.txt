@@ -4,6 +4,8 @@ The approved King artwork and silent audio behavior are preserved. This revision
 
 New acting: three spaced idle performances (curious glance, pleased nod, greeting wink); irregular blink timing with occasional double blink; warm touch smile; one nod when a visible hint is acquired; alternating approval nods; happy bounces; excited/extra-move anticipation and repeated lift; relief exhale; gentler worry and disappointed slump. Eye movement leads the head and shoulders. Fresh input overrides idle glances. The existing gameplay state machine still owns match/impact priority, cooldown, failure and low-move context.
 
+Look-around activity: while idle without fresh player input or a visible hint, the King looks down to the playing area, scans left and right, returns through center, then visits all four portrait-frame corners. Each target eases over 0.52 seconds; the eyes lead the slower head and shoulders. A neutral rest separates cycles. Fresh mouse/touch input, hints and authored gameplay reactions interrupt the route smoothly and restart its rest interval. The activity observes gameplay without consuming moves or input.
+
 Continuity repairs:
 - Continuous Skeleton.Time replaces per-track clock differencing, so clip boundaries and looping worry do not restart motion.
 - Critically damped motion channels preserve position and velocity across activity changes. Zero-time callbacks and pause do not change the visible pose.

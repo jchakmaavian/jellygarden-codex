@@ -16,16 +16,27 @@ public static class KingLivelyChecks
             var p = new KingVanguardPerformance(); p.Reset(); float dt = 1f / fps;
             void Step(KingVanguardCharacter.Activity activity, float phase, Vector2 gaze, float tap = 0, float laughTime = 0, int source = 0)
                 => p.Step(activity, dt, phase, gaze, 0, tap, laughTime, source);
-            for (int i = 0; i < fps * 22; i++) Step(KingVanguardCharacter.Activity.Idle, 0, Vector2.zero);
+            bool[] corners=new bool[4];bool downLeft=false,downRight=false,downCenter=false;float eyeStep=0;
+            for (int i = 0; i < fps * 22; i++) {
+                var beforeEyes=p.Eyes;Step(KingVanguardCharacter.Activity.Idle,0,Vector2.zero);
+                eyeStep=Mathf.Max(eyeStep,(p.Eyes-beforeEyes).magnitude);
+                if(p.Eyes.y<-.55f){if(p.Eyes.x<-.5f)downLeft=true;else if(p.Eyes.x>.5f)downRight=true;else if(Mathf.Abs(p.Eyes.x)<.15f)downCenter=true;}
+                if(p.LookStage>=5&&p.LookStage<=8&&Mathf.Abs(p.Eyes.x)>.6f&&Mathf.Abs(p.Eyes.y)>.5f)corners[p.LookStage-5]=true;
+            }
+            Check(downLeft&&downRight&&downCenter,fps+"fps scans the lower playing area left, center and right");
+            Check(System.Array.TrueForAll(corners,visited=>visited),fps+"fps looks to all four frame corners");
+            Check(eyeStep<5f/fps,fps+"fps scan direction changes ease without eye jumps");
             Check(p.GestureCount >= 3, fps + "fps idle curiosity, pleased nod and greeting variations");
-            float priorHappy = p.Happy;
+
             Step(KingVanguardCharacter.Activity.Idle, 0, new Vector2(.8f, -.3f), .2f, 0, 1);
             for (int i = 0; i < fps / 2; i++) Step(KingVanguardCharacter.Activity.Idle, 0, new Vector2(.8f, -.3f), .8f, 0, 1);
             Check(p.Happy > .35f, fps + "fps touch warms the expression");
             Check((p.Eyes-new Vector2(.8f,-.3f)).magnitude < .02f, fps + "fps fresh pointer wins over autonomous glances");
+            Check(p.LookStage==-1,fps+"fps pointer cancels autonomous route");
             int priorGestures = p.GestureCount;
             for (int i = 0; i < fps; i++) Step(KingVanguardCharacter.Activity.Idle, 0, new Vector2(-.4f, -.4f), 0, 0, 3);
             Check(p.GestureCount == priorGestures + 1, fps + "fps hint acquisition nod occurs once");
+            Check(p.LookStage==-1,fps+"fps hint keeps priority over frame scanning");
             float maxHeadStep = 0, maxWeightStep = 0;
             for (int i = 0; i < fps * 6; i++)
             {

@@ -1,37 +1,57 @@
+PASS 15fps scans the lower playing area left, center and right
+PASS 15fps looks to all four frame corners
+PASS 15fps scan direction changes ease without eye jumps
 PASS 15fps idle curiosity, pleased nod and greeting variations
 PASS 15fps touch warms the expression
 PASS 15fps fresh pointer wins over autonomous glances
+PASS 15fps pointer cancels autonomous route
 PASS 15fps hint acquisition nod occurs once
+PASS 15fps hint keeps priority over frame scanning
 PASS 15fps interrupted motion has bounded velocity: 5.847638
 PASS 15fps interrupted face has bounded blend: 0.2929552
 PASS 15fps worry settles without stale smiling/laughter
 PASS 15fps zero-time activity switch does not jump
 PASS 15fps disappointment settles into gentle slump
 PASS 15fps board reset clears all motion
+PASS 30fps scans the lower playing area left, center and right
+PASS 30fps looks to all four frame corners
+PASS 30fps scan direction changes ease without eye jumps
 PASS 30fps idle curiosity, pleased nod and greeting variations
 PASS 30fps touch warms the expression
 PASS 30fps fresh pointer wins over autonomous glances
+PASS 30fps pointer cancels autonomous route
 PASS 30fps hint acquisition nod occurs once
+PASS 30fps hint keeps priority over frame scanning
 PASS 30fps interrupted motion has bounded velocity: 2.91506
 PASS 30fps interrupted face has bounded blend: 0.1520603
 PASS 30fps worry settles without stale smiling/laughter
 PASS 30fps zero-time activity switch does not jump
 PASS 30fps disappointment settles into gentle slump
 PASS 30fps board reset clears all motion
+PASS 60fps scans the lower playing area left, center and right
+PASS 60fps looks to all four frame corners
+PASS 60fps scan direction changes ease without eye jumps
 PASS 60fps idle curiosity, pleased nod and greeting variations
 PASS 60fps touch warms the expression
 PASS 60fps fresh pointer wins over autonomous glances
+PASS 60fps pointer cancels autonomous route
 PASS 60fps hint acquisition nod occurs once
+PASS 60fps hint keeps priority over frame scanning
 PASS 60fps interrupted motion has bounded velocity: 1.461481
 PASS 60fps interrupted face has bounded blend: 0.07629508
 PASS 60fps worry settles without stale smiling/laughter
 PASS 60fps zero-time activity switch does not jump
 PASS 60fps disappointment settles into gentle slump
 PASS 60fps board reset clears all motion
+PASS 120fps scans the lower playing area left, center and right
+PASS 120fps looks to all four frame corners
+PASS 120fps scan direction changes ease without eye jumps
 PASS 120fps idle curiosity, pleased nod and greeting variations
 PASS 120fps touch warms the expression
 PASS 120fps fresh pointer wins over autonomous glances
+PASS 120fps pointer cancels autonomous route
 PASS 120fps hint acquisition nod occurs once
+PASS 120fps hint keeps priority over frame scanning
 PASS 120fps interrupted motion has bounded velocity: 0.72873
 PASS 120fps interrupted face has bounded blend: 0.03828585
 PASS 120fps worry settles without stale smiling/laughter
