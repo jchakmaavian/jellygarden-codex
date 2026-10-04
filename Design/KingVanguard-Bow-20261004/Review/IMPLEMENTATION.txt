@@ -1,0 +1,11 @@
+King Vanguard curious head bow - 2026-10-04
+
+Uses the user's approved generated bent-head portrait, copied byte-for-byte to Source/King-Curious-Bow.png. Original generation: exec-3393836e-77a3-46ef-be31-b30e790675b2.png. No raster artwork was edited. The full face, crown and beard pitch downward together; this is more than a pupil offset.
+
+During the lower-board portion of the idle scan, a damped bow channel enters and holds the approved pose. It returns to the upright character before the four-corner scan. Visible downward hints can prompt a smaller bow. Fresh mouse/touch input and authored reactions smoothly retire the bow; pause preserves it and board lifecycle reset clears it. No audio or gameplay moves are added.
+
+The seventh texture shares registered facial/crown/costume geometry with existing expressions. Extra correspondence vertices support crown finials, gemstone and brooches. Geometry and UVs move together, with alpha-aware texture blending. The same approved face remains active throughout.
+
+Before/ preserves the prior runtime files. Restore those files and remove the new BowMesh and King-Curious-Bow asset to roll back. Keep existing metadata GUIDs.
+
+Review/King-Bow-Preview.mp4 is a 22-second isolated Unity render: idle enters the board bow, mouse at 7.5s lifts it, laughter at 9.5s, sadness at 11.5s, relief at 13.5s, idle reset at 16s, downward hint at 17-20s. Input in this reel is scripted. Main live QA and integration status are separate in INTEGRATION-STATUS.txt.

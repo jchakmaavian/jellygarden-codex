@@ -1,0 +1,35 @@
+PASS 15fps lower-board scan reaches approved full head bow
+PASS 15fps head lifts before looking to frame corners
+PASS 15fps eased entry and recovery have bounded speed
+PASS 15fps zero-time callback preserves bow pose
+PASS 15fps fresh player input smoothly retires head bow
+PASS 15fps downward hint prompts attentive head bend
+PASS 15fps impact reaction interrupts bow without stale pose
+PASS 15fps board reset clears bow state
+PASS 30fps lower-board scan reaches approved full head bow
+PASS 30fps head lifts before looking to frame corners
+PASS 30fps eased entry and recovery have bounded speed
+PASS 30fps zero-time callback preserves bow pose
+PASS 30fps fresh player input smoothly retires head bow
+PASS 30fps downward hint prompts attentive head bend
+PASS 30fps impact reaction interrupts bow without stale pose
+PASS 30fps board reset clears bow state
+PASS 60fps lower-board scan reaches approved full head bow
+PASS 60fps head lifts before looking to frame corners
+PASS 60fps eased entry and recovery have bounded speed
+PASS 60fps zero-time callback preserves bow pose
+PASS 60fps fresh player input smoothly retires head bow
+PASS 60fps downward hint prompts attentive head bend
+PASS 60fps impact reaction interrupts bow without stale pose
+PASS 60fps board reset clears bow state
+PASS 120fps lower-board scan reaches approved full head bow
+PASS 120fps head lifts before looking to frame corners
+PASS 120fps eased entry and recovery have bounded speed
+PASS 120fps zero-time callback preserves bow pose
+PASS 120fps fresh player input smoothly retires head bow
+PASS 120fps downward hint prompts attentive head bend
+PASS 120fps impact reaction interrupts bow without stale pose
+PASS 120fps board reset clears bow state
+PASS bow and expression vertices correspond one to one
+PASS seven-pose shader compiles
+PASS approved bowed-head artwork imports

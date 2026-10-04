@@ -1,0 +1,1 @@
+Prepared and tested in the isolated character project. Main Unity is reserved by the APK build session; installation and live input verification are pending release. The approved generated PNG remains byte-identical.
