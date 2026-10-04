@@ -111,7 +111,8 @@ System.Collections.IEnumerator Cases()
  yield return Observe(3.7f);Check(!king.IsReacting&&attention.Source==RoyalThrone.Characters.KingVanguardAttention.TargetSource.None,"reaction completion does not replay stale pointer attention");
  Begin("worry strength");lm.Limit=3;yield return Observe(.3f);MouseAt(.2f,.8f);yield return Observe(.55f);
  Check(king.IsWorried&&attention.Source==RoyalThrone.Characters.KingVanguardAttention.TargetSource.Mouse&&attention.Influence>.2f&&attention.Influence<.34f&&UnityEngine.Mathf.Abs(attention.BodyLean)<.21f,"worry keeps source expression priority with reduced attention influence");
- Begin("pause visibility reset");lm.gameStatus=JellyGarden.Scripts.GameState.Pause;yield return Observe(.2f);
+ Begin("pause visibility reset");lm.gameStatus=JellyGarden.Scripts.GameState.Pause;yield return Observe(.12f);
+ Check(attention.Source==RoyalThrone.Characters.KingVanguardAttention.TargetSource.None&&attention.Influence<.15f,"pause immediately retires input while the HUD fades");yield return Observe(.23f);
  Check(attention.Influence==0&&attention.BodyLean==0&&attention.TapResponse==0,"pause/hidden HUD clears all external response");
  lm.gameStatus=JellyGarden.Scripts.GameState.Playing;lm.Limit=99;yield return Observe(.2f);
  Check(attention.Source==RoyalThrone.Characters.KingVanguardAttention.TargetSource.None,"resume requires fresh pointer motion");
@@ -120,7 +121,8 @@ System.Collections.IEnumerator Cases()
  Check(attention.Influence==0&&attention.Source==RoyalThrone.Characters.KingVanguardAttention.TargetSource.None,"new board-array identity clears attention independently of QA/pause gates");
  lm.squaresArray=restoreBoard;restoreBoard=null;yield return Observe(.1f);
  Begin("QA gate");MouseAt(.25f,.8f);yield return Observe(.4f);qa.Visible=true;yield return Observe(.1f);
- Check(attention.Influence==0&&attention.Source==RoyalThrone.Characters.KingVanguardAttention.TargetSource.None,"QA overlay blocks player attention input");qa.Visible=false;
+ Check(attention.Source==RoyalThrone.Characters.KingVanguardAttention.TargetSource.None,"QA overlay immediately stops accepting targets");yield return Observe(.3f);
+ Check(attention.Influence<.01f&&attention.Source==RoyalThrone.Characters.KingVanguardAttention.TargetSource.None,"QA overlay blocks player attention input");qa.Visible=false;
  Check(checkedFrames>30,"bounded finite gaze/influence/lean/tap across "+checkedFrames+" observed frames");complete=true;
 }
 System.Collections.IEnumerator Restore()

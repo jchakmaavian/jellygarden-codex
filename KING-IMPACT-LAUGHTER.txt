@@ -1,14 +1,18 @@
-King Vanguard impact laughter - updated 2026-10-04
+King Vanguard interactive portrait - updated 2026-10-04
 
-CURRENT VERSION: The reference laughing face is fitted to the normal King using 30 facial and silhouette landmarks. The original crown, contact shadows, cape, shoulders and outfit remain visible at their existing rig scale. Only facial attachments are temporarily replaced. This corrects the smaller-head/larger-chest mismatch in the previous whole-portrait reaction. The supplied reference texture is unchanged; its face is registered as a 2D mesh to the existing head. Laughter remains silent.
+CURRENT VERSION: The approved realistic King is used for the entire gameplay portrait: neutral, tracking, hints, touch, happy, excited, extra moves, worry, failure, relief and huge-impact laughter. The old portrait art stays hidden throughout these states. Crown, face, beard and costume now share one artwork family and coherent deformation. Teeth remain painted into the expression rather than independently moving attachments. Laughter is silent.
 
-TNT, horizontal and vertical rockets, TNT combos, Color Ball and other strong impact events trigger the 2.42-second reaction. Impact strength >= 0.75 selects laughter; ordinary matches and power-up creation retain smaller responses. A four-second cooldown prevents repeated cascade reactions. Failure and goal completion take priority. Pause freezes the reaction, and interruption/reset restores the original face.
+TNT, horizontal and vertical rockets, TNT combos, Color Ball and other strong impact events trigger the 2.42-second laugh. Ordinary matches and power-up creation retain smaller dedicated expressions. Existing reaction priorities, cooldowns, pause and save handling are preserved. Full-body area actors remain on their separate rig.
 
-Current evidence
-Design/KingVanguard-ProportionFix-20261004/Review/King-Fitted-Laugh.mp4
-Design/KingVanguard-ProportionFix-20261004/Review/main-rig-checks.txt
-Design/KingVanguard-ProportionFix-20261004/Review/live-checks.txt
-Design/KingVanguard-ProportionFix-20261004/Review/HUD-*.png
-Design/KingVanguard-ProportionFix-20261004/Review/IMPLEMENTATION.txt
+Current review and verification:
+Design/KingVanguard-InteractivePortrait-20261004/Review/King-All-Activities.mp4
+Design/KingVanguard-InteractivePortrait-20261004/Review/main-rig-checks.txt
+Design/KingVanguard-InteractivePortrait-20261004/Review/attention-checks.txt
+Design/KingVanguard-InteractivePortrait-20261004/Review/live-checks.txt
+Design/KingVanguard-InteractivePortrait-20261004/Review/positive-checks.txt
+Design/KingVanguard-InteractivePortrait-20261004/Review/IMPLEMENTATION.txt
 
-Earlier whole-portrait and voiced previews in other review folders are historical. The current game does not create a laughter audio component. QA uses isolated saves and restores the normal player profile. Android/device performance is unverified.
+Old character backup:
+Design/Backup/King-Before-Interactive-20261004/Old-King-Complete.zip
+
+Earlier fitted-face and voiced previews are historical. Current QA uses isolated saves and restores the normal profile. Android/device performance is unverified.

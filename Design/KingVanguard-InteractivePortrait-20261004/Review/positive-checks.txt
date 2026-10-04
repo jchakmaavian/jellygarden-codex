@@ -1,0 +1,45 @@
+RUNNING
+PASS QA Practice board completed
+PASS HUD King found
+PASS Happy accepted
+PASS Happy renders matching replacement art
+PASS Happy retains activity through pose
+INFO Happy current=Happy happy=0.9994257 excited=0
+PASS Happy does not use laughing face
+PASS Happy uses happy face
+PASS Excited accepted
+PASS Excited renders matching replacement art
+PASS Excited retains activity through pose
+INFO Excited current=Excited happy=0 excited=0.8967704
+PASS Excited does not use laughing face
+PASS Excited uses excited face
+PASS ExtraMoves accepted
+PASS ExtraMoves renders matching replacement art
+PASS ExtraMoves retains activity through pose
+INFO ExtraMoves current=ExtraMoves happy=0 excited=0.9999169
+PASS ExtraMoves does not use laughing face
+PASS ExtraMoves uses excited face
+PASS Match accepted
+PASS Match renders matching replacement art
+PASS Match retains activity through pose
+INFO Match current=MatchAcknowledgement happy=0.9768617 excited=0
+PASS Match does not use laughing face
+PASS Match uses happy face
+PASS Relief accepted
+PASS Relief renders matching replacement art
+PASS Relief retains activity through pose
+INFO Relief current=Relief happy=0.9999844 excited=0
+PASS Relief does not use laughing face
+PASS Relief uses happy face
+PASS Worried accepted
+PASS Worried renders matching replacement art
+PASS Worried retains activity through pose
+INFO Worried current=Worried happy=0 excited=0
+PASS Worried does not use laughing face
+PASS Sad accepted
+PASS Sad renders matching replacement art
+PASS Sad retains activity through pose
+INFO Sad current=Sad happy=0 excited=0
+PASS Sad does not use laughing face
+PASS normal player profile restored
+ALL LIVE EXPRESSION CHECKS PASSED

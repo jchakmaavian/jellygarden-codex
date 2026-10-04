@@ -1,0 +1,52 @@
+RUNNING: real virtual pointer events, actual visible hint and live gameplay portrait.
+PASS startup: Game view/application focused for input observation
+PASS startup: isolated QA profile started
+PASS startup: Practice board completed
+PASS startup: live main-HUD portrait found
+PASS startup: new portrait mounted production HUD attention without fixture assistance
+STAGE moving mouse
+PASS moving mouse: real mouse movement supplies smoothed gaze and subtle body lean
+PASS moving mouse: new character replaces the old portrait
+PASS moving mouse: new rendered eyes consume live mouse attention
+PASS moving mouse: QA overlay is hidden for Mouse screenshot
+STAGE mouse to actual hint
+PASS mouse to actual hint: practice board has a real legal hint
+PASS mouse to actual hint: the actual hint presenter shows its selected pieces
+PASS mouse to actual hint: visible valid hint exposes focus
+PASS mouse to actual hint: hint focus is exactly the actual swap-pair midpoint/tap piece
+PASS mouse to actual hint: recent mouse wins over a visible hint
+PASS mouse to actual hint: stationary mouse expires and the King looks toward the hint on the board
+PASS mouse to actual hint: new rendered eyes consume actual hint attention
+PASS mouse to actual hint: QA overlay is hidden for Hint screenshot
+STAGE touch priority
+PASS touch priority: real touchscreen press wins and produces a bounded tap response
+PASS touch priority: held touchscreen stays dominant while the mouse moves elsewhere
+PASS touch priority: new character visibly follows touch priority
+PASS touch priority: QA overlay is hidden for Touch screenshot
+PASS touch priority: input is released normally and portrait-area touch spent no game move
+PASS touch priority: valid hint can resume after the player releases
+PASS touch priority: touch release does not revive the old desktop target
+STAGE invalid hint and source idle
+PASS invalid hint and source idle: changed selected-piece colour immediately invalidates focus before presenter LateUpdate
+PASS invalid hint and source idle: absent target smoothly restores source eye animation
+STAGE authored reaction priority
+PASS authored reaction priority: external gaze established before reaction
+PASS authored reaction priority: original happy activity starts
+PASS authored reaction priority: authored reaction retires external gaze/body smoothly
+PASS authored reaction priority: reaction completion does not replay stale pointer attention
+STAGE worry strength
+PASS worry strength: worry keeps source expression priority with reduced attention influence
+STAGE pause visibility reset
+PASS pause visibility reset: pause immediately retires input while the HUD fades
+PASS pause visibility reset: pause/hidden HUD clears all external response
+PASS pause visibility reset: resume requires fresh pointer motion
+STAGE board identity reset
+PASS board identity reset: attention established before board-scope probe
+PASS board identity reset: new board-array identity clears attention independently of QA/pause gates
+STAGE QA gate
+PASS QA gate: QA overlay immediately stops accepting targets
+PASS QA gate: QA overlay blocks player attention input
+PASS QA gate: bounded finite gaze/influence/lean/tap across 722 observed frames
+CHECKS COMPLETE; restoring profile
+PASS QA gate: normal player profile restored
+ALL ATTENTION CHECKS PASSED

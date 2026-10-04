@@ -13,3 +13,12 @@ Sad addition:
 Make a gentle disappointed expression after level failure: inner brows raised, outer brows relaxed down, eyes softly downcast but still open, closed mouth subtle frown. Kind, sympathetic, not exaggerated, no tears. Keep nose and cheek size unchanged.
 
 The original approved laugh painting is reused unchanged. Runtime meshes and the shader provide interactive eye, head, breathing and jaw motion while preserving these raster source images.
+
+Happy and Excited generated 2026-10-04 with built-in imagegen; target Source/King-Neutral.png.
+Shared prompt:
+Edit this exact King Vanguard game portrait. This is an identity-preserving expression variant, NOT a redesign. Preserve identical face identity, eye size, nose, cheek proportions, head tilt, crown fit, hairstyle and beard outline. Keep camera, pixel registration, scale, shoulders, blue/gold outfit, sapphire brooches, chest jewel and lighting exactly unchanged. Change only facial expression. True transparent alpha, clean edges. Single square portrait, no text or panels.
+Happy addition:
+Friendly pleased happy expression: eyes remain OPEN with soft friendly lids, brown irises looking at player; a warm modest smile showing a small natural row of upper teeth beneath the moustache; mouth only slightly open, not loud laughter. Subtle lifted cheeks and relaxed brows. Keep teeth naturally seated, lips anatomically coherent.
+Excited addition:
+Delighted excited expression after a great move: eyes OPEN attentively and eyebrows gently raised, warm delighted wide smile with upper teeth and a modest open mouth. Face joyful and welcoming, not startled, not shouting or laughing with closed eyes. Maintain natural upper lip, connected moustache and anatomically seated teeth. Do not enlarge the eyes or face.
+Generated originals: exec-37e48182-e578-487a-82ef-6dc42284b736.png (Happy), exec-7a862852-1086-4b7c-9fee-e4223c59c392.png (Excited).

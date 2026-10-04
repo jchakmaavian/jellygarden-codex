@@ -3,12 +3,14 @@ using UnityEngine.UI;
 
 namespace RoyalThrone.Characters {
  public sealed class KingVanguardPaintedGraphic : MaskableGraphic {
-  Texture2D neutral,worried,sad,laugh; Material ownedMaterial;
-  float clock,lean,tap,cheer,worryWeight,sadWeight,blink,jaw,pulse;
-  public bool Ready => neutral&&worried&&sad&&laugh&&ownedMaterial;
+  Texture2D neutral,worried,sad,laugh,happy,excited; Material ownedMaterial;
+  float clock,lean,tap,cheer,worryWeight,sadWeight,blink,jaw,pulse,happyWeight,excitedWeight,positiveBob;
+  public bool Ready => neutral&&worried&&sad&&laugh&&happy&&excited&&ownedMaterial;
   public Vector2 Gaze {get;private set;}
   public float LaughWeight {get;private set;}
   public float Blink => blink;
+  public float HappyWeight => happyWeight;
+  public float ExcitedWeight => excitedWeight;
   public float JawOffset => jaw;
   public override Texture mainTexture => neutral?neutral:Texture2D.whiteTexture;
   public bool InitializeArtwork(){
@@ -17,10 +19,12 @@ namespace RoyalThrone.Characters {
    worried=Resources.Load<Texture2D>("KingVanguard/Interactive/King-Worried");
    sad=Resources.Load<Texture2D>("KingVanguard/Interactive/King-Sad");
    laugh=Resources.Load<Texture2D>("KingVanguard/LaughArt/ReferenceLaugh");
+   happy=Resources.Load<Texture2D>("KingVanguard/Interactive/King-Happy");
+   excited=Resources.Load<Texture2D>("KingVanguard/Interactive/King-Excited");
    var shader=Resources.Load<Shader>("KingVanguard/Interactive/KingVanguardPainted");
-   if(!neutral||!worried||!sad||!laugh||!shader)return false;
+   if(!neutral||!worried||!sad||!laugh||!happy||!excited||!shader)return false;
    if(!ownedMaterial)ownedMaterial=new Material(shader){name="King interactive portrait (instance)"};
-   ownedMaterial.SetTexture("_WorriedTex",worried);ownedMaterial.SetTexture("_SadTex",sad);ownedMaterial.SetTexture("_LaughTex",laugh);material=ownedMaterial;
+   ownedMaterial.SetTexture("_WorriedTex",worried);ownedMaterial.SetTexture("_SadTex",sad);ownedMaterial.SetTexture("_LaughTex",laugh);ownedMaterial.SetTexture("_HappyTex",happy);ownedMaterial.SetTexture("_ExcitedTex",excited);material=ownedMaterial;
    return true;
   }
   public void ApplyPose(KingVanguardCharacter.Activity activity,float time,float delta,float phase,Vector2 gaze,float bodyLean,float touch,float laughTime,bool immediate){
@@ -28,9 +32,12 @@ namespace RoyalThrone.Characters {
    float targetWorry=activity==KingVanguardCharacter.Activity.Worried?1:0;
    float targetSad=activity==KingVanguardCharacter.Activity.Sad?1:0;
    float targetLaugh=activity==KingVanguardCharacter.Activity.Laughing?KingVanguardLaughTiming.Intensity(laughTime):0;
-   bool positive=activity==KingVanguardCharacter.Activity.Happy||activity==KingVanguardCharacter.Activity.Excited||activity==KingVanguardCharacter.Activity.ExtraMoves;
-   if(positive)targetLaugh=Mathf.SmoothStep(0,1,phase/.16f)*(1-Mathf.SmoothStep(0,1,(phase-.70f)/.3f));
+   float envelope=Mathf.SmoothStep(0,1,phase/.16f)*(1-Mathf.SmoothStep(0,1,(phase-.70f)/.3f));
+   bool happyPose=activity==KingVanguardCharacter.Activity.Happy||activity==KingVanguardCharacter.Activity.MatchAcknowledgement||activity==KingVanguardCharacter.Activity.Relief;
+   bool excitedPose=activity==KingVanguardCharacter.Activity.Excited||activity==KingVanguardCharacter.Activity.ExtraMoves;
    float blend=immediate?1:1-Mathf.Exp(-delta*18);
+   happyWeight=Mathf.Lerp(happyWeight,happyPose?envelope:0,blend);excitedWeight=Mathf.Lerp(excitedWeight,excitedPose?envelope:0,blend);
+   positiveBob=Mathf.Sin(phase*Mathf.PI)*(excitedWeight*8+happyWeight*3);
    worryWeight=Mathf.Lerp(worryWeight,targetWorry,blend);sadWeight=Mathf.Lerp(sadWeight,targetSad,blend);
    LaughWeight=activity==KingVanguardCharacter.Activity.Laughing?targetLaugh:Mathf.Lerp(LaughWeight,targetLaugh,blend);
    pulse=activity==KingVanguardCharacter.Activity.Laughing?KingVanguardLaughTiming.PosePulse(laughTime):Mathf.Sin(phase*Mathf.PI);
@@ -42,9 +49,10 @@ namespace RoyalThrone.Characters {
    jaw=LaughWeight*(1-pulse)*6;
    if(ownedMaterial){
     ownedMaterial.SetVector("_Expression",new Vector4(worryWeight,sadWeight,LaughWeight,blink));
+    ownedMaterial.SetVector("_Positive",new Vector4(happyWeight,excitedWeight,0,0));
     ownedMaterial.SetVector("_Gaze",new Vector4(Gaze.x,Gaze.y,0,0));
     // Stencil materials are cached copies. Update the rendered instance as well.
-    var render=materialForRendering;if(render!=ownedMaterial){render.SetVector("_Expression",new Vector4(worryWeight,sadWeight,LaughWeight,blink));render.SetVector("_Gaze",new Vector4(Gaze.x,Gaze.y,0,0));}
+    var render=materialForRendering;if(render!=ownedMaterial){render.SetVector("_Expression",new Vector4(worryWeight,sadWeight,LaughWeight,blink));render.SetVector("_Positive",new Vector4(happyWeight,excitedWeight,0,0));render.SetVector("_Gaze",new Vector4(Gaze.x,Gaze.y,0,0));}
    }
    SetVerticesDirty();
   }
@@ -60,7 +68,7 @@ namespace RoyalThrone.Characters {
     Vector2 offset=p-new Vector2(627,880);float a=angle*head;
     p=new Vector2(627+Mathf.Cos(a)*offset.x-Mathf.Sin(a)*offset.y,880+Mathf.Sin(a)*offset.x+Mathf.Cos(a)*offset.y);
     p.x+=Gaze.x*6*head;
-    p.y-=Gaze.y*3*head+tap*7*head+cheer*5*head+breathe*(.3f+.7f*head)+LaughWeight*pulse*5;
+    p.y-=Gaze.y*3*head+tap*7*head+cheer*5*head+positiveBob*head+breathe*(.3f+.7f*head)+LaughWeight*pulse*5;
     float mouth=Mathf.Exp(-Mathf.Pow((source.x-627)/210,2))*Mathf.SmoothStep(0,1,(source.y-580)/120)*(1-Mathf.SmoothStep(0,1,(source.y-850)/150));
     p.y-=jaw*mouth;
     var v=UIVertex.simpleVert;v.position=new Vector3(rect.center.x+(p.x-627)*unit,rect.yMax-12-p.y*unit,0);v.uv0=new Vector2(source.x/1254,1-source.y/1254);v.color=color;vh.AddVert(v);

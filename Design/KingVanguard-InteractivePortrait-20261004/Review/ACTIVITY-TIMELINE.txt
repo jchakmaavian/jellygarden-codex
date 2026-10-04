@@ -1,0 +1,11 @@
+King-All-Activities.mp4: 30 FPS, 512x512, 26 seconds, silent.
+0-5s: idle breathing, eye/head tracking, hint direction, touch response and blink
+5-7s: ordinary match acknowledgement
+7-10s: happy
+10-13s: excited
+13-16s: extra moves
+16-19s: huge-impact laughter
+19-21.5s: low-move worry
+21.5-23.5s: failure/sad
+23.5-25.5s: goal completion/relief
+25.5-26s: neutral recovery

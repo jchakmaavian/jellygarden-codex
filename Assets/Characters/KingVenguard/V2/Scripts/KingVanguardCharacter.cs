@@ -44,6 +44,7 @@ namespace RoyalThrone.Characters
         Framing framing;
         bool attached, worried, worryEntered;
         KingVanguardFaceRig faceRig;
+        KingVanguardPaintedRig paintedRig;
         int sequence, idleIndex;
         Activity activity;
         float nextLaughAt = float.NegativeInfinity;
@@ -63,6 +64,7 @@ namespace RoyalThrone.Characters
                 if (!skeletonGraphic.IsValid) skeletonGraphic.Initialize(false);
                 if (!skeletonGraphic.IsValid || skeletonGraphic.AnimationState == null) return false;
                 if (!faceRig) faceRig = KingVanguardFaceRig.Ensure(skeletonGraphic);
+                if (!areaRig && (!paintedRig || !paintedRig.IsReady)) paintedRig = KingVanguardPaintedRig.Ensure(skeletonGraphic, this);
                 if (!attached) { skeletonGraphic.UpdateComplete += RemoveDecoration; attached = true; }
                 return true;
             }
@@ -86,6 +88,7 @@ namespace RoyalThrone.Characters
             skeletonGraphic.AnimationState.ClearTracks();
             skeletonGraphic.Skeleton.SetToSetupPose();
             StartIdle(true);
+            paintedRig?.ResetPresentation();
             RemoveDecoration(skeletonGraphic);
         }
 

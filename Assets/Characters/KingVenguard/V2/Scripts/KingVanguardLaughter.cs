@@ -42,7 +42,7 @@ namespace RoyalThrone.Characters
                 ownsClock = true;
             }
             entry = track; eyelids.Clear();
-            KingVanguardLaughArt.Ensure(gameObject);
+            if (!GetComponent<KingVanguardPaintedRig>()) KingVanguardLaughArt.Ensure(gameObject);
             var skeleton = animator.Skeleton;
             var blink = skeleton.Data.FindAnimation(KingVanguardCharacter.IdleAnimation);
             foreach (var timeline in blink.Timelines)

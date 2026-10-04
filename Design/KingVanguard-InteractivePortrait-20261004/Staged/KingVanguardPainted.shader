@@ -2,6 +2,7 @@ Shader "RoyalThrone/KingVanguardPainted" {
  Properties {
   [PerRendererData] _MainTex ("Neutral",2D)="white"{}
   _WorriedTex ("Worried",2D)="white"{} _SadTex ("Sad",2D)="white"{} _LaughTex ("Laugh",2D)="white"{}
+  _HappyTex ("Happy",2D)="white"{} _ExcitedTex ("Excited",2D)="white"{}
   _Color ("Tint",Color)=(1,1,1,1)
   _StencilComp ("Stencil Comparison",Float)=8 _Stencil ("Stencil ID",Float)=0
   _StencilOp ("Stencil Operation",Float)=0 _StencilWriteMask ("Stencil Write Mask",Float)=255 _StencilReadMask ("Stencil Read Mask",Float)=255
@@ -23,7 +24,7 @@ Shader "RoyalThrone/KingVanguardPainted" {
    #include "UnityUI.cginc"
    struct appdata {float4 vertex:POSITION;float4 color:COLOR;float2 uv:TEXCOORD0;};
    struct v2f {float4 vertex:SV_POSITION;fixed4 color:COLOR;float2 uv:TEXCOORD0;float4 world:TEXCOORD1;};
-   sampler2D _MainTex,_WorriedTex,_SadTex,_LaughTex;float4 _Color,_ClipRect,_Expression,_Gaze;
+   sampler2D _MainTex,_WorriedTex,_SadTex,_LaughTex,_HappyTex,_ExcitedTex;float4 _Color,_ClipRect,_Expression,_Gaze,_Positive;
    v2f vert(appdata v){v2f o;o.world=v.vertex;o.vertex=UnityObjectToClipPos(v.vertex);o.uv=v.uv;o.color=v.color*_Color;return o;}
    float ellipse(float2 p,float2 center,float2 radius){return length((p-center)/radius);}
    float2 eyeUV(float2 p,float2 center){
@@ -40,6 +41,8 @@ Shader "RoyalThrone/KingVanguardPainted" {
     fixed4 c=neutral;
     c.rgb=lerp(c.rgb,tex2D(_WorriedTex,uv(eyes)).rgb,_Expression.x*face);
     c.rgb=lerp(c.rgb,tex2D(_SadTex,uv(p)).rgb,_Expression.y*face);
+    if(_Positive.x>.001)c.rgb=lerp(c.rgb,tex2D(_HappyTex,uv(eyes)).rgb,_Positive.x*face);
+    if(_Positive.y>.001)c.rgb=lerp(c.rgb,tex2D(_ExcitedTex,uv(eyes)).rgb,_Positive.y*face);
     c.rgb=lerp(c.rgb,tex2D(_LaughTex,i.uv).rgb,_Expression.z*face);
     float left=1-smoothstep(.65,1,ellipse(p,float2(516,443),float2(65,43)));
     float right=1-smoothstep(.65,1,ellipse(p,float2(690,415),float2(65,43)));

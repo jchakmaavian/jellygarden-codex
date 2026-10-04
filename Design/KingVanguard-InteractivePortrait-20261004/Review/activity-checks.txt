@@ -1,0 +1,18 @@
+PASS new artwork is installed from initialization
+PASS isolated attention driver mounted; live input tested separately
+PASS old visual rig hidden during idle
+PASS new portrait does not intercept board input
+PASS distinct happy and excited faces reached full expression without laughing
+PASS 780 rendered frames use the new character exclusively
+PASS 15fps articulated laughter
+PASS 15fps returns to matching neutral art
+PASS 30fps articulated laughter
+PASS 30fps returns to matching neutral art
+PASS 60fps articulated laughter
+PASS 60fps returns to matching neutral art
+PASS renderer consumes attention vector
+PASS failure interrupts laughter
+PASS reset clears expression immediately
+PASS disable restores fallback without duplicate image
+PASS reenable restores new character
+PASS all states remain silent
