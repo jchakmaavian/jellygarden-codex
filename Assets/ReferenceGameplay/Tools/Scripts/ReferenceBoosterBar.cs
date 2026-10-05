@@ -261,7 +261,7 @@ namespace RoyalThrone.ReferenceGameplay
         {
             if(!ShopOpen||buying<0||purchasePending)return false;
             Offer(buying,out int count,out int cost);
-            if(count<=0||cost<0||InitScript.Gems<cost){balance.text="Not enough coins — you have "+InitScript.Gems;return false;}
+            if(count<=0||cost<0||InitScript.Gems<cost){balance.text="Not enough coins — you have "+InitScript.Gems;RoyalShopPage.Open(RoyalShopPage.Tab.Coins);return false;}   // the shop opens over this one (2026-10-05)
             purchasePending=true;
             try{InitScript.Instance.SetGems(InitScript.Gems-cost);InitScript.Instance.BuyBoost(Types[buying],0,Stock(buying)+count);int index=buying;CloseShop();Choose(Types[index]);return true;}
             finally{purchasePending=false;}

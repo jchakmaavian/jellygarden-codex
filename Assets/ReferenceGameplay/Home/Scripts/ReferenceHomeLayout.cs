@@ -31,7 +31,10 @@ namespace RoyalThrone.ReferenceGameplay
         // from the top.
         const float PlusDisc=53,PlusWidth=PlusDisc/.921f,PlusHeight=PlusDisc/.853f,PlusCentre=.453f;
         // Level and area cards: 1014 x 201 px, centred 436 px above the safe bottom; the area card is the wider one.
-        const float ActionsWidth=.9394f,ActionsHeight=.1864f,ActionsCentre=.4040f,LevelRight=.4687f,AreaLeft=.5175f;
+        // Since 2026-10-05 (the user's reference) the area card is hidden, the star counter opens the task list, and the Level
+        // button stands alone in the middle, higher (CentredActions): its bottom edge 12% of the width above the tab bar, as in
+        // the reference, so the raised Home castle stays clear below it. The castle scene still lines up with the old row.
+        const float ActionsWidth=.9394f,ActionsHeight=.1864f,ActionsCentre=.4040f,LevelRight=.4687f,AreaLeft=.5175f,CentredActions=.4774f;
         // Tab bar: 286 px, the imported strip's gold edge and highlight fill its top 14.3 units (at w 720) and stay visible.
         const float NavHeight=.2652f,GoldTrim=.0199f;
         static readonly float[] TabEdges={0,.17f,.347f,.653f,.81f,1};
@@ -41,7 +44,8 @@ namespace RoyalThrone.ReferenceGameplay
         static readonly Vector2 HomeRaised=new Vector2(.493f,1.2989f);
         static readonly Vector2 LabelBox=new Vector2(.269f,.478f);
         const int LabelSize=16,SelectedLabelSize=24;
-        // Selected tab: a rounded, slightly lighter panel with a soft rim, and a short gold underline below the label.
+        // Selected tab: a rounded, slightly lighter panel with a soft rim. The short gold underline below the label is no longer
+        // shown (the user's reference, 2026-10-05).
         const float PanelWidth=.2472f,PanelTop=.9253f,PanelRadius=.037f,RimWidth=.0019f,LineWidth=.1046f,LineHeight=.0093f,LineCentre=.1833f;
         // The card row's top edge sits at this fraction of the background's height, above its bottom: the courtyard in front of the
         // castle stays visible between the cards and the tab bar at every aspect ratio.
@@ -49,7 +53,7 @@ namespace RoyalThrone.ReferenceGameplay
         // The reference sky deepens toward the top, behind the resource bar: a veil over the upper 47% of the screen, under the clouds.
         const float SkyDepth=.47f;
         // The + badges and the selected tab stay still (UI polish, 2026-09-30): no idle swell or breathing on controls; the
-        // selected tab reads by its raised art, its panel, rim and gold line.
+        // selected tab reads by its raised art, its panel and rim.
         static Sprite Art(int id)=>Resources.Load<Sprite>("ReferenceGameplay/Home/"+id);
         public static void Attach(RoyalHomeScreen home){var v=home.GetComponent<ReferenceHomeLayout>();if(!v)v=home.gameObject.AddComponent<ReferenceHomeLayout>();v.home=home;v.Build();}
         // 0 in place, 1 off the screen: while an area task builds, the resource bar slides up and the cards and tab bar slide down,
@@ -132,6 +136,8 @@ namespace RoyalThrone.ReferenceGameplay
             TextPlace(home.areaLabel,.08f,.49f,.65f,.86f,32);home.areaLabel.color=new Color(1,.97f,.83f);
             // A warm drop shadow keeps the title readable on the orange face, like the level title on green.
             if(!home.areaLabel.GetComponent<Shadow>()){var title=home.areaLabel.gameObject.AddComponent<Shadow>();title.effectColor=new Color(.42f,.18f,0,.7f);title.effectDistance=new Vector2(1.5f,-2);}TextPlace(home.areaProgress,0,0,1,1,25);
+            // The reference's Home has no area card (the user's decision, 2026-10-05): the star counter opens the task list.
+            home.areaButton.gameObject.SetActive(false);
             Hide(home.navigationBackground);Pic(home.navigationBackground,21453,0,0,1,1,true);
             Hide(home.navigation);Pic(home.navigation,21453,0,0,1,1,true).transform.SetAsFirstSibling();
             // The reference bar deepens from royal blue to navy under the imported gold edge.
@@ -145,6 +151,7 @@ namespace RoyalThrone.ReferenceGameplay
                 tabFace[i]=Surface("Selected tab panel",tab,new Color(.01f,.35f,.76f),new Color(0,.22f,.52f));tabFace[i].transform.SetSiblingIndex(1);
                 tabLine[i]=Surface("Selected tab underline",tab,new Color(1,.87f,.36f),new Color(.93f,.55f,.08f));
                 foreach(var g in new[]{tabRim[i],tabFace[i],tabLine[i]}){var r=g.rectTransform;r.anchorMin=r.anchorMax=new Vector2(.5f,0);r.pivot=new Vector2(.5f,0);}
+                tabLine[i].gameObject.SetActive(false);
                 // The reference names every tab under its icon; the events book and trophy art name the first two.
                 var label=tab.GetComponentInChildren<Text>(true);label.text=names[i];label.alignment=TextAnchor.MiddleCenter;label.resizeTextForBestFit=true;label.resizeTextMinSize=12;
                 // A plain Shadow, not an Outline (which is a Shadow too).
@@ -190,9 +197,9 @@ namespace RoyalThrone.ReferenceGameplay
             float away=Mathf.Clamp01(HudAway),top=(1-home.safeArea.anchorMax.y)*((RectTransform)home.transform).rect.height;
             home.hud.sizeDelta=new Vector2(w*HudWidth,w*HudHeight);home.hud.anchoredPosition=new Vector2(0,-w*HudCentre+away*(w*(HudCentre+HudHeight)+top+24));
             for(int i=0;i<5;i++)Anchor((RectTransform)home.resourceButtons[i].transform,ResourceEdges[i*2],0,ResourceEdges[i*2+1],1);
-            float navH=w*NavHeight,drop=away*(w*(ActionsCentre+ActionsHeight)+inset+24);
-            home.actions.sizeDelta=new Vector2(w*ActionsWidth,w*ActionsHeight);home.actions.anchoredPosition=new Vector2(0,w*ActionsCentre-drop);
-            Anchor(home.levelRect,0,0,LevelRight,1);Anchor(home.areaRect,AreaLeft,0,1,1);
+            float navH=w*NavHeight,drop=away*(w*(CentredActions+ActionsHeight)+inset+24);
+            home.actions.sizeDelta=new Vector2(w*ActionsWidth,w*ActionsHeight);home.actions.anchoredPosition=new Vector2(0,w*CentredActions-drop);
+            Anchor(home.levelRect,.5f-LevelRight*.5f,0,.5f+LevelRight*.5f,1);Anchor(home.areaRect,AreaLeft,0,1,1);
             float sink=away*(navH*1.35f+inset+24);home.navigation.sizeDelta=new Vector2(w,navH);home.navigation.anchoredPosition=new Vector2(0,navH*.5f-sink);
             home.navigationBackground.sizeDelta=new Vector2(0,navH+inset);home.navigationBackground.anchoredPosition=new Vector2(home.navigationBackground.anchoredPosition.x,-sink);
             navDepth.rectTransform.offsetMin=new Vector2(0,-inset);navDepth.rectTransform.offsetMax=new Vector2(0,-w*GoldTrim);

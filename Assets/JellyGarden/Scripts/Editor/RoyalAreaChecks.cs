@@ -23,7 +23,8 @@ namespace RoyalThrone.Editor
         static readonly List<string> lines = new List<string>();
         static readonly List<string> errors = new List<string>();
         static readonly string[] RealKeys = { RoyalAreas.CurrentKey, RoyalAreas.DoneKey, RoyalAreas.SpentKey, RoyalAreas.EnteredKey, RoyalAreas.LayoutVersionKey, RoyalAreas.MigrationCreditKey, "Gems", "Stripes", "Packages", "Colorful_bomb", "OpenLevel", "Lifes" };
-        static readonly string[] AreaKeys = { RoyalAreas.CurrentKey, RoyalAreas.DoneKey, RoyalAreas.SpentKey, RoyalAreas.EnteredKey, RoyalAreas.LayoutVersionKey, RoyalAreas.MigrationCreditKey };
+        // BoughtKey: stars bought in the shop count as spendable (2026-10-05); a QA shop test must not change the counts here.
+        static readonly string[] AreaKeys = { RoyalAreas.CurrentKey, RoyalAreas.DoneKey, RoyalAreas.SpentKey, RoyalAreas.EnteredKey, RoyalAreas.LayoutVersionKey, RoyalAreas.MigrationCreditKey, RoyalAreas.BoughtKey };
 
         [MenuItem("Tools/Royal Throne/Areas/Check areas (Play Mode, QA profile)")]
         public static void Run()
@@ -112,7 +113,7 @@ namespace RoyalThrone.Editor
                 // ---- Too few stars: one row, the first task; Do It explains and offers the next level; nothing is spent.
                 RoyalSave.SetInt(RoyalAreas.SpentKey, earned); home.RefreshProgress();
                 Check(home.starLabel.text == "0", "Star counter shows stars left to spend");
-                home.areaButton.onClick.Invoke(); yield return Frames(2);
+                home.resourceButtons[3].onClick.Invoke(); yield return Frames(2);
                 Check(view.Showing == RoyalAreaView.Tasks && view.VisibleTiles == 1 && view.RowTask == 0, "The list shows one row: the first task");
                 Check(view.TabClearance >= 0, "The task list sits above the tab bar (" + view.TabClearance.ToString("0") + " px clear)");
                 Check(!home.dialogRect.gameObject.activeSelf, "The Home card gives way to the area panel");
@@ -130,7 +131,7 @@ namespace RoyalThrone.Editor
 
                 // ---- Ten stars: the chest's bubble, then the first build, with repeated taps.
                 RoyalSave.SetInt(RoyalAreas.SpentKey, earned - 10); home.RefreshProgress();
-                home.areaButton.onClick.Invoke(); yield return Frames(2);
+                home.resourceButtons[3].onClick.Invoke(); yield return Frames(2);
                 CheckHit(view.ChestButton, "The progress chest");
                 view.ChestButton.onClick.Invoke(); yield return Frames(1);
                 Check(view.TooltipVisible, "Tapping the chest shows its rewards");
@@ -180,7 +181,7 @@ namespace RoyalThrone.Editor
                 // ---- The rest of the area; the last task ends in the chest ceremony.
                 for (int task = 1; task < 6; task++)
                 {
-                    if (view.Showing != RoyalAreaView.Tasks) { home.areaButton.onClick.Invoke(); yield return Frames(2); }
+                    if (view.Showing != RoyalAreaView.Tasks) { home.resourceButtons[3].onClick.Invoke(); yield return Frames(2); }
                     Check(view.RowTask == task, "Task " + (task + 1) + " is the one on offer");
                     view.DoItButton.onClick.Invoke(); yield return Frames(1);
                     if (task < 5) { yield return Until(() => !view.Building, 12); Check(!view.Building && RoyalAreas.IsDone(task), "Task " + (task + 1) + " is built"); }
@@ -225,7 +226,7 @@ namespace RoyalThrone.Editor
                 Check(home.areaLabel.text == "New Area" && !home.areaProgress.gameObject.activeSelf, "With art, the Area card reads New Area");
                 Check(scene.Shown == areas[0] && scene.ShowingRestored, "Home still shows restored Area 1");
                 yield return Shot("home-new-area");
-                home.areaButton.onClick.Invoke(); yield return Frames(2);
+                home.resourceButtons[3].onClick.Invoke(); yield return Frames(2);
                 Check(view.Showing == RoyalAreaView.Unlocked, "New Area opens New Area!");
                 Check(view.TabClearance >= 0, "New Area! sits above the tab bar (" + view.TabClearance.ToString("0") + " px clear)");
                 CheckHit(view.UnlockButton, "Unlock");

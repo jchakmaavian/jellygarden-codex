@@ -112,8 +112,8 @@ namespace RoyalThrone.Presentation
                 var number=transform.Find("Banner/Royal level number");
                 if(number)number.GetComponent<Text>().text=level.currentLevel.ToString();
             }
-            // The fail card carries its level on the ribbon ("Level 18").
-            if(name=="MenuFailed"&&level){var title=transform.Find("Image/Royal ribbon/Royal heading");if(title)title.GetComponent<Text>().text="Level "+level.currentLevel;}
+            // The fail and win cards carry their level on the ribbon ("Level 18").
+            if((name=="MenuFailed"||name=="MenuComplete")&&level){var title=transform.Find("Image/Royal ribbon/Royal heading");if(title)title.GetComponent<Text>().text="Level "+level.currentLevel;}
         }
         void OnDisable(){if(name=="PreFailed")RoyalCards.ReleaseOfferGoals(transform);if(name=="MenuFailed")RoyalCards.ReleaseFailedGoals(transform);}
         readonly List<TargetIcon> offerGoals=new List<TargetIcon>();

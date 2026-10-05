@@ -120,7 +120,7 @@ namespace RoyalThrone.Presentation
                 if (!child || !child.gameObject.activeSelf || child.name == "Royal skin" || child.name == "Close") return;
                 var group = child.GetComponent<CanvasGroup>();
                 if (group && group.alpha <= 0) return;   // hidden on purpose (RoyalCardKit.Hide)
-                if (child.GetComponent<RoyalCalmAppear>()) return;   // appears by itself later (the win card's stars)
+                if (child.GetComponent<RoyalCalmAppear>() || child.GetComponent<RoyalAppearsLater>()) return;   // shows by itself later (the win card's star, title and lights)
                 var r = child as RectTransform;
                 if (!r) return;
                 int band = Mathf.Clamp(Mathf.FloorToInt((top - r.anchoredPosition.y - 60) / 150), 0, 3);

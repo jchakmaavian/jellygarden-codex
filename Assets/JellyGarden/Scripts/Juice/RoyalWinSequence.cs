@@ -11,14 +11,17 @@ namespace JellyGarden.Scripts.Juice
     /// <summary>
     /// The end of a won level, staged as the reference build shows it (Design/RoyalMatchReference/OBSERVATIONS.md):
     /// 1. <see cref="Celebrate"/> as soon as the goals are done, before the moves left are used: the screen dims, the
-    ///    Royal Throne logo drops in under hanging pennants, with fireworks and confetti (about 2.7 s).
+    ///    Royal Throne logo drops in under hanging pennants, with fireworks and confetti. The booster session starts as the
+    ///    logo lifts away (1.8 s in), while the stage fades out.
     /// 2. <see cref="BeginFinale"/>: the HUD's goal panel turns into a Reward coin counter; while the booster session
     ///    (ReferenceWinFinish) turns the moves left into rockets and fires them, coins fly from the board into it, and
     ///    <see cref="EndFinale"/> lands the rest.
     /// 3. <see cref="Reward"/> on the win card: a sparkle as each star appears; on the verified opening levels (1-5), which
     ///    award one star, a single large star drops onto the card in place of the star row and the score.
-    /// 4. After CONTINUE, on Home: a tip card for the piece the next levels teach, then the star and overlapping coins fly into the
-    ///    Home counters, which count up as they land, and the Area task list opens if its next task is affordable.
+    /// 4. After CONTINUE, on Home: the star and overlapping coins fly into the Home counters, which count up as they land,
+    ///    and the Area task list opens if its next task is affordable. (No tip card after the level: each power piece is
+    ///    taught when its level starts, RoyalPowerTutorial; the user, 2026-10-05.)
+    /// One stage leads straight into the next, with no wait between them (the user, 2026-10-05).
     /// Presentation only: LevelManager credits the coins and stars before the card opens. Nothing here takes input. A tap
     /// shortens the celebration (LevelManager.SkipWinCelebration). No squash or overshoot, like the cards around it.
     /// </summary>
@@ -405,9 +408,15 @@ namespace JellyGarden.Scripts.Juice
 
         // ---------------------------------------------------------------- 1. the celebration, when the goals are done
 
+        // The celebration plays on by itself; the level's coroutine moves on to the booster session as soon as the logo starts
+        // to lift away (the hand-over), so the stage's fade-out and the first moves' flights overlap instead of queueing.
+        bool celebrationHandover;
         public static IEnumerator Celebrate(LevelManager lm)
         {
-            var s = Get(lm); yield return s.RunCelebration(lm);
+            var s = Get(lm); s.celebrationHandover = false;
+            s.StartCoroutine(s.RunCelebration(lm));
+            float until = Time.unscaledTime + 6;
+            while (!s.celebrationHandover && s && s.isActiveAndEnabled && lm.gameStatus == GameState.PreWinAnimations && Time.unscaledTime < until) yield return null;
         }
 
         IEnumerator RunCelebration(LevelManager lm)
@@ -419,7 +428,7 @@ namespace JellyGarden.Scripts.Juice
             while (Time.unscaledTime < settle && lm.gameStatus == GameState.PreWinAnimations && !lm.SkipWinCelebration &&
                    (lm.IsResolvingMatches || RoyalPowerupDirector.Busy || lm.GetItems().Exists(i => i && (i.destroying || i.falling))))
                 yield return null;
-            if (lm.gameStatus != GameState.PreWinAnimations) yield break;
+            if (lm.gameStatus != GameState.PreWinAnimations) { celebrationHandover = true; yield break; }
             // An overlay made this frame may not have its screen size yet; everything below is laid out from it.
             yield return Scaled();
             // The existing "complete" cue (the celebration fanfare through RoyalAudioDirector); music is untouched.
@@ -453,13 +462,14 @@ namespace JellyGarden.Scripts.Juice
             // Its reaction makes the king in the HUD portrait cheer.
             if (RoyalPowerupDirector.Get && lm.GameField) RoyalPowerupDirector.Get.Creation(lm.GameField.position);
 
-            float t = 0, hold = 2.2f, exit = .45f;
+            float t = 0, hold = 1.8f, exit = .45f;
             while (true)
             {
                 if (lm.gameStatus != GameState.PreWinAnimations) { foreach (var b in bits) b.age = b.life; break; }
                 t += Time.unscaledDeltaTime;
                 // A tap (the same one that sped up the booster session) jumps to the exit.
                 if (lm.SkipWinCelebration && t < hold) hold = Mathf.Max(.35f, t);
+                if (t >= hold) celebrationHandover = true;
                 while (fired < at.Length && t >= at[fired] && t < hold) { FireworkBurst(shells[fired], colors[fired]); fired++; }
                 float outU = Mathf.Clamp01((t - hold) / exit), dimIn = EaseOut(t / .3f);
                 dim.color = new Color(Navy.r * .5f, Navy.g * .5f, Navy.b * .5f, .74f * dimIn * (1 - outU));
@@ -480,6 +490,7 @@ namespace JellyGarden.Scripts.Juice
                 if (t >= hold + exit) break;
                 yield return null;
             }
+            celebrationHandover = true;
             Destroy(stage.gameObject);
         }
 
@@ -585,7 +596,6 @@ namespace JellyGarden.Scripts.Juice
             while (Time.unscaledTime < end && FinalePendingCoinValue > .0001f && lm.gameStatus == GameState.PreWinAnimations) yield return null;
             if (lm.gameStatus != GameState.PreWinAnimations) yield break;
             rewardShown = rewardTarget; if (rewardCount) rewardCount.text = rewardShown.ToString();
-            yield return new WaitForSecondsRealtime(.25f);
         }
 
         void RestoreHud()
@@ -609,7 +619,6 @@ namespace JellyGarden.Scripts.Juice
         Canvas.WillRenderCanvases homeHold;
         RoyalThrone.Presentation.RoyalHomeScreen heldHome;
         readonly List<GameObject> rewardObjects = new List<GameObject>();
-        readonly List<Graphic> hiddenRewardGraphics = new List<Graphic>();
 
         void TrackRewardObject(GameObject value) { rewardObjects.Add(value); }
         void ReleaseHomeHold()
@@ -634,8 +643,6 @@ namespace JellyGarden.Scripts.Juice
             homeCoins = InitScript.Gems;
             ClearFlights();
             ClearPill();
-            foreach (var graphic in hiddenRewardGraphics) if (graphic) graphic.enabled = true;
-            hiddenRewardGraphics.Clear();
             // Unity may stop a disabled host without disposing every nested enumerator.
             // Keep explicit ownership of card, tip and floating-label objects for that case.
             foreach (var obj in rewardObjects) if (obj) Destroy(obj);
@@ -647,9 +654,10 @@ namespace JellyGarden.Scripts.Juice
             var s = Get(lm); s.CancelRewardPresentation();
             bool opening = RoyalThrone.Campaign.RoyalReferenceCampaign.Opening;
             // Home plays the rewards only after the verified opening levels, whose CONTINUE goes Home (AnimationManager).
-            // Later levels go on to the next level's card, so their coins fly on the win card as before.
+            // Later levels go on to the next level's card, so their coins fly on the win card as before. The card lands its
+            // own star either way (RoyalCards.Won, RoyalWinCard).
             s.pending = opening ? new Pending { coins = coins, before = balanceBefore, stars = lm.StarsGained, level = lm.currentLevel, opening = true } : null;
-            s.reward = s.StartCoroutine(opening ? s.RunCard() : s.RunCardCoins(lm, coins, balanceBefore));
+            s.reward = opening ? null : s.StartCoroutine(s.RunCardCoins(lm, coins, balanceBefore));
         }
 
         // ---- later levels: coins from the card's stars into a coin balance pill above the card (unchanged from v4)
@@ -679,24 +687,19 @@ namespace JellyGarden.Scripts.Juice
             var menus = MenuManager.Instance; var card = menus ? menus.GetCanvasGlobal().Find("MenuComplete") : null;
             if (!card) yield break;
             BuildPill(before); var pillGroup = pill.gameObject.AddComponent<CanvasGroup>(); pillGroup.alpha = 0;
-            float t0 = Time.unscaledTime; int expected = Mathf.Clamp(lm.stars, 1, 3), count = 0; var seen = new bool[3]; Vector2 starRow = Vector2.zero;
+            // The coins leave the level's star once it has landed on the card's cushion (RoyalWinCard lights and sparkles it).
+            float t0 = Time.unscaledTime; var piece = RoyalThrone.Presentation.RoyalWinCard.Of(card); var star1 = card.Find("Image/Star1");
             while (card.gameObject.activeInHierarchy && Time.unscaledTime - t0 < 4.5f)
             {
                 float e = Time.unscaledTime - t0;
                 pillGroup.alpha = EaseOut((e - .15f) / .25f); pill.anchoredPosition = new Vector2(0, PillY + 16 * (1 - EaseOut((e - .15f) / .25f)));
-                for (int i = 0; i < 3; i++)
-                {
-                    var s = card.Find("Image/Star" + (i + 1));
-                    if (!s || seen[i] || !s.gameObject.activeInHierarchy) continue;
-                    seen[i] = true; count++; var p = Local(s); if (i == 1 || starRow == Vector2.zero) starRow = p;
-                    SparkleBurst(p, 16, 330, Gold, 26); RingFlash(p, 150, new Color(1, .9f, .55f));
-                }
-                if (count >= expected && e > .5f) break;
+                bool landed = piece ? piece.Landed : star1 && star1.gameObject.activeInHierarchy;
+                if (landed && e > .5f) break;
                 yield return null;
             }
             if (!card.gameObject.activeInHierarchy) { ClearPill(); yield break; }
-            if (starRow == Vector2.zero) { var s2 = card.Find("Image/Star2"); starRow = s2 ? Local(s2) : Vector2.zero; }
-            float wait = Time.unscaledTime + .32f;
+            Vector2 starRow = star1 ? Local(star1) : Vector2.zero;
+            float wait = Time.unscaledTime + .12f;
             while (card.gameObject.activeInHierarchy && Time.unscaledTime < wait) yield return null;
             pillGroup.alpha = 1; pill.anchoredPosition = new Vector2(0, PillY);
             int flightsN = 10, landedN = 0; coin = coin ? coin : RoyalPieceSkin.Art("coin");
@@ -727,74 +730,7 @@ namespace JellyGarden.Scripts.Juice
             if (label) Destroy(label.gameObject);
         }
 
-        // Levels 1-5: one progression star per win, as on the reference card. The row of three and the score give way to a
-        // single large star that drops onto the card; they are switched back on when the card closes (it is reused).
-        IEnumerator RunCard()
-        {
-            reduced = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0;
-            var menus = MenuManager.Instance; var card = menus ? menus.GetCanvasGlobal().Find("MenuComplete") : null;
-            if (!card) yield break;
-            float t0 = Time.unscaledTime; var hidden = hiddenRewardGraphics;
-            try
-            {
-                var slot = card.Find("Image/Star2"); if (!slot) slot = card.Find("Image/Star1");
-                Vector2 at = slot ? Local(slot) + new Vector2(0, -10) : new Vector2(0, 120);
-                var big = Picture("Level star", root, star, at + new Vector2(0, 420), new Vector2(200, 200), new Color(1, 1, 1, 0));
-                var bigGlow = Picture("Level star glow", root, soft, at, new Vector2(330, 330), new Color(1, .86f, .45f, 0)); bigGlow.preserveAspect = false;
-                TrackRewardObject(big.gameObject); TrackRewardObject(bigGlow.gameObject);
-                big.rectTransform.SetAsLastSibling();
-                Sprite starArt = null; var s1 = card.Find("Image/Star1"); var si = s1 ? s1.GetComponent<Image>() : null; if (si && si.sprite) starArt = si.sprite; if (starArt) big.sprite = starArt;
-                bool landed = false; float fall = 0;
-                while (card && card.gameObject.activeInHierarchy)
-                {
-                    HideRowAndScore(card, hidden);
-                    float e = Time.unscaledTime - t0;
-                    if (e > .35f)
-                    {
-                        fall += Time.unscaledDeltaTime; float u = EaseOut(fall / .5f);
-                        big.rectTransform.anchoredPosition = at + new Vector2(0, (1 - u) * 420);
-                        big.rectTransform.localScale = Vector3.one * (reduced ? 1 : Mathf.Lerp(1.6f, 1, u));
-                        big.rectTransform.localRotation = Quaternion.Euler(0, 0, (1 - u) * -18);
-                        big.color = new Color(1, 1, 1, Mathf.Clamp01(fall / .12f));
-                        if (!landed && u >= 1)
-                        {
-                            landed = true; SparkleBurst(at, 18, 360, Gold, 26); RingFlash(at, 220, new Color(1, .9f, .55f));
-                            RoyalAudioDirector.Get?.Play(RoyalCue.Create);
-                        }
-                        if (landed) { float g = Time.unscaledTime - t0; bigGlow.color = new Color(1, .86f, .45f, .35f + .1f * Mathf.Sin(g * 2.5f)); if (!reduced && Random.value < .06f) SparkleBurst(at + Random.insideUnitCircle * 90, 1, 40, Gold, 18); }
-                    }
-                    yield return null;
-                }
-                Destroy(big.gameObject); Destroy(bigGlow.gameObject);
-            }
-            finally { foreach (var g in hidden) if (g) g.enabled = true; }
-        }
-
-        // Hides the star row and the score, remembering each graphic it switched off (the animator may re-enable them).
-        static void HideRowAndScore(Transform card, List<Graphic> hidden)
-        {
-            void Hide(Graphic g) { if (!g.enabled) return; g.enabled = false; if (!hidden.Contains(g)) hidden.Add(g); }
-            for (int i = 1; i <= 3; i++) { var s = card.Find("Image/Star" + i); if (s) foreach (var g in s.GetComponentsInChildren<Graphic>(true)) Hide(g); }
-            foreach (var g in card.GetComponentsInChildren<Graphic>(true))
-                if (g.name.IndexOf("Score", global::System.StringComparison.OrdinalIgnoreCase) >= 0 || g.transform.parent && g.transform.parent.name.IndexOf("Score", global::System.StringComparison.OrdinalIgnoreCase) >= 0) Hide(g);
-        }
-
         // ---------------------------------------------------------------- 4. Home: tip, coins, star, tasks
-
-        // The tip shown on the way home, per level just won, as the reference build does (Rocket, Rocket, TNT, Propeller,
-        // then the five-in-a-row piece). Our own wording; our pieces.
-        static bool Tip(int level, out string title, out ItemsTypes power, out int length, out bool square, out bool corner)
-        {
-            title = null; power = ItemsTypes.NONE; length = 4; square = false; corner = false;
-            switch (level)
-            {
-                case 1: case 2: title = "Rocket"; power = ItemsTypes.VERTICAL_STRIPPED; length = 4; return true;
-                case 3: title = "TNT"; power = ItemsTypes.PACKAGE; corner = true; return true;
-                case 4: title = "Propeller"; power = ItemsTypes.HELICOPTER; square = true; return true;
-                case 5: title = "Color Ball"; power = ItemsTypes.BOMB; length = 5; return true;
-            }
-            return false;
-        }
 
         IEnumerator HomeRewards(LevelManager lm)
         {
@@ -812,7 +748,6 @@ namespace JellyGarden.Scripts.Juice
                 heldHome = home; homeHold = Hold; Canvas.willRenderCanvases += homeHold;
                 try
                 {
-                    if (Tip(p.level, out var title, out var power, out var length, out var square, out var corner)) yield return ShowTip(title, power, length, square, corner);
                     if (lm.gameStatus != GameState.Map) yield break;
                     // Reference: the star launches first; the coin pile appears beneath it
                     // while it is still airborne. Currency remains saved independently.
@@ -867,7 +802,7 @@ namespace JellyGarden.Scripts.Juice
                 finally { ReleaseHomeHold(); }
                 // The task list opens by itself when the current area's next task can be paid for.
                 // The very first time, the reference points at the Area card instead (RoyalAreaView.GuideFirstTask).
-                if (lm.gameStatus == GameState.Map && Affordable(starsNow) && home.areaButton && !(home.AreaView && home.AreaView.GuideFirstTask())) home.OpenPanel("area", home.areaButton.gameObject);
+                if (lm.gameStatus == GameState.Map && Affordable(starsNow) && home.areaButton && !(home.AreaView && home.AreaView.GuideFirstTask())) home.OpenPanel("area", RoyalThrone.Presentation.RoyalAreaView.Entry(home).gameObject);
             }
             finally
             {
@@ -886,43 +821,6 @@ namespace JellyGarden.Scripts.Juice
             var area = RoyalThrone.Presentation.RoyalAreas.CurrentArea; if (area == null || area.tasks == null) return false;
             for (int i = 0; i < area.tasks.Length; i++) if (!RoyalThrone.Presentation.RoyalAreas.IsDone(i)) return area.tasks[i].cost <= starsLeft;
             return false;
-        }
-
-        IEnumerator ShowTip(string title, ItemsTypes power, int length, bool square, bool corner)
-        {
-            var stage = Node("Tip", root, Vector2.zero, Size);
-            TrackRewardObject(stage.gameObject);
-            var group = stage.gameObject.AddComponent<CanvasGroup>(); group.alpha = 0;
-            var back = Picture("Tip backdrop", stage, piece, Vector2.zero, Size + new Vector2(40, 40), new Color(.07f, .16f, .45f, .96f)); back.preserveAspect = false;
-            Words("Tip title", stage, title, 76, new Vector2(0, 260), new Vector2(700, 110), Gold, 4);
-            // The pieces that make it, an arrow, and the piece itself.
-            var tile = RoyalPieceSkin.For(ItemsTypes.NONE, corner ? 1 : square ? 2 : length == 5 ? 4 : 0);
-            var cells = new List<Vector2>();
-            if (square) cells.AddRange(new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 1), new Vector2(1, 1) });
-            else if (corner) cells.AddRange(new[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(0, 2), new Vector2(1, 0), new Vector2(2, 0) });
-            else for (int i = 0; i < length; i++) cells.Add(new Vector2(0, i));
-            float cell = 76; var origin = new Vector2(-200, -40);
-            float maxY = 0; foreach (var c in cells) maxY = Mathf.Max(maxY, c.y);
-            foreach (var c in cells) Picture("Tip piece", stage, tile, origin + new Vector2(c.x * cell, (c.y - maxY * .5f) * cell), new Vector2(cell - 6, cell - 6), Color.white);
-            // The arrow is drawn (a shaft and a two-stroke head), not a text glyph the display font may lack.
-            var arrow = Node("Tip arrow", stage, new Vector2(20, -40), new Vector2(120, 60));
-            var arrowColor = new Color(1, 1, 1, .92f);
-            Picture("Shaft", arrow, piece, new Vector2(-8, 0), new Vector2(84, 14), arrowColor).preserveAspect = false;
-            foreach (var sign in new[] { 1f, -1f })
-            {
-                var stroke = Picture("Head", arrow, piece, new Vector2(24, sign * 13), new Vector2(46, 14), arrowColor);
-                stroke.preserveAspect = false; stroke.rectTransform.localRotation = Quaternion.Euler(0, 0, -sign * 40);
-            }
-            Picture("Tip power", stage, RoyalPieceSkin.For(power, 0), new Vector2(200, -40), new Vector2(170, 170), Color.white);
-            float t = 0, hold = 1.3f;
-            while (t < hold + .5f)
-            {
-                t += Time.unscaledDeltaTime;
-                group.alpha = Mathf.Clamp01(t / .2f) * (1 - Mathf.Clamp01((t - hold - .2f) / .3f));
-                arrow.anchoredPosition = new Vector2(20 + (reduced ? 0 : Mathf.Sin(t * 5) * 8), -40);
-                yield return null;
-            }
-            Destroy(stage.gameObject);
         }
 
         // ---------------------------------------------------------------- Areas (RoyalAreaView): stars, streaks, puffs, the chest

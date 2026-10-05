@@ -326,75 +326,92 @@ namespace RoyalThrone.Presentation
 
         // ---- Results ---------------------------------------------------------------------------------------------------
 
-        // MenuComplete and MenuFailed. Returns the king's image, where RoyalMenuSkin mounts King Vanguard. Rows follow each
-        // other from the top edge: the stars (win), the king, the goals (the fail card has them; the win card has no goals
-        // group), the score, then the action; the card ends 52.5 below it.
-        public static Image Result(Transform menu, Transform p, bool win)
-        {
-            if (!win) return Failed(menu, p);
-            var targets = p.Find("Targets");
-            var best = p.Find("BestScore");
-            bool showBest = best && best.gameObject.activeSelf;
-            // SHARE exists only with online services (GUIEvents hides it otherwise).
-            var share = p.Find("Share");
-            bool showShare = share && RoyalThrone.RoyalOfflineMode.ServicesEnabled;
-            // The level-end system (as the So Close offer before it): the title at the offer's height, the stars 60 lower
-            // than on the old card with it, the goals card at the offer's size and the primary button at its height.
-            const float lower = CleanTitleDrop - TitleDrop, goalsHalf = RoyalCards.OfferGoalsHeight * .5f, actionHalf = PrimaryHeight * .5f;
-            float row = (win ? 281 : 145) + lower;            // the stars' lower edge, or the title's
-            float kingRow = row + 16 + 75; row = kingRow + 75;
-            float goalsRow = 0;
-            if (targets) { goalsRow = row + 21 + goalsHalf; row = goalsRow + goalsHalf; }
-            float scoreRow = row + 38, valueRow = scoreRow + 43, bestRow = scoreRow + 85;
-            row = showBest ? bestRow + 8 : valueRow + 18;
-            float actionRow = row + 28 + actionHalf;
-            float H = Mathf.Round(actionRow + actionHalf + CleanBottom), top = H * .5f;
+        // MenuComplete and MenuFailed. Returns the king's image, where RoyalMenuSkin mounts King Vanguard: the fail card's. The win
+        // card, as the reference's, has no king (null: nothing is mounted).
+        public static Image Result(Transform menu, Transform p, bool win) => win ? Won(menu, p) : Failed(menu, p);
 
-            var skin = Card(menu, p, H, win ? "WELL PLAYED!" : "TRY AGAIN", CardOffsetY, true);
-            // LEVEL over the level number on the ribbon ("Level" holds the number alone).
-            var level = p.Find("Level");
-            LevelBadge(p, level ? level.GetComponent<Text>() : null);
-            // The stars earned, shown one by one by AnimationManager once the card is in.
+        // MenuComplete, after the reference's results card (2026-10-05), in our art: "Level n" on the ribbon with the red close,
+        // "Well Done!" written in over the level's star, which lands on a royal cushion (RoyalWinCard), then Continue. No score:
+        // a win earns one star, and the star is the result (the user's choice). The close continues exactly as Continue does
+        // (it presses Next), so closing never loses the win. Rows from the card's top edge; the card ends 52 below Continue.
+        public const float WinTitleRow = 142, WinTitleSize = CleanTitleSize, WinStarSize = 256, WinCushionTop = 322, WinCushionWidth = 460;
+        public const float WinActionRow = 660, WinActionWidth = 470;
+        // The cushion art (win-cushion, 1024 x 684, RoyalThrone render_cushion.py): where the star rests on its dome, from the
+        // art's top as a share of its height, and the seat it gives from, from its bottom.
+        const float CushionAspect = 684f / 1024f, CushionRest = .1816f, CushionSeat = .30f;
+        static Image Won(Transform menu, Transform p)
+        {
+            const float H = WinActionRow + PrimaryHeight * .5f + CleanBottom, top = H * .5f;
+            var skin = RibbonCard(menu, p, H, "Level");
+            var next = p.Find("Next");
+            var close = p.Find("Royal close");
+            if (!close)
+            {
+                close = new GameObject("Royal close", typeof(RectTransform), typeof(Image), typeof(UnityEngine.UI.Button)).transform;
+                close.SetParent(p, false);
+                var nextButton = next ? next.GetComponent<UnityEngine.UI.Button>() : null;
+                close.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => { if (nextButton && nextButton.interactable) nextButton.onClick.Invoke(); });
+            }
+            RedClose(close, H);
+            Hide(p.Find("Level"));   // the number alone; the ribbon's title carries it
+            foreach (string n in new[] { "TargetDescription1", "TargetDescription2", "TargetCheck1", "TargetCheck2", "TargetUnCheck1", "TargetUnCheck2", "Score", "BestScore", "Targets" }) Hide(p.Find(n));
+
+            var heading = Words(p, "Royal win heading", "Well Done!", 0, top - WinTitleRow, 580, WinTitleSize, Ink.Display);
+            heading.gameObject.AddComponent<RoyalAppearsLater>();
+
+            float cushionH = WinCushionWidth * CushionAspect, cushionY = top - WinCushionTop - cushionH * .5f;
+            var cushion = RoyalMenuSkin.Art(p, "Royal cushion", "win-cushion", 0, cushionY, WinCushionWidth, cushionH);
+            var cr = cushion.rectTransform;
+            cr.pivot = new Vector2(.5f, CushionSeat); cr.anchoredPosition = new Vector2(0, cushionY + cushionH * (CushionSeat - .5f));
+            // The star's lower points sink a little into the dent in the cushion's top.
+            float starY = top - WinCushionTop - CushionRest * cushionH + .30f * WinStarSize;
+
+            RectTransform star = null;
             for (int i = 1; i <= 3; i++)
             {
-                var star = p.Find("Star" + i);
-                if (!win) { Hide(star); continue; }
-                // A win earns one star (LevelManager.stars is 1), and it is Star1: that one sits in the middle, at the large size;
-                // Star2 and Star3 keep the places beside it for a level that ever shows more.
-                float size = i == 1 ? 118 : 100, x = i == 1 ? 0 : i == 2 ? -118 : 118;
-                RoyalMenuSkin.Place(star, x, top - lower - (i == 1 ? 222 : 238), size, size);
-                var image = star ? star.GetComponent<Image>() : null;
-                if (image) { image.sprite = JellyGarden.Scripts.Juice.RoyalPieceSkin.Art("star"); image.preserveAspect = true; }
-                if (star && !star.GetComponent<RoyalCalmAppear>()) star.gameObject.AddComponent<RoyalCalmAppear>();
-                // The inherited star_animation (3x -> 1, linear, 0.5 s; no events) would override the calm appear every frame.
-                var clip = star ? star.GetComponent<Animation>() : null;
+                var s = p.Find("Star" + i);
+                if (!s) continue;
+                // The inherited star_animation (3x -> 1, linear, 0.5 s; no events) would override RoyalWinCard every frame.
+                var clip = s.GetComponent<Animation>();
                 if (clip) { clip.Stop(); clip.playAutomatically = false; clip.enabled = false; }
+                if (i > 1) { Hide(s); continue; }   // a win earns one star: Star1
+                RoyalMenuSkin.Place(s, 0, starY, WinStarSize, WinStarSize);
+                var image = s.GetComponent<Image>();
+                if (image) { image.sprite = JellyGarden.Scripts.Juice.RoyalPieceSkin.Art("star"); image.preserveAspect = true; image.raycastTarget = false; }
+                if (!s.GetComponent<RoyalAppearsLater>()) s.gameObject.AddComponent<RoyalAppearsLater>();
+                star = (RectTransform)s;
             }
-            var king = RoyalMenuSkin.Art(p, "Royal king", null, 0, top - kingRow, 170, 150);
-            king.enabled = false; // empty mount point; V2 owns the visible character
-            if (targets)
+            // Behind the star, over the cushion: its breathing glow and the flash as it lands. Sparkles above it all.
+            var glow = Shape(p, "Royal star glow", 0, starY - 6, 340, 340, 170, C("ffe08a"), C("ffc24a"));
+            glow.softness = 320; glow.color = new Color(1, 1, 1, 0); glow.gameObject.AddComponent<RoyalAppearsLater>();
+            var flash = Shape(p, "Royal star flash", 0, starY - 10, 460, 460, 230, C("fffbe6"), C("ffe7a6"));
+            flash.softness = 440; flash.color = new Color(1, 1, 1, 0); flash.gameObject.AddComponent<RoyalAppearsLater>();
+            var sparkles = Container(p, "Royal win sparkles");
+            sparkles.gameObject.AddComponent<RoyalAppearsLater>();
+            if (star)
             {
-                var panel = Panel(p, "Royal goals panel", 0, top - goalsRow, RoyalCards.OfferGoalsWidth, RoyalCards.OfferGoalsHeight);
-                panel.SetSiblingIndex(p.Find("Royal skin").GetSiblingIndex() + 1);
-                Separators(panel, 110, .5f);
-                RoyalMenuSkin.Place(targets, 0, top - goalsRow, RoyalCards.OfferGoalsWidth, RoyalCards.OfferGoalsHeight);
+                cr.SetSiblingIndex(star.GetSiblingIndex());
+                glow.transform.SetSiblingIndex(star.GetSiblingIndex());
+                flash.transform.SetSiblingIndex(star.GetSiblingIndex());
+                sparkles.SetSiblingIndex(star.GetSiblingIndex() + 1);
             }
-            foreach (string n in new[] { "TargetDescription1", "TargetDescription2", "TargetCheck1", "TargetCheck2", "TargetUnCheck1", "TargetUnCheck2" }) Hide(p.Find(n));
-            Words(p, "Royal score label", "SCORE", 0, top - scoreRow, 350, 20, Ink.Heading);
-            Field(p.Find("Score"), 0, top - valueRow, 490, 44, Ink.Hero);
-            Field(best, 0, top - bestRow, 490, 20, Ink.Accent);
-            var buttons = new List<RoyalCardControl>();
-            float actionY = top - actionRow;
-            // With SHARE the two sit side by side: a shorter action on the left, SHARE at the secondary height on the right.
-            var actionButton = p.Find(win ? "Next" : "Again");
-            bool pair = showShare && actionButton;
-            float actionX = pair ? -78 : 0, actionW = pair ? 330 : 490;
-            var action = CleanButton(actionButton, win ? "CONTINUE" : "TRY AGAIN", actionX, actionY, actionW, PrimaryHeight, Kind.Primary);
+
+            var buttons = new List<RoyalCardControl> { Feedback(close, false) };
+            // SHARE exists only with online services (GUIEvents hides it otherwise); then it sits beside a shorter Continue.
+            var share = p.Find("Share");
+            bool pair = share && next && RoyalThrone.RoyalOfflineMode.ServicesEnabled;
+            float actionX = pair ? -78 : 0, actionW = pair ? 330 : WinActionWidth, actionY = top - WinActionRow;
+            var action = CleanButton(next, "Continue", actionX, actionY, actionW, PrimaryHeight, Kind.Primary, 44);
             if (action) { buttons.Add(Feedback(action, true)); ButtonShadow(skin, actionX, actionY, actionW, PrimaryHeight); }
-            if (pair) buttons.Add(Feedback(CleanButton(share, "SHARE", 172, actionY, 150, SecondaryHeight, Kind.Secondary, 24), false));
+            if (pair) buttons.Add(Feedback(CleanButton(share, "Share", 172, actionY, 150, SecondaryHeight, Kind.Secondary, 28), false));
             else Hide(share);
+
+            var piece = p.GetComponent<RoyalWinCard>();
+            if (!piece) piece = p.gameObject.AddComponent<RoyalWinCard>();
+            piece.star = star; piece.cushion = cr; piece.title = heading.GetComponent<RoyalTextStyle>();
+            piece.glow = glow; piece.flash = flash; piece.sparkles = (RectTransform)sparkles; piece.starRest = new Vector2(0, starY);
             Motion(menu, p, H, buttons, action);
-            return king;
+            return null;
         }
 
         // MenuFailed, after the reference's Level Failed card: "Level n" on the ribbon, the red close, one cream panel with

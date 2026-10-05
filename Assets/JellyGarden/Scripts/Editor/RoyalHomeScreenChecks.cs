@@ -65,10 +65,12 @@ namespace RoyalThrone.Editor
                 Check(!home.mapCamera.enabled, "Old map camera cannot pan behind Home");
                 CheckNavigation(2);
                 Check(home.settingButtons.Length == 4, "Home exposes Music, Sound, Motion and Hints");
-                foreach (var b in home.resourceButtons.Concat(home.tabButtons).Concat(new[] { home.levelButton, home.areaButton })) CheckHit(b);
-                Rect left = ScreenRect(home.levelRect), right = ScreenRect(home.areaRect), nav = ScreenRect(home.navigation), hud = ScreenRect(home.hud);
-                Check(left.xMax < right.xMin && left.yMin > nav.yMax && hud.yMin > left.yMax, "HUD, level/area actions and navigation do not overlap");
-                CheckHomeArt(left, right);
+                foreach (var b in home.resourceButtons.Concat(home.tabButtons).Concat(new[] { home.levelButton })) CheckHit(b);
+                Rect left = ScreenRect(home.levelRect), nav = ScreenRect(home.navigation), hud = ScreenRect(home.hud);
+                // Since 2026-10-05 Home has no Area card (the star counter opens the task list) and the Level button is centred.
+                Check(!home.areaButton.gameObject.activeInHierarchy && Mathf.Abs(left.center.x - nav.center.x) < 2 && left.yMin > nav.yMax && hud.yMin > left.yMax,
+                    "The Level button stands alone in the middle, clear of the HUD and the tab bar (no Area card)");
+                CheckHomeArt(left);
                 Capture("home");
                 phase = 0; next = EditorApplication.timeSinceStartup + .6;
                 Application.logMessageReceived += Log; EditorApplication.update += Watch; running = true; return true;
@@ -88,7 +90,7 @@ namespace RoyalThrone.Editor
                 switch (phase++)
                 {
                     case 0:
-                        home.areaButton.onClick.Invoke(); Check(home.dialog.activeSelf && !home.controls.interactable, "Area dialog disables castle controls while navigation stays usable");
+                        home.resourceButtons[3].onClick.Invoke(); Check(home.dialog.activeSelf && !home.controls.interactable, "The star counter opens the area dialog, which disables castle controls while navigation stays usable");
                         CheckHit(home.tabButtons[0]);
                         // The player's real areas are only looked at here; building is checked in the QA profile (RoyalAreaChecks).
                         string route = home.OpenPanelName;
@@ -203,13 +205,13 @@ namespace RoyalThrone.Editor
         // attached) rises through the gap between them: in its sprite only the central spire fills the top quarter, at most 14% of
         // the width in the top 17% and 20% down to 25% (measured from 16525.png). So only rows in that quarter may reach above the
         // cards, and the spire's column there must stay between the cards.
-        static void CheckHomeArt(Rect left, Rect right)
+        static void CheckHomeArt(Rect level)
         {
             var castle = home.tabButtons[2].GetComponentsInChildren<Image>().FirstOrDefault(i => i.enabled && i.sprite && i.name.StartsWith("Imported"));
             if (!castle)
             {
                 var homeIcon = home.tabButtons[2].transform.Find("Home icon") as RectTransform;
-                Check(!ScreenRect(homeIcon).Overlaps(left) && !ScreenRect(homeIcon).Overlaps(right), "Lifted Home icon leaves the primary actions clear");
+                Check(!ScreenRect(homeIcon).Overlaps(level), "Lifted Home icon stays below the Level button");
                 return;
             }
             Rect box = ScreenRect(castle.rectTransform);
@@ -217,11 +219,8 @@ namespace RoyalThrone.Editor
             // preserveAspect draws the sprite centred in its box.
             Vector2 size = box.width / box.height > aspect ? new Vector2(box.height * aspect, box.height) : new Vector2(box.width, box.width / aspect);
             Rect art = new Rect(box.center - size * .5f, size);
-            float cardBottom = Mathf.Min(left.yMin, right.yMin), above = Mathf.Clamp01((art.yMax - cardBottom) / art.height);
-            float spire = art.width * (above <= .17f ? .14f : .20f);
-            Rect column = Rect.MinMaxRect(art.center.x - spire * .5f, cardBottom, art.center.x + spire * .5f, art.yMax);
-            Check(above <= .25f && (above == 0 || !column.Overlaps(left) && !column.Overlaps(right)),
-                "Lifted Home castle leaves the primary actions clear (" + Mathf.RoundToInt(above * 100) + "% of it above the cards, spire between them)");
+            // The centred Level button sits over the castle tab, so the raised castle must stay wholly below it.
+            Check(art.yMax <= level.yMin, "Lifted Home castle stays below the Level button (" + Mathf.RoundToInt(level.yMin - art.yMax) + " px clear)");
         }
         static void CheckHints()
         {

@@ -31,7 +31,7 @@ namespace JellyGarden.Scripts.Juice
             voiceGains=new float[voices.Length];
             for(int i=0;i<voices.Length;i++) { voices[i]=gameObject.AddComponent<AudioSource>(); voices[i].playOnAwake=false; voices[i].spatialBlend=0; voices[i].priority=160; }
             music=new AudioSource[2];
-            for(int i=0;i<2;i++) { music[i]=gameObject.AddComponent<AudioSource>(); music[i].playOnAwake=false; music[i].clip=clips[6]; music[i].priority=220; music[i].volume=0; }
+            for(int i=0;i<2;i++) { music[i]=gameObject.AddComponent<AudioSource>(); music[i].playOnAwake=false; music[i].clip=clips[6]; music[i].priority=0; music[i].volume=0; }
             for(int i=0;i<last.Length;i++) last[i]=-10;
             music[0].Play();
         }
@@ -49,7 +49,10 @@ namespace JellyGarden.Scripts.Juice
             int priority=cue==RoyalCue.Land?200:cue==RoyalCue.Match?160:cue==RoyalCue.Firework?90:60;
             // Restrained variation keeps repeated contacts organic without squeaky pitch climbs.
             PlayClip(clip,gain*Mathf.Clamp(strength,.6f,1.2f),priority, !imported&&cue==RoyalCue.Match?1+((variation%5)-2)*.012f:1);
-            if(cue==RoyalCue.Tnt||cue==RoyalCue.Rocket||cue==RoyalCue.Celebrate) duck=.42f;
+            // While a won level plays out (celebration, booster finale, card) the music holds its level: ducked under every
+            // rocket of the finale it sank out of hearing (the user, 2026-10-05: "the bg music is auto off").
+            var level = LevelManager.THIS; bool winning = level && (level.gameStatus == GameState.PreWinAnimations || level.gameStatus == GameState.Win);
+            if((cue==RoyalCue.Tnt||cue==RoyalCue.Rocket||cue==RoyalCue.Celebrate) && !winning) duck=.42f;
         }
         public void PlayClip(AudioClip clip,float gain=1,int priority=150,float pitch=1)
         {

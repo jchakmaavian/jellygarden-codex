@@ -61,6 +61,54 @@ namespace JellyGarden.Scripts.Juice
             cost = toolIndex == 1 || toolIndex == 2 ? 180 : 150;
         }
 
+        // ------------------------------------------------------------------ the value scale and the shop
+        // (2026-10-05, the user: real money buys stars and coins through Google Play, coins buy things in the game, and
+        // every value is mathematically equal.) One rate for everything: a coin is worth one US cent and a star 100 coins
+        // (the most one win pays). Every real-money pack is priced at exactly that rate, with no bulk bonus, so 5 stars for
+        // $5 cost the same as 500 coins for $5 spent on 5 stars at 100 coins each. Google Play converts the US prices
+        // into each country's currency.
+        /// <summary>US cents a coin is worth.</summary>
+        public const int CentsPerCoin = 1;
+        /// <summary>Coins a star is worth, in the shop and in the value of every pack.</summary>
+        public const int StarPriceCoins = 100;
+        /// <summary>The coins for a number of stars.</summary>
+        public static int StarsCost(int stars) => Mathf.Max(0, stars) * StarPriceCoins;
+        /// <summary>The stars a player can buy with coins, in the shop's Stars tab.</summary>
+        public static readonly int[] StarCoinPacks = { 1, 5, 10 };
+
+        /// <summary>A real-money product: its Google Play product id (a consumable "in-app product" in the Play Console)
+        /// and what it gives. Its price follows from its value.</summary>
+        public sealed class StoreItem
+        {
+            public readonly string Id; public readonly int Coins, Stars;
+            public StoreItem(string id, int coins, int stars) { Id = id; Coins = coins; Stars = stars; }
+            /// <summary>Its value in coins: the coins, plus 100 for each star.</summary>
+            public int ValueCoins => Coins + StarsCost(Stars);
+            /// <summary>Its US price in cents, which the Play Console product must be set to.</summary>
+            public int PriceCents => ValueCoins * CentsPerCoin;
+            public string PriceUsd => "$" + (PriceCents / 100) + (PriceCents % 100 == 0 ? "" : "." + (PriceCents % 100).ToString("00"));
+            public string Title => Coins > 0 ? Coins.ToString("N0") + " Coins" : Stars + (Stars == 1 ? " Star" : " Stars");
+        }
+
+        /// <summary>Every real-money product, coins first. The ids must match the Play Console's products exactly.</summary>
+        public static readonly StoreItem[] StoreItems =
+        {
+            new StoreItem("royalthrone.coins_100", 100, 0),
+            new StoreItem("royalthrone.coins_500", 500, 0),
+            new StoreItem("royalthrone.coins_1000", 1000, 0),
+            new StoreItem("royalthrone.coins_2000", 2000, 0),
+            new StoreItem("royalthrone.coins_5000", 5000, 0),
+            new StoreItem("royalthrone.stars_5", 0, 5),
+            new StoreItem("royalthrone.stars_10", 0, 10),
+            new StoreItem("royalthrone.stars_25", 0, 25),
+        };
+
+        public static StoreItem FindStoreItem(string id)
+        {
+            foreach (var item in StoreItems) if (item.Id == id) return item;
+            return null;
+        }
+
         /// <summary>Writes the pack table into the shop's products, in BoostType order.</summary>
         public static void Apply(List<BoostProduct> products)
         {

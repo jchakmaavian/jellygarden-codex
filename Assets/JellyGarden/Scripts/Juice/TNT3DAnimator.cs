@@ -48,7 +48,14 @@ namespace JellyGarden.Scripts.Juice
         public static float Cell { get {var l=LevelManager.THIS;return l&&l.GameField?Mathf.Min(l.squareWidth*Mathf.Abs(l.GameField.lossyScale.x),l.squareHeight*Mathf.Abs(l.GameField.lossyScale.y)):1;} }
         public static void Prewarm()
         {
-            TNTFrameAnimator.Prewarm();if(poolRoot)return;pool.Clear();Reuses=0;
+            // While the imported TNT is live the board draws its own view and the blast its own particles, so the 240
+            // frames (~28 MB on phones) and the 32 actors would sit unused. Both still load on first use without it.
+            if(!RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Has(ItemsTypes.PACKAGE))TNTFrameAnimator.Prewarm();
+            if(!RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("TntItemExplodeParticles"))BuildPool();
+        }
+        static void BuildPool()
+        {
+            if(poolRoot)return;pool.Clear();Reuses=0;
             var prefab=Resources.Load<TNT3DAnimator>("RoyalTNT/TNT_3D");if(!prefab)return;
             poolRoot=new GameObject("TNT visual pool").transform;
             for(int i=0;i<32;i++){var a=Instantiate(prefab,poolRoot);a.gameObject.SetActive(false);pool.Add(a);}
@@ -56,7 +63,7 @@ namespace JellyGarden.Scripts.Juice
         public static TNT3DAnimator Find(Item item){foreach(var a in pool)if(a&&a.gameObject.activeSelf&&a.Owner==item&&!a.detached)return a;return null;}
         static TNT3DAnimator Take(Vector3 position)
         {
-            Prewarm();foreach(var a in pool)if(a&&!a.gameObject.activeSelf){a.gameObject.SetActive(true);a.ResetVisualState();a.transform.position=position+Vector3.back*.7f;a.transform.localScale=Vector3.one*Cell;if(a.uses++>0)Reuses++;return a;}return null;
+            BuildPool();foreach(var a in pool)if(a&&!a.gameObject.activeSelf){a.gameObject.SetActive(true);a.ResetVisualState();a.transform.position=position+Vector3.back*.7f;a.transform.localScale=Vector3.one*Cell;if(a.uses++>0)Reuses++;return a;}return null;
         }
         public static TNT3DAnimator Attach(Item item,bool reveal=false)
         {

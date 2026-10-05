@@ -57,6 +57,7 @@ namespace JellyGarden.Scripts.GUI
             get
             {
                 if (Showing(prePlay)) return true;
+                if (RoyalThrone.Presentation.RoyalShopPage.IsOpen) return true;   // the shop, over a card or the board
                 if (canvasGlobal == null) return false;
                 foreach (Transform child in canvasGlobal)
                 {

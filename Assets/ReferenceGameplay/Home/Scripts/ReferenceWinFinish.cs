@@ -21,7 +21,8 @@ namespace RoyalThrone.ReferenceGameplay
         IEnumerator Settle(){lm.FindMatches();do{yield return null;}while(Active&&(lm.IsResolvingMatches||RoyalPowerupDirector.Busy||lm.GetItems().Where(i=>i).Any(i=>i.destroying||i.falling)));}
         IEnumerator Run(LevelManager owner){lm=owner;Sent=Converted=Fired=travelling=0;Running=true;
             try{
-                BuildLabel();skip.gameObject.SetActive(true);yield return Delay(.35f,.03f);
+                // No pause before, between or after the steps (the user, 2026-10-05): each one starts as the last ends.
+                BuildLabel();skip.gameObject.SetActive(true);
                 int left=lm.limitType==LIMIT.MOVES?Mathf.Max(0,lm.Limit):8;
                 while(Active){
                     var candidates=Regular();int count=Mathf.Min(left,candidates.Count);
@@ -31,7 +32,7 @@ namespace RoyalThrone.ReferenceGameplay
                         travelling++;StartCoroutine(Send(item));yield return Delay(.12f,.015f);
                     }
                     while(Active&&travelling>0)yield return null;
-                    yield return Delay(.22f,.02f);
+                    yield return Delay(.06f,.02f);
                     var powers=lm.GetItems().Where(Power).ToList();
                     if(powers.Count==0){
                         // No fabricated target: a fully blocked board cannot receive further conversions.
@@ -42,7 +43,6 @@ namespace RoyalThrone.ReferenceGameplay
                     yield return Settle();
                     if(left==0&&!lm.GetItems().Any(Power))break;
                 }
-                yield return Delay(.35f,.08f);
             }finally{Running=false;if(skip)skip.gameObject.SetActive(false);foreach(var h in leases)h?.Stop();leases.Clear();}
         }
         IEnumerator Send(Item item){ReferenceVfxPool.Handle flight=null;

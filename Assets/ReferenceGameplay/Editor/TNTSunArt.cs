@@ -54,10 +54,9 @@ namespace RoyalThrone.ReferenceGameplay.Editor
             for(int i=0;i<segments;i++){float a=i*Mathf.PI*2/segments;var unit=new Vector2(Mathf.Cos(a),Mathf.Sin(a));vertices[i+1]=unit*.225f;uv[i+1]=center+new Vector2(unit.x*225/texture.width,unit.y*225/texture.height);indices[i*3]=0;indices[i*3+1]=(i+1)%segments+1;indices[i*3+2]=i+1;}mesh.vertices=vertices;mesh.uv=uv;mesh.triangles=indices;mesh.RecalculateBounds();
             var material=new Material(Shader.Find("Unlit/Transparent"));material.mainTexture=texture;
             try{Render(Letter,256,256,new Vector2(.52f,.52f),root=>{var go=new GameObject("Supplied emblem slice",typeof(MeshFilter),typeof(MeshRenderer));go.transform.SetParent(root,false);go.GetComponent<MeshFilter>().sharedMesh=mesh;go.GetComponent<MeshRenderer>().sharedMaterial=material;});}finally{UnityEngine.Object.DestroyImmediate(mesh);UnityEngine.Object.DestroyImmediate(material);UnityEngine.Object.DestroyImmediate(texture);}Import(Letter,256/.52f);
-            Render(Combo,792,396,new Vector2(198/140f,99/140f),root=>{
-                var band=Piece(root,Load(Art+"Animation-tnt_yazi_arka_on__21580.png"),Vector2.zero);band.transform.localScale=new Vector3((198/140f)/band.sprite.bounds.size.x,(99/140f)/band.sprite.bounds.size.y,1);
-                Piece(root,Load(Letter),new Vector2(0,-.025f),1).transform.localScale=Vector3.one*1.20f;
-            });Import(Combo,560);
+            // The combo band is not re-rendered from the stretched front plate any more (blurry, and it lost the band's
+            // curled ends and raised plate). The 4x rebuild of the original band with this sun badge is installed instead.
+            File.Copy("Design/TNTCombo-Refine-1005/refined/Items-SpecialItems-TntItem-Combo-kemer__21603.png",Combo,true);Import(Combo,560);
             Render(Icon,536,508,new Vector2(134/140f,127/140f),root=>{
                 var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/TNT.prefab");var view=UnityEngine.Object.Instantiate(prefab,root,false);
                 foreach(var animator in view.GetComponentsInChildren<Animator>(true))animator.enabled=false;

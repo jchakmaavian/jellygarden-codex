@@ -20,6 +20,10 @@ namespace RoyalThrone.Presentation
         public Vector2 shadowOffset = new Vector2(0, -2);
         // Extra space after each letter (legacy Text has no tracking), kept centred, left or right as the Text aligns.
         public float spacing;
+        // Letters written in one by one (the win card's title): glyph i shows as `written` passes i, popping from 1.7x to its
+        // size about its own centre as it fades in. Infinity (the default) shows every glyph as it is.
+        public float written = float.PositiveInfinity;
+        public void Write(float letters) { if (written == letters) return; written = letters; if (graphic) graphic.SetVerticesDirty(); }
 
         static readonly List<UIVertex> source = new List<UIVertex>(), result = new List<UIVertex>();
         static readonly Vector2[] directions = BuildDirections();
@@ -53,6 +57,7 @@ namespace RoyalThrone.Presentation
             if (spacing != 0) Track();
             float yMin = float.MaxValue, yMax = float.MinValue;
             foreach (var v in source) { yMin = Mathf.Min(yMin, v.position.y); yMax = Mathf.Max(yMax, v.position.y); }
+            if (!float.IsPositiveInfinity(written)) Reveal();
             float outer = rimWidth + outlineWidth;
             if (shadow.a > 0) Copies(shadow, shadowOffset, outer);
             if (outline.a > 0 && outlineWidth > 0) Copies(outline, Vector2.zero, outer);
@@ -93,6 +98,30 @@ namespace RoyalThrone.Presentation
                     start = q;
                 }
                 previous = left;
+            }
+        }
+
+        // The written-in reveal on the glyph quads (six vertices each), before the shadow, outline and rim copy them.
+        void Reveal()
+        {
+            int quads = source.Count / 6;
+            for (int q = 0; q < quads; q++)
+            {
+                float p = Mathf.Clamp01(written - q);
+                if (p >= 1) continue;
+                Vector3 c = Vector3.zero;
+                for (int k = 0; k < 6; k++) c += source[q * 6 + k].position;
+                c /= 6;
+                float u = 1 - p / .6f;
+                float s = p < .6f ? Mathf.Lerp(1.7f, .94f, 1 - u * u * u) : Mathf.Lerp(.94f, 1, (p - .6f) / .4f);
+                float a = Mathf.Clamp01(p * 2.5f);
+                for (int k = 0; k < 6; k++)
+                {
+                    var v = source[q * 6 + k];
+                    v.position = c + (v.position - c) * s;
+                    var col = v.color; col.a = (byte)Mathf.RoundToInt(col.a * a); v.color = col;
+                    source[q * 6 + k] = v;
+                }
             }
         }
 

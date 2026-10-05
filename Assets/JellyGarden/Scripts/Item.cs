@@ -36,6 +36,8 @@ namespace JellyGarden.Scripts
     public class Item : MonoBehaviour
     {
         [NonSerialized] public bool royalConsumed;
+        // Set when ChangeTypeCor seats a match-made power-up in its cell; Start must not treat it as a refill.
+        bool royalSeatedPowerup;
         [NonSerialized] public bool inputSwapLocked, inputMatchPending;
         [NonSerialized] public int inputConversionLocks, inputMoveOrder;
         bool deferredInputHit;
@@ -154,7 +156,10 @@ namespace JellyGarden.Scripts
             gameObject.name = "item " + GetEntityId();
             // A Match-4 replacement starts its reveal in the spawn frame. Do not
             // randomize it, make it fall, or cache its temporary pop scale next frame.
-            if (RoyalRocketRevealing || (currentType == ItemsTypes.PACKAGE && TNT3DAnimator.Find(this))) { royalSkin?.ApplyNow(); return; }
+            // GenColor would also re-roll its colour, turn it into an ingredient on
+            // ingredient levels, or attach the timed levels' +5 sec bonus. This covers
+            // the imported reveal too, which RoyalRocketRevealing and TNT3DAnimator never see.
+            if (royalSeatedPowerup) { royalSkin?.ApplyNow(); return; }
             falling = true;
             GenColor();
             // sprRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -561,19 +566,25 @@ namespace JellyGarden.Scripts
                 {
                     // Valid swap: both items travel together, eased, and fast.
                     float dur = juiceCfg.EnableJuice ? juiceCfg.SwapDuration : 0.2f;
+                    // Two TNTs merge rather than trade places: the dragged one slides onto its partner, drawn above it,
+                    // and the combined TNT then grows out of the cell they met in.
+                    bool merge = RoyalEffectsProfile.Get && currentType == ItemsTypes.PACKAGE && switchItem != null && switchItem.currentType == ItemsTypes.PACKAGE;
+                    int restOrder = sprRenderer.sortingOrder;
+                    if (merge) sprRenderer.sortingOrder = restOrder + 1;
                     float t = 0f;
                     while (t < 1f)
                     {
                         t += Time.deltaTime / Mathf.Max(0.0001f, dur);
                         float e = juiceCfg.EnableJuice ? Easing.OutCubic(Mathf.Clamp01(t)) : Mathf.Clamp01(t);
                         transform.position = Vector3.LerpUnclamped(startPos, myTarget, e);
-                        if (switchItem != null)
+                        if (switchItem != null && !merge)
                             switchItem.transform.position = Vector3.LerpUnclamped(otherStart, startPos, e);
                         yield return null;
                     }
                     transform.position = myTarget;
-                    if (switchItem != null)
+                    if (switchItem != null && !merge)
                         switchItem.transform.position = startPos;
+                    sprRenderer.sortingOrder = restOrder;
                 }
 
                 if (rejectSwap)
@@ -1127,7 +1138,7 @@ namespace JellyGarden.Scripts
                 if (rocket || tnt || orb || createdType == ItemsTypes.HELICOPTER)
                 {
                     StopIdleAnim(); if (anim) anim.enabled = false;
-                    falling = false; justCreatedItem = false;
+                    falling = false; justCreatedItem = false; royalSeatedPowerup = true;
                     if (square) transform.position = square.transform.position + Vector3.back * .2f;
                     juiceBaseScale = transform.localScale; xScale = juiceBaseScale.x; yScale = juiceBaseScale.y;
                     sprRenderer.enabled = true; sprRenderer.color = Color.white;

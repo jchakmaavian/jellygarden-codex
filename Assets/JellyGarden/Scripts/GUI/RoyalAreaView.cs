@@ -562,7 +562,7 @@ namespace RoyalThrone.Presentation
             if (viewing != null && !home.IsHomeVisible) EndViewQuietly();
             PulseNewArea();
             PlaceGuide();
-            if (doItArrow && doItArrow.gameObject.activeInHierarchy) doItArrow.anchoredPosition = new Vector2(466, -(250 + (Motion ? Mathf.Abs(Mathf.Sin(Time.unscaledTime * 4.2f)) * 20 : 0)));
+            if (doItArrow && doItArrow.gameObject.activeInHierarchy) PlaceDoItPointer(Motion ? Mathf.Abs(Mathf.Sin(Time.unscaledTime * 4.2f)) * 20 : 0);
         }
 
         void LateUpdate()
@@ -646,15 +646,15 @@ namespace RoyalThrone.Presentation
                 yield return SlideHud(0);
                 bool arrived = false;
                 var patch = scene.Patch(task);
-                if (!RoyalWinSequence.AreaStreak(patch ? patch.transform : scene.transform, home.areaButton.transform, StreakTime, () => arrived = true)) arrived = true;
+                if (!RoyalWinSequence.AreaStreak(patch ? patch.transform : scene.transform, Entry(home).transform, StreakTime, () => arrived = true)) arrived = true;
                 float t1 = Time.unscaledTime + 2.5f; while (!arrived && Time.unscaledTime < t1) yield return null;
                 home.RefreshProgress(); heldStars = -1;
-                StartCoroutine(Pulse((RectTransform)home.areaButton.transform, .06f, .3f));
+                StartCoroutine(Pulse((RectTransform)Entry(home).transform, .06f, .3f));
                 yield return Wait(.25f);
                 if (!home.IsHomeVisible || !isActiveAndEnabled) yield break;
                 // 6. The list comes back on the task just done: its tick pops, the row leaves and the next task comes in.
                 reopenDone = task; reopenComplete = last; forceTasks = true;
-                home.OpenPanel(Tasks, home.areaButton.gameObject);
+                home.OpenPanel(Tasks, Entry(home).gameObject);
                 forceTasks = false; reopenDone = -1;
                 if (showing != Tasks) yield break;
                 if (last)
@@ -669,7 +669,7 @@ namespace RoyalThrone.Presentation
                     yield return Wait(.5f);
                     chestFrom = chestButton.transform.position; chestFromSet = true;
                     building = null; FinishBuild();
-                    home.OpenPanel(Chest, home.areaButton.gameObject);
+                    home.OpenPanel(Chest, Entry(home).gameObject);
                     yield break;
                 }
                 tick.gameObject.SetActive(true);
@@ -791,7 +791,7 @@ namespace RoyalThrone.Presentation
             var mid = (RectTransform)stageChestRect.parent;
             yield return null;   // the stage's layout (and scale) is applied before positions are read
             Vector2 target = new Vector2(369 - 360, 1612 * .5f - 956);
-            Vector2 start = LocalIn(mid, chestFromSet ? chestFrom : home.areaButton.transform.position);
+            Vector2 start = LocalIn(mid, chestFromSet ? chestFrom : Entry(home).transform.position);
             chestFromSet = false;
             MidAnchor(stageChestRect, start);
             float t = 0;
@@ -949,8 +949,17 @@ namespace RoyalThrone.Presentation
         // its first list has no close and an arrow at Do It. Once, until the first task is built (GuidedKey, per profile).
         public const string GuidedKey = "RoyalThrone.Area.Guided";
         public static bool NeedsGuide => RoyalThrone.Testing.RoyalSave.GetInt(GuidedKey, 0) == 0 && RoyalAreas.Current == 1 && RoyalAreas.Spent == 0 && RoyalAreas.DoneCount == 0;
-        RectTransform guide, guideHit, guideArrow, doItArrow, guideBelow; Image guideTabsDim; bool guided, openGuided;
+        RectTransform guide, guideHit, guideArrow, doItArrow, guideBelow, guideCaption, guideSpotClip; Image guideTabsDim; bool guided, openGuided;
+        RoyalCardShape guideSpot; Rect guideSpotPlaced;
+        // The spotlight: the dim reaches this far from the cut-out (past every screen edge), the cut-out is the target padded
+        // by SpotPad, and its edge fades over SpotSoft.
+        const float SpotReach = 3000, SpotPad = 8, SpotSoft = 12;
+        static readonly Color GuideDim = new Color(.02f, .04f, .08f, .62f);
         public bool Guiding => guide && guide.gameObject.activeSelf;
+        /// <summary>Where the area lives on Home: the Area card when it is shown, else the star counter, which opens the task
+        /// list since the card was hidden (the user's decision, 2026-10-05). Flights, pulses, panel openings and the guide aim here.</summary>
+        public static Button Entry(RoyalHomeScreen home) => home.areaButton && home.areaButton.gameObject.activeInHierarchy ? home.areaButton
+            : home.resourceButtons != null && home.resourceButtons.Length > 3 && home.resourceButtons[3] ? home.resourceButtons[3] : home.areaButton;
         /// <summary>For the checks: the guide's dim over the tab bar (it takes the tabs' taps while the guide shows).</summary>
         public Image GuideTabsDim => guideTabsDim;
         public bool GuidedList => guided;
@@ -969,25 +978,62 @@ namespace RoyalThrone.Presentation
             var hit = guideHit.gameObject.AddComponent<Image>(); hit.color = Color.clear;
             var button = guideHit.gameObject.AddComponent<Button>(); button.transition = Selectable.Transition.None;
             // Hide() (which OpenPanel calls first) clears the guided state, so the list is asked for guided and Fill sets it.
-            button.onClick.AddListener(() => { EndGuide(); openGuided = true; home.OpenPanel(Tasks, home.areaButton.gameObject); openGuided = false; });
-            // The dim is four pieces around the card, anchored to its rect in multiples of its size, so the card stays bright and
-            // follows it; the pieces still take every tap that misses the card.
+            button.onClick.AddListener(() => { EndGuide(); openGuided = true; home.OpenPanel(Tasks, Entry(home).gameObject); openGuided = false; });
+            // Four pieces around the card, anchored to its rect in multiples of its size, take every tap that misses the card.
+            // They are unseen: the dim itself is the spotlight below.
             foreach (var (min, max) in new[] { (new Vector2(-20, 1), new Vector2(21, 40)), (new Vector2(-20, -40), new Vector2(21, 0)), (new Vector2(-20, 0), new Vector2(0, 1)), (new Vector2(1, 0), new Vector2(21, 1)) })
             {
                 var piece = K.Node("Dim", guideHit); piece.anchorMin = min; piece.anchorMax = max; piece.offsetMin = piece.offsetMax = Vector2.zero;
-                piece.gameObject.AddComponent<Image>().color = new Color(.02f, .04f, .08f, .62f);
+                piece.gameObject.AddComponent<Image>().color = Color.clear;
                 if (min.y < 0) guideBelow = piece;   // stops at the tab bar, which dims itself (PlaceGuide)
             }
+            // The dim: one shape whose cut-out follows the target's outline (a pill round the star counter), soft at its edge,
+            // in place of a rectangular hole (the user, 2026-10-05). A band so wide that its outer edge is off every screen; a
+            // clip stops it at the tab bar, which dims itself, and lets it past the safe area everywhere else.
+            guideSpotClip = K.Node("Spotlight", guide); guideSpotClip.SetAsFirstSibling();
+            guideSpotClip.gameObject.AddComponent<RectMask2D>();
+            var spot = new GameObject("Dim", typeof(RectTransform)); spot.layer = 5; spot.transform.SetParent(guideSpotClip, false);
+            guideSpot = spot.AddComponent<RoyalCardShape>(); guideSpot.raycastTarget = false;
+            guideSpot.from = guideSpot.to = GuideDim; guideSpot.band = SpotReach; guideSpot.innerSoftness = SpotSoft;
+            guideSpot.rectTransform.anchorMin = guideSpot.rectTransform.anchorMax = guideSpot.rectTransform.pivot = new Vector2(.5f, .5f);
             // The caption: its navy edge, then the cream bubble over it, then the words (a parent draws before its children).
-            var bubble = K.Node("Caption", guideHit);
+            var bubble = guideCaption = K.Node("Caption", guideHit);
             bubble.anchorMin = bubble.anchorMax = new Vector2(.5f, 1); bubble.pivot = new Vector2(.5f, 0); bubble.sizeDelta = new Vector2(430, 110); bubble.anchoredPosition = new Vector2(-150, 150);
             var edge = K.Surface("Edge", bubble, K.C(0, 60, 128), K.C(0, 60, 128), 22); K.Inset(edge.rectTransform, -4, -4, -4, -4);
             var fill = K.Surface("Fill", bubble, K.C(252, 248, 232), K.C(236, 228, 204), 22); K.Inset(fill.rectTransform, 0, 0, 0, 0);
             var words = K.Words("Words", bubble, "Tap here to open your task list.", 30, K.Ink, TextAnchor.MiddleCenter); K.Inset(words.rectTransform, 18, 10, 18, 10);
-            guideArrow = Arrow("Arrow", guideHit, true); guideArrow.anchorMin = guideArrow.anchorMax = new Vector2(.5f, 1);
-            doItArrow = Arrow("Do It arrow", (RectTransform)doIt.transform.parent, false); doItArrow.gameObject.SetActive(false);
-            doItArrow.anchorMin = doItArrow.anchorMax = new Vector2(0, 1); doItArrow.anchoredPosition = new Vector2(466, -250);
+            guideArrow = Pointer("Arrow", guideHit, true); guideArrow.anchorMin = guideArrow.anchorMax = new Vector2(.5f, 1);
+            doItArrow = Pointer("Do It arrow", (RectTransform)doIt.transform.parent, false); doItArrow.gameObject.SetActive(false);
+            doItArrow.anchorMin = doItArrow.anchorMax = new Vector2(0, 1); PlaceDoItPointer(0);
         }
+
+        // "Tap here" points with a hand (the user, 2026-10-05): the level lessons' own pointing hand (the level 1 tutorial's
+        // HandTutorial sprite, as RoyalPowerTutorial shows it), its fingertip at the pivot, so placing the pointer places the
+        // fingertip. Pointing down it is mirrored top to bottom. Without that art it falls back to the drawn arrow.
+        const float HandSize = 150, HandGap = 6;
+        static readonly Vector2 HandTip = new Vector2(.30f, .88f);
+        static Sprite handSprite;
+        bool handPointers;
+        static Sprite HandSprite()
+        {
+            if (handSprite) return handSprite;
+            var authored = FindAnyObjectByType<JellyGarden.Scripts.GUI.TutorialStuff.HandTutorial>(FindObjectsInactive.Include);
+            var sr = authored ? authored.GetComponent<SpriteRenderer>() : null; var img = authored ? authored.GetComponent<Image>() : null;
+            handSprite = sr && sr.sprite ? sr.sprite : img ? img.sprite : null;
+            return handSprite;
+        }
+        RectTransform Pointer(string name, RectTransform parent, bool down)
+        {
+            var sprite = HandSprite();
+            if (!sprite) return Arrow(name, parent, down);
+            handPointers = true;
+            var r = K.Node(name, parent); r.sizeDelta = new Vector2(HandSize, HandSize); r.pivot = HandTip;
+            var image = r.gameObject.AddComponent<Image>(); image.sprite = sprite; image.preserveAspect = true; image.raycastTarget = false;
+            r.localScale = new Vector3(1, down ? -1 : 1, 1);
+            return r;
+        }
+        // The Do It pointer: the fingertip under the button (385, 12, 163 x 90 in its row), tapping up at it; the arrow as before.
+        void PlaceDoItPointer(float bob) => doItArrow.anchoredPosition = handPointers ? new Vector2(466, -(102 + HandGap + bob)) : new Vector2(466, -(250 + bob));
 
         // A thick gold arrow, drawn: a shaft and a head, pointing down (to the Area card) or up (to Do It).
         static RectTransform Arrow(string name, RectTransform parent, bool down)
@@ -1019,20 +1065,72 @@ namespace RoyalThrone.Presentation
         {
             if (!Guiding) return;
             if (!home.IsHomeVisible || home.dialog.activeSelf) { EndGuide(); return; }
-            // The opening follows the Area card; the arrow bounces over it.
-            var card = (RectTransform)home.areaButton.transform; var corners = new Vector3[4]; card.GetWorldCorners(corners);
+            // The opening follows the area's entry (the star counter while the Area card is hidden); the arrow bounces over it.
+            var card = (RectTransform)Entry(home).transform; var corners = new Vector3[4]; card.GetWorldCorners(corners);
             Vector2 a = guide.InverseTransformPoint(corners[0]), c = guide.InverseTransformPoint(corners[2]);
             guideHit.sizeDelta = c - a; guideHit.anchoredPosition = (a + c) * .5f;
             // The dim under the card ends at the tab bar's top edge; below it the tab bar's own dim takes over.
             var bar = home.navigationBackground ? home.navigationBackground : home.navigation;
+            float tabTop = guide.rect.yMin;
+            if (bar) { var nav = new Vector3[4]; bar.GetWorldCorners(nav); tabTop = guide.InverseTransformPoint(nav[1]).y; }
             if (guideBelow && bar)
             {
-                var nav = new Vector3[4]; bar.GetWorldCorners(nav); float top = guide.InverseTransformPoint(nav[1]).y;
                 guideBelow.anchorMin = new Vector2(-20, 0); guideBelow.anchorMax = new Vector2(21, 0);
-                guideBelow.offsetMax = Vector2.zero; guideBelow.offsetMin = new Vector2(0, -Mathf.Max(0, a.y - top));
+                guideBelow.offsetMax = Vector2.zero; guideBelow.offsetMin = new Vector2(0, -Mathf.Max(0, a.y - tabTop));
             }
+            // The cut-out and the fingertip go to what is drawn (the pill and its star), which sits inside a taller touch area.
+            Vector2 lo = a, hi = c;
+            if (DrawnBounds(card, guide, out var drawnLo, out var drawnHi)) { lo = drawnLo; hi = drawnHi; }
+            PlaceSpot(lo, hi, tabTop);
             float bob = Motion ? Mathf.Abs(Mathf.Sin(Time.unscaledTime * 4.2f)) * 22 : 0;
-            guideArrow.anchoredPosition = new Vector2(0, 80 + bob);
+            // A target in the upper half (the star counter) takes the arrow and its caption below it, the arrow pointing up.
+            bool high = (a.y + c.y) * .5f > guide.rect.center.y;
+            guideArrow.anchorMin = guideArrow.anchorMax = new Vector2(.5f, high ? 0 : 1); guideArrow.localScale = new Vector3(1, high ? -1 : 1, 1);
+            guideArrow.anchoredPosition = new Vector2(0, high ? -(80 + bob) : 80 + bob);
+            // The hand: its fingertip just off the target's edge, tapping at it (pointing up under a high target).
+            if (handPointers)
+            {
+                guideArrow.localScale = new Vector3(1, high ? 1 : -1, 1);
+                float dx = (lo.x + hi.x - a.x - c.x) * .5f, dy = high ? lo.y - a.y : hi.y - c.y;
+                guideArrow.anchoredPosition = new Vector2(dx, dy + (high ? -(HandGap + bob) : HandGap + bob));
+            }
+            // The caption beyond the pointer (the hand reaches 160 from the edge at the top of its tap).
+            float captionGap = handPointers ? 176 : 150;
+            if (guideCaption) { guideCaption.anchorMin = guideCaption.anchorMax = new Vector2(.5f, high ? 0 : 1); guideCaption.pivot = new Vector2(.5f, high ? 1 : 0); guideCaption.anchoredPosition = new Vector2(-150, high ? -captionGap : captionGap); }
+        }
+
+        // The bounds, in `space`, of what the target draws: its visible images and shapes, leaving out drop shadows and words
+        // (they sit inside the shapes). False when it draws nothing, and the touch area is used instead.
+        static readonly Vector3[] drawnCorners = new Vector3[4];
+        static bool DrawnBounds(RectTransform target, RectTransform space, out Vector2 lo, out Vector2 hi)
+        {
+            lo = new Vector2(float.MaxValue, float.MaxValue); hi = new Vector2(float.MinValue, float.MinValue); bool any = false;
+            foreach (var g in target.GetComponentsInChildren<Graphic>(false))
+            {
+                if (!g.enabled || g.color.a < .02f || g is Text || g.name.IndexOf("shadow", StringComparison.OrdinalIgnoreCase) >= 0) continue;
+                g.rectTransform.GetWorldCorners(drawnCorners);
+                foreach (var w in drawnCorners) { Vector2 q = space.InverseTransformPoint(w); lo = Vector2.Min(lo, q); hi = Vector2.Max(hi, q); }
+                any = true;
+            }
+            return any;
+        }
+
+        // The spotlight's cut-out on the target (guide coordinates): padded, with corners as round as the target's shape (a pill
+        // for a wide control such as the star counter, gently rounded for a card). Rebuilt only when the target moves.
+        void PlaceSpot(Vector2 a, Vector2 c, float tabTop)
+        {
+            if (!guideSpot || !guideSpotClip) return;
+            guideSpotClip.anchorMin = Vector2.zero; guideSpotClip.anchorMax = Vector2.one;
+            guideSpotClip.offsetMin = new Vector2(-SpotReach, Mathf.Max(0, tabTop - guide.rect.yMin)); guideSpotClip.offsetMax = new Vector2(SpotReach, SpotReach);
+            var hole = new Rect(a.x - SpotPad, a.y - SpotPad, c.x - a.x + 2 * SpotPad, c.y - a.y + 2 * SpotPad);
+            if (hole == guideSpotPlaced) return;
+            guideSpotPlaced = hole;
+            float shortSide = Mathf.Min(hole.width, hole.height), round = hole.width > hole.height * 1.6f ? shortSide * .5f : shortSide * .22f;
+            var r = guideSpot.rectTransform;
+            r.position = guide.TransformPoint(hole.center);
+            r.sizeDelta = hole.size + Vector2.one * 2 * SpotReach;
+            guideSpot.radius = SpotReach + round;
+            guideSpot.SetVerticesDirty();
         }
 
         // ================================================================ the Areas tab (A-20) and the replay (A-21)

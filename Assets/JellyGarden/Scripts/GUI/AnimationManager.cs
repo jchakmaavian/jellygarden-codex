@@ -550,19 +550,20 @@ namespace JellyGarden.Scripts.GUI
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
+        // The coin shop is the Royal shop's Coins tab (2026-10-05): coin packs bought through Google Play (RoyalStore).
         public void BuyGems()
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-            MenuManager.Instance.ShowGemsShop(true);
+            RoyalThrone.Presentation.RoyalShopPage.Open(RoyalThrone.Presentation.RoyalShopPage.Tab.Coins);
         }
 
-        // Not enough coins for `near` (the button that asked). With purchases available this opens the coin shop, as before;
-        // offline (RoyalOfflineMode) that shop sells nothing, so the card says so beside the button and the player stays on it.
+        // Not enough coins for `near` (the button that asked): the card says so beside the button, and the shop opens on its
+        // Coins tab over the card, so the player can buy coins and come back to the same offer.
         void NotEnoughCoins(Transform near)
         {
-            if (RoyalThrone.RoyalOfflineMode.ServicesEnabled) { BuyGems(); return; }
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
             RoyalThrone.Presentation.RoyalNotice.NotEnoughCoins(near ? near : transform, InitScript.Gems);
+            RoyalThrone.Presentation.RoyalShopPage.Open(RoyalThrone.Presentation.RoyalShopPage.Tab.Coins);
         }
 
         public void Buy(GameObject pack)

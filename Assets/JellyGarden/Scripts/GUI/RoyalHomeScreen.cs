@@ -230,6 +230,11 @@ namespace RoyalThrone.Presentation
         {
             if (!IsHomeVisible || waitingForLevel) return;
             if (panel == "home") { ClosePanel(); return; }
+            // The coin counter opens the shop (2026-10-05): coins and stars are bought there. The star counter opens the area's
+            // task list instead, since the Home's Area card is hidden (the user's decision, 2026-10-05); stars stay on sale in
+            // the shop's Stars tab.
+            if (panel == "coins") { RoyalShopPage.Open(RoyalShopPage.Tab.Coins); return; }
+            if (panel == "stars") panel = "area";
             if (areaView) panel = areaView.Route(panel);
             string[] tabs = { RoyalAreaView.List, "leagues", "home", "team", "collection" };
             int selected = Array.IndexOf(tabs, panel);

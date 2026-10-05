@@ -37,7 +37,7 @@ namespace RoyalThrone.Presentation
         [Serializable] sealed class CatalogFile { public RoyalAreaInfo[] areas; }
         const string Folder = "RoyalAreas/";
         public const string CurrentKey = "RoyalThrone.Area.Current", DoneKey = "RoyalThrone.Area.Done", SpentKey = "RoyalThrone.Area.Spent",
-            EnteredKey = "RoyalThrone.Area.Entered";
+            EnteredKey = "RoyalThrone.Area.Entered", BoughtKey = "RoyalThrone.Area.BoughtStars";
         static RoyalAreaInfo[] all;
 
         public static RoyalAreaInfo[] All
@@ -118,7 +118,14 @@ namespace RoyalThrone.Presentation
             }
         }
         public static bool Complete { get { var area = CurrentArea; return area != null && area.tasks.Length > 0 && DoneCount == area.tasks.Length; } }
-        public static int Available(int earned) => Mathf.Max(0, earned - Spent);
+        public static int Available(int earned) => Mathf.Max(0, earned + Bought - Spent);
+        /// <summary>Stars bought in the shop (RoyalShopPage: with coins or through Google Play), spent like earned ones.</summary>
+        public static int Bought => Mathf.Max(0, PlayerPrefs.GetInt(BoughtKey, 0));
+        public static void AddBoughtStars(int stars)
+        {
+            if (stars <= 0) return;
+            PlayerPrefs.SetInt(BoughtKey, Bought + stars); PlayerPrefs.Save();
+        }
         /// <summary>The next task to build: tasks are offered one at a time, in order, as in the reference. -1 when none is left.</summary>
         public static int NextTask
         {
