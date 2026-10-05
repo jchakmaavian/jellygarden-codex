@@ -1,7 +1,0 @@
-PASS new artwork is installed from initialization
-PASS isolated attention driver mounted; live input tested separately
-PASS old visual rig hidden during idle
-PASS new portrait does not intercept board input
-PASS distinct positive expressions rendered
-PASS 1260 frames rendered with live transitions and no forced reset between activities
-PASS all reactions remain silent

@@ -1,9 +1,0 @@
-Reference-based King laugh - 2026-10-04
-
-The user rejected the independently reconstructed laugh face and requested the supplied reference exactly. The new portrait uses the source painting byte-for-byte, with a mesh silhouette to exclude the background. It is a 2D painted pose with restrained mesh animation, not a newly modeled 3D character. The peak expression retains the reference artwork; transitions and chuckles deform the lower jaw/chin and subtly move the head.
-
-The upper mouth, teeth, nose and moustache remain on the same continuous painted surface. Jaw deformation begins below the upper teeth. The old face is hidden while the reference pose is visible, preventing doubled crowns, pupils and facial attachments. A brief pose change during eye closure replaces the ghosting crossfade. Completion, failure, goal completion and hiding restore the original rig and its opacity. Existing impact triggers and cooldown remain. No laughter AudioSource is created.
-
-Evidence: source-integrity.txt; main-rig-checks.txt; rig-checks.txt; canvas-check.txt; live-checks.txt. King-Reference-Laugh.mp4 shows the silent Unity-rendered reaction; Previous-vs-Reference.mp4 shows the earlier version on the left and replacement on the right. HUD PNGs show actual main-project gameplay.
-
-The 204-point clipping contour was traced from source image colors. Original PNG pixels are unchanged. 3 subdivision passes allow subtle mesh movement. The portrait respects the existing HUD mask and does not intercept pointer input. Device/Android testing has not been performed.

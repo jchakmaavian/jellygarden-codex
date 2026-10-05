@@ -1,2 +1,0 @@
-Reference texture copied byte-for-byte; SHA256 b8198602a6c6c0d5086d57240ab44ee32c05c426dd798e14937cd39b5d184438
-Silhouette is Unity mesh geometry; original painting RGB pixels were not modified.

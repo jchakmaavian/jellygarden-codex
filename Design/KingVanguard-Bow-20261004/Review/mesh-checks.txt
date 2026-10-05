@@ -1,1 +1,0 @@
-PASS 382992 triangle samples, all six expression-to-bow paths; minimum signed double area 2.3158.

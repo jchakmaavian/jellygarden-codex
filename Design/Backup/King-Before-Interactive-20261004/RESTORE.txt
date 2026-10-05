@@ -1,1 +1,0 @@
-Complete old King character backup, including all versions, textures, rigs, scripts, prefabs and Unity .meta GUIDs. Zip integrity verified before installing the new portrait. Restore into JellyGarden-Codex only while the editor is free and in Edit Mode.

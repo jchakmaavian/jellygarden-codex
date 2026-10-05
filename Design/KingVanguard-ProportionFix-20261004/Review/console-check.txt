@@ -1,2 +1,0 @@
-PASS final main Unity console: zero Error/Exception/Assert entries after completed live QA.
-Earlier recapture attempts failed the harness foreground-focus precondition before starting a test session. The final scripted board test records focus state; pointer input tracking was not retested.

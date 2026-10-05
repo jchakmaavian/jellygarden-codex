@@ -1,1 +1,0 @@
-Rejected by the user for visibly squashing the character. Removed from main on 2026-10-05; historical source and evidence are preserved. Numerical checks passed for stability but did not establish believable head rotation. See KingVanguard-BowFrames-20261005 for rollback and replacement status.
