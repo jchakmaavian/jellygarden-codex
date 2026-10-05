@@ -24,6 +24,10 @@ namespace RoyalThrone.Presentation
         // size about its own centre as it fades in. Infinity (the default) shows every glyph as it is.
         public float written = float.PositiveInfinity;
         public void Write(float letters) { if (written == letters) return; written = letters; if (graphic) graphic.SetVerticesDirty(); }
+        // A band of light crossing the letters (the reward card's title): its centre across the text, 0 at the left edge and 1
+        // at the right. Negative (the default) is off.
+        public float shine = -1;
+        public void Shine(float at) { if (shine == at) return; shine = at; if (graphic) graphic.SetVerticesDirty(); }
 
         static readonly List<UIVertex> source = new List<UIVertex>(), result = new List<UIVertex>();
         static readonly Vector2[] directions = BuildDirections();
@@ -55,8 +59,8 @@ namespace RoyalThrone.Presentation
             vh.GetUIVertexStream(source);
             if (source.Count == 0) return;
             if (spacing != 0) Track();
-            float yMin = float.MaxValue, yMax = float.MinValue;
-            foreach (var v in source) { yMin = Mathf.Min(yMin, v.position.y); yMax = Mathf.Max(yMax, v.position.y); }
+            float yMin = float.MaxValue, yMax = float.MinValue, xMin = float.MaxValue, xMax = float.MinValue;
+            foreach (var v in source) { yMin = Mathf.Min(yMin, v.position.y); yMax = Mathf.Max(yMax, v.position.y); xMin = Mathf.Min(xMin, v.position.x); xMax = Mathf.Max(xMax, v.position.x); }
             if (!float.IsPositiveInfinity(written)) Reveal();
             float outer = rimWidth + outlineWidth;
             if (shadow.a > 0) Copies(shadow, shadowOffset, outer);
@@ -67,6 +71,11 @@ namespace RoyalThrone.Presentation
                 var w = v;
                 float t = yMax > yMin ? (v.position.y - yMin) / (yMax - yMin) : 1;
                 w.color = Color.Lerp(bottom, top, t) * (Color)v.color;
+                if (shine >= 0 && xMax > xMin)
+                {
+                    float d = ((v.position.x - xMin) / (xMax - xMin) - shine) / .13f;
+                    Color c = w.color; w.color = Color.Lerp(c, new Color(1, 1, 1, c.a), Mathf.Exp(-d * d) * .75f);
+                }
                 result.Add(w);
             }
             vh.Clear();

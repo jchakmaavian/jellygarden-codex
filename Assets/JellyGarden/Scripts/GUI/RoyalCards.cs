@@ -344,8 +344,10 @@ namespace RoyalThrone.Presentation
             var skin = RibbonCard(menu, p, H, "Level");
             // Warmer gold, deeper blue and a fine interior rim, scoped to the completed-level card.
             var gold = skin.Find("Gold").GetComponent<RoyalCardShape>(); gold.from = C("fff0ad"); gold.to = C("e5a22e"); gold.SetVerticesDirty();
-            var face = skin.Find("Face").GetComponent<RoyalCardShape>(); face.from = C("2459b8"); face.to = C("102e70"); face.SetVerticesDirty();
-            var innerRim = Inset(skin, "Win inner rim", 22, 24, C("b5d9ff", .23f), C("72a6e8", .09f)); innerRim.band = 1.2f;
+            var face = skin.Find("Face").GetComponent<RoyalCardShape>(); face.from = C("102d6b"); face.to = C("061536"); face.SetVerticesDirty();
+            var faceLight = skin.Find("Face light").GetComponent<RoyalCardShape>(); faceLight.from = C("2955a4", .22f); faceLight.to = C("163874", 0); faceLight.SetVerticesDirty();
+            var faceGlow = skin.Find("Face glow").GetComponent<RoyalCardShape>(); faceGlow.from = C("638bca", .14f); faceGlow.to = C("31558f", .025f); faceGlow.SetVerticesDirty();
+            var innerRim = Inset(skin, "Win inner rim", 22, 24, C("bed7ff", .17f), C("6286bd", .07f)); innerRim.band = 1.2f;
             var next = p.Find("Next");
             var close = p.Find("Royal close");
             if (!close)
@@ -384,22 +386,34 @@ namespace RoyalThrone.Presentation
                 if (!s.GetComponent<RoyalAppearsLater>()) s.gameObject.AddComponent<RoyalAppearsLater>();
                 star = (RectTransform)s;
             }
-            // Broad halo and rays behind the pillow; a second warm pool lights the dent underneath the star.
-            var glow = Shape(p, "Royal star glow", 0, starY - 6, 400, 400, 200, C("ffeab0"), C("ffc453"));
-            glow.softness = 360; glow.color = new Color(1, 1, 1, 0); glow.gameObject.AddComponent<RoyalAppearsLater>();
-            var rays = Container(p, "Royal win rays"); RoyalMenuSkin.Place(rays, 0, starY, 600, 600);
+            // A contained amber halo behind the star and pillow, with no light wash in front of the gold face.
+            var glow = Shape(p, "Royal star glow", 0, starY - 3, 310, 310, 155, C("ffd279"), C("eaa32c"));
+            glow.softness = 168; glow.color = new Color(1, 1, 1, 0); glow.gameObject.AddComponent<RoyalAppearsLater>();
+            var rays = Container(p, "Royal win rays"); RoyalMenuSkin.Place(rays, 0, starY, 510, 510);
             var rayGraphic = rays.gameObject.AddComponent<RoyalWinRaysGraphic>(); rayGraphic.raycastTarget = false;
             rays.gameObject.AddComponent<RoyalAppearsLater>();
-            var pillowGlow = Shape(p, "Royal pillow glow", 0, starY - WinStarSize * .32f, 270, 94, 47, C("fff3b8"), C("ffc55a"));
-            pillowGlow.softness = 100; pillowGlow.color = new Color(1, 1, 1, 0); pillowGlow.gameObject.AddComponent<RoyalAppearsLater>();
-            var flash = Shape(p, "Royal star flash", 0, starY - 10, 460, 460, 230, C("fffbe6"), C("ffe7a6"));
-            flash.softness = 440; flash.color = new Color(1, 1, 1, 0); flash.gameObject.AddComponent<RoyalAppearsLater>();
+            var pillowGlow = Shape(p, "Royal pillow glow", 0, starY - WinStarSize * .34f, 228, 56, 28, C("ffcf70"), C("e49b32"));
+            pillowGlow.softness = 60; pillowGlow.color = new Color(1, 1, 1, 0); pillowGlow.gameObject.AddComponent<RoyalAppearsLater>();
+            var flash = Shape(p, "Royal star flash", 0, starY, 308, 308, 154, C("ffe5a0"), C("ffc75f"));
+            flash.softness = 150; flash.color = new Color(1, 1, 1, 0); flash.gameObject.AddComponent<RoyalAppearsLater>();
+            // Project the actual star silhouette onto the velvet; small offset samples soften its edge.
+            var starShadow = Container(p, "Royal star shadow");
+            RoyalMenuSkin.Place(starShadow, 9, starY - WinStarSize * .36f, 242, 72);
+            starShadow.gameObject.AddComponent<RoyalAppearsLater>();
+            for (int i = 0; i < 25; i++)
+            {
+                float x = i % 5 - 2, y = i / 5 - 2;
+                var sample = RoyalMenuSkin.Art(starShadow, "Shadow " + i, "star", x * 5, y * 3.5f, 242, 72);
+                sample.preserveAspect = false; sample.color = C("210714", .12f * Mathf.Exp(-.32f * (x * x + y * y))); sample.raycastTarget = false;
+            }
+            var contactShadow = Shape(p, "Royal star contact shadow", 3, starY - WinStarSize * .35f, 164, 25, 12.5f, C("190615"), C("190615"));
+            contactShadow.softness = 24; contactShadow.color = new Color(1, 1, 1, 0); contactShadow.gameObject.AddComponent<RoyalAppearsLater>();
             var sparkles = Container(p, "Royal win sparkles");
             sparkles.gameObject.AddComponent<RoyalAppearsLater>();
             if (star)
             {
-                glow.transform.SetAsLastSibling(); rays.SetAsLastSibling(); cr.SetAsLastSibling();
-                pillowGlow.transform.SetAsLastSibling(); flash.transform.SetAsLastSibling();
+                glow.transform.SetAsLastSibling(); rays.SetAsLastSibling(); flash.transform.SetAsLastSibling(); cr.SetAsLastSibling();
+                pillowGlow.transform.SetAsLastSibling(); starShadow.SetAsLastSibling(); contactShadow.transform.SetAsLastSibling();
                 star.SetAsLastSibling(); sparkles.SetAsLastSibling(); heading.transform.SetAsLastSibling();
             }
 
@@ -426,6 +440,7 @@ namespace RoyalThrone.Presentation
             piece.star = star; piece.cushion = cr; piece.title = heading.GetComponent<RoyalTextStyle>();
             piece.glow = glow; piece.flash = flash; piece.sparkles = (RectTransform)sparkles; piece.starRest = new Vector2(0, starY);
             piece.pillowGlow = pillowGlow; piece.rays = (RectTransform)rays;
+            piece.starShadow = (RectTransform)starShadow; piece.contactShadow = contactShadow;
             piece.rewardBadge = (RectTransform)rewardBadge; piece.rewardAmount = rewardAmount; piece.coinOrigin = rewardCoin.rectTransform;
             Motion(menu, p, H, buttons, action);
             var motion = menu.GetComponent<RoyalCardMotion>(); if (motion) motion.respectMotionSetting = true;
@@ -478,17 +493,52 @@ namespace RoyalThrone.Presentation
             return king;
         }
 
+        // The reward after a rewarded ad (coins or lives), on the crown card under "A ROYAL REWARD": a royal chest drops in,
+        // shakes and bursts open over turning golden rays; the reward rises out of it and hovers, its amount is written in under
+        // it, then COLLECT (RoyalRewardCard; the user, 2026-10-05: "make it feel more Royal"). Rows from the card's top edge.
+        // The chest is rendered art, one frame per lid angle (Resources/RoyalGameplay/RewardChest, render_chest.py).
+        public const float RewardHeight = 820, RewardStageRow = 330, RewardChestSize = 420, RewardShadowRow = 488;
+        public const float RewardIconRow = 255, RewardIconSize = 150, RewardAmountRow = 562, RewardAmountSize = 50;
+        static readonly float[] RewardLidAngles = { 0, 6, 14, 26, 40, 56, 72, 88, 102, 112 };
         public static void Reward(Transform menu, Transform p)
         {
-            const float H = 600, top = H * .5f;
+            const float H = RewardHeight, top = H * .5f;
             var skin = Card(menu, p, H, "A ROYAL REWARD");
             var close = Close(p.Find("Close"), H);
             Hide(p.Find("Label")); Hide(p.Find("icon"));
-            RoyalMenuSkin.Art(p, "Royal reward", "chest", 0, top - 300, 250, 240);
+            var stage = new Vector2(0, top - RewardStageRow);
+            // Behind the chest: its turning rays, the flash of the burst and its shadow on the card; over it, the reward's glow,
+            // the reward, the sparkles and the amount. Each shows by itself after the card is in.
+            var rays = RoyalMenuSkin.Art(p, "Royal reward rays", "reward-rays", stage.x, stage.y + 10, 640, 640);
+            var flash = Shape(p, "Royal reward flash", stage.x, stage.y + 30, 520, 520, 260, C("fffbe6"), C("ffe6a0")); flash.softness = 500;
+            var shadow = Shape(p, "Royal reward shadow", 0, top - RewardShadowRow, 300, 46, 23, C("000a30"), C("000a30")); shadow.softness = 34;
+            var chest = RoyalMenuSkin.Art(p, "Royal reward chest", "RewardChest/chest_000", stage.x, stage.y, RewardChestSize, RewardChestSize);
+            var glow = Shape(p, "Royal reward glow", 0, top - RewardIconRow, 300, 300, 150, C("ffe9a0"), C("ffc84a")); glow.softness = 280;
+            var icon = RoyalMenuSkin.Art(p, "Royal reward icon", "coin", 0, top - RewardIconRow, RewardIconSize, RewardIconSize);
+            var sparkles = Container(p, "Royal reward sparkles");
+            var amount = Words(p, "Royal reward amount", "+0 Coins", 0, top - RewardAmountRow, 560, RewardAmountSize, Ink.Display);
+            foreach (var g in new Graphic[] { flash, shadow, glow }) g.color = new Color(1, 1, 1, 0);
+            foreach (var part in new Component[] { rays, flash, shadow, chest, glow, icon, sparkles, amount }) part.gameObject.AddComponent<RoyalAppearsLater>();
             float okY = -top + BottomGap + 48;
+            // COLLECT breathes in a soft golden aura once the reward is out.
+            var aura = Shape(p, "Royal collect aura", 0, okY, 470, 160, 80, C("ffe9a0"), C("ffd060")); aura.softness = 64; aura.color = new Color(1, 1, 1, 0);
+            aura.gameObject.AddComponent<RoyalAppearsLater>();
             var ok = Button(p.Find("Ok"), "COLLECT", 0, okY, 400, 96, Kind.Primary);
-            if (ok) ButtonShadow(skin, 0, okY, 400, 96);
+            if (ok) { ButtonShadow(skin, 0, okY, 400, 96); aura.transform.SetSiblingIndex(ok.GetSiblingIndex()); }
             Ornament(skin, H);
+            var piece = p.GetComponent<RoyalRewardCard>();
+            if (!piece) piece = p.gameObject.AddComponent<RoyalRewardCard>();
+            piece.chest = chest; piece.rays = rays; piece.icon = icon; piece.flash = flash; piece.glow = glow; piece.shadow = shadow; piece.aura = aura;
+            var heading = p.Find("Royal heading");
+            if (heading) heading.SetAsLastSibling();   // the title stays clear over the chest's drop and the fountain
+            piece.title = heading ? heading.GetComponent<RoyalTextStyle>() : null;
+            piece.amount = amount.GetComponent<RoyalTextStyle>();
+            piece.sparkles = (RectTransform)sparkles;
+            piece.lidAngles = RewardLidAngles;
+            piece.lidFrames = new Sprite[RewardLidAngles.Length];
+            for (int i = 0; i < RewardLidAngles.Length; i++) piece.lidFrames[i] = RoyalPieceSkin.Art("RewardChest/chest_" + ((int)RewardLidAngles[i]).ToString("000"));
+            piece.chestRest = stage; piece.iconRest = new Vector2(0, top - RewardIconRow);
+            piece.coinArt = RoyalPieceSkin.Art("coin"); piece.heartArt = RoyalPieceSkin.Art("heart");
             Motion(menu, p, H, new List<RoyalCardControl> { Feedback(close, false), Feedback(ok, true) }, ok);
         }
 

@@ -142,10 +142,14 @@ namespace JellyGarden.Scripts.Juice
         // elements go to the screen through that camera; an overlay canvas's positions are already in pixels.
         Vector2 Local(Transform t)
         {
-            var canvas = t.GetComponentInParent<Canvas>(); canvas = canvas ? canvas.rootCanvas : null;
+            return LocalPoint(t, t.position);
+        }
+        Vector2 LocalPoint(Transform owner, Vector3 world)
+        {
+            var canvas = owner.GetComponentInParent<Canvas>(); canvas = canvas ? canvas.rootCanvas : null;
             Camera cam = null;
             if (canvas && canvas.renderMode != RenderMode.ScreenSpaceOverlay) cam = canvas.worldCamera ? canvas.worldCamera : Camera.main;
-            var screen = RectTransformUtility.WorldToScreenPoint(cam, t.position);
+            var screen = RectTransformUtility.WorldToScreenPoint(cam, world);
             RectTransformUtility.ScreenPointToLocalPointInRectangle(root, screen, null, out var local); return local;
         }
         Vector2 World(Vector3 world)
@@ -273,6 +277,7 @@ namespace JellyGarden.Scripts.Juice
             public Image image; public Vector2 from, burst, control, to;
             public float start, fly, size, hold; public global::System.Action land;
             public Transform receiver;
+            public RectTransform cardFrame;
             public bool landed, turning, started, trail;
             public ReferenceCoinParticles.Handle tracer;
         }
@@ -329,6 +334,8 @@ namespace JellyGarden.Scripts.Juice
             {
                 var f = flights[k];
                 if (f.landed || !f.image) { RetireFlight(f); flights.RemoveAt(k); continue; }
+                if (f.cardFrame && !f.cardFrame.gameObject.activeInHierarchy)
+                { RetireFlight(f); flights.RemoveAt(k); continue; }
                 if (f.receiver) f.to = Local(f.receiver);
                 float e = now - f.start; if (e < 0) continue;
                 float burstTime = f.turning ? .55f + f.hold : .2f;
@@ -362,10 +369,37 @@ namespace JellyGarden.Scripts.Juice
                         f.image.gameObject.SetActive(false); continue;
                     }
                 }
-                f.image.rectTransform.anchoredPosition = p;
                 f.image.rectTransform.localScale = Vector3.one * scale;
                 if (f.turning) ReferenceCoinAnimation.Apply(f.image, reduced ? 0 : e, f.size);
+                f.image.rectTransform.anchoredPosition = f.cardFrame ? ContainCardCoin(f, p) : p;
             }
+        }
+
+        readonly Vector3[] cardCoinCorners = new Vector3[4];
+        Rect CardCoinBounds(RectTransform frame)
+        {
+            // The popup and reward overlay use different canvases. Convert through screen space rather than assuming
+            // equal scales, including while the popup is fitting to a phone/tablet or completing its entrance.
+            frame.GetWorldCorners(cardCoinCorners);
+            Vector2 lo = LocalPoint(frame, cardCoinCorners[0]), hi = lo;
+            for (int i = 1; i < cardCoinCorners.Length; i++)
+            {
+                var point = LocalPoint(frame, cardCoinCorners[i]);
+                lo = Vector2.Min(lo, point); hi = Vector2.Max(hi, point);
+            }
+            return Rect.MinMaxRect(lo.x, lo.y, hi.x, hi.y);
+        }
+        Vector2 ContainCardCoin(Flight flight, Vector2 position)
+        {
+            var bounds = CardCoinBounds(flight.cardFrame);
+            float inset = 24 * bounds.width / Mathf.Max(1, flight.cardFrame.rect.width);
+            var rect = flight.image.rectTransform;
+            // Apply the recovered flip frame first: its aspect ratio and negative X scale can change every frame.
+            float halfW = Mathf.Abs(rect.rect.width * rect.localScale.x) * .5f;
+            float halfH = Mathf.Abs(rect.rect.height * rect.localScale.y) * .5f;
+            position.x = Mathf.Clamp(position.x, bounds.xMin + inset + halfW, bounds.xMax - inset - halfW);
+            position.y = Mathf.Clamp(position.y, bounds.yMin + inset + halfH, bounds.yMax - inset - halfH);
+            return position;
         }
         void RetireFlight(Flight f)
         {
@@ -663,12 +697,10 @@ namespace JellyGarden.Scripts.Juice
             s.reward = opening ? null : s.StartCoroutine(s.RunCardCoins(lm, coins, balanceBefore));
         }
 
-        // ---- later levels: coins from the card's stars into a coin balance pill above the card (unchanged from v4)
+        // ---- later levels: a compact coin fan collects inside the card; the balance above counts the arrivals.
 
         RectTransform pill; Text pillValue; Image pillFlash; float flash;
         float PillY => Half.y - (Screen.height - Screen.safeArea.yMax) * root.rect.width / Mathf.Max(1, Screen.width) - 76;
-        Vector2 PillCoin => pill ? pill.anchoredPosition + new Vector2(-118, 0) : Vector2.zero;
-
         void BuildPill(int value)
         {
             pill = Node("Royal coin balance", root, new Vector2(0, PillY), new Vector2(270, 80));
@@ -690,7 +722,7 @@ namespace JellyGarden.Scripts.Juice
             var menus = MenuManager.Instance; var card = menus ? menus.GetCanvasGlobal().Find("MenuComplete") : null;
             if (!card) yield break;
             BuildPill(before); var pillGroup = pill.gameObject.AddComponent<CanvasGroup>(); pillGroup.alpha = 0;
-            // Keep the glowing star clear: wait for its full settle and reward reveal, then collect from the coin badge.
+            // Keep the glowing star clear: wait for its full settle and reward reveal, then collect below the pillow.
             float t0 = Time.unscaledTime; var piece = RoyalThrone.Presentation.RoyalWinCard.Of(card); var star1 = card.Find("Image/Star1");
             while (card.gameObject.activeInHierarchy && Time.unscaledTime - t0 < 4.5f)
             {
@@ -701,7 +733,6 @@ namespace JellyGarden.Scripts.Juice
                 yield return null;
             }
             if (!card.gameObject.activeInHierarchy) { ClearPill(); yield break; }
-            Vector2 starRow = piece && piece.coinOrigin ? Local(piece.coinOrigin) : star1 ? Local(star1) : Vector2.zero;
             float wait = Time.unscaledTime + .12f;
             while (card.gameObject.activeInHierarchy && Time.unscaledTime < wait) yield return null;
             if (!card.gameObject.activeInHierarchy) { ClearPill(); yield break; }
@@ -713,20 +744,30 @@ namespace JellyGarden.Scripts.Juice
                 ClearPill(); yield break;
             }
             int flightsN = 10, landedN = 0; coin = coin ? coin : RoyalPieceSkin.Art("coin");
+            var frame = piece ? piece.transform as RectTransform : card.Find("Image") as RectTransform;
+            if (!frame) { if (pillValue) pillValue.text = (before + coins).ToString(); ClearPill(); yield break; }
+            var receiver = piece ? piece.coinOrigin : null;
+            Vector2 receiverInCard = receiver ? (Vector2)frame.InverseTransformPoint(receiver.position) : new Vector2(-67, -214);
+            Vector2 At(Vector2 position) => LocalPoint(frame, frame.TransformPoint(position));
+            float cardScale = CardCoinBounds(frame).width / Mathf.Max(1, frame.rect.width);
+            Vector2 collect = At(receiverInCard), origin = At(receiverInCard + new Vector2(-50, 123));
             for (int i = 0; i < flightsN; i++)
             {
-                Fly(coin, starRow, PillCoin, .055f * i, 54, .6f, () =>
+                Fly(coin, origin, collect, .055f * i, 46 * cardScale, .6f, () =>
                 {
                     landedN++; int shown = before + CoinAmountAtArrival(coins, landedN, flightsN);
                     if (pillValue) pillValue.text = shown.ToString(); flash = 1;
+                    PulseCoin(receiver);
                     if (landedN == 1) risingReward = StartCoroutine(RisePlus(coins));
                     if (landedN == 1) ReferenceGameplayAudio.Play("coin_counter__rfv387_17638", .55f);
-                }, true, 20, 0, false);
-                // Only these card flights use a side route. Home, finale and area rewards retain their authored paths.
+                }, true, 0, 0, false, receiver);
+                // A restrained fan off the pillow's lower-left edge, then a curved collection into the badge. All three
+                // Bezier points stay in the card, and a live full-sprite bound also guards resolution/layout changes.
+                // Home, finale and area rewards retain their own authored paths and never receive this bound.
                 var flight = flights[flights.Count - 1];
-                float lane = Mathf.Min(Half.x - 66, piece ? Local(piece.transform).x + 300 * card.localScale.x : 300);
-                flight.burst = new Vector2(lane + (i % 3 - 1) * 13, starRow.y + 46 + i * 3);
-                flight.control = new Vector2(lane + 110, PillCoin.y + 30);
+                flight.cardFrame = frame;
+                flight.burst = At(receiverInCard + new Vector2(-127 + (i % 5 - 2) * 12, 112 + i % 3 * 14));
+                flight.control = At(receiverInCard + new Vector2(-113 - i % 3 * 7, -10 + i % 2 * 12));
             }
             while (card.gameObject.activeInHierarchy && landedN < flightsN) yield return null;
             if (!card.gameObject.activeInHierarchy) ClearFlights();

@@ -7,13 +7,13 @@ namespace RoyalThrone.Presentation
     public sealed class RoyalAppearsLater : MonoBehaviour { }
 
     // Presentation of the already committed win: a soft star landing, warm light on the velvet,
-    // a short sparkle burst, then sparse twinkles on the star tips and cushion braid.
+    // a short sparkle burst, then a five-tip glint and a traveling sweep over the cushion braid.
     // AnimationManager activates Star1 after the card enters. This component owns no reward writes.
     public sealed class RoyalWinCard : MonoBehaviour
     {
-        public RectTransform star, cushion;
+        public RectTransform star, cushion, starShadow;
         public RoyalTextStyle title;
-        public RoyalCardShape glow, flash, pillowGlow;
+        public RoyalCardShape glow, flash, pillowGlow, contactShadow;
         public RectTransform sparkles, rays, rewardBadge, coinOrigin;
         public Text rewardAmount;
         public Vector2 starRest;
@@ -21,17 +21,19 @@ namespace RoyalThrone.Presentation
         const float Drop = .28f, Rebound = .42f, Settle = .60f;
         const float WriteStart = .32f, PerLetter = .042f, FallbackTitle = 1.6f;
         const float RewardStart = .69f, RewardCountTime = .55f, RewardReady = .72f;
-        const int BurstCount = 24, IdleCount = 8, RewardCountSteps = 64;
+        const int BurstCount = 24, IdleCount = 14, RewardCountSteps = 64;
 
         float t, open, nextTwinkle;
         bool started, reduced, initialized;
         int twinkleSlot, rewardCoins = -1, shownRewardStep = -1;
         Text titleText;
-        CanvasGroup starGroup, titleGroup, raysGroup, badgeGroup;
+        Material lightMaterial;
+        CanvasGroup starGroup, shadowGroup, titleGroup, raysGroup, badgeGroup;
         Vector2 badgeRest;
         RawImage[] sparkle;
         float[] sparkleStart, sparkleLife, sparkleAngle, sparkleRadius, sparkleSize, sparkleSpin;
-        Vector2[] sparklePosition;
+        Vector2[] sparklePosition, sparkleEnd;
+        bool[] sparkleHero;
         readonly string[] rewardLabels = new string[RewardCountSteps + 1];
 
         // Impact and collection are separate: coins wait until the complete star/cushion settle.
@@ -75,7 +77,7 @@ namespace RoyalThrone.Presentation
         void OnEnable()
         {
             reduced = RoyalThrone.Testing.RoyalSave.GetInt("RoyalThrone.HomeMotion", 1) == 0;
-            started = false; t = 0; open = 0; nextTwinkle = 1.15f; twinkleSlot = 0;
+            started = false; t = 0; open = 0; nextTwinkle = .91f; twinkleSlot = 0;
             var level = JellyGarden.Scripts.LevelManager.THIS;
             SetReward(level ? JellyGarden.Scripts.Juice.RoyalWinSequence.Coins(level) : 0);
             ResetVisuals();
@@ -89,16 +91,34 @@ namespace RoyalThrone.Presentation
             started = false; t = 0; open = 0;
         }
 
+        void OnDestroy()
+        {
+            if (lightMaterial) Destroy(lightMaterial);
+        }
+
         bool Initialize()
         {
             if (initialized) return true;
             if (!sparkles) return false;
             starGroup = Group(star);
+            shadowGroup = Group(starShadow);
             titleGroup = Group(title ? title.transform : null);
             raysGroup = Group(rays);
             badgeGroup = Group(rewardBadge);
             if (rewardBadge) badgeRest = rewardBadge.anchoredPosition;
             if (title) titleText = title.GetComponent<Text>();
+            // Light adds warmth over the navy rather than mixing a dull opaque veil into it.
+            // This card owns one shared UI material; its pillow, star and shadows retain normal blending.
+            var lightShader = Resources.Load<Shader>("RoyalGameplay/UIAdditive");
+            if (lightShader)
+            {
+                lightMaterial = new Material(lightShader) { name = "Royal win additive light", hideFlags = HideFlags.HideAndDontSave };
+                if (glow) glow.material = lightMaterial;
+                if (flash) flash.material = lightMaterial;
+                if (pillowGlow) pillowGlow.material = lightMaterial;
+                var rayGraphic = rays ? rays.GetComponent<Graphic>() : null;
+                if (rayGraphic) rayGraphic.material = lightMaterial;
+            }
             BuildSparkles();
             initialized = true;
             ResetVisuals();
@@ -123,6 +143,9 @@ namespace RoyalThrone.Presentation
                 star.localRotation = Quaternion.identity;
             }
             if (starGroup) starGroup.alpha = 0;
+            if (shadowGroup) shadowGroup.alpha = 0;
+            if (starShadow) starShadow.localScale = Vector3.one;
+            if (contactShadow) contactShadow.color = Fade(contactShadow.color, 0);
             if (title) title.Write(0);
             if (titleGroup) titleGroup.alpha = 1;
             if (cushion) cushion.localScale = Vector3.one;
@@ -166,6 +189,7 @@ namespace RoyalThrone.Presentation
             if (reduced) { Calm(); return; }
             PoseStar();
             PoseCushion();
+            PoseShadow();
             PoseLight();
             Write(t - WriteStart);
             Burst();
@@ -179,8 +203,11 @@ namespace RoyalThrone.Presentation
             if (starGroup) starGroup.alpha = a;
             star.anchoredPosition = starRest; star.localScale = Vector3.one; star.localRotation = Quaternion.identity;
             if (cushion) cushion.localScale = Vector3.one;
-            if (glow) glow.color = Fade(glow.color, .46f * a);
-            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, .24f * a);
+            if (shadowGroup) shadowGroup.alpha = .28f * a;
+            if (starShadow) starShadow.localScale = Vector3.one;
+            if (contactShadow) contactShadow.color = Fade(contactShadow.color, .25f * a);
+            if (glow) glow.color = Fade(glow.color, .53f * a);
+            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, .17f * a);
             if (flash) flash.color = Fade(flash.color, 0);
             if (raysGroup) raysGroup.alpha = 0;
             if (title) title.Write(float.PositiveInfinity);
@@ -238,17 +265,35 @@ namespace RoyalThrone.Presentation
             cushion.localScale = new Vector3(x, y, 1);
         }
 
+        void PoseShadow()
+        {
+            // The airborne star casts a broad, faint shape; it tightens and darkens as
+            // the star meets the velvet. Both shadows stay on the pillow, below the star.
+            float approach = Ease(t / Drop);
+            float settle = Ease((t - Drop) / (Settle - Drop));
+            if (shadowGroup)
+                shadowGroup.alpha = t < Drop ? Mathf.Lerp(.07f, .32f, approach) * Mathf.Clamp01(t / .09f) : Mathf.Lerp(.32f, .28f, settle);
+            if (starShadow)
+            {
+                float width = t < Drop ? Mathf.Lerp(1.27f, 1.055f, approach) : Mathf.Lerp(1.055f, 1, settle);
+                float height = t < Drop ? Mathf.Lerp(1.20f, .89f, approach) : Mathf.Lerp(.89f, 1, settle);
+                starShadow.localScale = new Vector3(width, height, 1);
+            }
+            if (contactShadow)
+                contactShadow.color = Fade(contactShadow.color, .25f * Ease((t - .10f) / (Drop - .10f)));
+        }
+
         void PoseLight()
         {
             float rise = Ease((t - Drop) / .30f);
             float breath = Mathf.Sin((t - Drop) * 2.15f);
-            if (glow) glow.color = Fade(glow.color, rise * (.50f + .065f * breath));
-            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, rise * (.30f + .035f * breath));
+            if (glow) glow.color = Fade(glow.color, rise * (.53f + .055f * breath));
+            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, rise * (.17f + .025f * breath));
             if (flash)
             {
                 float f = t < Drop ? Mathf.Clamp01((t - Drop + .065f) / .065f) : 1 - Mathf.Clamp01((t - Drop) / .23f);
-                flash.color = Fade(flash.color, .70f * f * f);
-                flash.rectTransform.localScale = Vector3.one * Mathf.Lerp(.72f, 1.14f, Mathf.Clamp01((t - Drop + .065f) / .30f));
+                flash.color = Fade(flash.color, .38f * f * f);
+                flash.rectTransform.localScale = Vector3.one * Mathf.Lerp(.78f, 1.06f, Mathf.Clamp01((t - Drop + .065f) / .30f));
             }
             if (raysGroup) raysGroup.alpha = .27f * rise;
             if (rays) rays.localRotation = Quaternion.Euler(0, 0, Mathf.Max(0, t - Drop) * 4);
@@ -288,7 +333,7 @@ namespace RoyalThrone.Presentation
             sparkle = new RawImage[count];
             sparkleStart = new float[count]; sparkleLife = new float[count]; sparkleAngle = new float[count];
             sparkleRadius = new float[count]; sparkleSize = new float[count]; sparkleSpin = new float[count];
-            sparklePosition = new Vector2[count];
+            sparklePosition = new Vector2[count]; sparkleEnd = new Vector2[count]; sparkleHero = new bool[count];
             var texture = JellyGarden.Scripts.Juice.SparkleTextureFactory.FourPointSparkle;
             for (int i = 0; i < count; i++)
             {
@@ -296,11 +341,12 @@ namespace RoyalThrone.Presentation
                 go.transform.SetParent(sparkles, false);
                 var image = go.GetComponent<RawImage>();
                 image.texture = texture; image.raycastTarget = false; image.enabled = false; sparkle[i] = image;
+                if (lightMaterial) image.material = lightMaterial;
                 sparkleStart[i] = i < BurstCount ? Drop + .28f * Hash(i * 3 + 1) : float.PositiveInfinity;
                 sparkleLife[i] = .55f + .25f * Hash(i * 3 + 2);
                 sparkleAngle[i] = i * 2.399963f;
-                sparkleRadius[i] = 95 + 90 * Hash(i * 7 + 5);
-                sparkleSize[i] = 14 + 17 * Hash(i * 5 + 7);
+                sparkleRadius[i] = 128 + 60 * Hash(i * 7 + 5);
+                sparkleSize[i] = (i % 4 == 0 ? 31 : 18) + 15 * Hash(i * 5 + 7);
                 sparkleSpin[i] = .65f + .55f * Hash(i * 11 + 3);
             }
         }
@@ -315,7 +361,7 @@ namespace RoyalThrone.Presentation
                 image.enabled = true;
                 float angle = sparkleAngle[i] + sparkleSpin[i] * u;
                 float radius = sparkleRadius[i] * (.80f + .32f * Ease(u));
-                var position = starRest + new Vector2(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius * .72f - 28 + 18 * u);
+                var position = starRest + new Vector2(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius * .79f - 12 + 15 * u);
                 float alpha = Mathf.Sin(Mathf.PI * u);
                 Place(image, position, sparkleSize[i] * (.65f + .50f * alpha), angle * 20, new Color(1, .96f, .78f, alpha));
             }
@@ -329,34 +375,55 @@ namespace RoyalThrone.Presentation
                 var image = sparkle[i];
                 if (u < 0 || u > 1) { image.enabled = false; continue; }
                 image.enabled = true;
-                float alpha = Mathf.Sin(Mathf.PI * u);
-                Place(image, sparklePosition[i], sparkleSize[i] * (.38f + .82f * alpha), 12 * Mathf.Sin(u * Mathf.PI), new Color(1, .97f, .84f, alpha * .90f));
+                float envelope = Mathf.Sin(Mathf.PI * u);
+                // Two highlights within each glint give the polished tips a brief shimmer.
+                float alpha = envelope * (sparkleHero[i] ? .84f + .16f * Mathf.Cos(4 * Mathf.PI * u) : 1);
+                Vector2 position = Vector2.Lerp(sparklePosition[i], sparkleEnd[i], Ease(u));
+                float size = sparkleSize[i] * (.40f + .80f * envelope);
+                Place(image, position, size, 16 * Mathf.Sin(u * Mathf.PI), new Color(1, .97f, .82f, alpha));
             }
             if (t < nextTwinkle) return;
             int index = twinkleSlot++;
             int slot = BurstCount + index % IdleCount;
-            float h = Hash(index * 13 + 1);
-            sparkleStart[slot] = t; sparkleLife[slot] = .50f + .28f * h;
-            sparkleSize[slot] = 16 + 15 * h;
-            sparklePosition[slot] = TwinklePoint(index);
-            nextTwinkle = t + .27f + .17f * Hash(index * 23 + 4);
+            int phase = index % 15;
+            bool hero = phase < 5 || phase == 14;
+            sparkleHero[slot] = hero;
+            sparkleStart[slot] = t;
+            sparkleLife[slot] = hero ? .78f : .62f;
+            sparkleSize[slot] = hero ? (phase == 0 || phase == 14 ? 48 : 40) : 24 + 6 * Hash(index * 13 + 1);
+            if (hero)
+            {
+                sparklePosition[slot] = StarTip(phase == 14 ? 0 : phase);
+                sparkleEnd[slot] = sparklePosition[slot];
+            }
+            else
+            {
+                // A continuous, left-to-right highlight catches the gold front braid.
+                // It follows the actual cushion's shallow curved edge, below the star face.
+                float along = (phase - 5) / 8f;
+                sparklePosition[slot] = BraidPoint(along);
+                sparkleEnd[slot] = BraidPoint(Mathf.Min(1, along + .07f));
+            }
+            nextTwinkle = t + (phase == 14 ? .95f : hero ? .14f : .09f);
         }
 
-        Vector2 TwinklePoint(int index)
+        Vector2 StarTip(int index)
         {
-            // Alternate star tips and the pillow trim, keeping the central gold face readable.
             float size = star ? star.sizeDelta.x : 256;
-            switch (index % 8)
+            switch (index % 5)
             {
                 case 0: return starRest + new Vector2(0, .40f * size);
-                case 1: return CushionPoint(-.30f, .44f);
-                case 2: return starRest + new Vector2(.34f, .10f) * size;
-                case 3: return CushionPoint(.30f, .44f);
-                case 4: return starRest + new Vector2(-.22f, -.29f) * size;
-                case 5: return starRest + new Vector2(-.34f, .10f) * size;
-                case 6: return CushionPoint(.03f, .31f);
-                default: return starRest + new Vector2(.22f, -.29f) * size;
+                case 1: return starRest + new Vector2(.34f, .10f) * size;
+                case 2: return starRest + new Vector2(.22f, -.29f) * size;
+                case 3: return starRest + new Vector2(-.22f, -.29f) * size;
+                default: return starRest + new Vector2(-.34f, .10f) * size;
             }
+        }
+
+        Vector2 BraidPoint(float along)
+        {
+            float edge = Mathf.Abs(along * 2 - 1);
+            return CushionPoint(Mathf.Lerp(-.40f, .40f, along), .345f + .085f * edge * edge);
         }
 
         Vector2 CushionPoint(float x, float y)
