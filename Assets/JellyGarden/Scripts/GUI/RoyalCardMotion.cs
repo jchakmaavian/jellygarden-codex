@@ -17,6 +17,8 @@ namespace RoyalThrone.Presentation
         public CanvasGroup cardGroup;
         // Off for cards whose own clip carries their timing (PreFailed, PrePlay): press feedback and gloss only.
         public bool entrance = true;
+        // Opt-in for the win card; existing cards keep their current motion behaviour.
+        public bool respectMotionSetting;
         // A question shown over its own card (the pause menu's leave question) moves above anything added to that card later.
         public bool front;
         public RoyalCardReveal[] reveals;
@@ -29,7 +31,7 @@ namespace RoyalThrone.Presentation
         const float GlossFirst = 1.4f, GlossPeriod = 3.4f, GlossTime = .75f, GlossStrength = .26f;
         float t, glossAt = -10, nextGloss;
         int nextEvent;
-        bool settled;
+        bool settled, reduced;
         // Seconds since the card opened, on the card's own clock (for diagnostics and checks).
         public float Elapsed => t;
 
@@ -48,6 +50,7 @@ namespace RoyalThrone.Presentation
         void OnEnable()
         {
             t = 0; nextEvent = 0; settled = !entrance; glossAt = -10; nextGloss = GlossFirst;
+            reduced = respectMotionSetting && RoyalThrone.Testing.RoyalSave.GetInt("RoyalThrone.HomeMotion", 1) == 0;
             if (front) transform.SetAsLastSibling();
             if (controls != null) foreach (var c in controls) if (c != null) { c.blend = 0; RoyalLevelCardMotion.ApplyPress(c, 0); }
             if (entrance) Pose();
@@ -78,7 +81,7 @@ namespace RoyalThrone.Presentation
             if (settled) return;
             float e = RoyalLevelCardMotion.EaseOutCubic(t / CardIn);
             if (dim) { var c = dimColor; c.a *= e; dim.color = c; }
-            if (card) card.localScale = Vector3.one * Mathf.Lerp(.96f, 1, e);
+            if (card) card.localScale = Vector3.one * (reduced ? 1 : Mathf.Lerp(.96f, 1, e));
             if (cardGroup) cardGroup.alpha = e;
             if (reveals != null)
                 foreach (var r in reveals)
@@ -88,7 +91,7 @@ namespace RoyalThrone.Presentation
                     {
                         if (!r.rects[i]) continue;
                         r.groups[i].alpha = p;
-                        r.rects[i].anchoredPosition = r.rest[i] + new Vector2(0, -Rise * (1 - p));
+                        r.rects[i].anchoredPosition = r.rest[i] + new Vector2(0, reduced ? 0 : -Rise * (1 - p));
                     }
                 }
             settled = t >= EntranceEnd;

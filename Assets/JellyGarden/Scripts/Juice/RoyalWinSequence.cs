@@ -652,6 +652,9 @@ namespace JellyGarden.Scripts.Juice
         public static void Reward(LevelManager lm, int coins, int balanceBefore)
         {
             var s = Get(lm); s.CancelRewardPresentation();
+            var menu = MenuManager.Instance ? MenuManager.Instance.GetCanvasGlobal().Find("MenuComplete") : null;
+            var winCard = RoyalThrone.Presentation.RoyalWinCard.Of(menu);
+            if (winCard) winCard.SetReward(coins); // display the committed award; never credit currency here
             bool opening = RoyalThrone.Campaign.RoyalReferenceCampaign.Opening;
             // Home plays the rewards only after the verified opening levels, whose CONTINUE goes Home (AnimationManager).
             // Later levels go on to the next level's card, so their coins fly on the win card as before. The card lands its
@@ -687,30 +690,44 @@ namespace JellyGarden.Scripts.Juice
             var menus = MenuManager.Instance; var card = menus ? menus.GetCanvasGlobal().Find("MenuComplete") : null;
             if (!card) yield break;
             BuildPill(before); var pillGroup = pill.gameObject.AddComponent<CanvasGroup>(); pillGroup.alpha = 0;
-            // The coins leave the level's star once it has landed on the card's cushion (RoyalWinCard lights and sparkles it).
+            // Keep the glowing star clear: wait for its full settle and reward reveal, then collect from the coin badge.
             float t0 = Time.unscaledTime; var piece = RoyalThrone.Presentation.RoyalWinCard.Of(card); var star1 = card.Find("Image/Star1");
             while (card.gameObject.activeInHierarchy && Time.unscaledTime - t0 < 4.5f)
             {
                 float e = Time.unscaledTime - t0;
-                pillGroup.alpha = EaseOut((e - .15f) / .25f); pill.anchoredPosition = new Vector2(0, PillY + 16 * (1 - EaseOut((e - .15f) / .25f)));
-                bool landed = piece ? piece.Landed : star1 && star1.gameObject.activeInHierarchy;
+                pillGroup.alpha = EaseOut((e - .15f) / .25f); pill.anchoredPosition = new Vector2(0, PillY + (reduced ? 0 : 16 * (1 - EaseOut((e - .15f) / .25f))));
+                bool landed = piece ? piece.RewardsReady : star1 && star1.gameObject.activeInHierarchy;
                 if (landed && e > .5f) break;
                 yield return null;
             }
             if (!card.gameObject.activeInHierarchy) { ClearPill(); yield break; }
-            Vector2 starRow = star1 ? Local(star1) : Vector2.zero;
+            Vector2 starRow = piece && piece.coinOrigin ? Local(piece.coinOrigin) : star1 ? Local(star1) : Vector2.zero;
             float wait = Time.unscaledTime + .12f;
             while (card.gameObject.activeInHierarchy && Time.unscaledTime < wait) yield return null;
+            if (!card.gameObject.activeInHierarchy) { ClearPill(); yield break; }
             pillGroup.alpha = 1; pill.anchoredPosition = new Vector2(0, PillY);
+            if (reduced)
+            {
+                if (pillValue) pillValue.text = (before + coins).ToString();
+                while (card.gameObject.activeInHierarchy) yield return null;
+                ClearPill(); yield break;
+            }
             int flightsN = 10, landedN = 0; coin = coin ? coin : RoyalPieceSkin.Art("coin");
             for (int i = 0; i < flightsN; i++)
-                Fly(coin, starRow, PillCoin, .02f * i, 66, .6f, () =>
+            {
+                Fly(coin, starRow, PillCoin, .055f * i, 54, .6f, () =>
                 {
                     landedN++; int shown = before + CoinAmountAtArrival(coins, landedN, flightsN);
                     if (pillValue) pillValue.text = shown.ToString(); flash = 1;
                     if (landedN == 1) risingReward = StartCoroutine(RisePlus(coins));
                     if (landedN == 1) ReferenceGameplayAudio.Play("coin_counter__rfv387_17638", .55f);
-                }, true, 100, i * .09f, false);
+                }, true, 20, 0, false);
+                // Only these card flights use a side route. Home, finale and area rewards retain their authored paths.
+                var flight = flights[flights.Count - 1];
+                float lane = Mathf.Min(Half.x - 66, piece ? Local(piece.transform).x + 300 * card.localScale.x : 300);
+                flight.burst = new Vector2(lane + (i % 3 - 1) * 13, starRow.y + 46 + i * 3);
+                flight.control = new Vector2(lane + 110, PillCoin.y + 30);
+            }
             while (card.gameObject.activeInHierarchy && landedN < flightsN) yield return null;
             if (!card.gameObject.activeInHierarchy) ClearFlights();
             if (pillValue) pillValue.text = (before + coins).ToString();

@@ -3,37 +3,53 @@ using UnityEngine.UI;
 
 namespace RoyalThrone.Presentation
 {
-    // Marks a card part that shows by itself after the card is in, so RoyalCardMotion's entrance leaves it alone.
+    // Excludes a part with its own timing from RoyalCardMotion's entrance bands.
     public sealed class RoyalAppearsLater : MonoBehaviour { }
 
-    // The win card's centre piece, after the reference's results card (its motion measured frame by frame from the 2026-09-28
-    // recording, 2026-10-05). When the level's star shows (AnimationManager switches Star1 on once the card is in) it starts
-    // very large over the card and shrinks onto the cushion in 0.2 s, where a flash lights it and the cushion gives under it;
-    // the star rebounds to 1.08 and settles by 0.42 s. "Well Done!" is then written in, a letter every 0.075 s, while sparkles
-    // swirl round the star for about a second; after that the star glows softly and the odd twinkle shows. Unscaled time.
-    // With Home motion off the star and the title simply fade in.
+    // Presentation of the already committed win: a soft star landing, warm light on the velvet,
+    // a short sparkle burst, then sparse twinkles on the star tips and cushion braid.
+    // AnimationManager activates Star1 after the card enters. This component owns no reward writes.
     public sealed class RoyalWinCard : MonoBehaviour
     {
         public RectTransform star, cushion;
         public RoyalTextStyle title;
-        Text titleText;
-        public RoyalCardShape glow, flash;
-        public RectTransform sparkles;
+        public RoyalCardShape glow, flash, pillowGlow;
+        public RectTransform sparkles, rays, rewardBadge, coinOrigin;
+        public Text rewardAmount;
         public Vector2 starRest;
 
-        const float Drop = .20f, Rebound = .30f, Settle = .42f, WriteStart = .24f, PerLetter = .075f, FallbackTitle = 1.6f;
-        const int SwirlCount = 26;
-        float t, open;
-        bool started, reduced;
+        const float Drop = .28f, Rebound = .42f, Settle = .60f;
+        const float WriteStart = .32f, PerLetter = .042f, FallbackTitle = 1.6f;
+        const float RewardStart = .69f, RewardCountTime = .55f, RewardReady = .72f;
+        const int BurstCount = 24, IdleCount = 8, RewardCountSteps = 64;
+
+        float t, open, nextTwinkle;
+        bool started, reduced, initialized;
+        int twinkleSlot, rewardCoins = -1, shownRewardStep = -1;
+        Text titleText;
+        CanvasGroup starGroup, titleGroup, raysGroup, badgeGroup;
+        Vector2 badgeRest;
         RawImage[] sparkle;
         float[] sparkleStart, sparkleLife, sparkleAngle, sparkleRadius, sparkleSize, sparkleSpin;
-        float nextTwinkle;
-        int twinkleSlot;
-        CanvasGroup starGroup;
+        Vector2[] sparklePosition;
+        readonly string[] rewardLabels = new string[RewardCountSteps + 1];
 
-        // True once the star has reached the cushion (RoyalWinSequence starts the coin flights from it then).
+        // Impact and collection are separate: coins wait until the complete star/cushion settle.
         public bool Landed => started && (reduced || t >= Drop);
+        public bool RewardsReady => started && t >= (reduced ? .20f : RewardReady);
+        public float Elapsed => t;
+        public float OpenElapsed => open;
+        public int RewardCoins => Mathf.Max(0, rewardCoins);
         public Vector2 StarRest => starRest;
+        public int ActiveSparkles
+        {
+            get
+            {
+                int count = 0;
+                if (sparkle != null) foreach (var image in sparkle) if (image && image.enabled) count++;
+                return count;
+            }
+        }
 
         public static RoyalWinCard Of(Transform menu)
         {
@@ -41,169 +57,323 @@ namespace RoyalThrone.Presentation
             return card ? card.GetComponent<RoyalWinCard>() : null;
         }
 
+        // Reward passes the committed amount after opening the popup. The fallback below also
+        // makes directly opened QA cards readable, without awarding anything.
+        public void SetReward(int coins)
+        {
+            coins = Mathf.Max(0, coins);
+            if (coins != rewardCoins || rewardLabels[0] == null)
+            {
+                rewardCoins = coins;
+                for (int i = 0; i <= RewardCountSteps; i++)
+                    rewardLabels[i] = "+" + Mathf.RoundToInt(coins * Ease(i / (float)RewardCountSteps));
+            }
+            shownRewardStep = -1;
+            ShowRewardCount(RewardProgress());
+        }
+
         void OnEnable()
         {
-            reduced = RoyalThrone.Testing.RoyalSave.GetInt("RoyalThrone.HomeMotion", 1) == 0;   // the Motion setting, as Home reads it
-            started = false; t = 0; open = 0; nextTwinkle = 0; twinkleSlot = 0;
-            if (title) title.Write(0);
-            if (glow) glow.color = Fade(glow.color, 0);
-            if (flash) flash.color = Fade(flash.color, 0);
-            if (cushion) cushion.localScale = Vector3.one;
+            reduced = RoyalThrone.Testing.RoyalSave.GetInt("RoyalThrone.HomeMotion", 1) == 0;
+            started = false; t = 0; open = 0; nextTwinkle = 1.15f; twinkleSlot = 0;
+            var level = JellyGarden.Scripts.LevelManager.THIS;
+            SetReward(level ? JellyGarden.Scripts.Juice.RoyalWinSequence.Coins(level) : 0);
+            ResetVisuals();
+            // AddComponent can call OnEnable before the card builder assigns our references.
+            // BuildSparkles is intentionally deferred until Update has a real parent to use.
+        }
+
+        void OnDisable()
+        {
+            ResetVisuals();
+            started = false; t = 0; open = 0;
+        }
+
+        bool Initialize()
+        {
+            if (initialized) return true;
+            if (!sparkles) return false;
+            starGroup = Group(star);
+            titleGroup = Group(title ? title.transform : null);
+            raysGroup = Group(rays);
+            badgeGroup = Group(rewardBadge);
+            if (rewardBadge) badgeRest = rewardBadge.anchoredPosition;
+            if (title) titleText = title.GetComponent<Text>();
             BuildSparkles();
-            foreach (var s in sparkle) s.enabled = false;
+            initialized = true;
+            ResetVisuals();
+            return true;
+        }
+
+        static CanvasGroup Group(Transform target)
+        {
+            if (!target) return null;
+            var group = target.GetComponent<CanvasGroup>();
+            if (!group) group = target.gameObject.AddComponent<CanvasGroup>();
+            group.blocksRaycasts = false; group.interactable = false;
+            return group;
+        }
+
+        void ResetVisuals()
+        {
+            if (star)
+            {
+                star.anchoredPosition = starRest;
+                star.localScale = Vector3.one;
+                star.localRotation = Quaternion.identity;
+            }
+            if (starGroup) starGroup.alpha = 0;
+            if (title) title.Write(0);
+            if (titleGroup) titleGroup.alpha = 1;
+            if (cushion) cushion.localScale = Vector3.one;
+            if (glow) glow.color = Fade(glow.color, 0);
+            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, 0);
+            if (flash) { flash.color = Fade(flash.color, 0); flash.rectTransform.localScale = Vector3.one; }
+            if (rays) rays.localRotation = Quaternion.identity;
+            if (raysGroup) raysGroup.alpha = 0;
+            if (badgeGroup) badgeGroup.alpha = 0;
+            if (rewardBadge && initialized) { rewardBadge.anchoredPosition = badgeRest; rewardBadge.localScale = Vector3.one; }
+            shownRewardStep = -1;
+            ShowRewardCount(0);
+            if (sparkle != null)
+                for (int i = 0; i < sparkle.Length; i++)
+                {
+                    if (sparkle[i]) sparkle[i].enabled = false;
+                    // Only burst entries have authored start times. Idle entries must not
+                    // reuse the previous opening's schedule or appear on the next first frame.
+                    if (i >= BurstCount) sparkleStart[i] = float.PositiveInfinity;
+                }
         }
 
         void Update()
         {
             float dt = Mathf.Min(Time.unscaledDeltaTime, .05f);
             open += dt;
+            if (!Initialize()) return;
             if (!started)
             {
                 if (star && star.gameObject.activeInHierarchy) { started = true; t = 0; }
-                // No star (a card opened some other way): the title still shows.
-                else if (open > FallbackTitle && title) title.Write(float.PositiveInfinity);
+                else if (open > FallbackTitle)
+                {
+                    if (title) title.Write(float.PositiveInfinity);
+                    if (badgeGroup) badgeGroup.alpha = 1;
+                    ShowRewardCount(1);
+                }
                 if (!started) return;
             }
             else t += dt;
-            if (!starGroup && star) { starGroup = star.GetComponent<CanvasGroup>(); if (!starGroup) starGroup = star.gameObject.AddComponent<CanvasGroup>(); }
+
             if (reduced) { Calm(); return; }
             PoseStar();
             PoseCushion();
             PoseLight();
             Write(t - WriteStart);
-            Swirl();
+            Burst();
             Twinkle();
+            PoseReward();
         }
 
         void Calm()
         {
-            float a = Mathf.Clamp01(t / .2f);
+            float a = Mathf.Clamp01(t / .20f);
             if (starGroup) starGroup.alpha = a;
             star.anchoredPosition = starRest; star.localScale = Vector3.one; star.localRotation = Quaternion.identity;
-            if (glow) glow.color = Fade(glow.color, .30f * a);
-            if (title && t >= Drop) title.Write(float.PositiveInfinity);
+            if (cushion) cushion.localScale = Vector3.one;
+            if (glow) glow.color = Fade(glow.color, .46f * a);
+            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, .24f * a);
+            if (flash) flash.color = Fade(flash.color, 0);
+            if (raysGroup) raysGroup.alpha = 0;
+            if (title) title.Write(float.PositiveInfinity);
+            if (titleGroup) titleGroup.alpha = a;
+            if (badgeGroup) badgeGroup.alpha = a;
+            if (rewardBadge) rewardBadge.anchoredPosition = badgeRest;
+            // Motion off presents the exact amount directly; only opacity changes.
+            ShowRewardCount(1);
         }
 
         void PoseStar()
         {
-            float s, lift;
-            if (t < Drop) { float u = t / Drop; s = Mathf.Lerp(2.7f, .80f, u * u); lift = 70 * (1 - u * u); }
-            else if (t < Rebound) { s = Mathf.Lerp(.80f, 1.08f, RoyalLevelCardMotion.EaseOutCubic((t - Drop) / (Rebound - Drop))); lift = 0; }
-            else { s = Mathf.Lerp(1.08f, 1, RoyalLevelCardMotion.EaseOutCubic((t - Rebound) / (Settle - Rebound))); lift = 0; }
-            star.localScale = Vector3.one * s;
+            float size, lift, rotation;
+            if (t < Drop)
+            {
+                float u = Mathf.Clamp01(t / Drop);
+                size = Mathf.Lerp(1.70f, .90f, u * u);
+                lift = Mathf.Lerp(70, -6, u * u);
+                rotation = Mathf.Lerp(-15, 2, u);
+            }
+            else if (t < Rebound)
+            {
+                float u = Ease((t - Drop) / (Rebound - Drop));
+                size = Mathf.Lerp(.90f, 1.055f, u);
+                lift = Mathf.Lerp(-6, 4, u); rotation = Mathf.Lerp(2, -1, u);
+            }
+            else
+            {
+                float u = Ease((t - Rebound) / (Settle - Rebound));
+                size = Mathf.Lerp(1.055f, 1, u);
+                lift = Mathf.Lerp(4, 0, u); rotation = Mathf.Lerp(-1, 0, u);
+            }
+            star.localScale = Vector3.one * size;
             star.anchoredPosition = starRest + new Vector2(0, lift);
-            star.localRotation = Quaternion.Euler(0, 0, t < Drop ? -10 * (1 - t / Drop) : 0);
-            if (starGroup) starGroup.alpha = Mathf.Clamp01(t / .06f);
+            star.localRotation = Quaternion.Euler(0, 0, rotation);
+            if (starGroup) starGroup.alpha = Mathf.Clamp01(t / .065f);
         }
 
-        // The cushion gives under the star and springs back: lower and wider, then a little taller, then at rest.
         void PoseCushion()
         {
             if (!cushion) return;
-            float y = 1, x = 1;
-            if (t >= Drop && t < Drop + .06f) { float u = RoyalLevelCardMotion.EaseOutCubic((t - Drop) / .06f); y = Mathf.Lerp(1, .90f, u); x = Mathf.Lerp(1, 1.04f, u); }
-            else if (t >= Drop + .06f && t < Drop + .16f) { float u = RoyalLevelCardMotion.EaseOutCubic((t - Drop - .06f) / .10f); y = Mathf.Lerp(.90f, 1.03f, u); x = Mathf.Lerp(1.04f, .99f, u); }
-            else if (t >= Drop + .16f && t < Drop + .30f) { float u = RoyalLevelCardMotion.EaseOutCubic((t - Drop - .16f) / .14f); y = Mathf.Lerp(1.03f, 1, u); x = Mathf.Lerp(.99f, 1, u); }
+            float x = 1, y = 1;
+            if (t >= Drop && t < Drop + .07f)
+            {
+                float u = Ease((t - Drop) / .07f); x = Mathf.Lerp(1, 1.055f, u); y = Mathf.Lerp(1, .84f, u);
+            }
+            else if (t >= Drop + .07f && t < Drop + .22f)
+            {
+                float u = Ease((t - Drop - .07f) / .15f); x = Mathf.Lerp(1.055f, .993f, u); y = Mathf.Lerp(.84f, 1.028f, u);
+            }
+            else if (t >= Drop + .22f && t < Drop + .42f)
+            {
+                float u = Ease((t - Drop - .22f) / .20f); x = Mathf.Lerp(.993f, 1, u); y = Mathf.Lerp(1.028f, 1, u);
+            }
             cushion.localScale = new Vector3(x, y, 1);
         }
 
-        // The flash as the star lands (peak at 0.17 s, gone by 0.4 s), then the star's own soft glow, breathing.
         void PoseLight()
         {
+            float rise = Ease((t - Drop) / .30f);
+            float breath = Mathf.Sin((t - Drop) * 2.15f);
+            if (glow) glow.color = Fade(glow.color, rise * (.50f + .065f * breath));
+            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, rise * (.30f + .035f * breath));
             if (flash)
             {
-                float f = t < .12f ? 0 : t < .17f ? (t - .12f) / .05f : 1 - Mathf.Clamp01((t - .17f) / .23f);
-                flash.color = Fade(flash.color, .85f * f * f);
-                flash.rectTransform.localScale = Vector3.one * Mathf.Lerp(.7f, 1.15f, Mathf.Clamp01((t - .12f) / .3f));
+                float f = t < Drop ? Mathf.Clamp01((t - Drop + .065f) / .065f) : 1 - Mathf.Clamp01((t - Drop) / .23f);
+                flash.color = Fade(flash.color, .70f * f * f);
+                flash.rectTransform.localScale = Vector3.one * Mathf.Lerp(.72f, 1.14f, Mathf.Clamp01((t - Drop + .065f) / .30f));
             }
-            if (glow)
-            {
-                float rise = Mathf.Clamp01((t - .2f) / .3f);
-                glow.color = Fade(glow.color, rise * (.30f + .07f * Mathf.Sin((t - .2f) * 2.4f)));
-            }
+            if (raysGroup) raysGroup.alpha = .27f * rise;
+            if (rays) rays.localRotation = Quaternion.Euler(0, 0, Mathf.Max(0, t - Drop) * 4);
         }
 
         void Write(float since)
         {
             if (!title) return;
             float letters = since < 0 ? 0 : since / PerLetter;
-            if (!titleText) titleText = title.GetComponent<Text>();
-            // Each glyph pops over one letter's time; once the last has settled the title is drawn as it is.
             int count = titleText ? titleText.text.Length : 20;
             title.Write(letters >= count + 1 ? float.PositiveInfinity : letters);
         }
 
+        float RewardProgress() => reduced ? 1 : Mathf.Clamp01((t - RewardStart) / RewardCountTime);
+
+        void PoseReward()
+        {
+            float reveal = Ease((t - RewardStart) / .26f);
+            if (badgeGroup) badgeGroup.alpha = reveal;
+            if (rewardBadge) rewardBadge.anchoredPosition = badgeRest + new Vector2(0, -12 * (1 - reveal));
+            ShowRewardCount(RewardProgress());
+        }
+
+        void ShowRewardCount(float progress)
+        {
+            if (!rewardAmount) return;
+            int step = Mathf.Clamp(Mathf.RoundToInt(progress * RewardCountSteps), 0, RewardCountSteps);
+            if (step == shownRewardStep || rewardLabels[step] == null) return;
+            shownRewardStep = step;
+            rewardAmount.text = rewardLabels[step];
+        }
+
         void BuildSparkles()
         {
-            if (sparkle != null && sparkle.Length > 0 && sparkle[0]) return;
-            int n = SwirlCount + 6;
-            sparkle = new RawImage[n];
-            sparkleStart = new float[n]; sparkleLife = new float[n]; sparkleAngle = new float[n]; sparkleRadius = new float[n]; sparkleSize = new float[n]; sparkleSpin = new float[n];
+            if (!sparkles || (sparkle != null && sparkle.Length > 0 && sparkle[0])) return;
+            int count = BurstCount + IdleCount;
+            sparkle = new RawImage[count];
+            sparkleStart = new float[count]; sparkleLife = new float[count]; sparkleAngle = new float[count];
+            sparkleRadius = new float[count]; sparkleSize = new float[count]; sparkleSpin = new float[count];
+            sparklePosition = new Vector2[count];
             var texture = JellyGarden.Scripts.Juice.SparkleTextureFactory.FourPointSparkle;
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < count; i++)
             {
                 var go = new GameObject("Sparkle " + i, typeof(RectTransform), typeof(RawImage));
                 go.transform.SetParent(sparkles, false);
-                var image = go.GetComponent<RawImage>(); image.texture = texture; image.raycastTarget = false; image.enabled = false;
-                sparkle[i] = image;
-                // The swirl: each sparkle starts somewhere on a ring round the star, at its own time in the first 0.5 s.
-                float k = i / (float)SwirlCount;
-                sparkleStart[i] = .22f + .5f * Hash(i * 3 + 1);
-                sparkleLife[i] = .55f + .45f * Hash(i * 3 + 2);
-                sparkleAngle[i] = k * Mathf.PI * 2 + Hash(i * 3 + 3);
-                sparkleRadius[i] = 90 + 110 * Hash(i * 7 + 5);
-                sparkleSize[i] = 16 + 20 * Hash(i * 5 + 7);
-                sparkleSpin[i] = 2.2f + 1.6f * Hash(i * 11 + 3);
+                var image = go.GetComponent<RawImage>();
+                image.texture = texture; image.raycastTarget = false; image.enabled = false; sparkle[i] = image;
+                sparkleStart[i] = i < BurstCount ? Drop + .28f * Hash(i * 3 + 1) : float.PositiveInfinity;
+                sparkleLife[i] = .55f + .25f * Hash(i * 3 + 2);
+                sparkleAngle[i] = i * 2.399963f;
+                sparkleRadius[i] = 95 + 90 * Hash(i * 7 + 5);
+                sparkleSize[i] = 14 + 17 * Hash(i * 5 + 7);
+                sparkleSpin[i] = .65f + .55f * Hash(i * 11 + 3);
             }
         }
 
-        // Sparkles spiralling in round the star and the cushion as the title is written.
-        void Swirl()
+        void Burst()
         {
-            for (int i = 0; i < SwirlCount; i++)
+            for (int i = 0; i < BurstCount; i++)
             {
                 float u = (t - sparkleStart[i]) / sparkleLife[i];
                 var image = sparkle[i];
-                if (u < 0 || u > 1) { if (image.enabled) image.enabled = false; continue; }
+                if (u < 0 || u > 1) { image.enabled = false; continue; }
                 image.enabled = true;
-                float a = sparkleAngle[i] + sparkleSpin[i] * u, r = sparkleRadius[i] * (1 - .45f * u);
-                var p = starRest + new Vector2(Mathf.Cos(a) * r * 1.25f, Mathf.Sin(a) * r * .8f - 30 + 50 * u);
+                float angle = sparkleAngle[i] + sparkleSpin[i] * u;
+                float radius = sparkleRadius[i] * (.80f + .32f * Ease(u));
+                var position = starRest + new Vector2(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius * .72f - 28 + 18 * u);
                 float alpha = Mathf.Sin(Mathf.PI * u);
-                Place(image, p, sparkleSize[i] * (.6f + .6f * alpha), a * 40, new Color(1, .97f, .86f, alpha));
+                Place(image, position, sparkleSize[i] * (.65f + .50f * alpha), angle * 20, new Color(1, .96f, .78f, alpha));
             }
         }
 
-        // Once settled, a twinkle every 0.3-0.5 s somewhere round the star.
         void Twinkle()
         {
-            if (t < 1.2f) { nextTwinkle = 1.2f; return; }
-            for (int i = SwirlCount; i < sparkle.Length; i++)
+            for (int i = BurstCount; i < sparkle.Length; i++)
             {
                 float u = (t - sparkleStart[i]) / sparkleLife[i];
                 var image = sparkle[i];
-                if (u < 0 || u > 1) { if (image.enabled) image.enabled = false; continue; }
+                if (u < 0 || u > 1) { image.enabled = false; continue; }
                 image.enabled = true;
                 float alpha = Mathf.Sin(Mathf.PI * u);
-                Place(image, starRest + new Vector2(Mathf.Cos(sparkleAngle[i]), Mathf.Sin(sparkleAngle[i])) * sparkleRadius[i], sparkleSize[i] * (.4f + .8f * alpha), 0, new Color(1, .96f, .82f, alpha));
+                Place(image, sparklePosition[i], sparkleSize[i] * (.38f + .82f * alpha), 12 * Mathf.Sin(u * Mathf.PI), new Color(1, .97f, .84f, alpha * .90f));
             }
             if (t < nextTwinkle) return;
-            int slot = SwirlCount + (twinkleSlot++ % (sparkle.Length - SwirlCount));
-            float h = Hash(twinkleSlot * 13 + 1);
-            sparkleStart[slot] = t; sparkleLife[slot] = .5f + .25f * h;
-            sparkleAngle[slot] = Hash(twinkleSlot * 17 + 2) * Mathf.PI * 2;
-            sparkleRadius[slot] = 70 + 70 * Hash(twinkleSlot * 19 + 3);
-            sparkleSize[slot] = 18 + 14 * h;
-            nextTwinkle = t + .3f + .2f * Hash(twinkleSlot * 23 + 4);
+            int index = twinkleSlot++;
+            int slot = BurstCount + index % IdleCount;
+            float h = Hash(index * 13 + 1);
+            sparkleStart[slot] = t; sparkleLife[slot] = .50f + .28f * h;
+            sparkleSize[slot] = 16 + 15 * h;
+            sparklePosition[slot] = TwinklePoint(index);
+            nextTwinkle = t + .27f + .17f * Hash(index * 23 + 4);
         }
 
-        static void Place(RawImage image, Vector2 p, float size, float angle, Color color)
+        Vector2 TwinklePoint(int index)
         {
-            var r = image.rectTransform;
-            r.anchoredPosition = p; r.sizeDelta = new Vector2(size, size); r.localRotation = Quaternion.Euler(0, 0, angle);
-            image.color = color;
+            // Alternate star tips and the pillow trim, keeping the central gold face readable.
+            float size = star ? star.sizeDelta.x : 256;
+            switch (index % 8)
+            {
+                case 0: return starRest + new Vector2(0, .40f * size);
+                case 1: return CushionPoint(-.30f, .44f);
+                case 2: return starRest + new Vector2(.34f, .10f) * size;
+                case 3: return CushionPoint(.30f, .44f);
+                case 4: return starRest + new Vector2(-.22f, -.29f) * size;
+                case 5: return starRest + new Vector2(-.34f, .10f) * size;
+                case 6: return CushionPoint(.03f, .31f);
+                default: return starRest + new Vector2(.22f, -.29f) * size;
+            }
         }
 
+        Vector2 CushionPoint(float x, float y)
+        {
+            if (!cushion) return starRest + new Vector2(x * 460, -110);
+            return cushion.anchoredPosition + new Vector2(x * cushion.sizeDelta.x, (y - cushion.pivot.y) * cushion.sizeDelta.y);
+        }
+
+        static void Place(RawImage image, Vector2 position, float size, float angle, Color color)
+        {
+            var rect = image.rectTransform;
+            rect.anchoredPosition = position; rect.sizeDelta = new Vector2(size, size);
+            rect.localRotation = Quaternion.Euler(0, 0, angle); image.color = color;
+        }
+
+        static float Ease(float value) => RoyalLevelCardMotion.EaseOutCubic(value);
         static float Hash(int n) { uint x = (uint)n * 2654435761u; x ^= x >> 15; x *= 2246822519u; x ^= x >> 13; return (x & 0xffffff) / (float)0x1000000; }
-        static Color Fade(Color c, float a) { c.a = a; return c; }
+        static Color Fade(Color color, float alpha) { color.a = alpha; return color; }
     }
 }

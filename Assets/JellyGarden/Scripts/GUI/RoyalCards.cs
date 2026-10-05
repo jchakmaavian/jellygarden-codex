@@ -334,15 +334,18 @@ namespace RoyalThrone.Presentation
         // "Well Done!" written in over the level's star, which lands on a royal cushion (RoyalWinCard), then Continue. No score:
         // a win earns one star, and the star is the result (the user's choice). The close continues exactly as Continue does
         // (it presses Next), so closing never loses the win. Rows from the card's top edge; the card ends 52 below Continue.
-        public const float WinTitleRow = 142, WinTitleSize = CleanTitleSize, WinStarSize = 256, WinCushionTop = 322, WinCushionWidth = 460;
-        public const float WinActionRow = 660, WinActionWidth = 470;
-        // The cushion art (win-cushion, 1024 x 684, RoyalThrone render_cushion.py): where the star rests on its dome, from the
-        // art's top as a share of its height, and the seat it gives from, from its bottom.
-        const float CushionAspect = 684f / 1024f, CushionRest = .1816f, CushionSeat = .30f;
+        public const float WinTitleRow = 142, WinTitleSize = CleanTitleSize, WinStarSize = 276, WinCushionTop = 310, WinCushionWidth = 548;
+        public const float WinRewardRow = 644, WinActionRow = 750, WinActionWidth = 470;
+        // Approved preview's velvet pillow, 768 x 512. Its centre dent is 36% down the image; the lower star points sit in it.
+        const float CushionAspect = 512f / 768f, CushionRest = .36f, CushionSeat = .25f;
         static Image Won(Transform menu, Transform p)
         {
             const float H = WinActionRow + PrimaryHeight * .5f + CleanBottom, top = H * .5f;
             var skin = RibbonCard(menu, p, H, "Level");
+            // Warmer gold, deeper blue and a fine interior rim, scoped to the completed-level card.
+            var gold = skin.Find("Gold").GetComponent<RoyalCardShape>(); gold.from = C("fff0ad"); gold.to = C("e5a22e"); gold.SetVerticesDirty();
+            var face = skin.Find("Face").GetComponent<RoyalCardShape>(); face.from = C("2459b8"); face.to = C("102e70"); face.SetVerticesDirty();
+            var innerRim = Inset(skin, "Win inner rim", 22, 24, C("b5d9ff", .23f), C("72a6e8", .09f)); innerRim.band = 1.2f;
             var next = p.Find("Next");
             var close = p.Find("Royal close");
             if (!close)
@@ -360,11 +363,11 @@ namespace RoyalThrone.Presentation
             heading.gameObject.AddComponent<RoyalAppearsLater>();
 
             float cushionH = WinCushionWidth * CushionAspect, cushionY = top - WinCushionTop - cushionH * .5f;
-            var cushion = RoyalMenuSkin.Art(p, "Royal cushion", "win-cushion", 0, cushionY, WinCushionWidth, cushionH);
+            var cushion = RoyalMenuSkin.Art(p, "Royal cushion", "win-cushion-v2", 0, cushionY, WinCushionWidth, cushionH);
             var cr = cushion.rectTransform;
             cr.pivot = new Vector2(.5f, CushionSeat); cr.anchoredPosition = new Vector2(0, cushionY + cushionH * (CushionSeat - .5f));
             // The star's lower points sink a little into the dent in the cushion's top.
-            float starY = top - WinCushionTop - CushionRest * cushionH + .30f * WinStarSize;
+            float starY = top - WinCushionTop - CushionRest * cushionH + .32f * WinStarSize;
 
             RectTransform star = null;
             for (int i = 1; i <= 3; i++)
@@ -381,20 +384,32 @@ namespace RoyalThrone.Presentation
                 if (!s.GetComponent<RoyalAppearsLater>()) s.gameObject.AddComponent<RoyalAppearsLater>();
                 star = (RectTransform)s;
             }
-            // Behind the star, over the cushion: its breathing glow and the flash as it lands. Sparkles above it all.
-            var glow = Shape(p, "Royal star glow", 0, starY - 6, 340, 340, 170, C("ffe08a"), C("ffc24a"));
-            glow.softness = 320; glow.color = new Color(1, 1, 1, 0); glow.gameObject.AddComponent<RoyalAppearsLater>();
+            // Broad halo and rays behind the pillow; a second warm pool lights the dent underneath the star.
+            var glow = Shape(p, "Royal star glow", 0, starY - 6, 400, 400, 200, C("ffeab0"), C("ffc453"));
+            glow.softness = 360; glow.color = new Color(1, 1, 1, 0); glow.gameObject.AddComponent<RoyalAppearsLater>();
+            var rays = Container(p, "Royal win rays"); RoyalMenuSkin.Place(rays, 0, starY, 600, 600);
+            var rayGraphic = rays.gameObject.AddComponent<RoyalWinRaysGraphic>(); rayGraphic.raycastTarget = false;
+            rays.gameObject.AddComponent<RoyalAppearsLater>();
+            var pillowGlow = Shape(p, "Royal pillow glow", 0, starY - WinStarSize * .32f, 270, 94, 47, C("fff3b8"), C("ffc55a"));
+            pillowGlow.softness = 100; pillowGlow.color = new Color(1, 1, 1, 0); pillowGlow.gameObject.AddComponent<RoyalAppearsLater>();
             var flash = Shape(p, "Royal star flash", 0, starY - 10, 460, 460, 230, C("fffbe6"), C("ffe7a6"));
             flash.softness = 440; flash.color = new Color(1, 1, 1, 0); flash.gameObject.AddComponent<RoyalAppearsLater>();
             var sparkles = Container(p, "Royal win sparkles");
             sparkles.gameObject.AddComponent<RoyalAppearsLater>();
             if (star)
             {
-                cr.SetSiblingIndex(star.GetSiblingIndex());
-                glow.transform.SetSiblingIndex(star.GetSiblingIndex());
-                flash.transform.SetSiblingIndex(star.GetSiblingIndex());
-                sparkles.SetSiblingIndex(star.GetSiblingIndex() + 1);
+                glow.transform.SetAsLastSibling(); rays.SetAsLastSibling(); cr.SetAsLastSibling();
+                pillowGlow.transform.SetAsLastSibling(); flash.transform.SetAsLastSibling();
+                star.SetAsLastSibling(); sparkles.SetAsLastSibling(); heading.transform.SetAsLastSibling();
             }
+
+            var rewardBadge = Container(p, "Royal win reward");
+            RoyalMenuSkin.Place(rewardBadge, 0, top - WinRewardRow, 242, 74);
+            Inset(rewardBadge, "Edge", 0, 37, C("9cc9ff", .28f), C("5486c5", .24f));
+            Inset(rewardBadge, "Face", 2, 35, C("103375"), C("163f88"));
+            var rewardCoin = RoyalMenuSkin.Art(rewardBadge, "Coin", "coin", -67, 0, 72, 72);
+            var rewardAmount = Words(rewardBadge, "Amount", "+0", 29, 0, 142, 44, Ink.Display);
+            rewardBadge.gameObject.AddComponent<RoyalAppearsLater>();
 
             var buttons = new List<RoyalCardControl> { Feedback(close, false) };
             // SHARE exists only with online services (GUIEvents hides it otherwise); then it sits beside a shorter Continue.
@@ -410,7 +425,10 @@ namespace RoyalThrone.Presentation
             if (!piece) piece = p.gameObject.AddComponent<RoyalWinCard>();
             piece.star = star; piece.cushion = cr; piece.title = heading.GetComponent<RoyalTextStyle>();
             piece.glow = glow; piece.flash = flash; piece.sparkles = (RectTransform)sparkles; piece.starRest = new Vector2(0, starY);
+            piece.pillowGlow = pillowGlow; piece.rays = (RectTransform)rays;
+            piece.rewardBadge = (RectTransform)rewardBadge; piece.rewardAmount = rewardAmount; piece.coinOrigin = rewardCoin.rectTransform;
             Motion(menu, p, H, buttons, action);
+            var motion = menu.GetComponent<RoyalCardMotion>(); if (motion) motion.respectMotionSetting = true;
             return null;
         }
 

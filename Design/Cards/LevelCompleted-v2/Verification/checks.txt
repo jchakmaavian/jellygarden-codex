@@ -1,0 +1,51 @@
+Started 2026-10-05T10:23:52.7385302Z; presentation-only level 23, one star, 65 coins.
+PASS new pillow glow, rays, reward badge and coin origin are bound
+PASS star enters at 1.65..1.80x (max 1.7000, first 1.0000)
+PASS star lands near 0.28s (0.3199s)
+PASS star compresses and rebounds (min 0.9039, rebound 1.0550)
+PASS star settles near 0.60s (0.5643s)
+PASS pillow gives and returns to rest (min 0.8400)
+PASS impact flash is visible (peak 0.6853)
+PASS star and pillow glow visibly (0.5650/0.3350)
+PASS landing sparkle burst is visible (max 24)
+PASS sparkles remain observable after 3 seconds (max 3)
+PASS reward badge visibly reads +65 (+65)
+PASS coin flights wait for RewardsReady (ready 0.7538s; first coin 0.8984s)
+PASS the 65-coin presentation does not mutate reward balances or stars
+PASS portrait card, close and Continue stay on screen 1080x1920
+PASS portrait heading clears the star body
+PASS portrait reward badge clears Continue
+PASS portrait cushion tassels clear the reward badge
+PASS portrait decorative light and sparkles do not take taps
+PASS sparkle pool is populated (32)
+PASS reopen 1 reuses effects without duplicate objects
+PASS reopen 2 reuses effects without duplicate objects
+PASS reopen 3 reuses effects without duplicate objects
+PASS recording covers the entrance and idle glow (84 samples)
+CAPTURE 84 actual-time JPG samples over 4s; ffconcat durations preserve observed playback. No audio recorded.
+PASS 720x1280 card, close and Continue stay on screen 720x1280
+PASS 720x1280 heading clears the star body
+PASS 720x1280 reward badge clears Continue
+PASS 720x1280 cushion tassels clear the reward badge
+PASS 720x1280 decorative light and sparkles do not take taps
+PASS 1536x2048 card, close and Continue stay on screen 1536x2048
+PASS 1536x2048 heading clears the star body
+PASS 1536x2048 reward badge clears Continue
+PASS 1536x2048 cushion tassels clear the reward badge
+PASS 1536x2048 decorative light and sparkles do not take taps
+PASS Motion off: star stays at 1x and pillow never compresses
+PASS Motion off: rays and sparkles stay off
+PASS Motion off: reward still becomes ready
+PASS Next owns its real raycast tap
+PASS Next follows Continue to Home/next-level card
+PASS Next does not award coins or stars again
+PASS Royal close owns its real raycast tap
+PASS Royal close follows Continue to Home/next-level card
+PASS Royal close does not award coins or stars again
+PASS real PlayerPrefs unchanged while QA is active
+PASS owned QA session ended
+PASS real PlayerPrefs unchanged after restoring the player profile
+PASS player runtime coins/lives/level restored
+PASS no Unity errors during the run (0)
+SUMMARY passes=47 fails=0
+DONE
