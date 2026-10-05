@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Royal Throne — Dog star reward animation preview</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#06152f;color:#fff2d0;font-family:system-ui,sans-serif;padding:24px}
+main{width:min(580px,100%);text-align:center}h1{font-size:26px;margin:8px 0 20px}p{line-height:1.5;color:#cbdaf5;font-size:14px}
+video{display:block;width:100%;border-radius:28px;border:3px solid #edbe58;background:#07316c;box-shadow:0 20px 60px #0006}
+button{border:0;background:#ecd074;color:#132743;border-radius:24px;padding:12px 24px;margin:20px 8px 0;font-size:16px;font-weight:700;cursor:pointer}
+small{display:block;color:#9caccc;margin-top:22px}
+</style><main><p>ROYAL THRONE · ANIMATION CONCEPT</p><h1>A star, with a little love.</h1>
+<video id="clip" src="dog-star-reward-preview.mp4" poster="review-01.png" controls playsinline preload="metadata" aria-label="A puppy gently cuddles and presents a golden reward star"></video>
+<button id="replay">Replay animation</button>
+<p>A gentle star cuddle, warm eye contact, and a grateful offer to the player.</p>
+<small>8-second silent concept. Preview only; not yet installed in the game. Blue background is part of the rendered video. Replay restarts the clip; this is not a seamless loop.</small>
+</main><script>document.getElementById('replay').onclick=()=>{const v=document.getElementById('clip');v.currentTime=0;v.play();};</script></html>
