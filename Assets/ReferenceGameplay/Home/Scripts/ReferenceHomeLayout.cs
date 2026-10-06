@@ -59,6 +59,9 @@ namespace RoyalThrone.ReferenceGameplay
         // 0 in place, 1 off the screen: while an area task builds, the resource bar slides up and the cards and tab bar slide down,
         // as the reference clears the scene for the new object (RoyalAreaView). Applied in Relayout, which places them every frame.
         public float HudAway{get;set;}
+        // The win payout's entrance (RoyalWinSequence.HomeRewards): the controls slide in over the area scene, which stays put
+        // (HudAway also moves the scene). Below 0 the top bar and the Level row overshoot their place a little.
+        public float EntranceAway{get;set;}
         static void Bounds(RectTransform r,float x0,float y0,float x1,float y1){Anchor(r,x0,y0,x1,y1);r.localScale=Vector3.one;}
         // Buttons keep their scale: RoyalButtonMotion owns it for the press feedback.
         static void Anchor(RectTransform r,float x0,float y0,float x1,float y1){r.anchorMin=new Vector2(x0,y0);r.anchorMax=new Vector2(x1,y1);r.offsetMin=r.offsetMax=Vector2.zero;}
@@ -196,14 +199,15 @@ namespace RoyalThrone.ReferenceGameplay
         // Also run by RoyalHomeScreen.RefreshLayout, whose own placement this replaces: code that reads the layout right after a
         // refresh (the Home checks' overlap and tap tests) then sees what is drawn.
         public void Relayout(){if(!built||!home)return;float w=home.layout.rect.width,inset=home.safeArea.anchorMin.y*((RectTransform)home.transform).rect.height;
-            float away=Mathf.Clamp01(HudAway),top=(1-home.safeArea.anchorMax.y)*((RectTransform)home.transform).rect.height;
-            home.hud.sizeDelta=new Vector2(w*HudWidth,w*HudHeight);home.hud.anchoredPosition=new Vector2(0,-w*HudCentre+away*(w*(HudCentre+HudHeight)+top+24));
+            float away=Mathf.Clamp01(HudAway),slide=Mathf.Clamp(away+EntranceAway,-.3f,1),top=(1-home.safeArea.anchorMax.y)*((RectTransform)home.transform).rect.height;
+            home.hud.sizeDelta=new Vector2(w*HudWidth,w*HudHeight);home.hud.anchoredPosition=new Vector2(0,-w*HudCentre+slide*(w*(HudCentre+HudHeight)+top+24));
             for(int i=0;i<5;i++)Anchor((RectTransform)home.resourceButtons[i].transform,ResourceEdges[i*2],0,ResourceEdges[i*2+1],1);
-            float navH=w*NavHeight,drop=away*(w*(CentredActions+ActionsHeight)+inset+24);
+            float navH=w*NavHeight,drop=slide*(w*(CentredActions+ActionsHeight)+inset+24);
             home.actions.sizeDelta=new Vector2(w*ActionsWidth,w*ActionsHeight);home.actions.anchoredPosition=new Vector2(0,w*CentredActions-drop);
             Anchor(home.levelRect,.5f-LevelRight*.5f,0,.5f+LevelRight*.5f,1);Anchor(home.areaRect,AreaLeft,0,1,1);
-            float sink=away*(navH*1.35f+inset+24);home.navigation.sizeDelta=new Vector2(w,navH);home.navigation.anchoredPosition=new Vector2(0,navH*.5f-sink);
-            home.navigationBackground.sizeDelta=new Vector2(0,navH+inset);home.navigationBackground.anchoredPosition=new Vector2(home.navigationBackground.anchoredPosition.x,-sink);
+            float sink=Mathf.Max(0,slide)*(navH*1.35f+inset+24);home.navigation.sizeDelta=new Vector2(w,navH);home.navigation.anchoredPosition=new Vector2(0,navH*.5f-sink);
+            // The bar's blue base stays for the win entrance: the area scene ends above it, so it covers what is under the tabs.
+            home.navigationBackground.sizeDelta=new Vector2(0,navH+inset);home.navigationBackground.anchoredPosition=new Vector2(home.navigationBackground.anchoredPosition.x,-away*(navH*1.35f+inset+24));
             navDepth.rectTransform.offsetMin=new Vector2(0,-inset);navDepth.rectTransform.offsetMax=new Vector2(0,-w*GoldTrim);
             const float glow=1;
             for(int i=0;i<5;i++){var b=home.tabButtons[i];Anchor((RectTransform)b.transform,TabEdges[i],0,TabEdges[i+1],1);

@@ -1,11 +1,17 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using CK = RoyalThrone.Presentation.RoyalCardKit;
 
 namespace RoyalThrone.Presentation
 {
     /// <summary>
-    /// The area dialogs' pieces, drawn (no image assets) to the reference's proportions and colours. Every size is in design
+    /// The area dialogs' pieces (2026-10-06, the user: the area cards and their unlock pop-up in the same design as every
+    /// other card). The frame, ribbon, close, cream cards, buttons and bar are drawn in the card kit's look (RoyalCardKit:
+    /// the result cards' gold border and royal-blue face, the blue ribbon under the crown, the red close with a gold ring,
+    /// cream panels with one thin gold border, green pills); their names, sizes and placement are unchanged, so the area
+    /// dialogs' layout code is the same. Before, they copied the reference's arched banner and layered orange frames.
+    /// Drawn (no image assets), sized as below. Every size is in design
     /// units: the reference's pixels on a 720-wide phone (Design/RoyalMatchReference/Areas/GAPS.md), which are also the Home
     /// canvas's units at 720 wide. Positions are given y down from the top of their parent, as they were measured.
     /// </summary>
@@ -59,102 +65,122 @@ namespace RoyalThrone.Presentation
         { var g = Surface(name, parent, top, bottom, radius); Inset(g.rectTransform, inset, inset, inset, inset); return g; }
 
         /// <summary>
-        /// The tall blue dialog: a soft shadow under it, then from the outside in a blue edge, a dark line, orange, a straw
-        /// line, gold, a dark line and a pale line around the blue body (45 units in all, as measured). Returns the body.
+        /// The dialog's card: a soft shadow, one gold border (a bronze edge, the gold, a light along its top), a navy line and
+        /// the royal-blue face with a light over its upper part and a faint rim inside the border (RoyalCardKit.CleanSurface,
+        /// without the crest: the ribbon carries the crown). Returns the body, inside the border.
         /// </summary>
         public static RectTransform BluePanel(Transform parent)
         {
+            const float r = CK.CardRadius, b = CK.CleanBorder;
             var root = Node("Area panel frame", parent);
-            var shadow = Surface("Shadow", root, C(10, 25, 45, 150), C(10, 25, 45, 150), 44);
-            Inset(shadow.rectTransform, 0, 16, 0, -22);
-            var edge = Surface("Blue edge", root, C(28, 113, 187), C(24, 95, 167), 44);
-            var dark = Layer("Dark line", edge.transform, 11, C(6, 62, 122), C(6, 62, 122), 36);
-            var orange = Layer("Orange", dark.transform, 5, C(241, 138, 7), C(233, 124, 0), 32);
-            var straw = Layer("Straw", orange.transform, 9, C(255, 215, 99), C(255, 215, 99), 26);
-            var gold = Layer("Gold", straw.transform, 3, C(252, 206, 0), C(250, 190, 0), 24);
-            var line = Layer("Inner dark line", gold.transform, 8, C(0, 60, 124), C(0, 60, 124), 18);
-            var pale = Layer("Pale line", line.transform, 5, C(31, 115, 190), C(29, 108, 182), 14);
-            var body = Layer("Body", pale.transform, 3, C(25, 92, 167), C(21, 85, 160), 12);
-            return body.rectTransform;
+            var shadow = CK.Inset(root, "Shadow", -8, r + 8, CK.C("000514", .5f), CK.C("000514", .5f));
+            shadow.softness = 30; shadow.rectTransform.anchoredPosition = new Vector2(0, -8);
+            CK.Inset(root, "Edge", 0, r, CK.C("b86c1e"), CK.C("8a4812"));
+            CK.Inset(root, "Gold", 1.2f, r - 1.2f, CK.C("fbd65e"), CK.C("eca628"));
+            CK.Strip(root, "Gold light", true, 1.2f, 70, r - 1.2f, CK.C("fff5c8", .9f), CK.C("fff5c8", 0));
+            CK.Inset(root, "Navy line", b - 1.5f, r - b + 1.5f, CK.C("0a2c7c"), CK.C("061f5c"));
+            CK.Inset(root, "Face", b, r - b, CK.C("1446a9"), CK.C("0b3386"));
+            CK.Strip(root, "Face light", true, b, 300, r - b, CK.C("2a62cc", .7f), CK.C("2a62cc", 0));
+            var glow = CK.Inset(root, "Face glow", b, r - b, CK.C("5b8ae6", .32f), CK.C("5b8ae6", .05f));
+            glow.band = .5f; glow.innerSoftness = 30;
+            var body = Node("Body", root); Inset(body, b + 3, b + 3, b + 3, b + 3);
+            return body;
         }
 
-        /// <summary>The arched blue ribbon with gold and orange trims (156 units at its middle) and its title.</summary>
+        /// <summary>
+        /// The title ribbon (RoyalCardKit.Ribbon): a blue pill with a gold rim and a navy line, the crest's crown resting on
+        /// it, and the title in the cards' display lettering. `y` is the pill's top below the parent's top; it is at most 520
+        /// wide, as on the cards.
+        /// </summary>
         public static Text Ribbon(RectTransform parent, float width, float y, string title, float titleSize)
         {
+            float w = Mathf.Min(CK.RibbonWidth, width), h = RibbonHeight, r = 26;
             var root = Node("Ribbon", parent);
             root.anchorMin = root.anchorMax = new Vector2(.5f, 1); root.pivot = new Vector2(.5f, 1);
-            root.anchoredPosition = new Vector2(0, -y); root.sizeDelta = new Vector2(width, 156);
-            // Bands from the top: blue edge 11, gold 10, orange 8, dark 4, body 101, gold 10, orange 9, dark 3.
-            float[] h = { 11, 10, 8, 4, 101, 10, 9, 3 };
-            Color[] top = { C(40, 120, 183), C(252, 214, 60), C(240, 136, 0), C(0, 58, 123), C(25, 88, 168), C(252, 212, 40), C(240, 134, 0), C(9, 62, 119) };
-            Color[] bottom = { C(25, 84, 167), C(249, 203, 0), C(236, 128, 0), C(0, 58, 123), C(20, 78, 155), C(249, 204, 0), C(232, 124, 0), C(9, 62, 119) };
-            // A soft shadow cast on the panel under the ribbon.
-            Band(root, "Ribbon shadow", 156, 18, C(0, 25, 60, 110), C(0, 25, 60, 0));
-            float at = 0;
-            for (int i = 0; i < h.Length; i++) { Band(root, "Ribbon band " + i, at, h[i], top[i], bottom[i]); at += h[i]; }
-            // The title's letters sit in the body band, 33 to 134 units from the top at the middle.
-            var label = Words("Title", root, title, titleSize, Cream, TextAnchor.MiddleCenter);
-            var lr = label.rectTransform; lr.anchorMin = lr.anchorMax = new Vector2(.5f, 1); lr.pivot = new Vector2(.5f, .5f);
-            lr.sizeDelta = new Vector2(width * .74f, 84); lr.anchoredPosition = new Vector2(0, -84);
+            root.anchoredPosition = new Vector2(0, -y); root.sizeDelta = new Vector2(w, h);
+            var shadow = CK.Inset(root, "Shadow", -4, r + 4, CK.C("000a30", .55f), CK.C("000a30", .55f));
+            shadow.softness = 14; shadow.rectTransform.anchoredPosition = new Vector2(0, -7);
+            CK.Inset(root, "Edge", 0, r, CK.C("8c4a14"), CK.C("6a3410"));
+            CK.Inset(root, "Gold", 1.2f, r - 1.2f, CK.C("ffe27a"), CK.C("e6a22a"));
+            CK.Inset(root, "Gold light", 1.2f, r - 1.2f, CK.C("fffbe0", .65f), CK.C("fffbe0", 0));
+            CK.Inset(root, "Navy line", 6.5f, r - 6.5f, CK.C("0a2c7c"), CK.C("061f5c"));
+            CK.Inset(root, "Face", 8, r - 8, CK.C("2e66d4"), CK.C("1440a2"));
+            var gloss = CK.Strip(root, "Gloss", true, 10, h * .34f, h * .17f, CK.C("ffffff", .2f), CK.C("ffffff", .02f));
+            gloss.rectTransform.sizeDelta = new Vector2(-2 * 30, h * .34f);
+            // The crown, smaller than on the cards so it stays clear of Home's counters above the dialog.
+            var crownArt = CK.CrownSprite();
+            if (crownArt)
+            {
+                var crown = Node("Crown", root).gameObject.AddComponent<Image>(); crown.sprite = crownArt; crown.preserveAspect = true; crown.raycastTarget = false;
+                float cw = CrownWidth, ch = cw * crownArt.rect.height / crownArt.rect.width;
+                var cr = crown.rectTransform; cr.anchorMin = cr.anchorMax = new Vector2(.5f, 1); cr.pivot = new Vector2(.5f, 0);
+                cr.sizeDelta = new Vector2(cw, ch); cr.anchoredPosition = new Vector2(0, -4);
+            }
+            var label = Words("Title", root, title, Mathf.Min(titleSize, 50), Cream, TextAnchor.MiddleCenter);
+            Inset(label.rectTransform, 34, 10, 34, 12);
             Title(label);
             return label;
         }
-        static void Band(RectTransform root, string name, float y, float h, Color top, Color bottom)
-        {
-            var g = new GameObject(name, typeof(RectTransform)).AddComponent<RoyalArchGraphic>();
-            g.gameObject.layer = 5; g.transform.SetParent(root, false); g.raycastTarget = false; g.topColor = top; g.bottomColor = bottom;
-            var r = g.rectTransform; r.anchorMin = new Vector2(0, 1); r.anchorMax = new Vector2(1, 1); r.pivot = new Vector2(.5f, 1);
-            r.anchoredPosition = new Vector2(0, -y); r.sizeDelta = new Vector2(0, h);
-        }
+        public const float RibbonHeight = 96, CrownWidth = 330;
 
-        /// <summary>The round red close control: a dark red rim, a glossy red face and a cream cross with a dark red edge.</summary>
+        /// <summary>
+        /// The cards' red close (RoyalCardKit.RedClose): a gold ring around a red face with a white X, centred on (x, y);
+        /// `size` is the tap area, the drawing is 84% of it.
+        /// </summary>
         public static Button RedClose(RectTransform parent, float x, float y, float size)
         {
             var r = Centre(Node("Close", parent), x, y, size, size);
-            var rim = Surface("Rim", r, C(150, 12, 20), C(110, 5, 12), 1000);
-            rim.raycastTarget = true;
-            var face = Layer("Face", rim.transform, size * .06f, C(250, 70, 72), C(200, 18, 30), 1000);
-            var shine = Surface("Shine", face.transform, new Color(1, 1, 1, .45f), new Color(1, 1, 1, 0), 1000);
-            Inset(shine.rectTransform, size * .16f, size * .06f, size * .16f, size * .48f);
-            foreach (var angle in new[] { 45f, -45f })
-            {
-                var edge = Surface("Cross edge", face.transform, C(150, 20, 25), C(150, 20, 25), 1000);
-                Centre(edge.rectTransform, 0, 0, size * .56f, size * .22f); edge.rectTransform.anchorMin = edge.rectTransform.anchorMax = new Vector2(.5f, .5f);
-                edge.rectTransform.anchoredPosition = Vector2.zero; edge.rectTransform.localRotation = Quaternion.Euler(0, 0, angle);
-            }
-            foreach (var angle in new[] { 45f, -45f })
-            {
-                var bar = Surface("Cross", face.transform, C(255, 250, 225), C(248, 230, 190), 1000);
-                Centre(bar.rectTransform, 0, 0, size * .47f, size * .13f); bar.rectTransform.anchorMin = bar.rectTransform.anchorMax = new Vector2(.5f, .5f);
-                bar.rectTransform.anchoredPosition = Vector2.zero; bar.rectTransform.localRotation = Quaternion.Euler(0, 0, angle);
-            }
-            return Clickable(r.gameObject, rim);
+            var hit = r.gameObject.AddComponent<Image>(); hit.color = Color.clear;
+            var skin = Node("Skin", r); float d = size * .84f, k = d / 84f, rad = d * .5f, gap = (size - d) * .5f;
+            Inset(skin, gap, gap, gap, gap);
+            var shadow = CK.Inset(skin, "Shadow", -2, rad + 2, CK.C("1a0008", .55f), CK.C("1a0008", .55f));
+            shadow.softness = 9; shadow.rectTransform.anchoredPosition = new Vector2(0, -3);
+            CK.Inset(skin, "Edge", 0, rad, CK.C("7a3a12"), CK.C("5a2a0e"));
+            CK.Inset(skin, "Gold", 1.2f * k, rad - 1.2f * k, CK.C("ffe27a"), CK.C("e3a02a"));
+            CK.Inset(skin, "Dark line", 6.4f * k, rad - 6.4f * k, CK.C("6a0c0c"), CK.C("4e0808"));
+            CK.Inset(skin, "Face", 7.6f * k, rad - 7.6f * k, CK.C("f4513f"), CK.C("b3171d"));
+            var shine = CK.Strip(skin, "Shine", true, 10 * k, 26 * k, 13 * k, CK.C("ffffff", .32f), CK.C("ffffff", .03f));
+            shine.rectTransform.sizeDelta = new Vector2(-2 * 20 * k, 26 * k);
+            for (int pass = 0; pass < 2; pass++)
+                for (int arm = 0; arm < 2; arm++)
+                {
+                    bool shade = pass == 0;
+                    var bar = CK.Shape(skin, (shade ? "Cross edge " : "Cross ") + arm, 0, shade ? -2.2f * k : 0, 44 * k, 11 * k, 5.5f * k,
+                        shade ? CK.C("5a0505", .7f) : CK.C("ffffff"), shade ? CK.C("5a0505", .7f) : CK.C("f6e8e2"));
+                    bar.rectTransform.localRotation = Quaternion.Euler(0, 0, arm == 0 ? 45 : -45);
+                }
+            return Clickable(r.gameObject, hit);
         }
 
-        /// <summary>A cream card with a dark blue outline, a thin tan border and a grey lip under it (Area Progress, a task row).</summary>
+        /// <summary>The cards' cream panel (RoyalCardKit.Panel): one thin gold border and a soft light over the cream's upper
+        /// half. Returns the cream face, inside the border, for the content.</summary>
         public static RectTransform CreamCard(string name, RectTransform parent, float x, float y, float w, float h)
         {
             var r = At(Node(name, parent), x, y, w, h);
-            var outline = Surface("Outline", r, C(0, 60, 128), C(0, 60, 128), 18);
-            var lip = Layer("Lip", outline.transform, 4, C(150, 146, 134), C(128, 126, 120), 15);
-            var border = Surface("Border", lip.transform, C(176, 166, 132), C(160, 153, 126), 14);
-            Inset(border.rectTransform, 0, 0, 0, 6);
-            var face = Layer("Face", border.transform, 3, C(251, 239, 218), C(245, 226, 187), 12);
-            return face.rectTransform;
+            float rad = Mathf.Min(CK.PanelRadius, h * .3f), border = CK.PanelBorder;
+            var shadow = CK.Inset(r, "Shadow", -2, rad + 2, CK.C("00103a", .35f), CK.C("00103a", .35f));
+            shadow.softness = 10; shadow.rectTransform.anchoredPosition = new Vector2(0, -3);
+            CK.Inset(r, "Edge", 0, rad, CK.C("c47a26"), CK.C("a8641c"));
+            CK.Inset(r, "Gold", 1, rad - 1, CK.C("fde58a"), CK.C("e9ae44"));
+            CK.Inset(r, "Cream", border, rad - border, CK.C("fff6e1"), CK.C("f5e2bc"));
+            CK.Strip(r, "Cream shine", true, border, h * .45f, rad - border, CK.C("ffffff", .55f), CK.C("ffffff", 0));
+            var face = Node("Face", r); Inset(face, border, border, border, border);
+            return face;
         }
 
-        /// <summary>The green action button (Do It, Continue, Unlock, View): dark green edge, a pale inner line, a glossy face.</summary>
+        /// <summary>The cards' primary button (RoyalCardKit.CleanFace): a green pill with a gold border, a gloss and the passing
+        /// sweep, over a soft shadow. `face` is the area inside the border, for the caption.</summary>
         public static Button GreenButton(string name, RectTransform parent, float x, float y, float w, float h, out RectTransform face)
         {
             var r = At(Node(name, parent), x, y, w, h);
-            var edge = Surface("Edge", r, C(92, 150, 21), C(66, 120, 6), 16);
-            edge.raycastTarget = true;
-            var pale = Layer("Pale line", edge.transform, 5, C(200, 238, 100), C(170, 220, 60), 12);
-            var body = Layer("Face", pale.transform, 3, C(165, 214, 20), C(118, 178, 0), 10);
-            var gloss = Surface("Gloss", body.transform, new Color(1, 1, 1, .30f), new Color(1, 1, 1, .04f), 9);
-            Inset(gloss.rectTransform, 5, 3, 5, h * .52f);
-            face = body.rectTransform;
-            return Clickable(r.gameObject, edge);
+            var hit = r.gameObject.AddComponent<Image>(); hit.color = Color.clear;
+            float k = Mathf.Clamp(h / 116, .6f, 1);
+            var shadow = CK.Inset(r, "Shadow", 0, h * .5f, CK.C("011140", .55f), CK.C("011140", .55f));
+            shadow.softness = 14 * k; shadow.rectTransform.anchoredPosition = new Vector2(0, -6 * k);
+            var skin = Node("Skin", r);
+            CK.CleanFace(skin, h, CK.Kind.Primary);
+            face = Node("Face", r); Inset(face, 9, 9, 9, 9);
+            return Clickable(r.gameObject, hit);
         }
 
         static Button Clickable(GameObject go, Graphic target)
@@ -164,18 +190,21 @@ namespace RoyalThrone.Presentation
             return b;
         }
 
-        /// <summary>The progress bar: an orange frame, a dark track, a glossy green fill and the count over it.</summary>
+        /// <summary>The progress bar in the cards' colours: a gold rim around a navy track, the primary button's green fill
+        /// with its gloss, and the count over it in white.</summary>
         public static RectTransform ProgressBar(RectTransform parent, float x, float y, float w, float h, out RectTransform fill, out Text value, float textSize)
         {
             var r = At(Node("Progress bar", parent), x, y, w, h);
-            var frame = Surface("Frame", r, C(254, 178, 20), C(240, 132, 0), h * .5f);
-            var track = Layer("Track", frame.transform, 5, C(0, 70, 110), C(0, 88, 125), h * .5f - 5);
+            float rad = h * .5f;
+            CK.Inset(r, "Edge", 0, rad, CK.C("8c4a14"), CK.C("6a3410"));
+            CK.Inset(r, "Gold", 1.1f, rad - 1.1f, CK.C("ffe27a"), CK.C("e6a22a"));
+            var track = Layer("Track", r, 5, CK.C("0a2466"), CK.C("16409a"), rad - 5);
             fill = Node("Fill", track.transform); fill.anchorMax = new Vector2(.5f, 1);
-            var green = Surface("Fill face", fill, C(141, 203, 0), C(56, 136, 0), h * .5f - 5);
+            var green = Surface("Fill face", fill, CK.C("3ec255"), CK.C("148a38"), rad - 5);
             var gloss = Surface("Fill gloss", green.transform, new Color(1, 1, 1, .28f), new Color(1, 1, 1, 0), h * .3f);
             Inset(gloss.rectTransform, 4, 2, 4, (h - 10) * .5f);
-            value = Words("Count", r, "0/0", textSize, C(250, 246, 204), TextAnchor.MiddleCenter);
-            Outline(value, C(20, 60, 0), 2.4f);
+            value = Words("Count", r, "0/0", textSize, Color.white, TextAnchor.MiddleCenter);
+            Lettering(value, CK.Ink.OnBlue);
             return r;
         }
 
@@ -226,14 +255,26 @@ namespace RoyalThrone.Presentation
         }
         public static void Outline(Text t, Color color, float distance)
         { var o = t.gameObject.AddComponent<Outline>(); o.effectColor = color; o.effectDistance = new Vector2(distance, -distance); }
-        /// <summary>The ribbon titles: cream to straw letters, a navy edge and a gold rim outside it.</summary>
-        public static void Title(Text t)
+        /// <summary>Titles (the ribbons, the area names): the cards' display lettering, ivory warming to cream with a thin
+        /// warm-brown edge.</summary>
+        public static void Title(Text t) { Lettering(t, CK.Ink.Display); }
+        /// <summary>Button captions and costs: the cards' white on green, its edge in the button's dark green; never larger
+        /// than the cards' captions (about a third of the button's height).</summary>
+        public static void ButtonCaption(Text t)
         {
-            var g = t.gameObject.AddComponent<RoyalTextGradient>(); g.top = Color.white; g.bottom = new Color(Straw.r / Cream.r, Straw.g / Cream.g, Straw.b / Cream.b);
-            Outline(t, Navy, 3.2f); Outline(t, C(245, 182, 12), 2.6f);
-            var s = t.gameObject.AddComponent<Shadow>(); s.effectColor = C(106, 51, 40, 200); s.effectDistance = new Vector2(0, -3);
+            var box = t.transform.parent as RectTransform;
+            if (box && box.rect.height > 0) t.resizeTextMaxSize = Mathf.Min(t.resizeTextMaxSize, Mathf.RoundToInt((box.rect.height + 18) * .36f));
+            Lettering(t, CK.Ink.OnGreen);
         }
-        /// <summary>Button captions and counts: cream letters with a dark green edge.</summary>
-        public static void ButtonCaption(Text t) { Outline(t, C(30, 80, 5), 2.6f); }
+        /// <summary>One of the cards' inks on a best-fit label: area and task names change at run time, so the label keeps
+        /// fitting its box (RoyalCardKit.Paint alone sets one exact size).</summary>
+        public static void Lettering(Text t, CK.Ink ink)
+        {
+            bool fit = t.resizeTextForBestFit; int max = t.resizeTextMaxSize, min = t.resizeTextMinSize, size = t.fontSize;
+            var align = t.alignment; var wrap = t.horizontalOverflow; var cut = t.verticalOverflow;
+            CK.Paint(t, ink, size);
+            t.resizeTextForBestFit = fit; t.resizeTextMaxSize = max; t.resizeTextMinSize = min;
+            t.alignment = align; t.horizontalOverflow = wrap; t.verticalOverflow = cut;
+        }
     }
 }

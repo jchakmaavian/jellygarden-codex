@@ -112,25 +112,29 @@ namespace RoyalThrone.Presentation
             {
                 while (character < text.Length && char.IsWhiteSpace(text[character])) character++;
                 int logical = character++;
+                bool finale = logical < text.Length && text[logical] == '!';
+                float peak = finale ? 1.82f : 1.72f;
                 float p = float.IsPositiveInfinity(written) ? 1 : Mathf.Clamp01((written - logical) / Mathf.Max(1, revealSpan));
                 float alpha = float.IsPositiveInfinity(written) ? 1 : Mathf.Clamp01((written - logical) * 5);
                 float scale, pitch, yaw;
                 if (p < .25f)
                 {
                     float u = p / .25f, e = 1 - (1 - u) * (1 - u);
-                    scale = Mathf.Lerp(.96f, 1.62f, e); pitch = Mathf.Lerp(-24, 7, e); yaw = Mathf.Lerp(17, -5, e);
+                    scale = Mathf.Lerp(1, peak, e); pitch = Mathf.Lerp(-10, 3, e); yaw = Mathf.Lerp(7, -2, e);
                 }
-                else if (p < .72f)
+                else if (p < .75f)
                 {
-                    float u = (p - .25f) / .47f, e = u * u;
-                    scale = Mathf.Lerp(1.62f, .92f, e); pitch = Mathf.Lerp(7, -3, e); yaw = Mathf.Lerp(-5, 2, e);
+                    float u = (p - .25f) / .5f, e = u * u;
+                    scale = Mathf.Lerp(peak, .88f, e); pitch = Mathf.Lerp(3, -1, e); yaw = Mathf.Lerp(-2, 1, e);
                 }
                 else
                 {
-                    float u = (p - .72f) / .28f, e = u * u * (3 - 2 * u);
-                    scale = Mathf.Lerp(.92f, 1, e); pitch = Mathf.Lerp(-3, 0, e); yaw = Mathf.Lerp(2, 0, e);
+                    float u = (p - .75f) / .25f, e = u * u * (3 - 2 * u);
+                    scale = Mathf.Lerp(.88f, 1, e); pitch = Mathf.Lerp(-1, 0, e); yaw = Mathf.Lerp(1, 0, e);
                 }
+                if (finale) scale *= 1.10f;
                 float fan = Mathf.Lerp(-5, 5, q / Mathf.Max(1f, quads - 1));
+                if (finale) fan = -8;
                 float direction = q < quads / 2 ? -1 : 1;
                 var rotation = Quaternion.Euler(pitch, yaw * direction, fan + direction * 3 * Mathf.Sin(p * Mathf.PI));
                 int first = q * 6;
@@ -138,21 +142,21 @@ namespace RoyalThrone.Presentation
                 for (int k = 0; k < 6; k++) { var v = source[first + k].position; lo = Mathf.Min(lo, v.y); hi = Mathf.Max(hi, v.y); left = Mathf.Min(left, v.x); right = Mathf.Max(right, v.x); }
                 var pivot = new Vector3((left + right) * .5f, lo);
                 // Cast shadow, far bronze sidewall, bright top edge, warm inner bevel, navy keyline, ivory face bevel.
-                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, -9, new Vector2(0, -2), 5.4f,
-                    new Color(.015f, .035f, .085f, .58f), new Color(.015f, .035f, .085f, .58f));
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, -5, new Vector2(0, -1.4f), 5.8f,
+                    new Color(.015f, .035f, .085f, .48f), new Color(.015f, .035f, .085f, .48f));
                 for (int layer = 8; layer >= 1; layer--)
                 {
                     float depth = layer / 8f;
                     Color sideTop = Color.Lerp(new Color(.87f, .49f, .08f), new Color(.44f, .20f, .025f), depth);
                     Color sideBottom = Color.Lerp(new Color(.64f, .28f, .015f), new Color(.23f, .075f, .01f), depth);
-                    RewardRing(first, pivot, rotation, scale, alpha, lo, hi, -7.5f * depth, Vector2.zero, 5.1f, sideTop, sideBottom);
-                    RewardCopy(first, pivot, rotation, scale, alpha, lo, hi, -7.5f * depth, Vector2.zero, sideTop, sideBottom);
+                    RewardRing(first, pivot, rotation, scale, alpha, lo, hi, -3.6f * depth, Vector2.zero, 5.8f, sideTop, sideBottom);
+                    RewardCopy(first, pivot, rotation, scale, alpha, lo, hi, -3.6f * depth, Vector2.zero, sideTop, sideBottom);
                 }
-                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, 0, Vector2.zero, 5.1f, new Color(1, .97f, .69f), new Color(.82f, .40f, .035f));
-                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .35f, Vector2.zero, 3.9f, new Color(1, .79f, .26f), new Color(1, .68f, .14f));
-                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .65f, Vector2.zero, 2.15f, new Color(.018f, .19f, .25f), new Color(.012f, .075f, .15f));
-                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .9f, Vector2.zero, .65f, new Color(1, 1, .94f), new Color(.88f, .64f, .24f));
-                RewardCopy(first, pivot, rotation, scale, alpha, lo, hi, 1.1f, Vector2.zero, new Color(1, 1, .94f), new Color(1, .85f, .45f));
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, 0, Vector2.zero, 5.8f, new Color(1, .97f, .69f), new Color(.87f, .52f, .06f));
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .35f, Vector2.zero, 4.8f, new Color(1, .82f, .32f), new Color(1, .73f, .20f));
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .65f, Vector2.zero, 2.8f, new Color(.018f, .14f, .22f), new Color(.012f, .075f, .15f));
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .9f, Vector2.zero, .45f, new Color(1, 1, .97f), new Color(.96f, .88f, .61f));
+                RewardCopy(first, pivot, rotation, scale, alpha, lo, hi, 1.1f, Vector2.zero, new Color(1, .995f, .94f), new Color(1, .95f, .78f));
             }
         }
 
@@ -174,6 +178,8 @@ namespace RoyalThrone.Presentation
                 var v = source[first + k];
                 float gradient = hi > lo ? Mathf.Clamp01((v.position.y - lo) / (hi - lo)) : 1;
                 var point = v.position - pivot + new Vector3(offset.x - z * .32f, offset.y + z * .85f, z);
+                // A slightly taller, less wide face reads as playful display lettering instead of a metal plaque.
+                point.x *= .96f; point.y *= 1.08f;
                 point = rotation * (point * scale);
                 float perspective = 640 / (640 - point.z);
                 v.position = pivot + new Vector3(point.x * perspective, point.y * perspective, 0);

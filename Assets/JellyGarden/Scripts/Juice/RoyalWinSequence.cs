@@ -9,21 +9,20 @@ using RoyalThrone.ReferenceGameplay;
 namespace JellyGarden.Scripts.Juice
 {
     /// <summary>
-    /// The end of a won level, staged as the reference build shows it (Design/RoyalMatchReference/OBSERVATIONS.md):
-    /// 1. <see cref="Celebrate"/> as soon as the goals are done, before the moves left are used: the screen dims, the
-    ///    Royal Throne logo drops in under hanging pennants, with fireworks and confetti. The booster session starts as the
-    ///    logo lifts away (1.8 s in), while the stage fades out.
-    /// 2. <see cref="BeginFinale"/>: the HUD's goal panel turns into a Reward coin counter; while the booster session
-    ///    (ReferenceWinFinish) turns the moves left into rockets and fires them, coins fly from the board into it, and
-    ///    <see cref="EndFinale"/> lands the rest.
+    /// The end of a won level, staged after the user's Royal Match Level 13 clip (Design/RoyalMatchReference/OBSERVATIONS.md,
+    /// "Level 13 completion"; the user, 2026-10-06: "I want this game experience"), in Royal Throne's own art:
+    /// 1. <see cref="Celebrate"/> as soon as the goals are done, before the moves left are used: the board dims below the HUD,
+    ///    the logo is built (emblem, ROYAL letter by letter, THRONE), pennants unroll, trumpets swing in and fireworks rise
+    ///    and burst; the logo swells and shrinks to a point and the dim is cut (about 3 s).
+    /// 2. <see cref="BeginFinale"/> on that frame: the HUD's goal panel turns into a Reward coin counter; the booster
+    ///    session (ReferenceWinFinish) turns the moves left into rockets and fires them, the board refills, and coins pop out
+    ///    of each booster into the counter; <see cref="EndFinale"/> lands the rest and lets the board rest a moment.
     /// 3. <see cref="Reward"/> on the win card: one large star lands on its pillow; the committed award waits for Home.
-    /// 4. After CONTINUE from every won level, on Home: the star and overlapping coins fly into the counters as in the
-    ///    supplied level-13 reference, and the counters count up as they land,
-    ///    and the Area task list opens if its next task is affordable. (No tip card after the level: each power piece is
-    ///    taught when its level starts, RoyalPowerTutorial; the user, 2026-10-05.)
-    /// One stage leads straight into the next, with no wait between them (the user, 2026-10-05).
+    /// 4. After CONTINUE, on Home: the scene alone, the controls slide in, the star curves into its counter and the coins
+    ///    stream into theirs, and the Area task list opens if its next task is affordable.
+    /// The level music stops with the celebration and comes back softly on the card (RoyalAudioDirector).
     /// Presentation only: LevelManager credits the coins and stars before the card opens. Nothing here takes input. A tap
-    /// shortens the celebration (LevelManager.SkipWinCelebration). No squash or overshoot, like the cards around it.
+    /// shortens the celebration and the boosters (LevelManager.SkipWinCelebration).
     /// </summary>
     public sealed class RoyalWinSequence : MonoBehaviour
     {
@@ -58,6 +57,8 @@ namespace JellyGarden.Scripts.Juice
         // ---------------------------------------------------------------- overlay
 
         RectTransform root; Font font; Sprite sparkle, star, glow, ring, piece, soft, coin, pennant, logo;
+        // The celebration's art (Resources/RoyalGameplay/Win; Design/RoyalMatchReference/level13_completion/art).
+        Sprite[] logoPart; Sprite trumpet, flagArt, flagRoll;
         bool built, reduced;
 
         static readonly Color[] Confetti =
@@ -96,6 +97,11 @@ namespace JellyGarden.Scripts.Juice
             // The approved Royal Throne logo (Design/Branding): the game scene references it, so it is loaded with the scene.
             foreach (var s in Resources.FindObjectsOfTypeAll<Sprite>())
                 if (s && s.name == "logo" && s.texture && s.texture.width >= 512) { logo = s; break; }
+            logoPart = new Sprite[LogoParts.Length];
+            for (int i = 0; i < LogoParts.Length; i++) logoPart[i] = Resources.Load<Sprite>("RoyalGameplay/Win/win-logo-" + LogoParts[i]);
+            trumpet = Resources.Load<Sprite>("RoyalGameplay/Win/win-trumpet");
+            flagArt = Resources.Load<Sprite>("RoyalGameplay/Win/win-pennant");
+            flagRoll = Resources.Load<Sprite>("RoyalGameplay/Win/win-pennant-roll");
         }
         static Sprite Shape(Texture2D t) => Sprite.Create(t, new Rect(0, 0, t.width, t.height), new Vector2(.5f, .5f), t.width);
 
@@ -208,15 +214,24 @@ namespace JellyGarden.Scripts.Juice
             }
         }
         // A firework on the overlay: a bright flash, a ring, and a wide spray of sparks that slow, sink and linger.
-        void FireworkBurst(Vector2 at, Color color)
+        // `shower`: the celebration's kind, a spray of sparks with no ring, as the reference's fireworks are.
+        void FireworkBurst(Vector2 at, Color color, float scale = 1, bool shower = false)
         {
-            var core = Spawn(3, at, Vector2.zero, .34f, 120, new Color(1, .97f, .86f)); if (core != null) core.grow = 170;
-            RingFlash(at, 220, color);
-            int count = reduced ? 8 : 26;
+            var core = Spawn(3, at, Vector2.zero, .34f, 120 * scale * (shower ? .6f : 1), new Color(1, .97f, .86f)); if (core != null) core.grow = 170 * scale * (shower ? .6f : 1);
+            if (!shower) RingFlash(at, 220 * scale, color);
+            else if (!reduced)
+                for (int i = 0; i < 14; i++)
+                {
+                    // An inner shell of slower sparks fills the burst's heart.
+                    float a = Random.value * Mathf.PI * 2, v = 380 * scale * Random.Range(.2f, .7f);
+                    var b = Spawn(1, at, new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * v, Random.Range(.6f, .95f), Random.Range(18f, 30f), Color.Lerp(color, Color.white, .4f));
+                    if (b != null) { b.fade = .9f; b.gravity = 220; b.drag = 1.8f; }
+                }
+            int count = reduced ? 8 : Mathf.RoundToInt(26 * scale * (shower ? 1.4f : 1));
             for (int i = 0; i < count; i++)
             {
-                float a = (i + Random.value * .5f) * Mathf.PI * 2 / count, v = 700 * Random.Range(.6f, 1f);
-                var b = Spawn(1, at, new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * v, Random.Range(.75f, 1.05f), Random.Range(30f, 42f), i % 3 == 0 ? Color.white : color);
+                float a = (i + Random.value * .5f) * Mathf.PI * 2 / count, v = 700 * scale * Random.Range(.6f, 1f);
+                var b = Spawn(1, at, new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * v, Random.Range(.75f, 1.05f), Random.Range(30f, 42f) * (shower ? 1.4f : 1), i % 3 == 0 ? Color.white : color);
                 if (b != null) { b.fade = .7f; b.gravity = 300; b.drag = 1.5f; }
             }
         }
@@ -269,6 +284,8 @@ namespace JellyGarden.Scripts.Juice
             var lm = LevelManager.THIS;
             if (pending != null && !homeRunning && lm && lm.gameStatus == GameState.Map)
             {
+                // Home's first frame already shows the area scene alone; the controls slide in when the payout starts.
+                HideHomeControls();
                 // A directly opened/reopened win card can cover Home. Collection starts only after that card closes.
                 var complete = MenuManager.Instance ? MenuManager.Instance.GetCanvasGlobal().Find("MenuComplete") : null;
                 if (!complete || !complete.gameObject.activeInHierarchy) homeReward = StartCoroutine(HomeRewards(lm));
@@ -453,17 +470,77 @@ namespace JellyGarden.Scripts.Juice
 
         // ---------------------------------------------------------------- 1. the celebration, when the goals are done
 
-        // The celebration plays on by itself; the level's coroutine moves on to the booster session as soon as the logo starts
-        // to lift away (the hand-over), so the stage's fade-out and the first moves' flights overlap instead of queueing.
+        // The celebration plays on by itself. The level's coroutine moves on to the booster session at the hand-over: the frame
+        // the dim is cut, which is the frame the reference turns its Target panel into Reward.
         bool celebrationHandover;
         public static IEnumerator Celebrate(LevelManager lm)
         {
             var s = Get(lm); s.celebrationHandover = false;
             s.StartCoroutine(s.RunCelebration(lm));
-            float until = Time.unscaledTime + 6;
+            float until = Time.unscaledTime + 7;
             while (!s.celebrationHandover && s && s.isActiveAndEnabled && lm.gameStatus == GameState.PreWinAnimations && Time.unscaledTime < until) yield return null;
         }
 
+        // The logo's layers (Resources/RoyalGameplay/Win), cut from the approved logo by
+        // Design/RoyalMatchReference/level13_completion/art/logo_layers.py: the emblem (crown, throne back and frame, with an
+        // empty velvet band), the letters of ROYAL, and the second line THRONE with its ornament. Centre x, y and size w, h are
+        // fractions of the logo's width, y up. Together they recompose the logo exactly.
+        static readonly string[] LogoParts = { "emblem", "r", "o", "y", "a", "l", "throne" };
+        static readonly Vector4[] LogoLayout =
+        {
+            new Vector4(-.0008f, .18341f, .89155f, .50558f), new Vector4(-.25478f, .02073f, .20335f, .21372f),
+            new Vector4(-.11284f, .02113f, .17624f, .19219f), new Vector4(.01754f, .02512f, .17544f, .19378f),
+            new Vector4(.12839f, .01715f, .17544f, .19856f), new Vector4(.25758f, .01994f, .18501f, .2201f),
+            new Vector4(.0004f, -.21691f, .94498f, .32217f)
+        };
+        // When each layer pops in (s after the dim starts): the emblem widens in, ROYAL is written a letter every 0.06 s, and
+        // THRONE lands as one word with the larger overshoot, as the reference writes "ROYAL" and then lands "MATCH!".
+        static readonly float[] LogoIn = { .20f, .30f, .36f, .42f, .48f, .54f, .62f };
+        // The four herald trumpets: the bell's centre (fractions of the half screen), the angle the bell points (degrees up
+        // from the side it comes from) and a size. Two come from each lower edge, bells up and in, as in the reference.
+        static readonly Vector4[] Horns =
+        {
+            new Vector4(-.51f, -.23f, 37, 1f), new Vector4(-.26f, -.385f, 31, .94f),
+            new Vector4(.51f, -.23f, 37, 1f), new Vector4(.26f, -.385f, 31, .94f)
+        };
+        // Firework shells: when, where (fractions of the half screen) and the colour. The first three are seen rising from the
+        // bottom centre first, as the reference's are; the rest burst on their own around the logo.
+        static readonly Vector4[] Shells =
+        {
+            new Vector4(1.55f, -.45f, .40f, 0), new Vector4(1.70f, .50f, .34f, 1), new Vector4(1.86f, -.08f, .52f, 2),
+            new Vector4(2.02f, .62f, .04f, 3), new Vector4(2.18f, -.62f, .10f, 0), new Vector4(2.36f, .24f, .46f, 1),
+            new Vector4(2.52f, -.30f, .60f, 4)
+        };
+        static readonly Color[] ShellColors =
+        {
+            new Color(1f, .82f, .32f), new Color(1f, .42f, .52f), new Color(.72f, .46f, 1f), new Color(.46f, .70f, 1f),
+            new Color(1f, .96f, .86f)
+        };
+        const float CelebrationExit = 2.70f, CelebrationShrink = 2.90f, CelebrationCut = 3.05f;
+
+        static float Overshoot(float t, float s) { t = Mathf.Clamp01(t) - 1; return 1 + (s + 1) * t * t * t + s * t * t; }
+        // A pop: from nothing up to `peak` in `rise` seconds, then back to 1 over `settle` seconds.
+        static float PopScale(float e, float peak, float rise, float settle)
+        {
+            if (e <= 0) return 0;
+            return e < rise ? peak * EaseOut(e / rise) : Mathf.Lerp(peak, 1, EaseInOut((e - rise) / settle));
+        }
+        // The bottom edge of the gameplay HUD (Target, King, Moves) in overlay units: the reference dims only the board and the
+        // booster bar, so the HUD and the cheering King stay bright. Null when the HUD is not there.
+        float? HudBottom()
+        {
+            var header = GameObject.Find("Imported gameplay header"); var rect = header ? header.transform as RectTransform : null;
+            if (!rect || !rect.gameObject.activeInHierarchy) return null;
+            var corners = new Vector3[4]; rect.GetWorldCorners(corners);
+            return LocalPoint(rect, corners[0]).y;
+        }
+
+        // Staged after the user's Royal Match Level 13 clip (Design/RoyalMatchReference/OBSERVATIONS.md, "Level 13
+        // completion"; the user, 2026-10-06: "I want this game experience"), in Royal Throne's own art: the board dims below
+        // the HUD; the emblem widens in, ROYAL is written a letter at a time and THRONE lands with an overshoot; two pennants
+        // unroll from under the HUD; four herald trumpets swing in from the lower edges; firework shells rise and burst behind
+        // the logo; then the logo swells, shrinks to a point, and the dim is cut in a single frame (3.05 s). A tap jumps to the
+        // swell. The fanfare starts with the pennants; the level music has already faded out (RoyalAudioDirector).
         IEnumerator RunCelebration(LevelManager lm)
         {
             reduced = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0;
@@ -476,73 +553,158 @@ namespace JellyGarden.Scripts.Juice
             if (lm.gameStatus != GameState.PreWinAnimations) { celebrationHandover = true; yield break; }
             // An overlay made this frame may not have its screen size yet; everything below is laid out from it.
             yield return Scaled();
-            // The existing "complete" cue (the celebration fanfare through RoyalAudioDirector); music is untouched.
-            if (SoundBase.Instance && SoundBase.Instance.complete != null && SoundBase.Instance.complete.Length > 0) SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
-            var h = Half; float y = h.y * .22f;
+            var h = Half;
+            float dimTop = Mathf.Min(HudBottom() ?? h.y + 20, h.y + 20);
+            // Back to front: the dim (with the firework sparks drawn over it on this canvas), then a canvas of its own for the
+            // pennants, the logo, the trumpets and the label, so the fireworks burst behind them.
             var stage = Node("Level won", root, Vector2.zero, Size);
-            var group = stage.gameObject.AddComponent<CanvasGroup>(); group.alpha = 1;
-            var dim = Picture("Dim", stage, piece, Vector2.zero, Size + new Vector2(40, 40), new Color(Navy.r, Navy.g, Navy.b, 0)); dim.preserveAspect = false;
-            // Pennants hanging from the top edge, dropping in one after another and swaying.
-            var flags = new List<RectTransform>(); float[] xs = { -.84f, -.54f, -.25f, .25f, .54f, .84f };
-            foreach (var fx in xs)
-            {
-                var f = Picture("Pennant", stage, pennant, new Vector2(fx * h.x, h.y + 20), new Vector2(92, 230), Color.white).rectTransform;
-                f.pivot = new Vector2(.5f, 1); f.localScale = Vector3.one * (Mathf.Abs(fx) > .7f ? 1.1f : .9f); flags.Add(f);
-            }
-            var halo = Picture("Logo halo", stage, soft, new Vector2(0, y), new Vector2(760, 520), new Color(1, .82f, .40f, 0)); halo.preserveAspect = false;
-            RectTransform lockup;
-            if (logo)
-            {
-                var img = Picture("Royal Throne logo", stage, logo, new Vector2(0, y), new Vector2(560, 560 * logo.rect.height / Mathf.Max(1, logo.rect.width)), new Color(1, 1, 1, 0));
-                lockup = img.rectTransform;
-            }
-            else lockup = Words("Royal Throne", stage, "ROYAL THRONE", 96, new Vector2(0, y), new Vector2(700, 160), new Color(Gold.r, Gold.g, Gold.b, 0), 4).rectTransform;
-            var graphic = lockup.GetComponent<Graphic>();
+            var dim = Picture("Dim", stage, piece, new Vector2(0, (dimTop - h.y - 20) * .5f), new Vector2(Size.x + 40, dimTop + h.y + 20), Color.clear);
+            dim.preserveAspect = false;
+            var front = Node("Celebration front", root, Vector2.zero, Size);
+            var frontCanvas = front.gameObject.AddComponent<Canvas>(); frontCanvas.overrideSorting = true; frontCanvas.sortingOrder = 36;
 
-            ConfettiBurst(new Vector2(-h.x + 30, -h.y * .55f), 68, 14, 48);
-            ConfettiBurst(new Vector2(h.x - 30, -h.y * .55f), 112, 14, 48);
-            var shells = new[] { new Vector2(-250, y + 150), new Vector2(260, y + 90), new Vector2(-30, y - 230), new Vector2(210, y - 190) };
-            var colors = new[] { Gold, new Color(.62f, .80f, 1f), new Color(1f, .62f, .68f), Gold };
-            var at = new[] { .25f, .55f, .85f, 1.15f }; int fired = 0;
+            // Two pennants unroll downward from under the HUD at 17% and 83% of the width: a clip grows over the cloth and the
+            // rolled end rides its lower edge.
+            float flagW = 120, flagH = flagW * 420 / 200f;
+            var clips = new RectTransform[2]; var rolls = new Image[2];
+            for (int i = 0; i < 2; i++)
+            {
+                float fx = (i == 0 ? -1 : 1) * h.x * .70f;
+                clips[i] = Node("Pennant", front, new Vector2(fx, dimTop + 2), new Vector2(flagW + 12, 0)); clips[i].pivot = new Vector2(.5f, 1);
+                clips[i].gameObject.AddComponent<RectMask2D>();
+                var cloth = Picture("Cloth", clips[i], flagArt ? flagArt : pennant, Vector2.zero, new Vector2(flagW, flagH), Color.white);
+                cloth.preserveAspect = false; var c = cloth.rectTransform; c.anchorMin = c.anchorMax = c.pivot = new Vector2(.5f, 1); c.anchoredPosition = Vector2.zero;
+                rolls[i] = Picture("Pennant roll", front, flagRoll ? flagRoll : piece, new Vector2(fx, dimTop), new Vector2(flagW * 1.16f, flagW * 1.16f * 60 / 228f), flagRoll ? Color.white : Color.clear);
+            }
+
+            // The lockup: the logo's layers, or the whole logo (or the name in letters) if they are missing.
+            float logoW = 470, logoY = h.y * .08f;
+            var lockup = Node("Royal Throne lockup", front, new Vector2(0, logoY), new Vector2(logoW, logoW));
+            bool layered = logoPart != null && global::System.Array.TrueForAll(logoPart, s => s);
+            RectTransform[] parts;
+            float[] partIn;
+            if (layered)
+            {
+                parts = new RectTransform[LogoParts.Length]; partIn = LogoIn;
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    var l = LogoLayout[i];
+                    var img = Picture("Logo " + LogoParts[i], lockup, logoPart[i], new Vector2(l.x, l.y) * logoW, new Vector2(l.z, l.w) * logoW, Color.white);
+                    img.preserveAspect = false; parts[i] = img.rectTransform; parts[i].localScale = Vector3.zero;
+                }
+            }
+            else
+            {
+                var whole = logo ? Picture("Royal Throne logo", lockup, logo, Vector2.zero, new Vector2(logoW, logoW * logo.rect.height / Mathf.Max(1, logo.rect.width)), Color.white).rectTransform
+                                 : Words("Royal Throne", lockup, "ROYAL THRONE", 96, Vector2.zero, new Vector2(700, 160), Gold, 4).rectTransform;
+                whole.localScale = Vector3.zero; parts = new[] { whole }; partIn = new[] { LogoIn[0] };
+            }
+
+            // Four herald trumpets from the lower edges, bells up and in; they slide in along their own line and bob.
+            var horns = new List<RectTransform>(); var hornRest = new List<Vector2>(); var hornDir = new List<Vector2>(); var hornAngle = new List<float>();
+            if (trumpet)
+                foreach (var spec in Horns)
+                {
+                    bool right = spec.x > 0; float len = 300 * spec.w;
+                    var img = Picture("Trumpet", front, trumpet, Vector2.zero, new Vector2(len, len * 360 / 600f), Color.white);
+                    var r = img.rectTransform; r.pivot = new Vector2(.90f, 1 - 120 / 360f);   // the bell's rim, on the tube's line
+                    float angle = right ? 180 - spec.z : spec.z;                                 // the way the bell points
+                    r.localScale = new Vector3(right ? -1 : 1, 1, 1); r.localRotation = Quaternion.Euler(0, 0, right ? -spec.z : spec.z);
+                    var rest = new Vector2(spec.x * h.x, spec.y * h.y);
+                    horns.Add(r); hornRest.Add(rest); hornAngle.Add(right ? -spec.z : spec.z);
+                    hornDir.Add(new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)));
+                    r.anchoredPosition = rest - hornDir[hornDir.Count - 1] * 420;
+                }
+
+            // "Tap to Skip", where the booster session's label (ReferenceWinFinish) will carry on.
+            var skip = Words("Tap to Skip", front, "Tap to Skip", 31, new Vector2(0, -h.y + Size.y * .14f), new Vector2(400, 60), new Color(1, .97f, .8f, 0), 0);
+            skip.GetComponent<Shadow>().effectColor = new Color(.02f, .10f, .22f); skip.GetComponent<Shadow>().effectDistance = new Vector2(1, -2);
+
             // Its reaction makes the king in the HUD portrait cheer.
             if (RoyalPowerupDirector.Get && lm.GameField) RoyalPowerupDirector.Get.Creation(lm.GameField.position);
 
-            // A short beat, not a wait (the user, 2026-10-06: "do all transitions immediately, do not bore the player"): the logo
-            // lands at 0.62 s, the boosters take over at 0.85 s and the stage fades out over the first rockets.
-            float t = 0, hold = .85f, exit = .3f;
+            float t = 0; int fired = 0; bool fanfare = false;
+            var rising = new Image[3];
             while (true)
             {
-                // The win card may open while the logo is still up (a last-move win with nothing left to fire): the stage then
-                // goes straight to its exit and fades out over the card instead of vanishing in a frame (bug review 2026-10-05).
                 bool won = lm.gameStatus == GameState.Win;
-                if (lm.gameStatus != GameState.PreWinAnimations && !won) { foreach (var b in bits) b.age = b.life; break; }
-                t += Time.unscaledDeltaTime;
-                if (won && t < hold) hold = t;
-                // A tap (the same one that sped up the booster session) jumps to the exit.
-                if (lm.SkipWinCelebration && t < hold) hold = Mathf.Max(.35f, t);
-                if (t >= hold) celebrationHandover = true;
-                while (fired < at.Length && t >= at[fired] && t < hold) { FireworkBurst(shells[fired], colors[fired]); fired++; }
-                float outU = Mathf.Clamp01((t - hold) / exit), dimIn = EaseOut(t / .3f);
-                dim.color = new Color(Navy.r * .5f, Navy.g * .5f, Navy.b * .5f, .74f * dimIn * (1 - outU));
-                // The logo drops from above the screen, settles without a bounce, and lifts away at the end.
-                float drop = EaseOut((t - .12f) / .5f), show = Mathf.Clamp01((t - .12f) / .2f) * (1 - outU);
-                lockup.anchoredPosition = new Vector2(0, y + (reduced ? 0 : (1 - drop) * 380 + outU * 40));
-                lockup.localScale = Vector3.one * (reduced ? 1 : Mathf.Lerp(1.12f, 1, drop));
-                if (graphic) graphic.color = new Color(graphic.color.r, graphic.color.g, graphic.color.b, show);
-                halo.color = new Color(1, .82f, .40f, .30f * show); halo.rectTransform.localScale = Vector3.one * (1 + .05f * Mathf.Sin(t * 2.4f));
-                for (int i = 0; i < flags.Count; i++)
+                if (lm.gameStatus != GameState.PreWinAnimations && !won) break;
+                t += Mathf.Min(Time.unscaledDeltaTime, .05f);
+                // A tap, or a card opening early (a last-move win with nothing left to fire), goes straight to the swell.
+                if ((lm.SkipWinCelebration || won) && t < CelebrationExit) t = CelebrationExit;
+                if (reduced && t < CelebrationExit && t > 1.2f) t = CelebrationExit;
+                if (t >= CelebrationCut) break;
+                if (!fanfare && t >= .70f)
                 {
-                    float fin = EaseOut((t - .05f - i % 3 * .07f) / .45f);
-                    flags[i].anchoredPosition = new Vector2(xs[i] * h.x, h.y + 20 + (1 - fin) * 260 + outU * 260);
-                    flags[i].localRotation = Quaternion.Euler(0, 0, reduced ? 0 : Mathf.Sin(t * 2.1f + i * 1.3f) * 4);
+                    fanfare = true;
+                    // The existing "complete" cue (the celebration fanfare).
+                    if (SoundBase.Instance && SoundBase.Instance.complete != null && SoundBase.Instance.complete.Length > 0) SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
                 }
-                if (!reduced && t < hold && Random.value < .3f)
-                    SparkleBurst(new Vector2(Random.Range(-250f, 250f), Random.Range(-120f, 120f)) + lockup.anchoredPosition, 1, 60, Gold, 20);
-                if (t >= hold + exit) break;
+                dim.color = new Color(Navy.r * .45f, Navy.g * .45f, Navy.b * .45f, .72f * EaseOut(t / .2f));
+
+                // The logo: each layer pops in on its beat; at the end the whole lockup swells and then shrinks to a point.
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    float e = t - partIn[i];
+                    if (reduced) { parts[i].localScale = Vector3.one * Mathf.Clamp01(e / .15f); continue; }
+                    if (parts.Length > 1 && i == 0)
+                        parts[i].localScale = e <= 0 ? Vector3.zero : new Vector3(Mathf.Lerp(.25f, 1, Overshoot(e / .16f, 1.4f)), Mathf.Lerp(.55f, 1, Overshoot(e / .16f, 1.4f)), 1);
+                    else parts[i].localScale = Vector3.one * (i == parts.Length - 1 && parts.Length > 1 ? PopScale(e, 1.32f, .09f, .14f) : PopScale(e, 1.35f, .07f, .10f));
+                }
+                float swell = reduced ? 1 : t < CelebrationShrink ? Mathf.Lerp(1, 1.18f, EaseOut((t - CelebrationExit) / .2f)) : 1.18f * (1 - Mathf.Pow(Mathf.Clamp01((t - CelebrationShrink) / (CelebrationCut - CelebrationShrink)), 1.6f));
+                lockup.localScale = Vector3.one * Mathf.Max(0, swell);
+
+                // The pennants unroll over 0.4 s and roll back up at the end.
+                float unroll = EaseOut((t - .85f) / .35f) * (1 - EaseInOut((t - CelebrationExit - .05f) / .2f));
+                if (reduced) unroll = 1;
+                for (int i = 0; i < 2; i++)
+                {
+                    float len = flagH * unroll;
+                    clips[i].sizeDelta = new Vector2(flagW + 12, len);
+                    rolls[i].rectTransform.anchoredPosition = new Vector2(clips[i].anchoredPosition.x, dimTop + 2 - Mathf.Max(0, len - 14));
+                    rolls[i].color = new Color(1, 1, 1, flagRoll && !reduced ? Mathf.Clamp01((t - .8f) / .06f) * (1 - Mathf.Clamp01((unroll - .9f) / .1f)) : 0);
+                    clips[i].localRotation = Quaternion.Euler(0, 0, reduced ? 0 : Mathf.Sin(t * 2.1f + i * 1.7f) * 1.5f * unroll);
+                }
+
+                // The trumpets swing in over 0.3 s (the lower pair a beat later), bob, and leave the way they came.
+                for (int i = 0; i < horns.Count; i++)
+                {
+                    float start = 1.05f + (i % 2) * .08f;
+                    float arrive = reduced ? 1 : EaseOut((t - start) / .3f), leave = reduced ? 0 : EaseInOut((t - CelebrationExit + .05f) / .25f);
+                    horns[i].anchoredPosition = hornRest[i] - hornDir[i] * 420 * ((1 - arrive) + leave);
+                    float bob = reduced ? 0 : Mathf.Sin((t - start) * 7f + i) * 3 * arrive;
+                    horns[i].localRotation = Quaternion.Euler(0, 0, hornAngle[i] + bob);
+                }
+
+                skip.color = new Color(1, .97f, .8f, Mathf.Clamp01((t - .9f) / .2f));
+
+                // Fireworks: shells rise from the bottom centre and burst around the logo, behind it.
+                if (!reduced)
+                {
+                    for (int k = 0; k < 3; k++)
+                    {
+                        var s = Shells[k]; float launch = s.x - .38f, u = (t - launch) / .38f;
+                        if (u < 0 || u >= 1) { if (rising[k]) rising[k].enabled = false; continue; }
+
+                        if (!rising[k]) { rising[k] = Picture("Shell trail", stage, piece, Vector2.zero, new Vector2(6, 120), Color.white); rising[k].preserveAspect = false; }
+                        var a = new Vector2((k - 1) * 30, -h.y * .82f); var b = new Vector2(s.y * h.x, s.z * h.y); var p = Vector2.Lerp(a, b, EaseOut(u));
+                        var d = (b - a).normalized; rising[k].enabled = true; rising[k].rectTransform.anchoredPosition = p - d * 60;
+                        rising[k].rectTransform.localRotation = Quaternion.Euler(0, 0, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg - 90);
+                        rising[k].color = new Color(1, .96f, .84f, .85f * (1 - u * u));
+                    }
+                    while (fired < Shells.Length && t >= Shells[fired].x && t < CelebrationExit + .1f)
+                    {
+                        var s = Shells[fired]; FireworkBurst(new Vector2(s.y * h.x, s.z * h.y), ShellColors[(int)s.w], 1.5f, true); fired++;
+                        RoyalAudioDirector.Get?.Play(RoyalCue.Firework, .8f);
+                    }
+                }
                 yield return null;
             }
+            // The cut: the dim, the lockup and every spark go in one frame, and the booster session takes over.
+            foreach (var b in bits) b.age = b.life;
             celebrationHandover = true;
-            Destroy(stage.gameObject);
+            if (stage) Destroy(stage.gameObject);
+            if (front) Destroy(front.gameObject);
         }
 
         // ---------------------------------------------------------------- 2. the finale: a Reward counter in the HUD
@@ -592,6 +754,14 @@ namespace JellyGarden.Scripts.Juice
             rewardShown = finaleBase; if (rewardCount) rewardCount.text = rewardShown.ToString();
             finale = true; finaleDraining = false; finaleLevel = lm;
             finaleReserved = finaleArrived = 0; finaleSources.Clear();
+            // The coin pops into the emptied panel, as the reference's does on the frame its dim is cut.
+            if (rewardContents && !reduced) StartCoroutine(PopRewardIn(rewardContents));
+        }
+        IEnumerator PopRewardIn(RectTransform contents)
+        {
+            float t = 0; contents.localScale = Vector3.zero;
+            while (contents && t < .14f) { t += Mathf.Min(Time.unscaledDeltaTime, .05f); contents.localScale = Vector3.one * PopScale(t, 1.12f, .08f, .06f); yield return null; }
+            if (contents) contents.localScale = Vector3.one;
         }
 
         // Only accepted booster activations can emit finale coins. No random live-piece timer.
@@ -615,24 +785,27 @@ namespace JellyGarden.Scripts.Juice
             // Allocate the EXISTING award across actual booster bursts. The reference's full
             // per-booster economy is not recovered; this must never manufacture currency.
             float unassigned = Mathf.Max(0, s.rewardTarget - s.finaleBase - s.finaleReserved);
-            s.EmitFinaleCoins(s.lastFinaleSource, unassigned / (remaining + 1));
+            // As in the user's Level 13 clip, a few coins pop out of each booster as it goes off (two from a rocket, one from
+            // anything else), hang there a moment and then arc into the Reward coin. Each carries its share of our award
+            // (the user's choice, 2026-10-06: keep 50 + 5 per move left), so the counter climbs by that share per coin.
+            bool rocket = item.currentType == ItemsTypes.HORIZONTAL_STRIPPED || item.currentType == ItemsTypes.VERTICAL_STRIPPED;
+            s.EmitFinaleCoins(s.lastFinaleSource, unassigned / (remaining + 1), rocket ? 2 : 1);
         }
 
-        void EmitFinaleCoins(Vector2 source, float amount)
+        void EmitFinaleCoins(Vector2 source, float amount, int count)
         {
-            if (amount <= .00001f || !rewardIcon) return;
+            if (amount <= .00001f || !rewardIcon || count <= 0) return;
             finaleReserved += amount;
-            const int count = 10; // RemainingMovesCoinCollectAnimation.Count
             int generation = previewGeneration;
             for (int i = 0; i < count; i++)
-                Fly(coin, source, Local(rewardIcon.transform), i * .02f, 54, .6f, () =>
+                Fly(coin, source, Local(rewardIcon.transform), i * .05f, 58, .5f, () =>
                 {
                     if (!finale || generation != previewGeneration) return;
                     finaleArrived += amount / count;
                     rewardShown = Mathf.Min(rewardTarget, finaleBase + Mathf.FloorToInt(finaleArrived + .0001f));
                     if (rewardCount) rewardCount.text = rewardShown.ToString();
                     if (rewardIcon) PulseCoin(rewardIcon.rectTransform);
-                }, true, 90, 0, true, rewardIcon.transform);
+                }, true, 70, 0, true, rewardIcon.transform);
         }
 
         IEnumerator FinishFinale(LevelManager lm)
@@ -641,12 +814,15 @@ namespace JellyGarden.Scripts.Juice
             finaleDraining = true;
             rewardTarget = Mathf.Max(rewardTarget, Coins(lm));
             float left = Mathf.Max(0, rewardTarget - finaleBase - finaleReserved);
-            if (finaleSources.Count > 0) EmitFinaleCoins(lastFinaleSource, left);
+            if (finaleSources.Count > 0) EmitFinaleCoins(lastFinaleSource, left, 2);
             // A no-booster win has no invented board origin. Its fixed award still settles here.
             float end = Time.unscaledTime + 4.8f;
             while (Time.unscaledTime < end && FinalePendingCoinValue > .0001f && lm.gameStatus == GameState.PreWinAnimations) yield return null;
             if (lm.gameStatus != GameState.PreWinAnimations) yield break;
             rewardShown = rewardTarget; if (rewardCount) rewardCount.text = rewardShown.ToString();
+            // The refilled board rests a moment, with the Reward counter at its total, before the card (0.7 s in the clip).
+            float rest = Time.unscaledTime + (lm.SkipWinCelebration ? .1f : .6f);
+            while (Time.unscaledTime < rest && lm.gameStatus == GameState.PreWinAnimations) yield return null;
         }
 
         void RestoreHud()
@@ -691,6 +867,7 @@ namespace JellyGarden.Scripts.Juice
             if (risingReward != null) StopCoroutine(risingReward);
             reward = homeReward = risingReward = null;
             homeRunning = false;
+            ReleaseHomeControls();
             homeCoins = InitScript.Gems;
             ClearFlights();
             ClearPill();
@@ -804,6 +981,32 @@ namespace JellyGarden.Scripts.Juice
 
         // ---------------------------------------------------------------- 4. Home: star, coins, tasks
 
+        // On Home, after the user's Royal Match Level 13 clip (Design/RoyalMatchReference/OBSERVATIONS.md): the area scene is
+        // shown alone for a moment, then the top bar and the Level row slide in and settle with a small overshoot. The star pops
+        // in over the scene, glows, dips a little and curves out to the right and up into the star counter; while it is in the
+        // air a pile of coins appears at the same spot under "+N", churns, and then streams up the left side into the coin
+        // counter one coin at a time. The counters count up as they are reached. The task list then opens if its next task
+        // can be paid for. Presentation only: the coins and the star were saved when the goals were met.
+        RoyalThrone.ReferenceGameplay.ReferenceHomeLayout entranceLayout;
+        void HideHomeControls()
+        {
+            if (entranceLayout || reduced || PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0) return;
+            var home = FindAnyObjectByType<RoyalThrone.Presentation.RoyalHomeScreen>();
+            entranceLayout = home ? home.GetComponent<RoyalThrone.ReferenceGameplay.ReferenceHomeLayout>() : null;
+            if (entranceLayout) entranceLayout.EntranceAway = 1;
+        }
+        void ReleaseHomeControls() { if (entranceLayout) entranceLayout.EntranceAway = 0; entranceLayout = null; }
+
+        // Where the Home star and coins appear: over the area scene, above the Level button.
+        Vector2 HomeRewardOrigin(RoyalThrone.Presentation.RoyalHomeScreen home)
+        {
+            var level = home.levelButton ? home.levelButton.transform as RectTransform : null;
+            if (!level) return new Vector2(0, -Half.y * .3f);
+            var corners = new Vector3[4]; level.GetWorldCorners(corners);
+            float top = LocalPoint(level, corners[1]).y;
+            return new Vector2(0, Mathf.Min(top + 150, -Half.y * .1f));
+        }
+
         IEnumerator HomeRewards(LevelManager lm)
         {
             homeRunning = true; var p = pending; pending = null;
@@ -811,6 +1014,7 @@ namespace JellyGarden.Scripts.Juice
             try
             {
                 reduced = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0;
+                HideHomeControls();
                 var home = FindAnyObjectByType<RoyalThrone.Presentation.RoyalHomeScreen>();
                 float wait = Time.unscaledTime + 3; while ((!home || !home.coinLabel || !home.coinLabel.gameObject.activeInHierarchy) && Time.unscaledTime < wait) { yield return null; home = home ? home : FindAnyObjectByType<RoyalThrone.Presentation.RoyalHomeScreen>(); }
                 if (!home || !home.coinLabel || lm.gameStatus != GameState.Map) yield break;
@@ -818,6 +1022,7 @@ namespace JellyGarden.Scripts.Juice
                 {
                     // Currency and stars are already saved. Motion off shows those balances directly, with no flights,
                     // count-up, floating amount or temporary hold on the Home counters.
+                    ReleaseHomeControls();
                     homeCoins = p.before + p.coins;
                     home.RefreshProgress();
                     completed = true;
@@ -831,57 +1036,45 @@ namespace JellyGarden.Scripts.Juice
                 heldHome = home; homeHold = Hold; Canvas.willRenderCanvases += homeHold;
                 try
                 {
+                    // The scene alone, then the controls slide in (0.32 s, a small overshoot), then a short beat.
+                    float alone = Time.unscaledTime + .6f;
+                    while (Time.unscaledTime < alone && lm.gameStatus == GameState.Map) yield return null;
+                    if (entranceLayout)
+                    {
+                        float e = 0;
+                        while (e < .32f && lm.gameStatus == GameState.Map && entranceLayout)
+                        { e += Mathf.Min(Time.unscaledDeltaTime, .05f); entranceLayout.EntranceAway = 1 - Overshoot(e / .32f, 1.2f); yield return null; }
+                        ReleaseHomeControls();
+                    }
+                    float beat = Time.unscaledTime + .25f;
+                    while (Time.unscaledTime < beat && lm.gameStatus == GameState.Map) yield return null;
                     if (lm.gameStatus != GameState.Map) yield break;
-                    // Reference: the star launches first; the coin pile appears beneath it
-                    // while it is still airborne. Currency remains saved independently.
+                    var origin = HomeRewardOrigin(home);
+
                     bool starLanded = p.stars <= 0 || !home.starLabel;
                     if (!starLanded)
                     {
                         var starParent = home.starLabel.transform.parent;
                         var starReceiver = starParent.Find("Imported 16674") ?? starParent.Find("Stars icon");
-                        var starTo = starReceiver ? Local(starReceiver) : Local(home.starLabel.transform) + new Vector2(-60, 0);
                         var starArt = Resources.Load<Sprite>("RoyalGameplay/win-star");
                         if (!starArt) starArt = RoyalThrone.Presentation.RoyalAreaKit.Star ? RoyalThrone.Presentation.RoyalAreaKit.Star : star;
-                        Fly(starArt, new Vector2(0, -Half.y * .18f), starTo, .08f, 110, .55f,
-                            () => { starLanded = true; starsShown = starsNow; RoyalAudioDirector.Get?.Play(RoyalCue.Create); },
-                            false, 60, .5f, false, starReceiver);
+                        StartCoroutine(HomeStar(starArt, origin, starReceiver ? starReceiver : home.starLabel.transform,
+                            () => { starLanded = true; starsShown = starsNow; RoyalAudioDirector.Get?.Play(RoyalCue.Create); if (starReceiver) PulseCoin(starReceiver as RectTransform); }));
+                        // The coins appear under it while it is still in the air.
                         float coinStart = Time.unscaledTime + .95f;
                         while (Time.unscaledTime < coinStart && lm.gameStatus == GameState.Map) yield return null;
                     }
                     if (lm.gameStatus != GameState.Map) yield break;
-                    // The coins: "+N" over the scene, then the coins fly to the coin counter, which counts up as they land.
                     var receiver = (home.coinLabel.transform.parent.Find("Imported 22081") ?? home.coinLabel.transform.parent.Find("Coins icon")) as RectTransform;
-                    var coinTo = receiver ? Local(receiver) : Local(home.coinLabel.transform) + new Vector2(-70, 0); var from = new Vector2(0, -Half.y * .18f);
-                    var plus = Words("Coins won", root, "+" + p.coins, 64, from + new Vector2(0, 55), new Vector2(300, 90), Gold, 3);
-                    TrackRewardObject(plus.gameObject);
-                    int flightsN = 10, landedN = 0; coin = coin ? coin : RoyalPieceSkin.Art("coin");
-                    for (int i = 0; i < flightsN; i++)
-                    {
-                        Fly(coin, from, coinTo, .25f + i * .02f, 70, .6f, () =>
-                        {
-                            landedN++; homeCoins = p.before + CoinAmountAtArrival(p.coins, landedN, flightsN);
-                            PulseCoin(receiver);
-                            if (landedN == 1) ReferenceGameplayAudio.Play("coin_counter__rfv387_17638", .55f);
-                        }, true, 48, i * .09f, false, receiver);
-                    }
-                    plus.rectTransform.SetAsLastSibling();
+                    bool coinsLanded = false;
+                    StartCoroutine(HomeCoins(p.coins, origin, receiver ? receiver : home.coinLabel.rectTransform,
+                        (landed, count) => homeCoins = p.before + CoinAmountAtArrival(p.coins, landed, count), () => coinsLanded = true));
                     float t = 0;
-                    while ((landedN < flightsN || !starLanded) && t < 4.8f && lm.gameStatus == GameState.Map)
-                    {
-                        t += Time.unscaledDeltaTime;
-                        if (plus)
-                        {
-                            plus.rectTransform.anchoredPosition = from + new Vector2(0, 55 + 18 * EaseOut(t / .8f));
-                            // Keep the amount readable through the pile and initial arrivals.
-                            plus.color = new Color(Gold.r, Gold.g, Gold.b, 1 - Mathf.Clamp01((t - 1.8f) / .5f));
-                        }
-                        yield return null;
-                    }
+                    while ((!coinsLanded || !starLanded) && t < 6f && lm.gameStatus == GameState.Map) { t += Time.unscaledDeltaTime; yield return null; }
                     if (lm.gameStatus != GameState.Map) yield break;
-                    homeCoins = p.before + p.coins; if (plus) Destroy(plus.gameObject);
-                    starsShown = starsNow;
+                    homeCoins = p.before + p.coins; starsShown = starsNow;
                     yield return new WaitForSecondsRealtime(.25f);
-                    completed = landedN == flightsN && starLanded;
+                    completed = coinsLanded && starLanded;
                 }
                 finally { ReleaseHomeHold(); }
                 // The task list opens by itself when the current area's next task can be paid for.
@@ -890,6 +1083,7 @@ namespace JellyGarden.Scripts.Juice
             }
             finally
             {
+                ReleaseHomeControls();
                 if (!completed)
                 {
                     ClearFlights();
@@ -898,6 +1092,112 @@ namespace JellyGarden.Scripts.Juice
                 }
                 homeRunning = false; homeReward = null; ReleaseHomeHold();
             }
+        }
+
+        // The Home star: it pops in (0.13 s), glows for a moment, dips a little, then curves out to the right and up into the
+        // star counter, gathering speed and tilting, with sparkles left behind it.
+        IEnumerator HomeStar(Sprite art, Vector2 origin, Transform receiver, global::System.Action land)
+        {
+            var halo = Picture("Home star glow", root, soft, origin, new Vector2(320, 320), new Color(1, .86f, .4f, 0));
+            var img = Picture("Home star", root, art, origin, new Vector2(165, 165), Color.white);
+            TrackRewardObject(halo.gameObject); TrackRewardObject(img.gameObject);
+            var r = img.rectTransform; r.localScale = Vector3.zero;
+            const float pop = .13f, hold = .35f, dip = .18f, fly = .62f;
+            var dipTo = origin + new Vector2(-14, -16);
+            float t = 0;
+            while (img && LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Map)
+            {
+                t += Mathf.Min(Time.unscaledDeltaTime, .05f);
+                var to = receiver ? Local(receiver) : origin + new Vector2(200, 600);
+                float shine = Mathf.Clamp01(t / pop) * (1 - Mathf.Clamp01((t - pop - hold - dip) / .25f));
+                halo.color = new Color(1, .86f, .4f, .7f * shine * (.8f + .2f * Mathf.Sin(t * 14)));
+                halo.rectTransform.localScale = Vector3.one * (1 + .12f * Mathf.Sin(t * 9));
+                if (t < pop) { r.localScale = Vector3.one * PopScale(t, 1.12f, pop * .7f, pop * .3f); r.anchoredPosition = origin; }
+                else if (t < pop + hold) r.localScale = Vector3.one;
+                else if (t < pop + hold + dip)
+                {
+                    float u = EaseInOut((t - pop - hold) / dip);
+                    r.anchoredPosition = Vector2.Lerp(origin, dipTo, u); r.localRotation = Quaternion.Euler(0, 0, 8 * u);
+                }
+                else
+                {
+                    float u = Mathf.Clamp01((t - pop - hold - dip) / fly), w = u * u;
+                    var control = new Vector2(Mathf.Max(dipTo.x, to.x) + 170, Mathf.Lerp(dipTo.y, to.y, .25f));
+                    var pos = (1 - w) * (1 - w) * dipTo + 2 * (1 - w) * w * control + w * w * to;
+                    r.anchoredPosition = pos; halo.rectTransform.anchoredPosition = pos;
+                    r.localScale = Vector3.one * Mathf.Lerp(1, .5f, w); r.localRotation = Quaternion.Euler(0, 0, 8 - 32 * w);
+                    if (Random.value < .75f)
+                    {
+                        var b = Spawn(1, pos + Random.insideUnitCircle * 20, Random.insideUnitCircle * 30, Random.Range(.45f, .75f), Random.Range(14f, 24f), Random.value < .5f ? Gold : Color.white);
+                        if (b != null) b.gravity = 20;
+                    }
+                    if (u >= 1) { SparkleBurst(to, 10, 260, Gold, 22); RingFlash(to, 90, Gold); land?.Invoke(); break; }
+                }
+                yield return null;
+            }
+            if (img) Destroy(img.gameObject);
+            if (halo) Destroy(halo.gameObject);
+        }
+
+        // The Home coins: a pile pops in at the star's spot with "+N" over it, churns (each coin hops on its own beat), then the
+        // coins leave one at a time, 0.07 s apart, and curve up the left side into the coin counter. Twelve coins at most;
+        // each carries its share of the award.
+        IEnumerator HomeCoins(int amount, Vector2 origin, RectTransform receiver, global::System.Action<int, int> arrived, global::System.Action done)
+        {
+            int n = Mathf.Clamp(amount, 1, 12);
+            coin = coin ? coin : RoyalPieceSkin.Art("coin");
+            var pile = new Image[n]; var off = new Vector2[n]; var phase = new float[n]; var from = new Vector2[n]; var gone = new bool[n];
+            for (int i = 0; i < n; i++)
+            {
+                float a = i * 2.4f, rad = 14 + 34 * Mathf.Sqrt((i + .5f) / n);
+                off[i] = new Vector2(Mathf.Cos(a) * rad * 1.3f, Mathf.Sin(a) * rad * .55f); phase[i] = i * 1.7f;
+                pile[i] = Picture("Home coin", root, coin, origin + off[i], new Vector2(64, 64), Color.white);
+                pile[i].rectTransform.localScale = Vector3.zero; TrackRewardObject(pile[i].gameObject);
+            }
+            var plus = Words("Coins won", root, "+" + amount, 60, origin + new Vector2(0, 66), new Vector2(300, 90), Gold, 3);
+            TrackRewardObject(plus.gameObject); plus.rectTransform.SetAsLastSibling(); plus.rectTransform.localScale = Vector3.zero;
+            const float churn = .62f, gap = .07f, fly = .55f;
+            float t = 0; int landed = 0;
+            while (landed < n && t < 6 && LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Map)
+            {
+                t += Mathf.Min(Time.unscaledDeltaTime, .05f);
+                var to = receiver ? Local(receiver) : origin + new Vector2(-300, 700);
+                plus.rectTransform.localScale = Vector3.one * PopScale(t - .05f, 1.15f, .1f, .1f);
+                plus.rectTransform.anchoredPosition = origin + new Vector2(0, 66 + 12 * EaseOut(t / .8f));
+                plus.color = new Color(Gold.r, Gold.g, Gold.b, 1 - Mathf.Clamp01((t - churn - n * gap - .2f) / .3f));
+                for (int i = 0; i < n; i++)
+                {
+                    if (gone[i]) continue;
+                    var r = pile[i].rectTransform; float leave = churn + i * gap;
+                    if (t < leave)
+                    {
+                        float hop = Mathf.Abs(Mathf.Sin(t * 7 + phase[i])) * 22 * Mathf.Clamp01((t - .1f) / .15f);
+                        r.localScale = Vector3.one * PopScale(t - i * .015f, 1.15f, .08f, .08f);
+                        r.anchoredPosition = from[i] = origin + off[i] + new Vector2(0, hop);
+                    }
+                    else
+                    {
+                        float u = Mathf.Clamp01((t - leave) / fly), w = Mathf.Pow(u, 1.6f);
+                        var control = new Vector2(Mathf.Min(from[i].x, to.x) - 140, Mathf.Lerp(from[i].y, to.y, .55f));
+                        r.anchoredPosition = (1 - w) * (1 - w) * from[i] + 2 * (1 - w) * w * control + w * w * to;
+                        r.localScale = Vector3.one * Mathf.Lerp(1, .7f, w);
+                        if (u >= 1)
+                        {
+                            gone[i] = true; landed++; pile[i].gameObject.SetActive(false);
+                            arrived?.Invoke(landed, n);
+                            ReferenceCoinParticles.Play("CoinCollectHitParticles", root, to, 64);
+                            if (receiver) PulseCoin(receiver);
+                            if (landed == 1) ReferenceGameplayAudio.Play("coin_counter__rfv387_17638", .55f);
+                            if (Time.unscaledTime >= nextCoinContactSound) { ReferenceGameplayAudio.Play("coin_collect__15714", .68f); nextCoinContactSound = Time.unscaledTime + .07f; }
+                        }
+                    }
+                    ReferenceCoinAnimation.Apply(pile[i], t + phase[i], 64);
+                }
+                yield return null;
+            }
+            foreach (var c in pile) if (c) Destroy(c.gameObject);
+            if (plus) Destroy(plus.gameObject);
+            done?.Invoke();
         }
 
         static bool Affordable(int starsLeft)

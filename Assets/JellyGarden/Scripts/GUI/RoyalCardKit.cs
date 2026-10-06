@@ -226,7 +226,8 @@ namespace RoyalThrone.Presentation
         static readonly Rect CrownCut = new Rect(0, 0, 605, 125);
         const float CrownWidth = 484;
         static Sprite crownSprite;
-        static Sprite CrownSprite()
+        // Shared with the area dialogs' ribbons (RoyalAreaKit.Ribbon).
+        public static Sprite CrownSprite()
         {
             if (crownSprite) return crownSprite;
             var crest = RoyalPieceSkin.Art("level-card-crest");

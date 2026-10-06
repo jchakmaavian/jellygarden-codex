@@ -11,7 +11,8 @@ namespace JellyGarden.Scripts.Juice
         readonly AudioClip[] clips = new AudioClip[11];
         readonly float[] last = new float[9];
         float[] voiceGains;
-        int variation, musicIndex; float duck, fade=-1;
+        int variation, musicIndex; float duck, fade=-1, winSince=-1;
+        AudioLowPassFilter musicFilter;
         public int PeakVoices { get; private set; }
         public static RoyalAudioDirector Get
         {
@@ -30,8 +31,12 @@ namespace JellyGarden.Scripts.Juice
             voices=new AudioSource[RoyalEffectsProfile.Get.soundVoices];
             voiceGains=new float[voices.Length];
             for(int i=0;i<voices.Length;i++) { voices[i]=gameObject.AddComponent<AudioSource>(); voices[i].playOnAwake=false; voices[i].spatialBlend=0; voices[i].priority=160; }
+            // The music has a child of its own, so the card can muffle it (a low-pass filter acts on its GameObject's sources)
+            // without muffling the effects.
+            var musicHost=new GameObject("Music"); musicHost.transform.SetParent(transform,false);
             music=new AudioSource[2];
-            for(int i=0;i<2;i++) { music[i]=gameObject.AddComponent<AudioSource>(); music[i].playOnAwake=false; music[i].clip=clips[6]; music[i].priority=0; music[i].volume=0; }
+            for(int i=0;i<2;i++) { music[i]=musicHost.AddComponent<AudioSource>(); music[i].playOnAwake=false; music[i].clip=clips[6]; music[i].priority=0; music[i].volume=0; }
+            musicFilter=musicHost.AddComponent<AudioLowPassFilter>(); musicFilter.cutoffFrequency=22000; musicFilter.lowpassResonanceQ=1;
             for(int i=0;i<last.Length;i++) last[i]=-10;
             music[0].Play();
         }
@@ -49,8 +54,7 @@ namespace JellyGarden.Scripts.Juice
             int priority=cue==RoyalCue.Land?200:cue==RoyalCue.Match?160:cue==RoyalCue.Firework?90:60;
             // Restrained variation keeps repeated contacts organic without squeaky pitch climbs.
             PlayClip(clip,gain*Mathf.Clamp(strength,.6f,1.2f),priority, !imported&&cue==RoyalCue.Match?1+((variation%5)-2)*.012f:1);
-            // While a won level plays out (celebration, booster finale, card) the music holds its level: ducked under every
-            // rocket of the finale it sank out of hearing (the user, 2026-10-05: "the bg music is auto off").
+            // No ducking while a won level plays out: the win sets the music's level itself (MusicTarget).
             var level = LevelManager.THIS; bool winning = level && (level.gameStatus == GameState.PreWinAnimations || level.gameStatus == GameState.Win);
             if((cue==RoyalCue.Tnt||cue==RoyalCue.Rocket||cue==RoyalCue.Celebrate) && !winning) duck=.42f;
         }
@@ -91,6 +95,19 @@ namespace JellyGarden.Scripts.Juice
             float headroom=Mathf.Min(1, .68f/Mathf.Max(.001f,total));
             for(int i=0;i<voices.Length;i++) voices[i].volume=voiceGains[i]*headroom;
         }
+        // The end of a won level follows the user's Royal Match Level 13 clip (the user, 2026-10-06: "music like the clip",
+        // replacing 10-05's music that held through the win): the level music fades out once the goals are met, so the
+        // fanfare and the boosters play alone; on the card it comes back softly and muffled, after the star has landed (about
+        // 0.9 s); Home brings it back in full.
+        float MusicTarget(float normal)
+        {
+            var level=LevelManager.THIS; var state=level?level.gameStatus:GameState.Map;
+            if(state==GameState.Win){ if(winSince<0)winSince=Time.unscaledTime; } else winSince=-1;
+            if(musicFilter) musicFilter.cutoffFrequency=state==GameState.Win?1100:22000;
+            if(state==GameState.PreWinAnimations) return 0;
+            if(state==GameState.Win) return normal*.45f*Mathf.Clamp01((Time.unscaledTime-winSince-.9f)/1f);
+            return normal;
+        }
         void Update()
         {
             if(voices==null)return;
@@ -100,7 +117,7 @@ namespace JellyGarden.Scripts.Juice
             BalanceVoices();
             if(!clips[6])return;
             duck=Mathf.Max(0,duck-Time.unscaledDeltaTime);
-            float target=PlayerPrefs.GetInt("Music",1)*RoyalEffectsProfile.Get.musicVolume*(duck>0?.55f:1);
+            float target=MusicTarget(PlayerPrefs.GetInt("Music",1)*RoyalEffectsProfile.Get.musicVolume*(duck>0?.55f:1));
             float duration=RoyalEffectsProfile.Get.musicCrossfade;
             if(fade<0&&music[musicIndex].time>=clips[6].length-duration) { fade=0; music[1-musicIndex].time=0; music[1-musicIndex].Play(); }
             if(fade>=0)

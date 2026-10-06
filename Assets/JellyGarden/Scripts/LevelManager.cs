@@ -1395,9 +1395,8 @@ namespace JellyGarden.Scripts
             // A gentle refill (2026-10-04): the new pieces of each column's run of cells are stacked just above that run's top
             // edge, the lowest first, so they enter from the board's edge as one stream and fade in as they cross it
             // (Item.royalEntryEdge); the columns start in a soft wave from the centre out (Item.royalFallDelay).
-            // The end of a level never refills (the user, 2026-10-06: "no more fill up"): once the goals are met the boosters
-            // clear the board and nothing new falls in behind them, or under the win card. Level setup (falling false) still fills.
-            if (falling && (gameStatus == GameState.PreWinAnimations || gameStatus == GameState.Win)) return;
+            // The end of a level refills too, as in the user's Royal Match Level 13 clip (the user, 2026-10-06, replacing that
+            // morning's "no more fill up"): the boosters' cleared cells fall and fill, and the card opens over a full board.
             bool gentle = falling && Juice.JuiceConfig.Instance.EnableJuice;
             float cellWorld = squareHeight * (GameField ? Mathf.Abs(GameField.lossyScale.y) : 1f);
             var stacked = new Dictionary<int, int>();

@@ -196,6 +196,21 @@ namespace JellyGarden.Scripts
 
             List<int> remainColors = new List<int>();
             int paletteSize = Mathf.Clamp(LevelManager.Instance.colorLimit, 1, RoyalGameplayArt.BoardColorCount);
+            // The win's finale refills without making new lines of three, as in the user's Royal Match Level 13 clip (the board
+            // fills once and rests before the card): a chain of cascades only kept the card waiting (6 s measured, 2026-10-06).
+            // Normal play keeps its own colouring.
+            bool finaleRefill = LevelManager.THIS.gameStatus == GameState.PreWinAnimations;
+            int ColorAt(int c, int r)
+            {
+                var sq = LevelManager.THIS.GetSquare(c, r);
+                var other = sq ? sq.item : null;
+                return other && other != this && !other.destroying && other.currentType == ItemsTypes.NONE ? other.color : -1;
+            }
+            bool Line(int c, int dc, int dr)
+            {
+                int a = ColorAt(col + dc, row + dr), b = ColorAt(col + 2 * dc, row + 2 * dr), o = ColorAt(col - dc, row - dr);
+                return (a == c && b == c) || (a == c && o == c);
+            }
             for (int i = 0; i < paletteSize; i++)
             {
                 bool canGen = true;
@@ -235,6 +250,8 @@ namespace JellyGarden.Scripts
                         }
                     }
                 }
+                if (canGen && finaleRefill && (Line(i, 1, 0) || Line(i, -1, 0) || Line(i, 0, 1) || Line(i, 0, -1)))
+                    canGen = false;
                 if (canGen && i != exceptColor)
                 {
                     remainColors.Add(i);

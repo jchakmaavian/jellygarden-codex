@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using K = RoyalThrone.Presentation.RoyalAreaKit;
+using CK = RoyalThrone.Presentation.RoyalCardKit;
 
 namespace RoyalThrone.Presentation
 {
@@ -146,6 +147,9 @@ namespace RoyalThrone.Presentation
         void OnDestroy() { Canvas.willRenderCanvases -= HoldLabels; }
 
         // A design-size panel (720 wide) pinned under the Home counters and scaled to the layout width.
+        // The frame's top edge (y down from the panel's top) and the ribbon's pill, centred on it.
+        const float FrameTop = 100, RibbonTop = FrameTop - K.RibbonHeight * .5f;
+
         RectTransform DesignPanel(string name, float height)
         {
             var p = K.Node(name, root); p.anchorMin = p.anchorMax = new Vector2(.5f, 1); p.pivot = new Vector2(.5f, 1);
@@ -160,26 +164,28 @@ namespace RoyalThrone.Presentation
 
         void BuildTaskPanel()
         {
-            taskPanel = DesignPanel("Area task list", 942);
-            K.Inset(FrameOf(K.BluePanel(taskPanel)), 27, 91, 27, 22);
-            taskTitle = K.Ribbon(taskPanel, 720, 0, "", 64);
-            closeFor[Tasks] = K.RedClose(taskPanel, 668, 58, 100); closeFor[Tasks].onClick.AddListener(home.ClosePanel);
+            // The cards' design (2026-10-06): the frame's top edge at 100 carries the ribbon across it (its pill from 52 to
+            // 148) and the close on its corner, 30 in from the right and 22 down, as on every card; the height fits the content.
+            taskPanel = DesignPanel("Area task list", 620);
+            K.Inset(FrameOf(K.BluePanel(taskPanel)), 27, FrameTop, 27, 22);
+            taskTitle = K.Ribbon(taskPanel, CK.RibbonWidth, RibbonTop, "", 50);
+            closeFor[Tasks] = K.RedClose(taskPanel, 720 - 27 - 30, FrameTop + 22, 100); closeFor[Tasks].onClick.AddListener(home.ClosePanel);
             // Area Progress: heading, bar and the chest (tap: its rewards, A-07).
             var card = K.CreamCard("Area progress", taskPanel, 76, 221, 567, 156);
             var heading = K.Words("Heading", card, "Area Progress", 31, K.Cream, TextAnchor.MiddleCenter);
-            K.Centre(heading.rectTransform, 239, 31, 360, 44); K.Outline(heading, K.Navy, 2.4f);
+            K.Centre(heading.rectTransform, 239, 31, 360, 44); K.Lettering(heading, CK.Ink.HeadingOnCream);
             K.ProgressBar(card, 35, 64, 409, 56, out barFill, out barCount, 30);
             var chest = K.Picture("Area chest", card, K.Chest, 471, 75, 163, 130);
             chest.raycastTarget = true; chestButton = chest.gameObject.AddComponent<Button>(); chestButton.transition = Selectable.Transition.None;
             chestButton.onClick.AddListener(() => ShowTooltip(!TooltipVisible));
-            var divider = K.Surface("Divider", taskPanel, K.C(0, 60, 128), K.C(0, 60, 128), 2); K.At(divider.rectTransform, 71, 399, 578, 4);
+            var divider = K.Surface("Divider", taskPanel, CK.C("0a2c7c", .8f), CK.C("0a2c7c", .8f), 2); K.At(divider.rectTransform, 71, 399, 578, 3);
             // The one task row: its object as the icon, the name, and Do It with the cost (A-03).
             row = K.At(K.Node("Task row", taskPanel), 76, 424, 567, 115);
             rowSlide = K.Node("Slide", row);
             var face = K.CreamCard("Row card", rowSlide, 0, 0, 567, 115);
             rowArt = K.Picture("Task object", face, null, 50, 52, 76, 76);
             rowName = K.Words("Task name", face, "", 31, K.Ink, TextAnchor.MiddleLeft); K.At(rowName.rectTransform, 96, 8, 280, 94);
-            rowName.resizeTextMinSize = 18;
+            rowName.resizeTextMinSize = 18; K.Lettering(rowName, CK.Ink.Navy);
             doIt = K.GreenButton("Do It", rowSlide, 385, 12, 163, 90, out var doItFace); doItRect = (RectTransform)doIt.transform;
             doItWord = K.Words("Caption", doItFace, "Do It", 27, K.Cream, TextAnchor.MiddleRight); K.At(doItWord.rectTransform, 4, 2, 76, 70); K.ButtonCaption(doItWord);
             doItStar = K.Picture("Star", doItFace, K.Star, 97, 37, 31, 31);
@@ -187,7 +193,7 @@ namespace RoyalThrone.Presentation
             doIt.onClick.AddListener(DoIt);
             tick = K.Check(rowSlide, 466, 57, 92); tick.gameObject.SetActive(false);
             completedLine = K.Words("Area completed", taskPanel, "Area Completed!", 34, K.Cream, TextAnchor.MiddleCenter);
-            K.At(completedLine.rectTransform, 76, 440, 567, 80); K.Outline(completedLine, K.Navy, 2.6f); completedLine.gameObject.SetActive(false);
+            K.At(completedLine.rectTransform, 76, 440, 567, 80); K.Lettering(completedLine, CK.Ink.Display); completedLine.gameObject.SetActive(false);
             // The chest's rewards, in a bubble under the progress card (A-07); a tap anywhere else puts it away.
             tooltipDismiss = K.Node("Chest rewards dismiss", taskPanel).gameObject.AddComponent<Image>(); tooltipDismiss.color = Color.clear;
             var dismiss = tooltipDismiss.gameObject.AddComponent<Button>(); dismiss.transition = Selectable.Transition.None;
@@ -210,13 +216,13 @@ namespace RoyalThrone.Presentation
         void BuildShortPanel()
         {
             // "Not Enough Stars!" (A-16), measured on the reference emulator and scaled to 720 wide.
-            shortPanel = DesignPanel("Area short of stars", 800);
-            var body = K.BluePanel(shortPanel); var frame = FrameOf(body); K.Inset(frame, 40, 90, 40, 22);
-            K.Ribbon(shortPanel, 690, 0, "Not Enough Stars!", 52);
-            closeFor[Short] = K.RedClose(shortPanel, 650, 47, 100); closeFor[Short].onClick.AddListener(home.ClosePanel);
+            shortPanel = DesignPanel("Area short of stars", 780);
+            var body = K.BluePanel(shortPanel); var frame = FrameOf(body); K.Inset(frame, 40, FrameTop, 40, 22);
+            K.Ribbon(shortPanel, 500, RibbonTop, "Not Enough Stars!", 50);
+            closeFor[Short] = K.RedClose(shortPanel, 720 - 40 - 30, FrameTop + 22, 100); closeFor[Short].onClick.AddListener(home.ClosePanel);
             // A little board of our pieces, an arrow, and the star it earns.
-            var board = K.Surface("Board", shortPanel, K.C(250, 244, 226), K.C(226, 214, 186), 16); K.At(board.rectTransform, 120, 247, 200, 200);
-            var tray = K.Layer("Tray", board.transform, 8, K.C(214, 224, 236), K.C(190, 204, 222), 10);
+            var board = K.CreamCard("Board", shortPanel, 120, 247, 200, 200);
+            var tray = K.Layer("Tray", board, 6, K.C(214, 224, 236), K.C(190, 204, 222), 10);
             int[] colours = { 3, 4, 0, 0, 0, 3, 4, 3, 4 };
             for (int i = 0; i < 9; i++)
             {
@@ -233,8 +239,8 @@ namespace RoyalThrone.Presentation
             }
             K.Picture("Star", shortPanel, K.Star, 503, 348, 200, 190);
             var strip = K.Surface("Caption strip", shortPanel, K.C(9, 50, 104), K.C(14, 58, 116), 14); K.At(strip.rectTransform, 100, 483, 520, 70);
-            var caption = K.Words("Caption", strip.transform, "Beat levels to earn stars", 33, K.Cream, TextAnchor.MiddleCenter); K.Inset(caption.rectTransform, 12, 6, 12, 6);
-            shortContinue = K.GreenButton("Continue", shortPanel, 163, 580, 394, 160, out var face);
+            var caption = K.Words("Caption", strip.transform, "Beat levels to earn stars", 33, K.Cream, TextAnchor.MiddleCenter); K.Inset(caption.rectTransform, 12, 6, 12, 6); K.Lettering(caption, CK.Ink.Light);
+            shortContinue = K.GreenButton("Continue", shortPanel, 160, 602, 400, CK.PrimaryHeight, out var face);
             var word = K.Words("Caption", face, "Continue", 62, K.Cream, TextAnchor.MiddleCenter); K.ButtonCaption(word);
             shortContinue.onClick.AddListener(() => { home.ClosePanel(); home.OpenNextLevel(); });
         }
@@ -244,26 +250,28 @@ namespace RoyalThrone.Presentation
         void BuildNewPanel()
         {
             // "New Area!" (A-19): the next area's name on a gold header over its scene under a padlock, and Unlock.
-            newPanel = DesignPanel("Area new area", 972);
-            var body = K.BluePanel(newPanel); var frame = FrameOf(body); K.Inset(frame, 36, 90, 40, 22);
-            newTitle = K.Ribbon(newPanel, 720, 0, "New Area!", 60);
-            closeFor[Unlocked] = K.RedClose(newPanel, 646, 64, 100); closeFor[Unlocked].onClick.AddListener(home.ClosePanel);
+            // In the cards' design (2026-10-06): the ribbon, then a cream panel with the area's name over its scene under the
+            // padlock, and Unlock, the card's one primary button.
+            newPanel = DesignPanel("Area new area", 920);
+            var body = K.BluePanel(newPanel); var frame = FrameOf(body); K.Inset(frame, 36, FrameTop, 40, 22);
+            newTitle = K.Ribbon(newPanel, 500, RibbonTop, "New Area!", 50);
+            closeFor[Unlocked] = K.RedClose(newPanel, 720 - 40 - 30, FrameTop + 22, 100); closeFor[Unlocked].onClick.AddListener(home.ClosePanel);
             closeFor[Soon] = closeFor[Unlocked];
-            var inner = K.Surface("Picture frame", newPanel, K.C(252, 206, 0), K.C(233, 124, 0), 20); K.At(inner.rectTransform, 96, 214, 528, 470);
-            var header = K.Layer("Header", inner.transform, 6, K.C(255, 214, 40), K.C(250, 180, 0), 14);
-            header.rectTransform.anchorMin = new Vector2(0, 1); header.rectTransform.anchorMax = new Vector2(1, 1); header.rectTransform.pivot = new Vector2(.5f, 1);
-            header.rectTransform.sizeDelta = new Vector2(-12, 104); header.rectTransform.anchoredPosition = new Vector2(0, -6);
-            newName = K.Words("Name", header.transform, "", 50, K.Cream, TextAnchor.MiddleCenter); K.Inset(newName.rectTransform, 16, 6, 16, 6); K.Title(newName);
-            newThumbMask = K.Node("Scene", inner.transform); K.Inset(newThumbMask, 6, 112, 6, 6);
+            var inner = K.CreamCard("Picture frame", newPanel, 96, 196, 528, 500);
+            newName = K.Words("Name", inner, "", 46, K.Cream, TextAnchor.MiddleCenter); K.At(newName.rectTransform, 16, 8, 487, 68); K.Lettering(newName, CK.Ink.Navy);
+            // The scene in a gold rim (the cards' border), clipped to its window.
+            var rim = K.Surface("Window rim", inner, CK.C("ffe27a"), CK.C("e6a22a"), 16); K.At(rim.rectTransform, 12, 82, 495, 397);
+            K.Layer("Navy line", rim.transform, 3.5f, CK.C("0a2c7c"), CK.C("061f5c"), 13);
+            newThumbMask = K.Node("Scene", inner); K.At(newThumbMask, 17, 87, 485, 387);
             newThumbMask.gameObject.AddComponent<RectMask2D>();
             newGrey = K.Surface("Locked scene", newThumbMask, K.C(150, 164, 184), K.C(96, 110, 132), 0).rectTransform;
             newThumb = K.Node("Scene art", newThumbMask).gameObject.AddComponent<Image>(); newThumb.raycastTarget = false;
-            newLock = K.Padlock(inner.GetComponent<RectTransform>(), 264, 300, 230);
-            unlock = K.GreenButton("Unlock", newPanel, 166, 710, 390, 170, out var face);
+            newLock = K.Padlock(inner, 259, 280, 200);
+            unlock = K.GreenButton("Unlock", newPanel, 160, 737, 400, CK.PrimaryHeight, out var face);
             var word = K.Words("Caption", face, "Unlock", 66, K.Cream, TextAnchor.MiddleCenter); K.ButtonCaption(word);
             unlock.onClick.AddListener(UnlockNext);
             newNoteStrip = K.Surface("Note strip", newPanel, K.C(9, 50, 104), K.C(14, 58, 116), 14).rectTransform; K.At(newNoteStrip, 96, 716, 528, 150);
-            newNote = K.Words("Note", newNoteStrip, "", 32, K.Cream, TextAnchor.MiddleCenter); K.Inset(newNote.rectTransform, 18, 10, 18, 10);
+            newNote = K.Words("Note", newNoteStrip, "", 32, K.Cream, TextAnchor.MiddleCenter); K.Inset(newNote.rectTransform, 18, 10, 18, 10); K.Lettering(newNote, CK.Ink.Light);
         }
 
         RectTransform stage; Image stageChest; RectTransform stageChestRect; Text stageHint; Button stageTap; RectTransform stageItems; Text stageCoins; Image stageCoin, stageBoost; int stageStep;
@@ -278,9 +286,9 @@ namespace RoyalThrone.Presentation
             stageItems = K.Node("Rewards", mid);
             var coinArt = RoyalPieceSkin.CampaignArt("coin");
             stageCoin = K.Picture("Coin", stageItems, coinArt ? coinArt : K.Star, 290, 690, 120, 120);
-            stageCoins = K.Words("Coins", stageItems, "", 40, K.Cream, TextAnchor.MiddleCenter); K.Centre(stageCoins.rectTransform, 290, 768, 200, 50); K.Outline(stageCoins, K.Navy, 3);
+            stageCoins = K.Words("Coins", stageItems, "", 40, K.Cream, TextAnchor.MiddleCenter); K.Centre(stageCoins.rectTransform, 290, 768, 200, 50); K.Lettering(stageCoins, CK.Ink.Display);
             stageBoost = K.Picture("Booster", stageItems, null, 450, 700, 130, 130);
-            stageHint = K.Words("Hint", mid, "Tap to Open", 46, K.Cream, TextAnchor.MiddleCenter); K.Centre(stageHint.rectTransform, 360, 1168, 600, 70); K.Outline(stageHint, K.Navy, 3);
+            stageHint = K.Words("Hint", mid, "Tap to Open", 46, K.Cream, TextAnchor.MiddleCenter); K.Centre(stageHint.rectTransform, 360, 1168, 600, 70); K.Lettering(stageHint, CK.Ink.Display);
         }
 
         RectTransform banner; RectTransform bannerRibbon; Text bannerWord; RectTransform kingArea; Image kingSlot;
@@ -295,11 +303,12 @@ namespace RoyalThrone.Presentation
             bannerRibbon = K.At(K.Node("Ribbon", mid), 0, 330, 720, 160);
             foreach (var side in new[] { 0, 1 })
             {
-                var tail = K.Surface("Tail", bannerRibbon, K.C(70, 60, 170), K.C(46, 38, 128), 6); K.At(tail.rectTransform, side == 0 ? -6 : 616, 44, 110, 100);
+                var tail = K.Surface("Tail", bannerRibbon, CK.C("1440a2"), CK.C("0a2c7c"), 6); K.At(tail.rectTransform, side == 0 ? -6 : 616, 44, 110, 100);
                 tail.rectTransform.localRotation = Quaternion.Euler(0, 0, side == 0 ? 8 : -8);
             }
-            var band = K.Surface("Band", bannerRibbon, K.C(252, 206, 0), K.C(233, 124, 0), 14); K.At(band.rectTransform, 40, 24, 640, 112);
-            K.Layer("Face", band.transform, 7, K.C(96, 84, 214), K.C(62, 50, 168), 10);
+            var band = K.Surface("Band", bannerRibbon, CK.C("ffe27a"), CK.C("e6a22a"), 30); K.At(band.rectTransform, 40, 24, 640, 112);
+            var bandLine = K.Layer("Navy line", band.transform, 6.5f, CK.C("0a2c7c"), CK.C("061f5c"), 24);
+            K.Layer("Face", bandLine.transform, 1.5f, CK.C("2e66d4"), CK.C("1440a2"), 22);
             bannerWord = K.Words("Words", band.transform, "Area Completed!", 58, K.Cream, TextAnchor.MiddleCenter); K.Inset(bannerWord.rectTransform, 20, 8, 20, 8); K.Title(bannerWord);
             kingArea = K.At(K.Node("King", mid), 100, 930, 520, 700);
             kingSlot = K.Node("King slot", kingArea).gameObject.AddComponent<Image>(); kingSlot.color = Color.clear; kingSlot.raycastTarget = false;
@@ -313,11 +322,11 @@ namespace RoyalThrone.Presentation
             var hit = showcase.gameObject.AddComponent<Image>(); hit.color = Color.clear;
             showcaseTap = showcase.gameObject.AddComponent<Button>(); showcaseTap.transition = Selectable.Transition.None; showcaseTap.onClick.AddListener(() => stageTapped = true);
             var mid = K.Node("Bottom", showcase); mid.anchorMin = mid.anchorMax = new Vector2(.5f, 0); mid.pivot = new Vector2(.5f, 0); mid.sizeDelta = new Vector2(720, 260); mids.Add(mid);
-            showcaseHint = K.Words("Continue", mid, "Continue", 52, K.Cream, TextAnchor.MiddleCenter); K.At(showcaseHint.rectTransform, 60, 96, 600, 80); K.Outline(showcaseHint, K.Navy, 3.2f);
+            showcaseHint = K.Words("Continue", mid, "Continue", 52, K.Cream, TextAnchor.MiddleCenter); K.At(showcaseHint.rectTransform, 60, 96, 600, 80); K.Lettering(showcaseHint, CK.Ink.Display);
         }
 
         // ---- the Areas tab (A-20)
-        sealed class Card { public int number; public string state; public RectTransform rect; public Image scene; public Text tab, name; public RectTransform bar, barFill, done, lockBadge; public Text barCount; public Button view; public RoyalPanelGraphic tabFace, ribbonFace, frameFace; public RectTransform grey, lockNote; public Text lockWords; }
+        sealed class Card { public int number; public string state; public RectTransform rect; public Image scene; public Text tab, name; public RectTransform bar, barFill, done, lockBadge; public Text barCount; public Button view; public RoyalPanelGraphic tabFace, ribbonFace, frameFace; public RectTransform grey, lockNote; public Text lockWords; public bool tabInk; }
         readonly List<Card> cards = new List<Card>();
         RectTransform page; ScrollRect pageScroll; RectTransform pageContent;
         const float CardPitch = 653, CardTop = 54;
@@ -325,7 +334,8 @@ namespace RoyalThrone.Presentation
         void BuildPage()
         {
             page = K.Node("Areas tab", root); page.gameObject.SetActive(false);
-            var back = K.Surface("Background", page, K.C(49, 65, 84), K.C(56, 74, 96), 0); back.raycastTarget = true;
+            // The pages' royal-blue fall (Settings, Profile, Leaderboard) and their header (2026-10-06).
+            var back = K.Surface("Background", page, CK.C("2256c6"), CK.C("0a2a78"), 0); back.raycastTarget = true;
             // The list scrolls under the title bar and above the tab bar.
             var viewport = K.Node("Viewport", page); viewport.gameObject.AddComponent<RectMask2D>();
             pageScroll = page.gameObject.AddComponent<ScrollRect>(); pageScroll.horizontal = false; pageScroll.vertical = true;
@@ -336,8 +346,11 @@ namespace RoyalThrone.Presentation
             // The title bar: a blue band down to the orange trim, "Areas" on it.
             var bar = K.Node("Title bar", page); bar.anchorMin = new Vector2(0, 1); bar.anchorMax = Vector2.one; bar.pivot = new Vector2(.5f, 1);
             bar.sizeDelta = new Vector2(0, 211); bar.anchoredPosition = Vector2.zero;
-            K.Surface("Blue", bar, K.C(0, 64, 130), K.C(0, 74, 158), 0);
-            var trim = K.Surface("Trim", bar, K.C(255, 167, 0), K.C(255, 88, 0), 0); trim.rectTransform.anchorMax = new Vector2(1, 0); trim.rectTransform.sizeDelta = new Vector2(0, 9);
+            K.Surface("Blue", bar, CK.C("2f6bd9"), CK.C("1747ad"), 0);
+            var barLight = K.Surface("Light", bar, CK.C("ffffff", .08f), CK.C("ffffff", 0), 0); barLight.rectTransform.anchorMin = new Vector2(0, 1); barLight.rectTransform.pivot = new Vector2(.5f, 1); barLight.rectTransform.sizeDelta = new Vector2(0, 80);
+            var shade = K.Surface("Shadow", bar, CK.C("000a30", .45f), CK.C("000a30", 0), 0); shade.rectTransform.anchorMax = new Vector2(1, 0); shade.rectTransform.anchorMin = Vector2.zero;
+            shade.rectTransform.pivot = new Vector2(.5f, 1); shade.rectTransform.sizeDelta = new Vector2(0, 30);
+            var trim = K.Surface("Trim", bar, CK.C("ffe27a"), CK.C("e3a02a"), 0); trim.rectTransform.anchorMax = new Vector2(1, 0); trim.rectTransform.sizeDelta = new Vector2(0, 6);
             trim.rectTransform.anchorMin = Vector2.zero; trim.rectTransform.pivot = new Vector2(.5f, 0);
             var title = K.Words("Title", bar, "Areas", 64, K.Cream, TextAnchor.MiddleCenter); K.Inset(title.rectTransform, 100, 104, 100, 20); K.Title(title);
             titleBar = bar; pageViewport = viewport;
@@ -348,28 +361,35 @@ namespace RoyalThrone.Presentation
         {
             var c = new Card { number = number };
             c.rect = K.Node("Area card " + number, pageContent); c.rect.anchorMin = c.rect.anchorMax = new Vector2(.5f, 1); c.rect.pivot = new Vector2(.5f, 1); c.rect.sizeDelta = new Vector2(720, CardPitch);
-            var divider = K.Surface("Divider", c.rect, K.C(27, 50, 61), K.C(27, 50, 61), 1); K.At(divider.rectTransform, 68, CardPitch - 58, 586, 3);
-            // The picture: a gold and red frame around a landscape window onto the area's scene.
-            var frame = K.Surface("Frame", c.rect, K.C(193, 0, 47), K.C(132, 31, 47), 26); K.At(frame.rectTransform, 59, 134, 602, 402);
-            c.frameFace = K.Layer("Gold", frame.transform, 4, K.C(253, 176, 2), K.C(252, 160, 2), 22);
-            var window = K.Node("Window", c.frameFace.transform); K.Inset(window, 6, 6, 6, 18); window.gameObject.AddComponent<RectMask2D>();
+            // In the cards' design (2026-10-06): the picture in the cards' gold border, the name on their blue ribbon across its
+            // top edge, and "Area N" on a small cream badge above the ribbon, where the crown sits on the cards.
+            var divider = K.Surface("Divider", c.rect, CK.C("6f98ee", .25f), CK.C("6f98ee", .25f), 1); K.At(divider.rectTransform, 68, CardPitch - 58, 586, 2);
+            var frame = K.Surface("Frame", c.rect, CK.C("8c4a14"), CK.C("6a3410"), 30); K.At(frame.rectTransform, 59, 134, 602, 402);
+            var frameShadow = K.Surface("Shadow", c.rect, CK.C("000a30", .45f), CK.C("000a30", .45f), 34); K.At(frameShadow.rectTransform, 55, 140, 610, 404); frameShadow.transform.SetSiblingIndex(frame.transform.GetSiblingIndex());
+            c.frameFace = K.Layer("Gold", frame.transform, 1.5f, CK.C("ffe27a"), CK.C("e6a22a"), 28);
+            var frameLine = K.Layer("Navy line", c.frameFace.transform, 6, CK.C("0a2c7c"), CK.C("061f5c"), 22);
+            var window = K.Node("Window", frameLine.transform); K.Inset(window, 2, 2, 2, 2); window.gameObject.AddComponent<RectMask2D>();
             c.grey = K.Surface("Locked scene", window, K.C(160, 172, 190), K.C(104, 116, 136), 0).rectTransform;
             c.scene = K.Node("Scene", window).gameObject.AddComponent<Image>(); c.scene.raycastTarget = false; c.scene.preserveAspect = false;
-            // The ribbon with the name, and the "Area N" tab over it.
-            var ribbon = K.Surface("Ribbon", c.rect, K.C(132, 30, 46), K.C(113, 25, 40), 18); K.At(ribbon.rectTransform, 59, 57, 602, 118);
-            var trims = K.Layer("Trims", ribbon.transform, 4, K.C(253, 176, 2), K.C(239, 151, 2), 14);
-            c.ribbonFace = K.Layer("Face", trims.transform, 6, K.C(185, 44, 60), K.C(176, 34, 52), 10);
-            c.name = K.Words("Name", c.ribbonFace.transform, "", 52, K.Cream, TextAnchor.MiddleCenter); K.Inset(c.name.rectTransform, 30, 6, 30, 8); K.Title(c.name);
-            var tab = K.Surface("Tab", c.rect, K.C(122, 14, 44), K.C(115, 42, 49), 16); K.At(tab.rectTransform, 239, 0, 242, 70);
-            c.tabFace = K.Layer("Face", tab.transform, 3, K.C(246, 234, 196), K.C(226, 208, 160), 14);
-            c.tab = K.Words("Area", c.tabFace.transform, "Area " + number, 34, K.C(122, 30, 40), TextAnchor.MiddleCenter); K.Inset(c.tab.rectTransform, 8, 4, 8, 24);
+            // The ribbon: the cards' blue pill with a gold rim and a navy line, across the picture's top edge.
+            var ribbonShadow = K.Surface("Ribbon shadow", c.rect, CK.C("000a30", .5f), CK.C("000a30", .5f), 30); K.At(ribbonShadow.rectTransform, 96, 93, 528, 100);
+            var ribbon = K.Surface("Ribbon", c.rect, CK.C("8c4a14"), CK.C("6a3410"), 30); K.At(ribbon.rectTransform, 100, 86, 520, 96);
+            var trims = K.Layer("Trims", ribbon.transform, 1.2f, CK.C("ffe27a"), CK.C("e6a22a"), 29);
+            var ribbonLine = K.Layer("Navy line", trims.transform, 5.3f, CK.C("0a2c7c"), CK.C("061f5c"), 23);
+            c.ribbonFace = K.Layer("Face", ribbonLine.transform, 1.5f, CK.C("2e66d4"), CK.C("1440a2"), 21);
+            var ribbonGloss = K.Surface("Gloss", c.ribbonFace.transform, CK.C("ffffff", .2f), CK.C("ffffff", .02f), 14); K.Inset(ribbonGloss.rectTransform, 22, 3, 22, 46);
+            c.name = K.Words("Name", c.ribbonFace.transform, "", 48, K.Cream, TextAnchor.MiddleCenter); K.Inset(c.name.rectTransform, 28, 8, 28, 10); K.Title(c.name);
+            var tab = K.Surface("Tab", c.rect, CK.C("c47a26"), CK.C("a8641c"), 20); K.At(tab.rectTransform, 260, 36, 200, 60);
+            var tabGold = K.Layer("Gold", tab.transform, 1, CK.C("fde58a"), CK.C("e9ae44"), 19);
+            c.tabFace = K.Layer("Face", tabGold.transform, 3.5f, CK.C("fff6e1"), CK.C("f5e2bc"), 16);
+            c.tab = K.Words("Area", c.tabFace.transform, "Area " + number, 30, K.Cream, TextAnchor.MiddleCenter); K.Inset(c.tab.rectTransform, 8, 4, 8, 6); K.Lettering(c.tab, CK.Ink.Navy);
             // Current: its progress bar. Done: Completed! and View. Locked: a padlock.
             // Measured on the reference cards (a18, a19): the bar 185-535 x 454-514, Completed! 90-350 x 420-484, View 430-622 x 403-487.
             c.bar = K.ProgressBar(c.rect, 185, 454, 350, 60, out c.barFill, out c.barCount, 32);
             c.done = K.At(K.Node("Completed", c.rect), 90, 420, 262, 64);
-            var strip = K.Surface("Strip", c.done, new Color(0, 0, 0, .30f), new Color(0, 0, 0, .20f), 12); K.Inset(strip.rectTransform, 0, 6, 0, 6);
+            var strip = K.Surface("Strip", c.done, CK.C("041a52", .62f), CK.C("041a52", .5f), 26); K.Inset(strip.rectTransform, 0, 6, 0, 6);
             K.Check(c.done, 30, 32, 50);
-            var doneWord = K.Words("Words", c.done, "Completed!", 32, K.Cream, TextAnchor.MiddleLeft); K.Inset(doneWord.rectTransform, 58, 4, 4, 4); K.Outline(doneWord, K.C(20, 50, 10), 2.4f);
+            var doneWord = K.Words("Words", c.done, "Completed!", 32, K.Cream, TextAnchor.MiddleLeft); K.Inset(doneWord.rectTransform, 58, 4, 4, 4); K.Lettering(doneWord, CK.Ink.Light);
             c.view = K.GreenButton("View", c.rect, 430, 403, 192, 84, out var face);
             var viewWord = K.Words("Caption", face, "View", 40, K.Cream, TextAnchor.MiddleCenter); K.ButtonCaption(viewWord);
             int n = number; c.view.onClick.AddListener(() => ChooseArea(n));
@@ -377,7 +397,7 @@ namespace RoyalThrone.Presentation
             // Locked: why, in words, on a dark strip across the grey window (UI polish, 2026-09-30; it was a padlock alone).
             c.lockNote = K.At(K.Node("Lock note", c.rect), 110, 456, 500, 58);
             var noteStrip = K.Surface("Strip", c.lockNote, new Color(0, .05f, .16f, .55f), new Color(0, .05f, .16f, .45f), 14); K.Inset(noteStrip.rectTransform, 0, 0, 0, 0);
-            c.lockWords = K.Words("Words", c.lockNote, "", 30, K.Cream, TextAnchor.MiddleCenter); K.Inset(c.lockWords.rectTransform, 12, 4, 12, 4); K.Outline(c.lockWords, K.C(10, 20, 45), 2);
+            c.lockWords = K.Words("Words", c.lockNote, "", 30, K.Cream, TextAnchor.MiddleCenter); K.Inset(c.lockWords.rectTransform, 12, 4, 12, 4); K.Lettering(c.lockWords, CK.Ink.Light);
             cards.Add(c);
             return c;
         }
@@ -443,9 +463,9 @@ namespace RoyalThrone.Presentation
         void LayoutPanel(RectTransform panel)
         {
             var safe = home.safeArea.rect; float w = home.layout.rect.width, k = w / 720f;
-            float designHeight = panel == taskPanel ? 942 : panel == shortPanel ? 800 : 972;
+            float designHeight = panel == taskPanel ? 620 : panel == shortPanel ? 780 : 920;
             // The least height the panel's content needs (its lowest control and the frame under it), in design units.
-            float needed = panel == taskPanel ? 600 : panel == shortPanel ? 790 : 940;
+            float needed = panel == taskPanel ? 600 : panel == shortPanel ? 760 : 900;
             float fraction = panel == taskPanel ? .179f : panel == shortPanel ? .212f : .205f;
             float below = w * .182f + 14, above = safe.height - w * .2652f - 16;   // under the top bar, over the tab bar
             float top = Mathf.Max(safe.height * fraction, below);
@@ -1187,11 +1207,11 @@ namespace RoyalThrone.Presentation
                     card.lockWords.text = !area.Ready ? "Coming soon" : n == current && entered < current ? "Unlock it from Home" : "Complete Area " + (n - 1) + " to unlock";
                 if (now) SetBar(card.barFill, card.barCount, RoyalAreas.DoneCount, area.tasks.Length);
                 bool grey = card.state == "locked";
-                card.ribbonFace.topColor = grey ? K.C(150, 160, 176) : K.C(185, 44, 60); card.ribbonFace.bottomColor = grey ? K.C(120, 130, 148) : K.C(176, 34, 52);
-                card.tabFace.topColor = grey ? K.C(214, 220, 228) : K.C(246, 234, 196); card.tabFace.bottomColor = grey ? K.C(180, 188, 200) : K.C(226, 208, 160);
-                card.frameFace.topColor = grey ? K.C(190, 198, 210) : K.C(253, 176, 2); card.frameFace.bottomColor = grey ? K.C(150, 160, 176) : K.C(252, 160, 2);
+                card.ribbonFace.topColor = grey ? K.C(150, 160, 176) : CK.C("2e66d4"); card.ribbonFace.bottomColor = grey ? K.C(120, 130, 148) : CK.C("1440a2");
+                card.tabFace.topColor = grey ? K.C(222, 226, 232) : CK.C("fff6e1"); card.tabFace.bottomColor = grey ? K.C(190, 196, 206) : CK.C("f5e2bc");
+                card.frameFace.topColor = grey ? K.C(190, 198, 210) : CK.C("ffe27a"); card.frameFace.bottomColor = grey ? K.C(150, 160, 176) : CK.C("e6a22a");
                 foreach (var g in new Graphic[] { card.ribbonFace, card.tabFace, card.frameFace }) g.SetVerticesDirty();
-                card.tab.color = grey ? K.C(70, 80, 96) : K.C(122, 30, 40);
+                if (card.tabInk != grey) { card.tabInk = grey; K.Lettering(card.tab, grey ? CK.Ink.NavySoft : CK.Ink.Navy); }
             }
             pageContent.sizeDelta = new Vector2(720, CardTop + slot * CardPitch + 40);
             LayoutPage(); Canvas.ForceUpdateCanvases();
