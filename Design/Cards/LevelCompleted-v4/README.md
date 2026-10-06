@@ -1,5 +1,8 @@
 # Level completed: a larger royal reward
 
+Archived preview. The supplied completed-game recording was subsequently located and inspected;
+[v5](../LevelCompleted-v5/README.md) supersedes this card's timing and reward handoff. V4 review media remain unchanged.
+
 Updated 6 October 2026 after the user requested a card consistent with the other dialogs, a star at 1.5 times its previous size, and a more precious reward reveal.
 
 The win popup now uses the Level Start / Royal Reward family's shared `RoyalCardKit.Card`, full crown and draped crest, layered gold bevels, blue close control, emerald primary button and bottom ornament. Its dark royal-blue stage is retained. The crest's level number is refreshed every time the card opens.

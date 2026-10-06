@@ -267,7 +267,12 @@ namespace JellyGarden.Scripts.Juice
             if (pillFlash) { flash = Mathf.Max(0, flash - dt * 3.2f); pillFlash.color = new Color(1, .92f, .6f, .55f * flash); if (pill) pill.localScale = Vector3.one * (1 + .035f * flash); }
             UpdateFinale();
             var lm = LevelManager.THIS;
-            if (pending != null && !homeRunning && lm && lm.gameStatus == GameState.Map) homeReward = StartCoroutine(HomeRewards(lm));
+            if (pending != null && !homeRunning && lm && lm.gameStatus == GameState.Map)
+            {
+                // A directly opened/reopened win card can cover Home. Collection starts only after that card closes.
+                var complete = MenuManager.Instance ? MenuManager.Instance.GetCanvasGlobal().Find("MenuComplete") : null;
+                if (!complete || !complete.gameObject.activeInHierarchy) homeReward = StartCoroutine(HomeRewards(lm));
+            }
         }
 
         // ---------------------------------------------------------------- coin (and star) flights

@@ -1,0 +1,217 @@
+Started 2026-10-06T06:31:59.7649859Z; isolated reference campaign levels13/23. Five actual QA instant wins and one forced-goals real pre-win capture.
+CASE L13-Next
+PASS L13-Next deterministic authored progress starts with four displayed spendable stars and the correct next level
+PASS L13-Next QA area fixture is fully restored with no task or tutorial due
+FIXTURE L13-Next authored-levels=50 earned=12 bought=200 spent=208 available=4; synthetic owned QA setup only, no shop or player award.
+PASS L13-Next opens an authored later level in the isolated profile
+PASS L13-Next starts at the configured life cap with the QA refill timer cleared
+PASS L13-Next one remaining move commits exactly 55 coins before presentation
+PASS L13-Next first-win/replay star award is committed exactly once
+PASS L13-Next saved progress now has the exact star balance and next authored level
+PASS L13-Next duplicate Win notification does not credit a second award
+PASS L13-Next card holds queued Home rewards
+PASS L13-Next popup has no visible coin reward badge
+PASS L13-Next committed amount remains available internally without a popup counter
+PASS L13-Next no reward flight leaves the visible popup before Continue
+PASS L13-Next waiting on the card never credits a second reward
+PASS L13-Next Next is interactable at the requested time
+PASS L13-Next Next owns its actual UI raycast
+PASS L13-Next action returns to Home without auto-opening the next level card
+PASS L13-Next Home collection completes within 12s
+PASS L13-Next no Area task panel or next-level popup covers active collection
+PASS L13-Next complete star and coin sprite bounds remain on screen throughout Home collection
+PASS L13-Next rendered star counter holds four until arrival, then shows five
+PASS L13-Next rendered coin label matches each sampled arrival total and ends at875
+PASS L13-Next final Home shows exact spendable stars and Level 14
+PASS L13-Next visible coin pile is animated on Home
+PASS L13-Next visible star launches first and overlaps the later coin pile
+PASS L13-Next star reaches its counter before the first coin arrival
+PASS L13-Next sampled counter totals are a valid increasing arrival subsequence ending at the exact reward
+PASS L13-Next ten distinct scheduled coin flights reach their landed state (scheduled=10, landed=10)
+PASS L13-Next display settles at 875 with no leftover coin flight
+PASS L13-Next Home animation and callbacks do not award coins, stars or lives again
+PASS L13-Next no delayed duplicate presentation, reward or next-level popup appears
+TIMING L13-Next star=0.1463 coins=1.2830 star-arrived=1.4018 first-arrival=2.4248 observed-counter-updates=10
+OBSERVATIONS L13-Next distinct-coin-flights=10 landed-coin-flights=10 sampled-reward-totals=[5,10,15,20,25,30,35,40,45,55] rendered-star-totals=[4,5] next-level=14
+PASS L13-Next normal player keys remain untouched
+CASE L23-Royal close
+PASS L23-Royal close deterministic authored progress starts with four displayed spendable stars and the correct next level
+PASS L23-Royal close QA area fixture is fully restored with no task or tutorial due
+FIXTURE L23-Royal close authored-levels=50 earned=22 bought=190 spent=208 available=4; synthetic owned QA setup only, no shop or player award.
+PASS L23-Royal close opens an authored later level in the isolated profile
+PASS L23-Royal close starts at the configured life cap with the QA refill timer cleared
+PASS L23-Royal close one remaining move commits exactly 55 coins before presentation
+PASS L23-Royal close first-win/replay star award is committed exactly once
+PASS L23-Royal close saved progress now has the exact star balance and next authored level
+PASS L23-Royal close duplicate Win notification does not credit a second award
+PASS L23-Royal close card holds queued Home rewards
+PASS L23-Royal close popup has no visible coin reward badge
+PASS L23-Royal close committed amount remains available internally without a popup counter
+PASS L23-Royal close no reward flight leaves the visible popup before Continue
+PASS L23-Royal close waiting on the card never credits a second reward
+PASS L23-Royal close Royal close is interactable at the requested time
+PASS L23-Royal close Royal close owns its actual UI raycast
+PASS L23-Royal close action returns to Home without auto-opening the next level card
+PASS L23-Royal close Home collection completes within 12s
+PASS L23-Royal close no Area task panel or next-level popup covers active collection
+PASS L23-Royal close complete star and coin sprite bounds remain on screen throughout Home collection
+PASS L23-Royal close rendered star counter holds four until arrival, then shows five
+PASS L23-Royal close rendered coin label matches each sampled arrival total and ends at875
+PASS L23-Royal close final Home shows exact spendable stars and Level 24
+PASS L23-Royal close visible coin pile is animated on Home
+PASS L23-Royal close visible star launches first and overlaps the later coin pile
+PASS L23-Royal close star reaches its counter before the first coin arrival
+PASS L23-Royal close sampled counter totals are a valid increasing arrival subsequence ending at the exact reward
+PASS L23-Royal close ten distinct scheduled coin flights reach their landed state (scheduled=10, landed=10)
+PASS L23-Royal close display settles at 875 with no leftover coin flight
+PASS L23-Royal close Home animation and callbacks do not award coins, stars or lives again
+PASS L23-Royal close no delayed duplicate presentation, reward or next-level popup appears
+TIMING L23-Royal close star=0.1695 coins=1.2913 star-arrived=1.4257 first-arrival=2.4478 observed-counter-updates=10
+OBSERVATIONS L23-Royal close distinct-coin-flights=10 landed-coin-flights=10 sampled-reward-totals=[5,10,15,20,25,30,35,40,45,55] rendered-star-totals=[4,5] next-level=24
+PASS L23-Royal close normal player keys remain untouched
+CASE L13-Next-early
+PASS L13-Next-early deterministic authored progress starts with four displayed spendable stars and the correct next level
+PASS L13-Next-early QA area fixture is fully restored with no task or tutorial due
+FIXTURE L13-Next-early authored-levels=50 earned=12 bought=200 spent=208 available=4; synthetic owned QA setup only, no shop or player award.
+PASS L13-Next-early opens an authored later level in the isolated profile
+PASS L13-Next-early starts at the configured life cap with the QA refill timer cleared
+PASS L13-Next-early one remaining move commits exactly 55 coins before presentation
+PASS L13-Next-early first-win/replay star award is committed exactly once
+PASS L13-Next-early saved progress now has the exact star balance and next authored level
+PASS L13-Next-early duplicate Win notification does not credit a second award
+PASS L13-Next-early card holds queued Home rewards
+PASS L13-Next-early popup has no visible coin reward badge
+PASS L13-Next-early committed amount remains available internally without a popup counter
+PASS L13-Next-early no reward flight leaves the visible popup before Continue
+PASS L13-Next-early waiting on the card never credits a second reward
+PASS L13-Next-early requested Continue before the star reward settle completes
+PASS L13-Next-early Next is interactable at the requested time
+PASS L13-Next-early Next owns its actual UI raycast
+PASS L13-Next-early action returns to Home without auto-opening the next level card
+PASS L13-Next-early Home collection completes within 12s
+PASS L13-Next-early no Area task panel or next-level popup covers active collection
+PASS L13-Next-early complete star and coin sprite bounds remain on screen throughout Home collection
+PASS L13-Next-early rendered star counter holds four until arrival, then shows five
+PASS L13-Next-early rendered coin label matches each sampled arrival total and ends at875
+PASS L13-Next-early final Home shows exact spendable stars and Level 14
+PASS L13-Next-early visible coin pile is animated on Home
+PASS L13-Next-early visible star launches first and overlaps the later coin pile
+PASS L13-Next-early star reaches its counter before the first coin arrival
+PASS L13-Next-early sampled counter totals are a valid increasing arrival subsequence ending at the exact reward
+PASS L13-Next-early ten distinct scheduled coin flights reach their landed state (scheduled=10, landed=10)
+PASS L13-Next-early display settles at 875 with no leftover coin flight
+PASS L13-Next-early Home animation and callbacks do not award coins, stars or lives again
+PASS L13-Next-early no delayed duplicate presentation, reward or next-level popup appears
+TIMING L13-Next-early star=0.1529 coins=1.2804 star-arrived=1.4077 first-arrival=2.4302 observed-counter-updates=10
+OBSERVATIONS L13-Next-early distinct-coin-flights=10 landed-coin-flights=10 sampled-reward-totals=[5,10,15,20,25,30,35,40,45,55] rendered-star-totals=[4,5] next-level=14
+PASS L13-Next-early normal player keys remain untouched
+CASE L23-Next-motion-off
+PASS L23-Next-motion-off deterministic authored progress starts with four displayed spendable stars and the correct next level
+PASS L23-Next-motion-off QA area fixture is fully restored with no task or tutorial due
+FIXTURE L23-Next-motion-off authored-levels=50 earned=22 bought=190 spent=208 available=4; synthetic owned QA setup only, no shop or player award.
+PASS L23-Next-motion-off opens an authored later level in the isolated profile
+PASS L23-Next-motion-off starts at the configured life cap with the QA refill timer cleared
+PASS L23-Next-motion-off one remaining move commits exactly 55 coins before presentation
+PASS L23-Next-motion-off first-win/replay star award is committed exactly once
+PASS L23-Next-motion-off saved progress now has the exact star balance and next authored level
+PASS L23-Next-motion-off duplicate Win notification does not credit a second award
+PASS L23-Next-motion-off card holds queued Home rewards
+PASS L23-Next-motion-off popup has no visible coin reward badge
+PASS L23-Next-motion-off committed amount remains available internally without a popup counter
+PASS L23-Next-motion-off no reward flight leaves the visible popup before Continue
+PASS L23-Next-motion-off waiting on the card never credits a second reward
+PASS L23-Next-motion-off Next is interactable at the requested time
+PASS L23-Next-motion-off Next owns its actual UI raycast
+PASS L23-Next-motion-off action returns to Home without auto-opening the next level card
+PASS L23-Next-motion-off Home collection completes within 12s
+PASS L23-Next-motion-off no Area task panel or next-level popup covers active collection
+PASS L23-Next-motion-off complete star and coin sprite bounds remain on screen throughout Home collection
+PASS L23-Next-motion-off Motion off renders five stars directly without a flight
+PASS L23-Next-motion-off rendered coin label matches each sampled arrival total and ends at875
+PASS L23-Next-motion-off final Home shows exact spendable stars and Level 24
+PASS L23-Next-motion-off Motion off completes the counters without star or coin flights
+PASS L23-Next-motion-off display settles at 875 with no leftover coin flight
+PASS L23-Next-motion-off Home animation and callbacks do not award coins, stars or lives again
+PASS L23-Next-motion-off no delayed duplicate presentation, reward or next-level popup appears
+TIMING L23-Next-motion-off star=-1.0000 coins=-1.0000 star-arrived=-1.0000 first-arrival=0.0598 observed-counter-updates=1
+OBSERVATIONS L23-Next-motion-off distinct-coin-flights=0 landed-coin-flights=0 sampled-reward-totals=[55] rendered-star-totals=[5] next-level=24
+PASS L23-Next-motion-off normal player keys remain untouched
+CASE L13-Royal close-replay
+PASS L13-Royal close-replay deterministic authored progress starts with four displayed spendable stars and the correct next level
+PASS L13-Royal close-replay QA area fixture is fully restored with no task or tutorial due
+FIXTURE L13-Royal close-replay authored-levels=50 earned=13 bought=199 spent=208 available=4; synthetic owned QA setup only, no shop or player award.
+PASS L13-Royal close-replay opens an authored later level in the isolated profile
+PASS L13-Royal close-replay starts at the configured life cap with the QA refill timer cleared
+PASS L13-Royal close-replay one remaining move commits exactly 55 coins before presentation
+PASS L13-Royal close-replay first-win/replay star award is committed exactly once
+PASS L13-Royal close-replay saved progress now has the exact star balance and next authored level
+PASS L13-Royal close-replay duplicate Win notification does not credit a second award
+PASS L13-Royal close-replay card holds queued Home rewards
+PASS L13-Royal close-replay popup has no visible coin reward badge
+PASS L13-Royal close-replay committed amount remains available internally without a popup counter
+PASS L13-Royal close-replay no reward flight leaves the visible popup before Continue
+PASS L13-Royal close-replay waiting on the card never credits a second reward
+PASS L13-Royal close-replay Royal close is interactable at the requested time
+PASS L13-Royal close-replay Royal close owns its actual UI raycast
+PASS L13-Royal close-replay action returns to Home without auto-opening the next level card
+PASS L13-Royal close-replay Home collection completes within 12s
+PASS L13-Royal close-replay no Area task panel or next-level popup covers active collection
+PASS L13-Royal close-replay complete star and coin sprite bounds remain on screen throughout Home collection
+PASS L13-Royal close-replay rendered star counter stays at four on replay
+PASS L13-Royal close-replay rendered coin label matches each sampled arrival total and ends at875
+PASS L13-Royal close-replay final Home shows exact spendable stars and Level 14
+PASS L13-Royal close-replay visible coin pile is animated on Home
+PASS L13-Royal close-replay replay does not fly or award a duplicate star
+PASS L13-Royal close-replay sampled counter totals are a valid increasing arrival subsequence ending at the exact reward
+PASS L13-Royal close-replay ten distinct scheduled coin flights reach their landed state (scheduled=10, landed=10)
+PASS L13-Royal close-replay display settles at 875 with no leftover coin flight
+PASS L13-Royal close-replay Home animation and callbacks do not award coins, stars or lives again
+PASS L13-Royal close-replay no delayed duplicate presentation, reward or next-level popup appears
+TIMING L13-Royal close-replay star=-1.0000 coins=0.3246 star-arrived=-1.0000 first-arrival=1.4694 observed-counter-updates=10
+OBSERVATIONS L13-Royal close-replay distinct-coin-flights=10 landed-coin-flights=10 sampled-reward-totals=[5,10,15,20,25,30,35,40,45,55] rendered-star-totals=[4] next-level=14
+PASS L13-Royal close-replay normal player keys remain untouched
+CASE L13-Next-full-prewin-capture
+PASS L13-Next-full-prewin-capture deterministic authored progress starts with four displayed spendable stars and the correct next level
+PASS L13-Next-full-prewin-capture QA area fixture is fully restored with no task or tutorial due
+FIXTURE L13-Next-full-prewin-capture authored-levels=50 earned=12 bought=200 spent=208 available=4; synthetic owned QA setup only, no shop or player award.
+PASS L13-Next-full-prewin-capture opens an authored later level in the isolated profile
+PASS L13-Next-full-prewin-capture starts at the configured life cap with the QA refill timer cleared
+PASS L13-Next-full-prewin-capture forced QA goals enter the real pre-win sequence
+PASS L13-Next-full-prewin-capture celebration and remaining-move finale reach Win within 35s
+PASS L13-Next-full-prewin-capture accepted finale booster emits its coins and drains assigned value
+PASS L13-Next-full-prewin-capture one remaining move commits exactly 55 coins before presentation
+PASS L13-Next-full-prewin-capture first-win/replay star award is committed exactly once
+PASS L13-Next-full-prewin-capture saved progress now has the exact star balance and next authored level
+PASS L13-Next-full-prewin-capture duplicate Win notification does not credit a second award
+PASS L13-Next-full-prewin-capture card holds queued Home rewards
+PASS L13-Next-full-prewin-capture popup has no visible coin reward badge
+PASS L13-Next-full-prewin-capture committed amount remains available internally without a popup counter
+PASS L13-Next-full-prewin-capture no reward flight leaves the visible popup before Continue
+PASS L13-Next-full-prewin-capture waiting on the card never credits a second reward
+PASS L13-Next-full-prewin-capture Next is interactable at the requested time
+PASS L13-Next-full-prewin-capture Next owns its actual UI raycast
+PASS L13-Next-full-prewin-capture action returns to Home without auto-opening the next level card
+PASS L13-Next-full-prewin-capture Home collection completes within 12s
+PASS L13-Next-full-prewin-capture no Area task panel or next-level popup covers active collection
+PASS L13-Next-full-prewin-capture complete star and coin sprite bounds remain on screen throughout Home collection
+PASS L13-Next-full-prewin-capture rendered star counter holds four until arrival, then shows five
+PASS L13-Next-full-prewin-capture rendered coin label matches each sampled arrival total and ends at875
+PASS L13-Next-full-prewin-capture final Home shows exact spendable stars and Level 14
+PASS L13-Next-full-prewin-capture visible coin pile is animated on Home
+PASS L13-Next-full-prewin-capture visible star launches first and overlaps the later coin pile
+PASS L13-Next-full-prewin-capture star reaches its counter before the first coin arrival
+PASS L13-Next-full-prewin-capture sampled counter totals are a valid increasing arrival subsequence ending at the exact reward
+PASS L13-Next-full-prewin-capture ten distinct scheduled coin flights reach their landed state (scheduled=10, landed=10)
+PASS L13-Next-full-prewin-capture display settles at 875 with no leftover coin flight
+PASS L13-Next-full-prewin-capture Home animation and callbacks do not award coins, stars or lives again
+TIMING L13-Next-full-prewin-capture star=0.1792 coins=1.3186 star-arrived=1.4319 first-arrival=2.4724 observed-counter-updates=10
+OBSERVATIONS L13-Next-full-prewin-capture distinct-coin-flights=10 landed-coin-flights=10 sampled-reward-totals=[5,10,15,20,25,30,35,40,45,55] rendered-star-totals=[4,5] next-level=14
+CAPTURE full-flow-20261006-063243-497: 136 actual-time JPEG frames, 720x1280. Silent recording; forced QA goals, real pre-win/finale/card/Continue/Home flow.
+PASS L13-Next-full-prewin-capture normal player keys remain untouched
+PASS Owned QA session ended
+PASS Original Home authored-level array reference and values restored
+PASS Every snapshotted normal save key is unchanged after restoration
+PASS Normal runtime coins/lives/selected level restored
+PASS No Unity errors or exceptions during full-flow QA (0)
+SUMMARY passes=189 fails=0
+DONE

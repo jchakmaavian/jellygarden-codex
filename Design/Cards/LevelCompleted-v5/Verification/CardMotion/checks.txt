@@ -1,0 +1,156 @@
+Started 2026-10-06T06:23:49.6939382Z; v5 presentation-only level 23; star ceremony and deferred 65-coin amount; no reward commit.
+PASS 1080x1920 required Game view preset exists
+PASS 1080x1920 shell and Continue are visible immediately on opening
+PASS 1080x1920 renders at requested dimensions
+PASS 1080x1920 sampled the full motion (263; entrance 38; first t 0.0000)
+PASS 1080x1920 star starts with the instant shell rather than after the former generic entrance (0.0578 wall seconds)
+PASS 1080x1920 oversized hero begins the reference zoom (peak 2.4000)
+PASS 1080x1920 hero shrinks below rest then rebounds (min 0.7620, rebound 1.0788)
+PASS 1080x1920 zoom retracts around a fixed centre with only a short rebound (0.0000/6.9736)
+PASS 1080x1920 entrance rotates to both sides then damps (-16.9457 to 28.0000 degrees)
+PASS 1080x1920 impact and star settle follow the fast reference timing (0.2003/0.6118s)
+PASS 1080x1920 velvet compresses, stretches and settles (0.9057/1.3000; 0.9116s)
+PASS 1080x1920 impact lights the rear halo and velvet (0.5190/0.2598)
+PASS 1080x1920 idle halo stays warm and restrained (0.2500 to 0.3097)
+PASS 1080x1920 title writes progressively around zoom impact (0.1882 to 0.5747s; 22 steps)
+PASS 1080x1920 burst transitions into moving rear halo and idle glints (24/8/12)
+PASS 1080x1920 celebration becomes ready after velvet settles (0.9853s)
+PASS 1080x1920 Continue stays visible throughout the ceremony (minimum alpha 1.0000)
+PASS 1080x1920 popup has no floating coins, count pill or reward label (first -1.0000s: none; max alpha 0.0000: none)
+PASS 1080x1920 card presentation leaves coins, stars, lives and scores unchanged
+PASS hero uses the high-resolution win-star import (1024x1024)
+PASS large star image cannot steal Continue or Close taps
+PASS win face is dark royal blue (top/bottom luminance 0.1698/0.0792)
+PASS face highlight and inner glow preserve the darker background
+PASS halo, animated halo sparkles, rays and impact flash render behind cushion and star
+PASS halo stays centred behind the star rather than washing the entire card
+PASS star silhouette shadow and contact shadow sit above velvet and below the star
+PASS star shadow is flattened onto the pillow below the star
+PASS soft silhouette and contact shadow remain visible after landing (group 0.2800; composite interior alpha 0.2643; contact 0.2500)
+PASS win frame uses the same layered gold bevels as Level Start
+PASS full draped crown crest matches the other cards, with no competing flat ribbon
+PASS close control uses the shared royal-blue face
+PASS Continue uses the shared emerald and gold primary-button treatment
+PASS shared bottom diamond and fine lines complete the card frame
+PASS reward star is exactly 1.5 times the previous 276-unit star (414.0000)
+PASS 1080x1920 card, close and Continue stay on screen 1080x1920
+PASS 1080x1920 heading clears the star body
+PASS 1080x1920 star ceremony has no reward badge or coin origin
+PASS 1080x1920 cushion tassels clear Continue
+PASS 1080x1920 decorative lights, shadows and sparkles do not take taps
+PASS crest shows the live level 23 (23)
+PASS 1080x1920 front and rear sparkle pools have 38 and 12 reusable images
+PASS 1080x1920 reopen preserves complete effect pools
+PASS 720x1280 required Game view preset exists
+PASS 720x1280 shell and Continue are visible immediately on opening
+PASS 720x1280 renders at requested dimensions
+PASS 720x1280 sampled the full motion (269; entrance 39; first t 0.0000)
+PASS 720x1280 star starts with the instant shell rather than after the former generic entrance (0.0355 wall seconds)
+PASS 720x1280 oversized hero begins the reference zoom (peak 2.4000)
+PASS 720x1280 hero shrinks below rest then rebounds (min 0.8137, rebound 1.0800)
+PASS 720x1280 zoom retracts around a fixed centre with only a short rebound (0.0000/6.9992)
+PASS 720x1280 entrance rotates to both sides then damps (-17.1888 to 28.0000 degrees)
+PASS 720x1280 impact and star settle follow the fast reference timing (0.2151/0.6004s)
+PASS 720x1280 velvet compresses, stretches and settles (0.8821/1.2993; 0.9058s)
+PASS 720x1280 impact lights the rear halo and velvet (0.4690/0.2498)
+PASS 720x1280 idle halo stays warm and restrained (0.2500 to 0.3097)
+PASS 720x1280 title writes progressively around zoom impact (0.1830 to 0.5671s; 23 steps)
+PASS 720x1280 burst transitions into moving rear halo and idle glints (24/7/12)
+PASS 720x1280 celebration becomes ready after velvet settles (0.9817s)
+PASS 720x1280 Continue stays visible throughout the ceremony (minimum alpha 1.0000)
+PASS 720x1280 popup has no floating coins, count pill or reward label (first -1.0000s: none; max alpha 0.0000: none)
+PASS 720x1280 card presentation leaves coins, stars, lives and scores unchanged
+PASS hero uses the high-resolution win-star import (1024x1024)
+PASS large star image cannot steal Continue or Close taps
+PASS win face is dark royal blue (top/bottom luminance 0.1698/0.0792)
+PASS face highlight and inner glow preserve the darker background
+PASS halo, animated halo sparkles, rays and impact flash render behind cushion and star
+PASS halo stays centred behind the star rather than washing the entire card
+PASS star silhouette shadow and contact shadow sit above velvet and below the star
+PASS star shadow is flattened onto the pillow below the star
+PASS soft silhouette and contact shadow remain visible after landing (group 0.2800; composite interior alpha 0.2643; contact 0.2500)
+PASS win frame uses the same layered gold bevels as Level Start
+PASS full draped crown crest matches the other cards, with no competing flat ribbon
+PASS close control uses the shared royal-blue face
+PASS Continue uses the shared emerald and gold primary-button treatment
+PASS shared bottom diamond and fine lines complete the card frame
+PASS reward star is exactly 1.5 times the previous 276-unit star (414.0000)
+PASS 720x1280 card, close and Continue stay on screen 720x1280
+PASS 720x1280 heading clears the star body
+PASS 720x1280 star ceremony has no reward badge or coin origin
+PASS 720x1280 cushion tassels clear Continue
+PASS 720x1280 decorative lights, shadows and sparkles do not take taps
+PASS crest shows the live level 23 (23)
+PASS 720x1280 front and rear sparkle pools have 38 and 12 reusable images
+PASS 720x1280 reopen preserves complete effect pools
+PASS 1536x2048 required Game view preset exists
+PASS 1536x2048 shell and Continue are visible immediately on opening
+PASS 1536x2048 renders at requested dimensions
+PASS 1536x2048 sampled the full motion (259; entrance 38; first t 0.0000)
+PASS 1536x2048 star starts with the instant shell rather than after the former generic entrance (0.0358 wall seconds)
+PASS 1536x2048 oversized hero begins the reference zoom (peak 2.4000)
+PASS 1536x2048 hero shrinks below rest then rebounds (min 0.7651, rebound 1.0800)
+PASS 1536x2048 zoom retracts around a fixed centre with only a short rebound (0.0001/6.9992)
+PASS 1536x2048 entrance rotates to both sides then damps (-17.3265 to 28.0000 degrees)
+PASS 1536x2048 impact and star settle follow the fast reference timing (0.2161/0.6056s)
+PASS 1536x2048 velvet compresses, stretches and settles (0.8807/1.2997; 0.9084s)
+PASS 1536x2048 impact lights the rear halo and velvet (0.5006/0.2503)
+PASS 1536x2048 idle halo stays warm and restrained (0.2500 to 0.3097)
+PASS 1536x2048 title writes progressively around zoom impact (0.1995 to 0.5675s; 21 steps)
+PASS 1536x2048 burst transitions into moving rear halo and idle glints (24/7/12)
+PASS 1536x2048 celebration becomes ready after velvet settles (0.9839s)
+PASS 1536x2048 Continue stays visible throughout the ceremony (minimum alpha 1.0000)
+PASS 1536x2048 popup has no floating coins, count pill or reward label (first -1.0000s: none; max alpha 0.0000: none)
+PASS 1536x2048 card presentation leaves coins, stars, lives and scores unchanged
+PASS hero uses the high-resolution win-star import (1024x1024)
+PASS large star image cannot steal Continue or Close taps
+PASS win face is dark royal blue (top/bottom luminance 0.1698/0.0792)
+PASS face highlight and inner glow preserve the darker background
+PASS halo, animated halo sparkles, rays and impact flash render behind cushion and star
+PASS halo stays centred behind the star rather than washing the entire card
+PASS star silhouette shadow and contact shadow sit above velvet and below the star
+PASS star shadow is flattened onto the pillow below the star
+PASS soft silhouette and contact shadow remain visible after landing (group 0.2800; composite interior alpha 0.2643; contact 0.2500)
+PASS win frame uses the same layered gold bevels as Level Start
+PASS full draped crown crest matches the other cards, with no competing flat ribbon
+PASS close control uses the shared royal-blue face
+PASS Continue uses the shared emerald and gold primary-button treatment
+PASS shared bottom diamond and fine lines complete the card frame
+PASS reward star is exactly 1.5 times the previous 276-unit star (414.0000)
+PASS 1536x2048 card, close and Continue stay on screen 1536x2048
+PASS 1536x2048 heading clears the star body
+PASS 1536x2048 star ceremony has no reward badge or coin origin
+PASS 1536x2048 cushion tassels clear Continue
+PASS 1536x2048 decorative lights, shadows and sparkles do not take taps
+PASS crest shows the live level 23 (23)
+PASS 1536x2048 front and rear sparkle pools have 38 and 12 reusable images
+PASS 1536x2048 reopen preserves complete effect pools
+PASS crest shows the live level 24 (24)
+PASS additional reopen 1 reuses both particle pools
+PASS additional reopen 1 has no popup coin graphics (none; alpha 0.0000)
+PASS crest shows the live level 23 (23)
+PASS additional reopen 2 reuses both particle pools
+PASS additional reopen 2 has no popup coin graphics (none; alpha 0.0000)
+PASS crest shows the live level 24 (24)
+PASS additional reopen 3 reuses both particle pools
+PASS additional reopen 3 has no popup coin graphics (none; alpha 0.0000)
+PASS separate capture includes full zoom, recoil and idle with actual wall and animation timestamps (59 frames)
+CAPTURE JPEG encoding is separate from assertion runs; ffconcat preserves actual wall-time playback, with per-frame animation times logged. No audio.
+PASS Motion off: star and velvet remain still at rest
+PASS Motion off: no flash, rays, front or halo particles, or floating rewards
+PASS Motion off: soft star/contact shadows remain visible and steady
+PASS Motion off: final title and Continue are readable and celebration becomes ready
+PASS Motion off: presentation leaves economy unchanged
+PASS Next owns its real raycast tap
+PASS Next follows Continue to Home
+PASS Next does not award coins or stars again
+PASS Royal close owns its real raycast tap
+PASS Royal close follows Continue to Home
+PASS Royal close does not award coins or stars again
+PASS real PlayerPrefs unchanged while QA is active
+PASS owned QA session ended
+PASS real PlayerPrefs unchanged after restoring the player profile
+PASS player runtime coins/lives/level restored
+PASS no Unity errors during the run (0)
+SUMMARY passes=152 fails=0
+DONE

@@ -1,0 +1,18 @@
+{
+  "reference_source": "G:\\Game\\old Backup\\JellyGarden-Codex-20261005\\Design\\RoyalMatchReference\\recordings\\game completed experience.mp4",
+  "reference_start_seconds": 10.317,
+  "unity_source": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v5\\Royal-Throne-Level-Complete-v5-Unity-Card.mp4",
+  "unity_first_hero_frame": 1,
+  "unity_start_wall_seconds": 0.0748,
+  "duration_seconds": 3.5,
+  "output_fps": 30,
+  "size": [
+    720,
+    680
+  ],
+  "audio": false,
+  "unity_card_passing_checks": 152,
+  "timing": "Both sides play at real-time speed. Only start offsets are aligned; no time stretching or animation-clock retiming.",
+  "scope": "Motion comparison; Royal Throne retains its own artwork, frame and requested larger settled star.",
+  "decode_validation": "passed"
+}

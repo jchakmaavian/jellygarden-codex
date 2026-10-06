@@ -1,0 +1,2 @@
+var f = typeof(RoyalThrone.Presentation.RoyalCardMotion).GetField("instantRewardEntrance");
+return new { playing = UnityEngine.Application.isPlaying, compiling = UnityEditor.EditorApplication.isCompiling, updating = UnityEditor.EditorApplication.isUpdating, testing = RoyalThrone.Testing.RoyalSave.Testing, v5Loaded = f != null, sprite = UnityEngine.Resources.Load<UnityEngine.Sprite>("RoyalGameplay/win-star") != null };

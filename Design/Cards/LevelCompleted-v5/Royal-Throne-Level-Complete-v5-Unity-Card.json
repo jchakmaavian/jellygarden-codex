@@ -1,0 +1,15 @@
+{
+  "source": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v5\\Verification\\CardMotion\\capture.ffconcat",
+  "output": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v5\\Royal-Throne-Level-Complete-v5-Unity-Card.mp4",
+  "passing_checks": 152,
+  "recorded_duration_seconds": 3.8159,
+  "source_frames": 59,
+  "output_fps": 30,
+  "size": [
+    720,
+    1280
+  ],
+  "audio": false,
+  "timing": "Recorded ffconcat wall-time durations resampled at 30 fps; not retimed to the animation clock.",
+  "decode_validation": "passed"
+}

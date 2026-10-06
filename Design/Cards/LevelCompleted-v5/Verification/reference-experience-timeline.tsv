@@ -1,0 +1,1711 @@
+case	stage	elapsed_s	state	star_flights	coin_flights	visible_stars	visible_coins	shown_coins	pending	saved_coins	star_hud	coin_hud	next_level
+L13-Next	card	0.0000	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.0862	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.0977	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.1110	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.1319	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.1441	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.1636	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.1779	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.1942	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.2148	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.2267	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.2465	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.2661	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.2834	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.2988	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.3241	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.3412	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.3613	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.3734	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.3948	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.4090	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.4275	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.4408	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.4618	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.4743	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.4980	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.5101	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.5405	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.5716	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.5971	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.6086	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.6320	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.6450	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.6588	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.6797	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.6973	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.7104	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.7324	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.7444	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.7638	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.7758	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.7967	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.8090	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.8326	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.8452	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.8594	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.8824	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.8939	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.9136	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.9271	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.9524	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.9767	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	0.9898	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.0026	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.0219	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.0341	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.0551	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.0722	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.1057	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.1164	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.1360	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.1495	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.1714	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.1885	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.2073	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.2187	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.2371	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.2551	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.2662	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.2877	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.3047	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.3161	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.3357	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.3525	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.3709	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.3823	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.4051	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.4162	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.4418	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.4572	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.4722	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.4846	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.5050	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.5220	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.5354	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.5548	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.5708	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.5822	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.6076	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.6181	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.6364	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.6485	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.6705	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.6877	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.7019	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.7222	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.7333	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.7536	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.7715	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.7830	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.8044	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.8209	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.8331	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.8543	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.8667	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.8877	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.9001	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.9198	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.9373	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.9541	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.9675	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	1.9812	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.0042	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.0163	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.0381	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.0494	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.0714	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.0823	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.1069	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.1177	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.1369	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.1493	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.1711	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.1875	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.2042	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.2213	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.2338	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.2559	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.2670	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.2867	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.3037	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.3212	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.3382	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.3489	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.3723	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.3829	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.4046	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.4157	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.4373	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.4547	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.4659	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.4883	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.4994	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.5206	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.5370	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.5488	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.5690	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.5859	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.6224	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.6319	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.6435	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.6632	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.6740	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.6964	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.7077	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.7286	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.7446	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.7618	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.7734	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.7962	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.8122	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.8236	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.8454	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.8585	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.8787	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.8906	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.9128	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.9245	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.9469	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.9628	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.9776	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	card	2.9956	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	0.0584	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next	home	0.0755	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next	home	0.0957	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next	home	0.1130	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next	home	0.1303	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next	home	0.1463	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.1638	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.1808	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.1917	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.2129	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.2291	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.2483	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.2626	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.2794	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.2968	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.3129	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.3291	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.3465	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.3623	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.3790	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.3966	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.4130	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.4295	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.4458	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.4629	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.4798	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.5178	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.5301	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.5403	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.5565	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.5728	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.5911	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.6070	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.6237	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.6411	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.6583	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.6749	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.6912	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.7071	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.7237	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.7413	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.7573	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.7734	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.7899	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.8032	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.8259	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.8391	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.8514	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.8735	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.8910	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.9070	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.9228	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.9403	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.9566	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	0.9740	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next	home	1.0211	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.0335	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.0494	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.0674	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.0836	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.0998	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.1166	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.1331	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.1507	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.1622	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.1838	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.1998	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.2157	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.2323	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.2500	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.2614	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next	home	1.2830	Map	1	10	1	1	820	True	875	4	820	14
+L13-Next	home	1.3010	Map	1	10	1	2	820	True	875	4	820	14
+L13-Next	home	1.3186	Map	1	10	1	3	820	True	875	4	820	14
+L13-Next	home	1.3345	Map	1	10	1	4	820	True	875	4	820	14
+L13-Next	home	1.3516	Map	1	10	1	4	820	True	875	4	820	14
+L13-Next	home	1.3691	Map	1	10	1	5	820	True	875	4	820	14
+L13-Next	home	1.3850	Map	1	10	1	6	820	True	875	4	820	14
+L13-Next	home	1.4018	Map	0	10	0	7	820	True	875	5	820	14
+L13-Next	home	1.4176	Map	0	10	0	8	820	True	875	5	820	14
+L13-Next	home	1.4350	Map	0	10	0	9	820	True	875	5	820	14
+L13-Next	home	1.4505	Map	0	10	0	9	820	True	875	5	820	14
+L13-Next	home	1.4674	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.4841	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.5238	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.5349	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.5482	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.5600	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.5807	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.5941	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.6128	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.6289	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.6467	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.6631	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.6807	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.6922	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.7128	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.7293	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.7413	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.7629	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.7786	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.7955	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.8097	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.8249	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.8450	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.8628	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.8756	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.8981	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.9098	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.9293	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.9452	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.9634	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	1.9745	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.0154	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.0253	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.0404	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.0566	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.0746	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.0922	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.1036	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.1243	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.1408	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.1583	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.1691	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.1910	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.2084	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.2254	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.2403	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.2526	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.2743	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.2856	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.3080	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.3242	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.3365	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.3598	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.3721	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.3900	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.4077	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next	home	2.4248	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next	home	2.4441	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next	home	2.4604	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next	home	2.4720	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next	home	2.4957	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next	home	2.5247	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next	home	2.5347	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next	home	2.5572	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next	home	2.5676	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next	home	2.5905	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next	home	2.6007	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next	home	2.6216	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next	home	2.6337	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next	home	2.6550	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next	home	2.6677	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next	home	2.6892	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next	home	2.7000	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next	home	2.7239	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next	home	2.7350	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next	home	2.7562	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next	home	2.7681	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next	home	2.7886	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next	home	2.8049	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next	home	2.8175	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next	home	2.8317	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next	home	2.8552	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next	home	2.8722	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next	home	2.8843	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next	home	2.9045	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next	home	2.9221	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next	home	2.9344	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next	home	2.9544	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next	home	2.9664	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next	home	2.9901	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next	home	3.0038	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next	home	3.0358	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next	home	3.0488	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next	home	3.0599	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next	home	3.0716	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next	home	3.0923	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next	home	3.1052	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next	home	3.1256	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next	home	3.1377	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next	home	3.1598	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next	home	3.1710	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next	home	3.1936	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next	home	3.2041	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next	home	3.2262	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next	home	3.2434	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next	home	3.2591	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next	home	3.2754	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next	home	3.2920	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next	home	3.3084	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next	home	3.3258	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next	home	3.3378	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next	home	3.3580	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next	home	3.3764	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next	home	3.3876	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next	home	3.4094	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next	home	3.4208	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.4420	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.4589	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.4703	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.4922	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.5098	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.5369	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.5494	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.5596	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.5760	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.5910	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.6096	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.6252	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.6442	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.6611	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.6711	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next	home	3.6920	Map	0	0	0	0	875	False	875	5	875	14
+L23-Royal close	card	0.0000	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.0766	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.1043	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.1132	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.1306	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.1451	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.1650	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.1778	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.1990	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.2164	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.2270	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.2481	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.2592	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.2803	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.2968	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.3089	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.3312	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.3422	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.3637	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.3804	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.3929	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.4133	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.4295	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.4470	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.4587	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.4808	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.4975	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.5113	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.5323	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.5443	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.5649	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.5769	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.6146	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.6253	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.6360	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.6552	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.6665	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.6869	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.7042	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.7214	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.7375	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.7615	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.7732	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.7855	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.8073	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.8171	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.8392	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.8549	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.8664	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.8876	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.9039	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.9164	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.9321	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.9548	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.9735	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	0.9962	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.0098	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.0319	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.0431	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.0609	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.0735	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.1266	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.1403	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.1548	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.1689	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.1929	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.2055	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.2231	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.2352	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.2586	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.2740	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.2881	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.3034	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.3242	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.3375	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.3611	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.3737	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.3863	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.4081	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.4208	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.4357	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.4587	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.4706	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.4900	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.5076	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.5254	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.5408	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.5550	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.5783	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.5896	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.6181	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.6306	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.6524	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.6681	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.6821	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.6972	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.7123	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.7335	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.7489	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.7754	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.7946	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.8158	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.8360	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.8531	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.8671	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.8801	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.9058	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.9206	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.9342	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.9509	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.9675	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	1.9801	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.0012	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.0163	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.0330	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.0472	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.0697	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.0806	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.1022	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.1280	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.1376	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.1587	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.1712	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.1923	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.2114	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.2222	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.2423	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.2613	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.2727	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.2916	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.3111	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.3261	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.3419	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.3543	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.3762	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.3936	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.4060	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.4265	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.4375	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.4605	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.4775	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.4896	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.5112	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.5237	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.5442	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.5559	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.5769	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.5901	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.6117	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.6412	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.6522	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.6804	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.6914	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.7053	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.7225	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.7358	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.7579	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.7715	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.7858	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.8061	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.8275	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.8379	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.8577	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.8691	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.8891	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.9016	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.9213	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.9404	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.9515	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.9733	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	card	2.9957	Win	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	0.0771	Map	1	0	0	0	820	True	875	4	820	24
+L23-Royal close	home	0.0980	Map	1	0	0	0	820	True	875	4	820	24
+L23-Royal close	home	0.1168	Map	1	0	0	0	820	True	875	4	820	24
+L23-Royal close	home	0.1377	Map	1	0	0	0	820	True	875	4	820	24
+L23-Royal close	home	0.1487	Map	1	0	0	0	820	True	875	4	820	24
+L23-Royal close	home	0.1695	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.1815	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.2001	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.2172	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.2450	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.2547	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.2656	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.2860	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.3059	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.3178	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.3431	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.3559	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.3696	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.3818	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.4035	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.4188	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.4365	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.4506	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.4691	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.4815	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.5089	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.5178	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.5366	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.5537	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.5705	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.5866	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.6011	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.6149	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.6367	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.6484	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.6713	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.6855	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.7039	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.7207	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.7353	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.7532	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.7662	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.7884	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.8012	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.8208	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.8344	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.8532	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.8667	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.8875	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.9019	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.9147	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.9360	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.9535	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.9661	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	0.9871	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.0117	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.0212	Map	1	0	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.0402	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.0596	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.0709	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.0911	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.1042	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.1252	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.1367	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.1579	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.1748	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.1937	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.2057	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.2239	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.2424	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.2597	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.2725	Map	1	10	1	0	820	True	875	4	820	24
+L23-Royal close	home	1.2913	Map	1	10	1	1	820	True	875	4	820	24
+L23-Royal close	home	1.3035	Map	1	10	1	1	820	True	875	4	820	24
+L23-Royal close	home	1.3245	Map	1	10	1	2	820	True	875	4	820	24
+L23-Royal close	home	1.3362	Map	1	10	1	3	820	True	875	4	820	24
+L23-Royal close	home	1.3584	Map	1	10	1	4	820	True	875	4	820	24
+L23-Royal close	home	1.3707	Map	1	10	1	4	820	True	875	4	820	24
+L23-Royal close	home	1.3913	Map	1	10	1	6	820	True	875	4	820	24
+L23-Royal close	home	1.4036	Map	1	10	1	6	820	True	875	4	820	24
+L23-Royal close	home	1.4257	Map	0	10	0	7	820	True	875	5	820	24
+L23-Royal close	home	1.4375	Map	0	10	0	8	820	True	875	5	820	24
+L23-Royal close	home	1.4578	Map	0	10	0	9	820	True	875	5	820	24
+L23-Royal close	home	1.4699	Map	0	10	0	9	820	True	875	5	820	24
+L23-Royal close	home	1.4906	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.5148	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.5246	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.5476	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.5626	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.5792	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.5968	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.6135	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.6259	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.6464	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.6632	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.6802	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.6967	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.7141	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.7303	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.7470	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.7635	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.7798	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.7962	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.8129	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.8315	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.8484	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.8639	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.8794	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.8961	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.9127	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.9308	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.9470	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.9640	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.9808	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	1.9973	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.0194	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.0287	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.0476	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.0654	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.0791	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.0970	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.1149	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.1259	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.1471	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.1631	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.1796	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.1968	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.2135	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.2308	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.2468	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.2649	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.2800	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.2986	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.3143	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.3306	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.3467	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.3625	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.3806	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.3969	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.4135	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.4292	Map	0	10	0	10	820	True	875	5	820	24
+L23-Royal close	home	2.4478	Map	0	9	0	9	825	True	875	5	825	24
+L23-Royal close	home	2.4590	Map	0	9	0	9	825	True	875	5	825	24
+L23-Royal close	home	2.4800	Map	0	9	0	9	825	True	875	5	825	24
+L23-Royal close	home	2.4975	Map	0	9	0	9	825	True	875	5	825	24
+L23-Royal close	home	2.5220	Map	0	9	0	9	825	True	875	5	825	24
+L23-Royal close	home	2.5321	Map	0	9	0	9	825	True	875	5	825	24
+L23-Royal close	home	2.5473	Map	0	9	0	9	825	True	875	5	825	24
+L23-Royal close	home	2.5633	Map	0	8	0	8	830	True	875	5	830	24
+L23-Royal close	home	2.5792	Map	0	8	0	8	830	True	875	5	830	24
+L23-Royal close	home	2.5975	Map	0	8	0	8	830	True	875	5	830	24
+L23-Royal close	home	2.6104	Map	0	8	0	8	830	True	875	5	830	24
+L23-Royal close	home	2.6300	Map	0	8	0	8	830	True	875	5	830	24
+L23-Royal close	home	2.6431	Map	0	8	0	8	830	True	875	5	830	24
+L23-Royal close	home	2.6626	Map	0	7	0	7	835	True	875	5	835	24
+L23-Royal close	home	2.6801	Map	0	7	0	7	835	True	875	5	835	24
+L23-Royal close	home	2.6963	Map	0	7	0	7	835	True	875	5	835	24
+L23-Royal close	home	2.7138	Map	0	7	0	7	835	True	875	5	835	24
+L23-Royal close	home	2.7299	Map	0	7	0	7	835	True	875	5	835	24
+L23-Royal close	home	2.7469	Map	0	7	0	7	835	True	875	5	835	24
+L23-Royal close	home	2.7649	Map	0	7	0	7	835	True	875	5	835	24
+L23-Royal close	home	2.7814	Map	0	6	0	6	840	True	875	5	840	24
+L23-Royal close	home	2.7990	Map	0	6	0	6	840	True	875	5	840	24
+L23-Royal close	home	2.8099	Map	0	6	0	6	840	True	875	5	840	24
+L23-Royal close	home	2.8307	Map	0	6	0	6	840	True	875	5	840	24
+L23-Royal close	home	2.8424	Map	0	6	0	6	840	True	875	5	840	24
+L23-Royal close	home	2.8635	Map	0	6	0	6	840	True	875	5	840	24
+L23-Royal close	home	2.8807	Map	0	5	0	5	845	True	875	5	845	24
+L23-Royal close	home	2.8923	Map	0	5	0	5	845	True	875	5	845	24
+L23-Royal close	home	2.9127	Map	0	5	0	5	845	True	875	5	845	24
+L23-Royal close	home	2.9300	Map	0	5	0	5	845	True	875	5	845	24
+L23-Royal close	home	2.9478	Map	0	5	0	5	845	True	875	5	845	24
+L23-Royal close	home	2.9628	Map	0	5	0	5	845	True	875	5	845	24
+L23-Royal close	home	2.9803	Map	0	5	0	5	845	True	875	5	845	24
+L23-Royal close	home	2.9982	Map	0	4	0	4	850	True	875	5	850	24
+L23-Royal close	home	3.0200	Map	0	4	0	4	850	True	875	5	850	24
+L23-Royal close	home	3.0307	Map	0	4	0	4	850	True	875	5	850	24
+L23-Royal close	home	3.0509	Map	0	4	0	4	850	True	875	5	850	24
+L23-Royal close	home	3.0672	Map	0	4	0	4	850	True	875	5	850	24
+L23-Royal close	home	3.0840	Map	0	4	0	4	850	True	875	5	850	24
+L23-Royal close	home	3.0961	Map	0	4	0	4	850	True	875	5	850	24
+L23-Royal close	home	3.1175	Map	0	3	0	3	855	True	875	5	855	24
+L23-Royal close	home	3.1301	Map	0	3	0	3	855	True	875	5	855	24
+L23-Royal close	home	3.1509	Map	0	3	0	3	855	True	875	5	855	24
+L23-Royal close	home	3.1684	Map	0	3	0	3	855	True	875	5	855	24
+L23-Royal close	home	3.1843	Map	0	3	0	3	855	True	875	5	855	24
+L23-Royal close	home	3.1965	Map	0	3	0	3	855	True	875	5	855	24
+L23-Royal close	home	3.2173	Map	0	2	0	2	860	True	875	5	860	24
+L23-Royal close	home	3.2344	Map	0	2	0	2	860	True	875	5	860	24
+L23-Royal close	home	3.2519	Map	0	2	0	2	860	True	875	5	860	24
+L23-Royal close	home	3.2685	Map	0	2	0	2	860	True	875	5	860	24
+L23-Royal close	home	3.2848	Map	0	2	0	2	860	True	875	5	860	24
+L23-Royal close	home	3.2970	Map	0	2	0	2	860	True	875	5	860	24
+L23-Royal close	home	3.3185	Map	0	2	0	2	860	True	875	5	860	24
+L23-Royal close	home	3.3315	Map	0	1	0	1	865	True	875	5	865	24
+L23-Royal close	home	3.3521	Map	0	1	0	1	865	True	875	5	865	24
+L23-Royal close	home	3.3643	Map	0	1	0	1	865	True	875	5	865	24
+L23-Royal close	home	3.3841	Map	0	1	0	1	865	True	875	5	865	24
+L23-Royal close	home	3.3973	Map	0	1	0	1	865	True	875	5	865	24
+L23-Royal close	home	3.4173	Map	0	1	0	1	865	True	875	5	865	24
+L23-Royal close	home	3.4309	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.4511	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.4684	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.4841	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.5006	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.5243	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.5345	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.5507	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.5674	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.5849	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.5981	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.6122	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.6343	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.6464	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.6670	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.6798	Map	0	0	0	0	875	True	875	5	875	24
+L23-Royal close	home	3.7006	Map	0	0	0	0	875	False	875	5	875	24
+L13-Next-early	card	0.0000	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.0706	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.0819	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.0999	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.1108	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.1311	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.1479	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.1591	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.1805	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.1989	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.2116	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.2254	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	card	0.2492	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	0.0639	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next-early	home	0.0800	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next-early	home	0.1013	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next-early	home	0.1129	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next-early	home	0.1354	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next-early	home	0.1529	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.1687	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.1857	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.2009	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.2175	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.2342	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.2512	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.2797	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.2899	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.2989	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.3205	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.3343	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.3484	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.3687	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.3805	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.4028	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.4144	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.4344	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.4506	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.4682	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.4855	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.5004	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.5172	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.5350	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.5504	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.5682	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.5801	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.6018	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.6168	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.6351	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.6470	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.6679	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.6798	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.7020	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.7174	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.7344	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.7513	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.7808	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.7908	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.7993	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.8172	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.8344	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.8519	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.8667	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.8841	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.9013	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.9172	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.9340	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.9519	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.9686	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	0.9806	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.0001	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.0180	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.0334	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.0503	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.0682	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.0803	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.1002	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.1181	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.1348	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.1506	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.1688	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.1810	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.2021	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.2178	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.2342	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.2514	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-early	home	1.2804	Map	1	10	1	1	820	True	875	4	820	14
+L13-Next-early	home	1.2898	Map	1	10	1	2	820	True	875	4	820	14
+L13-Next-early	home	1.3076	Map	1	10	1	2	820	True	875	4	820	14
+L13-Next-early	home	1.3194	Map	1	10	1	3	820	True	875	4	820	14
+L13-Next-early	home	1.3332	Map	1	10	1	4	820	True	875	4	820	14
+L13-Next-early	home	1.3558	Map	1	10	1	5	820	True	875	4	820	14
+L13-Next-early	home	1.3745	Map	1	10	1	6	820	True	875	4	820	14
+L13-Next-early	home	1.3905	Map	1	10	1	7	820	True	875	4	820	14
+L13-Next-early	home	1.4077	Map	0	10	0	7	820	True	875	5	820	14
+L13-Next-early	home	1.4187	Map	0	10	0	8	820	True	875	5	820	14
+L13-Next-early	home	1.4397	Map	0	10	0	9	820	True	875	5	820	14
+L13-Next-early	home	1.4563	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.4752	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.4858	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.5068	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.5228	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.5402	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.5515	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.5738	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.5890	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.6071	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.6188	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.6437	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.6538	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.6735	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.6892	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.7051	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.7235	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.7387	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.7562	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.7843	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.7943	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.8036	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.8242	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.8393	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.8551	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.8731	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.8904	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.9068	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.9225	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.9406	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.9571	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.9732	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	1.9893	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.0057	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.0234	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.0399	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.0559	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.0729	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.0900	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.1078	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.1183	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.1399	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.1516	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.1732	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.1850	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.2081	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.2218	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.2412	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.2518	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.2849	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.3240	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.3394	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.3527	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.3651	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.3769	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.3954	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.4162	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-early	home	2.4302	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-early	home	2.4439	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-early	home	2.4635	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-early	home	2.4751	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-early	home	2.4962	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-early	home	2.5090	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-early	home	2.5301	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-early	home	2.5430	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-early	home	2.5622	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-early	home	2.5798	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-early	home	2.5930	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-early	home	2.6146	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-early	home	2.6261	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-early	home	2.6457	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-early	home	2.6638	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-early	home	2.6760	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-early	home	2.6973	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-early	home	2.7090	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-early	home	2.7298	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-early	home	2.7443	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-early	home	2.7594	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-early	home	2.7933	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-early	home	2.8124	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-early	home	2.8275	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-early	home	2.8414	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-early	home	2.8565	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-early	home	2.8713	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-early	home	2.8891	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-early	home	2.9045	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-early	home	2.9172	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-early	home	2.9303	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-early	home	2.9509	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-early	home	2.9636	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-early	home	2.9813	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-early	home	2.9959	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-early	home	3.0206	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-early	home	3.0324	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-early	home	3.0529	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-early	home	3.0649	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-early	home	3.0860	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-early	home	3.0992	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-early	home	3.1197	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-early	home	3.1360	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-early	home	3.1536	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-early	home	3.1676	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-early	home	3.1812	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-early	home	3.2040	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next-early	home	3.2338	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next-early	home	3.2564	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next-early	home	3.2917	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next-early	home	3.3093	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next-early	home	3.3378	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next-early	home	3.3625	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next-early	home	3.3799	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next-early	home	3.3945	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next-early	home	3.4165	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.4354	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.4520	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.4646	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.4791	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.4993	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.5114	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.5330	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.5505	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.5623	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.5770	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.5945	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.6156	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.6302	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.6491	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.6682	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-early	home	3.6812	Map	0	0	0	0	875	False	875	5	875	14
+L23-Next-motion-off	card	0.0000	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.0533	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.0657	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.0833	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.1018	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.1128	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.1344	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.1521	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.1696	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.1800	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.1998	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.2122	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.2329	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.2503	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.2682	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.2835	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.3011	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.3184	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.3296	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.3534	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.3634	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.3913	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.4012	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.4184	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.4359	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.4473	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.4677	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.4855	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.4998	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.5178	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.5373	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.5511	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.5678	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.5853	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.5991	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.6163	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	card	0.6334	Win	0	0	0	0	875	True	875	5	875	24
+L23-Next-motion-off	home	0.0598	Map	0	0	0	0	875	False	875	5	875	24
+L13-Royal close-replay	card	0.0000	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.0559	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.0725	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.0845	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.1028	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.1193	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.1326	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.1539	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.1662	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.1887	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.1990	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.2227	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.2329	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.2555	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.2678	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.2878	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.3022	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.3154	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.3327	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.3490	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.3752	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.4051	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.4179	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.4343	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.4492	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.4622	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.4855	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.4987	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.5123	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.5350	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.5485	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.5616	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.5847	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.5992	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.6121	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.6289	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.6534	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.6666	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.6867	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.7017	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.7145	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.7399	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.7541	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.7675	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.7800	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.8014	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.8154	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.8283	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.8511	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.8642	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.8834	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.9083	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.9204	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.9425	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.9555	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.9681	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	0.9890	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.0026	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.0254	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.0369	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.0567	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.0737	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.0856	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.1088	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.1333	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.1536	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.1702	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.1875	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.2051	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.2214	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.2351	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.2491	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.2686	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.2853	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.2984	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.3207	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.3357	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.3520	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.3687	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.3815	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.4159	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.4274	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.4388	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.4552	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.4671	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.4868	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.5031	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.5200	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.5384	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.5553	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.5667	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.5880	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.6043	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.6207	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.6369	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.6495	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.6723	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.6853	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.7072	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.7188	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.7396	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.7520	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.7728	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.7846	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.8070	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.8181	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.8390	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.8518	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.8737	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.8849	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.9137	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.9261	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.9377	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.9519	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.9716	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	1.9870	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.0001	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.0215	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.0336	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.0581	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.0731	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.0848	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.1034	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.1233	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.1385	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.1554	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.1714	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.1889	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.2003	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.2208	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.2366	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.2544	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.2711	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.2871	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.3049	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.3218	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.3345	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.3543	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.3682	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.3882	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.4120	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.4239	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.4467	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.4620	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.4738	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.4973	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.5140	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.5254	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.5481	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.5583	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.5775	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.5968	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.6128	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.6242	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.6471	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.6584	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.6782	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.6945	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.7116	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.7295	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.7411	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.7625	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.7789	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.7904	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.8129	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.8282	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.8450	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.8623	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.8737	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.8969	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.9220	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.9334	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.9437	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.9619	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.9783	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	card	2.9956	Win	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	0.0637	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.0807	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.0972	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.1078	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.1293	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.1466	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.1633	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.1801	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.1963	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.2117	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.2294	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.2450	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.2649	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.2782	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.2968	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.3126	Map	0	10	0	0	820	True	875	4	820	14
+L13-Royal close-replay	home	0.3246	Map	0	10	0	1	820	True	875	4	820	14
+L13-Royal close-replay	home	0.3464	Map	0	10	0	2	820	True	875	4	820	14
+L13-Royal close-replay	home	0.3735	Map	0	10	0	3	820	True	875	4	820	14
+L13-Royal close-replay	home	0.3835	Map	0	10	0	4	820	True	875	4	820	14
+L13-Royal close-replay	home	0.3923	Map	0	10	0	4	820	True	875	4	820	14
+L13-Royal close-replay	home	0.4126	Map	0	10	0	5	820	True	875	4	820	14
+L13-Royal close-replay	home	0.4300	Map	0	10	0	6	820	True	875	4	820	14
+L13-Royal close-replay	home	0.4466	Map	0	10	0	7	820	True	875	4	820	14
+L13-Royal close-replay	home	0.4589	Map	0	10	0	8	820	True	875	4	820	14
+L13-Royal close-replay	home	0.4788	Map	0	10	0	9	820	True	875	4	820	14
+L13-Royal close-replay	home	0.4949	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.5135	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.5297	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.5461	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.5624	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.5792	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.5964	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.6119	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.6238	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.6461	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.6636	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.6793	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.6956	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.7129	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.7290	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.7452	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.7626	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.7790	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.7955	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.8123	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.8245	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.8459	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.8742	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.8836	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.8953	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.9126	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.9308	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.9459	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.9618	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.9782	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	0.9953	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.0135	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.0244	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.0461	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.0635	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.0792	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.0963	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.1131	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.1241	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.1449	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.1637	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.1751	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.1977	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.2081	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.2298	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.2462	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.2667	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.2793	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.2935	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.3126	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.3289	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.3464	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.3749	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.3857	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.4026	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.4185	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.4355	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.4526	Map	0	10	0	10	820	True	875	4	820	14
+L13-Royal close-replay	home	1.4694	Map	0	9	0	9	825	True	875	4	825	14
+L13-Royal close-replay	home	1.4872	Map	0	9	0	9	825	True	875	4	825	14
+L13-Royal close-replay	home	1.4979	Map	0	9	0	9	825	True	875	4	825	14
+L13-Royal close-replay	home	1.5187	Map	0	9	0	9	825	True	875	4	825	14
+L13-Royal close-replay	home	1.5348	Map	0	9	0	9	825	True	875	4	825	14
+L13-Royal close-replay	home	1.5521	Map	0	9	0	9	825	True	875	4	825	14
+L13-Royal close-replay	home	1.5693	Map	0	9	0	9	825	True	875	4	825	14
+L13-Royal close-replay	home	1.5857	Map	0	8	0	8	830	True	875	4	830	14
+L13-Royal close-replay	home	1.5974	Map	0	8	0	8	830	True	875	4	830	14
+L13-Royal close-replay	home	1.6204	Map	0	8	0	8	830	True	875	4	830	14
+L13-Royal close-replay	home	1.6318	Map	0	8	0	8	830	True	875	4	830	14
+L13-Royal close-replay	home	1.6530	Map	0	8	0	8	830	True	875	4	830	14
+L13-Royal close-replay	home	1.6685	Map	0	8	0	8	830	True	875	4	830	14
+L13-Royal close-replay	home	1.6860	Map	0	7	0	7	835	True	875	4	835	14
+L13-Royal close-replay	home	1.6989	Map	0	7	0	7	835	True	875	4	835	14
+L13-Royal close-replay	home	1.7192	Map	0	7	0	7	835	True	875	4	835	14
+L13-Royal close-replay	home	1.7366	Map	0	7	0	7	835	True	875	4	835	14
+L13-Royal close-replay	home	1.7472	Map	0	7	0	7	835	True	875	4	835	14
+L13-Royal close-replay	home	1.7684	Map	0	7	0	7	835	True	875	4	835	14
+L13-Royal close-replay	home	1.7868	Map	0	7	0	7	835	True	875	4	835	14
+L13-Royal close-replay	home	1.7992	Map	0	6	0	6	840	True	875	4	840	14
+L13-Royal close-replay	home	1.8197	Map	0	6	0	6	840	True	875	4	840	14
+L13-Royal close-replay	home	1.8361	Map	0	6	0	6	840	True	875	4	840	14
+L13-Royal close-replay	home	1.8516	Map	0	6	0	6	840	True	875	4	840	14
+L13-Royal close-replay	home	1.8773	Map	0	6	0	6	840	True	875	4	840	14
+L13-Royal close-replay	home	1.8888	Map	0	6	0	6	840	True	875	4	840	14
+L13-Royal close-replay	home	1.8981	Map	0	6	0	6	840	True	875	4	840	14
+L13-Royal close-replay	home	1.9189	Map	0	5	0	5	845	True	875	4	845	14
+L13-Royal close-replay	home	1.9351	Map	0	5	0	5	845	True	875	4	845	14
+L13-Royal close-replay	home	1.9521	Map	0	5	0	5	845	True	875	4	845	14
+L13-Royal close-replay	home	1.9693	Map	0	5	0	5	845	True	875	4	845	14
+L13-Royal close-replay	home	1.9870	Map	0	5	0	5	845	True	875	4	845	14
+L13-Royal close-replay	home	1.9996	Map	0	5	0	5	845	True	875	4	845	14
+L13-Royal close-replay	home	2.0190	Map	0	4	0	4	850	True	875	4	850	14
+L13-Royal close-replay	home	2.0319	Map	0	4	0	4	850	True	875	4	850	14
+L13-Royal close-replay	home	2.0533	Map	0	4	0	4	850	True	875	4	850	14
+L13-Royal close-replay	home	2.0683	Map	0	4	0	4	850	True	875	4	850	14
+L13-Royal close-replay	home	2.0858	Map	0	4	0	4	850	True	875	4	850	14
+L13-Royal close-replay	home	2.0977	Map	0	4	0	4	850	True	875	4	850	14
+L13-Royal close-replay	home	2.1197	Map	0	4	0	4	850	True	875	4	850	14
+L13-Royal close-replay	home	2.1376	Map	0	3	0	3	855	True	875	4	855	14
+L13-Royal close-replay	home	2.1510	Map	0	3	0	3	855	True	875	4	855	14
+L13-Royal close-replay	home	2.1693	Map	0	3	0	3	855	True	875	4	855	14
+L13-Royal close-replay	home	2.1844	Map	0	3	0	3	855	True	875	4	855	14
+L13-Royal close-replay	home	2.2020	Map	0	3	0	3	855	True	875	4	855	14
+L13-Royal close-replay	home	2.2197	Map	0	3	0	3	855	True	875	4	855	14
+L13-Royal close-replay	home	2.2365	Map	0	2	0	2	860	True	875	4	860	14
+L13-Royal close-replay	home	2.2493	Map	0	2	0	2	860	True	875	4	860	14
+L13-Royal close-replay	home	2.2650	Map	0	2	0	2	860	True	875	4	860	14
+L13-Royal close-replay	home	2.2797	Map	0	2	0	2	860	True	875	4	860	14
+L13-Royal close-replay	home	2.3042	Map	0	2	0	2	860	True	875	4	860	14
+L13-Royal close-replay	home	2.3156	Map	0	2	0	2	860	True	875	4	860	14
+L13-Royal close-replay	home	2.3351	Map	0	2	0	2	860	True	875	4	860	14
+L13-Royal close-replay	home	2.3544	Map	0	1	0	1	865	True	875	4	865	14
+L13-Royal close-replay	home	2.3798	Map	0	1	0	1	865	True	875	4	865	14
+L13-Royal close-replay	home	2.3898	Map	0	1	0	1	865	True	875	4	865	14
+L13-Royal close-replay	home	2.4107	Map	0	1	0	1	865	True	875	4	865	14
+L13-Royal close-replay	home	2.4263	Map	0	1	0	1	865	True	875	4	865	14
+L13-Royal close-replay	home	2.4447	Map	0	1	0	1	865	True	875	4	865	14
+L13-Royal close-replay	home	2.4613	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.4769	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.4896	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.5102	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.5261	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.5440	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.5596	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.5768	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.5943	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.6107	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.6281	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.6398	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.6619	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.6746	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.6948	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.7111	Map	0	0	0	0	875	True	875	4	875	14
+L13-Royal close-replay	home	2.7225	Map	0	0	0	0	875	False	875	4	875	14
+L13-Next-full-prewin-capture	prewin	0.0000	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.0122	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.0327	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.0885	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.1095	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.1524	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.1648	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.1875	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.2294	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.2405	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.2602	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.3047	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.3158	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.3364	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.3781	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.3901	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.4128	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.4548	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.4675	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.4870	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.5303	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.5407	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.5622	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.6068	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.6182	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.6415	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.6944	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.7050	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.7156	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.7568	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.7782	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.8226	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.8357	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.8563	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.8989	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.9096	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.9304	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.9747	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	0.9864	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.0089	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.0613	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.0757	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.0883	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.1345	PreWinAnimations	0	0	0	0	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.1554	PreWinAnimations	0	0	0	2	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.2102	PreWinAnimations	0	0	0	4	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.2250	PreWinAnimations	0	0	0	5	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.2673	PreWinAnimations	0	0	0	7	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.2895	PreWinAnimations	0	0	0	8	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.3314	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.3440	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.3636	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.4071	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.4191	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.4401	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.4837	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.4986	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.5184	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.5625	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.5759	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.5933	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.6366	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.6560	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.6687	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.7292	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.7439	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.8151	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.8304	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.8836	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.9066	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.9664	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.9806	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	1.9973	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.0526	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.0689	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.0840	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.1350	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.1567	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.2391	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.2548	PreWinAnimations	0	0	0	10	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.3196	PreWinAnimations	0	0	0	8	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.3410	PreWinAnimations	0	0	0	7	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.3962	PreWinAnimations	0	0	0	4	875	False	875	4	875	13
+L13-Next-full-prewin-capture	prewin	2.4140	PreWinAnimations	0	0	0	3	875	False	875	4	875	13
+L13-Next-full-prewin-capture	card	0.0000	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.1012	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.1152	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.1352	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.1783	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.1971	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.2093	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.2536	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.2773	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.3182	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.3322	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.3440	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.3855	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.3994	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.4210	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.4613	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.4742	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.4957	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.5368	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.5485	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.5688	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.6181	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.6338	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.6531	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.6948	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.7071	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.7280	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.7771	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.7881	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.7994	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.8377	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.8579	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.8977	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.9096	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.9310	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.9694	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	0.9810	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.0029	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.0407	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.0518	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.0740	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.1130	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.1260	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.1430	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.1838	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.2035	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.2202	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.2585	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.2815	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.3201	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.3441	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.3825	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.3936	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.4144	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.4529	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.4641	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.4860	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.5261	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.5418	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.5587	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.6099	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.6216	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.6443	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.6895	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.7021	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.7208	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.7624	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.7878	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.8310	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.8432	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.8546	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.8965	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.9136	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.9263	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.9694	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	1.9945	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.0363	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.0487	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.0611	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.0997	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.1212	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.1384	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.1818	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.1955	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.2172	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.2572	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.2688	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.2946	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.3407	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.3532	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.3650	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.4042	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.4230	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.4342	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.4738	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.4936	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.5125	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.5533	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.5667	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.5813	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.6266	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.6496	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.6976	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.7120	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.7239	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.7670	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.7947	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.8368	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.8486	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.8651	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.9068	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.9180	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.9379	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.9808	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	card	2.9981	Win	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	0.0954	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.1141	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.1317	Map	1	0	0	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.1792	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.1976	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.2091	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.2743	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.2875	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.3326	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.3538	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.3969	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.4077	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.4311	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.4781	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.4940	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.5603	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.5777	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.5888	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.6351	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.6559	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.6985	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.7152	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.7321	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.7805	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.7892	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.8059	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.8451	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.8606	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.8775	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.9164	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.9368	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.9469	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	0.9871	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.0069	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.0223	Map	1	0	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.0639	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.0806	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.0975	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.1373	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.1483	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.1698	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.2098	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.2279	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.2441	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.2937	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.3036	Map	1	10	1	0	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.3186	Map	1	10	1	1	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.3583	Map	1	10	1	3	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.3688	Map	1	10	1	3	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.3919	Map	1	10	1	4	820	True	875	4	820	14
+L13-Next-full-prewin-capture	home	1.4319	Map	0	10	0	6	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.4465	Map	0	10	0	7	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.4646	Map	0	10	0	8	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.5083	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.5199	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.5408	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.5827	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.5989	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.6164	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.6571	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.6682	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.6891	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.7297	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.7453	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.7622	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.8145	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.8256	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.8678	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.8849	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.9014	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.9426	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.9529	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	1.9720	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.0140	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.0269	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.0476	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.0892	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.1006	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.1193	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.1625	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.1744	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.1919	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.2324	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.2498	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.2653	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.3154	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.3252	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.3426	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.3815	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.3972	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.4150	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.4566	Map	0	10	0	10	820	True	875	5	820	14
+L13-Next-full-prewin-capture	home	2.4724	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-full-prewin-capture	home	2.4901	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-full-prewin-capture	home	2.5362	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-full-prewin-capture	home	2.5476	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-full-prewin-capture	home	2.5664	Map	0	9	0	9	825	True	875	5	825	14
+L13-Next-full-prewin-capture	home	2.6113	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-full-prewin-capture	home	2.6288	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-full-prewin-capture	home	2.6441	Map	0	8	0	8	830	True	875	5	830	14
+L13-Next-full-prewin-capture	home	2.6874	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-full-prewin-capture	home	2.6992	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-full-prewin-capture	home	2.7252	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-full-prewin-capture	home	2.7780	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-full-prewin-capture	home	2.7935	Map	0	7	0	7	835	True	875	5	835	14
+L13-Next-full-prewin-capture	home	2.8224	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-full-prewin-capture	home	2.8649	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-full-prewin-capture	home	2.8753	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-full-prewin-capture	home	2.8909	Map	0	6	0	6	840	True	875	5	840	14
+L13-Next-full-prewin-capture	home	2.9350	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-full-prewin-capture	home	2.9466	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-full-prewin-capture	home	2.9675	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-full-prewin-capture	home	3.0131	Map	0	5	0	5	845	True	875	5	845	14
+L13-Next-full-prewin-capture	home	3.0275	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-full-prewin-capture	home	3.0442	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-full-prewin-capture	home	3.0911	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-full-prewin-capture	home	3.1126	Map	0	4	0	4	850	True	875	5	850	14
+L13-Next-full-prewin-capture	home	3.1580	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-full-prewin-capture	home	3.1695	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-full-prewin-capture	home	3.1887	Map	0	3	0	3	855	True	875	5	855	14
+L13-Next-full-prewin-capture	home	3.2344	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next-full-prewin-capture	home	3.2461	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next-full-prewin-capture	home	3.2685	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next-full-prewin-capture	home	3.3248	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next-full-prewin-capture	home	3.3368	Map	0	2	0	2	860	True	875	5	860	14
+L13-Next-full-prewin-capture	home	3.3790	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next-full-prewin-capture	home	3.3907	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next-full-prewin-capture	home	3.4125	Map	0	1	0	1	865	True	875	5	865	14
+L13-Next-full-prewin-capture	home	3.4576	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	3.4705	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	3.4837	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	3.5528	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	3.5751	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	3.6197	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	3.6336	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	3.6517	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	3.6983	Map	0	0	0	0	875	True	875	5	875	14
+L13-Next-full-prewin-capture	home	3.7106	Map	0	0	0	0	875	False	875	5	875	14

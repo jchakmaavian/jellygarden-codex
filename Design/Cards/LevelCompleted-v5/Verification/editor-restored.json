@@ -1,0 +1,11 @@
+{
+  "checkedAtUtc": "2026-10-06T06:33:18Z",
+  "playing": false,
+  "compiling": false,
+  "updating": false,
+  "testing": false,
+  "scene": "Assets/JellyGarden/Scenes/main.unity",
+  "dirty": false,
+  "cardChecks": {"passed":152,"failed":0},
+  "experienceChecks": {"passed":189,"failed":0}
+}

@@ -1,0 +1,54 @@
+{
+  "reference": "G:\\Game\\old Backup\\JellyGarden-Codex-20261005\\Design\\RoyalMatchReference\\recordings\\game completed experience.mp4",
+  "reference_onset_seconds": 10.317,
+  "comparisons": [
+    {
+      "target_stage_seconds": 0,
+      "reference_clip_seconds": 10.317,
+      "unity_frame": 1,
+      "unity_star_seconds": 0.0,
+      "unity_wall_seconds": 0.0748,
+      "unity_source_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v5\\Verification\\CardMotion\\frames-20261006-062412-812\\00001.jpg"
+    },
+    {
+      "target_stage_seconds": 0.1,
+      "reference_clip_seconds": 10.417,
+      "unity_frame": 3,
+      "unity_star_seconds": 0.0964,
+      "unity_wall_seconds": 0.1712,
+      "unity_source_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v5\\Verification\\CardMotion\\frames-20261006-062412-812\\00003.jpg"
+    },
+    {
+      "target_stage_seconds": 0.2,
+      "reference_clip_seconds": 10.517,
+      "unity_frame": 5,
+      "unity_star_seconds": 0.1947,
+      "unity_wall_seconds": 0.2695,
+      "unity_source_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v5\\Verification\\CardMotion\\frames-20261006-062412-812\\00005.jpg"
+    },
+    {
+      "target_stage_seconds": 0.35,
+      "reference_clip_seconds": 10.667,
+      "unity_frame": 8,
+      "unity_star_seconds": 0.3447,
+      "unity_wall_seconds": 0.4408,
+      "unity_source_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v5\\Verification\\CardMotion\\frames-20261006-062412-812\\00008.jpg"
+    },
+    {
+      "target_stage_seconds": 0.65,
+      "reference_clip_seconds": 10.967,
+      "unity_frame": 14,
+      "unity_star_seconds": 0.6407,
+      "unity_wall_seconds": 0.7492,
+      "unity_source_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v5\\Verification\\CardMotion\\frames-20261006-062412-812\\00014.jpg"
+    },
+    {
+      "target_stage_seconds": 1.1,
+      "reference_clip_seconds": 11.417,
+      "unity_frame": 23,
+      "unity_star_seconds": 1.0792,
+      "unity_wall_seconds": 1.2166,
+      "unity_source_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v5\\Verification\\CardMotion\\frames-20261006-062412-812\\00023.jpg"
+    }
+  ]
+}

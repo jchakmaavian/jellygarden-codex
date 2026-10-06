@@ -8,7 +8,7 @@ namespace RoyalThrone.Presentation
 
     // Presentation of the already committed win, measured from game completed experience.mp4:
     // a fast star zoom/wobble, impact flash and velvet recoil, then rear halo and braid glints.
-    // AnimationManager activates Star1 after the card enters. This component owns no reward writes.
+    // AnimationManager activates Star1 with the card. This component owns no reward writes.
     public sealed class RoyalWinCard : MonoBehaviour
     {
         public RectTransform star, cushion, starShadow;
@@ -94,7 +94,7 @@ namespace RoyalThrone.Presentation
             SetReward(level ? JellyGarden.Scripts.Juice.RoyalWinSequence.Coins(level) : 0);
             ResetVisuals();
             // AddComponent can call OnEnable before the card builder assigns our references.
-            // BuildSparkles is intentionally deferred until Update has a real parent to use.
+            // BuildSparkles is intentionally deferred until the first pose has a real parent to use.
         }
 
         void OnDisable()
@@ -196,7 +196,8 @@ namespace RoyalThrone.Presentation
                 foreach (var image in haloSparkle) if (image) image.enabled = false;
         }
 
-        void Update()
+        // Menu activation events run in Update. Pose afterward so the first rendered card frame includes its star.
+        void LateUpdate()
         {
             float dt = Mathf.Min(Time.unscaledDeltaTime, .05f);
             open += dt;

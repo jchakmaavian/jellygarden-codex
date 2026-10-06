@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Royal Throne | Completed level and Home reward preview</title><link rel="stylesheet" href="preview.css"></head>
+<body><main>
+  <div class="review-label">ROYAL THRONE <span>Offline motion preview · Level complete → Home rewards</span></div>
+  <div class="viewport"><div class="scene" aria-label="Offline level-complete and Home reward animation preview">
+    <div class="world"></div><div class="dim"></div>
+    <div class="home-ui" aria-label="Reconstructed Home preview">
+      <div class="home-hud">
+        <div class="home-avatar"><img src="assets/king-idle.webp" alt="Royal Throne king"></div>
+        <div class="home-counter home-coins"><span class="home-coin-value">70</span><b>+</b></div>
+        <img class="home-coin-icon" src="assets/home-22081.png" alt="Coins">
+        <div class="home-counter home-lives"><span>Full</span><b>+</b></div>
+        <img class="home-life-icon" src="assets/home-21591.png" alt="Lives"><span class="home-life-count">5</span>
+        <div class="home-counter home-stars"><span class="home-star-value">4</span><b>+</b></div>
+        <img class="home-star-icon" src="assets/home-16674.png" alt="Stars">
+        <div class="home-settings" aria-label="Settings decoration">⚙</div>
+      </div>
+      <div class="home-level"><span>Level 14</span></div>
+      <div class="home-nav">
+        <div><img src="assets/home-16927.png" alt=""><span>Areas</span></div>
+        <div><img src="assets/home-22238.png" alt=""><span>Leaderboard</span></div>
+        <div class="selected"><img src="assets/home-16525.png" alt=""><span>Home</span></div>
+        <div><img src="assets/home-17106.png" alt=""><span>Team</span></div>
+        <div><img src="assets/home-16492.png" alt=""><span>Collection</span></div>
+      </div>
+    </div>
+    <div class="home-rewards" aria-hidden="true"><div class="home-star-aura"></div><img class="home-reward-star" src="assets/win-star.png" alt=""><div class="home-coins-layer"></div><div class="home-plus">+65</div></div>
+    <div class="card" role="group" aria-label="Level 13 completed">
+      <div class="surface" aria-hidden="true"></div>
+      <img class="crest" src="assets/crest.png" alt="">
+      <div class="level-label">LEVEL</div><div class="level-number">13</div>
+      <button class="close" type="button" aria-label="Continue to Home"><span></span><span></span></button>
+      <h1 class="heading">Well Done!</h1>
+      <div class="halo" aria-hidden="true"></div><div class="rays" aria-hidden="true"></div><div class="impact-flash" aria-hidden="true"></div>
+      <div class="halo-sparkles" aria-hidden="true"></div>
+      <img class="cushion" src="assets/cushion.webp" alt="Crimson velvet pillow with gold braid">
+      <div class="pillow-light" aria-hidden="true"></div><img class="star-shadow" src="assets/star.webp" alt=""><div class="contact-shadow" aria-hidden="true"></div>
+      <img class="star" src="assets/win-star.png" alt="One gold reward star">
+      <div class="sparkles" aria-hidden="true"></div>
+      <button class="continue" type="button"><span class="button-face"></span><span class="button-gloss"></span><span class="caption">Continue</span></button>
+      <div class="ornament" aria-hidden="true"><i></i></div>
+    </div>
+    <div class="offline-mark">OFFLINE MOTION PREVIEW</div>
+  </div></div>
+  <div class="controls"><button id="replay" type="button">Replay full sequence</button><label><input id="reduced" type="checkbox"> Reduced motion</label><span id="status" aria-live="polite">Playing</span></div>
+  <div class="timeline"><label for="scrub">Preview time</label><input id="scrub" type="range" min="0" max="10" step="0.016667" value="0"><output id="time">0.00 s</output></div>
+  <p class="preview-note">Editable reconstruction using project artwork and runtime timing. Continue returns Home; the automatic review timeline presses it at 4.5 seconds. Unity lighting and live gameplay still require native verification.</p>
+</main><script src="config.js"></script><script src="preview.js"></script></body></html>
