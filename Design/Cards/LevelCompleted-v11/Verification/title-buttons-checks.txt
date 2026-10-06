@@ -1,0 +1,124 @@
+Started 2026-10-06T10:45:11.1008395Z; v11 individual generated glyph animation presentation QA; no win/economy commit.
+PASS 1080x1920 required Game view preset exists
+PASS 1080x1920 generated individual glyphs replace whole-title bitmap
+PASS 1080x1920 nine independent glyphs use seven unique assets and consistent repeated letters
+PASS 1080x1920 sampled full animation: 77 frames
+PASS 1080x1920 complete opaque letters settle without residual stretch or rotation
+PASS 1080x1920 complete title is geometrically centered at its intended width
+PASS 1080x1920 all letter silhouettes share a common settled baseline
+PASS 1080x1920 title remains on screen and clears crown; conservative gap=4.6568
+PASS 1080x1920 progressive individual-letter reveal (partial frames=21)
+PASS 1080x1920 letter 0 ordered peak/rebound peak=1.6154 trough=0.9431 time=0.2097
+PASS 1080x1920 letter 0 appears at 0.1093 expected 0.1000
+PASS 1080x1920 letter 1 ordered peak/rebound peak=1.6192 trough=0.9401 time=0.2440
+PASS 1080x1920 letter 1 appears at 0.1566 expected 0.1400
+PASS 1080x1920 letter 2 ordered peak/rebound peak=1.6149 trough=0.9400 time=0.2764
+PASS 1080x1920 letter 2 appears at 0.1905 expected 0.1800
+PASS 1080x1920 letter 3 ordered peak/rebound peak=1.6177 trough=0.9410 time=0.3269
+PASS 1080x1920 letter 3 appears at 0.2268 expected 0.2200
+PASS 1080x1920 letter 4 ordered peak/rebound peak=1.6096 trough=0.9401 time=0.4147
+PASS 1080x1920 letter 4 appears at 0.3042 expected 0.3000
+PASS 1080x1920 letter 5 ordered peak/rebound peak=1.6198 trough=0.9403 time=0.4418
+PASS 1080x1920 letter 5 appears at 0.3441 expected 0.3400
+PASS 1080x1920 letter 6 ordered peak/rebound peak=1.6200 trough=0.9400 time=0.4800
+PASS 1080x1920 letter 6 appears at 0.3920 expected 0.3800
+PASS 1080x1920 letter 7 ordered peak/rebound peak=1.6131 trough=0.9406 time=0.5319
+PASS 1080x1920 letter 7 appears at 0.4291 expected 0.4200
+PASS 1080x1920 letter 8 ordered peak/rebound peak=1.6167 trough=0.9402 time=0.5682
+PASS 1080x1920 letter 8 appears at 0.4668 expected 0.4600
+PASS 1080x1920 presentation leaves economy unchanged
+PASS 1080x1920 uses the requested dimensions
+PASS 1080x1920 reopening reuses the title and effect hierarchy without accumulating children
+PASS 720x1280 required Game view preset exists
+PASS 720x1280 generated individual glyphs replace whole-title bitmap
+PASS 720x1280 nine independent glyphs use seven unique assets and consistent repeated letters
+PASS 720x1280 sampled full animation: 77 frames
+PASS 720x1280 complete opaque letters settle without residual stretch or rotation
+PASS 720x1280 complete title is geometrically centered at its intended width
+PASS 720x1280 all letter silhouettes share a common settled baseline
+PASS 720x1280 title remains on screen and clears crown; conservative gap=4.3969
+PASS 720x1280 progressive individual-letter reveal (partial frames=22)
+PASS 720x1280 letter 0 ordered peak/rebound peak=1.6199 trough=0.9401 time=0.2012
+PASS 720x1280 letter 0 appears at 0.1016 expected 0.1000
+PASS 720x1280 letter 1 ordered peak/rebound peak=1.6142 trough=0.9414 time=0.2508
+PASS 720x1280 letter 1 appears at 0.1512 expected 0.1400
+PASS 720x1280 letter 2 ordered peak/rebound peak=1.6185 trough=0.9404 time=0.2854
+PASS 720x1280 letter 2 appears at 0.1852 expected 0.1800
+PASS 720x1280 letter 3 ordered peak/rebound peak=1.6196 trough=0.9402 time=0.3190
+PASS 720x1280 letter 3 appears at 0.2343 expected 0.2200
+PASS 720x1280 letter 4 ordered peak/rebound peak=1.6198 trough=0.9401 time=0.4022
+PASS 720x1280 letter 4 appears at 0.3030 expected 0.3000
+PASS 720x1280 letter 5 ordered peak/rebound peak=1.6139 trough=0.9409 time=0.4512
+PASS 720x1280 letter 5 appears at 0.3511 expected 0.3400
+PASS 720x1280 letter 6 ordered peak/rebound peak=1.6189 trough=0.9406 time=0.4846
+PASS 720x1280 letter 6 appears at 0.3842 expected 0.3800
+PASS 720x1280 letter 7 ordered peak/rebound peak=1.6182 trough=0.9402 time=0.5178
+PASS 720x1280 letter 7 appears at 0.4346 expected 0.4200
+PASS 720x1280 letter 8 ordered peak/rebound peak=1.6048 trough=0.9414 time=0.5778
+PASS 720x1280 letter 8 appears at 0.4677 expected 0.4600
+PASS 720x1280 presentation leaves economy unchanged
+PASS 720x1280 uses the requested dimensions
+PASS 720x1280 reopening reuses the title and effect hierarchy without accumulating children
+PASS 1536x2048 required Game view preset exists
+PASS 1536x2048 generated individual glyphs replace whole-title bitmap
+PASS 1536x2048 nine independent glyphs use seven unique assets and consistent repeated letters
+PASS 1536x2048 sampled full animation: 76 frames
+PASS 1536x2048 complete opaque letters settle without residual stretch or rotation
+PASS 1536x2048 complete title is geometrically centered at its intended width
+PASS 1536x2048 all letter silhouettes share a common settled baseline
+PASS 1536x2048 title remains on screen and clears crown; conservative gap=4.5471
+PASS 1536x2048 progressive individual-letter reveal (partial frames=21)
+PASS 1536x2048 letter 0 ordered peak/rebound peak=1.6185 trough=0.9407 time=0.1981
+PASS 1536x2048 letter 0 appears at 0.1168 expected 0.1000
+PASS 1536x2048 letter 1 ordered peak/rebound peak=1.6161 trough=0.9417 time=0.2488
+PASS 1536x2048 letter 1 appears at 0.1503 expected 0.1400
+PASS 1536x2048 letter 2 ordered peak/rebound peak=1.6141 trough=0.9402 time=0.2909
+PASS 1536x2048 letter 2 appears at 0.1818 expected 0.1800
+PASS 1536x2048 letter 3 ordered peak/rebound peak=1.6200 trough=0.9400 time=0.3202
+PASS 1536x2048 letter 3 appears at 0.2488 expected 0.2200
+PASS 1536x2048 letter 4 ordered peak/rebound peak=1.6179 trough=0.9408 time=0.4065
+PASS 1536x2048 letter 4 appears at 0.3032 expected 0.3000
+PASS 1536x2048 letter 5 ordered peak/rebound peak=1.6085 trough=0.9400 time=0.4554
+PASS 1536x2048 letter 5 appears at 0.3547 expected 0.3400
+PASS 1536x2048 letter 6 ordered peak/rebound peak=1.6194 trough=0.9410 time=0.4836
+PASS 1536x2048 letter 6 appears at 0.3891 expected 0.3800
+PASS 1536x2048 letter 7 ordered peak/rebound peak=1.6199 trough=0.9400 time=0.5215
+PASS 1536x2048 letter 7 appears at 0.4244 expected 0.4200
+PASS 1536x2048 letter 8 ordered peak/rebound peak=1.6138 trough=0.9402 time=0.5712
+PASS 1536x2048 letter 8 appears at 0.4729 expected 0.4600
+PASS 1536x2048 presentation leaves economy unchanged
+PASS 1536x2048 uses the requested dimensions
+PASS 1536x2048 reopening reuses the title and effect hierarchy without accumulating children
+PASS motion-off generated individual glyphs replace whole-title bitmap
+PASS motion-off nine independent glyphs use seven unique assets and consistent repeated letters
+PASS motion-off sampled full animation: 76 frames
+PASS motion-off complete opaque letters settle without residual stretch or rotation
+PASS motion-off complete title is geometrically centered at its intended width
+PASS motion-off all letter silhouettes share a common settled baseline
+PASS motion-off title remains on screen and clears crown; conservative gap=60.5213
+PASS motion-off progressive individual-letter reveal (partial frames=0)
+PASS motion-off letter 0 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 1 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 2 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 3 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 4 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 5 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 6 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 7 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 8 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off presentation leaves economy unchanged
+PASS Motion off reopening reuses the existing hierarchy
+PASS real LevelStart and Continue use the same primary emerald/gold finish
+PASS Next remains the actual topmost raycast target
+PASS Next routes exactly once through Continue to Home and selects Level24
+PASS Next does not commit or duplicate any award
+PASS Royal close remains the actual topmost raycast target
+PASS Royal close routes exactly once through Continue to Home and selects Level24
+PASS Royal close does not commit or duplicate any award
+CAPTURE frames-20261006-104521-664 68 actual rendered JPEG frames; wall/title timestamps logged separately. Encoding pass is separate from motion assertions; silent capture.
+PASS normal player save keys remain untouched during presentation QA
+PASS owned QA ended and original Home catalog reference/values restored
+PASS normal save keys and runtime coins/lives/level restored exactly
+PASS no Unity errors or exceptions (0)
+SUMMARY passes=120 fails=0
+DONE

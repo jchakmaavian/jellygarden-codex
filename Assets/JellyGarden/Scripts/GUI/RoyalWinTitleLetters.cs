@@ -11,7 +11,9 @@ namespace RoyalThrone.Presentation
         [System.Serializable] public sealed class Atlas { public Glyph[] glyphs; }
         static readonly string[] Names = { "W", "e", "l", "l", "D", "o", "n", "e", "bang" };
         static readonly int[] Beats = { 0, 1, 2, 3, 5, 6, 7, 8, 9 };
-        static readonly float[] Heights = { .96f, .70f, 1, 1, 1, .70f, .72f, .70f, .99f };
+        // Match the reference's fuller lowercase and closely joined gold word silhouettes.
+        static readonly float[] Heights = { .98f, .82f, 1, 1, 1, .82f, .84f, .82f, 1 };
+        static readonly float[] Spacing = { -12, -14, -12, 10, -13, -12, -13, -13 };
         readonly RawImage[] letters = new RawImage[9];
         public RectTransform RectTransform => (RectTransform)transform;
         public RawImage[] Letters => letters;
@@ -25,7 +27,8 @@ namespace RoyalThrone.Presentation
             if (!data) return false;
             var atlas = JsonUtility.FromJson<Atlas>(data.text);
             var textures = new Texture2D[9]; var uvs = new Rect[9]; var widths = new float[9];
-            float total = 14 - 6 * 7;
+            float total = 0;
+            foreach (float space in Spacing) total += space;
             for (int i = 0; i < Names.Length; i++)
             {
                 var glyph = System.Array.Find(atlas.glyphs, g => g.name == Names[i]);
@@ -38,7 +41,6 @@ namespace RoyalThrone.Presentation
             float fit = RectTransform.rect.width / total, cursor = -RectTransform.rect.width * .5f;
             for (int i = 0; i < Names.Length; i++)
             {
-                if (i == 4) cursor += 14 * fit;
                 var go = new GameObject("Letter " + i + " " + Names[i], typeof(RectTransform), typeof(RawImage));
                 go.transform.SetParent(transform, false);
                 var image = go.GetComponent<RawImage>(); letters[i] = image;
@@ -46,7 +48,7 @@ namespace RoyalThrone.Presentation
                 var rect = image.rectTransform; rect.pivot = new Vector2(.5f, 0);
                 rect.sizeDelta = new Vector2(widths[i], Heights[i] * 100) * fit;
                 rect.anchoredPosition = new Vector2(cursor + rect.sizeDelta.x * .5f, -45);
-                cursor += rect.sizeDelta.x - (i == 3 ? 0 : 6 * fit);
+                cursor += rect.sizeDelta.x + (i < Spacing.Length ? Spacing[i] * fit : 0);
             }
             Ready = true; Write(0); return true;
         }
@@ -60,8 +62,8 @@ namespace RoyalThrone.Presentation
                 float u = Mathf.Clamp01((value - Beats[i]) / 10f);
                 var image = letters[i]; image.enabled = u > 0;
                 if (!image.enabled) continue;
-                float scale = u < .25f ? Mathf.Lerp(.28f, 1.64f, Smooth(u / .25f))
-                    : u < .75f ? Mathf.Lerp(1.64f, .94f, Smooth((u - .25f) / .50f))
+                float scale = u < .25f ? Mathf.Lerp(.28f, 1.62f, Smooth(u / .25f))
+                    : u < .75f ? Mathf.Lerp(1.62f, .94f, Smooth((u - .25f) / .50f))
                     : Mathf.Lerp(.94f, 1, Smooth((u - .75f) / .25f));
                 image.rectTransform.localScale = new Vector3(scale, scale, 1);
                 image.rectTransform.localRotation = Quaternion.Euler(0, 0, (i % 2 == 0 ? -5 : 5) * Mathf.Sin(Mathf.PI * u) * (1 - u));
