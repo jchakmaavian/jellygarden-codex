@@ -1,0 +1,146 @@
+Started 2026-10-06T05:46:53.4237251Z; presentation-only level 23, one star, 65 coins.
+PASS 1080x1920 preset is available
+PASS pillow glow, rays, halo sparkles, reward badge, coin origin and both shadows are bound
+PASS larger reward star enters with restrained scale (max 1.1200, first 1.0000)
+PASS precious-reward landing has a measured arrival near 0.48s (0.5059s)
+PASS star gives slightly and settles with a small rebound (min 0.9602, rebound 1.0250)
+PASS star settles near 0.90s (0.8339s)
+PASS pillow gives gently and returns to rest (min 0.9303)
+PASS restrained impact flash remains visible without a bright wash (peak 0.2172)
+PASS star and pillow carry a controlled warm glow (0.4050/0.1380)
+PASS landing sparkle burst is visible (max 25)
+PASS idle star and braid sweep remains visibly populated after 3 seconds (max 8)
+PASS idle hero glints are visibly larger than the former tiny twinkles (max 67.1988 card units)
+PASS rear halo sparkle animation remains visible during idle (max 12, 156 frames; reported 12)
+PASS visible halo glints continue travelling behind the star after the landing
+PASS reward badge visibly reads +65 (+65)
+PASS coin flights wait until the precious-reward landing has fully settled (ready 1.1159s; first coin 1.2621s)
+PASS the 65-coin presentation does not mutate reward balances or stars
+PASS win face is dark royal blue (top/bottom luminance 0.1698/0.0792)
+PASS face highlight and inner glow preserve the darker background
+PASS halo, animated halo sparkles, rays and impact flash render behind cushion and star
+PASS halo stays centred behind the star rather than washing the entire card
+PASS star silhouette shadow and contact shadow sit above velvet and below the star
+PASS star shadow is flattened onto the pillow below the star
+PASS soft silhouette and contact shadow remain visible after landing (group 0.2800; composite interior alpha 0.2643; contact 0.2500)
+PASS win frame uses the same layered gold bevels as Level Start
+PASS full draped crown crest matches the other cards, with no competing flat ribbon
+PASS close control uses the shared royal-blue face
+PASS Continue uses the shared emerald and gold primary-button treatment
+PASS shared bottom diamond and fine lines complete the card frame
+PASS reward star is exactly 1.5 times the previous 276-unit star (414.0000)
+PASS crest shows the live level 23 (23)
+PASS portrait card, close and Continue stay on screen 1080x1920
+PASS portrait heading clears the star body
+PASS portrait reward badge clears Continue
+PASS portrait cushion tassels clear the reward badge
+PASS portrait decorative lights, shadows and sparkles do not take taps
+PASS 24 landing and 14 idle sparkles are pooled once (38)
+PASS rear halo has its own reusable sparkle pool (12)
+PASS crest shows the live level 24 (24)
+PASS reopen 1 reuses front and halo effects without duplicate objects
+PASS crest shows the live level 23 (23)
+PASS reopen 2 reuses front and halo effects without duplicate objects
+PASS crest shows the live level 24 (24)
+PASS reopen 3 reuses front and halo effects without duplicate objects
+PASS recording covers entrance, shadows and repeated idle sparkle sweep (104 samples)
+CAPTURE 104 actual-time JPG samples over 6s; ffconcat durations preserve observed playback. No audio recorded.
+PASS 1080x1920 required Game view preset is available
+PASS 1080x1920 rendered at the required dimensions
+PASS 1080x1920 observed full coin flight: 10 coins, 97 visible frames, 682 quads, 1.6221s
+PASS 1080x1920 all 2728 visible sprite corners stay 22 units inside the popup (worst margin 68.5304; first escape none)
+PASS 1080x1920 flights start after reward readiness and finish within observation
+PASS 1080x1920 flight presentation leaves currency, stars and scores unchanged
+COIN OBSERVATION 1080x1920: 293 rendered frames; alpha threshold .001; bounds checked on the complete Image quad.
+PASS 1080x1920 card, close and Continue stay on screen 1080x1920
+PASS 1080x1920 heading clears the star body
+PASS 1080x1920 reward badge clears Continue
+PASS 1080x1920 cushion tassels clear the reward badge
+PASS 1080x1920 decorative lights, shadows and sparkles do not take taps
+PASS win face is dark royal blue (top/bottom luminance 0.1698/0.0792)
+PASS face highlight and inner glow preserve the darker background
+PASS halo, animated halo sparkles, rays and impact flash render behind cushion and star
+PASS halo stays centred behind the star rather than washing the entire card
+PASS star silhouette shadow and contact shadow sit above velvet and below the star
+PASS star shadow is flattened onto the pillow below the star
+PASS soft silhouette and contact shadow remain visible after landing (group 0.2800; composite interior alpha 0.2643; contact 0.2500)
+PASS win frame uses the same layered gold bevels as Level Start
+PASS full draped crown crest matches the other cards, with no competing flat ribbon
+PASS close control uses the shared royal-blue face
+PASS Continue uses the shared emerald and gold primary-button treatment
+PASS shared bottom diamond and fine lines complete the card frame
+PASS reward star is exactly 1.5 times the previous 276-unit star (414.0000)
+PASS crest shows the live level 23 (23)
+PASS 1080x1920 flight reopen preserves front and halo effect pools
+PASS 720x1280 required Game view preset is available
+PASS 720x1280 rendered at the required dimensions
+PASS 720x1280 observed full coin flight: 10 coins, 96 visible frames, 675 quads, 1.6165s
+PASS 720x1280 all 2700 visible sprite corners stay 22 units inside the popup (worst margin 68.5717; first escape none)
+PASS 720x1280 flights start after reward readiness and finish within observation
+PASS 720x1280 flight presentation leaves currency, stars and scores unchanged
+COIN OBSERVATION 720x1280: 297 rendered frames; alpha threshold .001; bounds checked on the complete Image quad.
+PASS 720x1280 card, close and Continue stay on screen 720x1280
+PASS 720x1280 heading clears the star body
+PASS 720x1280 reward badge clears Continue
+PASS 720x1280 cushion tassels clear the reward badge
+PASS 720x1280 decorative lights, shadows and sparkles do not take taps
+PASS win face is dark royal blue (top/bottom luminance 0.1698/0.0792)
+PASS face highlight and inner glow preserve the darker background
+PASS halo, animated halo sparkles, rays and impact flash render behind cushion and star
+PASS halo stays centred behind the star rather than washing the entire card
+PASS star silhouette shadow and contact shadow sit above velvet and below the star
+PASS star shadow is flattened onto the pillow below the star
+PASS soft silhouette and contact shadow remain visible after landing (group 0.2800; composite interior alpha 0.2643; contact 0.2500)
+PASS win frame uses the same layered gold bevels as Level Start
+PASS full draped crown crest matches the other cards, with no competing flat ribbon
+PASS close control uses the shared royal-blue face
+PASS Continue uses the shared emerald and gold primary-button treatment
+PASS shared bottom diamond and fine lines complete the card frame
+PASS reward star is exactly 1.5 times the previous 276-unit star (414.0000)
+PASS crest shows the live level 23 (23)
+PASS 720x1280 flight reopen preserves front and halo effect pools
+PASS 1536x2048 required Game view preset is available
+PASS 1536x2048 rendered at the required dimensions
+PASS 1536x2048 observed full coin flight: 10 coins, 93 visible frames, 662 quads, 1.6048s
+PASS 1536x2048 all 2648 visible sprite corners stay 22 units inside the popup (worst margin 68.5291; first escape none)
+PASS 1536x2048 flights start after reward readiness and finish within observation
+PASS 1536x2048 flight presentation leaves currency, stars and scores unchanged
+COIN OBSERVATION 1536x2048: 289 rendered frames; alpha threshold .001; bounds checked on the complete Image quad.
+PASS 1536x2048 card, close and Continue stay on screen 1536x2048
+PASS 1536x2048 heading clears the star body
+PASS 1536x2048 reward badge clears Continue
+PASS 1536x2048 cushion tassels clear the reward badge
+PASS 1536x2048 decorative lights, shadows and sparkles do not take taps
+PASS win face is dark royal blue (top/bottom luminance 0.1698/0.0792)
+PASS face highlight and inner glow preserve the darker background
+PASS halo, animated halo sparkles, rays and impact flash render behind cushion and star
+PASS halo stays centred behind the star rather than washing the entire card
+PASS star silhouette shadow and contact shadow sit above velvet and below the star
+PASS star shadow is flattened onto the pillow below the star
+PASS soft silhouette and contact shadow remain visible after landing (group 0.2800; composite interior alpha 0.2643; contact 0.2500)
+PASS win frame uses the same layered gold bevels as Level Start
+PASS full draped crown crest matches the other cards, with no competing flat ribbon
+PASS close control uses the shared royal-blue face
+PASS Continue uses the shared emerald and gold primary-button treatment
+PASS shared bottom diamond and fine lines complete the card frame
+PASS reward star is exactly 1.5 times the previous 276-unit star (414.0000)
+PASS crest shows the live level 23 (23)
+PASS 1536x2048 flight reopen preserves front and halo effect pools
+PASS Motion off: star stays at 1x and pillow never compresses
+PASS Motion off: rays, flash, front and halo sparkles, and coin flights stay off
+PASS Motion off: soft silhouette and contact shadow stay visible and steady
+PASS Motion off: reward presentation does not mutate currency or stars
+PASS Motion off: reward still becomes ready
+PASS Next owns its real raycast tap
+PASS Next follows Continue to Home/next-level card
+PASS Next does not award coins or stars again
+PASS Royal close owns its real raycast tap
+PASS Royal close follows Continue to Home/next-level card
+PASS Royal close does not award coins or stars again
+PASS real PlayerPrefs unchanged while QA is active
+PASS owned QA session ended
+PASS real PlayerPrefs unchanged after restoring the player profile
+PASS player runtime coins/lives/level restored
+PASS no Unity errors during the run (0)
+SUMMARY passes=139 fails=0
+DONE
