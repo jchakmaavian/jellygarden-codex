@@ -1,0 +1,236 @@
+{
+  "status": "Concept only, not imported into Unity",
+  "generatedWith": "Built-in image_gen",
+  "assets": [
+    {
+      "name": "home-castle",
+      "file": "assets/home-castle.png",
+      "width": 841,
+      "height": 1870,
+      "hasTransparency": false,
+      "sha256": "c4b55d9a30fa365742ffba25bf5514eeb021d5bf0f2142b8bb0531c62f18faad",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-c67fb2a9-4c7e-4dfc-8506-0b6064dd6275.png",
+      "preview": {
+        "file": "assets/preview/home-castle.webp",
+        "width": 800,
+        "height": 1779,
+        "bytes": 152800
+      },
+      "role": "Opaque environment plate; fountain and castle are baked into this concept image."
+    },
+    {
+      "name": "button-crowned-blank",
+      "file": "assets/button-crowned-blank.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "d295064ad5d7c7f9028171bdbdd2732044b7f427d7b4e60cab3db4dfb60e5c43",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-a7d22b06-ef2e-4455-8aa0-cfc119279868.png",
+      "preview": {
+        "file": "assets/preview/button-crowned-blank.webp",
+        "width": 800,
+        "height": 313,
+        "bytes": 45354
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "avatar-king",
+      "file": "assets/avatar-king.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "80ee654b22a576455b7d7ac361ede14664ce94fe50abf9d60be0e5ce083e584a",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-e9f6261e-b99f-471e-a7ef-10518a90d977.png",
+      "preview": {
+        "file": "assets/preview/avatar-king.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 18292
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-coin",
+      "file": "assets/icon-coin.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "cc0a0de4a04eb5ab26b7f56f4e5f18136dbdc5b3f14cacddb9fee0891e4e3e97",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-5c91bf39-2c3f-4062-91df-46fccd298232.png",
+      "preview": {
+        "file": "assets/preview/icon-coin.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 15364
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-heart",
+      "file": "assets/icon-heart.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "f29fbd83d62bb251e37e01995547185829262d6e467c34934acabb1535641c4f",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-3744b6d8-4aee-4cfc-aa4f-7248b6d75059.png",
+      "preview": {
+        "file": "assets/preview/icon-heart.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 8228
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-star",
+      "file": "assets/icon-star.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "56a01c6f93b071323968f7ef15690ba5304894495ad9081c920ab42ac94e1921",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-760cdf7b-54fe-4e04-a118-d2109b3cf979.png",
+      "preview": {
+        "file": "assets/preview/icon-star.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 9754
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-settings",
+      "file": "assets/icon-settings.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "91c13825d7431350c2536aa350950cf2d417836c50039183cdd6dcc74763e120",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-f0353c2b-f0f4-4696-b576-ec62810bddb5.png",
+      "preview": {
+        "file": "assets/preview/icon-settings.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 17770
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-chest",
+      "file": "assets/icon-chest.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "205faadfebbb9cc34d72ca7cec8a33ff533b7eead6171b0bca70a2874405f299",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-0e08f364-5120-4899-8fa8-48880a7f5d65.png",
+      "preview": {
+        "file": "assets/preview/icon-chest.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 17768
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-story",
+      "file": "assets/icon-story.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "028c14b9ed5f40adfe90be35925ef72595a3f2e8b6f66fc5239a97d4a1b350e8",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-9f8ebd8f-3fed-43a0-8108-13794f0639f9.png",
+      "preview": {
+        "file": "assets/preview/icon-story.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 14356
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-trophy",
+      "file": "assets/icon-trophy.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "5ccd39371acd3fbc3dd087d60304563c6530c9008977386fb9a9520419c2a2d3",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-b6be70d4-b2c3-4e11-9a11-4c3cac6a94ae.png",
+      "preview": {
+        "file": "assets/preview/icon-trophy.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 15834
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-home",
+      "file": "assets/icon-home.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "00e63cedc71202fcd786bfbaad7945510e0764452dbcead1714865d8dfd94fcc",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-cd7df616-3045-495d-a6e9-63317619d6a4.png",
+      "preview": {
+        "file": "assets/preview/icon-home.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 22574
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-team",
+      "file": "assets/icon-team.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "e74443e0b108970a798d2ec62e947792f782059f6313ff767bfc9a96a65521c5",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-04fcc508-885e-4762-8e97-fb63f9772a4e.png",
+      "preview": {
+        "file": "assets/preview/icon-team.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 15202
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "icon-cards",
+      "file": "assets/icon-cards.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "41ae333e367b2599ae06ae386a2f6d7e4212211f1cf8f5af2714c8367e23c04a",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-e7dd1854-a859-4831-b541-c57147566b77.png",
+      "preview": {
+        "file": "assets/preview/icon-cards.webp",
+        "width": 240,
+        "height": 240,
+        "bytes": 16760
+      },
+      "role": "Separate sprite"
+    },
+    {
+      "name": "logo-locked",
+      "file": "assets/logo-locked.png",
+      "width": 1254,
+      "height": 1254,
+      "hasTransparency": true,
+      "sha256": "7397cba6758c49fc1cc5bf13f64919edc3a33bb97d0515c460623575b298ea22",
+      "source": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Branding\\royal-throne-splash-logo-v1.png",
+      "preview": {
+        "file": "assets/preview/logo-locked.webp",
+        "width": 360,
+        "height": 360,
+        "bytes": 36680
+      },
+      "role": "Separate sprite"
+    }
+  ],
+  "font": {
+    "file": "assets/BorisBlackBloxx.ttf",
+    "sha256": "f7b9dab620c7a789668b02f8bdc5ad9b803be331f51cbcc461231fa40d0bec66",
+    "provenance": "Existing project font; original license remains applicable"
+  },
+  "fragmentBytes": 655669
+}

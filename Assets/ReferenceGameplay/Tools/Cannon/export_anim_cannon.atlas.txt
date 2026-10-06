@@ -1,0 +1,48 @@
+
+export_anim_cannon.png
+size: 370,208
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+fitil
+  rotate: false
+  xy: 274, 50
+  size: 26, 31
+  orig: 28, 33
+  offset: 1, 1
+  index: -1
+golge
+  rotate: false
+  xy: 178, 83
+  size: 124, 123
+  orig: 126, 125
+  offset: 1, 1
+  index: -1
+govde
+  rotate: false
+  xy: 2, 13
+  size: 174, 193
+  orig: 174, 193
+  offset: 0, 0
+  index: -1
+kafa
+  rotate: true
+  xy: 304, 62
+  size: 144, 61
+  orig: 146, 63
+  offset: 1, 1
+  index: -1
+sag_teker
+  rotate: true
+  xy: 178, 35
+  size: 46, 94
+  orig: 48, 96
+  offset: 1, 1
+  index: -1
+sol_teker
+  rotate: true
+  xy: 274, 2
+  size: 46, 94
+  orig: 48, 96
+  offset: 1, 1
+  index: -1

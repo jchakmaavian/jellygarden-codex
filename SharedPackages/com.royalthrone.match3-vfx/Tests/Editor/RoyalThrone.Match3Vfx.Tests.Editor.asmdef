@@ -1,0 +1,25 @@
+{
+    "name": "RoyalThrone.Match3Vfx.Tests.Editor",
+    "rootNamespace": "RoyalThrone.Match3Vfx.Tests",
+    "references": [
+        "RoyalThrone.Match3Vfx",
+        "RoyalThrone.Match3Vfx.Editor",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

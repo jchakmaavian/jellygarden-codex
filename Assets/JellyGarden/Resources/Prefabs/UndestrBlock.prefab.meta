@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 29bcaddb61b3cdd438f71dcda05f61bc
+NativeFormatImporter:
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Resources/Prefabs/UndestrBlock.prefab
+  uploadId: 894794

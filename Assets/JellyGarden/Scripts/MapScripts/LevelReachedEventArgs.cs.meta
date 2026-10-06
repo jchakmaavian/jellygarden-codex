@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ab56039526d6a7f40889fa69b66f3dff
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/MapScripts/LevelReachedEventArgs.cs
+  uploadId: 894794

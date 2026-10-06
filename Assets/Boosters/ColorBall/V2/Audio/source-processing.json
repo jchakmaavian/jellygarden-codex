@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Reveal",
+    "originalOnset": 0.0,
+    "duration": 0.4,
+    "peak": 0.7200000286102295
+  },
+  {
+    "name": "Beam",
+    "originalOnset": 0.0,
+    "duration": 0.19,
+    "peak": 0.7200000286102295
+  },
+  {
+    "name": "TargetHit",
+    "originalOnset": 0.0,
+    "duration": 0.1,
+    "peak": 0.7200000286102295
+  },
+  {
+    "name": "Convert",
+    "originalOnset": 0.0,
+    "duration": 0.21,
+    "peak": 0.7199999690055847
+  },
+  {
+    "name": "FinalPulse",
+    "originalOnset": 0.0,
+    "duration": 0.32,
+    "peak": 0.7200000286102295
+  },
+  {
+    "name": "Charge",
+    "originalOnset": 0.0,
+    "duration": 1.5,
+    "peak": 0.72
+  }
+]

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9a12790ac379ab40b1c9939f1f2c17c, type: 3}
+  m_Name: Library
+  m_EditorClassIdentifier: Assembly-CSharp::JellyGarden.Scripts.Juice.RoyalToolkitLibrary
+  ice: {fileID: 4256309974115919192, guid: 88faf59cba357c84d92071590b15f651, type: 3}
+  fire: {fileID: 4995570510737156849, guid: 2ed30e4db694e8647a7fb13744335eb3, type: 3}
+  iceScale: 1.1
+  fireScale: 3.2
+  iceLifetime: 0.9
+  fireLifetime: 1.5
+  icePool: 4
+  firePool: 2

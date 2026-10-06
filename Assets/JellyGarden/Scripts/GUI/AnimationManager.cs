@@ -1,0 +1,781 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
+// // All rights reserved
+// // Redistribution of this software is strictly not allowed.
+// // Copy of this software can be obtained from unity asset store only.
+// // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// // FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+// // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// // THE SOFTWARE.
+
+using System.Collections;
+using JellyGarden.Scripts.MapScripts;
+using JellyGarden.Scripts.System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+#if UNITY_ADS
+using UnityEngine.Advertisements;
+#endif
+
+
+
+
+
+namespace JellyGarden.Scripts.GUI
+{
+    public class AnimationManager : MonoBehaviour
+    {
+        public bool PlayOnEnable = true;
+        bool WaitForPickupFriends;
+
+        bool WaitForAksFriends;
+        global::System.Collections.Generic.Dictionary<string, string> parameters;
+
+        void OnEnable()
+        {
+            if (PlayOnEnable)
+            {
+                SoundBase.Instance.PlaySound(SoundBase.Instance.swish[0]);
+            }
+            if (name == "MenuPlay")
+            {
+                for (int i = 1; i <= 3; i++)
+                {
+                    transform.Find("Image").Find("Star" + i).gameObject.SetActive(false);
+                }
+                int stars = PlayerPrefs.GetInt(string.Format("Level.{0:000}.StarsCount", PlayerPrefs.GetInt("OpenLevel")), 0);
+                if (stars > 0 && stars <= 3)
+                {
+                    for (int i = 1; i <= stars; i++)
+                    {
+                        transform.Find("Image").Find("Star" + i).gameObject.SetActive(true);
+                    }
+
+                }
+                else
+                {
+                    for (int i = 1; i <= 3; i++)
+                    {
+                        transform.Find("Image").Find("Star" + i).gameObject.SetActive(false);
+                    }
+
+                }
+            }
+
+            if (name == "PrePlay")
+            {
+                // GameObject
+            }
+            if (name == "PreFailed")
+            {
+                SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
+                transform.Find("Video").gameObject.SetActive(true);
+                transform.Find("Buy").GetComponent<Button>().interactable = true;
+                failedChoiceMade = false;
+
+                GetComponent<Animation>().Play();
+            }
+
+            if (name == "Settings" || name == "MenuPause")
+            {
+                var leaveConfirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
+                if (leaveConfirm) leaveConfirm.gameObject.SetActive(false);   // a reopened pause menu never shows a stale question
+                if (PlayerPrefs.GetInt("Sound") == 0)
+                    transform.Find("Image/Sound/SoundOff").gameObject.SetActive(true);
+                else
+                    transform.Find("Image/Sound/SoundOff").gameObject.SetActive(false);
+
+                if (PlayerPrefs.GetInt("Music") == 0)
+                    transform.Find("Image/Music/MusicOff").gameObject.SetActive(true);
+                else
+                    transform.Find("Image/Music/MusicOff").gameObject.SetActive(false);
+
+            }
+
+            if (name == "GemsShop")
+            {
+                for (int i = 1; i <= 4; i++)
+                {
+                    transform.Find("Image/Pack" + i + "/Count").GetComponent<Text>().text = "" + LevelManager.THIS.gemsProducts[i - 1].count;
+                    transform.Find("Image/Pack" + i + "/Buy/Price").GetComponent<Text>().text = "$" + LevelManager.THIS.gemsProducts[i - 1].price;
+                }
+                // With store services off (the offline build) Buy does nothing, so show the packs as unavailable
+                // instead of real-money prices on buttons that silently ignore the tap.
+                if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled)
+                {
+                    for (int i = 1; i <= 4; i++)
+                    {
+                        var buy = transform.Find("Image/Pack" + i + "/Buy");
+                        buy.GetComponent<Button>().interactable = false;
+                        buy.Find("Price").GetComponent<Text>().text = "Unavailable";
+                    }
+                    var subtitle = transform.Find("Image/Royal subtitle");
+                    if (subtitle) subtitle.GetComponent<Text>().text = "Coin packs are not available in this version";
+                }
+            }
+            if (name == "MenuComplete")
+            {
+                for (int i = 1; i <= 3; i++)
+                {
+                    transform.Find("Image").Find("Star" + i).gameObject.SetActive(false);
+                }
+
+            }
+
+            var videoAdsButton = transform.Find("Image/Video");
+            if (videoAdsButton == null) videoAdsButton = transform.Find("Video");
+            if (videoAdsButton != null )
+            {
+                var videoButton = videoAdsButton == null ? transform.Find("Video") : videoAdsButton;
+                if (videoButton == null) return;
+                if (videoButton.GetComponent<RewardedButton>() == null)
+                {
+                    RewardedButton b = videoButton.gameObject.AddComponent<RewardedButton>();
+                    b.type = GetReward();
+                    b.SetEnabled();
+                }
+                #if UNITY_ADS
+            InitScript.Instance.rewardedVideoZone = "rewardedVideo";
+
+            if (!InitScript.Instance.enableUnityAds || !InitScript.Instance.GetRewardedUnityAdsReady())
+            {
+                videoButton.gameObject.SetActive(false);
+            }
+                #elif GOOGLE_MOBILE_ADS//2.2
+			bool stillShow = true;
+#if UNITY_ADS
+        stillShow = !InitScript.Instance.GetRewardedUnityAdsReady ();
+#endif
+			if (!InitScript.Instance.enableGoogleMobileAds || !RewAdmobManager.THIS.IsRewardedAdIsLoaded() || !stillShow)
+				videoAdsButton.gameObject.SetActive(false);
+                #else
+                videoAdsButton.gameObject.SetActive(false);
+                #endif
+            }
+
+        }
+
+        void Update()
+        {
+            if (InputManager.Instance != null && InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame() && !CoveredByLaterPopup())
+            {
+                // One Back release, one action: another menu may already have handled it earlier in this frame.
+                if (RoyalThrone.Presentation.RoyalBackButton.ConsumedThisFrame) return;
+                // The shop over a popup takes Back itself (it closes); the popup under it must not act on the same press, or
+                // Back over the shop on So Close ended the level (bug review 2026-10-05).
+                if (RoyalThrone.Presentation.RoyalShopPage.IsOpen) return;
+                if (name == "MenuPlay" || name == "Settings" || name == "BoostInfo" || name == "GemsShop" || name == "LiveShop" || name == "BoostShop" || name == "Reward" || name == "Tutorial")
+                {
+                    CloseMenu();
+                    RoyalThrone.Presentation.RoyalBackButton.Consume();
+                }
+                // The level-end cards take Back as their quiet choice: END LEVEL on the So Close offer, closing the Level Failed
+                // card, and CONTINUE on the win card (UI polish, 2026-09-30; Back did nothing on them).
+                else if (name == "PreFailed" && !failedChoiceMade)
+                {
+                    GiveUp();
+                    RoyalThrone.Presentation.RoyalBackButton.Consume();
+                }
+                else if (name == "MenuFailed" || name == "MenuComplete")
+                {
+                    Next();
+                    RoyalThrone.Presentation.RoyalBackButton.Consume();
+                }
+                else if (name == "MenuPause" && !IsOpen("Tutorial"))   // How-to-play on top of the pause menu closes first
+                {
+                    // Back first dismisses the leave question; otherwise it resumes, exactly like the Continue button.
+                    var leaveConfirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
+                    if (leaveConfirm && leaveConfirm.gameObject.activeSelf) leaveConfirm.gameObject.SetActive(false);
+                    else Play();
+                    RoyalThrone.Presentation.RoyalBackButton.Consume();
+                }
+            }
+        }
+
+        public void ShowAds()
+        {
+            InitScript.Instance.currentReward = GetReward();
+            InitScript.Instance.ShowRewardedAds();
+            CloseMenu();
+        }
+
+        private RewardedAdsType GetReward()
+        {
+            switch (name)
+            {
+                case "GemsShop":
+                    return RewardedAdsType.GetGems;
+                case "LiveShop":
+                    return RewardedAdsType.GetLifes;
+                case "PreFailed":
+                    return RewardedAdsType.GetGoOn;
+            }
+            return RewardedAdsType.GetGoOn;
+        }
+
+        public void GoRate()
+        {
+            // No verified Royal Throne store listing exists for this offline test build.
+            Debug.Log("Royal Throne ratings are unavailable in the offline test build.");
+        }
+
+        void OnDisable()
+        {
+            if (transform.Find("Image/Video") != null)
+            {
+                transform.Find("Image/Video").gameObject.SetActive(true);
+            }
+
+            //if( PlayOnEnable )
+            //{
+            //    if( !GetComponent<SequencePlayer>().sequenceArray[0].isPlaying )
+            //        GetComponent<SequencePlayer>().sequenceArray[0].Play
+            //}
+        }
+
+        public void OnFinished()
+        {
+            if (name == "MenuComplete")
+            {
+                StartCoroutine(MenuComplete());
+                StartCoroutine(MenuCompleteScoring());
+            }
+            if (name == "MenuPlay")
+            {
+                //            InitScript.Instance.currentTarget = InitScript.Instance.targets[PlayerPrefs.GetInt( "OpenLevel" )];
+                transform.Find("Image/Boost1").GetComponent<BoostIcon>().InitBoost();
+                transform.Find("Image/Boost2").GetComponent<BoostIcon>().InitBoost();
+                transform.Find("Image/Boost3").GetComponent<BoostIcon>().InitBoost();
+
+            }
+            if (name == "MenuPause")
+            {
+                if (LevelManager.THIS.gameStatus == GameState.Playing)
+                    LevelManager.THIS.gameStatus = GameState.Pause;
+            }
+
+            if (name == "PrePlay")
+            {
+                CloseMenu();
+                LevelManager.THIS.gameStatus = GameState.WaitForPopup;
+
+            }
+            if (name == "PreFailed")
+            {
+                if (LevelManager.THIS.Limit <= 0)
+                    LevelManager.THIS.gameStatus = GameState.GameOver;
+                transform.Find("Video").gameObject.SetActive(false);
+
+                CloseMenu();
+
+            }
+
+            if (name.Contains("gratzWord"))
+                gameObject.SetActive(false);
+            if (name == "NoMoreMatches")
+                gameObject.SetActive(false);
+            if (name == "CompleteLabel")
+                gameObject.SetActive(false);
+
+        }
+
+        void TargetCheck(bool check, int n = 1)
+        {
+            Transform TargetCheck = transform.Find("Image/TargetCheck" + n);
+            Transform TargetUnCheck = transform.Find("Image/TargetUnCheck" + n);
+            TargetCheck.gameObject.SetActive(check);
+            TargetUnCheck.gameObject.SetActive(!check);
+        }
+
+        public void WaitForGiveUp()
+        {
+            if (name == "PreFailed")
+            {
+                // Hold for the player's choice, unless it was already made while the banner was still arriving.
+                if (!failedChoiceMade)
+                    GetComponent<Animation>()["bannerFailed"].speed = 0;
+                #if UNITY_ADS
+
+            if (InitScript.Instance.enableUnityAds)
+            {
+
+                if (InitScript.Instance.GetRewardedUnityAdsReady())
+                {
+                    transform.Find("Video").gameObject.SetActive(true);
+                }
+            }
+                #elif GOOGLE_MOBILE_ADS//2.2
+			bool stillShow = true;
+#if UNITY_ADS
+        stillShow = !InitScript.Instance.GetRewardedUnityAdsReady ();
+#endif
+			if (InitScript.Instance.enableGoogleMobileAds && stillShow)
+			{
+				if (RewAdmobManager.THIS.IsRewardedAdIsLoaded())
+				{
+					transform.Find("Video").gameObject.SetActive(true);
+				}
+			}
+
+                #endif
+            }
+        }
+
+        IEnumerator MenuComplete()
+        {
+            for (int i = 1; i <= LevelManager.Instance.stars; i++)
+            {
+                //  SoundBase.Instance.audio.PlayOneShot( SoundBase.Instance.scoringStar );
+                transform.Find("Image").Find("Star" + i).gameObject.SetActive(true);
+                SoundBase.Instance.PlaySound(SoundBase.Instance.star[i - 1]);
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+
+        IEnumerator MenuCompleteScoring()
+        {
+            Text scores = transform.Find("Image").Find("Score").GetComponent<Text>();
+            // The win card hides the score (one star per win): write it once instead of counting it up, frame by frame, unseen.
+            var hidden = scores.GetComponent<CanvasGroup>();
+            if (hidden && hidden.alpha <= 0) { scores.text = "" + LevelManager.Score; yield break; }
+            for (int i = 0; i <= LevelManager.Score; i += 500)
+            {
+                scores.text = "" + i;
+                // SoundBase.Instance.audio.PlayOneShot( SoundBase.Instance.scoring );
+                yield return new WaitForSeconds(0.00001f);
+            }
+            scores.text = "" + LevelManager.Score;
+        }
+
+        public void Info()
+        {
+            MenuManager.Instance.ShowTutorial(true);
+            CloseMenu();
+        }
+
+        public void PlaySoundButton()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+
+        }
+
+        public IEnumerator Close()
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        public void CloseMenu()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            if (gameObject.name == "MenuComplete")
+            {
+                LevelManager.THIS.gameStatus = GameState.Map;
+                LevelManager.THIS.gameStatus = GameState.Map;
+                int nextLevel = RoyalThrone.Campaign.RoyalReferenceCampaign.Enabled ? Mathf.Min(50,LevelManager.THIS.currentLevel + 1) : LevelManager.THIS.currentLevel + 1;
+                // Every won level returns Home for the star and coin collection (including level 13 in the supplied
+                // recording). Select the next authored level for its Home button; opening its entry card is the player's choice.
+                // After the last authored level there is no level to open: CONTINUE returns to the home screen instead
+                // of loading a missing level file (which threw here and left this card stuck on screen).
+                if (Resources.Load<TextAsset>("Levels/" + nextLevel) != null)
+                {
+                    PlayerPrefs.SetInt("OpenLevel", nextLevel);
+                    // LoadLevel only reads the next layout; it does not raise OnLevelLoaded or cancel the pending reward.
+                    LevelManager.THIS.LoadLevel();
+                }
+            }
+            if (gameObject.name == "MenuFailed")
+            {
+                LevelManager.THIS.gameStatus = GameState.Map;
+            }
+
+            if (SceneManager.GetActiveScene().name == "game")
+            {
+                // How-to-play opened from the pause menu returns to that menu; only closing the pause menu itself resumes.
+                if (LevelManager.Instance.gameStatus == GameState.Pause && !(name == "Tutorial" && IsOpen("MenuPause")))
+                {
+                    LevelManager.Instance.gameStatus = GameState.WaitAfterClose;
+
+                }
+            }
+            SoundBase.Instance.PlaySound(SoundBase.Instance.swish[1]);
+
+            gameObject.SetActive(false);
+        }
+
+        static bool IsOpen(string menu)
+        {
+            var canvas = MenuManager.Instance ? MenuManager.Instance.GetCanvasGlobal() : null;
+            var popup = canvas ? canvas.Find(menu) : null;
+            return popup && popup.gameObject.activeSelf;
+        }
+
+        // Popups stack (the booster guide or a shop over the level card, the coin shop over a shop), and a later child of the
+        // global canvas draws on top. Back belongs to the top one: which popup's Update runs first is not defined.
+        bool CoveredByLaterPopup()
+        {
+            var parent = transform.parent;
+            if (!parent) return false;
+            for (int i = transform.GetSiblingIndex() + 1; i < parent.childCount; i++)
+            {
+                var sibling = parent.GetChild(i);
+                if (sibling.gameObject.activeSelf && sibling.GetComponent<AnimationManager>()) return true;
+            }
+            return false;
+        }
+
+        public void SwishSound()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.swish[1]);
+        }
+
+        public void ShowInfo()
+        {
+            MenuManager.Instance.ShowBoostInfo(true);
+        }
+
+        public void Play()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            if (gameObject.name == "MenuPreGameOver")
+            {
+                if (InitScript.Gems >= 12)
+                {
+                    InitScript.Instance.SpendGems(12);
+                    //                LevelData.LimitAmount += 12;
+                    LevelManager.Instance.gameStatus = GameState.WaitAfterClose;
+                    gameObject.SetActive(false);
+
+                }
+                else
+                {
+                    BuyGems();
+                }
+            }
+            else if (gameObject.name == "MenuFailed")
+            {
+                LevelManager.Instance.gameStatus = GameState.Map;
+            }
+            else if (gameObject.name == "MenuPlay")
+            {
+                if (InitScript.lifes > 0)
+                {
+                    // The level starts under a royal-blue cover that fades in over this card and Home and then lifts off the
+                    // goals banner (RoyalScreenCover; 2026-10-04, the user: the game start transition must be smooth). A tap
+                    // while the cover runs is ignored, so no second life is spent.
+                    if (RoyalThrone.Presentation.RoyalScreenCover.Busy) return;
+                    InitScript.Instance.SpendLife(1);
+                    RoyalThrone.Presentation.RoyalScreenCover.Play(() =>
+                    {
+                        LevelManager.THIS.gameStatus = GameState.PrepareGame;
+                        CloseMenu();
+                    });
+                    //Application.LoadLevel( "game" );
+                }
+                else
+                {
+                    BuyLifeShop();
+                }
+
+            }
+            else if (gameObject.name == "MenuPause")
+            {
+                // Resume only a paused game: if the goals were met while the card was opening, the celebration runs on (setting
+                // Playing then stopped the win flow and left a frozen board; bug review 2026-10-05).
+                var before = LevelManager.Instance.gameStatus;
+                CloseMenu();
+                if (before == GameState.Pause || before == GameState.Playing) LevelManager.Instance.gameStatus = GameState.Playing;
+            }
+        }
+
+        public void PlayTutorial()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            LevelManager.Instance.gameStatus = GameState.Playing;
+            //    mainscript.Instance.dropDownTime = Time.time + 0.5f;
+            //        CloseMenu();
+        }
+
+        public void BackToMap()
+        {
+            if (name == "MenuPause")
+            {
+                // Leaving costs the life spent on this level: the pause menu asks first (LEAVE calls back here).
+                var confirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
+                if (confirm && !confirm.gameObject.activeSelf)
+                {
+                    SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+                    confirm.gameObject.SetActive(true);
+                    return;
+                }
+                if (confirm) confirm.gameObject.SetActive(false);
+            }
+            Time.timeScale = 1;
+            // Leaving from the pause menu is not a defeat. This used to enter GameOver, which
+            // opens the "try again" failed summary over the map; go straight to the map instead.
+            // The life stays spent, exactly as it was when the level was opened.
+            LevelManager.THIS.gameStatus = GameState.Map;
+            CloseMenu();
+        }
+
+        public void Next()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            CloseMenu();
+        }
+
+        /// <summary>
+        /// "Try again" on the failed screen. It used to call <see cref="Next"/>, which only
+        /// returned to the map. This reopens the same level through the normal pre-level panel,
+        /// so the player can start it (spending a life, or being offered more) or close it.
+        /// </summary>
+        public void RetryLevel()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            int level = LevelManager.THIS.currentLevel;
+            CloseMenu();
+            // This panel is deactivated by CloseMenu, so the wait has to run on a live object.
+            LevelManager.THIS.StartCoroutine(ReopenLevel(level));
+        }
+
+        IEnumerator ReopenLevel(int level)
+        {
+            float deadline = Time.unscaledTime + 5f;
+            while (LevelManager.THIS.gameStatus != GameState.Map && Time.unscaledTime < deadline)
+                yield return null;
+            yield return null;
+            InitScript.Instance.TryOpenLevel(level);
+        }
+
+        public void Again()//2.2.2
+        {
+            GameObject gm = new GameObject();
+            gm.AddComponent<RestartLevel>();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        // The coin shop is the Royal shop's Coins tab (2026-10-05): coin packs bought through Google Play (RoyalStore).
+        public void BuyGems()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            RoyalThrone.Presentation.RoyalShopPage.Open(RoyalThrone.Presentation.RoyalShopPage.Tab.Coins);
+        }
+
+        // Not enough coins for `near` (the button that asked): the card says so beside the button, and the shop opens on its
+        // Coins tab over the card, so the player can buy coins and come back to the same offer.
+        void NotEnoughCoins(Transform near)
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            RoyalThrone.Presentation.RoyalNotice.NotEnoughCoins(near ? near : transform, InitScript.Gems);
+            RoyalThrone.Presentation.RoyalShopPage.Open(RoyalThrone.Presentation.RoyalShopPage.Tab.Coins);
+        }
+
+        public void Buy(GameObject pack)
+        {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            if (pack.name == "Pack1")
+            {
+                InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+                #if UNITY_WEBPLAYER || UNITY_WEBGL
+            InitScript.Instance.PurchaseSucceded();
+            CloseMenu();
+            return;
+                #endif
+                #if UNITY_INAPPS
+                UnityInAppsIntegration.THIS.BuyProductID(LevelManager.THIS.InAppIDs[0]);
+                #else
+            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//2.1.6
+                #endif
+            }
+
+            if (pack.name == "Pack2")
+            {
+                InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+                #if UNITY_WEBPLAYER || UNITY_WEBGL
+            InitScript.Instance.PurchaseSucceded();
+            CloseMenu();
+            return;
+                #endif
+                #if UNITY_INAPPS
+                UnityInAppsIntegration.THIS.BuyProductID(LevelManager.THIS.InAppIDs[1]);
+                #else
+            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//2.1.6
+                #endif
+            }
+            if (pack.name == "Pack3")
+            {
+                InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+                #if UNITY_WEBPLAYER || UNITY_WEBGL
+            InitScript.Instance.PurchaseSucceded();
+            CloseMenu();
+            return;
+                #endif
+                #if UNITY_INAPPS
+                UnityInAppsIntegration.THIS.BuyProductID(LevelManager.THIS.InAppIDs[2]);
+                #else
+            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//2.1.6
+                #endif
+            }
+            if (pack.name == "Pack4")
+            {
+                InitScript.waitedPurchaseGems = int.Parse(pack.transform.Find("Count").GetComponent<Text>().text.Replace("x ", ""));
+                #if UNITY_WEBPLAYER || UNITY_WEBGL
+            InitScript.Instance.PurchaseSucceded();
+            CloseMenu();
+            return;
+                #endif
+                #if UNITY_INAPPS
+                UnityInAppsIntegration.THIS.BuyProductID(LevelManager.THIS.InAppIDs[3]);
+                #else
+            Debug.LogError("Unity-inapps not enable. More info: https://docs.google.com/document/d/1HeN8JtQczTVetkMnd8rpSZp_TZZkEA7_kan7vvvsMw0/edit#heading=h.60xg5ccbex9m");//2.1.6
+                #endif
+            }
+            CloseMenu();
+
+        }
+
+        public void BuyLifeShop()
+        {
+
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            if (InitScript.lifes < InitScript.Instance.CapOfLife)
+                MenuManager.Instance.ShowLiveShop(true);
+
+        }
+
+        public void BuyLife(GameObject button)
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            // A life may have come back while the card was open: full lives are not sold again (bug review 2026-10-05).
+            if (InitScript.lifes >= InitScript.Instance.CapOfLife) { CloseMenu(); return; }
+            if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
+            {
+                InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));
+                InitScript.Instance.RestoreLifes();
+                CloseMenu();
+            }
+            else
+            {
+                NotEnoughCoins(button.transform);
+            }
+
+        }
+
+        // PreFailed: the buttons are in place about 0.4 s after the offer opens, but the clip only holds at its
+        // WaitForGiveUp event (2.05 s); CONTINUE used to require that hold and END LEVEL was re-held by it, so early
+        // taps were lost. A choice is now accepted as soon as it is made, once per showing.
+        bool failedChoiceMade;
+
+        void SkipFailedBannerHold()
+        {
+            // An early choice continues from the hold point, so the exit plays at once as it does after a late choice.
+            var animation = GetComponent<Animation>();
+            var state = animation ? animation["bannerFailed"] : null;
+            if (state == null || !state.clip) return;
+            foreach (var e in state.clip.events)
+                if (e.functionName == "WaitForGiveUp" && state.time < e.time)
+                    state.time = e.time + 0.01f;
+        }
+
+        public void BuyFailed(GameObject button)
+        {
+            if (!failedChoiceMade)
+            {
+                if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
+                {
+                    InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));
+                    LevelManager.THIS.ContinuesBought++;   // the next Continue in this attempt costs more
+                    button.GetComponent<Button>().interactable = false;
+                    GoOnFailed();
+                }
+                else
+                {
+                    NotEnoughCoins(button.transform);
+                }
+            }
+        }
+
+        public void GoOnFailed()
+        {
+            failedChoiceMade = true;
+            SkipFailedBannerHold();
+            if (LevelManager.THIS.limitType == LIMIT.MOVES)
+                LevelManager.THIS.Limit += LevelManager.THIS.ExtraFailedMoves;
+            else
+                LevelManager.THIS.Limit += LevelManager.THIS.ExtraFailedSecs;
+            GetComponent<Animation>()["bannerFailed"].speed = 1;
+            LevelManager.THIS.gameStatus = GameState.Playing;
+            RoyalThrone.Characters.KingVanguardActivityEvents.NotifyExtraMovesGranted(LevelManager.THIS);
+        }
+
+        public void GiveUp()
+        {
+            if (failedChoiceMade) return;
+            failedChoiceMade = true;
+            SkipFailedBannerHold();
+            GetComponent<Animation>()["bannerFailed"].speed = 1;
+        }
+
+        #region boosts
+
+        public void BuyBoost(BoostType boostType, int price, int count)
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            if (InitScript.Gems >= price)
+            {
+                InitScript.Instance.SpendGems(price);
+                // InitScript.BuyBoost sets the stock (its other callers pass the new total): add the pack to what is owned.
+                InitScript.Instance.BuyBoost(boostType, price, PlayerPrefs.GetInt("" + boostType) + count);
+                //InitScript.Instance.SpendBoost(boostType);
+                CloseMenu();
+            }
+            else
+            {
+                NotEnoughCoins(transform.Find("Image") ? transform.Find("Image") : transform);
+            }
+        }
+
+        #endregion
+
+        public void SoundOff(GameObject Off)
+        {
+            if (!Off.activeSelf)
+            {
+                SoundBase.Instance.SetVolume(0);
+                InitScript.sound = false;
+                Off.SetActive(true);
+            }
+            else
+            {
+                SoundBase.Instance.SetVolume(1);
+                InitScript.sound = true;
+                Off.SetActive(false);
+            }
+            PlayerPrefs.SetInt("Sound", (int)SoundBase.Instance.GetVolume());
+            PlayerPrefs.Save();
+        }
+
+        public void MusicOff(GameObject Off)
+        {
+            if (!Off.activeSelf)
+            {
+                MusicBase.Instance.SetVolume(0);
+                InitScript.music = false;
+                Off.SetActive(true);
+            }
+            else
+            {
+                MusicBase.Instance.SetVolume(1);
+                InitScript.music = true;
+                Off.SetActive(false);
+            }
+            PlayerPrefs.SetInt("Music", (int)MusicBase.Instance.GetVolume());
+            PlayerPrefs.Save();
+        }
+
+    }
+}

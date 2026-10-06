@@ -1,0 +1,20 @@
+{
+    "name": "spine-unity-editor",
+    "references": [
+        "spine-unity",
+        "Unity.2D.Sprite.Editor"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "versionDefines": [
+        {
+            "name": "com.unity.2d.sprite",
+            "expression": "1.0.0",
+            "define": "SPINE_2D_SPRITE"
+        }
+    ]
+}

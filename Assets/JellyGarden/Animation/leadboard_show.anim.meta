@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9260388cb86f3439a8218cbd25a18f14
+timeCreated: 1475674640
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Animation/leadboard_show.anim
+  uploadId: 894794

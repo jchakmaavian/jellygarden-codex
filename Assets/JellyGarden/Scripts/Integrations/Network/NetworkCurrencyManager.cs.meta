@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 4bb2280a6d51744459c9fe58f8e7482b
+timeCreated: 1475666528
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/Integrations/Network/NetworkCurrencyManager.cs
+  uploadId: 894794

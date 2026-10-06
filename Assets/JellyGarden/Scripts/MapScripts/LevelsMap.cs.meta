@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 5392c69f20649594691b44cf7bc61c77
+labels:
+- Map
+- Level
+- Star
+- candycrushsaga
+- character
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/MapScripts/LevelsMap.cs
+  uploadId: 894794

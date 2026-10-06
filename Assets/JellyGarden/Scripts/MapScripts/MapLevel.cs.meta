@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 3b6a9bbe0be36eb4bb8283ff30b0961f
+labels:
+- Level
+- Star
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/MapScripts/MapLevel.cs
+  uploadId: 894794

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e2ec10b987e2cff409cea5ddd4fb50da
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/MapScripts/ApiTest.cs
+  uploadId: 894794

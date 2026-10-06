@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 7462f06ec8cdf4167920a2dd2a3c9ff4
+timeCreated: 1476261002
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 43260
+  packageName: Match 3 Jelly Garden Kit
+  packageVersion: 2.5.2
+  assetPath: Assets/JellyGarden/Scripts/Integrations/Network/Gamesparks/GamesparksCurrencyManager.cs
+  uploadId: 894794

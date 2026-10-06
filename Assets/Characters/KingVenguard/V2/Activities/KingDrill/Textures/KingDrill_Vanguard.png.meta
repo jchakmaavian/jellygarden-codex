@@ -1,0 +1,663 @@
+fileFormatVersion: 2
+guid: 4f0669a1aaaf18b4dba0da01410dbc59
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1245976680673488425
+    second: KingDrill_Vanguard_0
+  - first:
+      213: 8408900774710366736
+    second: KingDrill_Vanguard_1
+  - first:
+      213: 4626147049702430238
+    second: KingDrill_Vanguard_2
+  - first:
+      213: -7016288284698945118
+    second: KingDrill_Vanguard_3
+  - first:
+      213: 8864007105208262639
+    second: KingDrill_Vanguard_4
+  - first:
+      213: 3379214048609933732
+    second: KingDrill_Vanguard_5
+  - first:
+      213: 2785689411691002191
+    second: KingDrill_Vanguard_6
+  - first:
+      213: -7846484496679052235
+    second: KingDrill_Vanguard_7
+  - first:
+      213: -1980693000912319044
+    second: KingDrill_Vanguard_8
+  - first:
+      213: 2222817556333948177
+    second: KingDrill_Vanguard_9
+  - first:
+      213: -73436255056150918
+    second: KingDrill_Vanguard_10
+  - first:
+      213: -8704174999089317365
+    second: KingDrill_Vanguard_11
+  - first:
+      213: 1834359287937037756
+    second: KingDrill_Vanguard_12
+  - first:
+      213: -3871949754299893016
+    second: KingDrill_Vanguard_13
+  - first:
+      213: -666196482074229733
+    second: KingDrill_Vanguard_14
+  - first:
+      213: 3837055414646736934
+    second: KingDrill_Vanguard_15
+  - first:
+      213: -2978690941488777066
+    second: KingDrill_Vanguard_16
+  - first:
+      213: -7119444050218580524
+    second: KingDrill_Vanguard_17
+  - first:
+      213: -474433003765088703
+    second: KingDrill_Vanguard_18
+  - first:
+      213: -2358888653189635716
+    second: KingDrill_Vanguard_19
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 0
+  spriteTessellationDetail: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: 48
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 1
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1785
+        width: 172
+        height: 196
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92ea6f980399a4110800000000000000
+      internalID: 1245976680673488425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_1
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 1715
+        width: 145
+        height: 138
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0125e1cc3ba62b470800000000000000
+      internalID: 8408900774710366736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_2
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 1846
+        width: 418
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e161c383b30633040800000000000000
+      internalID: 4626147049702430238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 583
+        width: 820
+        height: 1199
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a9d8cc9af221ae90800000000000000
+      internalID: -7016288284698945118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_4
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 1744
+        width: 10
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fef1a78af77430b70800000000000000
+      internalID: 8864007105208262639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_5
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 576
+        width: 327
+        height: 443
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a9976bf54165ee20800000000000000
+      internalID: 3379214048609933732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_6
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 582
+        width: 191
+        height: 328
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f49b86eb2c1c8a620800000000000000
+      internalID: 2785689411691002191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_7
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 674
+        width: 17
+        height: 1066
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53cd5d73cefab1390800000000000000
+      internalID: -7846484496679052235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_8
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 535
+        width: 84
+        height: 146
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbdc487b53a2384e0800000000000000
+      internalID: -1980693000912319044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 345
+        height: 583
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11d69cd5ac809de10800000000000000
+      internalID: 2222817556333948177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_10
+      rect:
+        serializedVersion: 2
+        x: 485
+        y: 571
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7e3eb77d1a1bfef0800000000000000
+      internalID: -73436255056150918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_11
+      rect:
+        serializedVersion: 2
+        x: 585
+        y: 252
+        width: 214
+        height: 330
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0af17c74fe843780800000000000000
+      internalID: -8704174999089317365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_12
+      rect:
+        serializedVersion: 2
+        x: 341
+        y: 476
+        width: 88
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb5fce3bd04f47910800000000000000
+      internalID: 1834359287937037756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_13
+      rect:
+        serializedVersion: 2
+        x: 341
+        y: 402
+        width: 189
+        height: 93
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ea3bc28632144ac0800000000000000
+      internalID: -3871949754299893016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_14
+      rect:
+        serializedVersion: 2
+        x: 797
+        y: 247
+        width: 150
+        height: 295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b14c95744d131c6f0800000000000000
+      internalID: -666196482074229733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_15
+      rect:
+        serializedVersion: 2
+        x: 346
+        y: 1
+        width: 244
+        height: 399
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 628028de195ff3530800000000000000
+      internalID: 3837055414646736934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_16
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 400
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69833e8de5099a6d0800000000000000
+      internalID: -2978690941488777066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_17
+      rect:
+        serializedVersion: 2
+        x: 590
+        y: 6
+        width: 269
+        height: 242
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d504745b57a23d90800000000000000
+      internalID: -7119444050218580524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_18
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 206
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14e3cdc52b97a69f0800000000000000
+      internalID: -474433003765088703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KingDrill_Vanguard_19
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 0
+        width: 50
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c71aee1944b834fd0800000000000000
+      internalID: -2358888653189635716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      KingDrill_Vanguard_0: 1245976680673488425
+      KingDrill_Vanguard_1: 8408900774710366736
+      KingDrill_Vanguard_10: -73436255056150918
+      KingDrill_Vanguard_11: -8704174999089317365
+      KingDrill_Vanguard_12: 1834359287937037756
+      KingDrill_Vanguard_13: -3871949754299893016
+      KingDrill_Vanguard_14: -666196482074229733
+      KingDrill_Vanguard_15: 3837055414646736934
+      KingDrill_Vanguard_16: -2978690941488777066
+      KingDrill_Vanguard_17: -7119444050218580524
+      KingDrill_Vanguard_18: -474433003765088703
+      KingDrill_Vanguard_19: -2358888653189635716
+      KingDrill_Vanguard_2: 4626147049702430238
+      KingDrill_Vanguard_3: -7016288284698945118
+      KingDrill_Vanguard_4: 8864007105208262639
+      KingDrill_Vanguard_5: 3379214048609933732
+      KingDrill_Vanguard_6: 2785689411691002191
+      KingDrill_Vanguard_7: -7846484496679052235
+      KingDrill_Vanguard_8: -1980693000912319044
+      KingDrill_Vanguard_9: 2222817556333948177
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
