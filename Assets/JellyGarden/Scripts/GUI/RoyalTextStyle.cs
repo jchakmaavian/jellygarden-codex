@@ -115,7 +115,8 @@ namespace RoyalThrone.Presentation
                 bool finale = logical < text.Length && text[logical] == '!';
                 float peak = finale ? 1.82f : 1.72f;
                 float p = float.IsPositiveInfinity(written) ? 1 : Mathf.Clamp01((written - logical) / Mathf.Max(1, revealSpan));
-                float alpha = float.IsPositiveInfinity(written) ? 1 : Mathf.Clamp01((written - logical) * 5);
+                // Reveal the whole dimensional glyph together; fading stacked side layers produces a brown flash.
+                float alpha = float.IsPositiveInfinity(written) || written > logical ? 1 : 0;
                 float scale, pitch, yaw;
                 if (p < .25f)
                 {
@@ -141,6 +142,7 @@ namespace RoyalThrone.Presentation
                 float lo = float.MaxValue, hi = float.MinValue, left = float.MaxValue, right = float.MinValue;
                 for (int k = 0; k < 6; k++) { var v = source[first + k].position; lo = Mathf.Min(lo, v.y); hi = Mathf.Max(hi, v.y); left = Mathf.Min(left, v.x); right = Mathf.Max(right, v.x); }
                 var pivot = new Vector3((left + right) * .5f, lo);
+                int firstOutput = result.Count;
                 // Cast shadow, far bronze sidewall, bright top edge, warm inner bevel, navy keyline, ivory face bevel.
                 RewardRing(first, pivot, rotation, scale, alpha, lo, hi, -5, new Vector2(0, -1.4f), 5.8f,
                     new Color(.015f, .035f, .085f, .48f), new Color(.015f, .035f, .085f, .48f));
@@ -157,6 +159,12 @@ namespace RoyalThrone.Presentation
                 RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .65f, Vector2.zero, 2.8f, new Color(.018f, .14f, .22f), new Color(.012f, .075f, .15f));
                 RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .9f, Vector2.zero, .45f, new Color(1, 1, .97f), new Color(.96f, .88f, .61f));
                 RewardCopy(first, pivot, rotation, scale, alpha, lo, hi, 1.1f, Vector2.zero, new Color(1, .995f, .94f), new Color(1, .95f, .78f));
+                // The bigger punctuation follows a shallow dip so its peak keeps breathing room under the crown.
+                if (finale)
+                {
+                    float dip = 6 * Mathf.Sin(p * Mathf.PI);
+                    for (int i = firstOutput; i < result.Count; i++) { var v = result[i]; v.position.y -= dip; result[i] = v; }
+                }
             }
         }
 

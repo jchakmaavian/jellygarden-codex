@@ -1,0 +1,171 @@
+Started 2026-10-06T08:37:35.8741510Z; v8 expressive lettering title mesh/buttons presentation QA; no win/economy commit.
+PASS 1080x1920 required Game view preset exists
+PASS 1080x1920 rendered mesh contains all nine visible Well Done! glyphs
+PASS 1080x1920 each rendered glyph arrives opaque with its ivory face last, avoiding a stacked-depth color flash
+PASS 1080x1920 animated title stays on screen and its outlined glyph bounds clear opaque crest pixels (gap 8.2429)
+PASS 1080x1920 sampled the complete0–1.2s rendered title (78 frames)
+PASS 1080x1920 projected gold sidewall remains visibly separated from the face and within UI vertex budget (depth 10.3025)
+PASS 1080x1920 perspective tilt changes the face projection during the pop (skew 0.0162)
+PASS 1080x1920 glyph W0 enters in logical sequence at 0.1924s
+PASS 1080x1920 glyph W0 grows, undershoots and settles (1.8176/0.9183)
+PASS 1080x1920 glyph W0 keeps the tilted pop anchored near its baseline (4.7176)
+PASS 1080x1920 glyph e1 enters in logical sequence at 0.2215s
+PASS 1080x1920 glyph e1 grows, undershoots and settles (1.7792/0.9015)
+PASS 1080x1920 glyph e1 keeps the tilted pop anchored near its baseline (1.5124)
+PASS 1080x1920 glyph l2 enters in logical sequence at 0.2709s
+PASS 1080x1920 glyph l2 grows, undershoots and settles (1.7468/0.8885)
+PASS 1080x1920 glyph l2 keeps the tilted pop anchored near its baseline (0.2895)
+PASS 1080x1920 glyph l3 enters in logical sequence at 0.3093s
+PASS 1080x1920 glyph l3 grows, undershoots and settles (1.7464/0.8863)
+PASS 1080x1920 glyph l3 keeps the tilted pop anchored near its baseline (0.3007)
+PASS 1080x1920 glyph D5 enters in logical sequence at 0.3825s
+PASS 1080x1920 glyph D5 grows, undershoots and settles (1.8020/0.9121)
+PASS 1080x1920 glyph D5 keeps the tilted pop anchored near its baseline (1.6683)
+PASS 1080x1920 D keeps the space's stagger step (onset 0.3825)
+PASS 1080x1920 glyph o6 enters in logical sequence at 0.4228s
+PASS 1080x1920 glyph o6 grows, undershoots and settles (1.7914/0.9073)
+PASS 1080x1920 glyph o6 keeps the tilted pop anchored near its baseline (1.3675)
+PASS 1080x1920 glyph n7 enters in logical sequence at 0.4709s
+PASS 1080x1920 glyph n7 grows, undershoots and settles (1.7858/0.9068)
+PASS 1080x1920 glyph n7 keeps the tilted pop anchored near its baseline (1.4751)
+PASS 1080x1920 glyph e8 enters in logical sequence at 0.5101s
+PASS 1080x1920 glyph e8 grows, undershoots and settles (1.7788/0.9030)
+PASS 1080x1920 glyph e8 keeps the tilted pop anchored near its baseline (1.5894)
+PASS 1080x1920 glyph !9 enters in logical sequence at 0.5422s
+PASS 1080x1920 glyph !9 grows, undershoots and settles (1.8279/0.8865)
+PASS 1080x1920 glyph !9 keeps the tilted pop anchored near its baseline (5.4078)
+PASS 1080x1920 final exclamation receives its full envelope without being cut off
+PASS 1080x1920 title settles completely and overlaps several growing letters (6)
+PASS 1080x1920 title presentation does not change currency, lives, stars or score
+PASS 1080x1920 uses the requested dimensions
+PASS 1080x1920 reopening reuses the title and effect hierarchy without accumulating children
+PASS 720x1280 required Game view preset exists
+PASS 720x1280 rendered mesh contains all nine visible Well Done! glyphs
+PASS 720x1280 each rendered glyph arrives opaque with its ivory face last, avoiding a stacked-depth color flash
+PASS 720x1280 animated title stays on screen and its outlined glyph bounds clear opaque crest pixels (gap 4.4972)
+PASS 720x1280 sampled the complete0–1.2s rendered title (77 frames)
+PASS 720x1280 projected gold sidewall remains visibly separated from the face and within UI vertex budget (depth 10.3320)
+PASS 720x1280 perspective tilt changes the face projection during the pop (skew 0.0162)
+PASS 720x1280 glyph W0 enters in logical sequence at 0.1831s
+PASS 720x1280 glyph W0 grows, undershoots and settles (1.8143/0.9150)
+PASS 720x1280 glyph W0 keeps the tilted pop anchored near its baseline (4.7476)
+PASS 720x1280 glyph e1 enters in logical sequence at 0.2276s
+PASS 720x1280 glyph e1 grows, undershoots and settles (1.7774/0.9049)
+PASS 720x1280 glyph e1 keeps the tilted pop anchored near its baseline (1.5126)
+PASS 720x1280 glyph l2 enters in logical sequence at 0.2668s
+PASS 720x1280 glyph l2 grows, undershoots and settles (1.7474/0.8872)
+PASS 720x1280 glyph l2 keeps the tilted pop anchored near its baseline (0.2865)
+PASS 720x1280 glyph l3 enters in logical sequence at 0.3001s
+PASS 720x1280 glyph l3 grows, undershoots and settles (1.7464/0.8924)
+PASS 720x1280 glyph l3 keeps the tilted pop anchored near its baseline (0.3177)
+PASS 720x1280 glyph D5 enters in logical sequence at 0.3829s
+PASS 720x1280 glyph D5 grows, undershoots and settles (1.8016/0.9093)
+PASS 720x1280 glyph D5 keeps the tilted pop anchored near its baseline (1.6990)
+PASS 720x1280 D keeps the space's stagger step (onset 0.3829)
+PASS 720x1280 glyph o6 enters in logical sequence at 0.4274s
+PASS 720x1280 glyph o6 grows, undershoots and settles (1.7910/0.9101)
+PASS 720x1280 glyph o6 keeps the tilted pop anchored near its baseline (1.3863)
+PASS 720x1280 glyph n7 enters in logical sequence at 0.4611s
+PASS 720x1280 glyph n7 grows, undershoots and settles (1.7867/0.9053)
+PASS 720x1280 glyph n7 keeps the tilted pop anchored near its baseline (1.5339)
+PASS 720x1280 glyph e8 enters in logical sequence at 0.5167s
+PASS 720x1280 glyph e8 grows, undershoots and settles (1.7763/0.9010)
+PASS 720x1280 glyph e8 keeps the tilted pop anchored near its baseline (1.5959)
+PASS 720x1280 glyph !9 enters in logical sequence at 0.5443s
+PASS 720x1280 glyph !9 grows, undershoots and settles (1.8245/0.8768)
+PASS 720x1280 glyph !9 keeps the tilted pop anchored near its baseline (5.4013)
+PASS 720x1280 final exclamation receives its full envelope without being cut off
+PASS 720x1280 title settles completely and overlaps several growing letters (6)
+PASS 720x1280 title presentation does not change currency, lives, stars or score
+PASS 720x1280 uses the requested dimensions
+PASS 720x1280 reopening reuses the title and effect hierarchy without accumulating children
+PASS 1536x2048 required Game view preset exists
+PASS 1536x2048 rendered mesh contains all nine visible Well Done! glyphs
+PASS 1536x2048 each rendered glyph arrives opaque with its ivory face last, avoiding a stacked-depth color flash
+PASS 1536x2048 animated title stays on screen and its outlined glyph bounds clear opaque crest pixels (gap 8.7295)
+PASS 1536x2048 sampled the complete0–1.2s rendered title (78 frames)
+PASS 1536x2048 projected gold sidewall remains visibly separated from the face and within UI vertex budget (depth 10.2817)
+PASS 1536x2048 perspective tilt changes the face projection during the pop (skew 0.0154)
+PASS 1536x2048 glyph W0 enters in logical sequence at 0.1832s
+PASS 1536x2048 glyph W0 grows, undershoots and settles (1.8167/0.9161)
+PASS 1536x2048 glyph W0 keeps the tilted pop anchored near its baseline (4.6529)
+PASS 1536x2048 glyph e1 enters in logical sequence at 0.2296s
+PASS 1536x2048 glyph e1 grows, undershoots and settles (1.7775/0.9050)
+PASS 1536x2048 glyph e1 keeps the tilted pop anchored near its baseline (1.4427)
+PASS 1536x2048 glyph l2 enters in logical sequence at 0.2629s
+PASS 1536x2048 glyph l2 grows, undershoots and settles (1.7460/0.8863)
+PASS 1536x2048 glyph l2 keeps the tilted pop anchored near its baseline (0.2687)
+PASS 1536x2048 glyph l3 enters in logical sequence at 0.3046s
+PASS 1536x2048 glyph l3 grows, undershoots and settles (1.7452/0.8855)
+PASS 1536x2048 glyph l3 keeps the tilted pop anchored near its baseline (0.3001)
+PASS 1536x2048 glyph D5 enters in logical sequence at 0.3830s
+PASS 1536x2048 glyph D5 grows, undershoots and settles (1.7991/0.9279)
+PASS 1536x2048 glyph D5 keeps the tilted pop anchored near its baseline (1.6250)
+PASS 1536x2048 D keeps the space's stagger step (onset 0.3830)
+PASS 1536x2048 glyph o6 enters in logical sequence at 0.4357s
+PASS 1536x2048 glyph o6 grows, undershoots and settles (1.7904/0.9068)
+PASS 1536x2048 glyph o6 keeps the tilted pop anchored near its baseline (1.3168)
+PASS 1536x2048 glyph n7 enters in logical sequence at 0.4675s
+PASS 1536x2048 glyph n7 grows, undershoots and settles (1.7854/0.9048)
+PASS 1536x2048 glyph n7 keeps the tilted pop anchored near its baseline (1.4344)
+PASS 1536x2048 glyph e8 enters in logical sequence at 0.5019s
+PASS 1536x2048 glyph e8 grows, undershoots and settles (1.7769/0.9075)
+PASS 1536x2048 glyph e8 keeps the tilted pop anchored near its baseline (1.5262)
+PASS 1536x2048 glyph !9 enters in logical sequence at 0.5456s
+PASS 1536x2048 glyph !9 grows, undershoots and settles (1.8282/0.8775)
+PASS 1536x2048 glyph !9 keeps the tilted pop anchored near its baseline (5.4097)
+PASS 1536x2048 final exclamation receives its full envelope without being cut off
+PASS 1536x2048 title settles completely and overlaps several growing letters (6)
+PASS 1536x2048 title presentation does not change currency, lives, stars or score
+PASS 1536x2048 uses the requested dimensions
+PASS 1536x2048 reopening reuses the title and effect hierarchy without accumulating children
+PASS motion-off rendered mesh contains all nine visible Well Done! glyphs
+PASS motion-off each rendered glyph arrives opaque with its ivory face last, avoiding a stacked-depth color flash
+PASS motion-off animated title stays on screen and its outlined glyph bounds clear opaque crest pixels (gap 57.0978)
+PASS motion-off sampled the complete0–1.2s rendered title (77 frames)
+PASS motion-off projected gold sidewall remains visibly separated from the face and within UI vertex budget (depth 5.4452)
+PASS motion-off perspective tilt is settled in Motion off (skew 0.0000)
+PASS motion-off Motion off keeps glyph W0 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph e1 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph l2 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph l3 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph D5 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph o6 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph n7 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph e8 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph !9 at its final mesh size/baseline
+PASS motion-off title settles completely and stays static
+PASS motion-off title presentation does not change currency, lives, stars or score
+PASS Motion off reopening reuses the existing hierarchy
+PASS real LevelStart and Continue use the same primary emerald/gold finish
+PASS 62h/180w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 62h primary caption styling matches across builders
+PASS 62h uses the reviewed emerald enamel and sculpted gold colors
+PASS 62h primary caption fits without acquiring the win-title wave
+PASS 82h/240w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 82h primary caption styling matches across builders
+PASS 82h uses the reviewed emerald enamel and sculpted gold colors
+PASS 82h primary caption fits without acquiring the win-title wave
+PASS 116h/360w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 116h primary caption styling matches across builders
+PASS 116h uses the reviewed emerald enamel and sculpted gold colors
+PASS 116h primary caption fits without acquiring the win-title wave
+PASS 120h/435w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 120h primary caption styling matches across builders
+PASS 120h uses the reviewed emerald enamel and sculpted gold colors
+PASS 120h primary caption fits without acquiring the win-title wave
+PASS legacy classic-blue, clean-blue and danger-red colors remain unchanged
+PASS secondary and danger buttons do not acquire the primary enamel layer
+PASS Next remains the actual topmost raycast target
+PASS Next routes exactly once through Continue to Home and selects Level24
+PASS Next does not commit or duplicate any award
+PASS Royal close remains the actual topmost raycast target
+PASS Royal close routes exactly once through Continue to Home and selects Level24
+PASS Royal close does not commit or duplicate any award
+CAPTURE frames-20261006-083746-757 69 actual rendered JPEG frames; wall/title timestamps logged separately. Encoding pass is separate from motion assertions; silent capture.
+PASS normal player save keys remain untouched during presentation QA
+PASS owned QA ended and original Home catalog reference/values restored
+PASS normal save keys and runtime coins/lives/level restored exactly
+PASS no Unity errors or exceptions (0)
+SUMMARY passes=167 fails=0
+DONE
