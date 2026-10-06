@@ -549,6 +549,8 @@ using Facebook.Unity;
 
         public void CheckRewardedAds()
         {
+            // The extra-moves video gives moves on the So Close offer; the reward card shows only coins or lives (bug review 2026-10-05).
+            if (currentReward == RewardedAdsType.GetGoOn) { MenuManager.Instance.ShowPreFailed(false); return; }
             RewardIcon reward = MenuManager.Instance.ShowReward().GetComponent<RewardIcon>();
             if (currentReward == RewardedAdsType.GetGems)
             {

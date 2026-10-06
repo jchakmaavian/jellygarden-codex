@@ -383,7 +383,7 @@ namespace RoyalThrone.Testing
             Bounds((RectTransform)anim.transform, 0f, .34f, .32f, .405f);
             var vfx = Toggle(body, "VFX", RoyalModChannels.Vfx, () => { RoyalModChannels.Vfx = !RoyalModChannels.Vfx; Build(); });
             Bounds((RectTransform)vfx.transform, .34f, .34f, .66f, .405f);
-            var sfx = Toggle(body, "SFX", RoyalModChannels.Sfx, () => { RoyalModChannels.Sfx = !RoyalModChannels.Sfx; RoyalSave.SetInt("Sound", RoyalModChannels.Sfx ? 1 : 0); Build(); });
+            var sfx = Toggle(body, "SFX", RoyalModChannels.Sfx, () => { RoyalModChannels.Sfx = !RoyalModChannels.Sfx; RoyalModChannels.ApplySfx(); Build(); });
             Bounds((RectTransform)sfx.transform, .68f, .34f, 1f, .405f);
 
             string[] vfxCmds = VfxFor(obj);
@@ -480,7 +480,7 @@ namespace RoyalThrone.Testing
             Bounds((RectTransform)anim.transform, 0f, .155f, .32f, .22f);
             var vfx = Toggle(body, "VFX", RoyalModChannels.Vfx, () => { RoyalModChannels.Vfx = !RoyalModChannels.Vfx; Build(); });
             Bounds((RectTransform)vfx.transform, .34f, .155f, .66f, .22f);
-            var sfx = Toggle(body, "SFX", RoyalModChannels.Sfx, () => { RoyalModChannels.Sfx = !RoyalModChannels.Sfx; RoyalSave.SetInt("Sound", RoyalModChannels.Sfx ? 1 : 0); Build(); });
+            var sfx = Toggle(body, "SFX", RoyalModChannels.Sfx, () => { RoyalModChannels.Sfx = !RoyalModChannels.Sfx; RoyalModChannels.ApplySfx(); Build(); });
             Bounds((RectTransform)sfx.transform, .68f, .155f, 1f, .22f);
         }
 
@@ -782,6 +782,13 @@ namespace RoyalThrone.Testing
     public static class RoyalModChannels
     {
         public static bool Animation = true, Vfx = true, Sfx = true;
+        /// <summary>In a QA session the switch is the (copied) Sound setting; on the player's own save it only mutes this session
+        /// (all audio), and never writes their Sound setting (bug review 2026-10-05: it turned the player's sound off for good).</summary>
+        public static void ApplySfx()
+        {
+            if (RoyalSave.Testing) { RoyalSave.SetInt("Sound", Sfx ? 1 : 0); UnityEngine.AudioListener.volume = 1; }
+            else UnityEngine.AudioListener.volume = Sfx ? 1 : 0;
+        }
     }
 }
 #endif

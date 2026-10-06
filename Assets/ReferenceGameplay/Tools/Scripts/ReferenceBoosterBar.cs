@@ -286,7 +286,8 @@ namespace RoyalThrone.ReferenceGameplay
                 var halo=chosen[ix]>0||halos[ix]?Halo(b,ix):null;if(halo&&!Mathf.Approximately(halo.color.a,e))halo.color=new Color(1,1,1,e);
             }
             // Back first closes this bar's shop or cancels a chosen tool, instead of also opening the pause menu.
-            if(InputManager.Instance&&InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
+            // With the coin shop over this bar's shop, Back closes the coin shop alone (RoyalShopPage).
+            if(InputManager.Instance&&InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame()&&!RoyalThrone.Presentation.RoyalShopPage.IsOpen&&!RoyalThrone.Presentation.RoyalBackButton.ConsumedThisFrame)
             {
                 if(ShopOpen){CloseShop();RoyalThrone.Presentation.RoyalBackButton.Consume();return;}
                 if(Selected>=0&&!Busy){CancelSelection();RoyalThrone.Presentation.RoyalBackButton.Consume();return;}

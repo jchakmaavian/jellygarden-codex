@@ -486,7 +486,8 @@ namespace JellyGarden.Scripts
         {
             if (switchDirection != Vector3.zero && neighborSquare != null)
             {
-                bool backMove = false;
+                bool backMove = false, charged = false;
+                var origin = square;
                 LevelManager.THIS.DragBlocked = true;
                 neighborSquare.item = this;
                 square.item = switchItem;
@@ -534,6 +535,7 @@ namespace JellyGarden.Scripts
                     {
                         if (LevelManager.THIS.limitType == LIMIT.MOVES) LevelManager.THIS.Limit--;
                         LevelManager.THIS.moveID++;
+                        charged = true;
                     }
                     else LevelManager.THIS.ActivatedBoost = null;
                     inputMoveOrder = LevelManager.THIS.moveID * 2 + 2;
@@ -585,6 +587,20 @@ namespace JellyGarden.Scripts
                     if (switchItem != null && !merge)
                         switchItem.transform.position = startPos;
                     sprRenderer.sortingOrder = restOrder;
+                }
+
+                // Both cells must still hold these two pieces (2026-10-06, the user's overlapping gems). If anything moved either
+                // piece on paper during the animation, writing the swap now would cross the cells' records and leave a piece
+                // drawn in a cell another piece owns: the swap is dropped, its move refunded, and each piece goes back to its cell.
+                if (!switchItem || square != origin || origin.item != this || neighborSquare.item != switchItem || switchItem.square != neighborSquare)
+                {
+                    if (charged && LevelManager.THIS.limitType == LIMIT.MOVES) LevelManager.THIS.Limit++;
+                    foreach (var piece in destinationMatches.Concat(sourceMatches)) if (piece) piece.inputMatchPending = false;
+                    Debug.LogWarning("[Royal board] A swap's cells changed during its animation; it was dropped and both pieces went home.");
+                    falling = false; StartFalling();
+                    if (switchItem && !switchItem.destroying) { switchItem.falling = false; switchItem.StartFalling(); }
+                    ResetDrag();
+                    yield break;
                 }
 
                 if (rejectSwap)
@@ -814,7 +830,8 @@ namespace JellyGarden.Scripts
         public void CheckNeedToFall(Square _square)
         {
             _square.item = this;
-            square.item = null;
+            // Only the cell that really holds this piece is freed (2026-10-06): clearing another piece's cell left it unowned.
+            if (square && square.item == this) square.item = null;
             square = _square;   //need to count all falling items and drop them down in the same time
         }
 
@@ -1026,7 +1043,7 @@ namespace JellyGarden.Scripts
             if (square.row < LevelManager.Instance.maxRows - 1 && square.col < LevelManager.Instance.maxCols)
             {
                 Square checkingSquare = LevelManager.Instance.GetSquare(square.col + 1, square.row + 1, true);
-                if (checkingSquare.CanGoInto() && checkingSquare.item == null && !falling)
+                if (checkingSquare.CanGoInto() && checkingSquare.item == null && !checkingSquare.Reserved && !falling && !destroying && !inputSwapLocked)
                 {//2.0
                     checkingSquare = LevelManager.Instance.GetSquare(square.col + 1, square.row + 1, true);
                     if (checkingSquare.CanGoInto())
@@ -1045,7 +1062,7 @@ namespace JellyGarden.Scripts
             if (square.row < LevelManager.Instance.maxRows - 1 && square.col > 0)
             {
                 Square checkingSquare = LevelManager.Instance.GetSquare(square.col - 1, square.row + 1, true);
-                if (checkingSquare.CanGoInto() && checkingSquare.item == null && !falling)
+                if (checkingSquare.CanGoInto() && checkingSquare.item == null && !checkingSquare.Reserved && !falling && !destroying && !inputSwapLocked)
                 {//2.0
                     checkingSquare = LevelManager.Instance.GetSquare(square.col - 1, square.row + 1, true);
                     if (checkingSquare.CanGoInto())
@@ -1265,6 +1282,7 @@ namespace JellyGarden.Scripts
             royalCampaignHitWave = RoyalThrone.Campaign.RoyalCampaignBlockers.CurrentWave;
             RoyalThrone.Campaign.RoyalCampaignBlockers.OnItemDestroying(this);
             square.item = null;
+            if (NextType != ItemsTypes.NONE) square.Reserve(this);   // a power-up will appear here: see Square.reservedFor
             _boxCollider2D.enabled = false;//2.1.5 prevents to early moving
 
             if (this == null)
@@ -1394,6 +1412,7 @@ namespace JellyGarden.Scripts
             if (NextType != ItemsTypes.NONE)
             {
                 bool rocket = RoyalEffectsProfile.Get && (NextType == ItemsTypes.HORIZONTAL_STRIPPED || NextType == ItemsTypes.VERTICAL_STRIPPED);
+                square.Release(this);
                 Item i = square.GenItem(!rocket && !(RoyalEffectsProfile.Get && NextType == ItemsTypes.PACKAGE), campaignRefill: false);
                 i.NextType = NextType;
                 i.SetColor(color);

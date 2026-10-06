@@ -11,6 +11,11 @@ namespace JellyGarden.Scripts.Juice
     // with two meshes (the shards in the ice texture, the frost in a soft white dot), so a cascade of breaks stays cheap.
     public sealed class RoyalIceBreak : MonoBehaviour
     {
+        // Its own random numbers: UnityEngine.Random is the board's (it picks the refill colours), and a decoration must not move
+        // it (bug review 2026-10-05; RoyalCellBreakChecks asserts this for the cell breaks).
+        static readonly global::System.Random dice = new global::System.Random(1405);
+        static float Dice(float min, float max) => min + (float)dice.NextDouble() * (max - min);
+        static Vector2 DiceCircle() { float a = Dice(0, Mathf.PI * 2), r = Mathf.Sqrt((float)dice.NextDouble()); return new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * r; }
         const int ShardCount = 8, PuffCount = 7, GlintCount = 12;
         const float Life = .55f, CrackTime = .045f;
         const int ShardOrder = 6, FrostOrder = 7;
@@ -113,10 +118,10 @@ namespace JellyGarden.Scripts.Juice
             float w = b.size.x, h = b.size.y;
             Vector2 UV(Vector2 p) => new Vector2(uvRect.xMin + (p.x / w + .5f) * uvRect.width, uvRect.yMin + (p.y / h + .5f) * uvRect.height);
             // The impact point near the middle, and the square's outline cut into wedges around it.
-            var impact = new Vector2(Random.Range(-.12f, .12f) * w, Random.Range(-.12f, .12f) * h);
+            var impact = new Vector2(Dice(-.12f, .12f) * w, Dice(-.12f, .12f) * h);
             var cuts = new float[ShardCount];
-            float start = Random.Range(0f, 360f);
-            for (int i = 0; i < ShardCount; i++) cuts[i] = start + (i + Random.Range(-.3f, .3f)) * 360f / ShardCount;
+            float start = Dice(0f, 360f);
+            for (int i = 0; i < ShardCount; i++) cuts[i] = start + (i + Dice(-.3f, .3f)) * 360f / ShardCount;
             var corners = new[] { new Vector2(w * .5f, h * .5f), new Vector2(-w * .5f, h * .5f), new Vector2(-w * .5f, -h * .5f), new Vector2(w * .5f, -h * .5f) };
             Vector2 OnEdge(float degrees)
             {
@@ -132,10 +137,10 @@ namespace JellyGarden.Scripts.Juice
                 var shard = new Shard { local = poly.ToArray(), uv = new Vector2[poly.Count] };
                 Vector2 sum = Vector2.zero; foreach (var p in poly) sum += p; shard.centroid = sum / poly.Count;
                 for (int k = 0; k < poly.Count; k++) { shard.uv[k] = UV(poly[k]); shard.local[k] = poly[k] - shard.centroid; }
-                var outward = (shard.centroid - impact).normalized; if (outward == Vector2.zero) outward = Random.insideUnitCircle.normalized;
+                var outward = (shard.centroid - impact).normalized; if (outward == Vector2.zero) outward = DiceCircle().normalized;
                 shard.outward = outward; shard.shrink = shrink;
-                shard.velocity = (outward * Random.Range(speedMin, speedMax) + Vector2.up * Random.Range(1f, 2f)) * cell * power;
-                shard.spin = Random.Range(-spinMax, spinMax) * power; shard.angle = 0; shard.offset = Vector2.zero; shard.scale = 1;
+                shard.velocity = (outward * Dice(speedMin, speedMax) + Vector2.up * Dice(1f, 2f)) * cell * power;
+                shard.spin = Dice(-spinMax, spinMax) * power; shard.angle = 0; shard.offset = Vector2.zero; shard.scale = 1;
                 shards.Add(shard);
             }
             // Each wedge is cut again across, at 40-60% of its length: a small inner chip that pops out slowly and fades
@@ -144,7 +149,7 @@ namespace JellyGarden.Scripts.Juice
             {
                 float a0 = cuts[i], a1 = cuts[(i + 1) % ShardCount] + (i == ShardCount - 1 ? 360 : 0);
                 Vector2 e0 = OnEdge(a0), e1 = OnEdge(a1);
-                Vector2 m0 = impact + (e0 - impact) * Random.Range(.4f, .6f), m1 = impact + (e1 - impact) * Random.Range(.4f, .6f);
+                Vector2 m0 = impact + (e0 - impact) * Dice(.4f, .6f), m1 = impact + (e1 - impact) * Dice(.4f, .6f);
                 AddShard(new List<Vector2> { impact, m0, m1 }, .8f, 1.6f, 300, .25f);
                 var outer = new List<Vector2> { m0, e0 };
                 var inside = new List<(float, Vector2)>();
@@ -154,8 +159,8 @@ namespace JellyGarden.Scripts.Juice
                 outer.Add(e1); outer.Add(m1);
                 AddShard(outer, 2.4f, 3.8f, 540, .45f);
             }
-            for (int i = 0; i < PuffCount; i++) puffs[i] = new Mote { dir = Random.insideUnitCircle.normalized, speed = Random.Range(.25f, .6f) * cell, size = Random.Range(.35f, .6f) * cell, delay = Random.Range(0f, .05f) };
-            for (int i = 0; i < GlintCount; i++) glints[i] = new Mote { dir = Random.insideUnitCircle.normalized, speed = Random.Range(1.6f, 3f) * cell * power, size = Random.Range(.07f, .13f) * cell, delay = Random.Range(0f, .06f) };
+            for (int i = 0; i < PuffCount; i++) puffs[i] = new Mote { dir = DiceCircle().normalized, speed = Dice(.25f, .6f) * cell, size = Dice(.35f, .6f) * cell, delay = Dice(0f, .05f) };
+            for (int i = 0; i < GlintCount; i++) glints[i] = new Mote { dir = DiceCircle().normalized, speed = Dice(1.6f, 3f) * cell * power, size = Dice(.07f, .13f) * cell, delay = Dice(0f, .06f) };
             Draw();
         }
 

@@ -19,6 +19,8 @@ namespace RoyalThrone.Presentation
         public bool entrance = true;
         // Opt-in for the win card; existing cards keep their current motion behaviour.
         public bool respectMotionSetting;
+        // The reference win reveal starts on a fully formed card; its star owns the entrance.
+        public bool instantRewardEntrance;
         // A question shown over its own card (the pause menu's leave question) moves above anything added to that card later.
         public bool front;
         public RoyalCardReveal[] reveals;
@@ -79,14 +81,14 @@ namespace RoyalThrone.Presentation
         void Pose()
         {
             if (settled) return;
-            float e = RoyalLevelCardMotion.EaseOutCubic(t / CardIn);
+            float e = instantRewardEntrance && !reduced ? 1 : RoyalLevelCardMotion.EaseOutCubic(t / CardIn);
             if (dim) { var c = dimColor; c.a *= e; dim.color = c; }
-            if (card) card.localScale = Vector3.one * (reduced ? 1 : Mathf.Lerp(.96f, 1, e));
+            if (card) card.localScale = Vector3.one * (reduced || instantRewardEntrance ? 1 : Mathf.Lerp(.96f, 1, e));
             if (cardGroup) cardGroup.alpha = e;
             if (reveals != null)
                 foreach (var r in reveals)
                 {
-                    float p = RoyalLevelCardMotion.EaseOutCubic((t - r.delay) / RevealIn);
+                    float p = instantRewardEntrance ? e : RoyalLevelCardMotion.EaseOutCubic((t - r.delay) / RevealIn);
                     for (int i = 0; i < r.rects.Length; i++)
                     {
                         if (!r.rects[i]) continue;

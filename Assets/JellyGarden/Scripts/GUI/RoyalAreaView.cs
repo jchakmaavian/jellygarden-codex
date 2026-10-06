@@ -42,7 +42,7 @@ namespace RoyalThrone.Presentation
         RoyalAreaScene scene;
         RoyalThrone.ReferenceGameplay.ReferenceHomeLayout homeLayout;
         RectTransform root;
-        Image outside, navDim;
+        Image outside, navDim, navBlock;
         Button outsideButton;
         Color veilColor; bool veilKept;
         string showing;
@@ -132,8 +132,13 @@ namespace RoyalThrone.Presentation
             outside.color = new Color(.02f, .04f, .08f, .70f);
             outsideButton = outside.gameObject.AddComponent<Button>(); outsideButton.transition = Selectable.Transition.None;
             outsideButton.onClick.AddListener(OutsideTap);
+            // Past the safe area on every side, so a notch or cutout strip is dimmed too (the canvas draws there).
+            outside.rectTransform.offsetMin = new Vector2(-400, -400); outside.rectTransform.offsetMax = new Vector2(400, 400);
             navDim = K.Node("Area dim over the tabs", home.navigation).gameObject.AddComponent<Image>();
             navDim.color = new Color(.02f, .04f, .08f, .62f); navDim.raycastTarget = false; navDim.gameObject.SetActive(false);
+            // While a task is being built the tabs take no taps: a tab mid-build ran the area replay over the build.
+            navBlock = K.Node("Area build holds the tabs", home.navigation).gameObject.AddComponent<Image>();
+            navBlock.color = Color.clear; navBlock.raycastTarget = true; navBlock.gameObject.SetActive(false);
             BuildTaskPanel(); BuildShortPanel(); BuildNewPanel(); BuildStage(); BuildBanner(); BuildShowcase(); BuildPage(); BuildViewer(); BuildGuide();
             root.gameObject.SetActive(false);
             Canvas.willRenderCanvases += HoldLabels;
@@ -284,6 +289,7 @@ namespace RoyalThrone.Presentation
             // "Area Completed!" (A-19): a ribbon across the top half and King Vanguard rising with his thumbs-up.
             banner = K.Node("Area completed", root); banner.gameObject.SetActive(false);
             var dim = K.Node("Dim", banner).gameObject.AddComponent<Image>(); dim.color = new Color(.01f, .03f, .08f, .45f);
+            dim.rectTransform.offsetMin = new Vector2(-400, -400); dim.rectTransform.offsetMax = new Vector2(400, 400);   // past the notch
             var skip = dim.gameObject.AddComponent<Button>(); skip.transition = Selectable.Transition.None; skip.onClick.AddListener(() => stageTapped = true);
             var mid = K.Node("Middle", banner); mid.anchorMin = mid.anchorMax = new Vector2(.5f, .5f); mid.sizeDelta = new Vector2(720, 1612); mids.Add(mid);
             bannerRibbon = K.At(K.Node("Ribbon", mid), 0, 330, 720, 160);
@@ -552,11 +558,17 @@ namespace RoyalThrone.Presentation
         void Update()
         {
             if (!root) return;
+            // The dim over the tab bar belongs to an area dialog and goes with it, whichever way it closed (its close, a tap
+            // outside, Back, a tab, Continue, Unlock). Only opening another panel cleared it before (bug review 2026-10-05).
+            if (navDim.gameObject.activeSelf && !(home.dialog.activeInHierarchy && root.gameObject.activeInHierarchy)) navDim.gameObject.SetActive(false);
+            if (navBlock.gameObject.activeSelf != (building != null)) { navBlock.gameObject.SetActive(building != null); navBlock.transform.SetAsLastSibling(); }
             // Back ends a view; while a task builds or the new area unlocks it does nothing (the Home is not in a dialog then,
             // so without this the quit prompt would open).
             if (InputManager.Instance != null && InputManager.Instance.Gameplay.Cancel.WasPressedThisFrame())
             {
                 if (viewing != null) { EndView(); RoyalBackButton.Consume(); }
+                // The first-visit guide waits for its tap: Back there quit the game (no dialog was open).
+                else if (Guiding) RoyalBackButton.Consume();
                 else if ((building != null || unlocking) && !home.dialog.activeSelf) RoyalBackButton.Consume();
             }
             if (viewing != null && !home.IsHomeVisible) EndViewQuietly();
@@ -580,6 +592,7 @@ namespace RoyalThrone.Presentation
         // The star counter's value while stars are in flight (the counter counts down as each leaves), and the Area card's
         // "New Area" dress, applied last before the canvases draw.
         int heldStars = -1, heldCoins = -1;
+        Coroutine hudSlide;   // "Area Completed!"'s slide of the HUD away, stopped when the ceremony ends
         readonly List<RectTransform> mids = new List<RectTransform>();
         void HoldLabels()
         {
@@ -770,7 +783,9 @@ namespace RoyalThrone.Presentation
         void StopCeremony()
         {
             if (ceremony != null) { StopCoroutine(ceremony); ceremony = null; }
-            stageStep = 0;
+            if (hudSlide != null) { StopCoroutine(hudSlide); hudSlide = null; }
+            // A ceremony cut off (a tab, Back) releases the coin counter it held at the old balance.
+            stageStep = 0; heldCoins = -1;
             if (home) home.SceneViewOpen = viewing != null;
             if (homeLayout && building == null) homeLayout.HudAway = 0;
             if (kingSlot) { var king = kingSlot.GetComponent<RoyalThrone.Characters.KingVanguardSlot>(); if (king) king.SetShown(false); }
@@ -854,6 +869,7 @@ namespace RoyalThrone.Presentation
         void EndCeremony(bool paid)
         {
             ceremony = null; stageStep = 0; heldCoins = -1;
+            if (hudSlide != null) { StopCoroutine(hudSlide); hudSlide = null; }   // or Back early in the banner left the HUD away
             if (kingSlot) { var king = kingSlot.GetComponent<RoyalThrone.Characters.KingVanguardSlot>(); if (king) king.SetShown(false); }
             stage.gameObject.SetActive(false); banner.gameObject.SetActive(false); showcase.gameObject.SetActive(false);
             home.SceneViewOpen = false; scene.Hold = false; if (homeLayout) homeLayout.HudAway = 0;
@@ -865,7 +881,7 @@ namespace RoyalThrone.Presentation
         {
             stageStep = 4;
             home.SceneViewOpen = true; outside.gameObject.SetActive(false); navDim.gameObject.SetActive(false);
-            StartCoroutine(SlideHud(1));
+            hudSlide = StartCoroutine(SlideHud(1));
             banner.gameObject.SetActive(true); banner.SetAsLastSibling();
             var king = RoyalThrone.Characters.KingVanguardSlot.Mount(kingSlot, RoyalThrone.Characters.KingVanguardCharacter.Framing.Celebration, RoyalThrone.Characters.KingVanguardSlot.Mode.Idle, kingArea, true);
             if (king) king.SetShown(true);

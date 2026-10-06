@@ -365,6 +365,8 @@ namespace JellyGarden.Scripts.Juice
                     {
                         int col=origin.col+(horizontal?step*d:lane),row=origin.row+(horizontal?-lane:-step*d);
                         var sq=lm.GetSquare(col,row);
+                        // The rocket's own cell was hit as the rocket was destroyed; an empty start cell is not hit again.
+                        if(step==0&&sq&&!sq.item){hit.Add(sq);continue;}
                         if(sq&&!sq.IsNone()&&hit.Add(sq))
                         {if(clearCells)StartOperation(RocketCell(sq));else RocketImpact(sq.transform.position);}
                     }

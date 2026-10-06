@@ -33,6 +33,8 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 
         /// <summary>The caption of the lesson showing now, or null (for checks).</summary>
         public static string Showing { get; private set; }
+        /// <summary>A lesson is showing its move: the regular hint (AI) stays off and leaves the lesson's outline alone.</summary>
+        public static bool HoldsHints { get; private set; }
         /// <summary>How the latest lesson went: what it found, why it stopped, or that it was shown (for checks).</summary>
         public static string Outcome { get; private set; }
         /// <summary>True while a lesson's hand or caption is on screen (for checks).</summary>
@@ -145,7 +147,7 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
                     var plan = FindMove(lm, lesson.kind);
                     if (plan == null) { Outcome = "level " + lesson.level + ": no " + lesson.kind + " move on the board"; yield break; }
                     Outcome = "level " + lesson.level + ": " + lesson.kind + " move " + plan.First.square.col + "," + plan.First.square.row + " <-> " + plan.Second.square.col + "," + plan.Second.square.row + " | shown";
-                    Save(lesson.level); if (ai) ai.allowShowTip = false; Build(); Showing = lesson.kind + " move";
+                    Save(lesson.level); if (ai) ai.allowShowTip = false; HoldsHints = true; Build(); Showing = lesson.kind + " move";
                     var first = plan.First; var second = plan.Second; int move = lm.moveID; float shown = 0;
                     while (lm && Live(lm) && lm.moveID == move && first && second)
                     {
@@ -176,7 +178,7 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
                     }
                     if (!found) { Outcome = "level " + lesson.level + ": no two power pieces met"; yield break; }
                     Outcome = "level " + lesson.level + ": combo " + a.square.col + "," + a.square.row + " + " + b.square.col + "," + b.square.row + " | shown";
-                    Save(lesson.level); if (ai) ai.allowShowTip = false; Build();
+                    Save(lesson.level); if (ai) ai.allowShowTip = false; HoldsHints = true; Build();
                     focus = a.transform.position; Caption(lesson.caption, RoyalPieceSkin.For(ItemsTypes.PACKAGE, 0), false);
                     int move = lm.moveID; float shown = 0;
                     while (lm && Live(lm) && lm.moveID == move && a && b && !a.destroying && !b.destroying)
@@ -189,6 +191,7 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
             }
             finally
             {
+                HoldsHints = false;
                 if (presenter) presenter.Hide();
                 if (ai && tips) ai.allowShowTip = true;
                 End(); running = null;

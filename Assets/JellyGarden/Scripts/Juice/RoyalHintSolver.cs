@@ -77,7 +77,12 @@ namespace JellyGarden.Scripts.Juice
         {return item&&!item.destroying&&!item.falling&&item.gameObject.activeInHierarchy&&item.square&&item.square.item==item&&item.square.CanGoInto()&&item.square.CanGoOut();}
         public static RoyalHintPlan EvaluateSwap(LevelManager lm,Item first,Item second)
         {
-            if(!lm||!CanMove(first)||!CanMove(second)||first.currentType!=ItemsTypes.NONE||second.currentType!=ItemsTypes.NONE||first.color==second.color)return null;
+            // A gem may also swap with an ingredient (the game accepts it when the gem makes a match): only the gem can match,
+            // where it lands. Before, such moves were not seen, and a board with only them was shuffled (bug review 2026-10-05).
+            bool firstIngredient=first&&first.currentType==ItemsTypes.INGREDIENT,secondIngredient=second&&second.currentType==ItemsTypes.INGREDIENT;
+            if(!lm||!CanMove(first)||!CanMove(second)||firstIngredient&&secondIngredient)return null;
+            if(first.currentType!=ItemsTypes.NONE&&!firstIngredient||second.currentType!=ItemsTypes.NONE&&!secondIngredient)return null;
+            if(!firstIngredient&&!secondIngredient&&first.color==second.color)return null;
             var a=first.square;var b=second.square;
             if(Mathf.Abs(a.col-b.col)+Mathf.Abs(a.row-b.row)!=1)return null;
             var cells=new HashSet<Square>();int longest=0;bool cross=false,square2=false;
@@ -113,7 +118,8 @@ namespace JellyGarden.Scripts.Juice
                     }
                 }
             }
-            CollectLines(a);CollectLines(b);CollectSquare(a);CollectSquare(b);
+            if(!secondIngredient){CollectLines(a);CollectSquare(a);}   // `second` lands on a
+            if(!firstIngredient){CollectLines(b);CollectSquare(b);}    // `first` lands on b
             int impact=longest>=5?Impact.ColorBall:cross?Impact.Tnt:longest==4?Impact.Rocket:square2?Impact.Propeller:Impact.Match;
             return cells.Count>=3?new RoyalHintPlan(lm,first,second,new List<Square>(cells),longest,false,impact):null;
         }

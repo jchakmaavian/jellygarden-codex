@@ -382,7 +382,7 @@ namespace RoyalThrone.Presentation
                 if (i > 1) { Hide(s); continue; }   // a win earns one star: Star1
                 RoyalMenuSkin.Place(s, 0, starY, WinStarSize, WinStarSize);
                 var image = s.GetComponent<Image>();
-                if (image) { image.sprite = JellyGarden.Scripts.Juice.RoyalPieceSkin.Art("star"); image.preserveAspect = true; image.raycastTarget = false; }
+                if (image) { image.sprite = Resources.Load<Sprite>("RoyalGameplay/win-star") ?? JellyGarden.Scripts.Juice.RoyalPieceSkin.Art("star"); image.preserveAspect = true; image.raycastTarget = false; }
                 if (!s.GetComponent<RoyalAppearsLater>()) s.gameObject.AddComponent<RoyalAppearsLater>();
                 star = (RectTransform)s;
             }
@@ -419,13 +419,7 @@ namespace RoyalThrone.Presentation
                 star.SetAsLastSibling(); sparkles.SetAsLastSibling(); heading.transform.SetAsLastSibling();
             }
 
-            var rewardBadge = Container(p, "Royal win reward");
-            RoyalMenuSkin.Place(rewardBadge, 0, top - WinRewardRow, 242, 74);
-            Inset(rewardBadge, "Edge", 0, 37, C("9cc9ff", .28f), C("5486c5", .24f));
-            Inset(rewardBadge, "Face", 2, 35, C("103375"), C("163f88"));
-            var rewardCoin = RoyalMenuSkin.Art(rewardBadge, "Coin", "coin", -67, 0, 72, 72);
-            var rewardAmount = Words(rewardBadge, "Amount", "+0", 29, 0, 142, 44, Ink.Hero);
-            rewardBadge.gameObject.AddComponent<RoyalAppearsLater>();
+            // The supplied reference keeps this ceremony about the star. Coins collect on Home after Continue.
 
             var buttons = new List<RoyalCardControl> { Feedback(close, false) };
             // SHARE exists only with online services (GUIEvents hides it otherwise); then it sits beside a shorter Continue.
@@ -446,9 +440,18 @@ namespace RoyalThrone.Presentation
             piece.starShadow = (RectTransform)starShadow; piece.contactShadow = contactShadow;
             piece.haloSparkles = (RectTransform)haloSparkles;
             piece.levelNumber = levelNumber;
-            piece.rewardBadge = (RectTransform)rewardBadge; piece.rewardAmount = rewardAmount; piece.coinOrigin = rewardCoin.rectTransform;
+            piece.rewardBadge = null; piece.rewardAmount = null; piece.coinOrigin = null;
             Motion(menu, p, H, buttons, action);
-            var motion = menu.GetComponent<RoyalCardMotion>(); if (motion) motion.respectMotionSetting = true;
+            var motion = menu.GetComponent<RoyalCardMotion>();
+            if (motion)
+            {
+                motion.respectMotionSetting = true; motion.instantRewardEntrance = true;
+                // Start the existing star activation and its sound with the card, not after the generic entrance clip.
+                for (int i = 0; motion.eventNames != null && i < motion.eventNames.Length; i++)
+                    if (motion.eventNames[i] == "OnFinished") motion.eventTimes[i] = 0;
+                if (motion.eventTimes != null && motion.eventNames != null)
+                    System.Array.Sort(motion.eventTimes, motion.eventNames);
+            }
             return null;
         }
 

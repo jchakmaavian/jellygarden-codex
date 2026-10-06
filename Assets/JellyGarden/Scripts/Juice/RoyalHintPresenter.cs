@@ -80,7 +80,7 @@ namespace JellyGarden.Scripts.Juice
         void PointerPressed(InputAction.CallbackContext context){Hide();}
         void PreferenceChanged(bool enabled){if(!enabled)Hide();}
         bool CanShow(LevelManager lm,RoyalHintPlan candidate)
-        {return lm&&candidate!=null&&RoyalHintSettings.Enabled&&lm.gameStatus==GameState.Playing&&!lm.DragBlocked&&!InputManager.Instance.IsTouching&&candidate.IsCurrent(lm);}
+        {return lm&&candidate!=null&&RoyalHintSettings.Enabled&&lm.gameStatus==GameState.Playing&&!lm.DragBlocked&&!InputManager.Instance.IsTouching&&!RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.OwnsInput&&candidate.IsCurrent(lm);}
         public bool Show(RoyalHintPlan candidate)
         {
             Hide();var lm=LevelManager.THIS;

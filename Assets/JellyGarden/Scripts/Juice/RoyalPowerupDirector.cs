@@ -281,7 +281,8 @@ namespace JellyGarden.Scripts.Juice
                         if(sq.item){sq.item.royalTntClear=true;sq.item.royalTntOrigin=p;}
                         if(sq.block.Count>0&&sq.block[sq.block.Count-1])CandyShatterService.Instance.Shatter(sq.block[sq.block.Count-1].GetComponentInChildren<SpriteRenderer>(),1,true,false,true);
                     }
-                    Hit(sq);
+                    // The TNT's own cell was hit as the TNT was destroyed: a second hit there took a second layer of ice.
+                    if (distance > 0 || (sq && sq.item)) Hit(sq);
                 }
                 yield return Wait(RoyalEffectsProfile.Get.blastWavePerCell);
             }

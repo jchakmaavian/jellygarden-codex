@@ -89,6 +89,8 @@ namespace RoyalThrone.Presentation
         // after it was due).
         public static void GoalLaunched(JellyGarden.Scripts.Targets.TargetObject target,float duration)
         {if(current)current.inFlight.Add(new KeyValuePair<JellyGarden.Scripts.Targets.TargetObject,float>(target,Time.unscaledTime+duration+.5f));}
+        /// <summary>Collected goal pieces still on their way to the Goal panel; the end of a level waits for them to land.</summary>
+        public static int GoalPiecesInFlight{get{var hud=current;if(!hud)return 0;float now=Time.unscaledTime;int n=0;foreach(var p in hud.inFlight)if(p.Value>=now)n++;return n;}}
         public static void GoalLanded(JellyGarden.Scripts.Targets.TargetObject target)
         {
             var hud=current;if(!hud)return;

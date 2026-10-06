@@ -126,7 +126,9 @@ namespace RoyalThrone.ReferenceGameplay
             Pair(settings,17072,.066f,.201f,.934f,.807f,false,true);
             Hide(home.levelButton.transform);Hide(home.areaButton.transform);
             ActionFace(home.levelButton.transform,21955);
-            TextPlace(home.levelLabel,.06f,.1f,.94f,.91f,45);
+            // The display face's capitals sit below the middle of their line box, so a centred box drew "Level 43" low on the
+            // button (the user's screenshot, 2026-10-06: 38 px of face above the words, 26 below). The box is raised by 5.5%.
+            TextPlace(home.levelLabel,.06f,.155f,.94f,.965f,45);
             ActionFace(home.areaButton.transform,17031);
             var chest=Pic(home.areaButton.transform,16593,.60f,.17f,.92f,.84f);chest.preserveAspect=true;
             Pair(home.areaButton.transform,17034,.10f,.24f,.61f,.47f,true);

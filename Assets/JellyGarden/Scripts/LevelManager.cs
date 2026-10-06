@@ -197,7 +197,7 @@ namespace JellyGarden.Scripts
         public GameObject ingrObject;
         public GameObject blocksObject;
         public GameObject scoreTargetObject;
-        bool ingredientFly;
+        bool ingredientFly; Coroutine timeTick;   // the one TimeTick running: StopCoroutine(TimeTick()) stopped nothing
         public GameObject[] gratzWords;
 
         public GameObject Level;
@@ -544,8 +544,8 @@ namespace JellyGarden.Scripts
             ReGenLevel();
             if (limitType == LIMIT.TIME)
             {
-                StopCoroutine(TimeTick());
-                StartCoroutine(TimeTick());
+                if (timeTick != null) StopCoroutine(timeTick);
+                timeTick = StartCoroutine(TimeTick());
             }
 //        InitTargets();
             GameField.gameObject.SetActive(true);
@@ -731,7 +731,7 @@ namespace JellyGarden.Scripts
             }
             if (rect) Destroy(rect.gameObject);
             RoyalThrone.Presentation.RoyalGameplayPresentation.GoalLanded(target);
-            if (gameStatus == GameState.Playing && !IsIngredientFalling())
+            if (gameStatus == GameState.Playing && !IsIngredientFalling() && !BoardResolving())
                 CheckWinLose();
             ingredientFly = false;
         }
@@ -769,10 +769,16 @@ namespace JellyGarden.Scripts
             }
             //     SoundBase.Instance.audio.PlayOneShot(SoundBase.Instance.getStarIngr);
             Destroy(item);
-            if (gameStatus == GameState.Playing && !IsIngredientFalling())//1.6.1
+            if (gameStatus == GameState.Playing && !IsIngredientFalling() && !BoardResolving())//1.6.1
                 CheckWinLose();
             ingredientFly = false;
         }
+
+        // The board is still working out a move: matches resolving, pieces breaking or falling, a power-up firing. A win or
+        // lose decided now can miss goals the rest of the cascade collects (on the last move "So Close" opened on a level the
+        // cascade then completed; bug review 2026-10-05). The end of the cascade (FallingDown) checks again, or the last goal
+        // piece to land does once the board is still.
+        bool BoardResolving() => royalResolving || Juice.RoyalPowerupDirector.Busy || GetItems().Exists(i => i && (i.destroying || i.falling));
 
         public void CheckWinLose()
         {
@@ -854,6 +860,13 @@ namespace JellyGarden.Scripts
             preWinAnimationRunning = true;
             SkipWinCelebration = false;
             RoyalThrone.Characters.KingVanguardActivityEvents.NotifyGoalsCompleted(this);
+
+            // A goal is met when its last piece lands in the Goal panel, not when it leaves the board: the celebration dims the
+            // HUD and the booster session turns the panel into the Reward counter, so both wait for those flights (at most 1 s).
+            float landed = Time.unscaledTime + 1f;
+            while (gameStatus == GameState.PreWinAnimations && Time.unscaledTime < landed && RoyalThrone.Presentation.RoyalGameplayPresentation.GoalPiecesInFlight > 0)
+                yield return null;
+            if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
 
             // The reference order (Design/RoyalMatchReference/OBSERVATIONS.md): the celebration (the logo under pennants,
             // fireworks, confetti, the complete fanfare) as soon as the goals are done, before the moves left are used. It
@@ -993,16 +1006,20 @@ namespace JellyGarden.Scripts
             }
         }
 
+        // A timed level's clock stands still while a popup is over the board (the coin shop from the tool bar, the tool shop):
+        // it ran on while the player shopped (bug review 2026-10-05).
+        bool TimerHeld() => (MenuManager.Instance && MenuManager.Instance.BlocksBoardInput) ||
+            (RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Instance && RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Instance.ShopOpen);
         IEnumerator TimeTick()
         {
             while (true)
             {
-                if (gameStatus == GameState.Playing)
+                if (gameStatus == GameState.Playing && !TimerHeld())
                 {
                     if (LevelManager.Instance.limitType == LIMIT.TIME)
                     {
                         LevelManager.THIS.Limit--;
-                        if (IsAllItemsFallDown())
+                        if (IsAllItemsFallDown() && !BoardResolving())
                             CheckWinLose();
                     }
                 }
@@ -1378,6 +1395,9 @@ namespace JellyGarden.Scripts
             // A gentle refill (2026-10-04): the new pieces of each column's run of cells are stacked just above that run's top
             // edge, the lowest first, so they enter from the board's edge as one stream and fade in as they cross it
             // (Item.royalEntryEdge); the columns start in a soft wave from the centre out (Item.royalFallDelay).
+            // The end of a level never refills (the user, 2026-10-06: "no more fill up"): once the goals are met the boosters
+            // clear the board and nothing new falls in behind them, or under the win card. Level setup (falling false) still fills.
+            if (falling && (gameStatus == GameState.PreWinAnimations || gameStatus == GameState.Win)) return;
             bool gentle = falling && Juice.JuiceConfig.Instance.EnableJuice;
             float cellWorld = squareHeight * (GameField ? Mathf.Abs(GameField.lossyScale.y) : 1f);
             var stacked = new Dictionary<int, int>();
@@ -1431,6 +1451,8 @@ namespace JellyGarden.Scripts
                 {
                     DragBlocked = false;
                     gameStatus = GameState.Playing;   // starts the hint search again
+                    // A goal that landed while the board shuffled was not checked (the board was busy): check now.
+                    if (!BoardResolving()) CheckWinLose();
                     yield break;
                 }
                 MenuManager.Instance.ShowNoMoreMatches(true);
@@ -1939,6 +1961,11 @@ namespace JellyGarden.Scripts
                 }
 
                 // A new move during the effects needs its matches resolved before gravity.
+                if (waveRevision != inputRevision) continue;
+                // Gravity waits for a swap that is still animating (2026-10-06, the user's overlapping gems): it moved a swapping
+                // piece down its column on paper, the swap then wrote its result from that new cell, and a piece was left drawn
+                // in a cell another piece owned. A swap that commits meanwhile starts a new wave, so its matches go first.
+                while (InputSwaps > 0) yield return null;
                 if (waveRevision != inputRevision) continue;
 
                 //falling down

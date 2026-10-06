@@ -41,6 +41,16 @@ namespace JellyGarden.Scripts
     public class Square : MonoBehaviour
     {
         public Item item;
+        // A matched piece that becomes a power-up here keeps its cell until the power-up exists (2026-10-06, the user's
+        // overlapping gems). DestroyItem frees the cell when the piece starts breaking, and its break waits on the physics
+        // tick before spawning the power-up; gravity, which checks every frame, could drop a piece into the cell in that gap,
+        // and the spawn then took the cell from it: that piece was never animated, stayed where it was, and the refill drew a
+        // new piece over it. Gravity, the diagonal slide and the refill treat a reserved cell as full. The reservation ends
+        // by itself once the breaking piece is gone, so it can never hold the board.
+        [global::System.NonSerialized] public Item reservedFor;
+        public bool Reserved => reservedFor && reservedFor.destroying;
+        public void Reserve(Item breaking) { reservedFor = breaking; }
+        public void Release(Item breaking) { if (reservedFor == breaking) reservedFor = null; }
         public int row;
         public int col;
         public SquareTypes type;
@@ -68,6 +78,10 @@ namespace JellyGarden.Scripts
         {
             if (IsNone() && !CanGoInto())
                 return null;
+            if (Reserved) return null;   // a power-up is about to appear here
+            // A cell holding a live piece must never be given a second one: the first would be left drawn under it.
+            if (item && !item.destroying)
+                Debug.LogWarning("[Royal board] A new piece was made in cell " + col + "," + row + ", which still held one; the board's safety net will tidy it.");
             var itemInstance = Instantiate(LevelManager.THIS.itemPrefab);
             itemInstance.transform.localScale = Vector2.one * 0.6f;
             itemInstance.square = this;
@@ -216,7 +230,8 @@ namespace JellyGarden.Scripts
 
         public void FallOut()
         {
-            if (item != null)
+            // A piece a swap holds stays put until the swap ends (2026-10-06): see LevelManager.FallingDown.
+            if (item != null && !item.inputSwapLocked)
             {
                 Square nextSquare = GetNeighborBottom();
                 if (nextSquare != null)
@@ -237,7 +252,7 @@ namespace JellyGarden.Scripts
                     }
                     if (nextSquare.CanGoInto())
                     {
-                        if (nextSquare.item == null)
+                        if (nextSquare.item == null && !nextSquare.Reserved)
                         {
                             item.CheckNeedToFall(nextSquare);
                         }

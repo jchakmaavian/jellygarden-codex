@@ -202,6 +202,8 @@ namespace RoyalThrone.Presentation
 
         static void Place(Image patch, RoyalAreaTask task, bool visible)
         {
+            // A replay stopped mid-rise left its scale behind on an image the current area shares (bug review 2026-10-05).
+            patch.rectTransform.localScale = Vector3.one;
             patch.enabled = visible;
             patch.sprite = visible ? RoyalAreas.Art(task.patch) : null;
             var r = patch.rectTransform;

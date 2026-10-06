@@ -86,9 +86,18 @@ namespace RoyalThrone.Characters
             mouseMovedAt = tapAt = float.NegativeInfinity;
         }
 
+        // Whether this is the gameplay HUD's king, looked up at most once a second (the lookup reads every parent's name,
+        // which allocates; it ran every frame).
+        float portraitCheckedAt = float.NegativeInfinity; bool portraitCached;
+        bool CachedGameplayPortrait()
+        {
+            if (Time.unscaledTime - portraitCheckedAt >= 1) { portraitCached = IsGameplayPortrait(character); portraitCheckedAt = Time.unscaledTime; }
+            return portraitCached;
+        }
+
         bool IsVisiblePortrait()
         {
-            if (!IsGameplayPortrait(character) || !character.isActiveAndEnabled || !character.Graphic ||
+            if (!CachedGameplayPortrait() || !character.isActiveAndEnabled || !character.Graphic ||
                 !character.Graphic.isActiveAndEnabled) return false;
             GetComponentsInParent(true, groups);
             foreach (var group in groups)

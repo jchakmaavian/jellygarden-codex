@@ -117,10 +117,13 @@ namespace RoyalThrone.Presentation
         }
         void OnDisable(){if(name=="PreFailed")RoyalCards.ReleaseOfferGoals(transform);if(name=="MenuFailed")RoyalCards.ReleaseFailedGoals(transform);}
         readonly List<TargetIcon> offerGoals=new List<TargetIcon>();
+        // The lesson pages' names, made once (they were concatenated six times a frame while How to Play was open).
+        static string[] lessonNames;
+        static string LessonName(int i){if(lessonNames==null||lessonNames.Length<RoyalLessonDemo.Count){lessonNames=new string[RoyalLessonDemo.Count];for(int k=0;k<lessonNames.Length;k++)lessonNames[k]="Royal lesson "+k;}return lessonNames[i];}
         void LateUpdate()
         {
             // How to play builds each lesson page the first time it is shown: style it before that frame is drawn.
-            if(name=="Tutorial"){var card=transform.Find("Image");if(card)for(int i=0;i<RoyalLessonDemo.Count;i++)RoyalCards.Lesson(card.Find("Royal lesson "+i));}
+            if(name=="Tutorial"){var card=transform.Find("Image");if(card)for(int i=0;i<RoyalLessonDemo.Count;i++)RoyalCards.Lesson(card.Find(LessonName(i)));}
             // The offer's goals show what is left, not TargetIcon's X: every frame, before it is drawn.
             if(name=="PreFailed")RoyalCards.OfferGoals(transform,offerGoals);
             if(name=="MenuFailed")RoyalCards.FailedGoals(transform,offerGoals);

@@ -45,6 +45,11 @@ namespace RoyalThrone.Presentation
             if (icon) icon.sprite = Coins ? coinArt : heartArt;
             amountWords = Coins ? "+" + (init ? init.rewardedGems : 0) + " Coins" : "Lives Refilled!";
             if (amount) { var text = amount.GetComponent<Text>(); if (text) text.text = amountWords; amount.Write(0); }
+            // A card is reused: nothing may carry over from the last opening (a shine band, a turned or scaled part).
+            if (title) title.Shine(-1);
+            if (rays) { rays.rectTransform.localRotation = Quaternion.identity; rays.rectTransform.localScale = Vector3.one; }
+            if (shadow) shadow.rectTransform.localScale = Vector3.one;
+            if (glow) glow.rectTransform.anchoredPosition = iconRest;
             Build();
             Pose();
         }
@@ -155,7 +160,8 @@ namespace RoyalThrone.Presentation
         void Burst()
         {
             JellyGarden.Scripts.Juice.RoyalAudioDirector.Get?.Play(JellyGarden.Scripts.Juice.RoyalCue.Create);
-            for (int i = 0; i < FountainCount; i++) { fountain[i].sprite = Coins ? coinArt : heartArt; fountain[i].enabled = true; }
+            // Each piece shows once its own turn in the fountain comes (PoseFountain), not all at once at the card's centre.
+            for (int i = 0; i < FountainCount; i++) fountain[i].sprite = Coins ? coinArt : heartArt;
         }
 
         void PoseLight()
@@ -199,7 +205,8 @@ namespace RoyalThrone.Presentation
             {
                 var image = fountain[i];
                 float life = .95f + .2f * Hash(i * 3 + 9), at = since - i * .015f;
-                if (!burst || at < 0 || at > life) { if (image.enabled && at > life) image.enabled = false; continue; }
+                if (!burst || at < 0 || at > life) { if (image.enabled) image.enabled = false; continue; }
+                if (!image.enabled) image.enabled = true;
                 var v = fountainVelocity[i];
                 var p = chestRest + new Vector2(0, 30) + v * at + new Vector2(0, -1500 * at * at * .5f);
                 float size = 58 * (1 - .3f * at / life);

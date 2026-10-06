@@ -165,6 +165,9 @@ namespace JellyGarden.Scripts.GUI
             {
                 // One Back release, one action: another menu may already have handled it earlier in this frame.
                 if (RoyalThrone.Presentation.RoyalBackButton.ConsumedThisFrame) return;
+                // The shop over a popup takes Back itself (it closes); the popup under it must not act on the same press, or
+                // Back over the shop on So Close ended the level (bug review 2026-10-05).
+                if (RoyalThrone.Presentation.RoyalShopPage.IsOpen) return;
                 if (name == "MenuPlay" || name == "Settings" || name == "BoostInfo" || name == "GemsShop" || name == "LiveShop" || name == "BoostShop" || name == "Reward" || name == "Tutorial")
                 {
                     CloseMenu();
@@ -336,6 +339,9 @@ namespace JellyGarden.Scripts.GUI
         IEnumerator MenuCompleteScoring()
         {
             Text scores = transform.Find("Image").Find("Score").GetComponent<Text>();
+            // The win card hides the score (one star per win): write it once instead of counting it up, frame by frame, unseen.
+            var hidden = scores.GetComponent<CanvasGroup>();
+            if (hidden && hidden.alpha <= 0) { scores.text = "" + LevelManager.Score; yield break; }
             for (int i = 0; i <= LevelManager.Score; i += 500)
             {
                 scores.text = "" + i;
@@ -370,17 +376,15 @@ namespace JellyGarden.Scripts.GUI
                 LevelManager.THIS.gameStatus = GameState.Map;
                 LevelManager.THIS.gameStatus = GameState.Map;
                 int nextLevel = RoyalThrone.Campaign.RoyalReferenceCampaign.Enabled ? Mathf.Min(50,LevelManager.THIS.currentLevel + 1) : LevelManager.THIS.currentLevel + 1;
-                // After levels 1-5 (the verified opening) CONTINUE stays on Home, where the rewards play, and the player
-                // opens the next level from the Level button, as the reference does. Read before LoadLevel resets it.
-                bool opening = RoyalThrone.Campaign.RoyalReferenceCampaign.Opening;
+                // Every won level returns Home for the star and coin collection (including level 13 in the supplied
+                // recording). Select the next authored level for its Home button; opening its entry card is the player's choice.
                 // After the last authored level there is no level to open: CONTINUE returns to the home screen instead
                 // of loading a missing level file (which threw here and left this card stuck on screen).
                 if (Resources.Load<TextAsset>("Levels/" + nextLevel) != null)
                 {
                     PlayerPrefs.SetInt("OpenLevel", nextLevel);
+                    // LoadLevel only reads the next layout; it does not raise OnLevelLoaded or cancel the pending reward.
                     LevelManager.THIS.LoadLevel();
-                    if (!opening && LevelsMap._instance.GetMapLevels().Count >= LevelManager.THIS.currentLevel)
-                        MenuManager.Instance.ShowMenuPlay(true);
                 }
             }
             if (gameObject.name == "MenuFailed")
@@ -479,8 +483,11 @@ namespace JellyGarden.Scripts.GUI
             }
             else if (gameObject.name == "MenuPause")
             {
+                // Resume only a paused game: if the goals were met while the card was opening, the celebration runs on (setting
+                // Playing then stopped the win flow and left a frozen board; bug review 2026-10-05).
+                var before = LevelManager.Instance.gameStatus;
                 CloseMenu();
-                LevelManager.Instance.gameStatus = GameState.Playing;
+                if (before == GameState.Pause || before == GameState.Playing) LevelManager.Instance.gameStatus = GameState.Playing;
             }
         }
 
@@ -643,6 +650,8 @@ namespace JellyGarden.Scripts.GUI
         public void BuyLife(GameObject button)
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            // A life may have come back while the card was open: full lives are not sold again (bug review 2026-10-05).
+            if (InitScript.lifes >= InitScript.Instance.CapOfLife) { CloseMenu(); return; }
             if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
             {
                 InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));

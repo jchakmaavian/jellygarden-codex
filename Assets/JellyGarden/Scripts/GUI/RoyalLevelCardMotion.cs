@@ -135,7 +135,7 @@ namespace RoyalThrone.Presentation
             GoalGlow();
             Boosters();
             Gloss();
-            foreach (var c in new[] { play, close, help }) Press(c);
+            Press(play); Press(close); Press(help);   // no array each frame
         }
 
         void ApplyEntrance()

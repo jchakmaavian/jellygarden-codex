@@ -16,9 +16,9 @@ namespace JellyGarden.Scripts.Juice
     /// 2. <see cref="BeginFinale"/>: the HUD's goal panel turns into a Reward coin counter; while the booster session
     ///    (ReferenceWinFinish) turns the moves left into rockets and fires them, coins fly from the board into it, and
     ///    <see cref="EndFinale"/> lands the rest.
-    /// 3. <see cref="Reward"/> on the win card: a sparkle as each star appears; on the verified opening levels (1-5), which
-    ///    award one star, a single large star drops onto the card in place of the star row and the score.
-    /// 4. After CONTINUE, on Home: the star and overlapping coins fly into the Home counters, which count up as they land,
+    /// 3. <see cref="Reward"/> on the win card: one large star lands on its pillow; the committed award waits for Home.
+    /// 4. After CONTINUE from every won level, on Home: the star and overlapping coins fly into the counters as in the
+    ///    supplied level-13 reference, and the counters count up as they land,
     ///    and the Area task list opens if its next task is affordable. (No tip card after the level: each power piece is
     ///    taught when its level starts, RoyalPowerTutorial; the user, 2026-10-05.)
     /// One stage leads straight into the next, with no wait between them (the user, 2026-10-05).
@@ -338,7 +338,7 @@ namespace JellyGarden.Scripts.Juice
                 { RetireFlight(f); flights.RemoveAt(k); continue; }
                 if (f.receiver) f.to = Local(f.receiver);
                 float e = now - f.start; if (e < 0) continue;
-                float burstTime = f.turning ? .55f + f.hold : .2f;
+                float burstTime = (f.turning ? .55f : .2f) + f.hold;
                 if (!f.started)
                 {
                     f.started = true;
@@ -370,6 +370,12 @@ namespace JellyGarden.Scripts.Juice
                     }
                 }
                 f.image.rectTransform.localScale = Vector3.one * scale;
+                if (!f.turning && f.hold > 0)
+                {
+                    // The Home star pauses and gently rocks before collection. Other star flights retain their zero hold.
+                    float rock = e < burstTime ? Mathf.Sin(Mathf.Clamp01((e - .2f) / f.hold) * Mathf.PI * 2) * 5 : 0;
+                    f.image.rectTransform.localRotation = Quaternion.Euler(0, 0, rock);
+                }
                 if (f.turning) ReferenceCoinAnimation.Apply(f.image, reduced ? 0 : e, f.size);
                 f.image.rectTransform.anchoredPosition = f.cardFrame ? ContainCardCoin(f, p) : p;
             }
@@ -496,11 +502,17 @@ namespace JellyGarden.Scripts.Juice
             // Its reaction makes the king in the HUD portrait cheer.
             if (RoyalPowerupDirector.Get && lm.GameField) RoyalPowerupDirector.Get.Creation(lm.GameField.position);
 
-            float t = 0, hold = 1.8f, exit = .45f;
+            // A short beat, not a wait (the user, 2026-10-06: "do all transitions immediately, do not bore the player"): the logo
+            // lands at 0.62 s, the boosters take over at 0.85 s and the stage fades out over the first rockets.
+            float t = 0, hold = .85f, exit = .3f;
             while (true)
             {
-                if (lm.gameStatus != GameState.PreWinAnimations) { foreach (var b in bits) b.age = b.life; break; }
+                // The win card may open while the logo is still up (a last-move win with nothing left to fire): the stage then
+                // goes straight to its exit and fades out over the card instead of vanishing in a frame (bug review 2026-10-05).
+                bool won = lm.gameStatus == GameState.Win;
+                if (lm.gameStatus != GameState.PreWinAnimations && !won) { foreach (var b in bits) b.age = b.life; break; }
                 t += Time.unscaledDeltaTime;
+                if (won && t < hold) hold = t;
                 // A tap (the same one that sped up the booster session) jumps to the exit.
                 if (lm.SkipWinCelebration && t < hold) hold = Mathf.Max(.35f, t);
                 if (t >= hold) celebrationHandover = true;
@@ -647,7 +659,7 @@ namespace JellyGarden.Scripts.Juice
 
         // ---------------------------------------------------------------- 3. the win card
 
-        sealed class Pending { public int coins, before, stars, level; public bool opening; }
+        sealed class Pending { public int coins, before, stars, level; }
         Pending pending; bool homeRunning; int homeCoins;
         Coroutine reward, homeReward, risingReward;
         Canvas.WillRenderCanvases homeHold;
@@ -688,16 +700,13 @@ namespace JellyGarden.Scripts.Juice
             var s = Get(lm); s.CancelRewardPresentation();
             var menu = MenuManager.Instance ? MenuManager.Instance.GetCanvasGlobal().Find("MenuComplete") : null;
             var winCard = RoyalThrone.Presentation.RoyalWinCard.Of(menu);
-            if (winCard) winCard.SetReward(coins); // display the committed award; never credit currency here
-            bool opening = RoyalThrone.Campaign.RoyalReferenceCampaign.Opening;
-            // Home plays the rewards only after the verified opening levels, whose CONTINUE goes Home (AnimationManager).
-            // Later levels go on to the next level's card, so their coins fly on the win card as before. The card lands its
-            // own star either way (RoyalCards.Won, RoyalWinCard).
-            s.pending = opening ? new Pending { coins = coins, before = balanceBefore, stars = lm.StarsGained, level = lm.currentLevel, opening = true } : null;
-            s.reward = opening ? null : s.StartCoroutine(s.RunCardCoins(lm, coins, balanceBefore));
+            if (winCard) winCard.SetReward(coins); // retain the committed amount; never credit currency here
+            // The supplied completed-level recording confirms this beyond the opening levels: CONTINUE returns Home,
+            // where the star leads the overlapping coin collection. The popup itself celebrates the star.
+            s.pending = new Pending { coins = coins, before = balanceBefore, stars = lm.StarsGained, level = lm.currentLevel };
         }
 
-        // ---- later levels: a compact coin fan collects inside the card; the balance above counts the arrivals.
+        // ---- legacy card-coin presentation; normal wins now collect on Home.
 
         RectTransform pill; Text pillValue; Image pillFlash; float flash;
         float PillY => Half.y - (Screen.height - Screen.safeArea.yMax) * root.rect.width / Mathf.Max(1, Screen.width) - 76;
@@ -788,7 +797,7 @@ namespace JellyGarden.Scripts.Juice
             if (label) Destroy(label.gameObject);
         }
 
-        // ---------------------------------------------------------------- 4. Home: tip, coins, star, tasks
+        // ---------------------------------------------------------------- 4. Home: star, coins, tasks
 
         IEnumerator HomeRewards(LevelManager lm)
         {
@@ -799,8 +808,19 @@ namespace JellyGarden.Scripts.Juice
                 reduced = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0;
                 var home = FindAnyObjectByType<RoyalThrone.Presentation.RoyalHomeScreen>();
                 float wait = Time.unscaledTime + 3; while ((!home || !home.coinLabel || !home.coinLabel.gameObject.activeInHierarchy) && Time.unscaledTime < wait) { yield return null; home = home ? home : FindAnyObjectByType<RoyalThrone.Presentation.RoyalHomeScreen>(); }
-                if (!home || !home.coinLabel) yield break;
-                // Hold the counters at their old values while the tip shows and the rewards fly.
+                if (!home || !home.coinLabel || lm.gameStatus != GameState.Map) yield break;
+                if (reduced)
+                {
+                    // Currency and stars are already saved. Motion off shows those balances directly, with no flights,
+                    // count-up, floating amount or temporary hold on the Home counters.
+                    homeCoins = p.before + p.coins;
+                    home.RefreshProgress();
+                    completed = true;
+                    int starsAvailable = home.Progress.available;
+                    if (Affordable(starsAvailable) && home.areaButton && !(home.AreaView && home.AreaView.GuideFirstTask())) home.OpenPanel("area", RoyalThrone.Presentation.RoyalAreaView.Entry(home).gameObject);
+                    yield break;
+                }
+                // Hold the counters at their old values while the rewards fly.
                 homeCoins = p.before; home.RefreshProgress(); int starsNow = home.Progress.available; int starsShown = Mathf.Max(0, starsNow - p.stars);
                 void Hold() { if (home.coinLabel) home.coinLabel.text = homeCoins.ToString("N0"); if (home.starLabel) home.starLabel.text = starsShown.ToString(); }
                 heldHome = home; homeHold = Hold; Canvas.willRenderCanvases += homeHold;
@@ -815,11 +835,12 @@ namespace JellyGarden.Scripts.Juice
                         var starParent = home.starLabel.transform.parent;
                         var starReceiver = starParent.Find("Imported 16674") ?? starParent.Find("Stars icon");
                         var starTo = starReceiver ? Local(starReceiver) : Local(home.starLabel.transform) + new Vector2(-60, 0);
-                        var starArt = RoyalThrone.Presentation.RoyalAreaKit.Star ? RoyalThrone.Presentation.RoyalAreaKit.Star : star;
-                        Fly(starArt, new Vector2(0, -Half.y * .18f), starTo, .1f, 110, .7f,
+                        var starArt = Resources.Load<Sprite>("RoyalGameplay/win-star");
+                        if (!starArt) starArt = RoyalThrone.Presentation.RoyalAreaKit.Star ? RoyalThrone.Presentation.RoyalAreaKit.Star : star;
+                        Fly(starArt, new Vector2(0, -Half.y * .18f), starTo, .08f, 110, .55f,
                             () => { starLanded = true; starsShown = starsNow; RoyalAudioDirector.Get?.Play(RoyalCue.Create); },
-                            false, 60, 0, false, starReceiver);
-                        float coinStart = Time.unscaledTime + .6f;
+                            false, 60, .5f, false, starReceiver);
+                        float coinStart = Time.unscaledTime + .95f;
                         while (Time.unscaledTime < coinStart && lm.gameStatus == GameState.Map) yield return null;
                     }
                     if (lm.gameStatus != GameState.Map) yield break;

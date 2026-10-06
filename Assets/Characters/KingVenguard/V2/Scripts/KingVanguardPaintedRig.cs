@@ -9,6 +9,7 @@ namespace RoyalThrone.Characters {
   SkeletonGraphic graphic; KingVanguardCharacter owner; KingVanguardAttention attention;
   KingVanguardPaintedGraphic portrait;
   float previousSkeletonTime, clock; Color originalColor; bool bound, originalUnscaledTime;
+  float attentionCheckedAt; UpdateMode originalUpdateMode=UpdateMode.FullUpdate;
   public KingVanguardPaintedGraphic Portrait => portrait;
   public bool IsReady => portrait && portrait.Ready;
   public Vector2 RenderedGaze => portrait ? portrait.Gaze : Vector2.zero;
@@ -33,7 +34,10 @@ namespace RoyalThrone.Characters {
    var old=graphic.GetComponent<KingVanguardLaughArt>();if(old){old.Cancel();old.enabled=false;}
    originalUnscaledTime=graphic.unscaledTime;graphic.unscaledTime=false;
    originalColor=graphic.color;graphic.color=new Color(originalColor.r,originalColor.g,originalColor.b,0);
-   attention=KingVanguardAttention.Ensure(graphic);
+   attention=KingVanguardAttention.Ensure(graphic);attentionCheckedAt=Time.unscaledTime;
+   // The rig is invisible under the painted portrait, which reads only its clock, track phase and bones: it keeps animating
+   // but builds no mesh (its mesh, face and mouth rigs ran every frame for nothing; bug review 2026-10-05).
+   originalUpdateMode=graphic.UpdateMode;graphic.UpdateMode=UpdateMode.EverythingExceptMesh;
    graphic.UpdateComplete+=Pose;bound=true;portrait.gameObject.SetActive(true);ResetPresentation();
   }
   public void ResetPresentation(){clock=0;previousSkeletonTime=graphic&&graphic.Skeleton!=null?graphic.Skeleton.Time:0;if(portrait)portrait.ApplyPose(owner.CurrentActivity,0,0,0,Vector2.zero,0,0,0,true);}
@@ -43,7 +47,11 @@ namespace RoyalThrone.Characters {
    // Skeleton time is continuous across clip swaps and worry loops; track phase is not.
    float now=graphic.Skeleton.Time;
    float delta=Mathf.Clamp(now-previousSkeletonTime,0,.1f);previousSkeletonTime=now;clock+=delta;
-   if(!attention)attention=KingVanguardAttention.Ensure(graphic);
+   // Becoming visible resets a SkeletonGraphic to a full update; the hidden rig goes back to no mesh.
+   if(graphic.UpdateMode==UpdateMode.FullUpdate)graphic.UpdateMode=UpdateMode.EverythingExceptMesh;
+   // Only the gameplay HUD's king has attention: look again at most once a second, not every frame (each look walks the
+   // parents' names, which allocates).
+   if(!attention&&Time.unscaledTime-attentionCheckedAt>=1){attention=KingVanguardAttention.Ensure(graphic);attentionCheckedAt=Time.unscaledTime;}
    var gaze=attention?attention.Gaze*attention.Influence:Vector2.zero;
    var laugh=graphic.GetComponent<KingVanguardLaughter>();
    float laughTime=laugh&&laugh.Active?laugh.Time:0;
@@ -51,7 +59,7 @@ namespace RoyalThrone.Characters {
    portrait.ApplyPose(owner.CurrentActivity,clock,delta,phase,gaze,attention?attention.BodyLean:0,attention?attention.TapResponse:0,laughTime,false,attention?(int)attention.Source:0);
   }
   void OnDisable(){
-   if(bound&&graphic){graphic.GetComponent<KingVanguardLaughter>()?.Cancel();graphic.UpdateComplete-=Pose;graphic.color=originalColor;graphic.unscaledTime=originalUnscaledTime;}
+   if(bound&&graphic){graphic.GetComponent<KingVanguardLaughter>()?.Cancel();graphic.UpdateComplete-=Pose;graphic.color=originalColor;graphic.unscaledTime=originalUnscaledTime;graphic.UpdateMode=originalUpdateMode;}
    bound=false;if(portrait)portrait.gameObject.SetActive(false);
   }
   void OnDestroy(){if(portrait){if(Application.isPlaying)Destroy(portrait.gameObject);else DestroyImmediate(portrait.gameObject);}}

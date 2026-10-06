@@ -29,7 +29,11 @@ namespace RoyalThrone
         public static bool Busy => waiting != null;
 
         static StoreController store;
+        // Whether the last product fetch returned any product. Unity IAP reports a partial fetch twice: OnProductsFetched
+        // with what it found, then OnProductsFetchFailed for the rest. One id missing on Google Play must not shut the shop.
+        static bool fetchedAny;
         static Action<bool, string> waiting;
+        static string waitingFor;   // the product the waiting purchase is for: another order (a slow one) finishing does not end it
         // In the editor a test purchase belongs to the save that started it (the QA profile or the real one): the test store's
         // dialog can be answered after a QA session has ended, which paid test coins into the real save (2026-10-05).
         static bool startedInQa;
@@ -37,7 +41,18 @@ namespace RoyalThrone
         const int PaidKept = 64;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetStatics() { store = null; Status = State.Off; Changed = null; waiting = null; Message = ""; MessageAt = -1; }
+        static void ResetStatics() { store = null; Status = State.Off; Changed = null; waiting = null; waitingFor = null; Message = ""; MessageAt = -1; fetchedAny = false; }
+
+        // Orders the app did not finish (closed mid-payment, or a slow payment completed since) are delivered as soon as the
+        // game scene is up, not only once the shop opens: Google refunds what is not acknowledged within three days.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        static void ConnectWithTheGame()
+        {
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded -= ConnectOnGameScene;
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += ConnectOnGameScene;
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "game") Connect();
+        }
+        static void ConnectOnGameScene(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode) { if (scene.name == "game") Connect(); }
 
         /// <summary>Connects once (again after a failure). Safe to call every time the shop opens.</summary>
         public static void Connect()
@@ -54,11 +69,17 @@ namespace RoyalThrone
                 if (store == null)
                 {
                     store = UnityIAPServices.StoreController();
-                    store.OnProductsFetched += products => { Set(State.Ready, null); store.FetchPurchases(); };
-                    store.OnProductsFetchFailed += failure => Set(State.Unavailable, null);
+                    store.OnProductsFetched += products => { fetchedAny |= products != null && products.Count > 0; Set(State.Ready, null); store.FetchPurchases(); };
+                    store.OnProductsFetchFailed += failure =>
+                    {
+                        // Only when nothing at all came back is the store unavailable; a missing pack is refused by Buy alone.
+                        var missing = failure != null && failure.FailedFetchProducts != null ? string.Join(", ", failure.FailedFetchProducts.ConvertAll(d => d.id)) : "?";
+                        Debug.LogWarning("[Royal store] Products not found on the store: " + missing + " (" + (failure != null ? failure.FailureReason : "") + ")");
+                        if (!fetchedAny) Set(State.Unavailable, null);
+                    };
                     store.OnPurchasePending += Deliver;
                     store.OnPurchaseFailed += Failed;
-                    store.OnPurchaseDeferred += order => Finish(false, "Payment pending: it is added once Google Play completes it");
+                    store.OnPurchaseDeferred += order => Finish(false, "Payment pending: it is added once Google Play completes it", order);
                     store.OnStoreDisconnected += failure => { Set(State.Unavailable, null); Finish(false, "Store unavailable"); };
                     // Listened to so the store does not warn about missing callbacks; the pending orders do the work.
                     store.OnPurchaseConfirmed += order => { };
@@ -68,6 +89,7 @@ namespace RoyalThrone
                 await store.Connect();
                 var products = new List<ProductDefinition>();
                 foreach (var item in RoyalEconomy.StoreItems) products.Add(new ProductDefinition(item.Id, ProductType.Consumable));
+                fetchedAny = false;
                 store.FetchProducts(products);
             }
             catch (Exception e)
@@ -90,11 +112,13 @@ namespace RoyalThrone
         public static bool Buy(RoyalEconomy.StoreItem item, Action<bool, string> done)
         {
             string refusal = Status != State.Ready || store == null ? "Store unavailable. Check your connection and try again"
-                : waiting != null ? "A purchase is already in progress" : null;
+                : waiting != null ? "A purchase is already in progress"
+                // On a device, money is never spent from the QA test profile: its coins are put back when the session ends.
+                : !Application.isEditor && RoyalThrone.Testing.RoyalSave.Testing ? "Leave the test profile to buy with real money" : null;
             var product = refusal == null ? store.GetProductById(item.Id) : null;
             if (refusal == null && (product == null || !product.availableToPurchase)) refusal = "This pack is not available yet";
             if (refusal != null) { Say(refusal); done?.Invoke(false, refusal); Changed?.Invoke(); return false; }
-            waiting = done ?? ((paid, message) => { });
+            waiting = done ?? ((paid, message) => { }); waitingFor = item.Id;
             startedInQa = RoyalThrone.Testing.RoyalSave.Testing;
             Say("Waiting for Google Play...");
             Changed?.Invoke();
@@ -112,6 +136,9 @@ namespace RoyalThrone
                 Finish(false, "Purchase cancelled");
                 return;
             }
+            // A real order delivered while the QA test profile is active (a development build) waits, unconfirmed, until the
+            // player's own save is back: Google Play hands it over again at the next connection.
+            if (!Application.isEditor && RoyalThrone.Testing.RoyalSave.Testing) { Debug.LogWarning("[Royal store] An order arrived during a QA session; it is kept for the player's save."); return; }
             var given = new List<string>();
             foreach (var line in order.CartOrdered.Items())
             {
@@ -125,19 +152,28 @@ namespace RoyalThrone
                 given.Add("+" + (item.Coins > 0 ? (item.Coins * quantity).ToString("N0") + " Coins" : (item.Stars * quantity) + " Stars"));
             }
             store.ConfirmPurchase(order);
-            Finish(true, given.Count > 0 ? string.Join("  ", given) : "Purchase complete");
+            Finish(true, given.Count > 0 ? string.Join("  ", given) : "Purchase complete", order);
+        }
+
+        // Whether an order is the one the shop is waiting for (no product to tell: assume it is).
+        static bool IsWaitedFor(Order order)
+        {
+            if (waitingFor == null || order == null || order.CartOrdered == null) return true;
+            foreach (var line in order.CartOrdered.Items()) if (line.Product != null && line.Product.definition.id == waitingFor) return true;
+            return false;
         }
 
         static void Failed(FailedOrder order)
         {
             bool cancelled = order.FailureReason == PurchaseFailureReason.UserCancelled;
-            Finish(false, cancelled ? "Purchase cancelled" : "Purchase failed. You were not charged");
+            Finish(false, cancelled ? "Purchase cancelled" : "Purchase failed. You were not charged", order);
         }
 
-        static void Finish(bool paid, string message)
+        static void Finish(bool paid, string message, Order order = null)
         {
             Say(message);
-            var done = waiting; waiting = null;
+            if (order != null && !IsWaitedFor(order)) { Changed?.Invoke(); return; }   // another order: the waited one goes on
+            var done = waiting; waiting = null; waitingFor = null;
             done?.Invoke(paid, message);
             Changed?.Invoke();
         }

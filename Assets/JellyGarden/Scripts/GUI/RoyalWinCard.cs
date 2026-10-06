@@ -6,8 +6,8 @@ namespace RoyalThrone.Presentation
     // Excludes a part with its own timing from RoyalCardMotion's entrance bands.
     public sealed class RoyalAppearsLater : MonoBehaviour { }
 
-    // Presentation of the already committed win: a soft star landing, warm light on the velvet,
-    // a short sparkle burst, then a five-tip glint and a traveling sweep over the cushion braid.
+    // Presentation of the already committed win, measured from game completed experience.mp4:
+    // a fast star zoom/wobble, impact flash and velvet recoil, then rear halo and braid glints.
     // AnimationManager activates Star1 after the card enters. This component owns no reward writes.
     public sealed class RoyalWinCard : MonoBehaviour
     {
@@ -18,9 +18,9 @@ namespace RoyalThrone.Presentation
         public Text rewardAmount, levelNumber;
         public Vector2 starRest;
 
-        const float RevealHold = .10f, Drop = .48f, Rebound = .68f, Settle = .90f;
-        const float WriteStart = .56f, PerLetter = .047f, FallbackTitle = 1.6f;
-        const float RewardStart = 1.03f, RewardCountTime = .62f, RewardReady = 1.10f;
+        const float Drop = .20f, Rebound = .34f, Settle = .64f, CushionSettle = .98f;
+        const float WriteStart = .18f, PerLetter = .035f, FallbackTitle = 1.6f;
+        const float RewardStart = .70f, RewardCountTime = .35f, RewardReady = .98f;
         const int BurstCount = 24, IdleCount = 14, HaloCount = 12, RewardCountSteps = 64;
 
         float t, open, nextTwinkle, sparkleCeiling;
@@ -88,7 +88,7 @@ namespace RoyalThrone.Presentation
         void OnEnable()
         {
             reduced = RoyalThrone.Testing.RoyalSave.GetInt("RoyalThrone.HomeMotion", 1) == 0;
-            started = false; t = 0; open = 0; nextTwinkle = 1.16f; twinkleSlot = 0;
+            started = false; t = 0; open = 0; nextTwinkle = .92f; twinkleSlot = 0;
             var level = JellyGarden.Scripts.LevelManager.THIS;
             RefreshLevelNumber();
             SetReward(level ? JellyGarden.Scripts.Juice.RoyalWinSequence.Coins(level) : 0);
@@ -235,7 +235,7 @@ namespace RoyalThrone.Presentation
             if (shadowGroup) shadowGroup.alpha = .28f * a;
             if (starShadow) starShadow.localScale = Vector3.one;
             if (contactShadow) contactShadow.color = Fade(contactShadow.color, .25f * a);
-            if (glow) glow.color = Fade(glow.color, .37f * a);
+            if (glow) glow.color = Fade(glow.color, .28f * a);
             if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, .12f * a);
             if (flash) flash.color = Fade(flash.color, 0);
             if (raysGroup) raysGroup.alpha = 0;
@@ -252,47 +252,52 @@ namespace RoyalThrone.Presentation
             float size, lift, rotation;
             if (t < Drop)
             {
-                // A moment of suspension lets the larger star read before its gentle descent.
-                float u = Mathf.Clamp01((t - RevealHold) / (Drop - RevealHold));
-                float descent = u * u * (3 - 2 * u);
-                size = Mathf.Lerp(1.12f, .96f, descent);
-                float revealLift = Mathf.Clamp(sparkleCeiling - starRest.y - star.sizeDelta.y * .44f * 1.12f, 0, 20);
-                lift = Mathf.Lerp(revealLift, -4, descent);
-                rotation = Mathf.Lerp(-4, .65f, descent);
+                // The reference retracts toward a nearly fixed centre; it does not fall down a long path.
+                // Its peak is normalized for our already 1.5x larger reward and shared card frame.
+                float u = Mathf.Clamp01(t / Drop);
+                size = t < .06f ? Mathf.Lerp(2.4f, 1.50f, Ease(t / .06f))
+                    : t < .15f ? Mathf.Lerp(1.50f, 1.30f, (t - .06f) / .09f)
+                    : Mathf.Lerp(1.30f, .76f, (t - .15f) / .05f);
+                lift = 0;
+                rotation = 28 * Mathf.Cos(u * Mathf.PI * 3) * Mathf.Pow(1 - u, 1.2f);
             }
             else if (t < Rebound)
             {
                 float u = Ease((t - Drop) / (Rebound - Drop));
-                size = Mathf.Lerp(.96f, 1.025f, u);
-                lift = Mathf.Lerp(-4, 3, u); rotation = Mathf.Lerp(.65f, -.35f, u);
+                size = Mathf.Lerp(.76f, 1.08f, u);
+                lift = Mathf.Lerp(0, 7, u); rotation = Mathf.Lerp(0, -2, u);
             }
             else
             {
                 float u = Ease((t - Rebound) / (Settle - Rebound));
-                size = Mathf.Lerp(1.025f, 1, u);
-                lift = Mathf.Lerp(3, 0, u); rotation = Mathf.Lerp(-.35f, 0, u);
+                size = Mathf.Lerp(1.08f, 1, u);
+                lift = Mathf.Lerp(7, 0, u); rotation = Mathf.Lerp(-2, 0, u);
             }
             star.localScale = Vector3.one * size;
             star.anchoredPosition = starRest + new Vector2(0, lift);
             star.localRotation = Quaternion.Euler(0, 0, rotation);
-            if (starGroup) starGroup.alpha = Ease(t / .18f);
+            if (starGroup) starGroup.alpha = 1;
         }
 
         void PoseCushion()
         {
             if (!cushion) return;
             float x = 1, y = 1;
-            if (t >= Drop && t < Drop + .09f)
+            if (t >= Drop && t < Drop + .04f)
             {
-                float u = Ease((t - Drop) / .09f); x = Mathf.Lerp(1, 1.025f, u); y = Mathf.Lerp(1, .93f, u);
+                float u = Ease((t - Drop) / .04f); x = Mathf.Lerp(1, 1.055f, u); y = Mathf.Lerp(1, .88f, u);
             }
-            else if (t >= Drop + .09f && t < Drop + .24f)
+            else if (t >= Drop + .04f && t < Drop + .16f)
             {
-                float u = Ease((t - Drop - .09f) / .15f); x = Mathf.Lerp(1.025f, .998f, u); y = Mathf.Lerp(.93f, 1.012f, u);
+                float u = Ease((t - Drop - .04f) / .12f); x = Mathf.Lerp(1.055f, .96f, u); y = Mathf.Lerp(.88f, 1.30f, u);
             }
-            else if (t >= Drop + .24f && t < Settle)
+            else if (t >= Drop + .16f && t < Drop + .40f)
             {
-                float u = Ease((t - Drop - .24f) / (Settle - Drop - .24f)); x = Mathf.Lerp(.998f, 1, u); y = Mathf.Lerp(1.012f, 1, u);
+                float u = Ease((t - Drop - .16f) / .24f); x = Mathf.Lerp(.96f, 1.035f, u); y = Mathf.Lerp(1.30f, .965f, u);
+            }
+            else if (t >= Drop + .40f && t < CushionSettle)
+            {
+                float u = Ease((t - Drop - .40f) / (CushionSettle - Drop - .40f)); x = Mathf.Lerp(1.035f, 1, u); y = Mathf.Lerp(.965f, 1, u);
             }
             cushion.localScale = new Vector3(x, y, 1);
         }
@@ -312,20 +317,20 @@ namespace RoyalThrone.Presentation
                 starShadow.localScale = new Vector3(width, height, 1);
             }
             if (contactShadow)
-                contactShadow.color = Fade(contactShadow.color, .25f * Ease((t - .28f) / (Drop - .28f)));
+                contactShadow.color = Fade(contactShadow.color, .25f * Ease((t - .12f) / (Drop - .12f)));
         }
 
         void PoseLight()
         {
-            float rise = Ease((t - Drop) / .46f);
+            float rise = Ease((t - Drop) / .34f);
             float breath = Mathf.Sin((t - Drop) * 1.30f);
-            if (glow) glow.color = Fade(glow.color, rise * (.37f + .035f * breath));
-            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, rise * (.12f + .018f * breath));
+            float impact = t < Drop ? Mathf.Clamp01((t - Drop + .025f) / .025f) : 1 - Mathf.Clamp01((t - Drop) / .30f);
+            if (glow) glow.color = Fade(glow.color, rise * (.28f + .03f * breath));
+            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, rise * (.12f + .018f * breath) + .26f * impact * impact);
             if (flash)
             {
-                float f = t < Drop ? Mathf.Clamp01((t - Drop + .09f) / .09f) : 1 - Mathf.Clamp01((t - Drop) / .30f);
-                flash.color = Fade(flash.color, .24f * f * f);
-                flash.rectTransform.localScale = Vector3.one * Mathf.Lerp(.88f, 1.04f, Mathf.Clamp01((t - Drop + .09f) / .39f));
+                flash.color = Fade(flash.color, .52f * impact * impact);
+                flash.rectTransform.localScale = Vector3.one * Mathf.Lerp(.70f, 1.08f, Mathf.Clamp01((t - Drop + .025f) / .325f));
             }
             if (raysGroup) raysGroup.alpha = .38f * rise;
             if (rays) rays.localRotation = Quaternion.Euler(0, 0, Mathf.Max(0, t - Drop) * 1.5f);
@@ -375,7 +380,7 @@ namespace RoyalThrone.Presentation
                 var image = go.GetComponent<RawImage>();
                 image.texture = texture; image.raycastTarget = false; image.enabled = false; sparkle[i] = image;
                 if (lightMaterial) image.material = lightMaterial;
-                sparkleStart[i] = i < BurstCount ? Drop + .36f * Hash(i * 3 + 1) : float.PositiveInfinity;
+                sparkleStart[i] = i < BurstCount ? Drop + .18f * Hash(i * 3 + 1) : float.PositiveInfinity;
                 sparkleLife[i] = .70f + .30f * Hash(i * 3 + 2);
                 sparkleAngle[i] = i * 2.399963f;
                 sparkleRadius[i] = Mathf.Min(235, starSize * (.43f + .13f * Hash(i * 7 + 5)));
