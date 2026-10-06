@@ -14,16 +14,16 @@ namespace RoyalThrone.Presentation
         public RectTransform star, cushion, starShadow;
         public RoyalTextStyle title;
         public RoyalCardShape glow, flash, pillowGlow, contactShadow;
-        public RectTransform sparkles, rays, rewardBadge, coinOrigin;
-        public Text rewardAmount;
+        public RectTransform sparkles, haloSparkles, rays, rewardBadge, coinOrigin;
+        public Text rewardAmount, levelNumber;
         public Vector2 starRest;
 
-        const float Drop = .28f, Rebound = .42f, Settle = .60f;
-        const float WriteStart = .32f, PerLetter = .042f, FallbackTitle = 1.6f;
-        const float RewardStart = .69f, RewardCountTime = .55f, RewardReady = .72f;
-        const int BurstCount = 24, IdleCount = 14, RewardCountSteps = 64;
+        const float RevealHold = .10f, Drop = .48f, Rebound = .68f, Settle = .90f;
+        const float WriteStart = .56f, PerLetter = .047f, FallbackTitle = 1.6f;
+        const float RewardStart = 1.03f, RewardCountTime = .62f, RewardReady = 1.10f;
+        const int BurstCount = 24, IdleCount = 14, HaloCount = 12, RewardCountSteps = 64;
 
-        float t, open, nextTwinkle;
+        float t, open, nextTwinkle, sparkleCeiling;
         bool started, reduced, initialized;
         int twinkleSlot, rewardCoins = -1, shownRewardStep = -1;
         Text titleText;
@@ -31,6 +31,8 @@ namespace RoyalThrone.Presentation
         CanvasGroup starGroup, shadowGroup, titleGroup, raysGroup, badgeGroup;
         Vector2 badgeRest;
         RawImage[] sparkle;
+        RawImage[] haloSparkle;
+        float[] haloPhase, haloSpeed, haloRadius, haloAspect, haloSize;
         float[] sparkleStart, sparkleLife, sparkleAngle, sparkleRadius, sparkleSize, sparkleSpin;
         Vector2[] sparklePosition, sparkleEnd;
         bool[] sparkleHero;
@@ -49,6 +51,15 @@ namespace RoyalThrone.Presentation
             {
                 int count = 0;
                 if (sparkle != null) foreach (var image in sparkle) if (image && image.enabled) count++;
+                return count;
+            }
+        }
+        public int ActiveHaloSparkles
+        {
+            get
+            {
+                int count = 0;
+                if (haloSparkle != null) foreach (var image in haloSparkle) if (image && image.enabled && image.color.a > .01f) count++;
                 return count;
             }
         }
@@ -77,8 +88,9 @@ namespace RoyalThrone.Presentation
         void OnEnable()
         {
             reduced = RoyalThrone.Testing.RoyalSave.GetInt("RoyalThrone.HomeMotion", 1) == 0;
-            started = false; t = 0; open = 0; nextTwinkle = .91f; twinkleSlot = 0;
+            started = false; t = 0; open = 0; nextTwinkle = 1.16f; twinkleSlot = 0;
             var level = JellyGarden.Scripts.LevelManager.THIS;
+            RefreshLevelNumber();
             SetReward(level ? JellyGarden.Scripts.Juice.RoyalWinSequence.Coins(level) : 0);
             ResetVisuals();
             // AddComponent can call OnEnable before the card builder assigns our references.
@@ -100,6 +112,7 @@ namespace RoyalThrone.Presentation
         {
             if (initialized) return true;
             if (!sparkles) return false;
+            RefreshLevelNumber();
             starGroup = Group(star);
             shadowGroup = Group(starShadow);
             titleGroup = Group(title ? title.transform : null);
@@ -107,6 +120,12 @@ namespace RoyalThrone.Presentation
             badgeGroup = Group(rewardBadge);
             if (rewardBadge) badgeRest = rewardBadge.anchoredPosition;
             if (title) titleText = title.GetComponent<Text>();
+            sparkleCeiling = ((RectTransform)transform).rect.yMax - 190;
+            if (titleText)
+            {
+                var textRect = titleText.rectTransform;
+                sparkleCeiling = transform.InverseTransformPoint(textRect.TransformPoint(new Vector3(0, textRect.rect.yMin, 0))).y - 8;
+            }
             // Light adds warmth over the navy rather than mixing a dull opaque veil into it.
             // This card owns one shared UI material; its pillow, star and shadows retain normal blending.
             var lightShader = Resources.Load<Shader>("RoyalGameplay/UIAdditive");
@@ -120,6 +139,7 @@ namespace RoyalThrone.Presentation
                 if (rayGraphic) rayGraphic.material = lightMaterial;
             }
             BuildSparkles();
+            BuildHaloSparkles();
             initialized = true;
             ResetVisuals();
             return true;
@@ -132,6 +152,12 @@ namespace RoyalThrone.Presentation
             if (!group) group = target.gameObject.AddComponent<CanvasGroup>();
             group.blocksRaycasts = false; group.interactable = false;
             return group;
+        }
+
+        void RefreshLevelNumber()
+        {
+            var level = JellyGarden.Scripts.LevelManager.THIS;
+            if (levelNumber && level) levelNumber.text = level.currentLevel.ToString();
         }
 
         void ResetVisuals()
@@ -166,6 +192,8 @@ namespace RoyalThrone.Presentation
                     // reuse the previous opening's schedule or appear on the next first frame.
                     if (i >= BurstCount) sparkleStart[i] = float.PositiveInfinity;
                 }
+            if (haloSparkle != null)
+                foreach (var image in haloSparkle) if (image) image.enabled = false;
         }
 
         void Update()
@@ -191,6 +219,7 @@ namespace RoyalThrone.Presentation
             PoseCushion();
             PoseShadow();
             PoseLight();
+            PoseHalo();
             Write(t - WriteStart);
             Burst();
             Twinkle();
@@ -206,8 +235,8 @@ namespace RoyalThrone.Presentation
             if (shadowGroup) shadowGroup.alpha = .28f * a;
             if (starShadow) starShadow.localScale = Vector3.one;
             if (contactShadow) contactShadow.color = Fade(contactShadow.color, .25f * a);
-            if (glow) glow.color = Fade(glow.color, .53f * a);
-            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, .17f * a);
+            if (glow) glow.color = Fade(glow.color, .37f * a);
+            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, .12f * a);
             if (flash) flash.color = Fade(flash.color, 0);
             if (raysGroup) raysGroup.alpha = 0;
             if (title) title.Write(float.PositiveInfinity);
@@ -223,44 +252,47 @@ namespace RoyalThrone.Presentation
             float size, lift, rotation;
             if (t < Drop)
             {
-                float u = Mathf.Clamp01(t / Drop);
-                size = Mathf.Lerp(1.70f, .90f, u * u);
-                lift = Mathf.Lerp(70, -6, u * u);
-                rotation = Mathf.Lerp(-15, 2, u);
+                // A moment of suspension lets the larger star read before its gentle descent.
+                float u = Mathf.Clamp01((t - RevealHold) / (Drop - RevealHold));
+                float descent = u * u * (3 - 2 * u);
+                size = Mathf.Lerp(1.12f, .96f, descent);
+                float revealLift = Mathf.Clamp(sparkleCeiling - starRest.y - star.sizeDelta.y * .44f * 1.12f, 0, 20);
+                lift = Mathf.Lerp(revealLift, -4, descent);
+                rotation = Mathf.Lerp(-4, .65f, descent);
             }
             else if (t < Rebound)
             {
                 float u = Ease((t - Drop) / (Rebound - Drop));
-                size = Mathf.Lerp(.90f, 1.055f, u);
-                lift = Mathf.Lerp(-6, 4, u); rotation = Mathf.Lerp(2, -1, u);
+                size = Mathf.Lerp(.96f, 1.025f, u);
+                lift = Mathf.Lerp(-4, 3, u); rotation = Mathf.Lerp(.65f, -.35f, u);
             }
             else
             {
                 float u = Ease((t - Rebound) / (Settle - Rebound));
-                size = Mathf.Lerp(1.055f, 1, u);
-                lift = Mathf.Lerp(4, 0, u); rotation = Mathf.Lerp(-1, 0, u);
+                size = Mathf.Lerp(1.025f, 1, u);
+                lift = Mathf.Lerp(3, 0, u); rotation = Mathf.Lerp(-.35f, 0, u);
             }
             star.localScale = Vector3.one * size;
             star.anchoredPosition = starRest + new Vector2(0, lift);
             star.localRotation = Quaternion.Euler(0, 0, rotation);
-            if (starGroup) starGroup.alpha = Mathf.Clamp01(t / .065f);
+            if (starGroup) starGroup.alpha = Ease(t / .18f);
         }
 
         void PoseCushion()
         {
             if (!cushion) return;
             float x = 1, y = 1;
-            if (t >= Drop && t < Drop + .07f)
+            if (t >= Drop && t < Drop + .09f)
             {
-                float u = Ease((t - Drop) / .07f); x = Mathf.Lerp(1, 1.055f, u); y = Mathf.Lerp(1, .84f, u);
+                float u = Ease((t - Drop) / .09f); x = Mathf.Lerp(1, 1.025f, u); y = Mathf.Lerp(1, .93f, u);
             }
-            else if (t >= Drop + .07f && t < Drop + .22f)
+            else if (t >= Drop + .09f && t < Drop + .24f)
             {
-                float u = Ease((t - Drop - .07f) / .15f); x = Mathf.Lerp(1.055f, .993f, u); y = Mathf.Lerp(.84f, 1.028f, u);
+                float u = Ease((t - Drop - .09f) / .15f); x = Mathf.Lerp(1.025f, .998f, u); y = Mathf.Lerp(.93f, 1.012f, u);
             }
-            else if (t >= Drop + .22f && t < Drop + .42f)
+            else if (t >= Drop + .24f && t < Settle)
             {
-                float u = Ease((t - Drop - .22f) / .20f); x = Mathf.Lerp(.993f, 1, u); y = Mathf.Lerp(1.028f, 1, u);
+                float u = Ease((t - Drop - .24f) / (Settle - Drop - .24f)); x = Mathf.Lerp(.998f, 1, u); y = Mathf.Lerp(1.012f, 1, u);
             }
             cushion.localScale = new Vector3(x, y, 1);
         }
@@ -275,28 +307,28 @@ namespace RoyalThrone.Presentation
                 shadowGroup.alpha = t < Drop ? Mathf.Lerp(.07f, .32f, approach) * Mathf.Clamp01(t / .09f) : Mathf.Lerp(.32f, .28f, settle);
             if (starShadow)
             {
-                float width = t < Drop ? Mathf.Lerp(1.27f, 1.055f, approach) : Mathf.Lerp(1.055f, 1, settle);
-                float height = t < Drop ? Mathf.Lerp(1.20f, .89f, approach) : Mathf.Lerp(.89f, 1, settle);
+                float width = t < Drop ? Mathf.Lerp(1.15f, 1.035f, approach) : Mathf.Lerp(1.035f, 1, settle);
+                float height = t < Drop ? Mathf.Lerp(1.10f, .96f, approach) : Mathf.Lerp(.96f, 1, settle);
                 starShadow.localScale = new Vector3(width, height, 1);
             }
             if (contactShadow)
-                contactShadow.color = Fade(contactShadow.color, .25f * Ease((t - .10f) / (Drop - .10f)));
+                contactShadow.color = Fade(contactShadow.color, .25f * Ease((t - .28f) / (Drop - .28f)));
         }
 
         void PoseLight()
         {
-            float rise = Ease((t - Drop) / .30f);
-            float breath = Mathf.Sin((t - Drop) * 2.15f);
-            if (glow) glow.color = Fade(glow.color, rise * (.53f + .055f * breath));
-            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, rise * (.17f + .025f * breath));
+            float rise = Ease((t - Drop) / .46f);
+            float breath = Mathf.Sin((t - Drop) * 1.30f);
+            if (glow) glow.color = Fade(glow.color, rise * (.37f + .035f * breath));
+            if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, rise * (.12f + .018f * breath));
             if (flash)
             {
-                float f = t < Drop ? Mathf.Clamp01((t - Drop + .065f) / .065f) : 1 - Mathf.Clamp01((t - Drop) / .23f);
-                flash.color = Fade(flash.color, .38f * f * f);
-                flash.rectTransform.localScale = Vector3.one * Mathf.Lerp(.78f, 1.06f, Mathf.Clamp01((t - Drop + .065f) / .30f));
+                float f = t < Drop ? Mathf.Clamp01((t - Drop + .09f) / .09f) : 1 - Mathf.Clamp01((t - Drop) / .30f);
+                flash.color = Fade(flash.color, .24f * f * f);
+                flash.rectTransform.localScale = Vector3.one * Mathf.Lerp(.88f, 1.04f, Mathf.Clamp01((t - Drop + .09f) / .39f));
             }
-            if (raysGroup) raysGroup.alpha = .27f * rise;
-            if (rays) rays.localRotation = Quaternion.Euler(0, 0, Mathf.Max(0, t - Drop) * 4);
+            if (raysGroup) raysGroup.alpha = .38f * rise;
+            if (rays) rays.localRotation = Quaternion.Euler(0, 0, Mathf.Max(0, t - Drop) * 1.5f);
         }
 
         void Write(float since)
@@ -311,7 +343,7 @@ namespace RoyalThrone.Presentation
 
         void PoseReward()
         {
-            float reveal = Ease((t - RewardStart) / .26f);
+            float reveal = Ease((t - RewardStart) / .32f);
             if (badgeGroup) badgeGroup.alpha = reveal;
             if (rewardBadge) rewardBadge.anchoredPosition = badgeRest + new Vector2(0, -12 * (1 - reveal));
             ShowRewardCount(RewardProgress());
@@ -335,6 +367,7 @@ namespace RoyalThrone.Presentation
             sparkleRadius = new float[count]; sparkleSize = new float[count]; sparkleSpin = new float[count];
             sparklePosition = new Vector2[count]; sparkleEnd = new Vector2[count]; sparkleHero = new bool[count];
             var texture = JellyGarden.Scripts.Juice.SparkleTextureFactory.FourPointSparkle;
+            float starSize = star ? star.sizeDelta.x : 414;
             for (int i = 0; i < count; i++)
             {
                 var go = new GameObject("Sparkle " + i, typeof(RectTransform), typeof(RawImage));
@@ -342,12 +375,58 @@ namespace RoyalThrone.Presentation
                 var image = go.GetComponent<RawImage>();
                 image.texture = texture; image.raycastTarget = false; image.enabled = false; sparkle[i] = image;
                 if (lightMaterial) image.material = lightMaterial;
-                sparkleStart[i] = i < BurstCount ? Drop + .28f * Hash(i * 3 + 1) : float.PositiveInfinity;
-                sparkleLife[i] = .55f + .25f * Hash(i * 3 + 2);
+                sparkleStart[i] = i < BurstCount ? Drop + .36f * Hash(i * 3 + 1) : float.PositiveInfinity;
+                sparkleLife[i] = .70f + .30f * Hash(i * 3 + 2);
                 sparkleAngle[i] = i * 2.399963f;
-                sparkleRadius[i] = 128 + 60 * Hash(i * 7 + 5);
-                sparkleSize[i] = (i % 4 == 0 ? 31 : 18) + 15 * Hash(i * 5 + 7);
-                sparkleSpin[i] = .65f + .55f * Hash(i * 11 + 3);
+                sparkleRadius[i] = Mathf.Min(235, starSize * (.43f + .13f * Hash(i * 7 + 5)));
+                sparkleSize[i] = (i % 4 == 0 ? 35 : 20) + 15 * Hash(i * 5 + 7);
+                sparkleSpin[i] = .22f + .24f * Hash(i * 11 + 3);
+            }
+        }
+
+        void BuildHaloSparkles()
+        {
+            if (!haloSparkles || (haloSparkle != null && haloSparkle.Length > 0 && haloSparkle[0])) return;
+            haloSparkle = new RawImage[HaloCount];
+            haloPhase = new float[HaloCount]; haloSpeed = new float[HaloCount]; haloRadius = new float[HaloCount];
+            haloAspect = new float[HaloCount]; haloSize = new float[HaloCount];
+            var texture = JellyGarden.Scripts.Juice.SparkleTextureFactory.FourPointSparkle;
+            float starSize = star ? star.sizeDelta.x : 414;
+            float outerRadius = Mathf.Min(235, starSize * .57f), innerRadius = Mathf.Min(outerRadius - 8, starSize * .48f);
+            for (int i = 0; i < HaloCount; i++)
+            {
+                var go = new GameObject("Halo sparkle " + i, typeof(RectTransform), typeof(RawImage));
+                go.transform.SetParent(haloSparkles, false);
+                var image = go.GetComponent<RawImage>();
+                image.texture = texture; image.raycastTarget = false; image.enabled = false;
+                if (lightMaterial) image.material = lightMaterial;
+                haloSparkle[i] = image;
+                haloPhase[i] = i * Mathf.PI * 2 / HaloCount;
+                haloSpeed[i] = .18f + .04f * Hash(i * 11 + 7);
+                haloRadius[i] = Mathf.Lerp(innerRadius, outerRadius, Hash(i * 13 + 8));
+                haloAspect[i] = .82f + .08f * Hash(i * 7 + 2);
+                haloSize[i] = i % 4 == 0 ? 38 : 15 + 16 * Hash(i * 5 + 9);
+            }
+        }
+
+        void PoseHalo()
+        {
+            if (haloSparkle == null) return;
+            float age = Mathf.Max(0, t - Drop), rise = Ease((age - .04f) / .60f);
+            for (int i = 0; i < haloSparkle.Length; i++)
+            {
+                var image = haloSparkle[i];
+                image.enabled = rise > .001f;
+                if (!image.enabled) continue;
+                float angle = haloPhase[i] + age * haloSpeed[i];
+                float pulse = .5f + .5f * Mathf.Sin(age * 1.9f + i * 1.7f);
+                float alpha = rise * (.08f + .82f * pulse * pulse * pulse);
+                // The orbit sits below the heading and physically behind both the star and
+                // cushion. Its hidden lower arc gives the visible rim glints a sense of depth.
+                float height = Mathf.Min(haloRadius[i] * haloAspect[i], Mathf.Max(30, sparkleCeiling - starRest.y + 12 - haloSize[i] * .85f));
+                var position = starRest + new Vector2(Mathf.Cos(angle) * haloRadius[i], Mathf.Sin(angle) * height - 12);
+                var color = i % 4 == 0 ? new Color(1, .96f, .77f, alpha) : new Color(1, .86f, .48f, alpha);
+                Place(image, position, haloSize[i] * (.65f + .50f * pulse), angle * Mathf.Rad2Deg * .15f, color);
             }
         }
 
@@ -360,8 +439,9 @@ namespace RoyalThrone.Presentation
                 if (u < 0 || u > 1) { image.enabled = false; continue; }
                 image.enabled = true;
                 float angle = sparkleAngle[i] + sparkleSpin[i] * u;
-                float radius = sparkleRadius[i] * (.80f + .32f * Ease(u));
-                var position = starRest + new Vector2(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius * .79f - 12 + 15 * u);
+                float radius = sparkleRadius[i] * (.86f + .14f * Ease(u));
+                float height = Mathf.Min(radius * .84f, Mathf.Max(30, sparkleCeiling - starRest.y - sparkleSize[i] * .85f));
+                var position = starRest + new Vector2(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * height - 8 + 8 * u);
                 float alpha = Mathf.Sin(Mathf.PI * u);
                 Place(image, position, sparkleSize[i] * (.65f + .50f * alpha), angle * 20, new Color(1, .96f, .78f, alpha));
             }
@@ -390,7 +470,7 @@ namespace RoyalThrone.Presentation
             sparkleHero[slot] = hero;
             sparkleStart[slot] = t;
             sparkleLife[slot] = hero ? .78f : .62f;
-            sparkleSize[slot] = hero ? (phase == 0 || phase == 14 ? 48 : 40) : 24 + 6 * Hash(index * 13 + 1);
+            sparkleSize[slot] = hero ? (phase == 0 || phase == 14 ? 56 : 46) : 24 + 6 * Hash(index * 13 + 1);
             if (hero)
             {
                 sparklePosition[slot] = StarTip(phase == 14 ? 0 : phase);

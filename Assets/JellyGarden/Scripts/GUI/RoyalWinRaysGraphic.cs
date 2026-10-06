@@ -20,7 +20,7 @@ namespace RoyalThrone.Presentation
                 {
                     float u = ring / (float)rings;
                     float distance = radius * u;
-                    Color shade = new Color(1, .88f, .52f, .18f * Mathf.Sin(Mathf.PI * u) * (1 - u)) * color;
+                    Color shade = new Color(1, .88f, .52f, .32f * Mathf.Sin(Mathf.PI * u) * (1 - u)) * color;
                     for (int side = 0; side < 2; side++)
                     {
                         float a = angle + (side == 0 ? -.095f : .095f);
