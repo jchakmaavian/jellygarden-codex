@@ -19,7 +19,7 @@ namespace RoyalThrone.Presentation
         public Vector2 starRest;
 
         const float Drop = .20f, Rebound = .34f, Settle = .64f, CushionSettle = .98f;
-        const float WriteStart = .18f, PerLetter = .04f, LetterPop = .40f, FallbackTitle = 1.6f;
+        const float WriteStart = .18f, PerLetter = .045f, LetterPop = .48f, FallbackTitle = 1.6f;
         const float RewardStart = .70f, RewardCountTime = .35f, RewardReady = .98f;
         const int BurstCount = 24, IdleCount = 14, HaloCount = 12, RewardCountSteps = 64;
 
@@ -122,7 +122,7 @@ namespace RoyalThrone.Presentation
             if (title)
             {
                 titleText = title.GetComponent<Text>();
-                title.rewardWave = true; title.revealSpan = LetterPop / PerLetter;
+                title.rewardWave = true; title.rewardDepth = true; title.revealSpan = LetterPop / PerLetter;
             }
             sparkleCeiling = ((RectTransform)transform).rect.yMax - 190;
             if (titleText)

@@ -334,7 +334,7 @@ namespace RoyalThrone.Presentation
         // "Well Done!" sits above a 1.5x reward star, which settles onto velvet (RoyalWinCard), then Continue. No score:
         // a win earns one star, and the star is the result (the user's choice). The close continues exactly as Continue does
         // (it presses Next), so closing never loses the win. Rows from the card's top edge; the card ends 52 below Continue.
-        public const float WinTitleRow = 166, WinTitleSize = 54, WinStarSize = 276 * 1.5f, WinCushionTop = 420, WinCushionWidth = 500;
+        public const float WinTitleRow = 190, WinTitleSize = 62, WinStarSize = 276 * 1.5f, WinCushionTop = 420, WinCushionWidth = 500;
         public const float WinRewardRow = 728, WinActionRow = 838, WinActionWidth = 435, WinActionHeight = 120;
         // Approved preview's velvet pillow, 768 x 512. Its centre dent is 36% down the image; the lower star points sit in it.
         const float CushionAspect = 512f / 768f, CushionRest = .36f, CushionSeat = .25f;

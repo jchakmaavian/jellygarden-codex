@@ -26,6 +26,9 @@ namespace RoyalThrone.Presentation
         // Win-title opt-in: each glyph grows upward from its baseline while later letters start their own wave.
         // Span is the number of stagger steps occupied by one complete grow/undershoot/settle envelope.
         public bool rewardWave;
+        // The win heading alone uses projected gold depth, directional bevels and a travelling 3D pop.
+        public bool rewardDepth;
+        public const int RewardDepthVerticesPerGlyph = 678;
         [Min(1)] public float revealSpan = 1;
         public void Write(float letters) { if (written == letters) return; written = letters; if (graphic) graphic.SetVerticesDirty(); }
         // A band of light crossing the letters (the reward card's title): its centre across the text, 0 at the left edge and 1
@@ -63,6 +66,12 @@ namespace RoyalThrone.Presentation
             vh.GetUIVertexStream(source);
             if (source.Count == 0) return;
             if (spacing != 0) Track();
+            if (rewardDepth)
+            {
+                RewardMesh();
+                vh.Clear(); vh.AddUIVertexTriangleStream(result);
+                return;
+            }
             float yMin = float.MaxValue, yMax = float.MinValue, xMin = float.MaxValue, xMax = float.MinValue;
             foreach (var v in source) { yMin = Mathf.Min(yMin, v.position.y); yMax = Mathf.Max(yMax, v.position.y); xMin = Mathf.Min(xMin, v.position.x); xMax = Mathf.Max(xMax, v.position.x); }
             if (!float.IsPositiveInfinity(written)) Reveal();
@@ -91,6 +100,86 @@ namespace RoyalThrone.Presentation
             }
             vh.Clear();
             vh.AddUIVertexTriangleStream(result);
+        }
+
+        // UI-friendly extrusion: eight solid silhouette slices behind each bevelled face, projected together.
+        // All layers use the font atlas and one UI material; other labels keep their original mesh path.
+        void RewardMesh()
+        {
+            int quads = source.Count / 6, character = 0;
+            string text = graphic is Text label ? label.text : "";
+            for (int q = 0; q < quads; q++)
+            {
+                while (character < text.Length && char.IsWhiteSpace(text[character])) character++;
+                int logical = character++;
+                float p = float.IsPositiveInfinity(written) ? 1 : Mathf.Clamp01((written - logical) / Mathf.Max(1, revealSpan));
+                float alpha = float.IsPositiveInfinity(written) ? 1 : Mathf.Clamp01((written - logical) * 5);
+                float scale, pitch, yaw;
+                if (p < .25f)
+                {
+                    float u = p / .25f, e = 1 - (1 - u) * (1 - u);
+                    scale = Mathf.Lerp(.96f, 1.62f, e); pitch = Mathf.Lerp(-24, 7, e); yaw = Mathf.Lerp(17, -5, e);
+                }
+                else if (p < .72f)
+                {
+                    float u = (p - .25f) / .47f, e = u * u;
+                    scale = Mathf.Lerp(1.62f, .92f, e); pitch = Mathf.Lerp(7, -3, e); yaw = Mathf.Lerp(-5, 2, e);
+                }
+                else
+                {
+                    float u = (p - .72f) / .28f, e = u * u * (3 - 2 * u);
+                    scale = Mathf.Lerp(.92f, 1, e); pitch = Mathf.Lerp(-3, 0, e); yaw = Mathf.Lerp(2, 0, e);
+                }
+                float fan = Mathf.Lerp(-5, 5, q / Mathf.Max(1f, quads - 1));
+                float direction = q < quads / 2 ? -1 : 1;
+                var rotation = Quaternion.Euler(pitch, yaw * direction, fan + direction * 3 * Mathf.Sin(p * Mathf.PI));
+                int first = q * 6;
+                float lo = float.MaxValue, hi = float.MinValue, left = float.MaxValue, right = float.MinValue;
+                for (int k = 0; k < 6; k++) { var v = source[first + k].position; lo = Mathf.Min(lo, v.y); hi = Mathf.Max(hi, v.y); left = Mathf.Min(left, v.x); right = Mathf.Max(right, v.x); }
+                var pivot = new Vector3((left + right) * .5f, lo);
+                // Cast shadow, far bronze sidewall, bright top edge, warm inner bevel, navy keyline, ivory face bevel.
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, -9, new Vector2(0, -2), 5.4f,
+                    new Color(.015f, .035f, .085f, .58f), new Color(.015f, .035f, .085f, .58f));
+                for (int layer = 8; layer >= 1; layer--)
+                {
+                    float depth = layer / 8f;
+                    Color sideTop = Color.Lerp(new Color(.87f, .49f, .08f), new Color(.44f, .20f, .025f), depth);
+                    Color sideBottom = Color.Lerp(new Color(.64f, .28f, .015f), new Color(.23f, .075f, .01f), depth);
+                    RewardRing(first, pivot, rotation, scale, alpha, lo, hi, -7.5f * depth, Vector2.zero, 5.1f, sideTop, sideBottom);
+                    RewardCopy(first, pivot, rotation, scale, alpha, lo, hi, -7.5f * depth, Vector2.zero, sideTop, sideBottom);
+                }
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, 0, Vector2.zero, 5.1f, new Color(1, .97f, .69f), new Color(.82f, .40f, .035f));
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .35f, Vector2.zero, 3.9f, new Color(1, .79f, .26f), new Color(1, .68f, .14f));
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .65f, Vector2.zero, 2.15f, new Color(.018f, .19f, .25f), new Color(.012f, .075f, .15f));
+                RewardRing(first, pivot, rotation, scale, alpha, lo, hi, .9f, Vector2.zero, .65f, new Color(1, 1, .94f), new Color(.88f, .64f, .24f));
+                RewardCopy(first, pivot, rotation, scale, alpha, lo, hi, 1.1f, Vector2.zero, new Color(1, 1, .94f), new Color(1, .85f, .45f));
+            }
+        }
+
+        void RewardRing(int first, Vector3 pivot, Quaternion rotation, float scale, float alpha, float lo, float hi,
+            float z, Vector2 offset, float radius, Color light, Color dark)
+        {
+            foreach (var d in directions)
+            {
+                Color tint = Color.Lerp(dark, light, Mathf.Clamp01(.5f + d.y * .4f - d.x * .18f));
+                RewardCopy(first, pivot, rotation, scale, alpha, lo, hi, z, offset + d * radius, tint, tint);
+            }
+        }
+
+        void RewardCopy(int first, Vector3 pivot, Quaternion rotation, float scale, float alpha, float lo, float hi,
+            float z, Vector2 offset, Color light, Color dark)
+        {
+            for (int k = 0; k < 6; k++)
+            {
+                var v = source[first + k];
+                float gradient = hi > lo ? Mathf.Clamp01((v.position.y - lo) / (hi - lo)) : 1;
+                var point = v.position - pivot + new Vector3(offset.x - z * .32f, offset.y + z * .85f, z);
+                point = rotation * (point * scale);
+                float perspective = 640 / (640 - point.z);
+                v.position = pivot + new Vector3(point.x * perspective, point.y * perspective, 0);
+                Color color = Color.Lerp(dark, light, gradient); color.a *= alpha * ((Color)v.color).a;
+                v.color = color; result.Add(v);
+            }
         }
 
         // Letter spacing: each glyph quad (six vertices) moves right by `spacing` per glyph before it on its line; a line
