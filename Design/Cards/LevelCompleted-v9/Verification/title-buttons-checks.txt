@@ -1,0 +1,103 @@
+Started 2026-10-06T09:17:21.2900514Z; v9 approved bitmap animation presentation QA; no win/economy commit.
+PASS 1080x1920 required Game view preset exists
+PASS 1080x1920 approved bitmap replaces font heading
+PASS 1080x1920 full resolution uncompressed artwork
+PASS 1080x1920 sampled full animation: 68 frames
+PASS 1080x1920 untinted original UV image restored exactly at rest
+PASS 1080x1920 title remains on screen and clears opaque crown; gap=5.3967
+PASS 1080x1920 letter 0 ordered grow/undershoot peak=1.1592 trough=0.9654 time=0.2759
+PASS 1080x1920 letter 1 ordered grow/undershoot peak=1.1581 trough=0.9653 time=0.3136
+PASS 1080x1920 letter 2 ordered grow/undershoot peak=1.1583 trough=0.9652 time=0.3707
+PASS 1080x1920 letter 3 ordered grow/undershoot peak=1.1588 trough=0.9652 time=0.4087
+PASS 1080x1920 letter 4 ordered grow/undershoot peak=1.1593 trough=0.9651 time=0.4866
+PASS 1080x1920 letter 5 ordered grow/undershoot peak=1.1595 trough=0.9651 time=0.5255
+PASS 1080x1920 letter 6 ordered grow/undershoot peak=1.1598 trough=0.9667 time=0.5640
+PASS 1080x1920 letter 7 ordered grow/undershoot peak=1.1598 trough=0.9658 time=0.6040
+PASS 1080x1920 letter 8 ordered grow/undershoot peak=1.1997 trough=0.9657 time=0.6435
+PASS 1080x1920 presentation leaves economy unchanged
+PASS 1080x1920 uses the requested dimensions
+PASS 1080x1920 reopening reuses the title and effect hierarchy without accumulating children
+PASS 720x1280 required Game view preset exists
+PASS 720x1280 approved bitmap replaces font heading
+PASS 720x1280 full resolution uncompressed artwork
+PASS 720x1280 sampled full animation: 67 frames
+PASS 720x1280 untinted original UV image restored exactly at rest
+PASS 720x1280 title remains on screen and clears opaque crown; gap=5.3259
+PASS 720x1280 letter 0 ordered grow/undershoot peak=1.1576 trough=0.9652 time=0.2727
+PASS 720x1280 letter 1 ordered grow/undershoot peak=1.1598 trough=0.9654 time=0.3182
+PASS 720x1280 letter 2 ordered grow/undershoot peak=1.1599 trough=0.9651 time=0.3592
+PASS 720x1280 letter 3 ordered grow/undershoot peak=1.1599 trough=0.9651 time=0.3997
+PASS 720x1280 letter 4 ordered grow/undershoot peak=1.1594 trough=0.9658 time=0.4767
+PASS 720x1280 letter 5 ordered grow/undershoot peak=1.1594 trough=0.9656 time=0.5260
+PASS 720x1280 letter 6 ordered grow/undershoot peak=1.1599 trough=0.9653 time=0.5631
+PASS 720x1280 letter 7 ordered grow/undershoot peak=1.1599 trough=0.9656 time=0.5985
+PASS 720x1280 letter 8 ordered grow/undershoot peak=1.1987 trough=0.9652 time=0.6356
+PASS 720x1280 presentation leaves economy unchanged
+PASS 720x1280 uses the requested dimensions
+PASS 720x1280 reopening reuses the title and effect hierarchy without accumulating children
+PASS 1536x2048 required Game view preset exists
+PASS 1536x2048 approved bitmap replaces font heading
+PASS 1536x2048 full resolution uncompressed artwork
+PASS 1536x2048 sampled full animation: 64 frames
+PASS 1536x2048 untinted original UV image restored exactly at rest
+PASS 1536x2048 title remains on screen and clears opaque crown; gap=5.4242
+PASS 1536x2048 letter 0 ordered grow/undershoot peak=1.1600 trough=0.9651 time=0.2805
+PASS 1536x2048 letter 1 ordered grow/undershoot peak=1.1598 trough=0.9651 time=0.3234
+PASS 1536x2048 letter 2 ordered grow/undershoot peak=1.1577 trough=0.9662 time=0.3726
+PASS 1536x2048 letter 3 ordered grow/undershoot peak=1.1593 trough=0.9656 time=0.3965
+PASS 1536x2048 letter 4 ordered grow/undershoot peak=1.1596 trough=0.9655 time=0.4775
+PASS 1536x2048 letter 5 ordered grow/undershoot peak=1.1597 trough=0.9653 time=0.5235
+PASS 1536x2048 letter 6 ordered grow/undershoot peak=1.1583 trough=0.9653 time=0.5710
+PASS 1536x2048 letter 7 ordered grow/undershoot peak=1.1582 trough=0.9651 time=0.5938
+PASS 1536x2048 letter 8 ordered grow/undershoot peak=1.1979 trough=0.9651 time=0.6342
+PASS 1536x2048 presentation leaves economy unchanged
+PASS 1536x2048 uses the requested dimensions
+PASS 1536x2048 reopening reuses the title and effect hierarchy without accumulating children
+PASS motion-off approved bitmap replaces font heading
+PASS motion-off full resolution uncompressed artwork
+PASS motion-off sampled full animation: 71 frames
+PASS motion-off untinted original UV image restored exactly at rest
+PASS motion-off title remains on screen and clears opaque crown; gap=21.6976
+PASS motion-off letter 0 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 1 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 2 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 3 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 4 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 5 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 6 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 7 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 8 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off presentation leaves economy unchanged
+PASS Motion off reopening reuses the existing hierarchy
+PASS real LevelStart and Continue use the same primary emerald/gold finish
+PASS 62h/180w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 62h primary caption styling matches across builders
+PASS 62h uses the reviewed emerald enamel and sculpted gold colors
+PASS 62h primary caption fits without acquiring the win-title wave
+PASS 82h/240w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 82h primary caption styling matches across builders
+PASS 82h uses the reviewed emerald enamel and sculpted gold colors
+PASS 82h primary caption fits without acquiring the win-title wave
+PASS 116h/360w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 116h primary caption styling matches across builders
+PASS 116h uses the reviewed emerald enamel and sculpted gold colors
+PASS 116h primary caption fits without acquiring the win-title wave
+PASS 120h/435w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 120h primary caption styling matches across builders
+PASS 120h uses the reviewed emerald enamel and sculpted gold colors
+PASS 120h primary caption fits without acquiring the win-title wave
+PASS legacy classic-blue, clean-blue and danger-red colors remain unchanged
+PASS secondary and danger buttons do not acquire the primary enamel layer
+PASS Next remains the actual topmost raycast target
+PASS Next routes exactly once through Continue to Home and selects Level24
+PASS Next does not commit or duplicate any award
+PASS Royal close remains the actual topmost raycast target
+PASS Royal close routes exactly once through Continue to Home and selects Level24
+PASS Royal close does not commit or duplicate any award
+CAPTURE frames-20261006-091731-965 64 actual rendered JPEG frames; wall/title timestamps logged separately. Encoding pass is separate from motion assertions; silent capture.
+PASS normal player save keys remain untouched during presentation QA
+PASS owned QA ended and original Home catalog reference/values restored
+PASS normal save keys and runtime coins/lives/level restored exactly
+PASS no Unity errors or exceptions (0)
+SUMMARY passes=99 fails=0
+DONE

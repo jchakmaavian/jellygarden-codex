@@ -1,0 +1,11 @@
+Tool: built-in image_gen.imagegen
+Input: the user's attached Well Done! artwork
+transparent_background: true
+num_last_images_to_include: 1
+
+Recreate the attached 'Well Done!' artwork as faithfully as possible, treating the attached image as the sole exact visual reference. Output a clean high-resolution transparent PNG game UI title, wide aspect ratio approximately 3:1, entire artwork visible with minimal transparent padding. Exact text: Well Done! Preserve the reference's precise letter shapes, mixed case, relative letter sizes, playful individual slants, tight overlapping gold silhouettes, word spacing, and oversized angled exclamation mark. Large tall chunky W, round lowercase e, tall narrow double l, large rounded D, circular o, rounded n and e. Pale warm ivory/cream faces with very subtle lighting, VERY THICK dark navy inner outlines, broad saturated yellow-gold raised bevel with pale yellow top highlights, and substantial warm brown/orange extrusion projecting downwards. Preserve the overall irregular rising and falling silhouette and reference proportions. This is a faithful recreation, not a redesign: do not substitute a generic font, do not add ornaments, stars, crowns, sparkles, card, button, background or extra text. Remove the black surround: genuine alpha transparency outside the lettering, including open gaps, preserving navy borders and brown depth. Crisp smooth antialiased edges, no black fringe, no detached edge speckles. Match the attached artwork rather than earlier conversation previews.
+
+Output: well-done-reference-recreation.png
+Verified dimensions: 2170 x 725
+Verified format: 32-bit ARGB; top-left alpha = 0
+Status: Generated artwork, not a verified pixel-identical copy of the input. Integrated into Unity on 2026-10-06 as the byte-identical Resources/RoyalGameplay/Win/well-done-art.png. See IMPLEMENTATION.md.

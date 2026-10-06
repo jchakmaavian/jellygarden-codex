@@ -13,6 +13,7 @@ namespace RoyalThrone.Presentation
     {
         public RectTransform star, cushion, starShadow;
         public RoyalTextStyle title;
+        public RoyalWinTitleArt titleArtwork;
         public RoyalCardShape glow, flash, pillowGlow, contactShadow;
         public RectTransform sparkles, haloSparkles, rays, rewardBadge, coinOrigin;
         public Text rewardAmount, levelNumber;
@@ -115,7 +116,7 @@ namespace RoyalThrone.Presentation
             RefreshLevelNumber();
             starGroup = Group(star);
             shadowGroup = Group(starShadow);
-            titleGroup = Group(title ? title.transform : null);
+            titleGroup = Group(titleArtwork ? titleArtwork.transform : title ? title.transform : null);
             raysGroup = Group(rays);
             badgeGroup = Group(rewardBadge);
             if (rewardBadge) badgeRest = rewardBadge.anchoredPosition;
@@ -127,7 +128,7 @@ namespace RoyalThrone.Presentation
             sparkleCeiling = ((RectTransform)transform).rect.yMax - 190;
             if (titleText)
             {
-                var textRect = titleText.rectTransform;
+                var textRect = titleArtwork ? titleArtwork.rectTransform : titleText.rectTransform;
                 sparkleCeiling = transform.InverseTransformPoint(textRect.TransformPoint(new Vector3(0, textRect.rect.yMin, 0))).y - 8;
             }
             // Light adds warmth over the navy rather than mixing a dull opaque veil into it.
@@ -176,7 +177,7 @@ namespace RoyalThrone.Presentation
             if (shadowGroup) shadowGroup.alpha = 0;
             if (starShadow) starShadow.localScale = Vector3.one;
             if (contactShadow) contactShadow.color = Fade(contactShadow.color, 0);
-            if (title) title.Write(0);
+            SetTitle(0);
             if (titleGroup) titleGroup.alpha = 1;
             if (cushion) cushion.localScale = Vector3.one;
             if (glow) glow.color = Fade(glow.color, 0);
@@ -211,7 +212,7 @@ namespace RoyalThrone.Presentation
                 if (star && star.gameObject.activeInHierarchy) { started = true; t = 0; }
                 else if (open > FallbackTitle)
                 {
-                    if (title) title.Write(float.PositiveInfinity);
+                    SetTitle(float.PositiveInfinity);
                     if (badgeGroup) badgeGroup.alpha = 1;
                     ShowRewardCount(1);
                 }
@@ -244,7 +245,7 @@ namespace RoyalThrone.Presentation
             if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, .12f * a);
             if (flash) flash.color = Fade(flash.color, 0);
             if (raysGroup) raysGroup.alpha = 0;
-            if (title) title.Write(float.PositiveInfinity);
+            SetTitle(float.PositiveInfinity);
             if (titleGroup) titleGroup.alpha = a;
             if (badgeGroup) badgeGroup.alpha = a;
             if (rewardBadge) rewardBadge.anchoredPosition = badgeRest;
@@ -341,13 +342,15 @@ namespace RoyalThrone.Presentation
             if (rays) rays.localRotation = Quaternion.Euler(0, 0, Mathf.Max(0, t - Drop) * 1.5f);
         }
 
+        void SetTitle(float letters) { if (titleArtwork) titleArtwork.Write(letters); else if (title) title.Write(letters); }
+
         void Write(float since)
         {
             if (!title) return;
             float letters = since < 0 ? 0 : since / PerLetter;
             int count = titleText ? titleText.text.Length : 20;
             // The final exclamation gets the same full envelope; reaching its onset must not snap it to rest.
-            title.Write(letters >= Mathf.Max(0, count - 1) + title.revealSpan ? float.PositiveInfinity : letters);
+            SetTitle(letters >= Mathf.Max(0, count - 1) + title.revealSpan ? float.PositiveInfinity : letters);
         }
 
         float RewardProgress() => reduced ? 1 : Mathf.Clamp01((t - RewardStart) / RewardCountTime);
