@@ -13,14 +13,14 @@ namespace RoyalThrone.Presentation
     {
         public RectTransform star, cushion, starShadow;
         public RoyalTextStyle title;
-        public RoyalWinTitleArt titleArtwork;
+        public RoyalWinTitleLetters titleArtwork;
         public RoyalCardShape glow, flash, pillowGlow, contactShadow;
         public RectTransform sparkles, haloSparkles, rays, rewardBadge, coinOrigin;
         public Text rewardAmount, levelNumber;
         public Vector2 starRest;
 
         const float Drop = .20f, Rebound = .34f, Settle = .64f, CushionSettle = .98f;
-        const float WriteStart = .18f, PerLetter = .04f, LetterPop = .40f, FallbackTitle = 1.6f;
+        const float WriteStart = .10f, PerLetter = .04f, LetterPop = .40f, FallbackTitle = 1.6f;
         const float RewardStart = .70f, RewardCountTime = .35f, RewardReady = .98f;
         const int BurstCount = 24, IdleCount = 14, HaloCount = 12, RewardCountSteps = 64;
 
@@ -128,7 +128,7 @@ namespace RoyalThrone.Presentation
             sparkleCeiling = ((RectTransform)transform).rect.yMax - 190;
             if (titleText)
             {
-                var textRect = titleArtwork ? titleArtwork.rectTransform : titleText.rectTransform;
+                var textRect = titleArtwork ? titleArtwork.RectTransform : titleText.rectTransform;
                 sparkleCeiling = transform.InverseTransformPoint(textRect.TransformPoint(new Vector3(0, textRect.rect.yMin, 0))).y - 8;
             }
             // Light adds warmth over the navy rather than mixing a dull opaque veil into it.

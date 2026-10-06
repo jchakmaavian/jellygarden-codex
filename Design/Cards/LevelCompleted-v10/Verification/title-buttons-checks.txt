@@ -1,0 +1,116 @@
+Started 2026-10-06T09:40:23.5663549Z; v10 individual generated glyph animation presentation QA; no win/economy commit.
+PASS 1080x1920 required Game view preset exists
+PASS 1080x1920 generated individual glyphs replace whole-title bitmap
+PASS 1080x1920 nine independent glyphs use seven unique assets and consistent repeated letters
+PASS 1080x1920 sampled full animation: 77 frames
+PASS 1080x1920 complete opaque letters settle without residual stretch or rotation
+PASS 1080x1920 title remains on screen and clears crown; conservative gap=6.2283
+PASS 1080x1920 progressive individual-letter reveal (partial frames=21)
+PASS 1080x1920 letter 0 ordered peak/rebound peak=1.6345 trough=0.9404 time=0.2104
+PASS 1080x1920 letter 0 appears at 0.1087 expected 0.1000
+PASS 1080x1920 letter 1 ordered peak/rebound peak=1.6383 trough=0.9401 time=0.2458
+PASS 1080x1920 letter 1 appears at 0.1404 expected 0.1400
+PASS 1080x1920 letter 2 ordered peak/rebound peak=1.6397 trough=0.9407 time=0.2791
+PASS 1080x1920 letter 2 appears at 0.1890 expected 0.1800
+PASS 1080x1920 letter 3 ordered peak/rebound peak=1.6378 trough=0.9400 time=0.3265
+PASS 1080x1920 letter 3 appears at 0.2278 expected 0.2200
+PASS 1080x1920 letter 4 ordered peak/rebound peak=1.6373 trough=0.9404 time=0.4072
+PASS 1080x1920 letter 4 appears at 0.3092 expected 0.3000
+PASS 1080x1920 letter 5 ordered peak/rebound peak=1.6390 trough=0.9406 time=0.4384
+PASS 1080x1920 letter 5 appears at 0.3436 expected 0.3400
+PASS 1080x1920 letter 6 ordered peak/rebound peak=1.6380 trough=0.9410 time=0.4862
+PASS 1080x1920 letter 6 appears at 0.3973 expected 0.3800
+PASS 1080x1920 letter 7 ordered peak/rebound peak=1.6400 trough=0.9400 time=0.5205
+PASS 1080x1920 letter 7 appears at 0.4233 expected 0.4200
+PASS 1080x1920 letter 8 ordered peak/rebound peak=1.6345 trough=0.9414 time=0.5705
+PASS 1080x1920 letter 8 appears at 0.4699 expected 0.4600
+PASS 1080x1920 presentation leaves economy unchanged
+PASS 1080x1920 uses the requested dimensions
+PASS 1080x1920 reopening reuses the title and effect hierarchy without accumulating children
+PASS 720x1280 required Game view preset exists
+PASS 720x1280 generated individual glyphs replace whole-title bitmap
+PASS 720x1280 nine independent glyphs use seven unique assets and consistent repeated letters
+PASS 720x1280 sampled full animation: 77 frames
+PASS 720x1280 complete opaque letters settle without residual stretch or rotation
+PASS 720x1280 title remains on screen and clears crown; conservative gap=5.9194
+PASS 720x1280 progressive individual-letter reveal (partial frames=21)
+PASS 720x1280 letter 0 ordered peak/rebound peak=1.6399 trough=0.9400 time=0.2011
+PASS 720x1280 letter 0 appears at 0.1163 expected 0.1000
+PASS 720x1280 letter 1 ordered peak/rebound peak=1.6343 trough=0.9420 time=0.2506
+PASS 720x1280 letter 1 appears at 0.1496 expected 0.1400
+PASS 720x1280 letter 2 ordered peak/rebound peak=1.6392 trough=0.9401 time=0.2840
+PASS 720x1280 letter 2 appears at 0.1837 expected 0.1800
+PASS 720x1280 letter 3 ordered peak/rebound peak=1.6300 trough=0.9404 time=0.3341
+PASS 720x1280 letter 3 appears at 0.2346 expected 0.2200
+PASS 720x1280 letter 4 ordered peak/rebound peak=1.6400 trough=0.9400 time=0.4007
+PASS 720x1280 letter 4 appears at 0.3117 expected 0.3000
+PASS 720x1280 letter 5 ordered peak/rebound peak=1.6338 trough=0.9417 time=0.4511
+PASS 720x1280 letter 5 appears at 0.3452 expected 0.3400
+PASS 720x1280 letter 6 ordered peak/rebound peak=1.6397 trough=0.9403 time=0.4825
+PASS 720x1280 letter 6 appears at 0.3837 expected 0.3800
+PASS 720x1280 letter 7 ordered peak/rebound peak=1.6369 trough=0.9404 time=0.5172
+PASS 720x1280 letter 7 appears at 0.4331 expected 0.4200
+PASS 720x1280 letter 8 ordered peak/rebound peak=1.6280 trough=0.9411 time=0.5755
+PASS 720x1280 letter 8 appears at 0.4667 expected 0.4600
+PASS 720x1280 presentation leaves economy unchanged
+PASS 720x1280 uses the requested dimensions
+PASS 720x1280 reopening reuses the title and effect hierarchy without accumulating children
+PASS 1536x2048 required Game view preset exists
+PASS 1536x2048 generated individual glyphs replace whole-title bitmap
+PASS 1536x2048 nine independent glyphs use seven unique assets and consistent repeated letters
+PASS 1536x2048 sampled full animation: 77 frames
+PASS 1536x2048 complete opaque letters settle without residual stretch or rotation
+PASS 1536x2048 title remains on screen and clears crown; conservative gap=6.2702
+PASS 1536x2048 progressive individual-letter reveal (partial frames=22)
+PASS 1536x2048 letter 0 ordered peak/rebound peak=1.6339 trough=0.9400 time=0.2110
+PASS 1536x2048 letter 0 appears at 0.1016 expected 0.1000
+PASS 1536x2048 letter 1 ordered peak/rebound peak=1.6342 trough=0.9419 time=0.2507
+PASS 1536x2048 letter 1 appears at 0.1515 expected 0.1400
+PASS 1536x2048 letter 2 ordered peak/rebound peak=1.6395 trough=0.9403 time=0.2831
+PASS 1536x2048 letter 2 appears at 0.1853 expected 0.1800
+PASS 1536x2048 letter 3 ordered peak/rebound peak=1.6353 trough=0.9400 time=0.3166
+PASS 1536x2048 letter 3 appears at 0.2291 expected 0.2200
+PASS 1536x2048 letter 4 ordered peak/rebound peak=1.6399 trough=0.9402 time=0.4016
+PASS 1536x2048 letter 4 appears at 0.3166 expected 0.3000
+PASS 1536x2048 letter 5 ordered peak/rebound peak=1.6325 trough=0.9415 time=0.4522
+PASS 1536x2048 letter 5 appears at 0.3508 expected 0.3400
+PASS 1536x2048 letter 6 ordered peak/rebound peak=1.6391 trough=0.9402 time=0.4842
+PASS 1536x2048 letter 6 appears at 0.3840 expected 0.3800
+PASS 1536x2048 letter 7 ordered peak/rebound peak=1.6400 trough=0.9400 time=0.5203
+PASS 1536x2048 letter 7 appears at 0.4340 expected 0.4200
+PASS 1536x2048 letter 8 ordered peak/rebound peak=1.6366 trough=0.9407 time=0.5681
+PASS 1536x2048 letter 8 appears at 0.4638 expected 0.4600
+PASS 1536x2048 presentation leaves economy unchanged
+PASS 1536x2048 uses the requested dimensions
+PASS 1536x2048 reopening reuses the title and effect hierarchy without accumulating children
+PASS motion-off generated individual glyphs replace whole-title bitmap
+PASS motion-off nine independent glyphs use seven unique assets and consistent repeated letters
+PASS motion-off sampled full animation: 77 frames
+PASS motion-off complete opaque letters settle without residual stretch or rotation
+PASS motion-off title remains on screen and clears crown; conservative gap=62.3550
+PASS motion-off progressive individual-letter reveal (partial frames=0)
+PASS motion-off letter 0 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 1 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 2 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 3 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 4 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 5 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 6 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 7 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off letter 8 static peak=1.0000 trough=1.0000 time=0.0000
+PASS motion-off presentation leaves economy unchanged
+PASS Motion off reopening reuses the existing hierarchy
+PASS real LevelStart and Continue use the same primary emerald/gold finish
+PASS Next remains the actual topmost raycast target
+PASS Next routes exactly once through Continue to Home and selects Level24
+PASS Next does not commit or duplicate any award
+PASS Royal close remains the actual topmost raycast target
+PASS Royal close routes exactly once through Continue to Home and selects Level24
+PASS Royal close does not commit or duplicate any award
+CAPTURE frames-20261006-094034-183 65 actual rendered JPEG frames; wall/title timestamps logged separately. Encoding pass is separate from motion assertions; silent capture.
+PASS normal player save keys remain untouched during presentation QA
+PASS owned QA ended and original Home catalog reference/values restored
+PASS normal save keys and runtime coins/lives/level restored exactly
+PASS no Unity errors or exceptions (0)
+SUMMARY passes=112 fails=0
+DONE

@@ -334,7 +334,7 @@ namespace RoyalThrone.Presentation
         // "Well Done!" sits above a 1.5x reward star, which settles onto velvet (RoyalWinCard), then Continue. No score:
         // a win earns one star, and the star is the result (the user's choice). The close continues exactly as Continue does
         // (it presses Next), so closing never loses the win. Rows from the card's top edge; the card ends 52 below Continue.
-        public const float WinTitleRow = 177, WinTitleSize = 60, WinStarSize = 276 * 1.5f, WinCushionTop = 420, WinCushionWidth = 500;
+        public const float WinTitleRow = 192, WinTitleSize = 60, WinStarSize = 276 * 1.5f, WinCushionTop = 420, WinCushionWidth = 500;
         public const float WinRewardRow = 728, WinActionRow = 838, WinActionWidth = 435, WinActionHeight = 120;
         // Approved preview's velvet pillow, 768 x 512. Its centre dent is 36% down the image; the lower star points sit in it.
         const float CushionAspect = 512f / 768f, CushionRest = .36f, CushionSeat = .25f;
@@ -366,17 +366,13 @@ namespace RoyalThrone.Presentation
             Style(heading, C("fffde3"), C("fff1ba"), C("073952"), 2.0f, C("f6c44d"), 2.1f,
                 C("071b40", .9f), new Vector2(0, -3));
             heading.gameObject.AddComponent<RoyalAppearsLater>();
-            RoyalWinTitleArt titleArt = null;
-            var titleTexture = Resources.Load<Texture2D>("RoyalGameplay/Win/well-done-art");
-            if (titleTexture)
-            {
-                var art = new GameObject("Approved Well Done artwork", typeof(RectTransform), typeof(RoyalWinTitleArt));
-                art.transform.SetParent(heading.transform, false);
-                titleArt = art.GetComponent<RoyalWinTitleArt>();
-                titleArt.artwork = titleTexture; titleArt.raycastTarget = false;
-                titleArt.rectTransform.sizeDelta = new Vector2(450, 450f * titleTexture.height / titleTexture.width);
-                heading.enabled = false;
-            }
+            RoyalWinTitleLetters titleArt = null;
+            var art = new GameObject("Individual Well Done letters", typeof(RectTransform), typeof(RoyalWinTitleLetters));
+            art.transform.SetParent(heading.transform, false);
+            var letters = art.GetComponent<RoyalWinTitleLetters>();
+            letters.RectTransform.sizeDelta = new Vector2(450, 110);
+            if (letters.Build()) { titleArt = letters; heading.enabled = false; }
+            else Object.Destroy(art);
 
             float cushionH = WinCushionWidth * CushionAspect, cushionY = top - WinCushionTop - cushionH * .5f;
             var cushion = RoyalMenuSkin.Art(p, "Royal cushion", "win-cushion-v2", 0, cushionY, WinCushionWidth, cushionH);
