@@ -101,7 +101,7 @@ namespace RoyalThrone.Presentation
             return panel;
         }
 
-        // A level-end button: a pill with one gold border (8 units on the primary, 5.5 on the secondary), green or royal blue.
+        // A level-end action: the shared emerald primary, or a blue/red pill with its lighter gold border.
         public static Transform CleanButton(Transform t, string caption, float x, float y, float w, float h, Kind kind, float captionSize = 0)
         {
             if (!t) return null;
@@ -117,9 +117,10 @@ namespace RoyalThrone.Presentation
 
         public static Ink CaptionInk(Kind kind) => kind == Kind.Primary ? Ink.OnGreen : kind == Kind.Danger ? Ink.OnRed : Ink.OnBlue;
 
-        // Green (primary), royal blue (secondary) or red (a destructive choice); the gold border is 8 units, 5.5 on the blue.
+        // Primary uses the shared enamel finish; the blue and red pills retain their 5.5- and 8-unit gold borders.
         public static void CleanFace(Transform skin, float h, Kind kind)
         {
+            if (kind == Kind.Primary) { PrimaryFace(skin, h); return; }
             float r = h * .5f, border = kind == Kind.Secondary ? 5.5f : 8, face = border + 1.3f;
             Color line = C("0c5424"), lineLow = C("093f1b"), top = C("3ec255"), bottom = C("148a38");
             if (kind == Kind.Secondary) { line = C("0a2466"); lineLow = C("071a4c"); top = C("3068d6"); bottom = C("1a44a6"); }
@@ -406,7 +407,8 @@ namespace RoyalThrone.Presentation
                 case Ink.Label: Style(text, C("fffdf0"), C("c8ccd4"), Color.clear, 0, C("0a1a50"), 1.2f, C("001450", .9f), new Vector2(0, -1.6f)); break;
                 case Ink.Body: Style(text, C("fbf3dc"), C("eadcbc"), Color.clear, 0, Color.clear, 0, C("00103a", .85f), new Vector2(0, -1.6f)); break;
                 case Ink.BodyOnCream: Style(text, C("24406f"), C("1b3260"), Color.clear, 0, Color.clear, 0, C("ffffff", .5f), new Vector2(0, -1.1f)); break;
-                case Ink.Caption: Style(text, C("fffdf3"), C("f4e1b9"), Color.clear, 0, C("01281f"), 1.8f * Mathf.Clamp(size / 47f, .6f, 1), C("00382c", .9f), new Vector2(0, -3.2f * Mathf.Clamp(size / 47f, .6f, 1))); break;
+                case Ink.Caption:
+                case Ink.OnGreen: Style(text, C("fffdf0"), C("f2e2b4"), Color.clear, 0, C("04351b"), 1.45f * Mathf.Clamp(size / 44f, .5f, 1.2f), C("012b16", .85f), new Vector2(0, -2.6f * Mathf.Clamp(size / 44f, .5f, 1.2f))); break;
                 case Ink.CaptionOnBlue: Style(text, C("fffdf3"), C("e3e7f2"), Color.clear, 0, C("0a1a4a"), 1.3f, C("000a30", .85f), new Vector2(0, -1.8f)); break;
                 case Ink.Accent: Style(text, C("ffe9a6"), C("f3c25a"), Color.clear, 0, C("2a1a08", .9f), 1.1f, C("00103a", .8f), new Vector2(0, -1.4f)); break;
                 case Ink.CaptionOnRed: Style(text, C("fffdf3"), C("f8e3bd"), Color.clear, 0, C("4a0707"), 1.8f * Mathf.Clamp(size / 47f, .6f, 1), C("3a0404", .9f), new Vector2(0, -3.2f * Mathf.Clamp(size / 47f, .6f, 1))); break;
@@ -414,7 +416,6 @@ namespace RoyalThrone.Presentation
                 // The level-end cards' type: a title ivory warming to cream with a thin warm-brown edge; captions white with an
                 // edge in the dark of their button's colour; labels on blue plain white with a soft shadow.
                 case Ink.Display: Clean(text, size, C("fffbf0"), C("ffe4a8"), C("7a3a0c"), .036f, C("1c0a02", .45f), .03f); break;
-                case Ink.OnGreen: Clean(text, size, C("ffffff"), C("f2f7ea"), C("0b5424"), .034f, C("063a17", .5f), .02f); break;
                 case Ink.OnBlue: Clean(text, size, C("ffffff"), C("edf2ff"), C("0b2766"), .034f, C("06154a", .5f), .02f); break;
                 case Ink.OnRed: Clean(text, size, C("ffffff"), C("fff0ea"), C("761010"), .034f, C("4a0606", .5f), .02f); break;
                 case Ink.Light: Clean(text, size, C("ffffff"), C("f1f5ff"), Color.clear, 0, C("041a52", .55f), .01f); break;
@@ -652,6 +653,7 @@ namespace RoyalThrone.Presentation
         // The button face layers, scaled from the 120-unit PLAY button.
         public static void Face(Transform skin, float h, Kind kind)
         {
+            if (kind == Kind.Primary) { PrimaryFace(skin, h); return; }
             float k = Mathf.Clamp(h / 120, .55f, 1), r = h * .395f;
             float orange = .8f * k, gold = 2.6f * k, innerOrange = 8.8f * k, dark = 10.3f * k, face = 12.3f * k;
             Inset(skin, "Edge", 0, r, C("3a2a3e"), C("5a2c10"));
@@ -676,6 +678,29 @@ namespace RoyalThrone.Presentation
             var sweep = Container(skin, "Sweep").gameObject.AddComponent<RoyalSweepGraphic>();
             Stretch(sweep.rectTransform, face);
             sweep.radius = fr; sweep.raycastTarget = false; sweep.color = new Color(1, 1, .96f);
+        }
+
+        // All primary actions share the same emerald enamel and sculpted gold bezel, including the smaller shop buttons.
+        // Reflections stay inside their rounded surfaces; a narrow warm highlight keeps the face richly green.
+        static void PrimaryFace(Transform skin, float h)
+        {
+            float k = Mathf.Clamp(h / 120, .5f, 1), r = h * .395f;
+            float gold = 2.2f * k, innerGold = 7.4f * k, dark = 8.7f * k, bevel = 10 * k, face = 12 * k;
+            Inset(skin, "Edge", 0, r, C("39200d"), C("2c1708"));
+            Inset(skin, "Orange", .8f * k, r - .8f * k, C("a65d17"), C("60330c"));
+            Inset(skin, "Gold", gold, r - gold, C("fff0a0"), C("c58923"));
+            var goldLight = Strip(skin, "Gold light", true, gold, 8 * k, 4 * k, C("fffbe1", .8f), C("fffbe1", 0));
+            goldLight.rectTransform.sizeDelta = new Vector2(-2 * (gold + r * .78f), 8 * k);
+            Inset(skin, "Inner orange", innerGold, r - innerGold, C("9e5717"), C("f0c764"));
+            Inset(skin, "Dark line", dark, r - dark, C("082716"), C("021f0f"));
+            Inset(skin, "Emerald bevel", bevel, r - bevel, C("33b86b"), C("012f17"));
+            Inset(skin, "Green", face, r - face, C("18a44e"), C("034522"));
+            float fr = r - face, lens = h * .15f;
+            var gloss = Strip(skin, "Gloss", true, face + 1.8f * k, lens, lens * .5f, C("fff2ba", .12f), C("fff2ba", 0));
+            gloss.rectTransform.sizeDelta = new Vector2(-2 * (face + Mathf.Max(8 * k, fr * .5f)), lens);
+            var sweep = Container(skin, "Sweep").gameObject.AddComponent<RoyalSweepGraphic>();
+            Stretch(sweep.rectTransform, face);
+            sweep.radius = fr; sweep.raycastTarget = false; sweep.color = C("fff6d5");
         }
 
         // A price inside a button: its "Price" Text right-aligned against a coin centred at `coinX` from the button's centre.

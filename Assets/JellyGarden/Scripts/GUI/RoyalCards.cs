@@ -334,7 +334,7 @@ namespace RoyalThrone.Presentation
         // "Well Done!" sits above a 1.5x reward star, which settles onto velvet (RoyalWinCard), then Continue. No score:
         // a win earns one star, and the star is the result (the user's choice). The close continues exactly as Continue does
         // (it presses Next), so closing never loses the win. Rows from the card's top edge; the card ends 52 below Continue.
-        public const float WinTitleRow = 144, WinTitleSize = 54, WinStarSize = 276 * 1.5f, WinCushionTop = 420, WinCushionWidth = 500;
+        public const float WinTitleRow = 166, WinTitleSize = 54, WinStarSize = 276 * 1.5f, WinCushionTop = 420, WinCushionWidth = 500;
         public const float WinRewardRow = 728, WinActionRow = 838, WinActionWidth = 435, WinActionHeight = 120;
         // Approved preview's velvet pillow, 768 x 512. Its centre dent is 36% down the image; the lower star points sit in it.
         const float CushionAspect = 512f / 768f, CushionRest = .36f, CushionSeat = .25f;
@@ -362,6 +362,9 @@ namespace RoyalThrone.Presentation
             Words(p, "Royal level label", "LEVEL", 0, top - LevelLabelDrop, 160, 24, Ink.Hero);
             var levelNumber = Words(p, "Royal win level number", "", 0, top - LevelNumberDrop, 160, 40, Ink.Hero);
             var heading = Words(p, "Royal win heading", "Well Done!", 0, top - WinTitleRow, 560, WinTitleSize, Ink.Hero);
+            // Reference lettering: ivory face, navy inner keyline, gold outer edge. Keep other card headings unchanged.
+            Style(heading, C("fffde3"), C("fff1ba"), C("073952"), 2.0f, C("f6c44d"), 2.1f,
+                C("071b40", .9f), new Vector2(0, -3));
             heading.gameObject.AddComponent<RoyalAppearsLater>();
 
             float cushionH = WinCushionWidth * CushionAspect, cushionY = top - WinCushionTop - cushionH * .5f;

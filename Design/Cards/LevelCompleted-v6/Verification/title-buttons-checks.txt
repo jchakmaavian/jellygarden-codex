@@ -1,0 +1,163 @@
+Started 2026-10-06T06:55:42.9894400Z; v6 focused title mesh/buttons presentation QA; no win/economy commit.
+PASS 1080x1920 required Game view preset exists
+PASS 1080x1920 rendered mesh contains all nine visible Well Done! glyphs
+PASS 1080x1920 each rendered glyph group ends with its ivory face, preserving per-glyph compositing
+PASS 1080x1920 animated title stays on screen and its outlined glyph bounds clear opaque crest pixels (gap 7.3039)
+PASS 1080x1920 sampled the complete0–1.2s rendered title (78 frames)
+PASS 1080x1920 glyph W0 enters in logical sequence at 0.1903s
+PASS 1080x1920 glyph W0 grows, undershoots and settles (1.7178/0.8817)
+PASS 1080x1920 glyph W0 grows upward from a stable bottom (0.0000)
+PASS 1080x1920 glyph e1 enters in logical sequence at 0.2259s
+PASS 1080x1920 glyph e1 grows, undershoots and settles (1.7198/0.8804)
+PASS 1080x1920 glyph e1 grows upward from a stable bottom (0.0000)
+PASS 1080x1920 glyph l2 enters in logical sequence at 0.2695s
+PASS 1080x1920 glyph l2 grows, undershoots and settles (1.7193/0.8885)
+PASS 1080x1920 glyph l2 grows upward from a stable bottom (0.0000)
+PASS 1080x1920 glyph l3 enters in logical sequence at 0.3064s
+PASS 1080x1920 glyph l3 grows, undershoots and settles (1.7199/0.8816)
+PASS 1080x1920 glyph l3 grows upward from a stable bottom (0.0000)
+PASS 1080x1920 glyph D5 enters in logical sequence at 0.3899s
+PASS 1080x1920 glyph D5 grows, undershoots and settles (1.7190/0.8844)
+PASS 1080x1920 glyph D5 grows upward from a stable bottom (0.0000)
+PASS 1080x1920 D keeps the space's stagger step (onset 0.3899)
+PASS 1080x1920 glyph o6 enters in logical sequence at 0.4225s
+PASS 1080x1920 glyph o6 grows, undershoots and settles (1.7197/0.8908)
+PASS 1080x1920 glyph o6 grows upward from a stable bottom (0.0000)
+PASS 1080x1920 glyph n7 enters in logical sequence at 0.4752s
+PASS 1080x1920 glyph n7 grows, undershoots and settles (1.7163/0.8908)
+PASS 1080x1920 glyph n7 grows upward from a stable bottom (0.0000)
+PASS 1080x1920 glyph e8 enters in logical sequence at 0.5079s
+PASS 1080x1920 glyph e8 grows, undershoots and settles (1.7190/0.8801)
+PASS 1080x1920 glyph e8 grows upward from a stable bottom (0.0000)
+PASS 1080x1920 glyph !9 enters in logical sequence at 0.5529s
+PASS 1080x1920 glyph !9 grows, undershoots and settles (1.7199/0.9088)
+PASS 1080x1920 glyph !9 grows upward from a stable bottom (0.0000)
+PASS 1080x1920 final exclamation receives its full envelope without being cut off
+PASS 1080x1920 title settles completely and overlaps several growing letters (6)
+PASS 1080x1920 title presentation does not change currency, lives, stars or score
+PASS 1080x1920 uses the requested dimensions
+PASS 1080x1920 reopening reuses the title and effect hierarchy without accumulating children
+PASS 720x1280 required Game view preset exists
+PASS 720x1280 rendered mesh contains all nine visible Well Done! glyphs
+PASS 720x1280 each rendered glyph group ends with its ivory face, preserving per-glyph compositing
+PASS 720x1280 animated title stays on screen and its outlined glyph bounds clear opaque crest pixels (gap 5.6688)
+PASS 720x1280 sampled the complete0–1.2s rendered title (77 frames)
+PASS 720x1280 glyph W0 enters in logical sequence at 0.1857s
+PASS 720x1280 glyph W0 grows, undershoots and settles (1.7199/0.8803)
+PASS 720x1280 glyph W0 grows upward from a stable bottom (0.0000)
+PASS 720x1280 glyph e1 enters in logical sequence at 0.2363s
+PASS 720x1280 glyph e1 grows, undershoots and settles (1.7200/0.8894)
+PASS 720x1280 glyph e1 grows upward from a stable bottom (0.0000)
+PASS 720x1280 glyph l2 enters in logical sequence at 0.2702s
+PASS 720x1280 glyph l2 grows, undershoots and settles (1.7181/0.9036)
+PASS 720x1280 glyph l2 grows upward from a stable bottom (0.0000)
+PASS 720x1280 glyph l3 enters in logical sequence at 0.3035s
+PASS 720x1280 glyph l3 grows, undershoots and settles (1.7196/0.8800)
+PASS 720x1280 glyph l3 grows upward from a stable bottom (0.0000)
+PASS 720x1280 glyph D5 enters in logical sequence at 0.3869s
+PASS 720x1280 glyph D5 grows, undershoots and settles (1.7198/0.8862)
+PASS 720x1280 glyph D5 grows upward from a stable bottom (0.0000)
+PASS 720x1280 D keeps the space's stagger step (onset 0.3869)
+PASS 720x1280 glyph o6 enters in logical sequence at 0.4209s
+PASS 720x1280 glyph o6 grows, undershoots and settles (1.7189/0.8810)
+PASS 720x1280 glyph o6 grows upward from a stable bottom (0.0000)
+PASS 720x1280 glyph n7 enters in logical sequence at 0.4708s
+PASS 720x1280 glyph n7 grows, undershoots and settles (1.7176/0.8882)
+PASS 720x1280 glyph n7 grows upward from a stable bottom (0.0000)
+PASS 720x1280 glyph e8 enters in logical sequence at 0.5043s
+PASS 720x1280 glyph e8 grows, undershoots and settles (1.7200/0.8835)
+PASS 720x1280 glyph e8 grows upward from a stable bottom (0.0000)
+PASS 720x1280 glyph !9 enters in logical sequence at 0.5542s
+PASS 720x1280 glyph !9 grows, undershoots and settles (1.7199/0.8804)
+PASS 720x1280 glyph !9 grows upward from a stable bottom (0.0000)
+PASS 720x1280 final exclamation receives its full envelope without being cut off
+PASS 720x1280 title settles completely and overlaps several growing letters (6)
+PASS 720x1280 title presentation does not change currency, lives, stars or score
+PASS 720x1280 uses the requested dimensions
+PASS 720x1280 reopening reuses the title and effect hierarchy without accumulating children
+PASS 1536x2048 required Game view preset exists
+PASS 1536x2048 rendered mesh contains all nine visible Well Done! glyphs
+PASS 1536x2048 each rendered glyph group ends with its ivory face, preserving per-glyph compositing
+PASS 1536x2048 animated title stays on screen and its outlined glyph bounds clear opaque crest pixels (gap 7.2847)
+PASS 1536x2048 sampled the complete0–1.2s rendered title (77 frames)
+PASS 1536x2048 glyph W0 enters in logical sequence at 0.1886s
+PASS 1536x2048 glyph W0 grows, undershoots and settles (1.7176/0.8807)
+PASS 1536x2048 glyph W0 grows upward from a stable bottom (0.0000)
+PASS 1536x2048 glyph e1 enters in logical sequence at 0.2213s
+PASS 1536x2048 glyph e1 grows, undershoots and settles (1.7198/0.8918)
+PASS 1536x2048 glyph e1 grows upward from a stable bottom (0.0000)
+PASS 1536x2048 glyph l2 enters in logical sequence at 0.2725s
+PASS 1536x2048 glyph l2 grows, undershoots and settles (1.7196/0.8824)
+PASS 1536x2048 glyph l2 grows upward from a stable bottom (0.0000)
+PASS 1536x2048 glyph l3 enters in logical sequence at 0.3082s
+PASS 1536x2048 glyph l3 grows, undershoots and settles (1.7192/0.8819)
+PASS 1536x2048 glyph l3 grows upward from a stable bottom (0.0000)
+PASS 1536x2048 glyph D5 enters in logical sequence at 0.3889s
+PASS 1536x2048 glyph D5 grows, undershoots and settles (1.7196/0.8835)
+PASS 1536x2048 glyph D5 grows upward from a stable bottom (0.0000)
+PASS 1536x2048 D keeps the space's stagger step (onset 0.3889)
+PASS 1536x2048 glyph o6 enters in logical sequence at 0.4249s
+PASS 1536x2048 glyph o6 grows, undershoots and settles (1.7195/0.8806)
+PASS 1536x2048 glyph o6 grows upward from a stable bottom (0.0000)
+PASS 1536x2048 glyph n7 enters in logical sequence at 0.4738s
+PASS 1536x2048 glyph n7 grows, undershoots and settles (1.7195/0.8894)
+PASS 1536x2048 glyph n7 grows upward from a stable bottom (0.0000)
+PASS 1536x2048 glyph e8 enters in logical sequence at 0.5063s
+PASS 1536x2048 glyph e8 grows, undershoots and settles (1.7189/0.8839)
+PASS 1536x2048 glyph e8 grows upward from a stable bottom (0.0000)
+PASS 1536x2048 glyph !9 enters in logical sequence at 0.5574s
+PASS 1536x2048 glyph !9 grows, undershoots and settles (1.7166/0.8810)
+PASS 1536x2048 glyph !9 grows upward from a stable bottom (0.0000)
+PASS 1536x2048 final exclamation receives its full envelope without being cut off
+PASS 1536x2048 title settles completely and overlaps several growing letters (6)
+PASS 1536x2048 title presentation does not change currency, lives, stars or score
+PASS 1536x2048 uses the requested dimensions
+PASS 1536x2048 reopening reuses the title and effect hierarchy without accumulating children
+PASS motion-off rendered mesh contains all nine visible Well Done! glyphs
+PASS motion-off each rendered glyph group ends with its ivory face, preserving per-glyph compositing
+PASS motion-off animated title stays on screen and its outlined glyph bounds clear opaque crest pixels (gap 39.2044)
+PASS motion-off sampled the complete0–1.2s rendered title (77 frames)
+PASS motion-off Motion off keeps glyph W0 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph e1 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph l2 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph l3 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph D5 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph o6 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph n7 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph e8 at its final mesh size/baseline
+PASS motion-off Motion off keeps glyph !9 at its final mesh size/baseline
+PASS motion-off title settles completely and stays static
+PASS motion-off title presentation does not change currency, lives, stars or score
+PASS Motion off reopening reuses the existing hierarchy
+PASS real LevelStart and Continue use the same primary emerald/gold finish
+PASS 62h/180w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 62h primary caption styling matches across builders
+PASS 62h uses the reviewed emerald enamel and sculpted gold colors
+PASS 62h primary caption fits without acquiring the win-title wave
+PASS 82h/240w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 82h primary caption styling matches across builders
+PASS 82h uses the reviewed emerald enamel and sculpted gold colors
+PASS 82h primary caption fits without acquiring the win-title wave
+PASS 116h/360w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 116h primary caption styling matches across builders
+PASS 116h uses the reviewed emerald enamel and sculpted gold colors
+PASS 116h primary caption fits without acquiring the win-title wave
+PASS 120h/435w primary Face and CleanFace have identical drawable enamel/bezel geometry with passive decoration
+PASS 120h primary caption styling matches across builders
+PASS 120h uses the reviewed emerald enamel and sculpted gold colors
+PASS 120h primary caption fits without acquiring the win-title wave
+PASS legacy classic-blue, clean-blue and danger-red colors remain unchanged
+PASS secondary and danger buttons do not acquire the primary enamel layer
+PASS Next remains the actual topmost raycast target
+PASS Next routes exactly once through Continue to Home and selects Level24
+PASS Next does not commit or duplicate any award
+PASS Royal close remains the actual topmost raycast target
+PASS Royal close routes exactly once through Continue to Home and selects Level24
+PASS Royal close does not commit or duplicate any award
+CAPTURE frames-20261006-065554-191 65 actual rendered JPEG frames; wall/title timestamps logged separately. Encoding pass is separate from motion assertions; silent capture.
+PASS normal player save keys remain untouched during presentation QA
+PASS owned QA ended and original Home catalog reference/values restored
+PASS normal save keys and runtime coins/lives/level restored exactly
+PASS no Unity errors or exceptions (0)
+SUMMARY passes=159 fails=0
+DONE

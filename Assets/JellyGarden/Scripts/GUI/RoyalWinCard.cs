@@ -19,7 +19,7 @@ namespace RoyalThrone.Presentation
         public Vector2 starRest;
 
         const float Drop = .20f, Rebound = .34f, Settle = .64f, CushionSettle = .98f;
-        const float WriteStart = .18f, PerLetter = .035f, FallbackTitle = 1.6f;
+        const float WriteStart = .18f, PerLetter = .04f, LetterPop = .40f, FallbackTitle = 1.6f;
         const float RewardStart = .70f, RewardCountTime = .35f, RewardReady = .98f;
         const int BurstCount = 24, IdleCount = 14, HaloCount = 12, RewardCountSteps = 64;
 
@@ -119,7 +119,11 @@ namespace RoyalThrone.Presentation
             raysGroup = Group(rays);
             badgeGroup = Group(rewardBadge);
             if (rewardBadge) badgeRest = rewardBadge.anchoredPosition;
-            if (title) titleText = title.GetComponent<Text>();
+            if (title)
+            {
+                titleText = title.GetComponent<Text>();
+                title.rewardWave = true; title.revealSpan = LetterPop / PerLetter;
+            }
             sparkleCeiling = ((RectTransform)transform).rect.yMax - 190;
             if (titleText)
             {
@@ -342,7 +346,8 @@ namespace RoyalThrone.Presentation
             if (!title) return;
             float letters = since < 0 ? 0 : since / PerLetter;
             int count = titleText ? titleText.text.Length : 20;
-            title.Write(letters >= count + 1 ? float.PositiveInfinity : letters);
+            // The final exclamation gets the same full envelope; reaching its onset must not snap it to rest.
+            title.Write(letters >= Mathf.Max(0, count - 1) + title.revealSpan ? float.PositiveInfinity : letters);
         }
 
         float RewardProgress() => reduced ? 1 : Mathf.Clamp01((t - RewardStart) / RewardCountTime);

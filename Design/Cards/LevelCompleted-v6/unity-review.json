@@ -1,0 +1,80 @@
+{
+  "passing_checks": 159,
+  "capture": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Verification\\TitleButtons\\capture.ffconcat",
+  "reference": "G:\\Game\\old Backup\\JellyGarden-Codex-20261005\\Design\\RoyalMatchReference\\recordings\\game completed experience.mp4",
+  "reference_onset_s": 10.317,
+  "unity_onset_wall_s": 0.0669,
+  "first_saved_frame_wall_s": 0.0226,
+  "unity_onset_in_capture_s": 0.044300000000000006,
+  "reference_crop_xywh": [
+    140,
+    530,
+    800,
+    235
+  ],
+  "unity_crop_xywh": [
+    144,
+    433,
+    792,
+    233
+  ],
+  "full_card_movie": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Royal-Throne-v6-Unity-Card.mp4",
+  "full_card_duration_s": 3,
+  "title_comparison_movie": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Royal-Throne-v6-Reference-vs-Unity-Title.mp4",
+  "title_comparison_start_stage_s": 0.1,
+  "title_comparison_duration_s": 1.5,
+  "comparison_sheet": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Royal-Throne-v6-Title-Wave-Comparison.png",
+  "stages": [
+    {
+      "target_stage_s": 0.2,
+      "reference_clip_s": 10.517,
+      "unity_frame": 5,
+      "unity_animation_s": 0.1813,
+      "unity_wall_s": 0.2497,
+      "unity_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Verification\\TitleButtons\\frames-20261006-065554-191\\00005.jpg"
+    },
+    {
+      "target_stage_s": 0.3,
+      "reference_clip_s": 10.617,
+      "unity_frame": 7,
+      "unity_animation_s": 0.278,
+      "unity_wall_s": 0.3634,
+      "unity_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Verification\\TitleButtons\\frames-20261006-065554-191\\00007.jpg"
+    },
+    {
+      "target_stage_s": 0.45,
+      "reference_clip_s": 10.767,
+      "unity_frame": 10,
+      "unity_animation_s": 0.4277,
+      "unity_wall_s": 0.5122,
+      "unity_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Verification\\TitleButtons\\frames-20261006-065554-191\\00010.jpg"
+    },
+    {
+      "target_stage_s": 0.6,
+      "reference_clip_s": 10.917,
+      "unity_frame": 13,
+      "unity_animation_s": 0.5777,
+      "unity_wall_s": 0.6753,
+      "unity_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Verification\\TitleButtons\\frames-20261006-065554-191\\00013.jpg"
+    },
+    {
+      "target_stage_s": 0.75,
+      "reference_clip_s": 11.067,
+      "unity_frame": 16,
+      "unity_animation_s": 0.7265,
+      "unity_wall_s": 0.8261,
+      "unity_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Verification\\TitleButtons\\frames-20261006-065554-191\\00016.jpg"
+    },
+    {
+      "target_stage_s": 1.0,
+      "reference_clip_s": 11.317,
+      "unity_frame": 22,
+      "unity_animation_s": 1.0196,
+      "unity_wall_s": 1.1402,
+      "unity_image": "C:\\Users\\chakm\\Documents\\Codex\\2026-09-08\\144\\outputs\\JellyGarden-Codex\\Design\\Cards\\LevelCompleted-v6\\Verification\\TitleButtons\\frames-20261006-065554-191\\00022.jpg"
+    }
+  ],
+  "timing": "Movies retain recorded wall-time cadence. Start offsets only; no speed change. Still sheet uses nearest recorded animation times.",
+  "decode_validation": "all movies passed",
+  "audio": false
+}
