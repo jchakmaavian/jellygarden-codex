@@ -31,7 +31,7 @@ namespace RoyalThrone.Editor
         public static void Build()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play Mode before authoring.");
-            if (!Application.dataPath.Replace('\\', '/').EndsWith("/outputs/JellyGarden-Codex/Assets", StringComparison.OrdinalIgnoreCase))
+            if (!Application.dataPath.Replace('\\', '/').EndsWith("/JellyGarden-Codex/Assets", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException("This authoring command is restricted to the independent Codex copy.");
             var current = SceneManager.GetActiveScene();
             if (current.isDirty) throw new InvalidOperationException("Save the current scene before rebuilding its title UI.");

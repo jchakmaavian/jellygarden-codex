@@ -160,7 +160,7 @@ namespace RoyalThrone.Editor
 
         public static void RequireCopy()
         {
-            if (!Application.dataPath.Replace('\\', '/').EndsWith("/outputs/JellyGarden-Codex/Assets", StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException("Restricted to the independent Codex copy.");
+            if (!Application.dataPath.Replace('\\', '/').EndsWith("/JellyGarden-Codex/Assets", StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException("Restricted to the independent Codex copy.");
         }
         static void ConfigureArt(string path)
         {

@@ -21,9 +21,11 @@ namespace RoyalThrone.Editor
         public const string LevelsTestLog = "Design/Backup/apk/RoyalThrone-Levels01-50-Test-build.log";
         public const string LevelsTestApplicationId = "com.royalthrone.levelsqa";
         public static string LogPath => Path.Combine(OutputDir, "last-build.log");
+        public const string PlayerApkName = "RoyalThrone.apk";
+        public static string PlayerLogPath => Path.Combine(OutputDir, "last-player-build.log");
 
         /// <summary>Applies the QA build configuration without building.</summary>
-        public static string Configure()
+        public static string Configure(bool development = true)
         {
             RoyalHomeScreenBuilder.RequireCopy();
             RoyalOfflineBuildPolicy.Configure(NamedBuildTarget.Android);
@@ -44,7 +46,7 @@ namespace RoyalThrone.Editor
             PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
 
-            EditorUserBuildSettings.development = true;
+            EditorUserBuildSettings.development = development;
             EditorUserBuildSettings.allowDebugging = false;
             EditorUserBuildSettings.connectProfiler = false;
             EditorUserBuildSettings.buildWithDeepProfilingSupport = false;
@@ -73,6 +75,16 @@ namespace RoyalThrone.Editor
             BuildAndroidTo(Path.Combine(OutputDir, ApkName), LogPath);
         }
 
+        /// <summary>
+        /// The player APK: a release build with ROYAL_DISABLE_QA, so the Mod Menu, the QA service and
+        /// the QA save sandbox are not compiled in. Everything else matches the QA APK.
+        /// </summary>
+        [MenuItem("Royal Throne/Build Android Player APK (no Mod Menu)")]
+        public static void BuildPlayer()
+        {
+            BuildAndroidTo(Path.Combine(OutputDir, PlayerApkName), PlayerLogPath, player: true);
+        }
+
         [MenuItem("Royal Throne/Build Levels 01-50 Test APK")]
         public static void BuildLevels01To50Test()
         {
@@ -94,13 +106,15 @@ namespace RoyalThrone.Editor
             }
         }
 
-        static void BuildAndroidTo(string apk, string logPath, bool referenceCampaign = false)
+        static void BuildAndroidTo(string apk, string logPath, bool referenceCampaign = false, bool player = false)
         {
             var started = DateTime.Now;
             Directory.CreateDirectory(Path.GetDirectoryName(apk));
             File.WriteAllText(logPath, "STATUS running\nstarted " + started.ToString("u") + "\n");
 
-            string config = Configure();
+            // Configure persists the development flag; a player build restores it afterwards.
+            bool wasDevelopment = EditorUserBuildSettings.development;
+            string config = Configure(!player);
 
             var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
             var options = new BuildPlayerOptions
@@ -109,8 +123,9 @@ namespace RoyalThrone.Editor
                 locationPathName = apk,
                 target = BuildTarget.Android,
                 targetGroup = BuildTargetGroup.Android,
-                extraScriptingDefines = referenceCampaign ? new[]{"ROYAL_REFERENCE_CAMPAIGN"} : Array.Empty<string>(),
-                options = BuildOptions.Development | BuildOptions.CompressWithLz4
+                extraScriptingDefines = player ? new[]{"ROYAL_DISABLE_QA"}
+                    : referenceCampaign ? new[]{"ROYAL_REFERENCE_CAMPAIGN"} : Array.Empty<string>(),
+                options = player ? BuildOptions.CompressWithLz4HC : BuildOptions.Development | BuildOptions.CompressWithLz4
             };
 
             var log = new StringBuilder();
@@ -136,6 +151,7 @@ namespace RoyalThrone.Editor
             {
                 log.Append("STATUS failed\nEXCEPTION ").Append(e.GetType().Name).Append(": ").Append(e.Message.Replace("\n", " ")).Append("\n");
             }
+            if (player) EditorUserBuildSettings.development = wasDevelopment;
             log.Append("finished ").Append(DateTime.Now.ToString("u")).Append("\n");
             File.WriteAllText(logPath, log.ToString());
         }
