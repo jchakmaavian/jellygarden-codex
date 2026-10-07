@@ -5,35 +5,46 @@ using RoyalThrone.ReferenceGameplay;
 
 namespace JellyGarden.Scripts.Juice
 {
-    // Only the accepted 2x2 Propeller group uses this presentation. Match detection,
+    // Accepted special-creation groups use this presentation. Match detection,
     // host selection, collection credit and the reserved output cell remain with the resolver.
-    public static class RoyalPropellerFormation
+    public static class RoyalSpecialFormation
     {
         public const float TravelDuration = .24f;
         public const float BlendDuration = .14f;
         public const float Duration = TravelDuration + BlendDuration;
         public static bool Prepare(List<Item> group)
         {
-            if (!RoyalEffectsProfile.Get || !ReferencePieceVisual.Has(ItemsTypes.HELICOPTER) || group.Count != 4) return false;
+            if (!RoyalEffectsProfile.Get || group.Count < 4) return false;
             Item host = null;
             foreach (var item in group)
             {
                 if (!item || item.destroying || item.currentType != ItemsTypes.NONE || !item.sprRenderer) return false;
-                if (item.NextType == ItemsTypes.HELICOPTER) host = item;
+                if (Supported(item.NextType))
+                {
+                    if (host && host != item) return false;
+                    host = item;
+                }
+                else if (item.NextType != ItemsTypes.NONE) return false;
             }
-            if (!host) return false;
+            if (!host || !ReferencePieceVisual.Has(host.NextType)) return false;
             foreach (var item in group)
             {
-                item.royalPropellerGather = true;
-                item.royalPropellerGatherTarget = host.sprRenderer.bounds.center;
+                item.royalSpecialGather = true;
+                item.royalSpecialGatherTarget = host.sprRenderer.bounds.center;
             }
             return true;
         }
+        public static bool Supported(ItemsTypes type) => type == ItemsTypes.HELICOPTER || type == ItemsTypes.PACKAGE ||
+            type == ItemsTypes.HORIZONTAL_STRIPPED || type == ItemsTypes.VERTICAL_STRIPPED || type == ItemsTypes.BOMB;
+        public static string CreationState(ItemsTypes type) => type == ItemsTypes.PACKAGE ? "TntCreationAnimation" :
+            type == ItemsTypes.HORIZONTAL_STRIPPED ? "HorizontalRocketCreationAnimation" :
+            type == ItemsTypes.VERTICAL_STRIPPED ? "VerticalRocketCreationAnimation" :
+            type == ItemsTypes.BOMB ? "LightballCreationAnimation" : "PropellerCreationAnimation";
 
         public static IEnumerator Gather(Item item)
         {
             var source = item.sprRenderer;
-            var go = new GameObject("Propeller gathering gem");
+            var go = new GameObject("Special gathering gem");
             go.transform.SetParent(item.transform, false);
             var sprite = go.AddComponent<SpriteRenderer>();
             sprite.sprite = source.sprite; sprite.sharedMaterial = source.sharedMaterial;
@@ -43,7 +54,7 @@ namespace JellyGarden.Scripts.Juice
             var inherited = item.transform.lossyScale;
             go.transform.localScale = new Vector3(source.transform.lossyScale.x / inherited.x, source.transform.lossyScale.y / inherited.y, 1);
             Vector3 start = go.transform.position;
-            Vector3 target = item.royalPropellerGatherTarget - (sprite.bounds.center - go.transform.position);
+            Vector3 target = item.royalSpecialGatherTarget - (sprite.bounds.center - go.transform.position);
             GameObject result = null;
             ReferenceActivationVisual resultView = null;
             SpriteRenderer[] resultSprites = null;
@@ -61,19 +72,28 @@ namespace JellyGarden.Scripts.Juice
                     float t = Mathf.Clamp01(elapsed / TravelDuration);
                     float travel = t * t * (3 - 2 * t);
                     // Keep every gem at its original size. Only after they occupy
-                    // the same location does the merged silhouette blend into the Propeller.
+                    // the same location does the merged silhouette blend into the special piece.
                     go.transform.position = Vector3.Lerp(start,target,travel);
                     float blend = Mathf.SmoothStep(0,1,Mathf.Clamp01((elapsed-TravelDuration)/BlendDuration));
                     sprite.color = new Color(1,1,1,1-blend);
-                    if (elapsed >= TravelDuration && item.NextType == ItemsTypes.HELICOPTER)
+                    if (elapsed >= TravelDuration && Supported(item.NextType))
                     {
                         if (!result)
                         {
-                            result = new GameObject("Propeller merge result");
+                            result = new GameObject("Special merge result");
                             result.transform.SetParent(item.transform,false);
                             result.transform.position = item.square.transform.position + Vector3.back * .2f;
-                            resultView = ReferenceActivationVisual.Attach(result,"Propeller",35);
-                            resultView.Play("PropellerCreationAnimation", normalizedTime:1);
+                            resultView = ReferenceActivationVisual.Attach(result,ReferencePieceVisual.Key(item.NextType),35);
+                            if (item.NextType == ItemsTypes.BOMB) resultView.Play("LightballDefaultAnimation");
+                            else resultView.Play(CreationState(item.NextType), normalizedTime:1);
+                            if (item.NextType == ItemsTypes.HORIZONTAL_STRIPPED || item.NextType == ItemsTypes.VERTICAL_STRIPPED)
+                            {
+                                var animator = result.GetComponentInChildren<Animator>();
+                                var horizontal = animator.transform.Find("Horizontal");
+                                var vertical = animator.transform.Find("Vertical");
+                                if (horizontal) horizontal.gameObject.SetActive(item.NextType == ItemsTypes.HORIZONTAL_STRIPPED);
+                                if (vertical) vertical.gameObject.SetActive(item.NextType == ItemsTypes.VERTICAL_STRIPPED);
+                            }
                             resultView.Hold();
                             resultSprites = result.GetComponentsInChildren<SpriteRenderer>(true);
                             resultColors = new Color[resultSprites.Length];

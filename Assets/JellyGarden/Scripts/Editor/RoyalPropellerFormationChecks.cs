@@ -35,7 +35,7 @@ namespace RoyalThrone.Editor
                     while(frame<fps*2)
                     {
                         yield return new WaitForEndOfFrame();
-                        var gems=Object.FindObjectsByType<SpriteRenderer>().Where(s=>s.name=="Propeller gathering gem").ToArray();
+                        var gems=Object.FindObjectsByType<SpriteRenderer>().Where(s=>s.name=="Special gathering gem").ToArray();
                         if(gems.Length>0){
                             gatherFrames++;sawFour|=gems.Length==4;
                             for(int i=0;i<4;i++)if(items[i]){rootsStable&=Vector3.Distance(items[i].transform.position,roots[i])<.001f;hidden&=items[i].sprRenderer.forceRenderingOff;}
@@ -44,7 +44,7 @@ namespace RoyalThrone.Editor
                                 fullSize &= index>=0 && Vector3.Distance(gem.bounds.size,sizes[index])<.001f;
                                 if(gem.color.a<.99f)fadeAfterMerge &= gems.All(other=>Vector3.Distance(gem.bounds.center,other.bounds.center)<.001f);
                             }
-                            sawBlend |= Object.FindObjectsByType<Transform>().Any(t=>t.name=="Propeller merge result") && gems.Any(g=>g.color.a>0 && g.color.a<1);
+                            sawBlend |= Object.FindObjectsByType<Transform>().Any(t=>t.name=="Special merge result") && gems.Any(g=>g.color.a>0 && g.color.a<1);
                             float distance=0;foreach(var gem in gems)foreach(var other in gems)distance+=Vector3.Distance(gem.bounds.center,other.bounds.center);
                             if(firstDistance<0)firstDistance=distance;lastDistance=distance;
                             if(!paused&&gatherFrames==3){
@@ -72,7 +72,7 @@ namespace RoyalThrone.Editor
                     check(gatherFrames>=fps*.20f,fps+" FPS: continuous gathering frames precede reveal");
                     check(items.All(i=>!i),fps+" FPS: all four matched source items retire");
                     check(lm.GetItems().Count(i=>i&&i.currentType==ItemsTypes.HELICOPTER)==1,fps+" FPS: exactly one playable Propeller is created");
-                    check(!Object.FindObjectsByType<SpriteRenderer>().Any(s=>s.name=="Propeller gathering gem"),fps+" FPS: no gathering visuals remain");
+                    check(!Object.FindObjectsByType<SpriteRenderer>().Any(s=>s.name=="Special gathering gem"),fps+" FPS: no gathering visuals remain");
                     check(lm.squaresArray.Where(s=>s&&s.item).All(s=>s.item.square==s),fps+" FPS: refill retains cell ownership");
                 }
             }
