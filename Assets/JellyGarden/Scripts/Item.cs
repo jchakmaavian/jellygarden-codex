@@ -1437,6 +1437,7 @@ namespace JellyGarden.Scripts
                 i.NextType = NextType;
                 i.SetColor(color);
                 i.ChangeType();
+                if (royalSpecialGather) RoyalSpecialCreationFlash.Attach(i);
                 // The profile counts the power-ups matches make while the level is played (RoyalProfile).
                 if (LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Playing && Juice.RoyalPowerupDirector.IsPower(i.currentType)) RoyalThrone.RoyalProfile.PowerupMade();
             }

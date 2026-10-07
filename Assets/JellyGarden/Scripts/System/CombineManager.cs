@@ -158,7 +158,18 @@ namespace JellyGarden.Scripts.System
 			if (combine.hCount >= 3 && combine.vCount >= 3)
 				return ItemsTypes.PACKAGE;
 			if (combine.hCount > 3 || combine.vCount > 3) {
-                if (Juice.RoyalEffectsProfile.Get) return combine.hCount > 3 ? ItemsTypes.HORIZONTAL_STRIPPED : ItemsTypes.VERTICAL_STRIPPED;
+                if (Juice.RoyalEffectsProfile.Get) {
+                    var lm = LevelManager.THIS;
+                    // The supplied video swaps sideways into a vertical four and
+                    // creates a horizontal rocket. Only that active swap supplies
+                    // an orientation; cascade matches retain their line direction.
+                    var dragged = lm.lastDraggedItem;
+                    var switched = lm.lastSwitchedItem;
+                    if (dragged && switched && dragged.square && switched.square &&
+                        (combine.items.Contains(dragged) || combine.items.Contains(switched)))
+                        return dragged.square.row == switched.square.row ? ItemsTypes.HORIZONTAL_STRIPPED : ItemsTypes.VERTICAL_STRIPPED;
+                    return combine.hCount > 3 ? ItemsTypes.HORIZONTAL_STRIPPED : ItemsTypes.VERTICAL_STRIPPED;
+                }
 				if (LevelManager.THIS.lastDraggedItem) {
 					Vector2 dir = LevelManager.THIS.lastDraggedItem.moveDirection;
 					if (Math.Abs (dir.x) > Math.Abs (dir.y))

@@ -72,9 +72,9 @@ namespace RoyalThrone.Editor
                     check(fullSize,fps+" FPS: all four gems retain their full original size throughout movement and merge");
                     check(opaqueMerge,fps+" FPS: merging gems remain fully visible until the original Reveal takes over");
                     check(sawRevealStart&&sawRevealAdvance,fps+" FPS: original Propeller Reveal starts at its beginning and advances normally");
-                    check(lastDistance<firstDistance*.2f,fps+" FPS: gems converge into one location");
+                    check(lastDistance<firstDistance*.3f,fps+" FPS: gems converge into the compact reference stack before the creation flash");
                     check(rootsStable&&hidden,fps+" FPS: visual-only movement; original roots stay fixed and originals are hidden");
-                    check(gatherFrames>=fps*.20f,fps+" FPS: continuous gathering frames precede reveal");
+                    check(Mathf.Abs(gatherFrames/(float)fps-RoyalSpecialFormation.Duration)<=2f/fps,fps+" FPS: continuous gathering follows the reference duration before reveal");
                     check(items.All(i=>!i),fps+" FPS: all four matched source items retire");
                     check(lm.GetItems().Count(i=>i&&i.currentType==ItemsTypes.HELICOPTER)==1,fps+" FPS: exactly one playable Propeller is created");
                     check(!Object.FindObjectsByType<SpriteRenderer>().Any(s=>s.name=="Special gathering gem"),fps+" FPS: no gathering visuals remain");

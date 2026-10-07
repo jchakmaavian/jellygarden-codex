@@ -9,7 +9,9 @@ namespace JellyGarden.Scripts.Juice
     // host selection, collection credit and the reserved output cell remain with the resolver.
     public static class RoyalSpecialFormation
     {
-        public const float TravelDuration = .24f;
+        // matching Tranform.mp4: frames 128-138 at 60 FPS. Full-size pieces
+        // accelerate into the host; the native creation flash takes over immediately.
+        public const float TravelDuration = 1f / 6f;
         public const float Duration = TravelDuration;
         public static bool Prepare(List<Item> group)
         {
@@ -65,7 +67,9 @@ namespace JellyGarden.Scripts.Juice
                 {
                     if (LevelManager.THIS.gameStatus != GameState.Pause) elapsed += Time.deltaTime;
                     float t = Mathf.Clamp01(elapsed / TravelDuration);
-                    float travel = t * t * (3 - 2 * t);
+                    // The last visible reference frame still has a compact stack;
+                    // the creation flash covers the final overlap into one piece.
+                    float travel = .78f * t * t;
                     // Keep the full-size gem merge, then hand creation to the original
                     // piece Reveal. Do not substitute a settled preview or skip its clip.
                     go.transform.position = Vector3.Lerp(start,target,travel);

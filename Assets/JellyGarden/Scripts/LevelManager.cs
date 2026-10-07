@@ -1946,7 +1946,10 @@ namespace JellyGarden.Scripts
                     //					lastSwitchedItem.ChangeType ();
                     //
                     //				}
-                    if (lastDraggedItem.NextType != ItemsTypes.NONE)
+                    // The visual gather already owns the merge duration. A second
+                    // fixed hold here strands the new piece above a cleared cell,
+                    // instead of letting its native Reveal continue during gravity.
+                    if (lastDraggedItem.NextType != ItemsTypes.NONE && !lastDraggedItem.royalSpecialGather)
                     {
                         //lastDraggedItem.ChangeType();
                         yield return new WaitForSeconds(0.5f);

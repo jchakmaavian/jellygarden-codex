@@ -36,7 +36,7 @@ namespace RoyalThrone.Editor
                     lm.FindMatches();
                     bool sawFour=false,rootsStable=true,hidden=true,paused=false,fullSize=true,opaqueMerge=true,sawRevealStart=false,sawRevealAdvance=false;
                     var sizes=items.Select(i=>i.sprRenderer.bounds.size).ToArray();
-                    int frame=0,gatherFrames=0;float firstDistance=-1,lastDistance=-1;
+                    int frame=0,gatherFrames=0,createdAtHandoff=-1;float firstDistance=-1,lastDistance=-1;
                     while(frame<fps*2)
                     {
                         yield return new WaitForEndOfFrame();
@@ -65,6 +65,7 @@ namespace RoyalThrone.Editor
                             if(visual && nativeAnimator) {
                                 var state=nativeAnimator.GetCurrentAnimatorStateInfo(0);
                                 if(state.IsName(RoyalSpecialFormation.CreationState(type)) && visual.Revealing){
+                                    if(createdAtHandoff<0)createdAtHandoff=lm.GetItems().Count(i=>i&&i.currentType==type);
                                     sawRevealStart |= state.normalizedTime < .15f;
                                     sawRevealAdvance |= state.normalizedTime > .15f && state.normalizedTime < 1;
                                 }
@@ -77,11 +78,11 @@ namespace RoyalThrone.Editor
                     check(fullSize,fps+" FPS: all matched gems retain their full original size throughout movement and merge");
                     check(opaqueMerge,fps+" FPS: merging gems remain fully visible until the original Reveal takes over");
                     check(sawRevealStart&&sawRevealAdvance,fps+" FPS: original creation Reveal starts at its beginning and advances normally");
-                    check(lastDistance<firstDistance*.2f,fps+" FPS: gems converge into one location");
+                    check(lastDistance<firstDistance*.3f,fps+" FPS: gems converge into the compact reference stack before the creation flash");
                     check(rootsStable&&hidden,fps+" FPS: visual-only movement; original roots stay fixed and originals are hidden");
-                    check(gatherFrames>=fps*.20f,fps+" FPS: continuous gathering frames precede reveal");
+                    check(Mathf.Abs(gatherFrames/(float)fps-RoyalSpecialFormation.Duration)<=2f/fps,fps+" FPS: continuous gathering follows the reference duration before reveal");
                     check(items.All(i=>!i),fps+" FPS: all matched source items retire");
-                    check(lm.GetItems().Count(i=>i&&i.currentType==type)==1,fps+" FPS: exactly one playable special piece is created");
+                    check(createdAtHandoff==1,fps+" FPS: the initial match creates exactly one playable special piece before later cascades");
                     check(!Object.FindObjectsByType<SpriteRenderer>().Any(s=>s.name=="Special gathering gem"),fps+" FPS: no gathering visuals remain");
                     check(lm.squaresArray.Where(s=>s&&s.item).All(s=>s.item.square==s),fps+" FPS: refill retains cell ownership");
                 }
