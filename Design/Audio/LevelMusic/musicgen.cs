@@ -8,7 +8,25 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
+if (args.Length > 0 && args[0] == "selftest")
+{
+    // Sampler check with generated tones named like VSCO files: an "A2" file (VSCO naming, octave +1) holds 220 Hz.
+    string dir = Path.Combine(Path.GetTempPath(), "musicgen-selftest", "inst"); Directory.CreateDirectory(dir);
+    foreach (var (file, hz) in new[] { ("spic_A2_v1_RR1", 220.0), ("spic_A2_v2_RR1", 220.0), ("spic_D3_v1_RR1", 293.66) })
+    {
+        int n = Dsp.SR; var x = new float[n]; for (int i = 0; i < n; i++) x[i] = (float)(.5 * Math.Sin(Dsp.TAU * hz * i / Dsp.SR));
+        Wav.Write(Path.Combine(dir, file + ".wav"), x, x);
+    }
+    var smp = Sampler.Load(Path.GetDirectoryName(dir), "inst", f => Tracks.TonalForTest(f, 1), "test")!;
+    foreach (var midi in new[] { 57.0, 59.0, 62.0, 64.0 })
+    {
+        var y = smp.Render(.5, midi, .9, new Random(1))[0]; int zc = 0; for (int i = 1; i < Dsp.SR / 4; i++) if (y[i - 1] < 0 && y[i] >= 0) zc++;
+        Console.WriteLine($"midi {midi}: expected {Dsp.Mtof(midi):F1} Hz, measured {zc * 4.0:F1} Hz");
+    }
+    return;
+}
 string outDir = args.Length > 0 ? args[0] : "out";
 string filter = args.Length > 1 ? args[1] : "";
 Directory.CreateDirectory(outDir);
@@ -22,11 +40,12 @@ foreach (var spec in Tracks.All())
     Console.WriteLine($"{spec.Name} ({spec.Title}): {L.Length / (double)Dsp.SR:F1} s, rendered in {sw.Elapsed.TotalSeconds:F1} s");
     Console.WriteLine(stats);
 }
+string? samples = args.Length > 2 ? args[2] : null;
 foreach (var (name, title, make) in Tracks.Custom())
 {
     if (filter != "" && !name.Contains(filter)) continue;
     var sw = Stopwatch.StartNew();
-    var (L, R, stats) = make().Render();
+    var (L, R, stats) = make(samples).Render();
     Wav.Write(Path.Combine(outDir, name + ".wav"), L, R);
     Console.WriteLine($"{name} ({title}): {L.Length / (double)Dsp.SR:F1} s, rendered in {sw.Elapsed.TotalSeconds:F1} s");
     Console.WriteLine(stats);
@@ -368,6 +387,75 @@ sealed class Riser : Inst
     }
 }
 
+// Plays recorded samples (VSCO 2 CE, CC0): picks the nearest recorded note, the velocity layer and the next round-robin
+// take, repitches by resampling, and releases at the note's end. Returns null when the samples are not on this machine.
+sealed class Sampler : Inst
+{
+    sealed record Zone(double Note, int Vel, float[] L, float[] R);
+    readonly List<Zone> zones = new(); readonly int[] velLevels; int rr;
+    public double Attack = .002, Release = .12; public bool OneShot;
+    Sampler(List<Zone> z) { zones = z; velLevels = z.Select(q => q.Vel).Distinct().OrderBy(v => v).ToArray(); }
+
+    public static readonly string[] Dyn = { "ppp", "pp", "p", "mp", "mf", "f", "ff", "fff" };
+    public static int NoteName(string n, int octaveShift)
+    {
+        int pc = Chord.Pc(n.Substring(0, n[1] == '#' || n[1] == 'b' ? 2 : 1)), oct = int.Parse(n.Substring(n[1] == '#' || n[1] == 'b' ? 2 : 1));
+        return 12 * (oct + octaveShift + 1) + pc;
+    }
+    // name: (note or NaN to detect the pitch, velocity layer), or null to skip the file.
+    public static Sampler? Load(string? root, string folder, Func<string, (double note, int vel)?> name, string inst)
+    {
+        if (root == null) return null;
+        string dir = Path.Combine(root, folder); if (!Directory.Exists(dir)) return null;
+        var z = new List<Zone>();
+        foreach (var f in Directory.GetFiles(dir, "*.wav").OrderBy(x => x))
+        {
+            var meta = name(Path.GetFileNameWithoutExtension(f)); if (meta == null) continue;
+            var (L, R) = Wav.Read(f);
+            int start = 0; float th = .003f; while (start < L.Length - 1 && Math.Abs(L[start]) < th && Math.Abs(R[start]) < th) start++;
+            start = Math.Max(0, start - 40);
+            L = L[start..]; R = R[start..];
+            double note = double.IsNaN(meta.Value.note) ? DetectPitch(L) : meta.Value.note;
+            z.Add(new Zone(note, meta.Value.vel, L, R));
+        }
+        if (z.Count == 0) return null;
+        float pk = z.Max(q => Math.Max(q.L.Max(Math.Abs), q.R.Max(Math.Abs)));
+        foreach (var q in z) for (int i = 0; i < q.L.Length; i++) { q.L[i] /= pk; q.R[i] /= pk; }
+        return new Sampler(z) { Name = inst };
+    }
+    static double DetectPitch(float[] x)
+    {
+        int n = 1 << 15; var re = new double[n]; for (int i = 0; i < Math.Min(n, x.Length); i++) re[i] = x[i] * (.5 - .5 * Math.Cos(Dsp.TAU * i / n));
+        double best = 0, bf = 100;
+        for (double f = 40; f < 400; f *= 1.003)
+        {
+            double c = 0, s = 0; for (int i = 0; i < n; i += 2) { double a = Dsp.TAU * f * i / Dsp.SR; c += re[i] * Math.Cos(a); s += re[i] * Math.Sin(a); }
+            double m = c * c + s * s; if (m > best) { best = m; bf = f; }
+        }
+        return 69 + 12 * Math.Log2(bf / 440);
+    }
+    public override float[][] Render(double dur, double midi, double vel, Random rnd)
+    {
+        int layer = velLevels[Math.Clamp((int)Math.Round((vel - .35) / .65 * (velLevels.Length - 1)), 0, velLevels.Length - 1)];
+        var cands = zones.Where(q => q.Vel == layer).ToList();
+        double nearest = OneShot ? cands[0].Note : cands.Min(q => Math.Abs(q.Note - midi));
+        cands = OneShot ? cands : cands.Where(q => Math.Abs(Math.Abs(q.Note - midi) - nearest) < .01).ToList();
+        var zone = cands[rr++ % cands.Count];
+        double ratio = OneShot ? 1 : Math.Pow(2, (midi - zone.Note) / 12);
+        double avail = zone.L.Length / ratio / Dsp.SR, len = OneShot ? avail : Math.Min(avail, dur + Release * 6);
+        int n = Math.Max(1, (int)(len * Dsp.SR)); var L = new float[n]; var R = new float[n];
+        double g = .55 + .45 * Math.Min(vel, 1.2);
+        for (int i = 0; i < n; i++)
+        {
+            double pos = i * ratio; int j = (int)pos; if (j + 1 >= zone.L.Length) break; double fr = pos - j, t = i / (double)Dsp.SR;
+            double env = Math.Min(1, t / Attack) * (OneShot || t < dur ? 1 : Math.Exp(-(t - dur) / Release)) * g;
+            L[i] = (float)((zone.L[j] * (1 - fr) + zone.L[j + 1] * fr) * env); R[i] = (float)((zone.R[j] * (1 - fr) + zone.R[j + 1] * fr) * env);
+        }
+        int fade = Math.Min(n, 300); for (int i = 0; i < fade; i++) { L[n - 1 - i] *= i / (float)fade; R[n - 1 - i] *= i / (float)fade; }
+        return new[] { L, R };
+    }
+}
+
 sealed class Chord
 {
     public int Root, Bass; public int[] Iv = Array.Empty<int>();
@@ -400,7 +488,8 @@ sealed class Song
     public readonly Random Rnd;
     readonly List<(Inst I, double T, double Dur, double Midi, double Vel)> evs = new();
     readonly Chord[] chordAt;
-    public Song(int bars, double bpm, int[] scale, int seed) { Bars = bars; Bpm = bpm; Scale = scale; Rnd = new Random(seed); chordAt = new Chord[bars * 16]; }
+    public readonly int Spb;   // 16ths per bar: 16 for 4/4, 12 for 3/4
+    public Song(int bars, double bpm, int[] scale, int seed, int spb = 16) { Bars = bars; Bpm = bpm; Scale = scale; Spb = spb; Rnd = new Random(seed); chordAt = new Chord[bars * spb]; }
     public double Step => 60.0 / Bpm / 4;
     public double T(int step) => step * Step + (step % 2 == 1 ? Swing * Step : 0);
 
@@ -410,7 +499,7 @@ sealed class Song
         for (int b = 0; b < bars; b++)
         {
             var parts = toks[b % toks.Length].Split('_').Select(Chord.Parse).ToArray();
-            for (int s = 0; s < 16; s++) chordAt[(bar + b) * 16 + s] = parts[s * parts.Length / 16];
+            for (int s = 0; s < Spb; s++) chordAt[(bar + b) * Spb + s] = parts[s * parts.Length / Spb];
         }
     }
     Chord ChordAt(int step) => chordAt[Math.Clamp(step, 0, chordAt.Length - 1)] ?? throw new Exception("no chord at step " + step);
@@ -421,16 +510,16 @@ sealed class Song
         evs.Add((i, Math.Max(0, t), dur, midi, vel * (1 + (Rnd.NextDouble() * 2 - 1) * .05)));
     }
     // One character per 16th; bars are separated by spaces and the pattern repeats; '-' ties, '.' rests.
-    static void Walk(int bar, int bars, string pat, Action<int, char, int> f)
+    void Walk(int bar, int bars, string pat, Action<int, char, int> f)
     {
         var bs = pat.Split(new[] { ' ', '|' }, StringSplitOptions.RemoveEmptyEntries);
-        foreach (var b in bs) if (b.Length != 16) throw new Exception($"pattern bar '{b}' is {b.Length} steps");
+        foreach (var b in bs) if (b.Length != Spb) throw new Exception($"pattern bar '{b}' is {b.Length} steps");
         var seq = new List<char>(); for (int b = 0; b < bars; b++) seq.AddRange(bs[b % bs.Length]);
         for (int k = 0; k < seq.Count; k++)
         {
             char c = seq[k]; if (c == '.' || c == '-') continue;
             int len = 1; while (k + len < seq.Count && seq[k + len] == '-') len++;
-            f(bar * 16 + k, c, len);
+            f(bar * Spb + k, c, len);
         }
     }
     static int Fit(int pc, int low) => low + ((pc - low) % 12 + 12) % 12;
@@ -472,13 +561,13 @@ sealed class Song
     public void Melody(Inst m, int bar, string notes, int baseMidi, int grid = 2, double vel = 1, int shift = 0, double legato = .92, int transpose = 0, int maxTokens = int.MaxValue)
     {
         var toks = notes.Split(new[] { ' ', '|', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-        if (toks.Length % (16 / grid) != 0) throw new Exception($"melody has {toks.Length} steps: {notes}");
+        if (toks.Length % (Spb / grid) != 0) throw new Exception($"melody has {toks.Length} steps: {notes}");
         toks = toks.Take(maxTokens).ToArray();
         for (int k = 0; k < toks.Length; k++)
         {
             string tk = toks[k]; if (tk == "." || tk == "-") continue;
             int len = 1; while (k + len < toks.Length && toks[k + len] == "-") len++;
-            int s = bar * 16 + k * grid;
+            int s = bar * Spb + k * grid;
             Add(m, T(s), Step * grid * len * legato, Degree(tk, baseMidi, shift) + transpose, vel * ((k * grid) % 8 == 0 ? 1 : .88));
         }
     }
@@ -490,12 +579,12 @@ sealed class Song
         int a = d + 7 * oct + shift, o = (int)Math.Floor(a / 7.0);
         return baseMidi + Scale[a - 7 * o] + 12 * o + acc;
     }
-    public void Hit(Inst i, int bar, double step, double durSteps, double midi = 60, double vel = 1) => evs.Add((i, (bar * 16 + step) * Step, durSteps * Step, midi, vel));
+    public void Hit(Inst i, int bar, double step, double durSteps, double midi = 60, double vel = 1) => evs.Add((i, (bar * Spb + step) * Step, durSteps * Step, midi, vel));
 
     public (float[] L, float[] R, string stats) Render()
     {
         const int SR = Dsp.SR;
-        int N = (int)Math.Round(Bars * 16 * Step * SR), tail = 5 * SR, M = N + tail;
+        int N = (int)Math.Round(Bars * Spb * Step * SR), tail = 5 * SR, M = N + tail;
         float[] dL = new float[M], dR = new float[M], kL = new float[M], kR = new float[M], rv = new float[M], dl = new float[M];
         var energy = new Dictionary<string, double>(); var kicks = new List<double>();
         foreach (var e in evs)
@@ -619,6 +708,29 @@ sealed class Song
 
 static class Wav
 {
+    // PCM 16/24-bit or 32-bit float, mono or stereo; resampled to 44.1 kHz if needed.
+    public static (float[] L, float[] R) Read(string path)
+    {
+        var b = File.ReadAllBytes(path); int pos = 12, ch = 2, rate = Dsp.SR, bits = 16, fmt = 1; byte[]? data = null; int dOff = 0, dLen = 0;
+        while (pos + 8 <= b.Length)
+        {
+            string id = Encoding.ASCII.GetString(b, pos, 4); int size = BitConverter.ToInt32(b, pos + 4);
+            if (id == "fmt ") { fmt = BitConverter.ToInt16(b, pos + 8); ch = BitConverter.ToInt16(b, pos + 10); rate = BitConverter.ToInt32(b, pos + 12); bits = BitConverter.ToInt16(b, pos + 22); if (fmt == -2) fmt = BitConverter.ToInt16(b, pos + 32); }
+            else if (id == "data") { data = b; dOff = pos + 8; dLen = Math.Min(size, b.Length - dOff); break; }
+            pos += 8 + size + (size & 1);
+        }
+        if (data == null) throw new Exception("no data in " + path);
+        int bps = bits / 8, frames = dLen / (bps * ch); var L = new float[frames]; var R = new float[frames];
+        float S(int o) => bits == 16 ? BitConverter.ToInt16(data, o) / 32768f : bits == 24 ? ((data[o] | data[o + 1] << 8 | (sbyte)data[o + 2] << 16) / 8388608f) : fmt == 3 ? BitConverter.ToSingle(data, o) : BitConverter.ToInt32(data, o) / 2147483648f;
+        for (int i = 0; i < frames; i++) { int o = dOff + i * bps * ch; L[i] = S(o); R[i] = ch > 1 ? S(o + bps) : L[i]; }
+        if (rate != Dsp.SR)
+        {
+            double r = rate / (double)Dsp.SR; int n = (int)(frames / r); var L2 = new float[n]; var R2 = new float[n];
+            for (int i = 0; i < n; i++) { double p = i * r; int j = Math.Min((int)p, frames - 2); double fr = p - j; L2[i] = (float)(L[j] * (1 - fr) + L[j + 1] * fr); R2[i] = (float)(R[j] * (1 - fr) + R[j + 1] * fr); }
+            return (L2, R2);
+        }
+        return (L, R);
+    }
     public static void Write(string path, float[] L, float[] R)
     {
         using var bw = new BinaryWriter(File.Create(path)); int n = L.Length;
@@ -757,9 +869,117 @@ static class Arranger
 
 static class Tracks
 {
-    public static IEnumerable<(string, string, Func<Song>)> Custom()
+    public static IEnumerable<(string, string, Func<string?, Song>)> Custom()
     {
-        yield return ("level-kings-quest", "The King's Quest — orchestral-folk adventure in the castle theme's style, D minor, 96 BPM", KingsQuest);
+        yield return ("level-kings-quest", "The King's Quest — orchestral-folk adventure in the castle theme's style, D minor, 96 BPM", _ => KingsQuest());
+        yield return ("level-iron-crown", "The Iron Crown — epic war-drum orchestral in 3/4, D minor, 156 BPM", IronCrown);
+    }
+
+    static (double, int)? Tonal(string f, int octaveShift)
+    {
+        var m = Regex.Match(f, @"_([A-G]#?)(-?\d)_(?:v(\d)|(ppp|pp|p|mp|mf|f|ff|fff))(?:_|$)");
+        if (!m.Success) return null;
+        int vel = m.Groups[3].Success ? int.Parse(m.Groups[3].Value) : Array.IndexOf(Sampler.Dyn, m.Groups[4].Value);
+        return (Sampler.NoteName(m.Groups[1].Value + m.Groups[2].Value, octaveShift), vel);
+    }
+    public static (double, int)? TonalForTest(string f, int shift) => Tonal(f, shift);
+    static (double, int)? Hit(string f, string prefix)
+    {
+        var m = Regex.Match(f, "^" + prefix + @"_(ppp|pp|p|mp|mf|f|ff|fff)_\d+$");
+        return m.Success ? (60, Array.IndexOf(Sampler.Dyn, m.Groups[1].Value)) : null;
+    }
+    static Inst Use(Sampler? smp, Action<Sampler> set, Inst fallback) { if (smp == null) return fallback; set(smp); return smp; }
+
+    // Epic war-drum orchestral in the manner of Ramin Djawadi's Game of Thrones score: an original piece that quotes none of
+    // it. 3/4 at 156, D minor: a galloping spiccato cello ostinato, war drums, a brooding cello melody, a heroic horn theme,
+    // and a build that bursts from D minor into D major before the full orchestra returns.
+    // Intro 0-7, A 8-23 (cellos), B 24-39 (horns), build 40-47, A2 48-63 (tutti), outro 64-67 back into the intro.
+    // With VSCO 2 CE samples (fetch_samples.py) the instruments are recorded; without them, synthesised stand-ins sketch it.
+    static Song IronCrown(string? lib)
+    {
+        var s = new Song(68, 156, Sc.Minor, 2026, spb: 12) { DuckAmt = 0, RevReturn = 3.2, Room = .88, Damp = .4, MasterLowpass = 9000, DlyFb = .2 };
+        const string progA = "Dm Dm Bb Bb C C Dm Dm Dm Dm Bb Bb Gm Gm A A";
+        s.Prog(0, 8, "Dm"); s.Prog(8, 16, progA); s.Prog(24, 16, "F F C C Dm Dm Bb Bb Gm Gm Dm Dm A A A A");
+        s.Prog(40, 8, "Bb Bb C C Dm Dm D D"); s.Prog(48, 16, progA); s.Prog(64, 4, "Dm Dm A A");
+
+        var cello = Use(Sampler.Load(lib, "Strings/Cello Section/spic", f => Tonal(f, 1), "cello ostinato"), x => { x.Gain = .6; x.Release = .07; x.Rev = .22; x.Pan = -.2; },
+            new Synth { Name = "cello ostinato", Voices = 3, Detune = .12, Width = .4, Cut = 1300, Res = .8, FEnv = 1.4, FD = .07, A = .004, D = .1, S = .25, R = .07, KeyTrack = .3, Gain = .42, Rev = .22, Pan = -.2 });
+        var violas = Use(Sampler.Load(lib, "Strings/Viola Section/spic", f => Tonal(f, 1), "viola ostinato"), x => { x.Gain = .42; x.Release = .07; x.Rev = .25; x.Pan = .2; },
+            new Synth { Name = "viola ostinato", Voices = 3, Detune = .12, Width = .5, Cut = 1800, Res = .8, FEnv = 1.4, FD = .07, A = .004, D = .1, S = .25, R = .07, KeyTrack = .3, Gain = .26, Rev = .25, Pan = .2 });
+        var violinSpic = Use(Sampler.Load(lib, "Strings/Violin Section/Spic", f => Tonal(f, 1), "violin ostinato"), x => { x.Gain = .34; x.Release = .07; x.Rev = .28; x.Pan = .35; },
+            new Synth { Name = "violin ostinato", Voices = 3, Detune = .12, Width = .6, Cut = 2600, FEnv = 1, FD = .07, A = .004, D = .1, S = .25, R = .07, KeyTrack = .3, Gain = .18, Rev = .28, Pan = .35 });
+        var bass = Use(Sampler.Load(lib, "Strings/Solo Contrabass/Spic", f => Tonal(f, 1), "contrabass"), x => { x.Gain = .6; x.Release = .1; x.Rev = .15; },
+            new Synth { Name = "contrabass", Voices = 2, Detune = .1, Sub = .5, Cut = 500, FEnv = 1, FD = .1, A = .006, D = .2, S = .4, R = .1, KeyTrack = .2, Gain = .4, Rev = .15 });
+        var celloLeg = Use(Sampler.Load(lib, "Strings/Cello Section/susvib", f => Tonal(f, 1), "cello melody"), x => { x.Gain = .75; x.Attack = .04; x.Release = .35; x.Rev = .4; x.Ducked = false; },
+            new Synth { Name = "cello melody", Voices = 3, Detune = .1, Width = .4, Cut = 1500, Res = .7, A = .1, D = .3, S = .9, R = .3, VibDepth = .2, VibDelay = .15, KeyTrack = .3, Gain = .34, Rev = .4, Ducked = false });
+        var violins = Use(Sampler.Load(lib, "Strings/Violin Section/susVib", f => Tonal(f, 1), "violins"), x => { x.Gain = .5; x.Attack = .06; x.Release = .4; x.Rev = .45; x.Ducked = false; },
+            new Synth { Name = "violins", Voices = 5, Detune = .2, Width = .8, Cut = 2600, A = .15, D = .3, S = .9, R = .4, VibDepth = .15, VibDelay = .2, Gain = .2, Rev = .45, Ducked = false });
+        var horns = Use(Sampler.Load(lib, "Brass/F Horn/sus", f => Tonal(f, 1), "horns"), x => { x.Gain = .65; x.Attack = .02; x.Release = .3; x.Rev = .45; x.Ducked = false; },
+            new Synth { Name = "horns", Voices = 3, Detune = .1, Width = .5, Cut = 560, FEnv = 1.8, FA = .06, FD = .4, FS = .55, A = .04, D = .3, S = .85, R = .2, VibDepth = .05, KeyTrack = .4, Gain = .36, Rev = .45, Ducked = false });
+        var trombones = Use(Sampler.Load(lib, "Brass/Tenor Trombone/sus", f => Tonal(f, 1), "trombones"), x => { x.Gain = .5; x.Attack = .02; x.Release = .3; x.Rev = .4; },
+            new Synth { Name = "trombones", Voices = 3, Detune = .1, Width = .4, Cut = 450, FEnv = 1.6, FA = .05, FD = .3, FS = .5, A = .03, D = .3, S = .85, R = .2, KeyTrack = .4, Gain = .3, Rev = .4 });
+        var harp = Use(Sampler.Load(lib, "Strings/Harp", f => Tonal(f, 0), "harp"), x => { x.Gain = .45; x.Release = .5; x.Rev = .4; x.Pan = -.3; }, Pre.Harp(.3));
+        var war = Use(Sampler.Load(lib, "VSCO 1 Percussion/drums/other/ethnic/giant/hand", f => Hit(f, "EthnicLargeHand_hit"), "war drums"), x => { x.OneShot = true; x.Gain = .85; x.Rev = .3; },
+            new Drum { Name = "war drums", Kind = Drum.K.Taiko, Tune = 1.0, Decay = .7, Gain = .78, Rev = .3, Ducked = false });
+        var bdrum = Use(Sampler.Load(lib, "VSCO 1 Percussion/drums/bass", f => Hit(f, "bdrum"), "bass drum"), x => { x.OneShot = true; x.Gain = .9; x.Rev = .3; },
+            new Drum { Name = "bass drum", Kind = Drum.K.Taiko, Tune = .8, Decay = 1.2, Gain = .55, Rev = .3, Ducked = false });
+        var toms = Use(Sampler.Load(lib, "VSCO 1 Percussion/drums/tenor/tenor_lower", f => Hit(f, "tenor"), "toms"), x => { x.OneShot = true; x.Gain = .6; x.Rev = .25; },
+            new Drum { Name = "toms", Kind = Drum.K.Tom, Decay = .9, Gain = .22, Rev = .25, Ducked = false });
+        var timp = Use(Sampler.Load(lib, "Percussion/Timpani", f => Regex.IsMatch(f, @"^Timpani\d_Hit_v\d_rr\d_Sum$") ? (double.NaN, int.Parse(Regex.Match(f, @"_v(\d)").Groups[1].Value)) : null, "timpani"),
+            x => { x.Gain = .75; x.Release = .9; x.Rev = .35; }, new Drum { Name = "timpani", Kind = Drum.K.Tom, Decay = 2.4, Gain = .5, Rev = .35, Ducked = false });
+        var crash = Use(Sampler.Load(lib, "VSCO 1 Percussion/varMetal/Cymbals/clash", f => f.StartsWith("crash_hit_ff") ? (60, f.StartsWith("crash_hit_fff") ? 2 : 1) : null, "cymbals"),
+            x => { x.OneShot = true; x.Gain = .45; x.Rev = .3; }, Pre.Crash(.16));
+        var swell = Use(Sampler.Load(lib, "VSCO 1 Percussion/varMetal/Cymbals/susp", f => f == "susp_hit_softmall_roll2_cresc" ? (60, 1) : null, "cymbal swell"),
+            x => { x.OneShot = true; x.Gain = .45; x.Rev = .35; }, Pre.Riser(.12));
+
+        const string ost = "R.RR5.55R.3.";
+        const string melA =
+            "5 - - - 1' - | 3' - - - 2' 1' | 6 - - - - - | 4 - 6 - 1' - | 7 - - - 1' 7 | 4 - - - - - | 5 - - - 4 3 | 1 - - - - - |" +
+            "5 - - - 1' - | 3' - - - 2' 1' | 4' - - - 3' 2' | 1' - - - 6 - | 1' - - - 6 4 | 6 - - - 1' 2' | #7 - - - 5 - | 5 - - - #7 -";
+        const string melB =
+            "3 - - 5 7 - | 1' - - - 7 - | 7 - - 5 2' - | 1' - - - 7 - | 1' - - 7 6 - | 5 - - - 3 - | 4 - - 6 1' - | 6 - - - - - |" +
+            "4 - - 6 1' - | 2' - - - 1' - | 1' - - 5 3 - | 1 - - - - - | #7, - - 2 5 - | #7 - - - 5 - | 5 - 6 - #7 - | #7 - - - - -";
+        const string climb = "4 - - - - - | 6 - - - - - | 5 - - - - - | 7 - - - - - | 1' - - - - - | 2' - - - - - | #3' - - - - - | - - - - - -";
+
+        // Intro: the cello gallop alone, then the contrabass, a war drum and the first timpani join.
+        s.Bass(cello, 0, 8, ost, 45, .85, .9);
+        s.Bass(bass, 4, 4, "R...R...R...", 38, .8);
+        s.Drums(war, 4, 4, "x...........", .7);
+        s.Bass(timp, 4, 1, "R...........", 38);
+        // A: the cello melody over pounding drums.
+        s.Bass(cello, 8, 16, ost, 45); s.Bass(bass, 8, 16, "R...R...R...", 38);
+        s.Drums(war, 8, 16, "X...x...x.x.");
+        s.Drums(bdrum, 8, 16, "X...........");
+        s.Bass(timp, 8, 16, "R........... ............", 38);
+        s.Melody(celloLeg, 8, melA, 50, grid: 2, legato: .98);
+        s.Chords(violins, 16, 8, "x-----------", 62, 3, .55, .98);
+        // B: horns take a heroic theme, trombones beneath, violas join the gallop, toms drive.
+        s.Bass(cello, 24, 16, ost, 45); s.Bass(violas, 24, 16, ost, 57, .85); s.Bass(bass, 24, 16, "R...R...R...", 38);
+        s.Drums(war, 24, 16, "X...x...x.x."); s.Drums(bdrum, 24, 16, "X.......x..."); s.Drums(toms, 24, 16, "......x.x.xx", .8);
+        s.Melody(horns, 24, melB, 62, grid: 2, legato: .98); s.Melody(trombones, 24, melB, 62, grid: 2, legato: .98, vel: .75, transpose: -12);
+        s.Chords(violins, 24, 16, "x-----------", 62, 3, .5, .98);
+        s.Bass(timp, 24, 16, "R...........", 38, .8);
+        // Build: the climb from D minor to D major, everything rising, rolls into the finale.
+        s.Bass(cello, 40, 8, ost, 45); s.Bass(violas, 40, 8, ost, 57); s.Bass(violinSpic, 44, 4, ost, 62, .8); s.Bass(bass, 40, 8, "R...R...R...", 38);
+        s.Drums(war, 40, 6, "X...x...x.x."); s.Drums(bdrum, 40, 6, "X...........");
+        s.Melody(violins, 40, climb, 62, grid: 2, legato: .99); s.Melody(horns, 40, climb, 62, grid: 2, legato: .99, vel: .8, transpose: -12);
+        s.Chords(trombones, 40, 8, "x-----------", 50, 3, .7, .98);
+        s.Drums(toms, 46, 2, "ooooooxxxxxx xxxxxxXXXXXX");
+        s.Bass(timp, 46, 2, "RRRRRRRRRRRR", 38, .9);
+        s.Hit(swell, 46, 0, 24, 60, 1);
+        // A2: the full orchestra on the main melody.
+        s.Bass(cello, 48, 16, ost, 45); s.Bass(violas, 48, 16, ost, 57); s.Bass(violinSpic, 48, 16, ost, 62, .8); s.Bass(bass, 48, 16, "R...R...R...", 38);
+        s.Drums(war, 48, 16, "X...x...x.x."); s.Drums(bdrum, 48, 16, "X.......x..."); s.Drums(toms, 48, 16, "......x.x.xx", .85);
+        s.Melody(celloLeg, 48, melA, 50, grid: 2, legato: .98); s.Melody(violins, 48, melA, 62, grid: 2, legato: .98, vel: .85);
+        s.Chords(horns, 48, 16, "x-----------", 57, 3, .6, .98); s.Bass(trombones, 48, 16, "R-----------", 38, .6, .98);
+        s.Bass(timp, 48, 16, "R...........", 38, .9);
+        // Outro: drums and gallop, thinning back into the intro.
+        s.Bass(cello, 64, 4, ost, 45); s.Bass(bass, 64, 4, "R...R...R...", 38, .85);
+        s.Drums(war, 64, 4, "X...x...x.x. X...x...x.x. X...x...x.x. X...x.x.xxxx");
+        s.Melody(harp, 63, ". . . 1 2 3 | 4 5 6 #7 1' 2'", 62, grid: 2, vel: .8);
+        foreach (var b in new[] { 8, 24, 48 }) s.Hit(crash, b, 0, 24, 60, 1);
+        s.Hit(crash, 40, 0, 24, 60, .7);
+        return s;
     }
 
     // Modelled on what drives the castle theme (analysed 7 Oct 2026): a low drum on every beat, strummed and tambourine 8ths
