@@ -35,8 +35,9 @@ namespace JellyGarden.Scripts.Juice
                             flights.Add(target);
                             ball.BeamFired(sq.transform.position);next++;prepared=false;
                             float fraction=next/(float)Mathf.Max(1,targets.Count);
-                            // Same selected cells/order. Only the visual launch rhythm varies with count.
-                            nextBeam+=(targets.Count>28?Mathf.Lerp(.132f,.121f,Mathf.Sin(fraction*Mathf.PI)):.124f)-1f/30f;
+                            // Keep the preparation beat and every impact; tighten the gaps between launches.
+                            // Dense selections retain a small rhythmic variation without lengthening each gap.
+                            nextBeam+=(targets.Count>28?Mathf.Lerp(.095f,.085f,Mathf.Sin(fraction*Mathf.PI)):.090f)-1f/30f;
                         }
                     }}
                     for(int i=0;i<flights.Count;){

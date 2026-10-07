@@ -11,7 +11,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4
     public sealed class ColorBallVisualV4 : MonoBehaviour
     {
         public enum Phase { Free,Reveal,Idle,Charge,Charged,Finish,PayoffHold }
-        public const float RevealDuration=.76f,ChargeDuration=.62f,FinishDuration=.30f,HandoffPause=.16f;
+        public const float RevealDuration=.76f,ChargeDuration=.32f,FinishDuration=.30f,HandoffPause=.16f;
         // Artistic spin rate. Blurred footage does not establish a physical RPM.
         public const float IdleSpin=.065f,ChargedSpin=94f,FinishSpin=126f;
         public const float IdleOrbit=.12f,ChargedOrbit=11f,FinishOrbit=16f;
