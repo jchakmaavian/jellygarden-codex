@@ -39,13 +39,21 @@ namespace JellyGarden.Scripts.Juice
         }
         public static void AddSquares(List<List<Item>> groups)
         {
-            var used=new HashSet<Item>();foreach(var g in groups)foreach(var i in g)used.Add(i);
             var lm=LevelManager.THIS;
             for(int r=0;r<lm.maxRows;r++)for(int c=0;c<lm.maxCols;c++)
             {
-                var g=SquareAt(lm.GetSquare(c,r));if(g.Count!=4||g.Exists(used.Contains))continue;
+                var g=SquareAt(lm.GetSquare(c,r));if(g.Count!=4)continue;
+                // A square plus an extra gem also contains a three-gem line.
+                // Absorb ordinary line matches instead of letting them suppress the square.
+                // Already selected specials (including an earlier square) keep their priority.
+                var overlaps=groups.FindAll(existing=>existing.Exists(g.Contains));
+                if(overlaps.Exists(existing=>existing.Exists(item=>item.NextType!=ItemsTypes.NONE)))continue;
+                foreach(var existing in overlaps){
+                    foreach(var item in existing)if(!g.Contains(item))g.Add(item);
+                    groups.Remove(existing);
+                }
                 Item host=lm.PreferredMatchHost(g);if(!host)host=g[0];
-                host.NextType=ItemsTypes.HELICOPTER;groups.Add(g);foreach(var i in g)used.Add(i);
+                host.NextType=ItemsTypes.HELICOPTER;groups.Add(g);
             }
         }
     }
