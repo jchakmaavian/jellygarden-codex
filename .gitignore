@@ -140,3 +140,6 @@ Thumbs.db
 ehthumbs.db
 desktop.ini
 .DS_Store
+
+# Local QA reports and spreadsheets (kept on disk, not in GitHub).
+/outputs/
