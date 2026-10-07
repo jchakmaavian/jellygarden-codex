@@ -10,6 +10,10 @@ namespace JellyGarden.Scripts.Juice
     public sealed class RoyalHintPresenter : MonoBehaviour
     {
         const int MaxContours=16,MaxCells=128;
+        public const float PairStartDelay=.4f,PairTravelSeconds=1.2f,PairRestSeconds=.35f;
+        const float PairNudge=.08f,MatchGrowth=.06f,ArtClearance=.015f;
+        sealed class HintGem { public Item Item;public RoyalPieceSkin Skin;public Vector3 Offset;public float Growth; }
+        readonly List<HintGem> hintGems=new List<HintGem>();
         static RoyalHintPresenter attentionSource;
         sealed class Outline
         {
@@ -39,6 +43,7 @@ namespace JellyGarden.Scripts.Juice
         readonly Vector3[] glintPoints=new Vector3[9];
         RoyalHintPlan plan;RoyalPieceSkin firstSkin,secondSkin;
         InputAction press,cancel;Material material;GameObject visualRoot;
+        Material pairGlowMaterial;readonly List<SpriteRenderer> pairGlows=new List<SpriteRenderer>();
         float shownAt,cell;int activeContours;
         public bool IsVisible=>plan!=null;
         public int VisibleSwapCount=>plan==null?0:plan.Second?2:1;
@@ -138,6 +143,7 @@ namespace JellyGarden.Scripts.Juice
                 foreach(var head in new[]{outline.HeadA,outline.HeadB}){head.sortingLayerID=candidate.First.sprRenderer.sortingLayerID;head.sortingOrder=baseOrder+8;head.enabled=false;}
             }
             plan=candidate;attentionSource=this;activeContours=shape.Loops.Count;BoundaryEdgeCount=shape.BoundaryEdges;shownAt=Time.unscaledTime;
+            PrepareGemInteraction(lm);
             sparkleRandom=new global::System.Random(candidate.MatchCells.Count*7919+lm.moveID);
             EnsureSparkles(candidate.First.sprRenderer.sortingLayerID,candidate.First.sprRenderer.sortingOrder+8);
             foreach(var sparkle in sparkles)Respawn(sparkle,shownAt-(float)sparkleRandom.NextDouble()*.7f);
@@ -255,9 +261,14 @@ namespace JellyGarden.Scripts.Juice
             bool motion=PlayerPrefs.GetInt("RoyalThrone.HomeMotion",1)!=0;
             float elapsed=Time.unscaledTime-shownAt,pulse=motion?Mathf.Pow(Mathf.Sin(elapsed*Mathf.PI/1.1f),2):0;
             if(plan.Second){
-                var direction=(plan.Second.transform.position-plan.First.transform.position).normalized;
-                Pose(firstSkin,plan.First,direction*cell*.045f*pulse,1+.008f*pulse);
-                Pose(secondSkin,plan.Second,-direction*cell*.045f*pulse,1+.008f*pulse);
+                float phase=Mathf.Repeat(Mathf.Max(0,elapsed-PairStartDelay),PairTravelSeconds+PairRestSeconds);
+                float interaction=motion&&elapsed>=PairStartDelay&&phase<PairTravelSeconds
+                    ?Mathf.Pow(Mathf.Sin(phase*Mathf.PI/PairTravelSeconds),2):0;
+                for(int i=0;i<hintGems.Count;i++){
+                    var gem=hintGems[i];
+                    Pose(gem.Skin,gem.Item,gem.Offset*interaction,1+gem.Growth*interaction);
+                    GlowGem(i,gem.Item.sprRenderer,interaction);
+                }
             }else Pose(firstSkin,plan.First,Vector3.zero,1+.018f*pulse);
             // White only: the bristles at full white, the brush body and the glow breathing with the pulse.
             float neon=motion?.5f+.5f*Mathf.Sin(elapsed*Mathf.PI*2/1.1f):1;
@@ -297,6 +308,70 @@ namespace JellyGarden.Scripts.Juice
         }
         static void Pose(RoyalPieceSkin skin,Item item,Vector3 worldOffset,float scale)
         {if(skin&&item&&item.sprRenderer)skin.SetHintPose(item.sprRenderer.transform.parent.InverseTransformVector(worldOffset),scale);}
+        void PrepareGemInteraction(LevelManager lm)
+        {
+            // The match contour contains destination cells. Include their current
+            // occupants and both exchange partners, including the gem outside it.
+            void Add(Item item){
+                if(!item||!item.sprRenderer)return;
+                foreach(var existing in hintGems)if(existing.Item==item)return;
+                var skin=item.GetComponent<RoyalPieceSkin>();if(!skin)return;
+                skin.ApplyNow();hintGems.Add(new HintGem{Item=item,Skin=skin});
+            }
+            foreach(var sq in plan.MatchCells)Add(sq.item);
+            Add(plan.First);Add(plan.Second);
+            Vector3 direction=plan.Second?(plan.Second.transform.position-plan.First.transform.position).normalized:Vector3.zero;
+            var affected=new HashSet<Item>();foreach(var gem in hintGems)affected.Add(gem.Item);
+            Bounds Peak(Item item){
+                var art=item.sprRenderer;var b=art.bounds;if(!affected.Contains(item))return b;
+                var pivot=art.transform.position;
+                return new Bounds(pivot+(b.center-pivot)*(1+MatchGrowth),b.size*(1+MatchGrowth));
+            }
+            Vector3 Motion(Item item)=>item==plan.First?direction:item==plan.Second?-direction:Vector3.zero;
+            bool horizontal=Mathf.Abs(direction.x)>.5f;int axis=horizontal?0:1,cross=horizontal?1:0;
+            float travel=cell*PairNudge;
+            // Share the free space between the two moving partners. Artwork can
+            // cross an imaginary cell edge, but cannot touch another gem. Testing
+            // the expanded peak bounds also keeps every intermediate pose clear.
+            foreach(var item in new[]{plan.First,plan.Second}){
+                if(!item)continue;var a=Peak(item);
+                foreach(var sq in lm.squaresArray){
+                    var other=sq?sq.item:null;if(!other||other==item||!other.sprRenderer)continue;
+                    var b=Peak(other);
+                    if(a.max[cross]<=b.min[cross]||b.max[cross]<=a.min[cross])continue;
+                    float sign=b.center[axis]>a.center[axis]?1:-1;
+                    float closing=(Motion(item)[axis]-Motion(other)[axis])*sign;if(closing<=0)continue;
+                    float gap=sign>0?b.min[axis]-a.max[axis]:a.min[axis]-b.max[axis];
+                    travel=Mathf.Min(travel,(gap-cell*ArtClearance)/closing);
+                }
+            }
+            foreach(var gem in hintGems){gem.Growth=MatchGrowth;gem.Offset=Motion(gem.Item)*Mathf.Max(0,travel);}
+        }
+        void GlowGem(int index,SpriteRenderer source,float pulse)
+        {
+            // A pooled additive copy brightens the matching-area artwork. No material,
+            // transform or collider on the gameplay root is changed.
+            while(pairGlows.Count<=index)pairGlows.Add(null);
+            var glow=pairGlows[index];
+            if(pulse<=0||!source.enabled){if(glow)glow.enabled=false;return;}
+            if(!pairGlowMaterial){
+                pairGlowMaterial=new Material(Resources.Load<Material>("JuiceAdditive")){name="Royal hint gem glow"};
+                pairGlowMaterial.EnableKeyword("SPRITE_RENDERER_COLOR");
+                pairGlowMaterial.SetFloat("_UseRendererColor",1);pairGlowMaterial.SetFloat("_Boost",1);
+                pairGlowMaterial.SetColor("_Color",Color.white);pairGlowMaterial.SetColor("_Tint",Color.white);
+            }
+            if(!glow){
+                glow=new GameObject("Hint match gem glow "+index).AddComponent<SpriteRenderer>();
+                glow.sharedMaterial=pairGlowMaterial;pairGlows[index]=glow;
+            }
+            var tr=glow.transform;var art=source.transform;
+            tr.SetParent(art,false);tr.localPosition=Vector3.zero;tr.localRotation=Quaternion.identity;tr.localScale=Vector3.one;
+            glow.sprite=source.sprite;glow.flipX=source.flipX;glow.flipY=source.flipY;
+            glow.sortingLayerID=source.sortingLayerID;glow.sortingOrder=source.sortingOrder+1;
+            // JuiceAdditive premultiplies then blends by alpha: square-root keeps
+            // brightness in step with the movement (about 23 percent at peak).
+            glow.color=new Color(1,1,1,.48f*Mathf.Sqrt(pulse)*source.color.a);glow.enabled=true;
+        }
         static Vector3 PointAlong(Outline outline,float distance)
         {
             for(int i=0;i<outline.Points.Length;i++)if(distance<=outline.Distance[i+1])
@@ -306,12 +381,14 @@ namespace JellyGarden.Scripts.Juice
         public void Hide()
         {
             if(attentionSource==this)attentionSource=null;
+            foreach(var glow in pairGlows)if(glow){glow.enabled=false;if(visualRoot)glow.transform.SetParent(visualRoot.transform,false);}
+            foreach(var gem in hintGems)if(gem.Skin)gem.Skin.ClearHintPose();hintGems.Clear();
             if(firstSkin)firstSkin.ClearHintPose();if(secondSkin)secondSkin.ClearHintPose();
             firstSkin=secondSkin=null;plan=null;activeContours=0;BoundaryEdgeCount=0;
             foreach(var outline in pool){outline.Glow.enabled=outline.Edge.enabled=outline.Halo.enabled=outline.Core.enabled=outline.Glint.enabled=outline.Chaser.enabled=false;
                 outline.HeadA.enabled=outline.HeadB.enabled=false;}
             foreach(var sparkle in sparkles)sparkle.Renderer.enabled=false;
         }
-        void OnDestroy(){Hide();if(visualRoot)Destroy(visualRoot);if(material)Destroy(material);}
+        void OnDestroy(){Hide();if(visualRoot)Destroy(visualRoot);if(material)Destroy(material);if(pairGlowMaterial)Destroy(pairGlowMaterial);}
     }
 }

@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
     /// <summary>Checks rendered hints on the disposable fixture, without invoking the mutating match solver.</summary>
     public static class RoyalHintPresentationChecks
     {
-        const string Folder="Design/Effects/Unity-review-v4/raw/";
+        const string Folder="Design/QaFeedback/03-HintInteraction/raw/";
         sealed class Example
         {
             public string Name;public Vector2Int Source;public Vector2Int[] Cells;public int Edges;
@@ -32,16 +32,29 @@ namespace RoyalThrone.Editor
             new Example("hint-square",P(2,3),8,P(3,3),P(4,3),P(3,4),P(4,4))
         };
         static Item At(LevelManager lm,Vector2Int p)=>lm.GetSquare(p.x,p.y).item;
-        static RoyalHintPlan Setup(LevelManager lm,Example example)
+        static RoyalHintPlan Setup(LevelManager lm,Example example,int colour=0)
         {
             // A prior gameplay resolver schedules idle discovery on LevelManager.
             // Retire that fixture's pending scan before assigning this exact shape.
             lm.StopAllCoroutines();
             AI.THIS.StopAllCoroutines();AI.THIS.CancelVisibleHint();AI.THIS.allowShowTip=false;
-            foreach(var sq in lm.squaresArray){var item=sq.item;item.SetColor(1+(sq.col+sq.row*2)%4);item.currentType=item.NextType=ItemsTypes.NONE;item.falling=item.destroying=false;}
-            foreach(var p in example.Cells)At(lm,p).SetColor(0);
-            At(lm,example.Source).SetColor(0);At(lm,P(3,3)).SetColor(4);
+            foreach(var sq in lm.squaresArray){var item=sq.item;item.SetColor((colour+1+(sq.col+sq.row*2)%4)%5);item.currentType=item.NextType=ItemsTypes.NONE;item.falling=item.destroying=false;}
+            foreach(var p in example.Cells)At(lm,p).SetColor(colour);
+            At(lm,example.Source).SetColor(colour);At(lm,P(3,3)).SetColor((colour+4)%5);
+            foreach(var sq in lm.squaresArray)sq.item.GetComponent<RoyalPieceSkin>().ApplyNow();
             return RoyalHintSolver.EvaluateSwap(lm,At(lm,example.Source),At(lm,P(3,3)));
+        }
+        static HashSet<Item> Affected(RoyalHintPlan plan)
+        {var items=new HashSet<Item>(plan.MatchCells.Select(s=>s.item));items.Add(plan.First);items.Add(plan.Second);items.Remove(null);return items;}
+        static bool NoArtOverlap(LevelManager lm,RoyalHintPlan plan)
+        {
+            foreach(var item in Affected(plan))foreach(var sq in lm.squaresArray){
+                if(!sq||!sq.item||sq.item==item)continue;
+                var a=item.sprRenderer.bounds;var b=sq.item.sprRenderer.bounds;
+                if(Mathf.Min(a.max.x,b.max.x)-Mathf.Max(a.min.x,b.min.x)>.0001f&&
+                    Mathf.Min(a.max.y,b.max.y)-Mathf.Max(a.min.y,b.min.y)>.0001f)return false;
+            }
+            return true;
         }
         static bool ExactEdges(RoyalHintContour.Shape shape,HashSet<Vector2Int> cells)
         {
@@ -105,19 +118,26 @@ namespace RoyalThrone.Editor
                 RoyalHintSettings.Enabled=true;PlayerPrefs.SetInt("RoyalThrone.HomeMotion",1);State(lm,GameState.Playing);lm.DragBlocked=false;
                 input.inputActionAsset.devices=new[]{mouse};yield return null;
                 foreach(var example in examples){
-                    var plan=Setup(lm,example);
+                    var plan=Setup(lm,example,Array.IndexOf(examples,example)%5);var affected=Affected(plan);
                     check(plan!=null&&new HashSet<Vector2Int>(plan.MatchCells.Select(s=>P(s.col,s.row))).SetEquals(example.Cells),example.Name+" previews every resulting matched cell and excludes unrelated neighbours");
                     check(plan.First==At(lm,example.Source)&&plan.Second==At(lm,P(3,3))&&!plan.IsTap,example.Name+" identifies both actual exchange partners");
                     check(MatchesProductionResult(lm,plan),example.Name+" full preview exactly matches the existing production match solver's consumed cells");
                     var grid=new HashSet<Vector2Int>(example.Cells.Select(p=>P(p.x,-p.y)));var shape=RoyalHintContour.Build(grid);
                     check(shape.Loops.Count==1&&shape.BoundaryEdges==example.Edges&&ExactEdges(shape,grid),example.Name+" has one closed full-shape boundary, with no internal or phantom edges");
                     var roots=originalItems.Select(i=>i.transform.position).ToArray();var sprites=originalItems.Select(i=>i.sprRenderer.transform.localPosition).ToArray();
+                    var scales=originalItems.Select(i=>i.sprRenderer.transform.localScale).ToArray();
                     var colliders=originalItems.Select(i=>i.GetComponent<BoxCollider2D>().bounds).ToArray();
                     var next=originalItems.Select(i=>i.NextType).ToArray();var solverRandom=UnityEngine.Random.state;
                     RoyalHintSolver.Find(lm);
                     check(originalItems.Select((item,index)=>item.NextType==next[index]&&item.square.item==item).All(v=>v)&&UnityEngine.Random.state.Equals(solverRandom),example.Name+" preview leaves ownership, power creation and RNG untouched");
                     check(presenter.Show(plan),example.Name+" starts its native rendered hint");
-                    yield return new WaitForSecondsRealtime(.34f);yield return new WaitForEndOfFrame();
+                    yield return new WaitForSecondsRealtime(.18f);yield return new WaitForEndOfFrame();
+                    check(originalItems.Select((item,index)=>item.sprRenderer.transform.localPosition==sprites[index]&&Vector3.Distance(item.sprRenderer.transform.localScale,scales[index])<.001f).All(v=>v),example.Name+" waits gently before moving or growing either gem");
+                    // Sample the actual rendered approach instead of assuming a
+                    // fixed wait lands on the peak during first-use shader warmup.
+                    float peakDeadline=Time.unscaledTime+2.5f;
+                    while(Time.unscaledTime<peakDeadline&&plan.First.sprRenderer.transform.localScale.x/scales[Array.IndexOf(originalItems,plan.First)].x<1.057f)
+                        yield return new WaitForEndOfFrame();
                     var direction=(plan.Second.transform.position-plan.First.transform.position).normalized;
                     var a=Array.IndexOf(originalItems,plan.First);var b=Array.IndexOf(originalItems,plan.Second);
                     Vector3 Delta(int index)=>originalItems[index].sprRenderer.transform.parent.TransformVector(originalItems[index].sprRenderer.transform.localPosition-sprites[index]);
@@ -125,6 +145,13 @@ namespace RoyalThrone.Editor
                         example.Name+" visibly moves the two rendered gems toward each other after Animator and skin updates (visible="+presenter.IsVisible+", first="+Vector3.Dot(Delta(a),direction)+", second="+Vector3.Dot(Delta(b),direction)+")");
                     check(originalItems.Select((item,index)=>index==a||index==b||Vector3.Distance(item.sprRenderer.transform.localPosition,sprites[index])<.0001f).All(v=>v),example.Name+" leaves all other gem positions steady");
                     check(originalItems.Select((item,index)=>Vector3.Distance(item.transform.position,roots[index])<.0001f&&item.GetComponent<BoxCollider2D>().bounds==colliders[index]&&item.square.item==item).All(v=>v),example.Name+" keeps roots, hit areas and square ownership unchanged during motion");
+                    check(affected.All(item=>{float ratio=item.sprRenderer.transform.localScale.x/scales[Array.IndexOf(originalItems,item)].x;return ratio>1.05f&&ratio<=1.0601f;}),
+                        example.Name+" all matching-area gems and both swap partners gently grow by no more than 0.06x");
+                    check(affected.All(item=>item.sprRenderer.GetComponentsInChildren<SpriteRenderer>().Any(r=>r.name.StartsWith("Hint match gem glow")&&r.enabled&&r.color.a>.45f&&r.sprite==item.sprRenderer.sprite)),
+                        example.Name+" every matching-area gem and both swap partners brighten together");
+                    check(originalItems.Where(item=>!affected.Contains(item)).All(item=>item.sprRenderer.transform.localScale==scales[Array.IndexOf(originalItems,item)]&&
+                        !item.GetComponentsInChildren<SpriteRenderer>().Any(r=>r.name.StartsWith("Hint match gem glow")&&r.enabled)),example.Name+" unrelated gems neither grow nor glow");
+                    check(NoArtOverlap(lm,plan),example.Name+" enlarged gem artwork stays separated from every neighbouring gem");
                     var line=presenter.ContourRenderer(0);var points=new Vector3[line.positionCount];line.GetPositions(points);
                     var bounds=new Bounds(plan.MatchCells[0].transform.position,Vector3.zero);foreach(var sq in plan.MatchCells)bounds.Encapsulate(sq.transform.position);
                     check(line.enabled&&line.loop&&line.positionCount>=24&&presenter.OutlineCellCount==example.Cells.Length&&presenter.BoundaryEdgeCount==example.Edges,
@@ -138,7 +165,42 @@ namespace RoyalThrone.Editor
                     check(Vector3.Distance(before,glint.GetPosition(0))>lm.squareWidth*.12f,example.Name+" light visibly travels along the contour between captured frames");
                     presenter.Hide();
                     check(!presenter.IsVisible&&originalItems.Select((item,index)=>Vector3.Distance(item.sprRenderer.transform.localPosition,sprites[index])<.0001f).All(v=>v),example.Name+" cancellation restores both sprite positions immediately");
+                    check(originalItems.Select((item,index)=>Vector3.Distance(item.sprRenderer.transform.localScale,scales[index])<.001f).All(v=>v)&&
+                        presenter.GetComponentsInChildren<SpriteRenderer>().Where(r=>r.name.StartsWith("Hint match gem glow")).All(r=>!r.enabled),example.Name+" cancellation restores size and removes gem brightness immediately");
                 }
+
+                // Observe repeated live frames, including the return/rest phase and
+                // the second approach. Sampling the rendered result catches Animator conflicts.
+                var loopPlan=Setup(lm,examples[0]);
+                var loopItems=lm.squaresArray.Select(s=>s.item).ToArray();
+                var loopRoots=loopItems.Select(i=>i.transform.position).ToArray();
+                var loopBounds=loopItems.Select(i=>i.GetComponent<BoxCollider2D>().bounds).ToArray();
+                var loopRest=loopItems.Select(i=>i.sprRenderer.transform.localPosition).ToArray();
+                var loopScale=loopPlan.First.sprRenderer.transform.localScale.x;
+                presenter.Show(loopPlan);float loopStart=Time.unscaledTime,nextCapture=0;
+                int frame=0;bool stationary=true,separated=true,firstPeak=false,secondPeak=false,returned=false;
+                var captureTimes=new List<string>();
+                while(Time.unscaledTime-loopStart<3.65f){
+                    yield return new WaitForEndOfFrame();float time=Time.unscaledTime-loopStart;
+                    stationary &= loopItems.Select((item,index)=>item.transform.position==loopRoots[index]&&item.GetComponent<BoxCollider2D>().bounds==loopBounds[index]&&item.square.item==item&&
+                        (item==loopPlan.First||item==loopPlan.Second||item.sprRenderer.transform.localPosition==loopRest[index])).All(v=>v);
+                    float scale=loopPlan.First.sprRenderer.transform.localScale.x/loopScale;
+                    separated &= NoArtOverlap(lm,loopPlan);
+                    if(time<1.3f&&scale>1.057f)firstPeak=true;
+                    if(time>2.2f&&scale>1.057f)secondPeak=true;
+                    if(time>1.6f&&time<1.95f&&Mathf.Abs(scale-1)<.001f)returned=true;
+                    if(time>=nextCapture){
+                        Directory.CreateDirectory(Folder);var tex=ScreenCapture.CaptureScreenshotAsTexture();
+                        try{File.WriteAllBytes(Folder+"loop-"+frame.ToString("D3")+".png",tex.EncodeToPNG());}finally{UnityEngine.Object.Destroy(tex);}
+                        captureTimes.Add(time.ToString("F4",System.Globalization.CultureInfo.InvariantCulture));frame++;nextCapture=time+1f/15;
+                    }
+                }
+                File.WriteAllLines(Folder+"loop-times.txt",captureTimes);
+                check(firstPeak&&secondPeak&&returned,"Interaction repeats two full approaches with a smooth return to normal size between them");
+                check(stationary,"Every sampled loop frame preserves all cell owners, root positions, hit areas and other gem positions");
+                check(separated,"No hinted gem overlaps any neighbour during either complete rendered cycle");
+                check(loopItems.Sum(i=>i.GetComponentsInChildren<SpriteRenderer>().Count(r=>r.name.StartsWith("Hint match gem glow")))==Affected(loopPlan).Count,"Repeated animation reuses one glow per matching-area gem and swap partner");
+                presenter.Hide();
 
                 var mixed=new Example("line-square-overlap",P(4,3),8,P(1,3),P(2,3),P(3,3));Setup(lm,mixed);
                 At(lm,P(2,2)).SetColor(0);At(lm,P(3,2)).SetColor(0);
@@ -176,7 +238,7 @@ namespace RoyalThrone.Editor
                     "Natural idle finder reveals a real two-gem swap only after the quiet-time delay");
                 check(idlePlan.IsCurrent(lm)&&MatchesProductionResult(lm,idlePlan),
                     "Natural idle finder selects the complete match actually consumed by production gameplay");
-                yield return new WaitForSecondsRealtime(.34f);yield return new WaitForEndOfFrame();
+                yield return new WaitForSecondsRealtime(RoyalHintPresenter.PairStartDelay+.34f);yield return new WaitForEndOfFrame();
                 var idleDirection=(idlePlan.Second.transform.position-idlePlan.First.transform.position).normalized;
                 Vector3 IdleDelta(Item item)=>item.sprRenderer.transform.parent.TransformVector(item.sprRenderer.transform.localPosition-idleRest[item]);
                 check(presenter.CurrentPlan==idlePlan&&Vector3.Dot(IdleDelta(idlePlan.First),idleDirection)>lm.squareWidth*.005f&&
@@ -209,8 +271,11 @@ namespace RoyalThrone.Editor
                 candidate=Setup(lm,examples[3]);presenter.Show(candidate);var originalField=lm.GameField;lm.GameField=null;yield return null;
                 check(!presenter.IsVisible,"Changing game fields clears the hint");lm.GameField=originalField;
                 candidate=Setup(lm,examples[3]);PlayerPrefs.SetInt("RoyalThrone.HomeMotion",0);
-                var firstRest=candidate.First.sprRenderer.transform.localPosition;presenter.Show(candidate);yield return new WaitForSecondsRealtime(.4f);
-                check(presenter.IsVisible&&candidate.First.sprRenderer.transform.localPosition==firstRest&&presenter.GetComponentsInChildren<LineRenderer>().Where(r=>r.name.Contains("travelling")).All(r=>!r.enabled),
+                var firstRest=candidate.First.sprRenderer.transform.localPosition;var firstScale=candidate.First.sprRenderer.transform.localScale;
+                presenter.Show(candidate);yield return new WaitForSecondsRealtime(1f);
+                check(presenter.IsVisible&&candidate.First.sprRenderer.transform.localPosition==firstRest&&candidate.First.sprRenderer.transform.localScale==firstScale&&
+                    presenter.GetComponentsInChildren<SpriteRenderer>().Where(r=>r.name.StartsWith("Hint match gem glow")).All(r=>!r.enabled)&&
+                    presenter.GetComponentsInChildren<LineRenderer>().Where(r=>r.name.Contains("travelling")).All(r=>!r.enabled),
                     "Reduced motion retains a readable full outline with no gem nudging or moving glint");presenter.Hide();
                 check(lm.Limit==moves&&LevelManager.Score==score&&lm.moveID==move&&InitScript.Gems==gems&&InitScript.lifes==lives,"Rendered hint checks consume no moves, score, coins or lives");
                 PlayerPrefs.SetInt("RoyalThrone.HomeMotion",1);candidate=Setup(lm,examples[3]);presenter.Show(candidate);

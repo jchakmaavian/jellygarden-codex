@@ -84,7 +84,7 @@ namespace JellyGarden.Scripts.Juice
         {
             if(!ready)ApplyNow();if(!item||!item.sprRenderer||item.destroying)return;
             if(!hintPose)hintRestPosition=item.sprRenderer.transform.localPosition;
-            hintPose=true;hintOffset=localOffset;hintScale=Mathf.Clamp(scale,1,1.035f);ApplyNow();
+            hintPose=true;hintOffset=localOffset;hintScale=Mathf.Clamp(scale,1,1.06f);ApplyNow();
         }
         public void ClearHintPose()
         {
