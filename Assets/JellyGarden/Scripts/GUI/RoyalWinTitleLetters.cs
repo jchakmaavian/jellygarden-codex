@@ -12,7 +12,11 @@ namespace RoyalThrone.Presentation
         static readonly string[] Names = { "W", "e", "l", "l", "D", "o", "n", "e", "bang" };
         static readonly int[] Beats = { 0, 1, 2, 3, 5, 6, 7, 8, 9 };
         static readonly float[] Heights = { .96f, .70f, 1, 1, 1, .70f, .72f, .70f, .99f };
+        // A gentle arch like the reference: letters ride a wide circle whose ends drop ArchDrop of the title width,
+        // each tilted along it. The middle keeps the earlier height, so the crown clearance is unchanged.
+        const float ArchDrop = .034f;
         readonly RawImage[] letters = new RawImage[9];
+        readonly float[] arch = new float[9];
         public RectTransform RectTransform => (RectTransform)transform;
         public RawImage[] Letters => letters;
         public bool Ready { get; private set; }
@@ -35,7 +39,8 @@ namespace RoyalThrone.Presentation
                 widths[i] = Heights[i] * 100 * textures[i].width * glyph.uv.width / (textures[i].height * glyph.uv.height);
                 total += widths[i];
             }
-            float fit = RectTransform.rect.width / total, cursor = -RectTransform.rect.width * .5f;
+            float half = RectTransform.rect.width * .5f, fit = half * 2 / total, cursor = -half;
+            float drop = ArchDrop * half * 2, radius = (half * half + drop * drop) / (2 * drop);
             for (int i = 0; i < Names.Length; i++)
             {
                 if (i == 4) cursor += 14 * fit;
@@ -45,7 +50,9 @@ namespace RoyalThrone.Presentation
                 image.texture = textures[i]; image.uvRect = uvs[i]; image.raycastTarget = false;
                 var rect = image.rectTransform; rect.pivot = new Vector2(.5f, 0);
                 rect.sizeDelta = new Vector2(widths[i], Heights[i] * 100) * fit;
-                rect.anchoredPosition = new Vector2(cursor + rect.sizeDelta.x * .5f, -45);
+                float x = cursor + rect.sizeDelta.x * .5f, angle = Mathf.Asin(Mathf.Clamp(x / radius, -1, 1));
+                rect.anchoredPosition = new Vector2(x, -45 - radius * (1 - Mathf.Cos(angle)));
+                arch[i] = -angle * Mathf.Rad2Deg;
                 cursor += rect.sizeDelta.x - (i == 3 ? 0 : 6 * fit);
             }
             Ready = true; Write(0); return true;
@@ -64,7 +71,7 @@ namespace RoyalThrone.Presentation
                     : u < .75f ? Mathf.Lerp(1.64f, .94f, Smooth((u - .25f) / .50f))
                     : Mathf.Lerp(.94f, 1, Smooth((u - .75f) / .25f));
                 image.rectTransform.localScale = new Vector3(scale, scale, 1);
-                image.rectTransform.localRotation = Quaternion.Euler(0, 0, (i % 2 == 0 ? -5 : 5) * Mathf.Sin(Mathf.PI * u) * (1 - u));
+                image.rectTransform.localRotation = Quaternion.Euler(0, 0, arch[i] + (i % 2 == 0 ? -5 : 5) * Mathf.Sin(Mathf.PI * u) * (1 - u));
                 image.color = Color.white;
             }
         }
