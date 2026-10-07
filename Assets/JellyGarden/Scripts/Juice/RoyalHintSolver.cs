@@ -7,6 +7,9 @@ namespace JellyGarden.Scripts.Juice
     {
         public readonly Item First,Second;
         public readonly List<Square> MatchCells;
+        // One connected same-colour result for visual guidance. MatchCells still
+        // holds every result of the selected swap for gameplay and move ranking.
+        public readonly List<Square> PreviewCells;
         public readonly bool IsTap;
         public readonly int LongestRun;
         /// <summary>How much the move does (RoyalHintSolver.Impact): a power combo, a power made or used, or a plain match.</summary>
@@ -18,10 +21,12 @@ namespace JellyGarden.Scripts.Juice
         readonly ItemsTypes[] types;
         readonly SquareTypes[] squareTypes;
         readonly int move;
-        internal RoyalHintPlan(LevelManager lm,Item first,Item second,List<Square> cells,int longestRun=0,bool tap=false,int impact=RoyalHintSolver.Impact.Match)
+        internal RoyalHintPlan(LevelManager lm,Item first,Item second,List<Square> cells,int longestRun=0,bool tap=false,int impact=RoyalHintSolver.Impact.Match,List<Square> preview=null)
         {
             First=first;Second=second;MatchCells=cells;LongestRun=longestRun;IsTap=tap;Impact=impact;
             MatchCells.Sort((a,b)=>a.row==b.row?a.col.CompareTo(b.col):a.row.CompareTo(b.row));
+            PreviewCells=preview??new List<Square>(cells);
+            PreviewCells.Sort((a,b)=>a.row==b.row?a.col.CompareTo(b.col):a.row.CompareTo(b.row));
             field=lm.GameField;board=lm.squaresArray;move=lm.moveID;
             occupants=new Item[board.Length];colours=new int[board.Length];types=new ItemsTypes[board.Length];squareTypes=new SquareTypes[board.Length];
             for(int i=0;i<board.Length;i++)if(board[i]){squareTypes[i]=board[i].type;if(board[i].item){occupants[i]=board[i].item;colours[i]=occupants[i].color;types[i]=occupants[i].currentType;}}
@@ -75,6 +80,34 @@ namespace JellyGarden.Scripts.Juice
         }
         static bool CanMove(Item item)
         {return item&&!item.destroying&&!item.falling&&item.gameObject.activeInHierarchy&&item.square&&item.square.item==item&&item.square.CanGoInto()&&item.square.CanGoOut();}
+        static List<Square> SinglePreview(LevelManager lm,HashSet<Square> cells,Item first,Item second)
+        {
+            Item After(Square sq)=>sq==first.square?second:sq==second.square?first:sq.item;
+            var ordered=new List<Square>(cells);
+            ordered.Sort((a,b)=>a.row==b.row?a.col.CompareTo(b.col):a.row.CompareTo(b.row));
+            var remaining=new HashSet<Square>(cells);List<Square> best=null;long bestScore=long.MinValue;
+            foreach(var seed in ordered){
+                if(!remaining.Remove(seed))continue;
+                var group=new List<Square>{seed};int colour=After(seed).color;
+                for(int i=0;i<group.Count;i++)foreach(var d in new[]{Vector2Int.right,Vector2Int.left,Vector2Int.up,Vector2Int.down}){
+                    var neighbour=lm.GetSquare(group[i].col+d.x,group[i].row+d.y);
+                    if(neighbour&&remaining.Contains(neighbour)&&After(neighbour).color==colour){remaining.Remove(neighbour);group.Add(neighbour);}
+                }
+                var shape=new HashSet<Vector2Int>();foreach(var sq in group)shape.Add(new Vector2Int(sq.col,sq.row));
+                int longest=0;bool cross=false,square=false;
+                foreach(var p in shape){
+                    int Run(Vector2Int axis){int n=1;foreach(int sign in new[]{-1,1})for(int step=1;shape.Contains(p+axis*step*sign);step++)n++;return n;}
+                    int h=Run(Vector2Int.right),v=Run(Vector2Int.up);longest=Mathf.Max(longest,h,v);cross|=h>=3&&v>=3;
+                    square|=shape.Contains(p+Vector2Int.right)&&shape.Contains(p+Vector2Int.up)&&shape.Contains(p+Vector2Int.one);
+                }
+                int impact=longest>=5?Impact.ColorBall:cross?Impact.Tnt:longest==4?Impact.Rocket:square?Impact.Propeller:Impact.Match;
+                long score=impact*100000L+group.Count*100+longest;
+                // Sorted seeds make equal-result ties stable, including when the
+                // same exchange is evaluated with its partners in reverse order.
+                if(best==null||score>bestScore){best=group;bestScore=score;}
+            }
+            return best;
+        }
         public static RoyalHintPlan EvaluateSwap(LevelManager lm,Item first,Item second)
         {
             // A gem may also swap with an ingredient (the game accepts it when the gem makes a match): only the gem can match,
@@ -121,7 +154,7 @@ namespace JellyGarden.Scripts.Juice
             if(!secondIngredient){CollectLines(a);CollectSquare(a);}   // `second` lands on a
             if(!firstIngredient){CollectLines(b);CollectSquare(b);}    // `first` lands on b
             int impact=longest>=5?Impact.ColorBall:cross?Impact.Tnt:longest==4?Impact.Rocket:square2?Impact.Propeller:Impact.Match;
-            return cells.Count>=3?new RoyalHintPlan(lm,first,second,new List<Square>(cells),longest,false,impact):null;
+            return cells.Count>=3?new RoyalHintPlan(lm,first,second,new List<Square>(cells),longest,false,impact,SinglePreview(lm,cells,first,second)):null;
         }
     }
 }

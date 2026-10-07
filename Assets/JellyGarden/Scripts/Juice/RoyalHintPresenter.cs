@@ -47,7 +47,7 @@ namespace JellyGarden.Scripts.Juice
         float shownAt,cell;int activeContours;
         public bool IsVisible=>plan!=null;
         public int VisibleSwapCount=>plan==null?0:plan.Second?2:1;
-        public int OutlineCellCount=>plan==null?0:plan.MatchCells.Count;
+        public int OutlineCellCount=>plan==null?0:plan.PreviewCells.Count;
         public int ContourCount=>activeContours;
         public int BoundaryEdgeCount {get;private set;}
         public LineRenderer ContourRenderer(int index)=>index>=0&&index<activeContours?pool[index].Core:null;
@@ -89,15 +89,16 @@ namespace JellyGarden.Scripts.Juice
         public bool Show(RoyalHintPlan candidate)
         {
             Hide();var lm=LevelManager.THIS;
-            if(!CanShow(lm,candidate)||candidate.MatchCells.Count>MaxCells)return false;
+            if(!CanShow(lm,candidate)||candidate.PreviewCells.Count>MaxCells)return false;
             firstSkin=candidate.First.GetComponent<RoyalPieceSkin>();
             secondSkin=candidate.Second?candidate.Second.GetComponent<RoyalPieceSkin>():null;
             if(!firstSkin||(candidate.Second&&!secondSkin)){firstSkin=secondSkin=null;return false;}
-            var grid=new List<Vector2Int>();foreach(var sq in candidate.MatchCells)grid.Add(new Vector2Int(sq.col,-sq.row));
+            var grid=new List<Vector2Int>();foreach(var sq in candidate.PreviewCells)grid.Add(new Vector2Int(sq.col,-sq.row));
             var shape=RoyalHintContour.Build(grid);
             if(shape.Loops.Count==0||shape.Loops.Count>MaxContours){firstSkin=secondSkin=null;return false;}
+            if(attentionSource&&attentionSource!=this)attentionSource.Hide();
             EnsureMaterial();cell=Mathf.Min(lm.squareWidth,lm.squareHeight);
-            var anchor=candidate.MatchCells[0];var anchorPoint=anchor.transform.position;
+            var anchor=candidate.PreviewCells[0];var anchorPoint=anchor.transform.position;
             Vector3 World(Vector2 point)=>new Vector3(anchorPoint.x+(point.x-anchor.col-.5f)*lm.squareWidth,
                 anchorPoint.y+(point.y+anchor.row-.5f)*lm.squareHeight,candidate.First.transform.position.z-.02f);
             for(int i=0;i<shape.Loops.Count;i++){
@@ -144,7 +145,7 @@ namespace JellyGarden.Scripts.Juice
             }
             plan=candidate;attentionSource=this;activeContours=shape.Loops.Count;BoundaryEdgeCount=shape.BoundaryEdges;shownAt=Time.unscaledTime;
             PrepareGemInteraction(lm);
-            sparkleRandom=new global::System.Random(candidate.MatchCells.Count*7919+lm.moveID);
+            sparkleRandom=new global::System.Random(candidate.PreviewCells.Count*7919+lm.moveID);
             EnsureSparkles(candidate.First.sprRenderer.sortingLayerID,candidate.First.sprRenderer.sortingOrder+8);
             foreach(var sparkle in sparkles)Respawn(sparkle,shownAt-(float)sparkleRandom.NextDouble()*.7f);
             Animate();return true;
@@ -318,7 +319,7 @@ namespace JellyGarden.Scripts.Juice
                 var skin=item.GetComponent<RoyalPieceSkin>();if(!skin)return;
                 skin.ApplyNow();hintGems.Add(new HintGem{Item=item,Skin=skin});
             }
-            foreach(var sq in plan.MatchCells)Add(sq.item);
+            foreach(var sq in plan.PreviewCells)Add(sq.item);
             Add(plan.First);Add(plan.Second);
             Vector3 direction=plan.Second?(plan.Second.transform.position-plan.First.transform.position).normalized:Vector3.zero;
             var affected=new HashSet<Item>();foreach(var gem in hintGems)affected.Add(gem.Item);

@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
     /// <summary>Checks rendered hints on the disposable fixture, without invoking the mutating match solver.</summary>
     public static class RoyalHintPresentationChecks
     {
-        const string Folder="Design/QaFeedback/03-HintInteraction/raw/";
+        const string Folder="Design/QaFeedback/04-SingleMoveHint/raw/";
         sealed class Example
         {
             public string Name;public Vector2Int Source;public Vector2Int[] Cells;public int Edges;
@@ -45,7 +45,67 @@ namespace RoyalThrone.Editor
             return RoyalHintSolver.EvaluateSwap(lm,At(lm,example.Source),At(lm,P(3,3)));
         }
         static HashSet<Item> Affected(RoyalHintPlan plan)
-        {var items=new HashSet<Item>(plan.MatchCells.Select(s=>s.item));items.Add(plan.First);items.Add(plan.Second);items.Remove(null);return items;}
+        {var items=new HashSet<Item>(plan.PreviewCells.Select(s=>s.item));items.Add(plan.First);items.Add(plan.Second);items.Remove(null);return items;}
+        static RoyalHintPlan DualResult(LevelManager lm,bool horizontal=false,int secondLength=3)
+        {
+            lm.StopAllCoroutines();AI.THIS.StopAllCoroutines();AI.THIS.CancelVisibleHint();AI.THIS.allowShowTip=false;
+            foreach(var sq in lm.squaresArray){sq.item.SetColor(2+(sq.col+sq.row*2)%3);sq.item.currentType=sq.item.NextType=ItemsTypes.NONE;sq.item.falling=sq.item.destroying=false;}
+            Item Piece(int x,int y)=>At(lm,horizontal?P(y,x):P(x,y));
+            Piece(3,3).SetColor(0);Piece(3,4).SetColor(1);
+            Piece(1,3).SetColor(1);Piece(2,3).SetColor(1);
+            for(int i=1;i<secondLength;i++)Piece(3+i,4).SetColor(0);
+            foreach(var sq in lm.squaresArray)sq.item.GetComponent<RoyalPieceSkin>().ApplyNow();
+            return RoyalHintSolver.EvaluateSwap(lm,Piece(3,3),Piece(3,4));
+        }
+        static IEnumerator SingleMoveChecks(LevelManager lm,RoyalHintPresenter presenter,Action<bool,string> check)
+        {
+            foreach(var test in new[]{(horizontal:false,length:3),(horizontal:true,length:3),(horizontal:false,length:4),(horizontal:true,length:4),(horizontal:false,length:5)}){
+                var plan=DualResult(lm,test.horizontal,test.length);string label="Dual result "+(test.horizontal?"horizontal":"vertical")+" 3+"+test.length;
+                check(plan!=null&&plan.MatchCells.Count==3+test.length,label+" retains both genuine match results");
+                check(MatchesProductionResult(lm,plan),label+" complete result still matches production resolution");
+                var expected=new HashSet<Square>();
+                for(int i=0;i<(test.length==3?3:test.length);i++){
+                    int x=test.length==3?1+i:3+i,y=test.length==3?3:4;
+                    expected.Add(lm.GetSquare(test.horizontal?y:x,test.horizontal?x:y));
+                }
+                check(expected.SetEquals(plan.PreviewCells),label+" previews only the strongest connected match, with a stable tie choice");
+                var reversed=RoyalHintSolver.EvaluateSwap(lm,plan.Second,plan.First);
+                check(expected.SetEquals(reversed.PreviewCells),label+" reversing swap arguments cannot change the marked group");
+                var rest=lm.squaresArray.ToDictionary(s=>s.item,s=>s.item.sprRenderer.transform.localScale);
+                check(presenter.Show(plan),label+" starts its single-group hint");
+                yield return new WaitForSecondsRealtime(.95f);yield return new WaitForEndOfFrame();
+                check(presenter.VisibleSwapCount==2&&presenter.ContourCount==1&&presenter.OutlineCellCount==expected.Count,label+" shows one outline and one swap pair");
+                var affected=Affected(plan);
+                check(lm.squaresArray.Where(s=>!affected.Contains(s.item)).All(s=>s.item.sprRenderer.transform.localScale==rest[s.item]&&
+                    !s.item.GetComponentsInChildren<SpriteRenderer>().Any(r=>r.name.StartsWith("Hint match gem glow")&&r.enabled)),label+" secondary result and alternative moves stay unmarked and unpulsed");
+                check(affected.All(i=>i.sprRenderer.transform.localScale.x/rest[i].x>1.05f&&i.sprRenderer.transform.localScale.x/rest[i].x<=1.0601f),label+" retains the approved six-percent pulse for the marked group and swap pair");
+                if(!test.horizontal&&test.length==3)yield return Capture("single-group-after");
+                presenter.Hide();
+            }
+            var candidate=DualResult(lm);var ai=AI.THIS;var plans=new List<RoyalHintPlan>();
+            // A separate legal swap, away from the two-result exchange, verifies
+            // selection when the board really offers more than one player move.
+            At(lm,P(1,0)).SetColor(0);At(lm,P(2,0)).SetColor(0);At(lm,P(3,0)).SetColor(1);At(lm,P(3,1)).SetColor(0);
+            foreach(var sq in lm.squaresArray)sq.item.GetComponent<RoyalPieceSkin>().ApplyNow();
+            foreach(var sq in lm.squaresArray)foreach(var d in new[]{Vector2Int.right,Vector2Int.up}){
+                var next=lm.GetSquare(sq.col+d.x,sq.row+d.y);if(!next)continue;
+                var option=RoyalHintSolver.EvaluateSwap(lm,sq.item,next.item);if(option!=null)plans.Add(option);
+            }
+            check(plans.Count>1,"Regression board contains multiple available legal swaps");
+            for(int i=0;i<3;i++)ai.StartCoroutine(ai.CheckPossibleCombines());
+            float deadline=Time.unscaledTime+8;while(!presenter.IsVisible&&Time.unscaledTime<deadline)yield return null;
+            var chosen=presenter.CurrentPlan;
+            check(chosen!=null&&chosen.IsCurrent(lm)&&presenter.VisibleSwapCount==2&&presenter.ContourCount==1,"Concurrent idle finders display exactly one legal swap and one matching group");
+            yield return new WaitForSecondsRealtime(1.7f);
+            check(presenter.CurrentPlan==chosen,"Several available moves do not cycle or accumulate extra hint suggestions");
+            ai.StopAllCoroutines();ai.CancelVisibleHint();ai.allowShowTip=false;
+            candidate=DualResult(lm);presenter.Show(candidate);
+            var host=new GameObject("QA secondary hint presenter");var other=host.AddComponent<RoyalHintPresenter>();
+            try{
+                check(other.Show(candidate)&&other.IsVisible&&!presenter.IsVisible,"A second presenter retires the previous hint before displaying another");
+                check(presenter.Show(candidate)&&presenter.IsVisible&&!other.IsVisible,"Hint ownership can return without leaving a second marking behind");
+            }finally{other.Hide();UnityEngine.Object.DestroyImmediate(host);presenter.Hide();}
+        }
         static bool NoArtOverlap(LevelManager lm,RoyalHintPlan plan)
         {
             foreach(var item in Affected(plan))foreach(var sq in lm.squaresArray){
@@ -117,6 +177,7 @@ namespace RoyalThrone.Editor
             {
                 RoyalHintSettings.Enabled=true;PlayerPrefs.SetInt("RoyalThrone.HomeMotion",1);State(lm,GameState.Playing);lm.DragBlocked=false;
                 input.inputActionAsset.devices=new[]{mouse};yield return null;
+                yield return SingleMoveChecks(lm,presenter,check);
                 foreach(var example in examples){
                     var plan=Setup(lm,example,Array.IndexOf(examples,example)%5);var affected=Affected(plan);
                     check(plan!=null&&new HashSet<Vector2Int>(plan.MatchCells.Select(s=>P(s.col,s.row))).SetEquals(example.Cells),example.Name+" previews every resulting matched cell and excludes unrelated neighbours");
@@ -247,8 +308,8 @@ namespace RoyalThrone.Editor
                 check(originalItems.All(i=>Vector3.Distance(i.transform.position,idleRoots[i])<.0001f&&i.square.item==i)&&
                     originalItems.Where(i=>i!=idlePlan.First&&i!=idlePlan.Second).All(i=>Vector3.Distance(i.sprRenderer.transform.localPosition,idleRest[i])<.0001f),
                     "Natural idle hint moves only the two child sprites while every board root and other gem stays steady");
-                check(presenter.OutlineCellCount==idlePlan.MatchCells.Count&&presenter.ContourCount>0&&presenter.ContourRenderer(0).enabled&&presenter.ContourRenderer(0).loop,
-                    "Natural idle hint renders a closed outline for its complete predicted match");
+                check(presenter.OutlineCellCount==idlePlan.PreviewCells.Count&&presenter.ContourCount==1&&presenter.ContourRenderer(0).enabled&&presenter.ContourRenderer(0).loop,
+                    "Natural idle hint renders a closed outline for one predicted matching group");
                 yield return Capture("hint-natural-idle-moving");
                 cancelledInsideEvent=false;
                 InputSystem.QueueStateEvent(mouse,new MouseState{position=new Vector2(-100,-100),buttons=1});yield return null;
