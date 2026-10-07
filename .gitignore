@@ -126,6 +126,9 @@ InitTestScene*.unity*
 !/Design/**/*.md
 !/Design/Branding/**
 !/Design/Concepts/**
+# Source for the generated game audio (renders stay local).
+!/Design/Audio/**/*.cs
+!/Design/Audio/**/*.py
 
 # Unity crash-recovery scenes.
 /[Aa]ssets/_Recovery/

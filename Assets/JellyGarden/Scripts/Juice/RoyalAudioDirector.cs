@@ -12,6 +12,11 @@ namespace JellyGarden.Scripts.Juice
         readonly float[] last = new float[9];
         float[] voiceGains;
         int variation, musicIndex; float duck, fade=-1, winSince=-1;
+        // Home keeps the castle theme; level n plays track (n-1) mod 10, each an original seamless loop (Design/Audio/LevelMusic).
+        public static readonly string[] LevelMusic={"level-01-crown-jewels","level-02-garden-gallop","level-03-palace-funk","level-04-knights-dash","level-05-sugar-tower",
+            "level-06-moonlit-ballroom","level-07-market-day","level-08-sky-kites","level-09-dragon-drums","level-10-royal-parade"};
+        readonly AudioClip[] levelClips=new AudioClip[LevelMusic.Length];
+        readonly bool[] levelTried=new bool[LevelMusic.Length];
         AudioLowPassFilter musicFilter;
         public int PeakVoices { get; private set; }
         public static RoyalAudioDirector Get
@@ -108,6 +113,18 @@ namespace JellyGarden.Scripts.Juice
             if(state==GameState.Win) return normal*.45f*Mathf.Clamp01((Time.unscaledTime-winSince-.9f)/1f);
             return normal;
         }
+        AudioClip DesiredMusic()
+        {
+            var level=LevelManager.THIS;
+            if(!level||level.gameStatus==GameState.Map) return clips[6];
+            int i=((level.currentLevel-1)%LevelMusic.Length+LevelMusic.Length)%LevelMusic.Length;
+            if(!levelTried[i]) { levelTried[i]=true; levelClips[i]=Resources.Load<AudioClip>("RoyalGameplay/Music/"+LevelMusic[i]); }
+            return levelClips[i]?levelClips[i]:clips[6];
+        }
+        void StartFade(AudioClip clip)
+        {
+            var next=music[1-musicIndex]; next.clip=clip; next.loop=clip!=clips[6]; next.time=0; next.volume=0; next.Play(); fade=0;
+        }
         void Update()
         {
             if(voices==null)return;
@@ -119,13 +136,26 @@ namespace JellyGarden.Scripts.Juice
             duck=Mathf.Max(0,duck-Time.unscaledDeltaTime);
             float target=MusicTarget(PlayerPrefs.GetInt("Music",1)*RoyalEffectsProfile.Get.musicVolume*(duck>0?.55f:1));
             float duration=RoyalEffectsProfile.Get.musicCrossfade;
-            if(fade<0&&music[musicIndex].time>=clips[6].length-duration) { fade=0; music[1-musicIndex].time=0; music[1-musicIndex].Play(); }
+            var current=music[musicIndex]; var want=DesiredMusic();
+            if(fade<0&&want&&current.clip!=want)
+            {
+                // Entering a level or coming Home crossfades to that place's music once its data has loaded in the background.
+                if(want.loadState==AudioDataLoadState.Unloaded) want.LoadAudioData();
+                if(want.loadState==AudioDataLoadState.Loaded) StartFade(want);
+            }
+            // The castle theme loops by crossfading into itself; level tracks are seamless loops and repeat on their own.
+            else if(fade<0&&!current.loop&&current.clip&&current.time>=current.clip.length-duration) StartFade(current.clip);
             if(fade>=0)
             {
                 fade+=Time.unscaledDeltaTime; float t=Mathf.Clamp01(fade/duration);
                 music[musicIndex].volume=Mathf.Cos(t*Mathf.PI*.5f)*target;
                 music[1-musicIndex].volume=Mathf.Sin(t*Mathf.PI*.5f)*target;
-                if(t>=1){music[musicIndex].Stop(); musicIndex=1-musicIndex; fade=-1;}
+                if(t>=1)
+                {
+                    var old=music[musicIndex]; old.Stop();
+                    if(old.clip&&old.clip!=clips[6]&&old.clip!=music[1-musicIndex].clip) old.clip.UnloadAudioData();
+                    musicIndex=1-musicIndex; fade=-1;
+                }
             }
             else { music[musicIndex].volume=Mathf.MoveTowards(music[musicIndex].volume,target,Time.unscaledDeltaTime); music[1-musicIndex].volume=0; if(!music[musicIndex].isPlaying)music[musicIndex].Play(); }
         }

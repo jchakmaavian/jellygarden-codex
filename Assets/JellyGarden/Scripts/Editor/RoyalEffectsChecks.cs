@@ -115,6 +115,7 @@ namespace RoyalThrone.Editor
                 Check(Resources.Load<GameObject>("RoyalGameplay/EffectsRig"),"Authored particle rig loads");
                 foreach(var name in RoyalPieceSkin.Colours.Concat(new[]{"rocket","tnt","helicopter","orb","smoke","gem","heart","star","ice","key","chest","chains","stone"}))Check(RoyalPieceSkin.Art(name),"WebP sprite loads: "+name);
                 foreach(var name in new[]{"match-a","match-b","rocket","tnt","helicopter","create","castle-theme","land","click","firework","celebrate","royal-fanfare"})Check(Resources.Load<AudioClip>("RoyalGameplay/Audio/"+name),"Audio imports: "+name);
+                foreach(var name in RoyalAudioDirector.LevelMusic)Check(Resources.Load<AudioClip>("RoyalGameplay/Music/"+name),"Level music imports: "+name);
                 foreach(var blockName in new[]{"Block","SolidBlock","ThrivingBlock","UndestrBlock","WireBlock"}){
                     var prefab=Resources.Load<GameObject>("Prefabs/"+blockName);var original=prefab.GetComponent<SpriteRenderer>().sprite;
                     var styled=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(original,true);
