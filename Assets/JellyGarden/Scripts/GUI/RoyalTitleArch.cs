@@ -3,20 +3,19 @@ using UnityEngine.UI;
 
 namespace RoyalThrone.Presentation
 {
-    // Bends one title letter as a slice of a whole-word arc, like the reference lettering: letters stay upright, the top
-    // edge curves over the middle, the ends sit a little lower and shorter, and their strokes lean gently outward. The bend
-    // uses the letter's rest place in the title, so the reveal's scale and wobble play on top of a settled arc.
+    // Bends a whole-word title image along a gentle arch, like the reference lettering: the word follows one circle, its
+    // ends dip and lean outward while the middle keeps its height. Its outline stays continuous because the image is bent
+    // as one piece. Widths are kept along the baseline arc, so the word reads at its original size.
     [RequireComponent(typeof(RawImage))]
     public sealed class RoyalTitleArch : BaseMeshEffect
     {
-        const int Columns = 8, Rows = 4;
-        // center: the letter's rest x in the title. sag: baseline drop at the title ends, in title units.
-        // shrink: share of height the ends lose. fan: outward lean of the ends' strokes per unit of height.
-        public float center, halfWidth = 1, sag, shrink, fan;
+        const int Columns = 32, Rows = 2;
+        // The arc's half-angle at the image's ends, in radians.
+        public float angle = .1f;
 
         public override void ModifyMesh(VertexHelper vh)
         {
-            if (!IsActive() || vh.currentVertCount < 4 || halfWidth <= 0) return;
+            if (!IsActive() || vh.currentVertCount < 4 || angle <= 0) return;
             var v = new UIVertex(); vh.PopulateUIVertex(ref v, 0);
             Vector2 min = v.position, max = v.position, uvMin = v.uv0, uvMax = v.uv0; Color32 color = v.color;
             for (int i = 1; i < 4; i++)
@@ -25,14 +24,14 @@ namespace RoyalThrone.Presentation
                 min = Vector2.Min(min, v.position); max = Vector2.Max(max, v.position);
                 uvMin = Vector2.Min(uvMin, v.uv0); uvMax = Vector2.Max(uvMax, v.uv0);
             }
+            float mid = (min.x + max.x) * .5f, radius = (max.x - min.x) * .5f / angle;
             vh.Clear();
             for (int r = 0; r <= Rows; r++)
                 for (int c = 0; c <= Columns; c++)
                 {
                     float u = (float)c / Columns, w = (float)r / Rows;
-                    float x = Mathf.Lerp(min.x, max.x, u), up = (max.y - min.y) * w;
-                    float t = (center + x) / halfWidth, bend = t * t;
-                    var position = new Vector3(x + fan * t * up, min.y + up * (1 - shrink * bend) - sag * bend);
+                    float a = (Mathf.Lerp(min.x, max.x, u) - mid) / radius, reach = radius + (max.y - min.y) * w;
+                    var position = new Vector3(mid + reach * Mathf.Sin(a), min.y + reach * Mathf.Cos(a) - radius);
                     vh.AddVert(position, color, new Vector4(Mathf.Lerp(uvMin.x, uvMax.x, u), Mathf.Lerp(uvMin.y, uvMax.y, w)));
                 }
             for (int r = 0; r < Rows; r++)

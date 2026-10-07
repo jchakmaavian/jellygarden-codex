@@ -367,7 +367,7 @@ namespace RoyalThrone.Presentation
                 C("071b40", .9f), new Vector2(0, -3));
             heading.gameObject.AddComponent<RoyalAppearsLater>();
             RoyalWinTitleLetters titleArt = null;
-            var art = new GameObject("Individual Well Done letters", typeof(RectTransform), typeof(RoyalWinTitleLetters));
+            var art = new GameObject("Well Done title", typeof(RectTransform), typeof(RoyalWinTitleLetters));
             art.transform.SetParent(heading.transform, false);
             var letters = art.GetComponent<RoyalWinTitleLetters>();
             letters.RectTransform.sizeDelta = new Vector2(450, 110);

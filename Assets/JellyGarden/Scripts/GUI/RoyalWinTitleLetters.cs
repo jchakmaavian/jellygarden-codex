@@ -3,57 +3,36 @@ using UnityEngine.UI;
 
 namespace RoyalThrone.Presentation
 {
-    // Each generated glyph owns its complete bevel and extrusion, including hidden side edges.
+    // The completion title: the whole-word "Well Done!" art (one continuous gold outline, navy keyline, ivory face) bent
+    // into the reference's gentle arch by RoyalTitleArch, revealed with a single pop.
     public sealed class RoyalWinTitleLetters : MonoBehaviour
     {
-        [System.Serializable] public sealed class Crop { public float x, y, width, height; }
-        [System.Serializable] public sealed class Glyph { public string name; public Crop uv; }
-        [System.Serializable] public sealed class Atlas { public Glyph[] glyphs; }
-        static readonly string[] Names = { "W", "e", "l", "l", "D", "o", "n", "e", "bang" };
-        static readonly int[] Beats = { 0, 1, 2, 3, 5, 6, 7, 8, 9 };
-        static readonly float[] Heights = { .96f, .70f, 1, 1, 1, .70f, .72f, .70f, .99f };
-        // A gentle whole-word arch like the reference (RoyalTitleArch), as shares of the capital height: the ends' baseline
-        // drop, the height they lose, and their strokes' outward lean. The middle keeps its height, so the crown clearance holds.
-        const float ArchSag = .05f, ArchShrink = .14f, ArchFan = .10f;
-        readonly RawImage[] letters = new RawImage[9];
+        // Visible art inside well-done-art.png (2170 x 725), as a UV crop with a few pixels of clear margin.
+        static readonly Rect Crop = new Rect(24 / 2170f, 98 / 725f, 2123 / 2170f, 544 / 725f);
+        const float Aspect = 2123f / 544f, Arch = .10f;
+        // Reveal in RoyalWinCard's letter units (0.04 s each): 0.48 s, well inside the card's title span.
+        const float Span = 12;
+        // The art's top edge sits where the earlier lettering's did, keeping the crown clearance.
+        const float Top = 44;
+        RawImage art;
         public RectTransform RectTransform => (RectTransform)transform;
-        public RawImage[] Letters => letters;
+        public RawImage Art => art;
         public bool Ready { get; private set; }
         float progress = float.NaN;
 
         public bool Build()
         {
             if (Ready) return true;
-            var data = Resources.Load<TextAsset>("RoyalGameplay/Win/Letters/glyphs");
-            if (!data) return false;
-            var atlas = JsonUtility.FromJson<Atlas>(data.text);
-            var textures = new Texture2D[9]; var uvs = new Rect[9]; var widths = new float[9];
-            float total = 14 - 6 * 7;
-            for (int i = 0; i < Names.Length; i++)
-            {
-                var glyph = System.Array.Find(atlas.glyphs, g => g.name == Names[i]);
-                textures[i] = Resources.Load<Texture2D>("RoyalGameplay/Win/Letters/" + Names[i]);
-                if (glyph == null || !textures[i] || glyph.uv == null || glyph.uv.width <= 0 || glyph.uv.height <= 0) return false;
-                uvs[i] = new Rect(glyph.uv.x, glyph.uv.y, glyph.uv.width, glyph.uv.height);
-                widths[i] = Heights[i] * 100 * textures[i].width * glyph.uv.width / (textures[i].height * glyph.uv.height);
-                total += widths[i];
-            }
-            float half = RectTransform.rect.width * .5f, fit = half * 2 / total, cursor = -half;
-            for (int i = 0; i < Names.Length; i++)
-            {
-                if (i == 4) cursor += 14 * fit;
-                var go = new GameObject("Letter " + i + " " + Names[i], typeof(RectTransform), typeof(RawImage));
-                go.transform.SetParent(transform, false);
-                var image = go.GetComponent<RawImage>(); letters[i] = image;
-                image.texture = textures[i]; image.uvRect = uvs[i]; image.raycastTarget = false;
-                var rect = image.rectTransform; rect.pivot = new Vector2(.5f, 0);
-                rect.sizeDelta = new Vector2(widths[i], Heights[i] * 100) * fit;
-                rect.anchoredPosition = new Vector2(cursor + rect.sizeDelta.x * .5f, -45);
-                var arch = go.AddComponent<RoyalTitleArch>();
-                arch.center = rect.anchoredPosition.x; arch.halfWidth = half;
-                arch.sag = ArchSag * 100 * fit; arch.shrink = ArchShrink; arch.fan = ArchFan;
-                cursor += rect.sizeDelta.x - (i == 3 ? 0 : 6 * fit);
-            }
+            var texture = Resources.Load<Texture2D>("RoyalGameplay/Win/well-done-art");
+            if (!texture) return false;
+            var go = new GameObject("Well Done art", typeof(RectTransform), typeof(RawImage), typeof(RoyalTitleArch));
+            go.transform.SetParent(transform, false);
+            art = go.GetComponent<RawImage>();
+            art.texture = texture; art.uvRect = Crop; art.raycastTarget = false;
+            go.GetComponent<RoyalTitleArch>().angle = Arch;
+            var rect = art.rectTransform; float width = RectTransform.rect.width, height = width / Aspect;
+            rect.sizeDelta = new Vector2(width, height);
+            rect.anchoredPosition = new Vector2(0, Top - height * .5f);
             Ready = true; Write(0); return true;
         }
 
@@ -61,18 +40,15 @@ namespace RoyalThrone.Presentation
         {
             if (!Ready || progress == value) return;
             progress = value;
-            for (int i = 0; i < letters.Length; i++)
-            {
-                float u = Mathf.Clamp01((value - Beats[i]) / 10f);
-                var image = letters[i]; image.enabled = u > 0;
-                if (!image.enabled) continue;
-                float scale = u < .25f ? Mathf.Lerp(.28f, 1.64f, Smooth(u / .25f))
-                    : u < .75f ? Mathf.Lerp(1.64f, .94f, Smooth((u - .25f) / .50f))
-                    : Mathf.Lerp(.94f, 1, Smooth((u - .75f) / .25f));
-                image.rectTransform.localScale = new Vector3(scale, scale, 1);
-                image.rectTransform.localRotation = Quaternion.Euler(0, 0, (i % 2 == 0 ? -5 : 5) * Mathf.Sin(Mathf.PI * u) * (1 - u));
-                image.color = Color.white;
-            }
+            float u = Mathf.Clamp01(value / Span);
+            art.enabled = u > 0;
+            if (!art.enabled) return;
+            // Grow past full size, dip under it, then settle: one confident stamp rather than a letter ripple.
+            float scale = u < .40f ? Mathf.Lerp(.35f, 1.12f, Smooth(u / .40f))
+                : u < .75f ? Mathf.Lerp(1.12f, .97f, Smooth((u - .40f) / .35f))
+                : Mathf.Lerp(.97f, 1, Smooth((u - .75f) / .25f));
+            art.rectTransform.localScale = new Vector3(scale, scale, 1);
+            art.color = new Color(1, 1, 1, Smooth(Mathf.Clamp01(u / .20f)));
         }
 
         static float Smooth(float u) => u * u * (3 - 2 * u);
