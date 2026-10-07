@@ -1564,9 +1564,10 @@ namespace JellyGarden.Scripts
 
             // Restore the original sprite-led pop; soften only confirmed matches.
             bool smoothMatch = royalMatchSize >= 3 && !royalBlastClear;
-            float anticipationTime = smoothMatch ? .03f : cfg.MatchAnticipation;
-            float squashTime = smoothMatch ? .045f : cfg.MatchSquashDuration;
-            float reboundTime = smoothMatch ? .045f : cfg.MatchReboundDuration;
+            bool immediateMatch = smoothMatch && royalMatchSize == 3 && NextType == ItemsTypes.NONE;
+            float anticipationTime = immediateMatch ? 0f : smoothMatch ? .03f : cfg.MatchAnticipation;
+            float squashTime = immediateMatch ? 0f : smoothMatch ? .045f : cfg.MatchSquashDuration;
+            float reboundTime = immediateMatch ? 0f : smoothMatch ? .045f : cfg.MatchReboundDuration;
             float destroyTime = smoothMatch ? .09f : cfg.MatchDestroyDuration;
 
             // Schedule the VFX UP FRONT, before any yield, and let the service play them
@@ -1603,13 +1604,13 @@ namespace JellyGarden.Scripts
             }
 
             Vector3 baseScale = juiceBaseScale;
-            float squash = smoothMatch ? .045f : cfg.MatchSquashAmount;
+            float squash = immediateMatch ? 0f : smoothMatch ? .045f : cfg.MatchSquashAmount;
 
             // --- 1. anticipation ------------------------------------------------
             float t = 0f;
             float dur = Mathf.Max(0.0001f, anticipationTime);
-            float anticip = cfg.MatchAnticipationScale;
-            while (t < 1f)
+            float anticip = immediateMatch ? 0f : cfg.MatchAnticipationScale;
+            while (t < 1f && !immediateMatch)
             {
                 t += Time.deltaTime / dur;
                 float e = smoothMatch ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t)) : Easing.OutQuad(Mathf.Clamp01(t));
@@ -1622,7 +1623,7 @@ namespace JellyGarden.Scripts
             t = 0f;
             dur = Mathf.Max(0.0001f, squashTime);
             float fromS = 1f - anticip;
-            while (t < 1f)
+            while (t < 1f && !immediateMatch)
             {
                 t += Time.deltaTime / dur;
                 float e = smoothMatch ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t)) : Easing.OutCubic(Mathf.Clamp01(t));
@@ -1635,8 +1636,8 @@ namespace JellyGarden.Scripts
             // --- 3. rebound (the shine was scheduled up front) ------------------
             t = 0f;
             dur = Mathf.Max(0.0001f, reboundTime);
-            float reb = smoothMatch ? .065f : cfg.MatchReboundAmount;
-            while (t < 1f)
+            float reb = immediateMatch ? 0f : smoothMatch ? .065f : cfg.MatchReboundAmount;
+            while (t < 1f && !immediateMatch)
             {
                 t += Time.deltaTime / dur;
                 float e = smoothMatch ? Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t)) : Easing.OutQuad(Mathf.Clamp01(t));

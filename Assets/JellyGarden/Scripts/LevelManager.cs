@@ -1797,10 +1797,9 @@ namespace JellyGarden.Scripts
             while (true)
             {
 
-                //find matches
-                yield return new WaitForSeconds(0.1f);
-
-                while (InputSwaps > 0 || !IsAllItemsFallDown()) yield return null;
+                // Resolve as soon as the board is ready, rather than adding a
+                // fixed pause after a completed swap. Keep the ownership gates.
+                while (gameStatus == GameState.Pause || InputSwaps > 0 || !IsAllItemsFallDown()) yield return null;
                 int waveRevision = inputRevision;
                 foreach (var piece in GetItems()) if (piece) piece.inputMatchPending = false;
 
@@ -1860,6 +1859,8 @@ namespace JellyGarden.Scripts
                     float groupIntensity = Juice.MatchVFXService.ComputeIntensity(desrtoyItems.Count, combo);
 
                     bool specialFormation = Juice.RoyalSpecialFormation.Prepare(desrtoyItems);
+                    bool immediateThree = desrtoyItems.Count == 3 && desrtoyItems.TrueForAll(piece =>
+                        piece && piece.currentType == ItemsTypes.NONE && piece.NextType == ItemsTypes.NONE);
                     if (juiceCfg.EnableJuice && !specialFormation)
                     {
                         Vector3 matchCenter = Vector3.zero;
@@ -1882,12 +1883,12 @@ namespace JellyGarden.Scripts
                             if (vfxService != null)
                             {
                                 // One restored group accent, aligned with the gentler sprite pop.
-                                float centerDelay = .12f;
+                                float centerDelay = immediateThree ? 0f : .12f;
                                 StartCoroutine(PlayMatchCenterDelayed(matchCenter, centerColor, groupIntensity, centerDelay));
 
                                 // One micro-freeze for the whole group, timed to the pop.
                                 // Per-fruit would read as lag in a long cascade.
-                                vfxService.RequestHitStop(
+                                if (!immediateThree) vfxService.RequestHitStop(
                                     centerDelay,
                                     juiceCfg.HitStopDuration +
                                         juiceCfg.HitStopIntensityBonus * (groupIntensity - 1f),
@@ -1907,7 +1908,7 @@ namespace JellyGarden.Scripts
                         if (!item || item.destroying) continue;
                         // Tiny controlled offset between neighbours - still reads as
                         // simultaneous, but gives the group a visual rhythm.
-                        item.juiceStagger = juiceCfg.EnableJuice ? juiceIndex * juiceCfg.MatchStagger : 0f;
+                        item.juiceStagger = juiceCfg.EnableJuice && !immediateThree ? juiceIndex * juiceCfg.MatchStagger : 0f;
                         item.juiceIntensity = groupIntensity;
                         if (item.currentType == ItemsTypes.NONE && !item.destroying)
                             item.royalMatchSize = desrtoyItems.Count;
