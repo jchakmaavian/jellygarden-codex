@@ -2,9 +2,15 @@
 
 ## Status (7 October 2026)
 
-The user rejected the first ten tracks as "boring". They named the castle theme ("the original bg of the Royal Throne") as the reference for engaging music, and asked for one track first, matching that vibe. The ten were removed from the game and remain in git history (commit `db01cb54`).
-
-The track on trial is **The King's Quest**: `Assets/JellyGarden/Resources/RoyalGameplay/Music/level-kings-quest.ogg`. Every level plays it while it awaits the user's verdict. Home keeps `castle-theme`.
+- **Rejected so far:** the first ten tracks ("boring") and The King's Quest. The user then asked for Game of Thrones–like excitement, and then "another engaging one, not boring".
+- **The Iron Crown:** an orchestral 3/4 piece. It waits on recorded samples (VSCO 2 CE, CC0), whose download needs the user's permission. Only a synthesised sketch exists.
+- **On trial: Crown of Fire.** Every level plays it (`Music/level-crown-of-fire.ogg`). It's an epic hybrid trailer style, which suits synthesis.
+  - **Engine:** a 16th-note synth pulse, a 3-against-4 string ostinato and a sub bass.
+  - **Drums and accents:** war drums, braams, booms and a reverse-cymbal swell.
+  - **Melodies:** a heroic 3+3+2 hook, then a choir theme.
+  - **Structure:** 48 bars (91 s), D minor, 126 BPM. Something changes every 4–8 bars: intro, drums in, hook, choir theme (half-time), build (accelerating roll, riser, one beat of silence), drop (hook in octaves, double-time drums), breakdown (bells), final, then back into the intro.
+  - **Loudness per section:** intro −20 to −25 dB, hook −14.6, choir −15.5, gap −35, drop −13.4, breakdown −20, final −13 to −14.
+- Home keeps `castle-theme`. The rejected tracks are kept in git history.
 
 ## What makes the castle theme work
 

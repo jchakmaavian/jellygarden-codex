@@ -296,7 +296,7 @@ sealed class Flute : Inst
 
 sealed class Drum : Inst
 {
-    public enum K { Kick, Snare, Clap, HatC, HatO, Shaker, Rim, Tom, Crash, Clave, Snap, Taiko, Tamb }
+    public enum K { Kick, Snare, Clap, HatC, HatO, Shaker, Rim, Tom, Crash, Clave, Snap, Taiko, Tamb, Boom }
     public K Kind;
     public double Tune = 1, Decay = 1, Tone = .5;
     static readonly double[] Metal = { 205.3, 304.4, 369.6, 522.7, 540.0, 800.0 };
@@ -305,7 +305,7 @@ sealed class Drum : Inst
         double len = Kind switch
         {
             K.Kick => .5, K.Snare => .35, K.Clap => .4, K.HatC => .12, K.HatO => .6, K.Shaker => .15, K.Rim => .08, K.Tom => .7,
-            K.Crash => 2.6, K.Clave => .1, K.Snap => .15, K.Taiko => 1.5, _ => .35
+            K.Crash => 2.6, K.Clave => .1, K.Snap => .15, K.Taiko => 1.5, K.Boom => 2.8, _ => .35
         } * Decay;
         int n = (int)(len * Dsp.SR); var x = new float[n];
         var f1 = new Svf(); var f2 = new Svf(); double ph = 0; var mph = new double[6];
@@ -362,6 +362,13 @@ sealed class Drum : Inst
                     }
                 case K.Clave:
                     s = Math.Sin(Dsp.TAU * 2450 * Tune * t) * Math.Exp(-t / .028) * Math.Min(1, t / .0005); break;
+                case K.Boom:
+                    {
+                        // A trailer impact: a sub drop from 62 to 30 Hz under a dark noise burst.
+                        double f = 30 + 32 * Math.Exp(-t / .25); ph += f / Dsp.SR;
+                        s = Math.Sin(Dsp.TAU * ph) * Math.Exp(-t / (.9 * Decay)) * 1.2 + f1.Lp(nz, 600, .8) * Math.Exp(-t / .12) * 1.4 + f2.Bp(nz, 2500, .8) * Math.Exp(-t / .02) * .5;
+                        s = Math.Tanh(1.5 * s); break;
+                    }
                 case K.Snap:
                     s = f1.Bp(nz, 2300 * Tune, 1.8) * (Math.Exp(-t / .018) + (t > .006 ? .5 * Math.Exp(-(t - .006) / .01) : 0)) * 2.5; break;
             }
@@ -373,6 +380,50 @@ sealed class Drum : Inst
 }
 
 // Noise sweep that builds into a section.
+// A formant "choir": detuned saws through the vowel "ah" (800, 1150, 2900 Hz), with breath and a slow vibrato.
+sealed class Choir : Inst
+{
+    public int Voices = 6; public double Detune = .2, A = .35, R = .6, Vib = .12;
+    public override float[][] Render(double dur, double midi, double vel, Random rnd)
+    {
+        double f0 = Dsp.Mtof(midi); int n = (int)((dur + R * 6 + .02) * Dsp.SR);
+        var L = new float[n]; var Rr = new float[n];
+        var ph = new double[Voices]; var det = new double[Voices]; var rate = new double[Voices]; var vp = new double[Voices];
+        for (int v = 0; v < Voices; v++) { ph[v] = rnd.NextDouble(); det[v] = Math.Pow(2, Detune * (v / (double)Math.Max(1, Voices - 1) - .5) / 12); rate[v] = 4.6 + rnd.NextDouble(); vp[v] = rnd.NextDouble(); }
+        var fl = new[] { new Svf(), new Svf(), new Svf() }; var fr = new[] { new Svf(), new Svf(), new Svf() };
+        double[] F = { 800, 1150, 2900 }, Q = { 8, 10, 18 }, G = { 1, .55, .22 };
+        for (int i = 0; i < n; i++)
+        {
+            double t = i / (double)Dsp.SR, l = 0, r = 0;
+            for (int v = 0; v < Voices; v++)
+            {
+                double fm = Math.Pow(2, Vib * Math.Clamp((t - .2) / .4, 0, 1) * Math.Sin(Dsp.TAU * (rate[v] * t + vp[v])) / 12);
+                double dt = f0 * det[v] * fm / Dsp.SR, p = ph[v], x = 2 * p - 1 - Dsp.Blep(p, dt);
+                p += dt; if (p >= 1) p -= 1; ph[v] = p;
+                if (v % 2 == 0) l += x; else r += x;
+            }
+            double br = (rnd.NextDouble() * 2 - 1) * .15; l += br; r += br;
+            double ol = 0, or = 0; for (int k = 0; k < 3; k++) { ol += fl[k].Bp(l, F[k], Q[k]) * G[k]; or += fr[k].Bp(r, F[k], Q[k]) * G[k]; }
+            double amp = Dsp.Env(t, dur, A, .5, .9, R) * vel * 1.4 / Math.Sqrt(Voices);
+            L[i] = (float)(ol * amp); Rr[i] = (float)(or * amp);
+        }
+        return new[] { L, Rr };
+    }
+}
+
+// Plays another instrument backwards and cut to the note's length: a reverse-cymbal swell that ends on the beat.
+sealed class Reverse : Inst
+{
+    public Inst Inner = null!;
+    public override float[][] Render(double dur, double midi, double vel, Random rnd)
+    {
+        var x = Inner.Render(dur, midi, vel, rnd); int n = Math.Min(x[0].Length, (int)(dur * Dsp.SR));
+        var L = new float[n]; var R = new float[n];
+        for (int i = 0; i < n; i++) { L[i] = x[0][n - 1 - i]; R[i] = x[1][n - 1 - i]; }
+        return new[] { L, R };
+    }
+}
+
 sealed class Riser : Inst
 {
     public override float[][] Render(double dur, double midi, double vel, Random rnd)
@@ -873,6 +924,116 @@ static class Tracks
     {
         yield return ("level-kings-quest", "The King's Quest — orchestral-folk adventure in the castle theme's style, D minor, 96 BPM", _ => KingsQuest());
         yield return ("level-iron-crown", "The Iron Crown — epic war-drum orchestral in 3/4, D minor, 156 BPM", IronCrown);
+        yield return ("level-crown-of-fire", "Crown of Fire — epic hybrid trailer style, D minor, 126 BPM", _ => CrownOfFire());
+    }
+
+    // Epic hybrid trailer style (synth pulses, war drums, braams, choir): the user asked for something engaging, not boring,
+    // after rejecting slower pieces (7 Oct 2026). Something changes every 4-8 bars. D minor, 126 BPM, 48 bars:
+    // intro 0-3 (pulse, braam), drums in 4-7, hook 8-15, choir theme 16-23 (half-time), build 24-27 (accelerating roll,
+    // riser, a beat of silence), drop 28-35 (hook in octaves, double-time drums, booms), breakdown 36-39 (bells),
+    // final 40-47 (hook with harmony), whose last bar leads back into the intro.
+    static Song CrownOfFire()
+    {
+        var s = new Song(48, 126, Sc.Minor, 4242) { DuckAmt = .3, RevReturn = 3.0, Room = .87, Damp = .4, MasterLowpass = 12000, DlyFb = .3, DlySteps = 3 };
+        const string epic = "Dm Bb F C";
+        s.Prog(0, 16, epic); s.Prog(16, 8, "Bb C Dm Dm Gm Bb A A"); s.Prog(24, 4, "Gm Bb C A"); s.Prog(28, 20, epic);
+
+        var kick = Pre.Kick(1.2, 1, 1.25);
+        var taiko = new Drum { Name = "taiko", Kind = Drum.K.Taiko, Tune = 1.0, Decay = .8, Gain = .85, Rev = .3, Ducked = false };
+        var toms = new Drum { Name = "toms", Kind = Drum.K.Tom, Decay = 1, Gain = .45, Rev = .3, Ducked = false };
+        var snare = Pre.Snare(.95, .9, "epic snare"); snare.Rev = .4;
+        var clap = Pre.Clap(.7); clap.Rev = .35;
+        var roll = Pre.Snare(.42, 1, "snare roll");
+        var hat = Pre.HatC(.42); var ohat = Pre.HatO(.26); var crash = Pre.Crash(.16);
+        var boom = new Drum { Name = "boom", Kind = Drum.K.Boom, Gain = 1.0, Rev = .35, Ducked = false };
+        var swell = new Reverse { Name = "reverse swell", Inner = Pre.Crash(1), Gain = .26, Rev = .3, Ducked = false };
+        var riser = Pre.Riser(.12);
+        var pulse = new Synth { Name = "pulse", Voices = 2, Detune = .1, Width = .5, Cut = 700, Res = 1.2, FEnv = 2.6, FD = .08, A = .002, D = .12, S = .2, R = .05, KeyTrack = .4, Gain = .32, Rev = .15, Dly = .1 };
+        var ostinato = new Synth { Name = "string ostinato", Voices = 3, Detune = .14, Width = .7, Cut = 1600, FEnv = 1.2, FD = .07, A = .003, D = .1, S = .3, R = .06, KeyTrack = .3, Gain = .24, Rev = .25 };
+        var sub = new Synth { Name = "sub", Wave = Synth.W.Tri, A = .01, D = .3, S = .9, R = .1, Cut = 300, KeyTrack = 0, Gain = .5, Rev = 0 };
+        var braam = new Synth { Name = "braam", Voices = 5, Detune = .25, Width = .8, Sub = .5, Cut = 150, Res = 1.3, FEnv = 3.5, FA = .25, FD = 1.2, FS = .35, A = .03, D = .8, S = .7, R = .8, KeyTrack = .2, Gain = .3, Rev = .4, Ducked = false };
+        var lead = new Synth { Name = "hero lead", Voices = 3, Detune = .16, Width = .5, Cut = 3800, Res = .8, FEnv = .8, FD = .2, A = .006, D = .25, S = .85, R = .12, VibDepth = .14, VibDelay = .18, Gain = .36, Rev = .3, Dly = .15, Ducked = false };
+        var brass = Pre.Brass(.3, "brass"); var brassHarm = Pre.Brass(.14, "brass harmony"); brassHarm.Pan = -.3;
+        var choir = new Choir { Name = "choir", Gain = .16, Rev = .5, Ducked = false };
+        var choirPad = new Choir { Name = "choir chords", Gain = .06, Rev = .5, A = .5 };
+        var strings = new Synth { Name = "strings", Voices = 6, Detune = .22, Width = .9, Cut = 2400, A = .25, D = .4, S = .9, R = .5, VibDepth = .1, VibDelay = .25, Gain = .16, Rev = .5, Ducked = false };
+        var pad = Pre.SuperPad(.1); var bell = Pre.Glock(.24, "bells");
+        var arp = Pre.SawPluck(.16); arp.Name = "arp"; arp.Pan = .3;
+
+        const string hook =
+            "1 - - 1 - - 5 - 4 - - 3 - - 1 - | 6, - - 6, - - 4 - 3 - - 2 - - 1 - | 3 - - 3 - - 1' - 7 - - 6 - - 5 - | 5 - - - - - - - 4 - 3 - 2 - 7, - |" +
+            "1 - - 1 - - 5 - 4 - - 3 - - 1 - | 6, - - 6, - - 4 - 3 - - 4 - - 6 - | 1' - - 1' - - 7 - 6 - - 5 - - 3 - | 2 - - - - - - - 7, - 1 - 2 - 3 -";
+        const string theme =
+            "4 - - - - - - - 6 - - - - - - - | 5 - - - - - - - 7 - - - - - - - | 1' - - - - - - - - - - - 5 - - - | 1' - - - - - - - 2' - - - 3' - - - |" +
+            "4' - - - - - - - 3' - - - 2' - - - | 1' - - - - - - - 6 - - - 4 - - - | #7 - - - - - - - - - - - 5 - - - | #7 - - - - - - - 2' - - - #7 - - -";
+        const string drive = "RR8RR5R8RR8RR5R8", cross = "0120120120120120";
+
+        // The engine underneath everything but the breakdown: a 16th-note pulse, a cross-rhythm string ostinato (3 against 4),
+        // and a sub on the root.
+        void Engine(int bar, int bars, double vel = 1)
+        {
+            s.Bass(pulse, bar, bars, drive, 38, vel);
+            s.Arp(ostinato, bar, bars, cross, 62, vel * .9);
+            s.Bass(sub, bar, bars, "R---------------", 38, vel, .98);
+        }
+        void Braam(int bar) { s.Bass(braam, bar, 1, "R---------------", 38, 1, .9); s.Bass(braam, bar, 1, "5---------------", 38, .8, .9); }
+        void Drop(int bar, int bars)
+        {
+            s.Drums(kick, bar, bars, "x...x...x...x...");
+            s.Drums(snare, bar, bars, "....X.......X..."); s.Drums(clap, bar, bars, "....x.......x...");
+            s.Drums(taiko, bar, bars, "X..x..x.X..x..x.");
+            s.Drums(ohat, bar, bars, "..x...x...x...x."); s.Drums(hat, bar, bars, "xoxoxoxoxoxoxoxo", .9);
+        }
+
+        // Intro: the pulse alone under a braam, then the drums arrive with a fill.
+        Engine(0, 4, .8); Braam(0);
+        s.Drums(hat, 2, 2, "x.x.x.x.x.x.x.x.", .6);
+        s.Drums(taiko, 4, 4, "X.......x.x.x..."); s.Drums(toms, 4, 3, "............x.xx", .8, 45);
+        s.Drums(toms, 7, 1, "x.x.x.xxxxxxXXXX", .9, 45); Engine(4, 4);
+        s.Hit(riser, 6, 0, 32, 60, .7);
+        // Hook: the heroic lead in 3+3+2 over half-time drums whose taiko answers the same rhythm.
+        Engine(8, 8); Braam(8);
+        s.Drums(kick, 8, 8, "x.....x...x....."); s.Drums(snare, 8, 8, "........X.......");
+        s.Drums(taiko, 8, 8, "X..x..x.x..x..x."); s.Drums(hat, 8, 8, "x.xxx.xxx.xxx.xx", .8);
+        s.Drums(toms, 15, 1, "........x.x.xxxx", .9, 45);
+        s.Melody(lead, 8, hook, 74, grid: 1);
+        s.Hit(crash, 8, 0, 16, 60, .9);
+        // Choir theme: half-time, toms, strings doubling an octave up.
+        Engine(16, 8, .85); Braam(16);
+        s.Drums(kick, 16, 8, "x.........x....."); s.Drums(snare, 16, 8, "........X.......");
+        s.Drums(taiko, 16, 8, "X.......x.x....."); s.Drums(toms, 16, 8, "....x.x.....x.xx", .7, 45);
+        s.Drums(hat, 16, 8, "x.x.x.x.x.x.x.x.", .7);
+        s.Melody(choir, 16, theme, 62, grid: 1, legato: .99); s.Melody(strings, 16, theme, 74, grid: 1, vel: .55, legato: .99);
+        s.Chords(pad, 16, 8, "x---------------", 57, 3, .7, .98);
+        s.Hit(crash, 16, 0, 16, 60, .8);
+        // Build: quarters, eighths, sixteenths, a thirty-second roll, then one beat of silence before the drop.
+        s.Bass(pulse, 24, 3, drive, 38, .9); s.Bass(pulse, 27, 1, "RR8RR5R8RR8R....", 38, 1);
+        s.Arp(ostinato, 24, 3, cross, 62); s.Arp(ostinato, 27, 1, "012012012012....", 62);
+        s.Bass(sub, 24, 3, "R---------------", 38); s.Bass(sub, 27, 1, "R-----------....", 38);
+        s.Drums(roll, 24, 4, "x...x...x...x... x.x.x.x.x.x.x.x. xxxxxxxxxxxxxxxx rrrrrrrrrrrr....");
+        s.Drums(taiko, 24, 3, "X...x...X...x...");
+        s.Hit(riser, 24, 0, 60, 60, 1); s.Hit(swell, 27, 0, 16, 60, 1);
+        // Drop: the hook in octaves with brass and choir chords, double-time drums, booms.
+        Engine(28, 8); Braam(28); Drop(28, 8);
+        s.Melody(lead, 28, hook, 74, grid: 1); s.Melody(brass, 28, hook, 74, grid: 1, transpose: -12, vel: .9);
+        s.Chords(choirPad, 28, 8, "x-------x-------", 62, 3, .8, .98);
+        s.Arp(arp, 28, 8, "0123423101234231", 74, .8);
+        foreach (var b in new[] { 28, 32 }) { s.Hit(boom, b, 0, 16, 60, 1); s.Hit(crash, b, 0, 16, 60, 1); }
+        // Breakdown: bells play the hook over a pad and a softened pulse; the swell pulls into the final section.
+        s.Bass(pulse, 36, 4, drive, 38, .55); s.Bass(sub, 36, 4, "R---------------", 38, .8, .98);
+        s.Chords(pad, 36, 4, "x---------------", 57, 3, .9, .98);
+        s.Melody(bell, 36, hook, 74, grid: 1, vel: .8, maxTokens: 64);
+        s.Drums(taiko, 36, 4, "X............... ................ X............... ........x.x.x.xx", .8);
+        s.Hit(riser, 38, 0, 32, 60, .9); s.Hit(swell, 39, 0, 16, 60, 1);
+        // Final: everything, with the hook harmonised; the last bar's fill leads back into the intro.
+        Engine(40, 8); Braam(40); Drop(40, 7);
+        s.Drums(kick, 47, 1, "x...x...x...x..."); s.Drums(toms, 47, 1, "X.x.X.x.XxXxXXXX", 1, 45);
+        s.Melody(lead, 40, hook, 74, grid: 1); s.Melody(brass, 40, hook, 74, grid: 1, transpose: -12, vel: .9);
+        s.Melody(brassHarm, 40, hook, 74, grid: 1, shift: -2, vel: .8);
+        s.Chords(choirPad, 40, 8, "x-------x-------", 62, 3, .8, .98);
+        s.Arp(arp, 40, 8, "0123423101234231", 74, .8);
+        s.Hit(boom, 40, 0, 16, 60, 1); s.Hit(crash, 40, 0, 16, 60, 1);
+        return s;
     }
 
     static (double, int)? Tonal(string f, int octaveShift)

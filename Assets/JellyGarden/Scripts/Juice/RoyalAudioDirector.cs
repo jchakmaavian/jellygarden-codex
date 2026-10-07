@@ -13,8 +13,8 @@ namespace JellyGarden.Scripts.Juice
         float[] voiceGains;
         int variation, musicIndex; float duck, fade=-1, winSince=-1;
         // Home keeps the castle theme; level n plays track (n-1) mod count, each an original seamless loop (Design/Audio/LevelMusic).
-        // The user rejected the first ten tracks on 7 Oct 2026; The King's Quest, written in the castle theme's style, is on trial.
-        public static readonly string[] LevelMusic={"level-kings-quest"};
+        // On 7 Oct 2026 the user rejected the first ten tracks and The King's Quest as boring; Crown of Fire (epic hybrid) is on trial.
+        public static readonly string[] LevelMusic={"level-crown-of-fire"};
         readonly AudioClip[] levelClips=new AudioClip[LevelMusic.Length];
         readonly bool[] levelTried=new bool[LevelMusic.Length];
         AudioLowPassFilter musicFilter;
