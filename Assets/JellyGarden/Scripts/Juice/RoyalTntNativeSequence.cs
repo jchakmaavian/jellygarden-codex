@@ -32,11 +32,11 @@ namespace JellyGarden.Scripts.Juice
                 LastTntComboPreparation = length;
                 var socket = view.Socket("FitilPartikul");
                 fuse = ReferenceVfxPool.Play("TntTntComboFuseParticles", socket.position, worldCell: Cell, sustained: true);
+                // The body renders at 36; the pool default (35) hides the burning tip.
+                fuse?.Follow(socket, 37);
                 float elapsed = 0;
                 while (elapsed < length)
                 {
-                    if (fuse?.GameObject && socket)
-                        fuse.GameObject.transform.SetPositionAndRotation(socket.position, socket.rotation);
                     yield return null;
                     if (!Paused) elapsed += Time.deltaTime;
                 }

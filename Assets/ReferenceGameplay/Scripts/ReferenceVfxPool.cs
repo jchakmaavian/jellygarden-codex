@@ -13,6 +13,7 @@ namespace RoyalThrone.ReferenceGameplay
         {
             public string key; public GameObject root; public ParticleSystem[] particles; public bool[] pausedByOwner;
             public bool active, sustained, stopped; public int lease; public float age, emissionEnd;
+            public Transform follow;
         }
         public sealed class Handle
         {
@@ -20,6 +21,14 @@ namespace RoyalThrone.ReferenceGameplay
             internal Handle(object value) { entry = (Entry)value; lease = entry.lease; }
             public bool Valid => entry != null && entry.active && entry.lease == lease && entry.root;
             public GameObject GameObject => Valid ? entry.root : null;
+            // Socket motion is sampled after Animator evaluation, at a stable world scale.
+            public void Follow(Transform socket, int sortingOrder)
+            {
+                if (!Valid) return;
+                entry.follow = socket;
+                entry.root.GetComponent<SortingGroup>().sortingOrder = sortingOrder;
+                if (socket) entry.root.transform.SetPositionAndRotation(socket.position, socket.rotation);
+            }
             public void Stop() { if (Valid) StopEmission(entry); }
         }
         static ReferenceVfxPool instance;
@@ -52,6 +61,7 @@ namespace RoyalThrone.ReferenceGameplay
                 LastInstantiationMilliseconds = buildClock.Elapsed.TotalMilliseconds;
             }
             var item = selected; item.lease++; item.active = true; item.sustained = sustained; item.age = 0; item.stopped = false; item.emissionEnd = 0;
+            item.follow = null;
             System.Array.Clear(item.pausedByOwner, 0, item.pausedByOwner.Length);
             var lm = LevelManager.THIS;
             if (worldCell <= 0) worldCell = lm && lm.GameField ? lm.squareWidth * Mathf.Abs(lm.GameField.lossyScale.x) : 1;
@@ -116,9 +126,16 @@ namespace RoyalThrone.ReferenceGameplay
         static void Touch(Texture texture) { if (texture) _ = texture.width; }
         static void StopEmission(Entry item)
         {
+            item.follow = null;
             item.stopped = true; item.sustained = false;
             System.Array.Clear(item.pausedByOwner, 0, item.pausedByOwner.Length);
             foreach (var ps in item.particles) if (ps) ps.Stop(false, ParticleSystemStopBehavior.StopEmitting);
+        }
+        void LateUpdate()
+        {
+            foreach (var item in pool)
+                if (item.active && item.root && item.follow)
+                    item.root.transform.SetPositionAndRotation(item.follow.position, item.follow.rotation);
         }
         void Update()
         {
@@ -145,6 +162,7 @@ namespace RoyalThrone.ReferenceGameplay
         }
         static void Retire(Entry item)
         {
+            item.follow = null;
             foreach (var ps in item.particles) if (ps) ps.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
             if (item.root) item.root.SetActive(false); item.active=false; item.sustained=false;
         }
