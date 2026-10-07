@@ -220,7 +220,8 @@ namespace RoyalThrone.Presentation
             bool showHome = home && (paused || home.gameObject.activeSelf), showInfo = paused || info && info.gameObject.activeSelf;
             float row = 238, resumeRow = row;
             if (showResume) row += 118;
-            float soundRow = row, hintRow = row + 96, helpRow, homeRow, last;
+            // Volume sliders sit under MUSIC and SFX (the user's request, 2026-10-07).
+            float soundRow = row, volumeRow = row + 70, hintRow = row + 160, helpRow, homeRow, last;
             if (paused) { helpRow = homeRow = hintRow + 128; last = homeRow; }
             else
             {
@@ -245,6 +246,13 @@ namespace RoyalThrone.Presentation
             buttons.Add(Feedback(Button(p.Find("Music"), "MUSIC ON", -128, top - soundRow, 244, 76, Kind.Secondary), false));
             buttons.Add(Feedback(Button(p.Find("Sound"), "SFX ON", 128, top - soundRow, 244, 76, Kind.Secondary), false));
             foreach (string n in new[] { "Music", "Sound" }) Hide(p.Find(n + "/" + n + "Off"));
+            foreach (bool music in new[] { true, false })
+            {
+                string name = music ? "Royal music volume" : "Royal sfx volume"; float x = music ? -128 : 128;
+                var existing = p.Find(name);
+                if (existing) RoyalMenuSkin.Place(existing, x, top - volumeRow, 190 + 46, 64);
+                else RoyalVolumeSlider.Build(p, name, music, x, top - volumeRow, 190);
+            }
             var hint = p.Find("Hints");
             if (!hint)
             {

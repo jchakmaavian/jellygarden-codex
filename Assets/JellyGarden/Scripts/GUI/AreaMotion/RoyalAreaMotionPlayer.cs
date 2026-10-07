@@ -176,6 +176,8 @@ namespace RoyalThrone.Presentation.AreaMotion
         {
             if(!revealAudio)return;bool audible=SoundEnabled&&Visible&&!paused&&isActiveAndEnabled;
             revealAudio.mute=!audible;ambientAudio.mute=!audible;fountainAudio.mute=!audible;
+            float sfx=JellyGarden.Scripts.Juice.RoyalAudioSettings.Sound;   // the player's SFX volume
+            revealAudio.volume=.8f*sfx;ambientAudio.volume=.15f*sfx;fountainAudio.volume=.3f*sfx;
             if(audible&&ambientAudio.clip&&!ambientAudio.isPlaying)ambientAudio.Play();
             if(audible&&fountainVisible&&fountainAudio.clip&&!fountainAudio.isPlaying)fountainAudio.Play();
             if(!fountainVisible&&fountainAudio.isPlaying)fountainAudio.Stop();

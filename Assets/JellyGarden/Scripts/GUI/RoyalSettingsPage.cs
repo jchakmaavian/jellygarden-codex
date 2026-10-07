@@ -15,7 +15,7 @@ namespace RoyalThrone.Presentation
     // laid out on an 800-unit column from the screen's top; a screen wider than 9:16 (a tablet) scales the column down.
     public sealed class RoyalSettingsPage : MonoBehaviour
     {
-        const float Column = 800, PhoneHeight = 1422, PanelWidth = 736, RowHeight = 124, PanelTop = 282, ButtonHeight = 116, Gap = 28;
+        const float Column = 800, PhoneHeight = 1422, PanelWidth = 736, RowHeight = 124, VolumeHeight = 92, PanelTop = 282, ButtonHeight = 116, Gap = 28;
         static readonly string[] Labels = { "Music", "Sound", "Motion", "Hint" };
         static readonly string[] Keys = { "Music", "Sound", "RoyalThrone.HomeMotion", RoyalHintSettings.PreferenceKey };
 
@@ -136,18 +136,25 @@ namespace RoyalThrone.Presentation
             RedClose(close, 0);
             RoyalMenuSkin.Place(close, 322, -128, 100, 100);
 
-            // The switches' panel: a deeper, see-through blue with a light rim; a thin line between rows.
+            // The switches' panel: a deeper, see-through blue with a light rim; a thin line between rows. Music and Sound each
+            // have a volume slider row beneath their switch (the user's request, 2026-10-07).
             int rows = Mathf.Min(home.settingButtons != null ? home.settingButtons.Length : 0, Labels.Length);
-            float panelHeight = rows * RowHeight + 16, panelY = -PanelTop - panelHeight * .5f;
+            var layout = new List<(int index, bool volume, float height)>();
+            for (int i = 0; i < rows; i++) { layout.Add((i, false, RowHeight)); if (i < 2) layout.Add((i, true, VolumeHeight)); }
+            float panelHeight = 16; foreach (var e in layout) panelHeight += e.height;
+            float panelY = -PanelTop - panelHeight * .5f;
             var panel = Container(content, "Royal settings panel");
             RoyalMenuSkin.Place(panel, 0, panelY, PanelWidth, panelHeight);
             var shade = Shape(panel, "Shadow", 0, -5, PanelWidth + 10, panelHeight + 10, 34, C("000a30", .35f), C("000a30", .35f));
             shade.softness = 14;
             Inset(panel, "Rim", 0, 30, C("86aaf2", .55f), C("4a76d6", .4f));
             Inset(panel, "Fill", 2.4f, 27.6f, C("12399a", .92f), C("0b2a78", .92f));
-            for (int i = 0; i < rows; i++)
+            float top = -PanelTop - 8;
+            foreach (var entry in layout)
             {
-                float y = RowY(i);
+                float y = top - entry.height * .5f; top -= entry.height;
+                int i = entry.index;
+                if (entry.volume) { BuildVolume(i, y); continue; }
                 if (i > 0)
                 {
                     Shape(content, "Row line " + i, 0, y + RowHeight * .5f, PanelWidth - 56, 2, 1, C("6f98ee", .35f), C("6f98ee", .35f));
@@ -176,7 +183,20 @@ namespace RoyalThrone.Presentation
 
         float nextButtonY;
 
-        float RowY(int i) => -PanelTop - 8 - RowHeight * (i + .5f);
+        // ---- Volume sliders ---------------------------------------------------------------------------------------------
+
+        // A row under Music or Sound: "Volume", the slider (RoyalVolumeSlider) and its percentage.
+        void BuildVolume(int which, float y)
+        {
+            var row = Container(content, "Row " + Labels[which] + " volume");
+            RoyalMenuSkin.Place(row, 0, y, PanelWidth, VolumeHeight);
+            // The caption lines up with the switch labels above; the track runs between it and the percentage.
+            var caption = Words(row, "Royal label", "Volume", -175, 0, 150, 28, Ink.Light);
+            caption.alignment = TextAnchor.MiddleLeft;
+            var percent = Words(row, "Royal percent", "", 304, 0, 96, 28, Ink.Light);
+            percent.alignment = TextAnchor.MiddleRight;
+            RoyalVolumeSlider.Build(row, "Royal slider", which == 0, 100, 0, 280, percent, row.gameObject.AddComponent<CanvasGroup>());
+        }
 
         // A tappable child of the column with the Button (and a clear Image as its tap area).
         static Transform Control(Transform parent, string name, UnityEngine.Events.UnityAction action)

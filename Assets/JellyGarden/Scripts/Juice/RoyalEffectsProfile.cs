@@ -21,8 +21,11 @@ namespace JellyGarden.Scripts.Juice
         [Range(100,1000)] public int sparkleBudget=480;
         [Range(0,.12f)] public float impactShake=.035f;
         [Header("Sound balance")]
-        [Range(0,1)] public float musicVolume=.32f;
-        [Range(0,1)] public float effectsVolume=.68f;
+        // The game's mix; the player's Settings volumes scale it (RoyalAudioSettings).
+        [Range(0,1), UnityEngine.Serialization.FormerlySerializedAs("musicVolume")] public float musicMix=.32f;
+        [Range(0,1), UnityEngine.Serialization.FormerlySerializedAs("effectsVolume")] public float effectsMix=.68f;
+        public float musicVolume => musicMix*RoyalAudioSettings.Music;
+        public float effectsVolume => effectsMix*RoyalAudioSettings.Sound;
         [Range(4,24)] public int soundVoices=12;
         [Range(.2f,2)] public float musicCrossfade=1.2f;
         static RoyalEffectsProfile instance;
