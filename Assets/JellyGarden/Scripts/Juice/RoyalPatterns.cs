@@ -44,16 +44,18 @@ namespace JellyGarden.Scripts.Juice
             {
                 var g=SquareAt(lm.GetSquare(c,r));if(g.Count!=4)continue;
                 // A square plus an extra gem also contains a three-gem line.
-                // Absorb ordinary line matches instead of letting them suppress the square.
+                // Claim only the four square gems; clear overlapping line extras separately.
                 // Already selected specials (including an earlier square) keep their priority.
                 var overlaps=groups.FindAll(existing=>existing.Exists(g.Contains));
                 if(overlaps.Exists(existing=>existing.Exists(item=>item.NextType!=ItemsTypes.NONE)))continue;
+                var extras=new List<Item>();
                 foreach(var existing in overlaps){
-                    foreach(var item in existing)if(!g.Contains(item))g.Add(item);
+                    foreach(var item in existing)if(!g.Contains(item)&&!extras.Contains(item))extras.Add(item);
                     groups.Remove(existing);
                 }
                 Item host=lm.PreferredMatchHost(g);if(!host)host=g[0];
                 host.NextType=ItemsTypes.HELICOPTER;groups.Add(g);
+                if(extras.Count>0)groups.Add(extras);
             }
         }
     }
