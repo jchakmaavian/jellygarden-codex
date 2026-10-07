@@ -22,7 +22,8 @@ namespace RoyalThrone.ReferenceGameplay
         // centre. The + sits in the pill's round right end, and the value between the icon and the +.
         static readonly Vector4[] IconPx={new Vector4(176.5f,56.5f,282.5f,165.5f),new Vector4(441,64,552,165),new Vector4(721,72,805,151)};
         static readonly Vector4[] ValuePx={new Vector4(288,83,366,146),new Vector4(556,82,646,145),new Vector4(806,82,870,145)};
-        static readonly Vector4 LifeCountPx=new Vector4(463,83.5f,533,144.5f);
+        // Center the visible digit in the heart; the display font sits below its line-box centre.
+        static readonly Vector4 LifeCountPx=new Vector4(461.5f,79.5f,531.5f,140.5f);
         static readonly float[] PillLeft={229,497,763},PillRight={434,714,938};
         const float PillTop=79,PillBottom=156,FaceTop=82,FaceBottom=150,PillEdge=2.5f;
         // Values render at about 32 px, the reference digits' size.
