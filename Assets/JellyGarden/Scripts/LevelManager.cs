@@ -1859,7 +1859,8 @@ namespace JellyGarden.Scripts
                     var juiceCfg = Juice.JuiceConfig.Instance;
                     float groupIntensity = Juice.MatchVFXService.ComputeIntensity(desrtoyItems.Count, combo);
 
-                    if (juiceCfg.EnableJuice)
+                    bool propellerFormation = Juice.RoyalPropellerFormation.Prepare(desrtoyItems);
+                    if (juiceCfg.EnableJuice && !propellerFormation)
                     {
                         Vector3 matchCenter = Vector3.zero;
                         int centerCount = 0;

@@ -36,6 +36,9 @@ namespace JellyGarden.Scripts
     public class Item : MonoBehaviour
     {
         [NonSerialized] public bool royalConsumed;
+        [NonSerialized] public bool royalPropellerGather;
+        [NonSerialized] public bool royalPropellerMerged;
+        [NonSerialized] public Vector3 royalPropellerGatherTarget;
         // Set when ChangeTypeCor seats a match-made power-up in its cell; Start must not treat it as a refill.
         bool royalSeatedPowerup;
         [NonSerialized] public bool inputSwapLocked, inputMatchPending;
@@ -1180,7 +1183,7 @@ namespace JellyGarden.Scripts
                 }
                 if (previousType != currentType)
                     RoyalThrone.Characters.KingVanguardActivityEvents.NotifyPowerupCreated(LevelManager.THIS, this);
-                if (RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Attach(this, true)) yield break;
+                if (RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Attach(this, !royalPropellerMerged)) yield break;
                 if (tnt) TNT3DAnimator.RevealSprite(this);
                 else
                 {
@@ -1334,7 +1337,8 @@ namespace JellyGarden.Scripts
             }
             //if (anim_name == "")
             //{
-            if (royalSpecial || royalConsumed || royalCoin) { }
+            if (royalPropellerGather) yield return RoyalPropellerFormation.Gather(this);
+            else if (royalSpecial || royalConsumed || royalCoin) { }
             else if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
                 PlayDestroyAnimation("destroy");
             else if (currentType == ItemsTypes.VERTICAL_STRIPPED)
@@ -1432,6 +1436,7 @@ namespace JellyGarden.Scripts
                 square.Release(this);
                 Item i = square.GenItem(!rocket && !(RoyalEffectsProfile.Get && NextType == ItemsTypes.PACKAGE), campaignRefill: false);
                 i.NextType = NextType;
+                i.royalPropellerMerged = royalPropellerGather && NextType == ItemsTypes.HELICOPTER;
                 i.SetColor(color);
                 i.ChangeType();
                 // The profile counts the power-ups matches make while the level is played (RoyalProfile).
