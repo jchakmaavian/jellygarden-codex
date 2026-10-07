@@ -1,5 +1,7 @@
 # Feedback 6 — Four gems merge into one Propeller
 
+**Subsequent revision:** full-size gem merging remains, but the original Propeller Reveal has been restored at the user's request. See [the current restoration report](../07-SpecialFormation/reveals-restored/FIXING-REPORT.md). The crossfade description below is historical.
+
 Corrected on 7 October 2026 following the user's clarification: the four gems must move together at their original size, without shrinking, breaking or a Propeller popping into place.
 
 The accepted 2x2 match now uses a 0.24-second inward slide. All four gem visuals retain their original size and overlap at the existing selected creation cell. Once together, the merged silhouette crossfades over 0.14 seconds into the full-size native Propeller artwork. The resulting gameplay item starts in its settled visual state, bypassing the old pop-style creation clip. This is a visual crossfade between existing artwork, not a newly authored mesh morph.

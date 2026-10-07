@@ -10,8 +10,7 @@ namespace JellyGarden.Scripts.Juice
     public static class RoyalSpecialFormation
     {
         public const float TravelDuration = .24f;
-        public const float BlendDuration = .14f;
-        public const float Duration = TravelDuration + BlendDuration;
+        public const float Duration = TravelDuration;
         public static bool Prepare(List<Item> group)
         {
             if (!RoyalEffectsProfile.Get || group.Count < 4) return false;
@@ -55,10 +54,6 @@ namespace JellyGarden.Scripts.Juice
             go.transform.localScale = new Vector3(source.transform.lossyScale.x / inherited.x, source.transform.lossyScale.y / inherited.y, 1);
             Vector3 start = go.transform.position;
             Vector3 target = item.royalSpecialGatherTarget - (sprite.bounds.center - go.transform.position);
-            GameObject result = null;
-            ReferenceActivationVisual resultView = null;
-            SpriteRenderer[] resultSprites = null;
-            Color[] resultColors = null;
             source.forceRenderingOff = true;
             if (item.anim) item.anim.enabled = false;
             var shadow = item.transform.Find("Royal contact shadow");
@@ -71,45 +66,15 @@ namespace JellyGarden.Scripts.Juice
                     if (LevelManager.THIS.gameStatus != GameState.Pause) elapsed += Time.deltaTime;
                     float t = Mathf.Clamp01(elapsed / TravelDuration);
                     float travel = t * t * (3 - 2 * t);
-                    // Keep every gem at its original size. Only after they occupy
-                    // the same location does the merged silhouette blend into the special piece.
+                    // Keep the full-size gem merge, then hand creation to the original
+                    // piece Reveal. Do not substitute a settled preview or skip its clip.
                     go.transform.position = Vector3.Lerp(start,target,travel);
-                    float blend = Mathf.SmoothStep(0,1,Mathf.Clamp01((elapsed-TravelDuration)/BlendDuration));
-                    sprite.color = new Color(1,1,1,1-blend);
-                    if (elapsed >= TravelDuration && Supported(item.NextType))
-                    {
-                        if (!result)
-                        {
-                            result = new GameObject("Special merge result");
-                            result.transform.SetParent(item.transform,false);
-                            result.transform.position = item.square.transform.position + Vector3.back * .2f;
-                            resultView = ReferenceActivationVisual.Attach(result,ReferencePieceVisual.Key(item.NextType),35);
-                            if (item.NextType == ItemsTypes.BOMB) resultView.Play("LightballDefaultAnimation");
-                            else resultView.Play(CreationState(item.NextType), normalizedTime:1);
-                            if (item.NextType == ItemsTypes.HORIZONTAL_STRIPPED || item.NextType == ItemsTypes.VERTICAL_STRIPPED)
-                            {
-                                var animator = result.GetComponentInChildren<Animator>();
-                                var horizontal = animator.transform.Find("Horizontal");
-                                var vertical = animator.transform.Find("Vertical");
-                                if (horizontal) horizontal.gameObject.SetActive(item.NextType == ItemsTypes.HORIZONTAL_STRIPPED);
-                                if (vertical) vertical.gameObject.SetActive(item.NextType == ItemsTypes.VERTICAL_STRIPPED);
-                            }
-                            resultView.Hold();
-                            resultSprites = result.GetComponentsInChildren<SpriteRenderer>(true);
-                            resultColors = new Color[resultSprites.Length];
-                            for (int i=0;i<resultSprites.Length;i++) resultColors[i]=resultSprites[i].color;
-                        }
-                        for (int i=0;i<resultSprites.Length;i++)
-                        { var color=resultColors[i];color.a*=blend;resultSprites[i].color=color; }
-                    }
                     yield return null;
                 }
                 item.SetAnimationDestroyingFinished();
             }
             finally
             {
-                if (resultView) resultView.Release();
-                if (result) Object.Destroy(result);
                 if (go) Object.Destroy(go);
             }
         }

@@ -1,5 +1,7 @@
 # Feedback 7 — TNT, Rocket and Color Ball creation
 
+**Superseded presentation:** the user subsequently requested the original Reveals back while retaining gem merging. See [the current restoration report](reveals-restored/FIXING-REPORT.md). The crossfade/no-Reveal description below records the earlier implementation.
+
 Implemented in the requested order on 7 October 2026: TNT first, both Rocket orientations second, Color Ball third. Each stage was tested before proceeding to the next.
 
 Matched gems keep their original size as they slide into the existing selected creation cell over 0.24 seconds. Once together, their merged silhouette crossfades into one full-size special piece over 0.14 seconds. There is no gem shrinking, fragment burst, empty interval or replay of the pop-style creation clip. This uses a crossfade between existing sprites, not a new mesh morph.

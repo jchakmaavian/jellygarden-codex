@@ -37,7 +37,6 @@ namespace JellyGarden.Scripts
     {
         [NonSerialized] public bool royalConsumed;
         [NonSerialized] public bool royalSpecialGather;
-        [NonSerialized] public bool royalSpecialMerged;
         [NonSerialized] public Vector3 royalSpecialGatherTarget;
         // Set when ChangeTypeCor seats a match-made power-up in its cell; Start must not treat it as a refill.
         bool royalSeatedPowerup;
@@ -1183,10 +1182,7 @@ namespace JellyGarden.Scripts
                 }
                 if (previousType != currentType)
                     RoyalThrone.Characters.KingVanguardActivityEvents.NotifyPowerupCreated(LevelManager.THIS, this);
-                bool merged = royalSpecialMerged;
-                royalSpecialMerged = false;
-                if (merged) RoyalThrone.ReferenceGameplay.ReferenceGameplayAudio.Reveal(createdType);
-                if (RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Attach(this, !merged)) yield break;
+                if (RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Attach(this, true)) yield break;
                 if (tnt) TNT3DAnimator.RevealSprite(this);
                 else
                 {
@@ -1439,7 +1435,6 @@ namespace JellyGarden.Scripts
                 square.Release(this);
                 Item i = square.GenItem(!rocket && !(RoyalEffectsProfile.Get && NextType == ItemsTypes.PACKAGE), campaignRefill: false);
                 i.NextType = NextType;
-                i.royalSpecialMerged = royalSpecialGather && RoyalSpecialFormation.Supported(NextType);
                 i.SetColor(color);
                 i.ChangeType();
                 // The profile counts the power-ups matches make while the level is played (RoyalProfile).

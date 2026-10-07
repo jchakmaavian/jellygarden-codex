@@ -14,7 +14,7 @@ namespace RoyalThrone.Editor
         public static IEnumerator Run(LevelManager lm, Action<bool,string> report, ItemsTypes type, string shape)
         {
             Action<bool,string> check = (ok, message) => report(ok, shape + ": " + message);
-            string folder="Design/QaFeedback/07-SpecialFormation/"+shape+"/raw/";
+            string folder="Design/QaFeedback/07-SpecialFormation/reveals-restored/"+shape+"/raw/";
             Directory.CreateDirectory(folder);
             float oldCapture=Time.captureDeltaTime;
             try
@@ -34,7 +34,7 @@ namespace RoyalThrone.Editor
                     var roots=items.Select(i=>i.transform.position).ToArray();
                     Time.captureDeltaTime=1f/fps;
                     lm.FindMatches();
-                    bool sawFour=false,rootsStable=true,hidden=true,paused=false,fullSize=true,fadeAfterMerge=true,sawBlend=false,noPop=true;
+                    bool sawFour=false,rootsStable=true,hidden=true,paused=false,fullSize=true,opaqueMerge=true,sawRevealStart=false,sawRevealAdvance=false;
                     var sizes=items.Select(i=>i.sprRenderer.bounds.size).ToArray();
                     int frame=0,gatherFrames=0;float firstDistance=-1,lastDistance=-1;
                     while(frame<fps*2)
@@ -47,9 +47,8 @@ namespace RoyalThrone.Editor
                             foreach(var gem in gems){
                                 int index=Array.IndexOf(items,gem.GetComponentInParent<Item>());
                                 fullSize &= index>=0 && Vector3.Distance(gem.bounds.size,sizes[index])<.001f;
-                                if(gem.color.a<.99f)fadeAfterMerge &= gems.All(other=>Vector3.Distance(gem.bounds.center,other.bounds.center)<.001f);
+                                opaqueMerge &= gem.color.a >= .99f;
                             }
-                            sawBlend |= Object.FindObjectsByType<Transform>().Any(t=>t.name=="Special merge result") && gems.Any(g=>g.color.a>0 && g.color.a<1);
                             float distance=0;foreach(var gem in gems)foreach(var other in gems)distance+=Vector3.Distance(gem.bounds.center,other.bounds.center);
                             if(firstDistance<0)firstDistance=distance;lastDistance=distance;
                             if(!paused&&gatherFrames==3){
@@ -63,15 +62,21 @@ namespace RoyalThrone.Editor
                         foreach(var propeller in lm.GetItems().Where(i=>i&&i.currentType==type)){
                             var visual=propeller.GetComponent<RoyalThrone.ReferenceGameplay.ReferencePieceVisual>();
                             var nativeAnimator=propeller.GetComponentsInChildren<Animator>().FirstOrDefault(a=>a!=propeller.anim);
-                            noPop &= !propeller.royalSpecialMerged && visual && nativeAnimator && !(nativeAnimator.GetCurrentAnimatorStateInfo(0).IsName(RoyalSpecialFormation.CreationState(type)) && nativeAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime<.99f);
+                            if(visual && nativeAnimator) {
+                                var state=nativeAnimator.GetCurrentAnimatorStateInfo(0);
+                                if(state.IsName(RoyalSpecialFormation.CreationState(type)) && visual.Revealing){
+                                    sawRevealStart |= state.normalizedTime < .15f;
+                                    sawRevealAdvance |= state.normalizedTime > .15f && state.normalizedTime < 1;
+                                }
+                            }
                         }
                         if(fps==60&&frame<85){var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(folder+frame.ToString("D3")+".png",tex.EncodeToPNG());Object.Destroy(tex);}
                         frame++;
                     }
                     check(sawFour,fps+" FPS: all matched gems gather together");
                     check(fullSize,fps+" FPS: all matched gems retain their full original size throughout movement and merge");
-                    check(fadeAfterMerge,fps+" FPS: transformation begins only after all matched gems reach the same location");
-                    check(sawBlend&&noPop,fps+" FPS: merged gems blend into the full-size special piece without replaying its pop reveal");
+                    check(opaqueMerge,fps+" FPS: merging gems remain fully visible until the original Reveal takes over");
+                    check(sawRevealStart&&sawRevealAdvance,fps+" FPS: original creation Reveal starts at its beginning and advances normally");
                     check(lastDistance<firstDistance*.2f,fps+" FPS: gems converge into one location");
                     check(rootsStable&&hidden,fps+" FPS: visual-only movement; original roots stay fixed and originals are hidden");
                     check(gatherFrames>=fps*.20f,fps+" FPS: continuous gathering frames precede reveal");
