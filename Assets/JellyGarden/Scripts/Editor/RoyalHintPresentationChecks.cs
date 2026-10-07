@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
     /// <summary>Checks rendered hints on the disposable fixture, without invoking the mutating match solver.</summary>
     public static class RoyalHintPresentationChecks
     {
-        const string Folder="Design/QaFeedback/04-SingleMoveHint/raw/";
+        const string Folder="Design/QaFeedback/04-SingleMoveHint/rotation/raw/";
         sealed class Example
         {
             public string Name;public Vector2Int Source;public Vector2Int[] Cells;public int Edges;
@@ -92,12 +92,37 @@ namespace RoyalThrone.Editor
                 var option=RoyalHintSolver.EvaluateSwap(lm,sq.item,next.item);if(option!=null)plans.Add(option);
             }
             check(plans.Count>1,"Regression board contains multiple available legal swaps");
+            string Key(RoyalHintPlan p)=>p.First.square.col+","+p.First.square.row+":"+p.Second.square.col+","+p.Second.square.row;
+            var choices=RoyalHintSolver.FindAll(lm);
+            check(choices.Count==plans.Count&&choices.Select(Key).Distinct().Count()==choices.Count,"Rotation includes every legal exchange exactly once");
+            var rotationRest=lm.squaresArray.ToDictionary(s=>s.item,s=>s.item.sprRenderer.transform.localScale);
             for(int i=0;i<3;i++)ai.StartCoroutine(ai.CheckPossibleCombines());
             float deadline=Time.unscaledTime+8;while(!presenter.IsVisible&&Time.unscaledTime<deadline)yield return null;
             var chosen=presenter.CurrentPlan;
             check(chosen!=null&&chosen.IsCurrent(lm)&&presenter.VisibleSwapCount==2&&presenter.ContourCount==1,"Concurrent idle finders display exactly one legal swap and one matching group");
             yield return new WaitForSecondsRealtime(1.7f);
-            check(presenter.CurrentPlan==chosen,"Several available moves do not cycle or accumulate extra hint suggestions");
+            check(presenter.CurrentPlan==chosen,"Each suggestion stays readable instead of changing midway through its interaction");
+            yield return Capture("rotation-1");
+            var visited=new HashSet<string>{Key(chosen)};var previous=chosen;bool single=true,restored=true,wrapped=false;
+            deadline=Time.unscaledTime+AI.HintSuggestionSeconds*choices.Count+2;
+            while(Time.unscaledTime<deadline&&!wrapped){
+                yield return new WaitForEndOfFrame();var current=presenter.CurrentPlan;
+                single &= current!=null&&current.IsCurrent(lm)&&presenter.ContourCount==1&&presenter.VisibleSwapCount==2;
+                if(current==null)break;
+                if(current!=previous){
+                    var affected=Affected(current);
+                    restored &= lm.squaresArray.Where(s=>!affected.Contains(s.item)).All(s=>s.item.sprRenderer.transform.localScale==rotationRest[s.item]&&
+                        !s.item.GetComponentsInChildren<SpriteRenderer>().Any(r=>r.name.StartsWith("Hint match gem glow")&&r.enabled));
+                    wrapped=Key(current)==Key(chosen);visited.Add(Key(current));previous=current;
+                    if(visited.Count==2&&!wrapped)yield return Capture("rotation-2");
+                }
+            }
+            check(visited.Count==choices.Count&&wrapped,"Idle hints visit other legal combinations and wrap only after every option has been shown");
+            check(single,"Rotation keeps exactly one current legal swap and one outline visible throughout");
+            check(restored,"Switching suggestions restores the previous group's size and removes its glow");
+            ai.CancelVisibleHint();check(!presenter.IsVisible,"Cancellation clears an actively rotating hint immediately");
+            yield return new WaitForSecondsRealtime(.2f);
+            check(!presenter.IsVisible,"Rotation cannot resurrect a cancelled suggestion before the fresh idle delay");
             ai.StopAllCoroutines();ai.CancelVisibleHint();ai.allowShowTip=false;
             candidate=DualResult(lm);presenter.Show(candidate);
             var host=new GameObject("QA secondary hint presenter");var other=host.AddComponent<RoyalHintPresenter>();

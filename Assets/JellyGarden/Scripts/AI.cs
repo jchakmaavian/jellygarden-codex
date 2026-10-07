@@ -53,9 +53,11 @@ namespace JellyGarden.Scripts
 		int visibleHintMove;
 		Juice.RoyalHintPresenter hintPresenter;
 		public int VisibleHintCount => hintPresenter && hintPresenter.IsVisible ? hintPresenter.VisibleSwapCount : 0;
-		// The hint always shows the best move (2026-10-04): it appears once the board has been still for a second and stays
-		// until the player touches the board or the board changes.
+		// Start with the strongest move, then rotate through other legal exchanges,
+		// keeping one suggestion visible for two complete interaction cycles.
 		public const float HintIdleSeconds = 1f;
+		public const float HintSuggestionSeconds = Juice.RoyalHintPresenter.PairStartDelay +
+			2 * (Juice.RoyalHintPresenter.PairTravelSeconds + Juice.RoyalHintPresenter.PairRestSeconds);
 		void OnEnable() { Juice.RoyalHintSettings.Changed += HintPreferenceChanged; }
 		void OnDisable()
 		{
@@ -622,14 +624,27 @@ namespace JellyGarden.Scripts
 			{
 				// The legacy discovery sample omits the swap partner and longer runs.
 				// Preview the complete result without changing real cells or match state.
-				var plan = Juice.RoyalHintSolver.Find(lm);
+				var options = Juice.RoyalHintSolver.FindAll(lm);
+				var plan = options.Count > 0 ? options[0] : null;
 				if (!hintPresenter) hintPresenter = GetComponent<Juice.RoyalHintPresenter>() ?? gameObject.AddComponent<Juice.RoyalHintPresenter>();
 				if (hintPresenter.Show(plan))
 				{
 					visibleHintMove = tipID;
 					visibleHintItems.Add(plan.First);
 					if (plan.Second) visibleHintItems.Add(plan.Second);
-					while (hintPresenter.IsVisible) yield return null;
+					int option=0;float nextSuggestion=Time.unscaledTime+HintSuggestionSeconds;
+					while (hintPresenter.IsVisible)
+					{
+						if(!allowShowTip||JellyGarden.Scripts.GUI.TutorialStuff.RoyalPowerTutorial.HoldsHints||BoardSettling(lm))break;
+						if(options.Count>1&&Time.unscaledTime>=nextSuggestion){
+							option=(option+1)%options.Count;var next=options[option];
+							if(!next.IsCurrent(lm)||!hintPresenter.Show(next))break;
+							visibleHintItems.Clear();visibleHintItems.Add(next.First);if(next.Second)visibleHintItems.Add(next.Second);
+							this.nextMoveItems=new List<Item>(visibleHintItems);tipItem=next.First;
+							nextSuggestion=Time.unscaledTime+HintSuggestionSeconds;
+						}
+						yield return null;
+					}
 				}
 			}
 			CancelVisibleHint();

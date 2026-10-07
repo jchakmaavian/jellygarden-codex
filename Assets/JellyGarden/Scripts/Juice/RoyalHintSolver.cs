@@ -63,9 +63,20 @@ namespace JellyGarden.Scripts.Juice
         static long Score(RoyalHintPlan plan)=>plan.Impact*100000L+plan.MatchCells.Count*100+plan.LongestRun;
         public static RoyalHintPlan Find(LevelManager lm)
         {
-            if(!lm||lm.squaresArray==null)return null;
-            RoyalHintPlan best=null;long bestScore=long.MinValue;
-            void Consider(RoyalHintPlan candidate){if(candidate==null)return;long score=Score(candidate);if(best==null||score>bestScore){best=candidate;bestScore=score;}}
+            var options=FindAll(lm);return options.Count>0?options[0]:null;
+        }
+        public static List<RoyalHintPlan> FindAll(LevelManager lm)
+        {
+            var options=new List<RoyalHintPlan>();
+            if(!lm||lm.squaresArray==null)return options;
+            void Consider(RoyalHintPlan candidate){
+                if(candidate==null)return;long score=Score(candidate);int at=0;
+                // Stable ordering: strongest first, then every other legal swap.
+                // Each neighbouring pair is visited once, so reversed duplicates
+                // do not occupy another turn in the hint rotation.
+                while(at<options.Count&&Score(options[at])>=score)at++;
+                options.Insert(at,candidate);
+            }
             // Ordinary swaps of two plain gems only (EvaluateSwap rejects power-ups): no tap hints, no combo hints. No match
             // at all returns null, and AI.CheckPossibleCombines then shuffles the board (RoyalShuffle).
             for(int row=0;row<lm.maxRows;row++)for(int col=0;col<lm.maxCols;col++){
@@ -76,7 +87,7 @@ namespace JellyGarden.Scripts.Juice
                     Consider(EvaluateSwap(lm,item,next.item));
                 }
             }
-            return best;
+            return options;
         }
         static bool CanMove(Item item)
         {return item&&!item.destroying&&!item.falling&&item.gameObject.activeInHierarchy&&item.square&&item.square.item==item&&item.square.CanGoInto()&&item.square.CanGoOut();}
