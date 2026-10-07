@@ -623,12 +623,13 @@ namespace JellyGarden.Scripts.Juice
             // Its reaction makes the king in the HUD portrait cheer.
             if (RoyalPowerupDirector.Get && lm.GameField) RoyalPowerupDirector.Get.Creation(lm.GameField.position);
 
-            float t = 0; int fired = 0; bool fanfare = false;
+            float t = 0; int fired = 0; bool fanfare = false, abandoned = false;
+            var fanfareClip = Resources.Load<AudioClip>("RoyalGameplay/Audio/royal-fanfare");
             var rising = new Image[3];
             while (true)
             {
                 bool won = lm.gameStatus == GameState.Win;
-                if (lm.gameStatus != GameState.PreWinAnimations && !won) break;
+                if (lm.gameStatus != GameState.PreWinAnimations && !won) { abandoned = true; break; }
                 t += Mathf.Min(Time.unscaledDeltaTime, .05f);
                 // A tap, or a card opening early (a last-move win with nothing left to fire), goes straight to the swell.
                 if ((lm.SkipWinCelebration || won) && t < CelebrationExit) t = CelebrationExit;
@@ -637,8 +638,11 @@ namespace JellyGarden.Scripts.Juice
                 if (!fanfare && t >= .70f)
                 {
                     fanfare = true;
-                    // The existing "complete" cue (the celebration fanfare).
-                    if (SoundBase.Instance && SoundBase.Instance.complete != null && SoundBase.Instance.complete.Length > 0) SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
+                    // Royal Throne's herald fanfare (Design/Audio/WinFanfare), scored to this timeline: pickups with the
+                    // pennants, a held chord as the trumpets land, the final chord on the swell. The inherited "complete"
+                    // jingle stands in if the clip is missing.
+                    if (fanfareClip && RoyalAudioDirector.Get) RoyalAudioDirector.Get.PlayClip(fanfareClip, .95f, 0);
+                    else if (SoundBase.Instance && SoundBase.Instance.complete != null && SoundBase.Instance.complete.Length > 0) SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
                 }
                 dim.color = new Color(Navy.r * .45f, Navy.g * .45f, Navy.b * .45f, .72f * EaseOut(t / .2f));
 
@@ -702,6 +706,8 @@ namespace JellyGarden.Scripts.Juice
             }
             // The cut: the dim, the lockup and every spark go in one frame, and the booster session takes over.
             foreach (var b in bits) b.age = b.life;
+            // A level left mid-celebration takes its fanfare with it; a won one lets it ring into the booster session.
+            if (abandoned && fanfareClip) { var audio = FindAnyObjectByType<RoyalAudioDirector>(); if (audio) audio.StopClip(fanfareClip); }
             celebrationHandover = true;
             if (stage) Destroy(stage.gameObject);
             if (front) Destroy(front.gameObject);

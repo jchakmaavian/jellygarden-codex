@@ -24,7 +24,7 @@ namespace JellyGarden.Scripts.Juice
         };
         static readonly (ItemsTypes type, int count)[] Pieces =
             { (ItemsTypes.HORIZONTAL_STRIPPED, 3), (ItemsTypes.PACKAGE, 2), (ItemsTypes.HELICOPTER, 2), (ItemsTypes.BOMB, 1) };
-        static readonly string[] DirectorClips = { "match-a", "match-b", "rocket", "tnt", "helicopter", "create", "land", "click", "firework", "celebrate" };
+        static readonly string[] DirectorClips = { "match-a", "match-b", "rocket", "tnt", "helicopter", "create", "land", "click", "firework", "celebrate", "royal-fanfare" };
         static float lastStep = -10;
         // The editor keeps statics between Play sessions (domain reload is off), while the clock restarts.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)] static void ResetStatics() { lastStep = -10; }
