@@ -22,6 +22,15 @@ foreach (var spec in Tracks.All())
     Console.WriteLine($"{spec.Name} ({spec.Title}): {L.Length / (double)Dsp.SR:F1} s, rendered in {sw.Elapsed.TotalSeconds:F1} s");
     Console.WriteLine(stats);
 }
+foreach (var (name, title, make) in Tracks.Custom())
+{
+    if (filter != "" && !name.Contains(filter)) continue;
+    var sw = Stopwatch.StartNew();
+    var (L, R, stats) = make().Render();
+    Wav.Write(Path.Combine(outDir, name + ".wav"), L, R);
+    Console.WriteLine($"{name} ({title}): {L.Length / (double)Dsp.SR:F1} s, rendered in {sw.Elapsed.TotalSeconds:F1} s");
+    Console.WriteLine(stats);
+}
 
 static class Dsp
 {
@@ -386,7 +395,7 @@ sealed class Chord
 
 sealed class Song
 {
-    public double Bpm, Swing, DuckAmt = .3, RevReturn = 1.2, DlyFb = .35, Room = .82, Damp = .35;
+    public double Bpm, Swing, DuckAmt = .3, RevReturn = 1.2, DlyFb = .35, Room = .82, Damp = .35, MasterLowpass = 0;
     public int Bars, DlySteps = 3; public int[] Scale;
     public readonly Random Rnd;
     readonly List<(Inst I, double T, double Dur, double Midi, double Vel)> evs = new();
@@ -577,13 +586,19 @@ sealed class Song
         return (L, R);
     }
     // Every stage with memory runs over the loop twice and keeps the second pass, so the loop point stays seamless.
-    static void Master(float[] L, float[] R)
+    void Master(float[] L, float[] R)
     {
         int n = L.Length;
         foreach (var x in new[] { L, R })
         {
             double a = Math.Exp(-Dsp.TAU * 30 / Dsp.SR), y = 0, xp = 0;
             for (int pass = 0; pass < 2; pass++) for (int i = 0; i < n; i++) { double v = x[i], o = a * (y + v - xp); xp = v; y = o; if (pass == 1) x[i] = (float)o; }
+            // Optional warm top end (an orchestral recording's darker air).
+            if (MasterLowpass > 0)
+            {
+                var lp = new Svf();
+                for (int pass = 0; pass < 2; pass++) for (int i = 0; i < n; i++) { double o = lp.Lp(x[i], MasterLowpass, .6); if (pass == 1) x[i] = (float)o; }
+            }
         }
         float pk = 1e-9f; for (int i = 0; i < n; i++) pk = Math.Max(pk, Math.Max(Math.Abs(L[i]), Math.Abs(R[i])));
         for (int i = 0; i < n; i++) { L[i] /= pk; R[i] /= pk; }
@@ -742,6 +757,92 @@ static class Arranger
 
 static class Tracks
 {
+    public static IEnumerable<(string, string, Func<Song>)> Custom()
+    {
+        yield return ("level-kings-quest", "The King's Quest — orchestral-folk adventure in the castle theme's style, D minor, 96 BPM", KingsQuest);
+    }
+
+    // Modelled on what drives the castle theme (analysed 7 Oct 2026): a low drum on every beat, strummed and tambourine 8ths
+    // that never stop, minor harmony with the raised leading tone, busy melodic lines with scale runs, and a warm, dark mix.
+    // The melody and arrangement are original.
+    // Intro 0-1, A 2-9 (flute hook), A' 10-17 (harmony and pizzicato), B 18-25 (horns), bridge 26-29, A'' 30-37 (full),
+    // turnaround 38-39 back into the intro.
+    static Song KingsQuest()
+    {
+        var s = new Song(40, 96, Sc.Minor, 1207) { DuckAmt = .06, RevReturn = 2.6, Room = .86, Damp = .45, MasterLowpass = 5200, DlyFb = .22 };
+        const string progA = "Dm Bb C A Dm Bb Gm A";
+        s.Prog(0, 2, "Dm A"); s.Prog(2, 8, progA); s.Prog(10, 8, progA); s.Prog(18, 8, "Gm C F Bb Gm A Dm A");
+        s.Prog(26, 4, "Dm Bb Gm A"); s.Prog(30, 8, progA); s.Prog(38, 2, "Dm A");
+
+        var frame = new Drum { Name = "frame drum", Kind = Drum.K.Taiko, Tune = 1.08, Decay = .45, Gain = .42, Rev = .22, Ducked = false };
+        var kick = Pre.Kick(1.2, .8, .28);
+        var timp = new Drum { Name = "timpani", Kind = Drum.K.Tom, Decay = 2.4, Gain = .45, Rev = .4, Ducked = false };
+        var snare = Pre.Snare(.5, .95, "field snare"); var roll = Pre.Snare(.3, .95, "snare roll");
+        var tamb = Pre.Tamb(.22); var crash = Pre.Crash(.11);
+        var lute = new Pluck { Name = "lute", Bright = .4, T60 = .7, Release = .07, Gain = .36, Rev = .22, Pan = -.25 };
+        var cellos = new Synth { Name = "string chug", Voices = 3, Detune = .14, Width = .5, Cut = 900, Res = .8, FEnv = 1.2, FD = .08, A = .008, D = .12, S = .35, R = .08, KeyTrack = .3, Gain = .4, Rev = .28 };
+        var bass = Pre.UprightBass(.26);
+        var strings = new Synth { Name = "string section", Voices = 6, Detune = .22, Width = .9, Cut = 1800, Res = .6, A = .3, D = .4, S = .9, R = .5, VibDepth = .08, VibDelay = .3, Gain = .2, Rev = .5 };
+        var flute = new Flute { Name = "flute", Breath = .06, Vib = .12, Chiff = .25, A = .03, R = .08, Gain = .24, Rev = .38, Dly = .1, Ducked = false };
+        var flute2 = new Flute { Name = "flute harmony", Breath = .1, Vib = .12, Chiff = .2, Gain = .2, Rev = .38, Pan = .3, Ducked = false };
+        var horns = new Synth { Name = "horns", Voices = 3, Detune = .1, Width = .5, Cut = 520, FEnv = 1.6, FA = .08, FD = .4, FS = .55, A = .05, D = .3, S = .85, R = .18, VibDepth = .06, KeyTrack = .4, Gain = .34, Rev = .42, Ducked = false };
+        var hornPad = new Synth { Name = "horn chords", Voices = 3, Detune = .1, Width = .6, Cut = 480, FEnv = 1.2, FA = .15, FD = .5, FS = .6, A = .12, D = .3, S = .85, R = .3, KeyTrack = .4, Gain = .2, Rev = .45 };
+        var harp = Pre.Harp(.4); var pizz = Pre.Pizz(.35, "pizzicato");
+
+        const string melA =
+            "5, - - 5, 1 - - - 3 - - 3 5 - - - | 4 - 3 - 1 - 6, - 1 - - 3 4 - - - | 3 - - 3 2 - - - 7, - 1 - 2 - 3 - | #7, - - - 5, - - - #7, - 2 - 1 - #7, - |" +
+            "5, - - 5, 1 - - - 3 - - 3 5 - - - | 4 - 3 - 4 - 6 - 3 - - - 4 - - - | 6 - - 6 5 - - - 4 - 3 - 2 - 6, - | #7, - 1 - 2 - #7, - 5, - - - - - - -";
+        const string melB =
+            "6 - - - 5 - 4 - 6 - - - 1' - - - | 7 - - - 6 - 5 - 7 - - - 2' - - - | 1' - - - 7 - 6 - 5 - - - 3 - - - | 3 - - - - - - - 6 - 5 - 4 - 3 - |" +
+            "6 - - - 5 - 4 - 6 - - - 1' - - - | #7 - - - 5 - - - 2' - - - 1' - #7 - | 1' - - - 5 - - - 3 - 4 - 5 - 6 - | #7 - - - - - - - 5 - - - - - - -";
+        const string melBridge =
+            "1' - - - - - - - 5 - - - 3 - - - | 4 - - - - - - - 3 - - - 1 - - - | 6, - - - 1 - - - 4 - - - 6 - - - | #7, - - - 2 - - - 5, - - - - - - -";
+        const string runUp = ". . . . . . . . 1 2 3 4 5 6 #7 1'", runDown = ". . . . . . . . 1' 7 6 5 4 3 2 1";
+
+        // The groove never stops, as in the castle theme: frame drum, kick and bass on the beat; lute and violas chugging
+        // the 8ths in the middle register; tambourine on every 8th.
+        void Groove(int bar, int bars, bool full)
+        {
+            s.Drums(frame, bar, bars, "X...x...X...x... X...x...X...x... X...x...X...x... X...x...X...x.xx");
+            s.Drums(kick, bar, bars, "x...x...x...x...", full ? 1 : .8);
+            s.Drums(tamb, bar, bars, "x.x.x.x.x.x.x.x.", full ? 1 : .8);
+            if (full) s.Drums(snare, bar, bars, "....x.......x...");
+            s.Chords(lute, bar, bars, "o.x.o.x.o.x.o.x.", 64, 4, 1, .9, .012);
+            s.Bass(cellos, bar, bars, "R.R.5.R.R.R.8.5.", 55);
+            s.Bass(bass, bar, bars, "R.......5.......", 38);
+        }
+        Groove(0, 2, false); Groove(2, 8, false); Groove(10, 8, true); Groove(18, 8, true); Groove(30, 8, true); Groove(38, 2, false);
+        // Bridge: half-time drums under harp arpeggios, building back with a timpani roll.
+        s.Drums(frame, 26, 4, "X.......x.......");
+        s.Drums(tamb, 26, 4, "x.x.x.x.x.x.x.x.", .6);
+        s.Bass(cellos, 26, 4, "R.R.5.R.R.R.8.5.", 55, .8);
+        s.Bass(bass, 26, 4, "R-------5-------", 38);
+        s.Arp(harp, 26, 4, "0123432101234321", 62, .8);
+        s.Drums(timp, 29, 1, "x.x.x.x.xxxxXXXX", .9, 38);
+        s.Drums(roll, 29, 1, "........o.o.xxxx");
+
+        // Melodies.
+        s.Melody(flute, 2, melA, 74, grid: 1);
+        s.Melody(flute, 10, melA, 74, grid: 1); s.Melody(flute2, 10, melA, 74, grid: 1, shift: -2); s.Melody(pizz, 10, melA, 74, grid: 1, vel: .7, transpose: -12);
+        s.Melody(horns, 18, melB, 62, grid: 1); s.Melody(strings, 18, melB, 74, grid: 1, vel: .5);
+        s.Melody(flute, 22, melB.Substring(melB.IndexOf("6 - - - 5", 10)), 74, grid: 1, vel: .55);
+        s.Melody(flute, 26, melBridge, 74, grid: 1, vel: .8);
+        s.Melody(flute, 30, melA, 74, grid: 1); s.Melody(flute2, 30, melA, 74, grid: 1, shift: -2); s.Melody(pizz, 30, melA, 74, grid: 1, vel: .7, transpose: -12);
+        s.Chords(hornPad, 30, 8, "x-------x-------", 60, 3, .9, .98);
+        // Sustained strings under A' and B.
+        s.Chords(strings, 2, 8, "x---------------", 62, 4, .5, .98);
+        s.Chords(strings, 10, 8, "x---------------", 62, 4, .7, .98);
+        s.Chords(strings, 26, 4, "x---------------", 62, 4, .9, .98);
+        s.Chords(strings, 30, 8, "x---------------", 62, 4, .8, .98);
+        // Harp runs answer each phrase.
+        foreach (var b in new[] { 1, 5, 9, 13, 17, 33, 37, 39 }) s.Melody(harp, b, runUp, 62, grid: 1, vel: .85);
+        foreach (var b in new[] { 21, 25 }) s.Melody(harp, b, runDown, 74, grid: 1, vel: .85);
+        // Accents into each section.
+        foreach (var b in new[] { 2, 10, 18, 30 }) { s.Hit(crash, b, 0, 16, 60, b == 2 ? .6 : .9); s.Hit(timp, b, 0, 8, 38, 1); }
+        s.Drums(roll, 17, 1, "........o.o.xxXX"); s.Drums(roll, 37, 1, "............xxXX"); s.Drums(roll, 39, 1, "............oxxx", .8);
+        return s;
+    }
+
     public static IEnumerable<Spec> All()
     {
         yield return new Spec
