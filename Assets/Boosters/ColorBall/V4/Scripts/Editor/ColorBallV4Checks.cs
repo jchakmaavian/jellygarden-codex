@@ -33,9 +33,9 @@ namespace RoyalThrone.Boosters.ColorBall.V4.Editor
             switch(e){
                 case ColorBallEvent.ColorBallRevealFinished:Check(v.Age<.04f,"Reveal settles without extra hold "+label);break;
                 case ColorBallEvent.ColorBallActivationStarted:activation=Time.time;Check(v.Lease==activationLease,"Idle visual retained through activation "+label);break;
-                case ColorBallEvent.ColorBallChargeComplete:chargeAt=Time.time;Check(chargeAt-activation>=.60f&&chargeAt-activation<.68f,"Readable 0.62-second charge "+label);break;
+                case ColorBallEvent.ColorBallChargeComplete:chargeAt=Time.time;Check(chargeAt-activation>=ColorBallVisualV4.ChargeDuration-.02f&&chargeAt-activation<ColorBallVisualV4.ChargeDuration+.06f,"Charge respects configured duration "+label);break;
                 case ColorBallEvent.ColorBallBeamPrepared:prepared[p]=Time.time;break;
-                case ColorBallEvent.ColorBallBeamFired:Check(prepared.ContainsKey(p)&&Time.time-prepared[p]>=1f/60f-.001f,"Source reacts before launch "+label+" "+p);if(fired++==0){firstBeam=Time.time;Check(firstBeam>=chargeAt&&firstBeam-activation>=.62f-1e-5f,"First beam follows charge "+label);}break;
+                case ColorBallEvent.ColorBallBeamFired:Check(prepared.ContainsKey(p)&&Time.time-prepared[p]>=1f/60f-.001f,"Source reacts before launch "+label+" "+p);if(fired++==0){firstBeam=Time.time;Check(firstBeam>=chargeAt&&firstBeam-activation>=ColorBallVisualV4.ChargeDuration-1e-5f,"First beam follows charge "+label);}break;
                 case ColorBallEvent.ColorBallBeamHit:hit++;lastContact=Time.time;Check(!contacts.ContainsKey(p),"One contact per target "+label+" "+p);contacts[p]=Time.time;break;
                 case ColorBallEvent.ColorBallTargetFlash:Check(contacts.ContainsKey(p)&&Time.time-contacts[p]>=1f/30f-.001f,"Flash staged after contact "+label+" "+p);flashes[p]=Time.time;break;
                 case ColorBallEvent.ColorBallTargetConverted:
