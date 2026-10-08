@@ -20,7 +20,7 @@ namespace RoyalThrone.Presentation
         public Text rewardAmount, levelNumber;
         public Vector2 starRest;
 
-        const float Drop = .20f, Rebound = .34f, Settle = .64f, CushionSettle = .98f;
+        const float Drop = .32f, Rebound = .52f, Settle = .90f, CushionSettle = .98f;
         const float WriteStart = .10f, PerLetter = .04f, LetterPop = .40f, FallbackTitle = 1.6f;
         const float RewardStart = .70f, RewardCountTime = .35f, RewardReady = .98f;
         const int BurstCount = 24, IdleCount = 14, HaloCount = 12, RewardCountSteps = 64;
@@ -262,31 +262,28 @@ namespace RoyalThrone.Presentation
             float size, lift, rotation;
             if (t < Drop)
             {
-                // The reference retracts toward a nearly fixed centre; it does not fall down a long path.
-                // Its peak is normalized for our already 1.5x larger reward and shared card frame.
-                float u = Mathf.Clamp01(t / Drop);
-                size = t < .06f ? Mathf.Lerp(2.4f, 1.50f, Ease(t / .06f))
-                    : t < .15f ? Mathf.Lerp(1.50f, 1.30f, (t - .06f) / .09f)
-                    : Mathf.Lerp(1.30f, .76f, (t - .15f) / .05f);
-                lift = 0;
-                rotation = 28 * Mathf.Cos(u * Mathf.PI * 3) * Mathf.Pow(1 - u, 1.2f);
+                // Ease into the landing without the old full-opacity 2.4x snap.
+                float u = Mathf.SmoothStep(0, 1, Mathf.Clamp01(t / Drop));
+                size = Mathf.Lerp(1.28f, .94f, u);
+                lift = Mathf.Lerp(12, 0, u);
+                rotation = Mathf.Lerp(-8, 0, u);
             }
             else if (t < Rebound)
             {
                 float u = Ease((t - Drop) / (Rebound - Drop));
-                size = Mathf.Lerp(.76f, 1.08f, u);
+                size = Mathf.Lerp(.94f, 1.04f, u);
                 lift = Mathf.Lerp(0, 7, u); rotation = Mathf.Lerp(0, -2, u);
             }
             else
             {
                 float u = Ease((t - Rebound) / (Settle - Rebound));
-                size = Mathf.Lerp(1.08f, 1, u);
+                size = Mathf.Lerp(1.04f, 1, u);
                 lift = Mathf.Lerp(7, 0, u); rotation = Mathf.Lerp(-2, 0, u);
             }
             star.localScale = Vector3.one * size;
             star.anchoredPosition = starRest + new Vector2(0, lift);
             star.localRotation = Quaternion.Euler(0, 0, rotation);
-            if (starGroup) starGroup.alpha = 1;
+            if (starGroup) starGroup.alpha = Mathf.SmoothStep(0, 1, Mathf.Clamp01(t / .18f));
         }
 
         void PoseCushion()
@@ -295,19 +292,19 @@ namespace RoyalThrone.Presentation
             float x = 1, y = 1;
             if (t >= Drop && t < Drop + .04f)
             {
-                float u = Ease((t - Drop) / .04f); x = Mathf.Lerp(1, 1.055f, u); y = Mathf.Lerp(1, .88f, u);
+                float u = Ease((t - Drop) / .04f); x = Mathf.Lerp(1, 1.055f, u); y = Mathf.Lerp(1, .96f, u);
             }
             else if (t >= Drop + .04f && t < Drop + .16f)
             {
-                float u = Ease((t - Drop - .04f) / .12f); x = Mathf.Lerp(1.055f, .96f, u); y = Mathf.Lerp(.88f, 1.30f, u);
+                float u = Ease((t - Drop - .04f) / .12f); x = Mathf.Lerp(1.055f, .96f, u); y = Mathf.Lerp(.96f, 1.08f, u);
             }
             else if (t >= Drop + .16f && t < Drop + .40f)
             {
-                float u = Ease((t - Drop - .16f) / .24f); x = Mathf.Lerp(.96f, 1.035f, u); y = Mathf.Lerp(1.30f, .965f, u);
+                float u = Ease((t - Drop - .16f) / .24f); x = Mathf.Lerp(.96f, 1.035f, u); y = Mathf.Lerp(1.08f, .985f, u);
             }
             else if (t >= Drop + .40f && t < CushionSettle)
             {
-                float u = Ease((t - Drop - .40f) / (CushionSettle - Drop - .40f)); x = Mathf.Lerp(1.035f, 1, u); y = Mathf.Lerp(.965f, 1, u);
+                float u = Ease((t - Drop - .40f) / (CushionSettle - Drop - .40f)); x = Mathf.Lerp(1.035f, 1, u); y = Mathf.Lerp(.985f, 1, u);
             }
             cushion.localScale = new Vector3(x, y, 1);
         }

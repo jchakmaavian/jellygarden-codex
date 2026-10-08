@@ -131,21 +131,24 @@ namespace RoyalThrone.Presentation
                 if (card.star && transform.GetSiblingIndex() > card.star.GetSiblingIndex())
                     transform.SetSiblingIndex(card.star.GetSiblingIndex());
             }
-            float time = reduced ? .8f : Mathf.Max(0, seconds - .2f);
+            // Opacity must update even when the reduced-motion simulation is frozen.
+            float reveal = Mathf.SmoothStep(0, 1, Mathf.Clamp01((seconds - (reduced ? 0 : .20f)) / (reduced ? .28f : .64f)));
+            color = new Color(1, 1, 1, reveal);
+            float time = reduced ? .8f : Mathf.Max(0, seconds - .32f);
             bool restart = previous < 0 || time < previous || previousCalm != reduced;
             if (!restart && Mathf.Approximately(previous, time)) return;
             VisibleSparkles = 0;
             foreach (var ps in systems)
             {
                 if (!ps.gameObject.activeInHierarchy) continue;
-                ps.Simulate(restart ? time : time - previous, false, restart, true);
+                ps.Simulate(restart ? time : time - previous, false, restart, false);
                 ps.Pause(false);
                 VisibleSparkles += ps.particleCount;
             }
             previous = time;
             previousCalm = reduced;
             effectCamera.Render();
-            color = new Color(1, 1, 1, Mathf.Clamp01(seconds / .2f));
+
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
