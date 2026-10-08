@@ -1,0 +1,23 @@
+PASS 15 FPS native duration
+PASS 15 FPS native body and charging VFX
+PASS 15 FPS authored completion
+PASS 15 FPS dedicated blast particles
+PASS 15 FPS complete actor, voice and particle retirement
+PASS 30 FPS native duration
+PASS 30 FPS native body and charging VFX
+PASS 30 FPS authored completion
+PASS 30 FPS dedicated blast particles
+PASS 30 FPS complete actor, voice and particle retirement
+PASS 60 FPS native duration
+PASS 60 FPS native body and charging VFX
+PASS 60 FPS authored completion
+PASS 60 FPS dedicated blast particles
+PASS 60 FPS complete actor, voice and particle retirement
+PASS Pause freezes actor timer and native curves
+PASS Pause freezes native particles
+PASS Resume advances native sequence
+PASS Cancel clears all active leases
+PASS Muted preference respected
+PASS Reuse resets actor and native state
+PASS Home transition clears actor and particles
+SUMMARY failures=0

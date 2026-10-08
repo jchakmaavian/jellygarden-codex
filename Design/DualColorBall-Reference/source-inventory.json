@@ -1,0 +1,38 @@
+{
+  "apk": "G:\\Game\\old Backup\\JellyGarden-Codex-20261005\\Design\\Backup\\apk\\royal_thron_rfv387.apk",
+  "apkSHA256": "a2cbee4ecf021ee464dc6f17766ba6c0b2addb2d65007f611e5c368532aa8151",
+  "datapackSHA256": "99154e10880f367b6d36898293045da40b6e963831c5c219d7c486d54b261dd0",
+  "existingExtractionMatches": false,
+  "assets": [
+    {
+      "id": 17017,
+      "type": "AnimationClip",
+      "name": "BallBallExplodeAnimation"
+    },
+    {
+      "id": 17531,
+      "type": "AudioClip",
+      "name": "lightball_lightball_combo"
+    },
+    {
+      "id": 18166,
+      "type": "AnimatorController",
+      "name": "BallBallComboAnimator"
+    },
+    {
+      "id": 48774,
+      "type": "GameObject",
+      "name": "BallBallComboExplodeParticles"
+    },
+    {
+      "id": 51492,
+      "type": "GameObject",
+      "name": "BallBallComboUseParticles"
+    },
+    {
+      "id": 54128,
+      "type": "GameObject",
+      "name": "BallBallComboPrefab"
+    }
+  ]
+}

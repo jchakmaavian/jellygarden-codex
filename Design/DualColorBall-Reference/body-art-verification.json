@@ -1,0 +1,52 @@
+[
+  {
+    "sourcePathId": 18302,
+    "name": "light_ball-top_blur_4",
+    "identicalImportedPixels": true
+  },
+  {
+    "sourcePathId": 18340,
+    "name": "light_ball-top_blur_3",
+    "identicalImportedPixels": true
+  },
+  {
+    "sourcePathId": 18576,
+    "name": "light_ball-bot_blur_2",
+    "identicalImportedPixels": false
+  },
+  {
+    "sourcePathId": 18958,
+    "name": "light_ball-top_blur_2",
+    "identicalImportedPixels": true
+  },
+  {
+    "sourcePathId": 19051,
+    "name": "light_ball-top_blur_1",
+    "identicalImportedPixels": true
+  },
+  {
+    "sourcePathId": 19077,
+    "name": "light_ball-bot_blur_4",
+    "identicalImportedPixels": true
+  },
+  {
+    "sourcePathId": 23854,
+    "name": "light_ball-bot_blur_3",
+    "identicalImportedPixels": true
+  },
+  {
+    "sourcePathId": 23992,
+    "name": "light_ball-top_blur_5",
+    "identicalImportedPixels": true
+  },
+  {
+    "sourcePathId": 24413,
+    "name": "light_ball-bot_blur_5",
+    "identicalImportedPixels": true
+  },
+  {
+    "sourcePathId": 24703,
+    "name": "light_ball-bot_blur_1",
+    "identicalImportedPixels": true
+  }
+]

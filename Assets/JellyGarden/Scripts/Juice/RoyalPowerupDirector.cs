@@ -88,7 +88,7 @@ namespace JellyGarden.Scripts.Juice
         }
         void StartOperation(IEnumerator sequence){pending++;StartCoroutine(Own(sequence));}
         IEnumerator Own(IEnumerator sequence){try{yield return sequence;}finally{pending=Mathf.Max(0,pending-1);}}
-        void OnDisable(){ReleaseConversionInput();RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Clear();RoyalAudioDirector.StopReferenceVoices();RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;rocketTails=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
+        void OnDisable(){RoyalThrone.ReferenceGameplay.ReferenceDualColorBallVisual.Clear();ReleaseConversionInput();RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Clear();RoyalAudioDirector.StopReferenceVoices();RoyalThrone.Boosters.ColorBall.V4.ColorBallVisualV4.Clear();RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();ColorBallBoostView.ClearAll();ColorBallTargetVfx.ClearAll();ColorBallState=ColorBallPhase.Complete;TNT3DAnimator.ClearAll();StopAllCoroutines();pending=0;rocketTails=0;reserved.Clear();if(shakeCamera)shakeCamera.transform.position-=shakeOffset;shakeOffset=Vector3.zero;shakeEnergy=0; if(flyers!=null)foreach(var f in flyers){if(f.rocket&&f.preRocketGradient!=null)f.trail.colorGradient=f.preRocketGradient;f.used=false;f.flame.enabled=false;f.flame.positionCount=0;f.trail.Clear();f.core.Clear();f.go.SetActive(false);} }
         void ReleaseConversionInput()
         {
             RoyalThrone.Boosters.ColorBall.V4.ColorBallChargedTargetV4.ClearAll();
@@ -344,6 +344,7 @@ namespace JellyGarden.Scripts.Juice
             // else remains interactive; overlapping Color Balls own separate leases.
             var leased=new List<Item>();foreach(var sq in targets)if(sq.item){leased.Add(sq.item);conversionInputLeases.Add(sq.item);sq.item.inputConversionLocks++;}
             try {
+            if(all) {yield return DualColorBall(origin,targets);yield break;}
             if(payload==ItemsTypes.NONE||payload==ItemsTypes.HORIZONTAL_STRIPPED||payload==ItemsTypes.VERTICAL_STRIPPED||payload==ItemsTypes.HELICOPTER||payload==ItemsTypes.PACKAGE)
             {yield return AnimateColorBallV4Targets(origin,targets,payload);yield break;}
             Creation(origin.transform.position);RoyalAudioDirector.Get?.Play(RoyalCue.Create);
