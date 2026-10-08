@@ -146,6 +146,10 @@ namespace JellyGarden.Scripts
                 NextType = ItemsTypes.NONE;
                 transform.position = square.transform.position;
                 falling = false;
+                // STORY: a TNT made by a match arrives here, not through
+                // ChangeTypeCor (this consumes NextType first, so that exits).
+                if (currentType == ItemsTypes.PACKAGE)
+                    JellyGarden.Scripts.Story.StoryOriginalTnt.Show(this, true);
             }
             else if (LevelManager.THIS.limitType == LIMIT.TIME && Random.Range(0, 28) == 1)
             {
@@ -873,7 +877,9 @@ namespace JellyGarden.Scripts
             else if (NextType == ItemsTypes.PACKAGE)
             {
                 anim.SetTrigger("appear");
-                SoundBase.Instance.PlaySound(SoundBase.Instance.appearPackage);
+                // STORY: the original TNT brings its own creation sound.
+                if (!JellyGarden.Scripts.Story.StoryOriginalTnt.Ready)
+                    SoundBase.Instance.PlaySound(SoundBase.Instance.appearPackage);
 
             }
             else if (NextType == ItemsTypes.BOMB)
@@ -902,6 +908,8 @@ namespace JellyGarden.Scripts
             debugType = NextType;
             currentType = NextType;
             NextType = ItemsTypes.NONE;
+            if (currentType == ItemsTypes.PACKAGE)
+                JellyGarden.Scripts.Story.StoryOriginalTnt.Show(this, true);
 
         }
 
@@ -1377,7 +1385,10 @@ namespace JellyGarden.Scripts
 
         public void DestroyPackage()
         {
-            SoundBase.Instance.PlaySound(SoundBase.Instance.destroyPackage);
+            // STORY: the original TNT's blast plays its own explosion sound.
+            bool originalTnt = JellyGarden.Scripts.Story.StoryOriginalTnt.OwnsBlast;
+            if (!originalTnt)
+                SoundBase.Instance.PlaySound(SoundBase.Instance.destroyPackage);
 
             // STORY: the explosion, fired ONCE here rather than from DestroyCor.
             //
@@ -1401,7 +1412,8 @@ namespace JellyGarden.Scripts
                             item.DestroyItem(true, "destroy_package");
                     }
             }
-            SoundBase.Instance.PlaySound(SoundBase.Instance.explosion);
+            if (!originalTnt)
+                SoundBase.Instance.PlaySound(SoundBase.Instance.explosion);
             currentType = ItemsTypes.NONE;
             DestroyItem(true);
         }

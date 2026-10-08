@@ -18,7 +18,7 @@ namespace JellyGarden.Scripts.Story.Editor
         int checks;
         float savedTimeScale;
         RocketVariant savedVariant;
-        bool savedEnabled;
+        bool savedEnabled, savedOriginalTnt;
 
         [MenuItem("JellyGarden/Story/Preview/Validate Rocket Animation")]
         public static void Run()
@@ -36,6 +36,7 @@ namespace JellyGarden.Scripts.Story.Editor
             savedTimeScale = Time.timeScale;
             savedVariant = StoryRocketVariant.Current;
             savedEnabled = StoryRocketVfx.Enabled;
+            savedOriginalTnt = StoryOriginalTnt.Enabled;
             File.WriteAllText(Output + "/progress.txt", "Starting ZIP validation\n");
             File.Delete(Output + "/result.txt");
             Time.timeScale = 1f;
@@ -90,6 +91,9 @@ namespace JellyGarden.Scripts.Story.Editor
         IEnumerator Validate()
         {
             StoryRocketVfx.Enabled = true;
+            // This harness asserts on the RoyalTNTVFX player; the original TNT
+            // replaces it when on. OnDestroy restores the switch.
+            StoryOriginalTnt.Enabled = false;
             StoryRocketVariant.Current = RocketVariant.RoyalStreak;
             SceneManager.LoadScene("game");
             yield return Until(() => LevelManager.THIS != null, 20f, "No game board manager");
@@ -260,6 +264,7 @@ namespace JellyGarden.Scripts.Story.Editor
             Time.timeScale = savedTimeScale;
             StoryRocketVariant.Current = savedVariant;
             StoryRocketVfx.Enabled = savedEnabled;
+            StoryOriginalTnt.Enabled = savedOriginalTnt;
         }
     }
 }

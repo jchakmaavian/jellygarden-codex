@@ -11,16 +11,16 @@ namespace RoyalThrone.ReferenceGameplay.Tests
     // sound the game (and ReferenceTntPreview) loads by name must resolve with nothing missing.
     public class ReferenceTntAssetsTests
     {
-        static readonly string[] Visuals = { ReferenceTntPreview.PieceKey, ReferenceTntPreview.ComboKey, "TNTTNTCombo" };
+        static readonly string[] Visuals = { ReferenceTnt.PieceKey, ReferenceTnt.ComboKey, "TNTTNTCombo" };
         static readonly string[] Vfx =
         {
-            ReferenceTntPreview.FuseVfx, ReferenceTntPreview.ExplodeVfx,
-            ReferenceTntPreview.ComboFuseVfx, ReferenceTntPreview.ComboExplodeVfx
+            ReferenceTnt.FuseVfx, ReferenceTnt.ExplodeVfx,
+            ReferenceTnt.ComboFuseVfx, ReferenceTnt.ComboExplodeVfx
         };
         static readonly string[] Audio =
         {
-            ReferenceTntPreview.CreationAudio, ReferenceTntPreview.ExplodeAudio,
-            ReferenceTntPreview.ComboAudio, "tnt_tnt_combo__15766"
+            ReferenceTnt.CreationAudio, ReferenceTnt.ExplodeAudio,
+            ReferenceTnt.ComboAudio, "tnt_tnt_combo__15766"
         };
 
         static GameObject Load(string resource)
@@ -44,8 +44,8 @@ namespace RoyalThrone.ReferenceGameplay.Tests
         [Test]
         public void PieceHasCreationClip()
         {
-            var clips = ClipNames(Load("ReferenceGameplay/Visuals/" + ReferenceTntPreview.PieceKey));
-            CollectionAssert.Contains(clips, ReferenceTntPreview.CreationState);
+            var clips = ClipNames(Load("ReferenceGameplay/Visuals/" + ReferenceTnt.PieceKey));
+            CollectionAssert.Contains(clips, ReferenceTnt.CreationState);
             CollectionAssert.Contains(clips, "TntLightballCreationAnimation");
             CollectionAssert.Contains(clips, "TntBoosterAnimation");
         }
@@ -53,10 +53,10 @@ namespace RoyalThrone.ReferenceGameplay.Tests
         [Test]
         public void ComboHasExplodeClipAndFuseSocket()
         {
-            var combo = Load("ReferenceGameplay/Visuals/" + ReferenceTntPreview.ComboKey);
-            CollectionAssert.Contains(ClipNames(combo), ReferenceTntPreview.ComboState);
-            Assert.IsTrue(combo.GetComponentsInChildren<Transform>(true).Any(t => t.name == ReferenceTntPreview.ComboFuseSocket),
-                "Combo fuse socket " + ReferenceTntPreview.ComboFuseSocket + " missing");
+            var combo = Load("ReferenceGameplay/Visuals/" + ReferenceTnt.ComboKey);
+            CollectionAssert.Contains(ClipNames(combo), ReferenceTnt.ComboState);
+            Assert.IsTrue(combo.GetComponentsInChildren<Transform>(true).Any(t => t.name == ReferenceTnt.ComboFuseSocket),
+                "Combo fuse socket " + ReferenceTnt.ComboFuseSocket + " missing");
         }
 
         [Test]

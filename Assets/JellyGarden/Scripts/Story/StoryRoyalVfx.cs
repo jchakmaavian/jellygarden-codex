@@ -58,9 +58,12 @@ namespace JellyGarden.Scripts.Story
         public static bool Blast(Vector3 at, int radius)
         {
             if (!Application.isPlaying) return false;
+            float pitch = StoryBoardScale.Pitch;
+            // The original Royal Throne TNT draws the blast when it is on; see
+            // StoryOriginalTnt. RoyalTNTVFX stays the fallback.
+            if (StoryOriginalTnt.Blast(EffectPosition(at, pitch), pitch)) return true;
             var player = Tnt();
             if (player == null) return false;
-            float pitch = StoryBoardScale.Pitch;
             player.Play(EffectPosition(at, pitch), radius, pitch);
             return true;
         }
@@ -72,12 +75,14 @@ namespace JellyGarden.Scripts.Story
             bool paused = state == GameState.Pause;
             if (RocketVFX.Player != null) RocketVFX.Player.Paused = paused;
             if (TNTExplosionVFX.Player != null) TNTExplosionVFX.Player.Paused = paused;
+            StoryOriginalTnt.StateChanged(state);
         }
 
         public static void Clear()
         {
             RocketVFX.Clear();
             TNTExplosionVFX.Clear();
+            StoryOriginalTnt.Clear();
         }
 
         static Vector3 EffectPosition(Vector3 at, float pitch)
