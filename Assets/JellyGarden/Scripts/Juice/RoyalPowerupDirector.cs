@@ -153,7 +153,8 @@ namespace JellyGarden.Scripts.Juice
             if(a==ItemsTypes.BOMB||b==ItemsTypes.BOMB){yield return Orb(origin,a==ItemsTypes.BOMB?b:a,-1,a==ItemsTypes.BOMB&&b==ItemsTypes.BOMB);yield break;}
             if(a==ItemsTypes.HELICOPTER||b==ItemsTypes.HELICOPTER){yield return Helicopter(origin,a==ItemsTypes.HELICOPTER?b:a,a==b?3:1);yield break;}
             if(a==ItemsTypes.PACKAGE&&b==ItemsTypes.PACKAGE){yield return Explosion(origin,4);yield break;}
-            int lanes=a==ItemsTypes.PACKAGE||b==ItemsTypes.PACKAGE?3:1;
+            if(a==ItemsTypes.PACKAGE||b==ItemsTypes.PACKAGE){yield return NativeRocketTntCombo(origin);yield break;}
+            int lanes=1;
             StartOperation(Rocket(origin,true,lanes,true,true));yield return Rocket(origin,false,lanes,true,true);
         }
         Flyer Take(string art,Vector3 p,float scale=1)
@@ -266,7 +267,7 @@ namespace JellyGarden.Scripts.Juice
             }
             if(visual)visual.Explode(radius>2?1.45f:1);
             if(native)RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play(radius>2?"TntTntComboExplodeParticles":"TntItemExplodeParticles",p,worldCell:Cell);
-            RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);
+            if(!native || radius<=2)RoyalAudioDirector.Get?.Play(RoyalCue.Tnt);
             Reaction?.Invoke(radius>2?1.45f:1f);
             yield return Wait(.012f);
             var lm=LevelManager.THIS;

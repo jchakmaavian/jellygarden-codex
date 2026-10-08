@@ -20,7 +20,7 @@ namespace JellyGarden.Scripts.Juice
             try
             {
                 if (actor != null)
-                    view = ReferenceActivationVisual.Attach(actor.go, "TntTntCombo", 36);
+                    view = ReferenceActivationVisual.Attach(actor.go, "TNTTNTComboRfv387", 36);
                 float length = view ? view.Play("TntTntComboExplodeAnimation") : 0;
                 if (length <= 0)
                 {
@@ -30,6 +30,7 @@ namespace JellyGarden.Scripts.Juice
                 }
                 NativeTntComboPlays++;
                 LastTntComboPreparation = length;
+                ReferenceGameplayAudio.Play("tnt_tnt_combo__rfv387_17741", .45f);
                 var socket = view.Socket("FitilPartikul");
                 fuse = ReferenceVfxPool.Play("TntTntComboFuseParticles", socket.position, worldCell: Cell, sustained: true);
                 // The body renders at 36; the pool default (35) hides the burning tip.

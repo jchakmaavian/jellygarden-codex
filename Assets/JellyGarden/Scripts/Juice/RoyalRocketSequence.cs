@@ -254,7 +254,7 @@ namespace JellyGarden.Scripts.Juice
         }
         // releaseBoard: a Rocket fired by a tap or a swap combo lets the board fall once its last cell is hit. Propeller
         // payloads and previews keep holding it until they leave the screen, as before.
-        IEnumerator Rocket(Square origin,bool horizontal,int lanes,bool clearCells=true,bool releaseBoard=false)
+        IEnumerator Rocket(Square origin,bool horizontal,int lanes,bool clearCells=true,bool releaseBoard=false,bool preparedCombo=false)
         {
             if(!origin)yield break;
             var lm=LevelManager.THIS;Vector3 p=origin.transform.position;
@@ -269,7 +269,7 @@ namespace JellyGarden.Scripts.Juice
             // so horizontal and vertical sweeps read at the same pace and the same trail length.
             float speed=Mathf.Max(1,RoyalEffectsProfile.Get.rocketCellsPerSecond*RocketAnimationRate);
             float duration=reach/speed;
-            LastRocketSweepDuration=duration;LastRocketAnticipation=Mathf.Max(0,RoyalEffectsProfile.Get.rocketAnticipation);
+            LastRocketSweepDuration=duration;LastRocketAnticipation=preparedCombo?0:Mathf.Max(0,RoyalEffectsProfile.Get.rocketAnticipation);
             RocketLaunches++;
             var active=new List<Flyer>(lanes*2);var exits=new List<float>(lanes*2);var hit=new HashSet<Square>();
             float maxExit=0;
@@ -301,7 +301,7 @@ namespace JellyGarden.Scripts.Juice
                 active.Add(f);
             }
             // A board Rocket continues its Idle pose through anticipation; the Passing sprites wait hidden.
-            var standIn=lanes==1?TakeRocketLaunchStandIn(origin,horizontal):null;
+            var standIn=!preparedCombo&&lanes==1?TakeRocketLaunchStandIn(origin,horizontal):null;
             if(standIn!=null)foreach(var f in active)if(f!=null)f.sprite.enabled=false;
             float anticipation=0;
             while(anticipation<LastRocketAnticipation)

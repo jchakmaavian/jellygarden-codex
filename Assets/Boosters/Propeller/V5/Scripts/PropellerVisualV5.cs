@@ -42,7 +42,7 @@ namespace RoyalThrone.Boosters.Propeller.V5
         ReferenceVfxPool.Handle carriedEnergy;
         Transform importedRoot;
         Vector3 importedScale;
-        ItemsTypes carriedType;
+        ItemsTypes carriedType, pairedPayload;
         float pairedAge;
         bool pairedContact;
         public bool UsesNative=>imported&&imported.Active;
@@ -101,7 +101,7 @@ namespace RoyalThrone.Boosters.Propeller.V5
         public void NeighborHit(Vector3 p){if(!UsesNative)PropellerVfxV5.Pressure(Anchor,p,Cell);Emit(PropellerEvent.PropellerNeighborHit,p);}
         public void Contact(Vector3 p)
         {
-            bool wasPaired=HasCarriedBooster;ClearCarried();pairedContact=wasPaired;
+            bool wasPaired=HasCarriedBooster;var contactPayload=carriedType;ClearCarried();pairedContact=wasPaired;pairedPayload=contactPayload;
             transform.position=p+Vector3.back*.8f;pose.localPosition=Vector3.zero;
             if(UsesNative)imported.Offset(Vector3.zero);
             startScale=pose.localScale;startTurn=pose.localRotation;Current=Phase.Impact;Age=0;impactStarted=false;
@@ -123,8 +123,8 @@ namespace RoyalThrone.Boosters.Propeller.V5
             if(!carried){var holder=new GameObject("Propeller paired booster");holder.transform.SetParent(transform,false);carried=holder.AddComponent<SpriteRenderer>();}
             carried.sprite=sprite;carried.color=Color.white;carried.sortingLayerID=SortingLayer.NameToID("Default");carried.sortingOrder=39;carried.enabled=true;carried.forceRenderingOff=false;
             carried.transform.localScale=Vector3.one*Cell;
-            carriedEnergy=ReferenceVfxPool.Play(payload==ItemsTypes.PACKAGE?"TntPropellerComboFuseParticles":"PropellerRocketComboParticles",Anchor,worldCell:Cell,sustained:payload==ItemsTypes.PACKAGE);
-            if(payload==ItemsTypes.PACKAGE)ReferenceGameplayAudio.Play("propeller_tnt_combo__15680");
+            if(payload==ItemsTypes.PACKAGE)carriedEnergy=ReferenceVfxPool.Play("TntPropellerComboFuseParticles",Anchor,worldCell:Cell,sustained:true);
+            if(payload==ItemsTypes.PACKAGE)ReferenceGameplayAudio.Play("propeller_tnt_combo__rfv387_17641");
             UpdateCarried();
         }
         Vector3 PairOffset()
@@ -222,7 +222,7 @@ namespace RoyalThrone.Boosters.Propeller.V5
                     float disappear=Mathf.SmoothStep(0,1,Mathf.InverseLerp(.045f,ImpactSeconds,Age));
                     pose.localScale=Vector3.Scale(startScale,new Vector3(1+compression*.55f,1-compression,1))*(1-.78f*disappear);
                     pose.localRotation=startTurn;body.localRotation=Quaternion.Euler(0,0,-impactAngle*.18f);
-                    if(!impactStarted&&Age>=.022f){impactStarted=true;if(UsesNative){imported.Hide();if(!pairedContact)ReferenceVfxPool.Play("PropellerTargetExplodeParticles",Anchor,-1,Cell);}else if(!pairedContact)PropellerVfxV5.Play(PropellerVfxV5.Kind.Impact,Anchor,Cell);Emit(PropellerEvent.PropellerImpactStarted,Anchor);}
+                    if(!impactStarted&&Age>=.022f){impactStarted=true;if(UsesNative){imported.Hide();if(pairedContact&&(pairedPayload==ItemsTypes.HORIZONTAL_STRIPPED||pairedPayload==ItemsTypes.VERTICAL_STRIPPED))ReferenceVfxPool.Play("PropellerRocketComboParticles",Anchor,-1,Cell);else if(!pairedContact)ReferenceVfxPool.Play("PropellerTargetExplodeParticles",Anchor,-1,Cell);}else if(!pairedContact)PropellerVfxV5.Play(PropellerVfxV5.Kind.Impact,Anchor,Cell);Emit(PropellerEvent.PropellerImpactStarted,Anchor);}
                     alpha=1-disappear;
                     if(q>=1){Emit(PropellerEvent.PropellerImpactFinished,Anchor);Emit(PropellerEvent.PropellerCompleted,Anchor);Release();return;}break;
             }

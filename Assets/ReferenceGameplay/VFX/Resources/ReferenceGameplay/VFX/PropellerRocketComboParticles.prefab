@@ -741,8 +741,8 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: 1c6b164463b534d4095e40baf3f7595b, type: 2}
-    - sprite: {fileID: 21300000, guid: e6b52126d68bf4942b5a903a0457e423, type: 2}
+    - sprite: {fileID: 21300000, guid: 7f106b4d18fe47b44b06db6f4f1c3412, type: 2}
+    - sprite: {fileID: 21300000, guid: efdb74dd339ecd4408c33f7befcc8ba8, type: 2}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -3092,7 +3092,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: d5fb51791cfe8ea4ea7512c3daa7c981, type: 2}
+    - sprite: {fileID: 21300000, guid: ec363a09bca442748852477bb86122bb, type: 2}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -5424,7 +5424,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: c5bc292e197938c4a9c942ab292f9716, type: 2}
+    - sprite: {fileID: 21300000, guid: 79dbbb928fb3dc14e947a1bc19c183c8, type: 2}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -7756,7 +7756,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: 0dfd9e7364a8284448e7af5094fc34cf, type: 2}
+    - sprite: {fileID: 21300000, guid: f1b459b66dc3e2045bc080967debe3c2, type: 2}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -10088,7 +10088,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: 09e64a434918dea40b2d22352d370e33, type: 2}
+    - sprite: {fileID: 21300000, guid: 1c7d555ad81522f49b1b356646508057, type: 2}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -12434,7 +12434,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: 49c1adb7064b4ad4f937f230ec099f45, type: 2}
+    - sprite: {fileID: 21300000, guid: 07cdbb0ad3d3b7640bf00f7a5ec6b53d, type: 2}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -14784,7 +14784,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: e304572588506bf4384b1c163c6de6ad, type: 2}
+    - sprite: {fileID: 21300000, guid: 8f2e553d9fda4f44ba3e01d44cab4575, type: 2}
     flipU: 0
     flipV: 0
   VelocityModule:

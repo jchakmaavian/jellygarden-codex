@@ -1,0 +1,11 @@
+{
+  "unity": "6000.5.10f1",
+  "runtime": "PASS",
+  "editor": "PASS",
+  "newSources": [
+    "RoyalRocketTntCombo.cs",
+    "ReferenceDualComboImporter.cs",
+    "RoyalAllDualComboChecks.cs"
+  ],
+  "warnings": "Existing card serialization and obsolete API warnings; no compiler errors"
+}

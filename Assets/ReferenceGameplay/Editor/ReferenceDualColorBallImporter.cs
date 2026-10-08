@@ -73,7 +73,7 @@ public static class ReferenceDualColorBallImporter
         foreach (var binding in AnimationUtility.GetObjectReferenceCurveBindings(clip))
         {
             var keys = AnimationUtility.GetObjectReferenceCurve(clip, binding);
-            for (int i = 0; i < keys.Length; i++) if (keys[i].value && keys[i].value.name == "light_ball-bot_blur_2") keys[i].value = exactBlur;
+            for (int i = 0; i < keys.Length; i++) if (keys[i].value && System.Text.RegularExpressions.Regex.Replace(keys[i].value.name, @"__\d+$", "") == "light_ball-bot_blur_2") keys[i].value = exactBlur;
             AnimationUtility.SetObjectReferenceCurve(clip, binding, keys);
         }
         EditorUtility.SetDirty(clip);
