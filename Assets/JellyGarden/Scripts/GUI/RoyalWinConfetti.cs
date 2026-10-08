@@ -23,7 +23,7 @@ namespace RoyalThrone.Presentation
             if (stage) return true;
             var hit = Resources.Load<GameObject>("ReferenceGameplay/VFX/StarHitParticles");
             var idle = Resources.Load<GameObject>("ReferenceGameplay/VFX/StarIdleParticles");
-            var shader = Resources.Load<Shader>("RoyalGameplay/UIAdditive");
+            var shader = Resources.Load<Shader>("RoyalGameplay/UIWinGlow");
             if (!hit || !idle || !shader) return false;
             stage = new GameObject("Native win VFX render stage") { hideFlags = HideFlags.HideAndDontSave };
             stage.transform.position = new Vector3(20000, 20000, 0);
@@ -40,16 +40,23 @@ namespace RoyalThrone.Presentation
                 // Presentation tuning on instances only: retain the recovered source prefabs.
                 var main = ps.main;
                 if (ps.name == "star_softlight")
-                    main.startSizeMultiplier *= 1.5f;
+                    { main.startSizeMultiplier *= 2.05f; SoftenGlow(ps, .78f); }
                 else if (ps.name == "star_softglow")
-                    main.startSizeMultiplier *= 1.35f;
+                    { main.startSizeMultiplier *= 1.8f; SoftenGlow(ps, .72f); }
                 else if (ps.name == "light_beam (1)")
                     main.startSizeMultiplier *= 1.12f;
                 else if (ps.name == "_stars (1)" || ps.name == "spark(add_spark_hard)")
                 {
                     main.startSizeMultiplier *= 1.12f;
                     var emission = ps.emission;
-                    emission.rateOverTimeMultiplier *= 1.2f;
+                    emission.rateOverTimeMultiplier *= 2.6f;
+                    main.startLifetimeMultiplier *= 1.15f;
+                    for (int i = 0; i < emission.burstCount; i++)
+                    {
+                        var burst = emission.GetBurst(i);
+                        var count = burst.count; count.curveMultiplier *= 2f;
+                        burst.count = count; emission.SetBurst(i, burst);
+                    }
                 }
                 ps.useAutoRandomSeed = false;
                 ps.randomSeed = (uint)(17 + System.Array.IndexOf(systems, ps));
@@ -76,6 +83,36 @@ namespace RoyalThrone.Presentation
             raycastTarget = false;
             SetAllDirty();
             return true;
+        }
+
+        static void SoftenGlow(ParticleSystem ps, float opacity)
+        {
+            var main = ps.main;
+            var tint = main.startColor;
+            Color FadeColor(Color c) { c.a *= opacity; return c; }
+            Gradient FadeGradient(Gradient source)
+            {
+                if (source == null) return null;
+                var alpha = source.alphaKeys;
+                for (int i = 0; i < alpha.Length; i++) alpha[i].alpha *= opacity;
+                var copy = new Gradient { mode = source.mode };
+                copy.SetKeys(source.colorKeys, alpha);
+                return copy;
+            }
+            if (tint.mode == ParticleSystemGradientMode.Color)
+                tint.color = FadeColor(tint.color);
+            else if (tint.mode == ParticleSystemGradientMode.TwoColors)
+            {
+                tint.colorMin = FadeColor(tint.colorMin);
+                tint.colorMax = FadeColor(tint.colorMax);
+            }
+            else
+            {
+                tint.gradientMax = FadeGradient(tint.gradientMax);
+                if (tint.mode == ParticleSystemGradientMode.TwoGradients)
+                    tint.gradientMin = FadeGradient(tint.gradientMin);
+            }
+            main.startColor = tint;
         }
 
         public void Pose(float seconds, bool reduced)

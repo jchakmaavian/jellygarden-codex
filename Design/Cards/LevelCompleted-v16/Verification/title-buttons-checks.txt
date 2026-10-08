@@ -1,0 +1,57 @@
+Started 2026-10-08T08:00:17.6047519Z; v14 native APK particles card presentation QA; no win/economy commit.
+PASS 1080x1920 required Game view preset exists
+PASS 1080x1920 arched artwork and celebration star particles are installed
+PASS 1080x1920 title reveals and settles with intact artwork
+PASS 1080x1920 title stays on screen and clears crown (gap=18.3674)
+PASS 1080x1920 title pop respects motion preference
+PASS 1080x1920 every star particle vertex stays inside card side lanes and clear of controls
+PASS 1080x1920 native systems emit particles; reduced motion remains static
+PASS 1080x1920 rays remain behind the star and native particles remain behind the star and never intercept taps
+PASS 1080x1920 celebration does not alter rewards
+PASS 1080x1920 uses the requested dimensions
+PASS 1080x1920 reopening reuses the title and effect hierarchy without accumulating children
+PASS 720x1280 required Game view preset exists
+PASS 720x1280 arched artwork and celebration star particles are installed
+PASS 720x1280 title reveals and settles with intact artwork
+PASS 720x1280 title stays on screen and clears crown (gap=18.4329)
+PASS 720x1280 title pop respects motion preference
+PASS 720x1280 every star particle vertex stays inside card side lanes and clear of controls
+PASS 720x1280 native systems emit particles; reduced motion remains static
+PASS 720x1280 rays remain behind the star and native particles remain behind the star and never intercept taps
+PASS 720x1280 celebration does not alter rewards
+PASS 720x1280 uses the requested dimensions
+PASS 720x1280 reopening reuses the title and effect hierarchy without accumulating children
+PASS 1536x2048 required Game view preset exists
+PASS 1536x2048 arched artwork and celebration star particles are installed
+PASS 1536x2048 title reveals and settles with intact artwork
+PASS 1536x2048 title stays on screen and clears crown (gap=18.4033)
+PASS 1536x2048 title pop respects motion preference
+PASS 1536x2048 every star particle vertex stays inside card side lanes and clear of controls
+PASS 1536x2048 native systems emit particles; reduced motion remains static
+PASS 1536x2048 rays remain behind the star and native particles remain behind the star and never intercept taps
+PASS 1536x2048 celebration does not alter rewards
+PASS 1536x2048 uses the requested dimensions
+PASS 1536x2048 reopening reuses the title and effect hierarchy without accumulating children
+PASS motion-off arched artwork and celebration star particles are installed
+PASS motion-off title reveals and settles with intact artwork
+PASS motion-off title stays on screen and clears crown (gap=25.7415)
+PASS motion-off title pop respects motion preference
+PASS motion-off every star particle vertex stays inside card side lanes and clear of controls
+PASS motion-off native systems emit particles; reduced motion remains static
+PASS motion-off rays remain behind the star and native particles remain behind the star and never intercept taps
+PASS motion-off celebration does not alter rewards
+PASS Motion off reopening reuses the existing hierarchy
+PASS Continue uses the reference emerald highlight with the shared gold frame
+PASS Next remains the actual topmost raycast target
+PASS Next routes exactly once through Continue to Home and selects Level24
+PASS Next does not commit or duplicate any award
+PASS Royal close remains the actual topmost raycast target
+PASS Royal close routes exactly once through Continue to Home and selects Level24
+PASS Royal close does not commit or duplicate any award
+CAPTURE frames-20261008-080035-813 121 actual rendered JPEG frames; wall/title timestamps logged separately. Encoding pass is separate from motion assertions; silent capture.
+PASS normal player save keys remain untouched during presentation QA
+PASS owned QA ended and original Home catalog reference/values restored
+PASS normal save keys and runtime coins/lives/level restored exactly
+PASS no Unity errors or exceptions (0)
+SUMMARY passes=53 fails=0
+DONE
