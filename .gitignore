@@ -129,6 +129,10 @@ InitTestScene*.unity*
 # Source for the generated game audio (renders stay local).
 !/Design/Audio/**/*.cs
 !/Design/Audio/**/*.py
+# Full project copies used as test fixtures, and any nested Unity cache:
+# their Markdown is package and duplicate documentation, not design notes.
+/Design/**/FullGameFixture/
+/Design/**/[Ll]ibrary/
 
 # Unity crash-recovery scenes.
 /[Aa]ssets/_Recovery/
