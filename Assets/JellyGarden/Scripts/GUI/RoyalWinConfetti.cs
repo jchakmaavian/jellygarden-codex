@@ -3,84 +3,130 @@ using UnityEngine.UI;
 
 namespace RoyalThrone.Presentation
 {
-    // Gold and ivory star particles in bounded side lanes, using one reusable UI mesh.
+    // Renders the APK's native ParticleSystems into the UI; no reconstructed particle motion.
     [RequireComponent(typeof(CanvasRenderer))]
     public sealed class RoyalWinConfetti : MaskableGraphic
     {
         public Vector2 origin;
-        float age;
-        bool calm;
         public int VisibleSparkles { get; private set; }
+        GameObject stage;
+        Camera effectCamera;
+        RenderTexture target;
+        Material composite;
+        ParticleSystem[] systems;
+        float previous = -1;
+        bool previousCalm;
+        public override Texture mainTexture => target ? target : Texture2D.blackTexture;
+
+        bool Build()
+        {
+            if (stage) return true;
+            var hit = Resources.Load<GameObject>("ReferenceGameplay/VFX/StarHitParticles");
+            var idle = Resources.Load<GameObject>("ReferenceGameplay/VFX/StarIdleParticles");
+            var shader = Resources.Load<Shader>("RoyalGameplay/UIAdditive");
+            if (!hit || !idle || !shader) return false;
+            stage = new GameObject("Native win VFX render stage") { hideFlags = HideFlags.HideAndDontSave };
+            stage.transform.position = new Vector3(20000, 20000, 0);
+            foreach (var prefab in new[] { hit, idle })
+            {
+                var instance = Instantiate(prefab, stage.transform, false);
+                instance.transform.localPosition = Vector3.zero;
+                foreach (var tr in instance.GetComponentsInChildren<Transform>(true)) tr.gameObject.layer = 31;
+            }
+            systems = stage.GetComponentsInChildren<ParticleSystem>(true);
+            foreach (var ps in systems)
+            {
+                ps.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+                ps.useAutoRandomSeed = false;
+                ps.randomSeed = (uint)(17 + System.Array.IndexOf(systems, ps));
+            }
+            var cameraObject = new GameObject("Native win VFX camera");
+            cameraObject.transform.SetParent(stage.transform, false);
+            cameraObject.transform.localPosition = new Vector3(0, 0, -10);
+            effectCamera = cameraObject.AddComponent<Camera>();
+            effectCamera.enabled = false;
+            effectCamera.orthographic = true;
+            effectCamera.orthographicSize = 4;
+            effectCamera.nearClipPlane = .1f;
+            effectCamera.farClipPlane = 20;
+            effectCamera.cullingMask = 1 << 31;
+            effectCamera.clearFlags = CameraClearFlags.SolidColor;
+            effectCamera.backgroundColor = Color.black;
+            effectCamera.allowHDR = false;
+            effectCamera.allowMSAA = false;
+            target = new RenderTexture(512, 512, 16, RenderTextureFormat.ARGB32) { name = "Native win particles" };
+            target.Create();
+            effectCamera.targetTexture = target;
+            composite = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
+            material = composite;
+            raycastTarget = false;
+            SetAllDirty();
+            return true;
+        }
 
         public void Pose(float seconds, bool reduced)
         {
-            if (age == seconds && calm == reduced) return;
-            age = seconds;
-            calm = reduced;
-            SetVerticesDirty();
+            if (!Build()) return;
+            var card = GetComponentInParent<RoyalWinCard>();
+            if (card)
+            {
+                // The native glow and sparkles replace the earlier procedural layers.
+                if (card.sparkles) card.sparkles.gameObject.SetActive(false);
+                if (card.haloSparkles) card.haloSparkles.gameObject.SetActive(false);
+                if (card.rays) card.rays.gameObject.SetActive(false);
+                if (card.glow) card.glow.enabled = false;
+                if (card.flash) card.flash.enabled = false;
+                if (card.pillowGlow) card.pillowGlow.enabled = false;
+                if (card.star && transform.GetSiblingIndex() > card.star.GetSiblingIndex())
+                    transform.SetSiblingIndex(card.star.GetSiblingIndex());
+            }
+            float time = reduced ? .8f : Mathf.Max(0, seconds - .2f);
+            bool restart = previous < 0 || time < previous || previousCalm != reduced;
+            if (!restart && Mathf.Approximately(previous, time)) return;
+            VisibleSparkles = 0;
+            foreach (var ps in systems)
+            {
+                if (!ps.gameObject.activeInHierarchy) continue;
+                ps.Simulate(restart ? time : time - previous, false, restart, true);
+                ps.Pause(false);
+                VisibleSparkles += ps.particleCount;
+            }
+            previous = time;
+            previousCalm = reduced;
+            effectCamera.Render();
+            color = new Color(1, 1, 1, Mathf.Clamp01(seconds / .2f));
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             vh.Clear();
-            VisibleSparkles = 0;
-            float reveal = Mathf.SmoothStep(0, 1, Mathf.Clamp01(age / .3f));
-            if (reveal <= 0) return;
-            float clock = calm ? 0 : Mathf.Max(0, age - .22f);
-
-            // Sparse, staggered glints remain after the initial celebration.
-            for (int i = 0; i < 10; i++)
-            {
-                float side = i % 2 == 0 ? -1 : 1;
-                float phase = i * 2.39996f;
-                float pulse = calm ? .65f : Mathf.Pow(.5f + .5f * Mathf.Sin(clock * 2.1f + phase), 3);
-                float size = (i % 3 == 0 ? 10 : 6) * (.65f + .35f * pulse);
-                Vector2 centre = origin + new Vector2(side * (216 + (i % 3) * 18),
-                    118 - (i / 2) * 65 + (calm ? 0 : 5 * Mathf.Sin(clock * .8f + phase)));
-                Star(vh, centre, size, i * 17, reveal * (.18f + .82f * pulse));
-            }
-            if (calm) return;
-
-            // Short outward burst; no paper shapes or colored ribbons.
-            for (int i = 0; i < 22; i++)
-            {
-                float u = (clock - i * .018f) / (1.45f + .15f * (i % 4));
-                if (u <= 0 || u >= 1) continue;
-                float side = i % 2 == 0 ? -1 : 1;
-                float x = side * (178 + (i % 4) * 13 + 34 * u);
-                float y = -155 + (i % 7) * 43 + 56 * u - 20 * u * u;
-                float alpha = reveal * Mathf.Sin(Mathf.PI * u);
-                Star(vh, origin + new Vector2(x, y), (4 + i % 4) * Mathf.Sin(Mathf.PI * u),
-                    i * 31 + u * 35, alpha);
-            }
+            const float half = 275;
+            vh.AddVert(origin + new Vector2(-half, -half), color, new Vector2(0, 0));
+            vh.AddVert(origin + new Vector2(-half, half), color, new Vector2(0, 1));
+            vh.AddVert(origin + new Vector2(half, half), color, new Vector2(1, 1));
+            vh.AddVert(origin + new Vector2(half, -half), color, new Vector2(1, 0));
+            vh.AddTriangle(0, 1, 2);
+            vh.AddTriangle(0, 2, 3);
         }
 
-        void Star(VertexHelper vh, Vector2 centre, float radius, float degrees, float alpha)
+        protected override void OnDisable()
         {
-            if (alpha <= .01f || radius <= .01f) return;
-            VisibleSparkles++;
-            float angle = degrees * Mathf.Deg2Rad;
-            // A soft golden halo sits below a crisp four-point ivory star.
-            Fan(vh, centre, radius * 2.1f, angle, new Color(1, .73f, .22f, alpha * .19f), true);
-            Fan(vh, centre, radius, angle, new Color(1, .94f, .65f, alpha), false);
-            Fan(vh, centre, radius * .52f, angle, new Color(1, 1, .96f, alpha), false);
+            base.OnDisable();
+            previous = -1;
+            if (stage) stage.SetActive(false);
         }
-
-        void Fan(VertexHelper vh, Vector2 centre, float radius, float angle, Color tint, bool halo)
+        protected override void OnEnable()
         {
-            int first = vh.currentVertCount;
-            vh.AddVert(centre, tint * color, Vector2.zero);
-            const int points = 8;
-            for (int i = 0; i < points; i++)
-            {
-                float a = angle + i * Mathf.PI / 4;
-                float r = radius * (halo ? 1 : (i % 2 == 0 ? 1 : .23f));
-                Color edge = tint;
-                if (halo) edge.a = 0;
-                vh.AddVert(centre + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * r, edge * color, Vector2.zero);
-            }
-            for (int i = 0; i < points; i++)
-                vh.AddTriangle(first, first + 1 + i, first + 1 + (i + 1) % points);
+            base.OnEnable();
+            if (stage) stage.SetActive(true);
+            previous = -1;
+        }
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            if (stage) Destroy(stage);
+            if (target) { target.Release(); Destroy(target); }
+            if (composite) Destroy(composite);
         }
     }
 }
