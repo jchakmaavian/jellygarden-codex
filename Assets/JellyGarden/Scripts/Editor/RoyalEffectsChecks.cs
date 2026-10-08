@@ -35,7 +35,7 @@ namespace RoyalThrone.Editor
             File.WriteAllLines(Folder+"hierarchy.txt",lines);Capture("current-gameplay");Debug.Log("[Royal Effects] Board inspection saved.");
         }
         static readonly List<string> checks=new List<string>(),errors=new List<string>();
-        static bool cellBreakOnly,rocketOnly,tntOnly,colorBallOnly;
+        static bool cellBreakOnly,rocketOnly,tntOnly,colorBallOnly,inputOnly;
         static string Folder=>colorBallOnly?"Design/Effects/ColorBall-live-v1/":tntOnly?"Design/Effects/TNT-review-v6/":rocketOnly?"Design/Effects/Rocket-review-v7/":cellBreakOnly?"Design/Effects/Unity-review-v6/":"Design/Effects/Unity-review-v4/";
         [MenuItem("Tools/Royal Throne/Color Ball/Verify live Rocket conversion only %#F7")]
         public static void RunColorBall(){colorBallOnly=true;Run();}
@@ -43,6 +43,8 @@ namespace RoyalThrone.Editor
         public static void RunTnt(){tntOnly=true;Run();}
         [MenuItem("Tools/Royal Throne/Effects/Verify restored smooth match breaks %#F10")]
         public static void RunCellBreaks(){cellBreakOnly=true;Run();}
+        [MenuItem("Tools/Royal Throne/Effects/Verify board input only")]
+        public static void RunInput(){inputOnly=true;Run();}
         [MenuItem("Tools/Royal Throne/Effects/Verify rocket travel at half and full speed %#F11")]
         public static void RunRockets(){rocketOnly=true;Run();}
         static LevelManager lm;static Transform originalField,testField;static Square[] originalSquares;
@@ -87,6 +89,12 @@ namespace RoyalThrone.Editor
             bool completed=false;
             try
             {
+                if(inputOnly)
+                {
+                    Seed();yield return null;SetColours();yield return RoyalInputRegression.Run(lm,Check);
+                    Check(InitScript.Gems==money&&InitScript.lifes==lives,"Input tests preserve coins and lives");
+                    Check(errors.Count==0,"No runtime errors during input tests");completed=true;yield break;
+                }
                 if(colorBallOnly)
                 {
                     yield return RoyalColorBallChecks.Run(lm,Seed,SetColours,Check);
@@ -309,7 +317,7 @@ namespace RoyalThrone.Editor
             lm.lastDraggedItem=lm.lastSwitchedItem=null;lm.DragBlocked=drag;UnityEngine.Random.state=random;Object.Destroy(testField.gameObject);originalField.gameObject.SetActive(true);
             frames.Sort();string result="Checks completed: "+checks.Count+"\n"+string.Join("\n",checks)+"\nErrors: "+string.Join("\n",errors)+"\nEditor update p95 ms (not device GPU benchmark): "+(frames.Count>0?frames[(int)(frames.Count*.95f)]:0);
             File.WriteAllText(Folder+"checks.txt",result);Debug.Log("[Royal Effects Checks] "+result);AI.THIS.StartCoroutine(AI.THIS.CheckPossibleCombines());
-            cellBreakOnly=false;rocketOnly=false;tntOnly=false;colorBallOnly=false;
+            cellBreakOnly=false;rocketOnly=false;tntOnly=false;colorBallOnly=false;inputOnly=false;
         }
     }
 }

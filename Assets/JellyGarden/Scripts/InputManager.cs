@@ -34,9 +34,13 @@ public class InputManager : MonoBehaviour
     private bool wasTouchPressed;
     private bool wasTouchReleased;
     private bool isTouching;
-    
+    // The device whose press started the current gesture. A Value action bound to several pointers follows
+    // whichever has the larger position, so a second touchscreen (Android lists the panel and adb/remote input
+    // separately) or a mouse left high on the screen froze swipes lower down (phone QA, 8 Oct 2026).
+    private Pointer pressPointer;
+
     public bool IsTouching => isTouching && !RoyalThrone.Testing.RoyalSave.BlockGameplayInput;
-    public Vector2 TouchPosition => lastPosition;
+    public Vector2 TouchPosition => pressPointer != null && pressPointer.added ? pressPointer.position.ReadValue() : lastPosition;
     public bool WasTouchPressed => wasTouchPressed && !RoyalThrone.Testing.RoyalSave.BlockGameplayInput;
     public bool WasTouchReleased => wasTouchReleased && !RoyalThrone.Testing.RoyalSave.BlockGameplayInput;
     
@@ -257,6 +261,16 @@ public class InputManager : MonoBehaviour
     {
         isTouching = true;
         wasTouchPressed = true;
+        TrackPressPointer(context);
+    }
+
+    private void TrackPressPointer(InputAction.CallbackContext context)
+    {
+        if (context.control?.device is Pointer pointer)
+        {
+            pressPointer = pointer;
+            lastPosition = pointer.position.ReadValue();
+        }
     }
     
     private void OnTouchCanceled(InputAction.CallbackContext context)
@@ -274,6 +288,7 @@ public class InputManager : MonoBehaviour
     {
         isTouching = true;
         wasTouchPressed = true;
+        TrackPressPointer(context);
     }
     
     private void OnPanCanceled(InputAction.CallbackContext context)

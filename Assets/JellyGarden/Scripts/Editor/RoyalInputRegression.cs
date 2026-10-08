@@ -51,14 +51,14 @@ namespace RoyalThrone.Editor
             yield return null;
         }
 
-        static IEnumerator Gesture(Vector2 from,Vector2 to,bool touchscreen=false,Item expectedSource=null)
+        static IEnumerator Gesture(Vector2 from,Vector2 to,bool touchscreen=false,Item expectedSource=null,bool isolate=true)
         {
             // Value-type position actions choose among all matching controls. Isolate
             // the virtual pointer so a real mouse or a stale touch position cannot win
             // disambiguation while this device supplies the button press.
             gestureSource=expectedSource;
             InputDevice pointer=touchscreen?(InputDevice)touch:mouse;
-            InputManager.Instance.inputActionAsset.devices=new[]{pointer};
+            if(isolate) InputManager.Instance.inputActionAsset.devices=new[]{pointer};
             yield return null;
             if(touchscreen)
                 InputSystem.QueueStateEvent(touch,new TouchState{touchId=71,phase=UnityEngine.InputSystem.TouchPhase.Began,position=from});
@@ -146,6 +146,29 @@ namespace RoyalThrone.Editor
                 moves=lm.Limit;score=LevelManager.Score;
                 yield return Gesture(Screen(At(3,3)),Screen(At(3,2)),true,At(3,3));yield return Settle(check);
                 check(lm.Limit==moves-1&&LevelManager.Score>score,"Touch vertical drag matches through production input and spends one move (moves "+moves+" -> "+lm.Limit+", score "+score+" -> "+LevelManager.Score+")");
+
+                // Android lists the touch panel and injected or remote input as separate touchscreens. A touch
+                // left high on one used to win the position action, freezing swipes lower down on the other
+                // (phone QA, 8 Oct 2026). Both stay live here: the gesture must follow the device that pressed.
+                var stale=InputSystem.AddDevice<Touchscreen>("Royal QA stale touch");
+                try
+                {
+                    actionAsset.devices=new InputDevice[]{touch,stale};
+                    var high=new Vector2(UnityEngine.Screen.width-1,UnityEngine.Screen.height-1);
+                    InputSystem.QueueStateEvent(stale,new TouchState{touchId=5,phase=UnityEngine.InputSystem.TouchPhase.Began,position=high});
+                    yield return null;
+                    InputSystem.QueueStateEvent(stale,new TouchState{touchId=5,phase=UnityEngine.InputSystem.TouchPhase.Ended,position=high});
+                    yield return null;
+                    yield return Seed(); Paint(3,3,1);Paint(2,2,1);Paint(4,2,1);Paint(3,2,4);
+                    moves=lm.Limit;score=LevelManager.Score;
+                    yield return Gesture(Screen(At(3,3)),Screen(At(3,2)),true,At(3,3),false);yield return Settle(check);
+                    check(lm.Limit==moves-1&&LevelManager.Score>score,"Swipe on one touchscreen matches while another holds a stale high touch (moves "+moves+" -> "+lm.Limit+", score "+score+" -> "+LevelManager.Score+")");
+                }
+                finally
+                {
+                    actionAsset.devices=previousDeviceFilter;
+                    if(stale.added) InputSystem.RemoveDevice(stale);
+                }
 
                 yield return Seed(); first=At(2,2);second=At(3,2);moves=lm.Limit;lm.DragBlocked=true;
                 yield return Gesture(Screen(first),Screen(second));
