@@ -9,11 +9,11 @@ namespace RoyalThrone.Presentation
     {
         // Visible art inside well-done-art.png (2170 x 725), as a UV crop with a few pixels of clear margin.
         static readonly Rect Crop = new Rect(24 / 2170f, 98 / 725f, 2123 / 2170f, 544 / 725f);
-        const float Aspect = 2123f / 544f, Arch = .10f;
+        const float Aspect = 2123f / 544f, Arch = .16f;
         // Reveal in RoyalWinCard's letter units (0.04 s each): 0.48 s, well inside the card's title span.
         const float Span = 12;
-        // The art's top edge sits where the earlier lettering's did, keeping the crown clearance.
-        const float Top = 44;
+        // Reserve crown clearance above and a clear gap above the star below.
+        const float Top = 60;
         RawImage art;
         public RectTransform RectTransform => (RectTransform)transform;
         public RawImage Art => art;

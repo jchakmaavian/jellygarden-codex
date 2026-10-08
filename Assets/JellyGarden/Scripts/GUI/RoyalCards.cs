@@ -342,8 +342,8 @@ namespace RoyalThrone.Presentation
         // "Well Done!" sits above a 1.5x reward star, which settles onto velvet (RoyalWinCard), then Continue. No score:
         // a win earns one star, and the star is the result (the user's choice). The close continues exactly as Continue does
         // (it presses Next), so closing never loses the win. Rows from the card's top edge; the card ends 52 below Continue.
-        public const float WinTitleRow = 192, WinTitleSize = 60, WinStarSize = 276 * 1.5f, WinCushionTop = 420, WinCushionWidth = 500;
-        public const float WinRewardRow = 728, WinActionRow = 838, WinActionWidth = 435, WinActionHeight = 120;
+        public const float WinTitleRow = 192, WinTitleSize = 60, WinStarSize = 276 * 1.5f, WinCushionTop = 446, WinCushionWidth = 500;
+        public const float WinRewardRow = 728, WinActionRow = 818, WinActionWidth = 450, WinActionHeight = 120;
         // Approved preview's velvet pillow, 768 x 512. Its centre dent is 36% down the image; the lower star points sit in it.
         const float CushionAspect = 512f / 768f, CushionRest = .36f, CushionSeat = .25f;
         static Image Won(Transform menu, Transform p)
@@ -351,7 +351,7 @@ namespace RoyalThrone.Presentation
             const float H = WinActionRow + WinActionHeight * .5f + CleanBottom, top = H * .5f;
             var skin = Card(menu, p, H, null);
             // Keep the common gold bevels, crest and controls; the win's deep stage gives its gold reward clear contrast.
-            var face = skin.Find("Face").GetComponent<RoyalCardShape>(); face.from = C("102d6b"); face.to = C("061536"); face.SetVerticesDirty();
+            var face = skin.Find("Face").GetComponent<RoyalCardShape>(); face.from = C("0b3979"); face.to = C("041638"); face.SetVerticesDirty();
             var faceLight = skin.Find("Face light").GetComponent<RoyalCardShape>(); faceLight.from = C("2955a4", .22f); faceLight.to = C("163874", 0); faceLight.SetVerticesDirty();
             var faceGlow = skin.Find("Face glow").GetComponent<RoyalCardShape>(); faceGlow.from = C("638bca", .14f); faceGlow.to = C("31558f", .025f); faceGlow.SetVerticesDirty();
             var next = p.Find("Next");
@@ -378,7 +378,7 @@ namespace RoyalThrone.Presentation
             var art = new GameObject("Well Done title", typeof(RectTransform), typeof(RoyalWinTitleLetters));
             art.transform.SetParent(heading.transform, false);
             var letters = art.GetComponent<RoyalWinTitleLetters>();
-            letters.RectTransform.sizeDelta = new Vector2(450, 110);
+            letters.RectTransform.sizeDelta = new Vector2(480, 128);
             if (letters.Build()) { titleArt = letters; heading.enabled = false; }
             else Object.Destroy(art);
 
@@ -437,6 +437,11 @@ namespace RoyalThrone.Presentation
                 star.SetAsLastSibling(); sparkles.SetAsLastSibling(); heading.transform.SetAsLastSibling();
             }
 
+            var ribbons = Container(p, "Royal celebration ribbons");
+            RoyalMenuSkin.Place(ribbons, 0, 0, 640, H);
+            ribbons.gameObject.AddComponent<RoyalAppearsLater>();
+            var confetti = ribbons.gameObject.AddComponent<RoyalWinConfetti>();
+            confetti.origin = new Vector2(0, starY); confetti.raycastTarget = false;
             // The supplied reference keeps this ceremony about the star. Coins collect on Home after Continue.
 
             var buttons = new List<RoyalCardControl> { Feedback(close, false) };
@@ -448,11 +453,15 @@ namespace RoyalThrone.Presentation
             if (action) { buttons.Add(Feedback(action, true)); ButtonShadow(skin, actionX, actionY, actionW, WinActionHeight); }
             if (pair) buttons.Add(Feedback(Button(share, "Share", 172, actionY, 150, SecondaryHeight, Kind.Secondary, 28), false));
             else Hide(share);
+            var enamel = action ? action.Find("Royal skin/Green")?.GetComponent<RoyalCardShape>() : null;
+            if (enamel) { enamel.from = C("00bb57"); enamel.to = C("034522"); enamel.SetVerticesDirty(); }
+            var enamelShine = action ? action.Find("Royal skin/Gloss")?.GetComponent<RoyalCardShape>() : null;
+            if (enamelShine) { enamelShine.from = C("fff2ba", .23f); enamelShine.SetVerticesDirty(); }
             Ornament(skin, H);
 
             var piece = p.GetComponent<RoyalWinCard>();
             if (!piece) piece = p.gameObject.AddComponent<RoyalWinCard>();
-            piece.star = star; piece.cushion = cr; piece.title = heading.GetComponent<RoyalTextStyle>(); piece.titleArtwork = titleArt;
+            piece.confetti = confetti; piece.star = star; piece.cushion = cr; piece.title = heading.GetComponent<RoyalTextStyle>(); piece.titleArtwork = titleArt;
             piece.glow = glow; piece.flash = flash; piece.sparkles = (RectTransform)sparkles; piece.starRest = new Vector2(0, starY);
             piece.pillowGlow = pillowGlow; piece.rays = (RectTransform)rays;
             piece.starShadow = (RectTransform)starShadow; piece.contactShadow = contactShadow;
@@ -463,6 +472,7 @@ namespace RoyalThrone.Presentation
             var motion = menu.GetComponent<RoyalCardMotion>();
             if (motion)
             {
+                motion.dimColor = C("031a37");
                 motion.respectMotionSetting = true; motion.instantRewardEntrance = true;
                 // Start the existing star activation and its sound with the card, not after the generic entrance clip.
                 for (int i = 0; motion.eventNames != null && i < motion.eventNames.Length; i++)

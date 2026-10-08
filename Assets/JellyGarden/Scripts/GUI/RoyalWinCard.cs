@@ -14,6 +14,7 @@ namespace RoyalThrone.Presentation
         public RectTransform star, cushion, starShadow;
         public RoyalTextStyle title;
         public RoyalWinTitleLetters titleArtwork;
+        public RoyalWinConfetti confetti;
         public RoyalCardShape glow, flash, pillowGlow, contactShadow;
         public RectTransform sparkles, haloSparkles, rays, rewardBadge, coinOrigin;
         public Text rewardAmount, levelNumber;
@@ -140,8 +141,8 @@ namespace RoyalThrone.Presentation
                 if (glow) glow.material = lightMaterial;
                 if (flash) flash.material = lightMaterial;
                 if (pillowGlow) pillowGlow.material = lightMaterial;
-                var rayGraphic = rays ? rays.GetComponent<Graphic>() : null;
-                if (rayGraphic) rayGraphic.material = lightMaterial;
+
+                // Normal alpha preserves the warm gold beam color against the deep blue face.
             }
             BuildSparkles();
             BuildHaloSparkles();
@@ -178,6 +179,7 @@ namespace RoyalThrone.Presentation
             if (starShadow) starShadow.localScale = Vector3.one;
             if (contactShadow) contactShadow.color = Fade(contactShadow.color, 0);
             SetTitle(0);
+            if (confetti) confetti.Pose(0, reduced);
             if (titleGroup) titleGroup.alpha = 1;
             if (cushion) cushion.localScale = Vector3.one;
             if (glow) glow.color = Fade(glow.color, 0);
@@ -226,6 +228,7 @@ namespace RoyalThrone.Presentation
             PoseShadow();
             PoseLight();
             PoseHalo();
+            if (confetti) confetti.Pose(t, false);
             Write(t - WriteStart);
             Burst();
             Twinkle();
@@ -234,6 +237,7 @@ namespace RoyalThrone.Presentation
 
         void Calm()
         {
+            if (confetti) confetti.Pose(t, true);
             float a = Mathf.Clamp01(t / .20f);
             if (starGroup) starGroup.alpha = a;
             star.anchoredPosition = starRest; star.localScale = Vector3.one; star.localRotation = Quaternion.identity;
@@ -244,7 +248,7 @@ namespace RoyalThrone.Presentation
             if (glow) glow.color = Fade(glow.color, .28f * a);
             if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, .12f * a);
             if (flash) flash.color = Fade(flash.color, 0);
-            if (raysGroup) raysGroup.alpha = 0;
+            if (raysGroup) raysGroup.alpha = .55f * a;
             SetTitle(float.PositiveInfinity);
             if (titleGroup) titleGroup.alpha = a;
             if (badgeGroup) badgeGroup.alpha = a;
@@ -331,14 +335,14 @@ namespace RoyalThrone.Presentation
             float rise = Ease((t - Drop) / .34f);
             float breath = Mathf.Sin((t - Drop) * 1.30f);
             float impact = t < Drop ? Mathf.Clamp01((t - Drop + .025f) / .025f) : 1 - Mathf.Clamp01((t - Drop) / .30f);
-            if (glow) glow.color = Fade(glow.color, rise * (.28f + .03f * breath));
+            if (glow) glow.color = Fade(glow.color, rise * (.22f + .025f * breath));
             if (pillowGlow) pillowGlow.color = Fade(pillowGlow.color, rise * (.12f + .018f * breath) + .26f * impact * impact);
             if (flash)
             {
                 flash.color = Fade(flash.color, .52f * impact * impact);
                 flash.rectTransform.localScale = Vector3.one * Mathf.Lerp(.70f, 1.08f, Mathf.Clamp01((t - Drop + .025f) / .325f));
             }
-            if (raysGroup) raysGroup.alpha = .38f * rise;
+            if (raysGroup) raysGroup.alpha = (.88f + .08f * breath) * rise;
             if (rays) rays.localRotation = Quaternion.Euler(0, 0, Mathf.Max(0, t - Drop) * 1.5f);
         }
 
