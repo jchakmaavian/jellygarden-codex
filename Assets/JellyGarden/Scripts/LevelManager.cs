@@ -1390,13 +1390,14 @@ namespace JellyGarden.Scripts
 
         }
 
-        void GenerateNewItems(bool falling = true)
+        bool GenerateNewItems(bool falling = true, bool fillBlockedCells = false)
         {
             // A gentle refill (2026-10-04): the new pieces of each column's run of cells are stacked just above that run's top
             // edge, the lowest first, so they enter from the board's edge as one stream and fade in as they cross it
             // (Item.royalEntryEdge); the columns start in a soft wave from the centre out (Item.royalFallDelay).
             // The end of a level refills too, as in the user's Royal Match Level 13 clip (the user, 2026-10-06, replacing that
             // morning's "no more fill up"): the boosters' cleared cells fall and fill, and the card opens over a full board.
+            bool generated = false;
             bool gentle = falling && Juice.JuiceConfig.Instance.EnableJuice;
             float cellWorld = squareHeight * (GameField ? Mathf.Abs(GameField.lossyScale.y) : 1f);
             var stacked = new Dictionary<int, int>();
@@ -1409,13 +1410,14 @@ namespace JellyGarden.Scripts
                     {
                         if (!GetSquare(col, row).IsNone() && GetSquare(col, row).CanGoInto() && GetSquare(col, row).item == null)
                         {
-                            if ((GetSquare(col, row).item == null && !GetSquare(col, row).IsHaveSolidAbove()) || !falling)
+                            if ((GetSquare(col, row).item == null && !GetSquare(col, row).IsHaveSolidAbove()) || !falling || fillBlockedCells)
                             {
                                 var created = GetSquare(col, row).GenItem(falling);
+                                generated |= created != null;
                                 if (gentle && created)
                                 {
                                     int top = row;
-                                    while (top > 0 && GetSquare(col, top - 1) != null && !GetSquare(col, top - 1).IsNone()) top--;
+                                    while (top > 0 && GetSquare(col, top - 1) != null && GetSquare(col, top - 1).CanGoInto()) top--;
                                     stacked.TryGetValue(top, out int k); stacked[top] = k + 1;
                                     var topPosition = GetSquare(col, top).transform.position;
                                     var target = GetSquare(col, row).transform.position;
@@ -1428,7 +1430,7 @@ namespace JellyGarden.Scripts
                     }
                 }
             }
-
+            return generated;
         }
 
         public void NoMatches()
@@ -2054,6 +2056,16 @@ namespace JellyGarden.Scripts
                 }
 
                 if (waveRevision != inputRevision || Juice.RoyalPowerupDirector.Busy) continue;
+
+                // Normal gravity and diagonal slides get first choice. A solid roof can
+                // isolate a playable cell from both, so refill remaining holes before
+                // declaring the board settled. GenItem preserves special reservations.
+                if (!nearEmptySquareDetected && GenerateNewItems(true, fillBlockedCells: true))
+                {
+                    yield return null; // Let newly spawned Items initialize their color and falling state.
+                    while (!IsAllItemsFallDown()) yield return null;
+                    continue; // Resolve any matches made by these new gems as usual.
+                }
 
                 if (destroyAnyway.Count > 0)
                     nearEmptySquareDetected = true;
