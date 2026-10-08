@@ -172,19 +172,24 @@ namespace RoyalThrone.Presentation.AreaMotion
             bool fountain=Area==1&&(doneMask&2)!=0;if(fountain!=fountainVisible){fountainVisible=fountain;effects.SetFountain(fountain);}
             if(currentTask>=0&&!effectFired&&taskAge>=data.tasks[currentTask].duration-.45f){effects.Play(data.tasks[currentTask].effect,clock);effectFired=true;}
         }
+        // The ambience fades in and out (0.15 s) instead of switching, and keeps fading while Home is hidden (2026-10-08).
+        float audioGate,fountainGate;
         void UpdateAudio()
         {
             if(!revealAudio)return;bool audible=SoundEnabled&&Visible&&!paused&&isActiveAndEnabled;
-            revealAudio.mute=!audible;ambientAudio.mute=!audible;fountainAudio.mute=!audible;
-            float sfx=JellyGarden.Scripts.Juice.RoyalAudioSettings.Sound;   // the player's SFX volume
-            revealAudio.volume=.8f*sfx;ambientAudio.volume=.15f*sfx;fountainAudio.volume=.3f*sfx;
+            float k=1-Mathf.Exp(-Time.unscaledDeltaTime/.15f);
+            audioGate+=((audible?1:0)-audioGate)*k;fountainGate+=((fountainVisible?1:0)-fountainGate)*k;
+            if(!audible&&audioGate<.002f)audioGate=0;if(!fountainVisible&&fountainGate<.002f)fountainGate=0;
+            bool silent=audioGate<=0;revealAudio.mute=silent;ambientAudio.mute=silent;fountainAudio.mute=silent;
+            float sfx=JellyGarden.Scripts.Juice.RoyalAudioSettings.Sound*audioGate;   // the player's SFX volume
+            revealAudio.volume=.8f*sfx;ambientAudio.volume=.15f*sfx;fountainAudio.volume=.3f*sfx*fountainGate;
             if(audible&&ambientAudio.clip&&!ambientAudio.isPlaying)ambientAudio.Play();
             if(audible&&fountainVisible&&fountainAudio.clip&&!fountainAudio.isPlaying)fountainAudio.Play();
-            if(!fountainVisible&&fountainAudio.isPlaying)fountainAudio.Stop();
+            if(!fountainVisible&&fountainGate<=0&&fountainAudio.isPlaying)fountainAudio.Stop();
         }
         void LateUpdate()
         {
-            if(!Loaded||paused||!Visible)return;Resize();bool animate=MotionEnabled||Revealing;
+            if(!Loaded)return;if(paused||!Visible){UpdateAudio();return;}Resize();bool animate=MotionEnabled||Revealing;
             if(animate)clock+=Time.unscaledDeltaTime;
             UpdateEffects();effects.Tick(clock,animate);UpdateAudio();cameraView.enabled=animate||dirty;
             if(!cameraView.enabled)return;ApplyPose();
@@ -192,7 +197,7 @@ namespace RoyalThrone.Presentation.AreaMotion
             foreach(var m in materials)m.SetTexture("_ReflectionTex",back);dirty=false;
         }
         public void RenderForReview(float time,bool fountainCloseup=false){clock=time;Resize();if(fountainCloseup&&Area==1){cameraView.orthographicSize*=.34f;var p=cameraView.transform.localPosition;p.y=-2.98f;cameraView.transform.localPosition=p;}ApplyPose();UpdateEffects();var next=back;back=front;front=next;cameraView.targetTexture=front;surface.texture=front;foreach(var m in materials)m.SetTexture("_ReflectionTex",back);cameraView.Render();}
-        void OnApplicationPause(bool value){paused=value;if(cameraView)cameraView.enabled=!value;if(revealAudio){if(value){revealAudio.Pause();ambientAudio.Pause();fountainAudio.Pause();}else{revealAudio.UnPause();dirty=true;}}}
+        void OnApplicationPause(bool value){paused=value;if(cameraView)cameraView.enabled=!value;if(revealAudio){if(value){revealAudio.Pause();ambientAudio.Pause();fountainAudio.Pause();}else{revealAudio.UnPause();audioGate=0;dirty=true;}}}
         void OnEnable(){if(stage)stage.gameObject.SetActive(Visible);dirty=true;}
         void OnDisable(){epoch++;currentTask=-1;if(stage)stage.gameObject.SetActive(false);if(revealAudio){revealAudio.Stop();ambientAudio.Stop();fountainAudio.Stop();}}
         void ReleaseTargets(){if(cameraView)cameraView.targetTexture=null;if(surface)surface.texture=null;foreach(var t in new[]{front,back})if(t){t.Release();Destroy(t);}front=back=null;}

@@ -99,7 +99,19 @@ namespace JellyGarden.Scripts.Juice
             float total=0;
             for(int i=0;i<voices.Length;i++) if(voices[i].isPlaying) total+=voiceGains[i];
             float headroom=Mathf.Min(1, .68f/Mathf.Max(.001f,total));
-            for(int i=0;i<voices.Length;i++) voices[i].volume=voiceGains[i]*headroom;
+            for(int i=0;i<voices.Length;i++) voices[i].volume=voiceGains[i]*headroom*sfxGate;
+        }
+        // Smooth starts and stops (the user, 2026-10-08: "all the music play and pause must be smooth"). Every change of the
+        // music's loudness glides instead of jumping: Music on or off, the duck under big blasts, the win's fade and return,
+        // the Settings slider, and coming back to the app. Silent music is paused where it is and resumes from there. The win's
+        // muffle glides, and switching Sound off fades the effects over 0.1 s instead of cutting them.
+        const float MusicGlide=.2f, MuffleGlide=.25f, SfxFade=.1f;
+        float musicLevel, cutoff=22000, cutoffTarget=22000, sfxGate=1; bool musicPaused;
+        void OnApplicationPause(bool paused)
+        {
+            // Unity resumes the audio as it was; start the music from silence and let it glide back in.
+            if(paused||music==null) return;
+            musicLevel=0; foreach(var m in music) if(m) m.volume=0;
         }
         // The end of a won level follows the user's Royal Match Level 13 clip (the user, 2026-10-06: "music like the clip",
         // replacing 10-05's music that held through the win): the level music fades out once the goals are met, so the
@@ -109,7 +121,7 @@ namespace JellyGarden.Scripts.Juice
         {
             var level=LevelManager.THIS; var state=level?level.gameStatus:GameState.Map;
             if(state==GameState.Win){ if(winSince<0)winSince=Time.unscaledTime; } else winSince=-1;
-            if(musicFilter) musicFilter.cutoffFrequency=state==GameState.Win?1100:22000;
+            cutoffTarget=state==GameState.Win?1100:22000;
             if(state==GameState.PreWinAnimations) return 0;
             if(state==GameState.Win) return normal*.45f*Mathf.Clamp01((Time.unscaledTime-winSince-.9f)/1f);
             return normal;
@@ -125,17 +137,24 @@ namespace JellyGarden.Scripts.Juice
         void StartFade(AudioClip clip)
         {
             var next=music[1-musicIndex]; next.clip=clip; next.loop=clip!=clips[6]; next.time=0; next.volume=0; next.Play(); fade=0;
+            musicPaused=false;
         }
         void Update()
         {
             if(voices==null)return;
+            float dt=Time.unscaledDeltaTime;
             int count=0; bool soundOff=PlayerPrefs.GetInt("Sound",1)==0;   // one read per frame, not one per voice
-            foreach(var v in voices){ if(v.isPlaying)count++; if(soundOff)v.Stop(); }
+            sfxGate=Mathf.MoveTowards(sfxGate,soundOff?0:1,dt/SfxFade);
+            foreach(var v in voices){ if(v.isPlaying)count++; if(soundOff&&sfxGate<=0&&v.isPlaying)v.Stop(); }
             PeakVoices=Mathf.Max(PeakVoices,count);
             BalanceVoices();
             if(!clips[6])return;
-            duck=Mathf.Max(0,duck-Time.unscaledDeltaTime);
+            duck=Mathf.Max(0,duck-dt);
             float target=MusicTarget(PlayerPrefs.GetInt("Music",1)*RoyalEffectsProfile.Get.musicVolume*(duck>0?.55f:1));
+            musicLevel+=(target-musicLevel)*(1-Mathf.Exp(-dt/MusicGlide));
+            if(Mathf.Abs(target-musicLevel)<.0005f) musicLevel=target;
+            cutoff=Mathf.Exp(Mathf.Lerp(Mathf.Log(cutoff),Mathf.Log(cutoffTarget),1-Mathf.Exp(-dt/MuffleGlide)));
+            if(musicFilter) musicFilter.cutoffFrequency=cutoff;
             float duration=RoyalEffectsProfile.Get.musicCrossfade;
             var current=music[musicIndex]; var want=DesiredMusic();
             if(fade<0&&want&&current.clip!=want)
@@ -149,8 +168,8 @@ namespace JellyGarden.Scripts.Juice
             if(fade>=0)
             {
                 fade+=Time.unscaledDeltaTime; float t=Mathf.Clamp01(fade/duration);
-                music[musicIndex].volume=Mathf.Cos(t*Mathf.PI*.5f)*target;
-                music[1-musicIndex].volume=Mathf.Sin(t*Mathf.PI*.5f)*target;
+                music[musicIndex].volume=Mathf.Cos(t*Mathf.PI*.5f)*musicLevel;
+                music[1-musicIndex].volume=Mathf.Sin(t*Mathf.PI*.5f)*musicLevel;
                 if(t>=1)
                 {
                     var old=music[musicIndex]; old.Stop();
@@ -158,7 +177,14 @@ namespace JellyGarden.Scripts.Juice
                     musicIndex=1-musicIndex; fade=-1;
                 }
             }
-            else { music[musicIndex].volume=Mathf.MoveTowards(music[musicIndex].volume,target,Time.unscaledDeltaTime); music[1-musicIndex].volume=0; if(!music[musicIndex].isPlaying)music[musicIndex].Play(); }
+            else
+            {
+                var source=music[musicIndex]; source.volume=musicLevel; music[1-musicIndex].volume=0;
+                // Faded all the way out (Music off, the celebration): pause in place; when wanted again, resume from there.
+                if(target<=0&&musicLevel<=0) { if(source.isPlaying) { source.Pause(); musicPaused=true; } }
+                else if(musicPaused) { source.UnPause(); musicPaused=false; }
+                else if(!source.isPlaying) source.Play();
+            }
         }
     }
 }
