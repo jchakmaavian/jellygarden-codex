@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "king-leo.slnx"
+    "dotnet.defaultSolution": "JellyGarden-Codex.slnx"
 }
