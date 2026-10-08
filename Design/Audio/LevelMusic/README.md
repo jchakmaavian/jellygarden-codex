@@ -1,15 +1,18 @@
 # Level music (Royal Throne)
 
-## Status (7 October 2026)
+## Status (8 October 2026)
 
-- **Rejected so far:** the first ten tracks ("boring") and The King's Quest. The user then asked for Game of Thrones–like excitement, and then "another engaging one, not boring".
+- **Rejected so far:** the first ten tracks ("boring"), The King's Quest, and Crown of Fire. On 8 October the user asked for "march or parade music with melody".
 - **The Iron Crown:** an orchestral 3/4 piece. It waits on recorded samples (VSCO 2 CE, CC0), whose download needs the user's permission. Only a synthesised sketch exists.
-- **On trial: Crown of Fire.** Every level plays it (`Music/level-crown-of-fire.ogg`). It's an epic hybrid trailer style, which suits synthesis.
-  - **Engine:** a 16th-note synth pulse, a 3-against-4 string ostinato and a sub bass.
-  - **Drums and accents:** war drums, braams, booms and a reverse-cymbal swell.
-  - **Melodies:** a heroic 3+3+2 hook, then a choir theme.
-  - **Structure:** 48 bars (91 s), D minor, 126 BPM. Something changes every 4–8 bars: intro, drums in, hook, choir theme (half-time), build (accelerating roll, riser, one beat of silence), drop (hook in octaves, double-time drums), breakdown (bells), final, then back into the intro.
-  - **Loudness per section:** intro −20 to −25 dB, hook −14.6, choir −15.5, gap −35, drop −13.4, breakdown −20, final −13 to −14.
+- **On trial: The Royal Parade March.** Every level plays it (`Music/level-royal-march.ogg`). It's a classic concert march in Sousa's form at 120 BPM, 76 bars (152 s):
+  - **Fanfare intro (B♭):** the band in unison, with a roll.
+  - **First strain:** trumpets and bells in dotted rhythms over tuba oom-pah, horn afterbeats, bass drum and cymbals.
+  - **Second strain:** trombones and horns, through G minor and D7; the trumpets punch the afterbeats.
+  - **Trio (E♭):** a gentle clarinet hymn with horns in thirds, including a borrowed A♭ minor chord.
+  - **Breakstrain (C minor):** low brass calls, the trumpets answer, and the drums drive every beat.
+  - **Grandioso:** the trio tune in full band, trombones an octave down, a piccolo obbligato, and cymbals on every beat. It then loops back to the intro.
+  - **Loudness per section:** intro −14.9 dB, strains about −15.6, trio −18.4, breakstrain and grandioso −13.8.
+  - All melodies are original.
 - Home keeps `castle-theme`. The rejected tracks are kept in git history.
 
 ## What makes the castle theme work

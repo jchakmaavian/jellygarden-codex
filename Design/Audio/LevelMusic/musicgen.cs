@@ -613,6 +613,12 @@ sealed class Song
     {
         var toks = notes.Split(new[] { ' ', '|', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries);
         if (toks.Length % (Spb / grid) != 0) throw new Exception($"melody has {toks.Length} steps: {notes}");
+        if (notes.Contains('|'))   // bar lines given: every bar must be full
+            foreach (var barText in notes.Split('|'))
+            {
+                int n = barText.Split(new[] { ' ', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries).Length;
+                if (n != 0 && n != Spb / grid) throw new Exception($"melody bar has {n} steps, not {Spb / grid}: '{barText.Trim()}'");
+            }
         toks = toks.Take(maxTokens).ToArray();
         for (int k = 0; k < toks.Length; k++)
         {
@@ -925,6 +931,108 @@ static class Tracks
         yield return ("level-kings-quest", "The King's Quest — orchestral-folk adventure in the castle theme's style, D minor, 96 BPM", _ => KingsQuest());
         yield return ("level-iron-crown", "The Iron Crown — epic war-drum orchestral in 3/4, D minor, 156 BPM", IronCrown);
         yield return ("level-crown-of-fire", "Crown of Fire — epic hybrid trailer style, D minor, 126 BPM", _ => CrownOfFire());
+        yield return ("level-royal-march", "The Royal Parade March — concert march, B-flat and E-flat, 120 BPM", _ => RoyalMarch());
+    }
+
+    // A classic concert march (the user, 8 Oct 2026: "march or parade music with melody"), in Sousa's form, 120 BPM:
+    // fanfare intro 0-3 (B-flat), first strain 4-19 (trumpets and bells over tuba oom-pah and horn afterbeats), second strain
+    // 20-35 (trombones, through G minor), trio 36-51 (E-flat, a gentle clarinet hymn), breakstrain 52-59 (C minor, low brass
+    // and trumpets answering each other), grandioso 60-75 (the trio tune in full band with a piccolo obbligato), back into
+    // the intro. All melodies are original.
+    static Song RoyalMarch()
+    {
+        var s = new Song(76, 120, Sc.Major, 1776) { DuckAmt = 0, RevReturn = 2.0, Room = .8, Damp = .45, MasterLowpass = 11000, DlyFb = .15 };
+        const string trioProg = "Eb Eb Bb7 Bb7 Bb7 Bb7 Eb Eb Eb Eb7 Ab Abm Eb/Bb Bb7 Eb Eb";
+        s.Prog(0, 4, "Bb Gm Cm_F7 F7");
+        s.Prog(4, 16, "Bb Bb F7 Bb Eb Bb C7 F7 Bb Bb F7 Bb Eb Ebm Bb/F_F7 Bb");
+        s.Prog(20, 16, "Gm D7 Gm D7 Cm Gm A7 D7 Eb Bb F7 Bb Eb Bb F7 Bb");
+        s.Prog(36, 16, trioProg); s.Prog(52, 8, "Cm G7 Cm G7 Ab G7 Cm Bb7"); s.Prog(60, 16, trioProg);
+
+        var trumpets = new Synth { Name = "trumpets", Voices = 3, Detune = .08, Width = .5, Cut = 900, FEnv = 2.4, FA = .03, FD = .25, FS = .5, A = .015, D = .2, S = .8, R = .1, VibDepth = .06, KeyTrack = .5, Gain = .3, Rev = .25, Ducked = false };
+        var trombones = new Synth { Name = "trombones", Voices = 3, Detune = .08, Width = .4, Cut = 520, FEnv = 2.0, FA = .04, FD = .3, FS = .5, A = .02, D = .2, S = .8, R = .12, VibDepth = .04, KeyTrack = .5, Gain = .32, Rev = .25, Ducked = false };
+        var horns = new Synth { Name = "horns", Voices = 3, Detune = .1, Width = .5, Cut = 520, FEnv = 1.6, FA = .05, FD = .35, FS = .55, A = .04, D = .3, S = .85, R = .18, KeyTrack = .4, Gain = .2, Rev = .35, Ducked = false };
+        var afterbeats = new Synth { Name = "horn afterbeats", Voices = 3, Detune = .1, Width = .6, Cut = 600, FEnv = 1.8, FA = .01, FD = .12, FS = .3, A = .008, D = .12, S = .4, R = .06, KeyTrack = .4, Gain = .22, Rev = .25 };
+        var clarinets = new Synth { Name = "clarinets", Wave = Synth.W.Square, Voices = 2, Detune = .05, Width = .4, Cut = 2200, A = .03, D = .2, S = .9, R = .08, VibDepth = .08, VibDelay = .25, Gain = .2, Rev = .35, Ducked = false };
+        var tuba = Pre.Tuba(.55);
+        var glock = Pre.Glock(.13, "bells");
+        var piccolo = Pre.Whistle(.15, "piccolo"); piccolo.Pan = .25;
+        var bassDrum = new Drum { Name = "bass drum", Kind = Drum.K.Taiko, Tune = .86, Decay = .9, Gain = .6, Rev = .2, Ducked = false };
+        var cymbals = new Drum { Name = "march cymbals", Kind = Drum.K.Crash, Decay = .28, Gain = .17, Rev = .1, Ducked = false };
+        var crash = Pre.Crash(.16);
+        var snare = Pre.Snare(.3, 1.05, "field snare"); snare.Rev = .18;
+        var rim = Pre.Rim(.2);
+
+        const string intro =
+            "5, - - 5, 1 - - - 3 - - 1 5 - - - | 6 - - 5 4 - - - 3 - - 2 1 - - - | 2 - - 2 3 - - 4 5 - - 4 3 - - 2 | 5 - - - 1' - - - 5 - - - . 5, 6, 7,";
+        const string strainA =
+            "1 - - - 3 - - 1 5 - - - 5 - 6 - | 5 - - 4 3 - - 2 1 - - - 5, - - - | 2 - - - 4 - - 2 7, - - - 7, - 1 - | 3 - - - 1 - - - 5, - - - . 5, 6, 7, |" +
+            "1' - - - 6 - - 4 6 - - - 1' - - - | 2' - - 1' 7 - - 6 5 - - - 3 - - - | 2 - - - #4 - - 5 6 - - - 5 - #4 - | 5 - - - - - - - . . . . . 5, 6, 7, |" +
+            "1 - - - 3 - - 1 5 - - - 5 - 6 - | 5 - - 4 3 - - 2 1 - - - 5, - - - | 2 - - - 4 - - 2 7, - - - 7, - 1 - | 3 - - - 1 - - - 5, - - - . 5, 6, 7, |" +
+            "1' - - - 6 - - 4 6 - - - 1' - - - | 2' - - 1' b6 - - 5 4 - - - b6 - - - | 5 - - - 3 - - - 2 - - - 4 - - - | 1 - - - 5, - - - 1 - - - . . . .";
+        const string strainB =
+            "6 - - - 6 - 7 - 1' - - - 6 - - - | #5 - - - 7 - - - 2' - - - #5 - - - | 6 - - - 1' - - - 3' - - - 2' 1' 7 6 | #5 - - - - - - - 3 - - - #5 - - - |" +
+            "4 - - - 4 - 5 - 6 - - - 4 - - - | 3 - - - 6 - - - 1' - - - 3 - - - | #2 - - - #4 - - - 6 - - - 7 - - - | 1' - - - 7 - - - 6 - - - #5 - - - |" +
+            "4 - - - 6 - - - 1' - - - 6 - - - | 5 - - - 3 - - - 1 - - - 3 - - - | 2 - - - 4 - - - 7 - - - 2' - - - | 1' - - - - - - - 5 - - - - - - - |" +
+            "6 - - - 1' - - - 4' - - - 1' - - - | 7 - - - 1' - - - 3' - - - 1' - - - | 2' - - - 1' - - - 7 - - - 2' - - - | 1' - - - - - - - . . . . . 5 6 7";
+        const string trioHead =
+            "5 - - - - - - - 6 - - 5 4 - - 3 | 3 - - - - - - - . . . . 3 - 4 - | 5 - - - - - - - 6 - - 5 4 - - 2 | 2 - - - - - - - . . . . 2 - 3 - |" +
+            "4 - - - - - - - 5 - - 4 3 - - 2 | 5, - - - - - - - . . . . 5, - 7, - | 1 - - - - - - - 3 - - - 5 - - - | 1' - - - - - - - . . . . 7 - 6 - |" +
+            "5 - - - - - - - 6 - - 5 4 - - 3 | 3 - - - - - - - 5 - - - b7 - - - | 6 - - - - - - - 1' - - - 6 - - - | b6 - - - - - - - 1' - - - b6 - - - |" +
+            "5 - - - - - - - 3 - - - 1 - - - | 2 - - - - - - - 4 - - - 7, - - - | 1 - - - - - - - - - - - - - - - |";
+        const string trio = trioHead + ". . . . . . . . . . . . . . . .";
+        const string grand = trioHead + "1 - - - 5, - - - 1 - - - . . . .";
+        const string breakLow =
+            "6, - - 6, 1 - - - 3 - - - . . . . | #5, - - #5, 7, - - - 2 - - - . . . . | 6, - - 6, 1 - - - 3 - - - . . . . | #5, - - #5, 7, - - - 2 - - - . . . . |" +
+            "4, - - 4, 6, - - - 1 - - - . . . . | 3, - - 3, #5, - - - 7, - - - . . . . | 6, - - - 3 - - - 6, - - - 3 - - - | 5, - - - - - - - 5, - 5, - 5, - 5, -";
+        const string breakHigh =
+            ". . . . . . . . 6 - 5 - 4 - 3 - | . . . . . . . . 2' - 1' - 7 - #5 - | . . . . . . . . 1' - 7 - 6 - 3 - | . . . . . . . . 7 - - - #5 - - - |" +
+            ". . . . . . . . 1' - 6 - 4 - 6 - | . . . . . . . . 2' - 7 - #5 - 7 - | 6 - - - 1' - - - 3' - - - 1' - - - | 4 - - - 5 - - - 7 - - - 2' - - -";
+
+        // The band's engine: tuba on the beat (root, fifth), horns on the afterbeats, bass drum and cymbals together.
+        void OomPah(int bar, int bars, double vel = 1)
+        {
+            s.Bass(tuba, bar, bars, "R...5...R...5...", 34, vel);
+            s.Chords(afterbeats, bar, bars, "..x...x...x...x.", 62, 3, vel * .9, .7);
+        }
+        void Street(int bar, int bars, string snarePattern, double vel = 1)
+        {
+            s.Drums(bassDrum, bar, bars, "x.......x.......", vel); s.Drums(cymbals, bar, bars, "x.......x.......", vel);
+            s.Drums(snare, bar, bars, snarePattern, vel);
+        }
+
+        // Fanfare intro: the band in unison, a roll into the first strain.
+        s.Melody(trumpets, 0, intro, 70, grid: 1); s.Melody(trombones, 0, intro, 70, grid: 1, transpose: -12);
+        s.Bass(tuba, 0, 3, "R.......R.......", 34); s.Drums(bassDrum, 0, 3, "x...x...x...x..."); s.Drums(cymbals, 0, 3, "x...x...x...x...");
+        s.Drums(snare, 3, 1, "x...x...rrrrrrrX"); s.Hit(crash, 0, 0, 16, 60, .8);
+        // First strain: trumpets with bells an octave up.
+        OomPah(4, 16); Street(4, 16, "X..xx.x.X..xx.x.");
+        s.Melody(trumpets, 4, strainA, 70, grid: 1); s.Melody(glock, 4, strainA, 82, grid: 1, vel: .6);
+        s.Hit(crash, 4, 0, 16, 60, .9); s.Hit(crash, 12, 0, 16, 60, .7);
+        // Second strain: trombones and horns carry it; the trumpets punch the afterbeats.
+        OomPah(20, 16); Street(20, 16, "X.xxX.x.X.xxX.rx");
+        s.Melody(trombones, 20, strainB, 58, grid: 1); s.Melody(horns, 20, strainB, 58, grid: 1, vel: .7);
+        s.Chords(trumpets, 20, 16, "..x...x...x...x.", 67, 2, .45, .5);
+        s.Hit(crash, 20, 0, 16, 60, .9); s.Hit(crash, 28, 0, 16, 60, .7);
+        // Trio: E-flat, softer; clarinets sing, horns harmonise, the band steps back.
+        s.Bass(tuba, 36, 16, "R.......5.......", 34, .75); s.Chords(afterbeats, 36, 16, "..x...x...x...x.", 60, 3, .5, .7);
+        s.Drums(bassDrum, 36, 16, "x.......x.......", .55); s.Drums(rim, 36, 16, "....x.......x...", .7);
+        s.Melody(clarinets, 36, trio, 63, grid: 1); s.Melody(horns, 36, trio, 63, grid: 1, shift: -2, vel: .55);
+        s.Drums(snare, 51, 1, "........x.x.xxXX", .8);
+        // Breakstrain: C minor, low brass call, trumpets answer, the drums drive every beat.
+        s.Melody(trombones, 52, breakLow, 63, grid: 1); s.Melody(tuba, 52, breakLow, 63, grid: 1, transpose: -12, vel: .8);
+        s.Melody(trumpets, 52, breakHigh, 63, grid: 1);
+        s.Drums(bassDrum, 52, 8, "x...x...x...x..."); s.Drums(cymbals, 52, 7, "x.......x.......");
+        s.Drums(snare, 52, 8, "X.xxX.xxX.xxXxxx", .9); s.Drums(snare, 59, 1, "xxxxxxxxrrrrrrrX");
+        s.Hit(crash, 58, 0, 16, 60, .8);
+        // Grandioso: the trio tune in full band, trombones an octave down, piccolo obbligato above, cymbals on every beat.
+        OomPah(60, 16); s.Drums(bassDrum, 60, 16, "x...x...x...x..."); s.Drums(cymbals, 60, 16, "x...x...x...x...", .9);
+        s.Drums(snare, 60, 16, "X..xx.x.X..xx.x.");
+        s.Melody(trumpets, 60, grand, 75, grid: 1); s.Melody(trombones, 60, grand, 63, grid: 1);
+        s.Melody(clarinets, 60, grand, 75, grid: 1, vel: .55); s.Melody(glock, 60, grand, 87, grid: 1, vel: .5);
+        s.Arp(piccolo, 60, 15, "0.1.2.3.2.1.2.1.", 84, .7);
+        foreach (var b in new[] { 60, 64, 68, 72 }) s.Hit(crash, b, 0, 16, 60, b == 60 ? 1 : .8);
+        s.Drums(snare, 75, 1, "........x.x.rrrX", .9);
+        return s;
     }
 
     // Epic hybrid trailer style (synth pulses, war drums, braams, choir): the user asked for something engaging, not boring,
