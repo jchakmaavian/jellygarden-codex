@@ -437,7 +437,7 @@ namespace RoyalThrone.Presentation
                 star.SetAsLastSibling(); sparkles.SetAsLastSibling(); heading.transform.SetAsLastSibling();
             }
 
-            var ribbons = Container(p, "Royal celebration ribbons");
+            var ribbons = Container(p, "Royal celebration star particles");
             RoyalMenuSkin.Place(ribbons, 0, 0, 640, H);
             ribbons.gameObject.AddComponent<RoyalAppearsLater>();
             var confetti = ribbons.gameObject.AddComponent<RoyalWinConfetti>();
