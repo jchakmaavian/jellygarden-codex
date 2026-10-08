@@ -37,6 +37,20 @@ namespace RoyalThrone.Presentation
             foreach (var ps in systems)
             {
                 ps.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
+                // Presentation tuning on instances only: retain the recovered source prefabs.
+                var main = ps.main;
+                if (ps.name == "star_softlight")
+                    main.startSizeMultiplier *= 1.5f;
+                else if (ps.name == "star_softglow")
+                    main.startSizeMultiplier *= 1.35f;
+                else if (ps.name == "light_beam (1)")
+                    main.startSizeMultiplier *= 1.12f;
+                else if (ps.name == "_stars (1)" || ps.name == "spark(add_spark_hard)")
+                {
+                    main.startSizeMultiplier *= 1.12f;
+                    var emission = ps.emission;
+                    emission.rateOverTimeMultiplier *= 1.2f;
+                }
                 ps.useAutoRandomSeed = false;
                 ps.randomSeed = (uint)(17 + System.Array.IndexOf(systems, ps));
             }
