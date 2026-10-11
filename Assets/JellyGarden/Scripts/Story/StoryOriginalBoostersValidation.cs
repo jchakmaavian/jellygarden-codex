@@ -120,7 +120,8 @@ namespace JellyGarden.Scripts.Story.Editor
             manager.Limit = 100;
             manager.star1 = 1000000; manager.star2 = 2000000; manager.star3 = 3000000;
             yield return new WaitForSeconds(3f);
-            foreach (var goal in manager.targetObject) goal.targetCount = 999;
+            // Far past any score: a score goal counts the score itself, and the combos clear a lot.
+            foreach (var goal in manager.targetObject) goal.targetCount = int.MaxValue / 2;
             yield return Settled();
             Require(StoryOriginalBoosters.OwnsRocket, "The board's rockets fly as the original");
 
