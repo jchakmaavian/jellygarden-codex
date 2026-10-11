@@ -113,6 +113,13 @@ namespace JellyGarden.Scripts.Story
                 bool quiet = StoryOriginalBoosters.ColorBallClearing;
                 Vector3 at = item.square != null ? item.square.transform.position : item.transform.position;
                 int colour = item.color;
+                // A spent combo partner just goes; the Color Ball's own visual has taken its place.
+                if (_silent.Remove(item))
+                {
+                    foreach (var r in item.GetComponentsInChildren<SpriteRenderer>(true))
+                        if (r != null && !IsBonus(r.transform, item.transform)) r.enabled = false;
+                    yield break;
+                }
                 bool matched = _marks.TryGetValue(item, out var mark);
                 _marks.Remove(item);
 
@@ -369,7 +376,11 @@ namespace JellyGarden.Scripts.Story
             Entries++;
         }
 
-        public static void Clear() => _marks.Clear();
+        public static void Clear() { _marks.Clear(); _silent.Clear(); }
+
+        /// <summary>A piece leaving with no effect of its own (a Color Ball combo's spent partner).</summary>
+        public static void Silence(Item item) { if (item != null) _silent.Add(item); }
+        private static readonly HashSet<Item> _silent = new HashSet<Item>();
     }
 
     /// <summary>Per-piece fall state: which fall owns it, its landing, and its refill entry.</summary>

@@ -685,25 +685,43 @@ namespace JellyGarden.Scripts
             {
                 // STORY: where the original Color Ball sequences start from.
                 Vector3 ballAt = item1.square != null ? item1.square.transform.position : item1.transform.position;
+                // STORY: royal-throne's Color Ball, rules and sequence, when it is on
+                // (StoryOriginalColorBall.Fire); the kit's colour bomb is the fallback.
                 if (item2.currentType == ItemsTypes.NONE)
+                {
+                    // STORY: the swapped gem's colour, plain gems only, beams then one clear.
+                    if (!JellyGarden.Scripts.Story.StoryOriginalColorBall.Fire(item1, item2.color, ItemsTypes.NONE, false))
                     DestroyColor(item2.color);
+                }
                 else if (item2.currentType == ItemsTypes.HORIZONTAL_STRIPPED || item2.currentType == ItemsTypes.VERTICAL_STRIPPED)
                 {
+                    // STORY: the most common colour turns into this Rocket and fires.
+                    if (!JellyGarden.Scripts.Story.StoryOriginalColorBall.Fire(item1, -1, item2.currentType, false, item2))
+                    {
                     // STORY: beams to every gem that turns into a Rocket.
                     JellyGarden.Scripts.Story.StoryOriginalBoosters.ColorBallConvert(ballAt, item2.color);
                     LevelManager.THIS.SetTypeByColor(item2.color, ItemsTypes.HORIZONTAL_STRIPPED);
+                    }
                 }
                 else if (item2.currentType == ItemsTypes.PACKAGE)
                 {
+                    // STORY: the most common colour turns into TNTs that go off.
+                    if (!JellyGarden.Scripts.Story.StoryOriginalColorBall.Fire(item1, -1, ItemsTypes.PACKAGE, false, item2))
+                    {
                     // STORY: and to every gem that turns into a TNT.
                     JellyGarden.Scripts.Story.StoryOriginalBoosters.ColorBallConvert(ballAt, item2.color);
                     LevelManager.THIS.SetTypeByColor(item2.color, ItemsTypes.PACKAGE);
+                    }
                 }
                 else if (item2.currentType == ItemsTypes.BOMB)
                 {
+                    // STORY: the two-ball clip, then every cell on the board at once.
+                    if (!JellyGarden.Scripts.Story.StoryOriginalColorBall.Fire(item1, -1, ItemsTypes.BOMB, true, item2))
+                    {
                     // STORY: the original two-ball clip and blast.
                     JellyGarden.Scripts.Story.StoryOriginalBoosters.DualColorBall(ballAt);
                     LevelManager.THIS.DestroyDoubleBomb(square.col);
+                    }
                 }
 
 
@@ -1149,9 +1167,12 @@ namespace JellyGarden.Scripts
                 return false;
             // The colour bomb needs a colour to eat, which a tap cannot supply.
             // It keeps the kit's swap-to-activate.
+            // STORY: royal-throne's Color Ball takes the most common colour on a tap
+            // (StoryOriginalColorBall.Tappable).
             return currentType == ItemsTypes.HORIZONTAL_STRIPPED
                 || currentType == ItemsTypes.VERTICAL_STRIPPED
-                || currentType == ItemsTypes.PACKAGE;
+                || currentType == ItemsTypes.PACKAGE
+                || JellyGarden.Scripts.Story.StoryOriginalColorBall.Tappable(this);
         }
 
         /// <summary>
@@ -1168,6 +1189,9 @@ namespace JellyGarden.Scripts
             if (LevelManager.THIS.limitType == LIMIT.MOVES && LevelManager.THIS.Limit > 0)
                 LevelManager.THIS.Limit--;
 
+            // STORY: a tapped Color Ball fires from its cell before it leaves it.
+            if (currentType == ItemsTypes.BOMB)
+                JellyGarden.Scripts.Story.StoryOriginalColorBall.Fire(this, -1, ItemsTypes.NONE, false);
             DestroyItem(true);
             LevelManager.THIS.FindMatches();
             return true;

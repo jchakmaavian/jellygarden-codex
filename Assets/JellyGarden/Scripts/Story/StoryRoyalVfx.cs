@@ -82,6 +82,7 @@ namespace JellyGarden.Scripts.Story
             if (TNTExplosionVFX.Player != null) TNTExplosionVFX.Player.Paused = paused;
             StoryOriginalTnt.StateChanged(state);
             StoryOriginalBoosters.StateChanged(state);
+            StoryOriginalColorBall.StateChanged(state);
         }
 
         public static void Clear()
@@ -91,6 +92,7 @@ namespace JellyGarden.Scripts.Story
             StoryOriginalTnt.Clear();
             StoryOriginalBoosters.Clear();
             StoryOriginalMotion.Clear();
+            StoryOriginalColorBall.Clear();
         }
 
         internal static Vector3 EffectPosition(Vector3 at, float pitch)

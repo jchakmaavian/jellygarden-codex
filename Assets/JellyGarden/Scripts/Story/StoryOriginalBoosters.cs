@@ -294,6 +294,9 @@ namespace JellyGarden.Scripts.Story
         /// its TNT then reveals with the dedicated clip. Asking clears the mark.
         /// </summary>
         public static bool TakeColorBallReveal(Item item) => item != null && _colorBallMade.Remove(item);
+
+        /// <summary>A Color Ball is about to turn <paramref name="item"/> into a TNT (StoryOriginalColorBall).</summary>
+        public static void MarkColorBallMade(Item item) { if (item != null) _colorBallMade.Add(item); }
         private static readonly HashSet<Item> _colorBallMade = new HashSet<Item>();
 
         internal static void Landed() => MovesInFlight = Mathf.Max(0, MovesInFlight - 1);

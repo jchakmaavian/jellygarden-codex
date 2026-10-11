@@ -133,23 +133,8 @@ namespace JellyGarden.Scripts.Story.Editor
             // 2. Vertical Rocket, paused mid-flight.
             yield return RocketTapped(ItemsTypes.VERTICAL_STRIPPED, "rocket-v");
 
-            // 3. Color Ball swapped with a plain gem: charge, beams, final pulse.
-            Item ball = Centre();
-            yield return Make(ball, ItemsTypes.BOMB, "color-ball");
-            Item gem = PlainNeighbour(ball);
-            Require(gem != null, "Color Ball has a plain neighbour");
-            int balls = StoryOriginalBoosters.ColorBallPlays, rays = StoryOriginalBoosters.Rays;
-            yield return Settled();
-            Time.timeScale = Slow;
-            string before = "ball " + Describe(ball) + ", gem " + Describe(gem);
-            Swap(ball, gem);
-            yield return Until(() => StoryOriginalBoosters.ColorBallPlays == balls + 1, 5f,
-                "Swap fired the original Color Ball (before: " + before + "; after: ball " + Describe(ball) + ", gem " + Describe(gem) + ")");
-            yield return Shots("color-ball-fire", 6, .12f);
-            Require(StoryOriginalBoosters.Rays > rays, "Color Ball fired a beam per target");
-            Time.timeScale = 1f;
-            yield return Settled();
-            yield return Until(() => StoryOriginalBoosters.ActiveEffects == 0, 8f, "Color Ball effects retired");
+            // 3. The Color Ball by royal-throne's rules: swap, tap and its three combos.
+            yield return ColorBallChecks();
 
             // 4-8. Combos: two specials side by side, swapped together.
             yield return Combo(ItemsTypes.HORIZONTAL_STRIPPED, ItemsTypes.VERTICAL_STRIPPED, "rocket-rocket",
@@ -158,14 +143,6 @@ namespace JellyGarden.Scripts.Story.Editor
                 () => StoryOriginalBoosters.RocketTntPlays, 1);
             yield return Combo(ItemsTypes.PACKAGE, ItemsTypes.PACKAGE, "tnt-tnt",
                 () => StoryOriginalBoosters.TntTntPlays, 1);
-            yield return Combo(ItemsTypes.BOMB, ItemsTypes.HORIZONTAL_STRIPPED, "ball-rocket",
-                () => StoryOriginalBoosters.ColorBallConverts, 1);
-            yield return FireConverted("ball-rocket-fire");
-            yield return Combo(ItemsTypes.BOMB, ItemsTypes.PACKAGE, "ball-tnt",
-                () => StoryOriginalBoosters.ColorBallConverts, 1);
-            yield return FireConverted("ball-tnt-fire");
-            yield return Combo(ItemsTypes.BOMB, ItemsTypes.BOMB, "ball-ball",
-                () => StoryOriginalBoosters.DualColorBallPlays, 1);
 
             // 9. Plain gems broke with the original explosion along the way.
             Require(StoryOriginalBoosters.MatchBreaks > 0, "Plain gems broke with the original explosion");
@@ -348,6 +325,131 @@ namespace JellyGarden.Scripts.Story.Editor
             Time.timeScale = 1f;
             yield return Settled();
             yield return Until(() => StoryOriginalBoosters.ActiveEffects == 0, 6f, label + " effects retired");
+        }
+
+        // RoyalPowerupDirector.Orb and its combos, through the board's own swap and tap paths.
+        IEnumerator ColorBallChecks()
+        {
+            Require(StoryOriginalColorBall.Ready, "The Royal Throne Color Ball is on");
+
+            // a. Swapped with a gem: that gem's colour, plain gems only; each held charged until the
+            //    ball finishes, then all clear on that frame. A Rocket of the same colour is no target.
+            Item ball = Centre();
+            yield return Make(ball, ItemsTypes.BOMB, "color-ball");
+            Item gem = PlainNeighbour(ball);
+            Require(gem != null, "Color Ball has a plain neighbour");
+            int colour = gem.color;
+            Item special = FindObjectsByType<Item>().Where(i => StoryOriginalColorBall.Eligible(i) && i.color == colour &&
+                    i != gem && i.square != null && Mathf.Abs(i.square.col - ball.square.col) + Mathf.Abs(i.square.row - ball.square.row) > 2)
+                .FirstOrDefault();
+            if (special != null) yield return Make(special, ItemsTypes.HORIZONTAL_STRIPPED, "same-colour-rocket");
+            yield return Settled();
+            int expected = FindObjectsByType<Item>().Count(i => StoryOriginalColorBall.Eligible(i) && i.color == colour);
+            int plays = StoryOriginalColorBall.Plays, beams = StoryOriginalColorBall.Beams;
+            int held = StoryOriginalColorBall.Held, cleared = StoryOriginalColorBall.Cleared;
+            float finish = StoryOriginalColorBall.LastFinishAt;
+            Time.timeScale = Slow;
+            Swap(ball, gem);
+            yield return Until(() => StoryOriginalColorBall.Plays == plays + 1, 5f, "Swap fired the Royal Throne Color Ball");
+            Require(StoryOriginalColorBall.LastColour == colour, "It takes the swapped gem's colour");
+            Require(StoryOriginalColorBall.LastTargets == expected,
+                "It targets every plain gem of that colour, and nothing else (" + StoryOriginalColorBall.LastTargets + " of " + expected + ")");
+            Require(StoryOriginalColorBall.Busy, "The board is held for the sequence");
+            var targets = FindObjectsByType<Item>().Where(i => StoryOriginalColorBall.Eligible(i) && i.color == colour).ToList();
+            bool sawHeld = false;
+            int shots = 0;
+            while (StoryOriginalColorBall.LastFinishAt == finish && StoryOriginalColorBall.Busy)
+            {
+                if (StoryOriginalColorBall.Held >= held + 2 && !sawHeld)
+                {
+                    sawHeld = true;
+                    Require(targets.All(i => i != null && !i.destroying), "Reached gems stay on the board, charged, until the finish");
+                    Require(FindObjectsByType<StoryOriginalChargedTarget>().Count(c => c.Held) >= 2, "Reached gems glow and tremble");
+                }
+                if (shots < 6) { yield return Shot("color-ball-beams"); shots++; yield return new WaitForSeconds(.08f); }
+                else yield return null;
+            }
+            Require(sawHeld || expected < 2, "The beams held their gems");
+            Require(StoryOriginalColorBall.Beams - beams == StoryOriginalColorBall.Held - held, "One beam reached, and held, each gem");
+            Require(targets.All(i => i == null || i.destroying), "Every held gem cleared on the finish frame");
+            Require(StoryOriginalColorBall.Cleared - cleared == StoryOriginalColorBall.Held - held, "They clear together, once each");
+            if (special != null)
+                Require(special != null && !special.destroying && special.currentType == ItemsTypes.HORIZONTAL_STRIPPED,
+                    "A Rocket of that colour is not a target");
+            yield return Shots("color-ball-finish", 3, .08f);
+            Time.timeScale = 1f;
+            yield return Settled();
+            if (special != null && special.CanTapActivate()) { special.TapActivate(); yield return Settled(); }
+
+            // b. Tapped: the colour most plain gems share.
+            Item tapped = Centre();
+            yield return Make(tapped, ItemsTypes.BOMB, "color-ball-tap");
+            yield return Settled();
+            Require(tapped.CanTapActivate(), "A Color Ball can be tapped");
+            int common = StoryOriginalColorBall.MostCommonColour();
+            plays = StoryOriginalColorBall.Plays;
+            Require(tapped.TapActivate(), "Color Ball tap accepted");
+            Require(StoryOriginalColorBall.Plays == plays + 1, "A tap fires the Color Ball");
+            Require(StoryOriginalColorBall.LastColour == common, "A tap takes the most common colour");
+            yield return Shots("color-ball-tap", 3, .2f);
+            yield return Settled();
+
+            // c, d. With a Rocket or TNT: the most common colour turns into that exact piece as each
+            //       beam lands, and they all fire together once the ball is gone. The partner is spent.
+            foreach (var payload in new[] { ItemsTypes.VERTICAL_STRIPPED, ItemsTypes.PACKAGE })
+            {
+                string label = payload == ItemsTypes.PACKAGE ? "ball-tnt" : "ball-rocket";
+                Item a = Centre();
+                Item b = PlainNeighbour(a);
+                Require(b != null, label + " has a neighbour for the partner");
+                yield return Make(a, ItemsTypes.BOMB, label + "-ball");
+                yield return Make(b, payload, label + "-partner");
+                yield return Settled();
+                common = StoryOriginalColorBall.MostCommonColour();
+                int combos = StoryOriginalColorBall.Combos, converted = StoryOriginalColorBall.Converted, fired = StoryOriginalColorBall.Fired;
+                Time.timeScale = Slow;
+                Swap(a, b);
+                yield return Until(() => StoryOriginalColorBall.Combos == combos + 1, 5f, label + " fired the Royal Throne combo");
+                Require(StoryOriginalColorBall.LastColour == common, label + " takes the most common colour");
+                Require(b == null || b.destroying, label + ": the partner is spent");
+                yield return Until(() => StoryOriginalColorBall.Converted > converted, 10f, label + ": beams convert their gems");
+                yield return Until(() => FindObjectsByType<Item>().Any(i => !i.destroying && i.currentType == payload), 5f,
+                    label + ": converted gems become the partner's exact type");
+                if (payload == ItemsTypes.PACKAGE)
+                    yield return Until(() => FindObjectsByType<StoryOriginalTntPiece>().Any(p => p.ColorBallReveal), 5f,
+                        label + ": converted TNTs reveal with the dedicated clip");
+                Require(StoryOriginalColorBall.Fired == fired, label + ": nothing fires before the ball is gone");
+                yield return Shots(label, 4, .15f);
+                yield return Until(() => !StoryOriginalColorBall.Busy, 20f, label + " finished");
+                // They go off together; one caught in another's blast first goes off from that blast.
+                Require(StoryOriginalColorBall.Fired > fired, label + ": the converted pieces fired after the ball");
+                yield return Until(() => !FindObjectsByType<Item>().Any(i => !i.destroying && i.currentType == payload), 10f,
+                    label + ": every converted piece went off (" + (StoryOriginalColorBall.Converted - converted) + " made)");
+                yield return Shots(label + "-fire", 2, .15f);
+                Time.timeScale = 1f;
+                yield return Settled();
+            }
+
+            // e. Two Color Balls: the two-ball clip, then every cell on the board at once.
+            {
+                Item a = Centre();
+                Item b = PlainNeighbour(a);
+                Require(b != null, "ball-ball has a neighbour for the second ball");
+                yield return Make(a, ItemsTypes.BOMB, "ball-ball-a");
+                yield return Make(b, ItemsTypes.BOMB, "ball-ball-b");
+                yield return Settled();
+                int duals = StoryOriginalColorBall.Duals, cleared2 = StoryOriginalColorBall.Cleared;
+                Time.timeScale = Slow;
+                Swap(a, b);
+                yield return Until(() => StoryOriginalColorBall.Duals == duals + 1, 5f, "ball-ball fired the two-ball clip");
+                int cells = StoryOriginalColorBall.LastTargets;
+                yield return Shots("ball-ball", 4, .25f);
+                yield return Until(() => StoryOriginalColorBall.Cleared - cleared2 == cells, 20f, "ball-ball hit every cell at once");
+                yield return Shots("ball-ball-blast", 3, .1f);
+                Time.timeScale = 1f;
+                yield return Settled();
+            }
+            yield return Until(() => !StoryOriginalColorBall.Busy && StoryOriginalChargedTarget.Active == 0, 10f, "Color Ball sequences finished");
         }
 
         IEnumerator Combo(ItemsTypes a, ItemsTypes b, string label, Func<int> counter, int expected)

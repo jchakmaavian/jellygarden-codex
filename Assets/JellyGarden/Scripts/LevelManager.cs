@@ -2038,6 +2038,8 @@ namespace JellyGarden.Scripts
             if (JellyGarden.Scripts.Story.StoryRocketSweep.HasPendingHits) return false;
             // STORY: a TNT+TNT anticipation holds the board until its clear has run.
             if (JellyGarden.Scripts.Story.StoryOriginalTnt.Anticipating) return false;
+            // STORY: so does a Color Ball, from its charge to its last converted piece firing.
+            if (JellyGarden.Scripts.Story.StoryOriginalColorBall.Busy) return false;
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
             foreach (GameObject item in items)
             {
