@@ -52,7 +52,7 @@ namespace JellyGarden.Scripts.Story.Editor
         IEnumerator Guard(IEnumerator routine)
         {
             // Flatten nested coroutines so any assertion writes a result and restores the clock.
-            var stack = new System.Collections.Generic.Stack<IEnumerator>();
+            var stack = new global::System.Collections.Generic.Stack<IEnumerator>();
             stack.Push(routine);
             while (stack.Count > 0)
             {
@@ -219,7 +219,7 @@ namespace JellyGarden.Scripts.Story.Editor
             Require(manager.Limit == moves - 1, label + " charged one move");
             yield return Until(() => StoryOriginalBoosters.RocketFlights == flights + 1, 3f, label + " flew as the original");
             yield return Shots(label + "-flight", 3, .06f);
-            Require(Math.Abs(StoryRoyalVfx.RocketReachesAt(3) - StoryOriginalBoosters.RocketReachesAt(3)) < 1e-5f,
+            Require(Mathf.Abs(StoryRoyalVfx.RocketReachesAt(3) - StoryOriginalBoosters.RocketReachesAt(3)) < 1e-5f,
                 label + " clears cells on the original timing");
 
             if (type == ItemsTypes.VERTICAL_STRIPPED)
