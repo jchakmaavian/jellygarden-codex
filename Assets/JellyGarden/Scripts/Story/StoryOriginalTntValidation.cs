@@ -110,7 +110,7 @@ namespace JellyGarden.Scripts.Story.Editor
             manager.Limit = 100;
             manager.star1 = 1000000; manager.star2 = 2000000; manager.star3 = 3000000;
             yield return new WaitForSeconds(3f);
-            foreach (var goal in manager.targetObject) goal.targetCount = 999;
+            foreach (var goal in manager.targetObject) { goal.targetCount = 1000000; goal.countCollected = 0; }
             yield return Settled();
 
             // 1. A TNT made by a match: the matched gem carries NextType, DestroyCor
@@ -138,6 +138,9 @@ namespace JellyGarden.Scripts.Story.Editor
             Time.timeScale = .25f;
             var ring = LevelManager.THIS.GetItemsAround(made.square)
                 .Where(i => i != null && i != made && i.currentType == ItemsTypes.NONE && !i.destroying).ToList();
+            var singleTargets = Area(made.square, StoryOriginalTnt.SingleRadius);
+            var singleOutside = Area(made.square, StoryOriginalTnt.SingleRadius + 1).Except(singleTargets).Where(i => i.currentType == ItemsTypes.NONE).ToArray();
+            Require(singleTargets.Any(i => Mathf.Max(Mathf.Abs(i.square.col - made.square.col), Mathf.Abs(i.square.row - made.square.row)) == 2), "Single TNT includes the second ring (5x5)");
             int ignitions = StoryOriginalTnt.Ignitions;
             Require(made.TapActivate(), "TNT tap accepted");
             float tapped = Time.time;
@@ -160,6 +163,8 @@ namespace JellyGarden.Scripts.Story.Editor
                 float reached = Time.time - blasted;
                 Require(reached >= .05f, "The wave reached the next ring after 0.055s (" + reached.ToString("0.000") + "s)");
             }
+            yield return Until(() => singleTargets.All(i => i == null || i.destroying), 3f, "Single TNT hits every eligible cell in its 5x5 footprint");
+            Require(singleOutside.All(i => i != null && !i.destroying), "Single TNT leaves the third ring intact before refill");
             for (int i = 0; i < 4; i++) { yield return new WaitForSeconds(.06f); yield return Shot("blast"); }
             var blast = FindObjectsByType<ParticleSystem>().First(p => p.transform.root.name == "~OriginalTnt");
             manager.gameStatus = GameState.Pause;
@@ -205,6 +210,8 @@ namespace JellyGarden.Scripts.Story.Editor
             yield return Settled();
             int anticipations = StoryOriginalTnt.ComboAnticipations, combos = StoryOriginalBoosters.TntTntPlays;
             ignitions = StoryOriginalTnt.Ignitions;
+            var dualTargets = Area(first.square, StoryOriginalTnt.DualRadius);
+            Require(dualTargets.Any(i => Mathf.Max(Mathf.Abs(i.square.col - first.square.col), Mathf.Abs(i.square.row - first.square.row)) >= 3), "Dual TNT includes cells beyond the former 5x5 area");
             Swap(first, second);
             yield return Until(() => StoryOriginalTnt.ComboAnticipations == anticipations + 1, 3f, "TNT+TNT plays the original anticipation");
             float began = Time.time;
@@ -223,15 +230,71 @@ namespace JellyGarden.Scripts.Story.Editor
             float clip = StoryOriginalTnt.LastComboResolved - StoryOriginalTnt.LastComboStarted;
             Require(Mathf.Abs(clip - StoryOriginalTnt.LastComboLength) < .1f,
                 "The clear ran when the clip ended (" + clip.ToString("0.000") + "s of " + StoryOriginalTnt.LastComboLength.ToString("0.000") + "s)");
-            Require(!StoryOriginalTnt.Anticipating, "The board is released after the clear starts");
+            Require(StoryOriginalTnt.Anticipating, "The board remains held until the outward blast wave completes");
             Require(StoryOriginalTnt.Ignitions == ignitions,
                 "The combo's own TNTs light no fuse");
+            yield return Until(() => dualTargets.All(i => i == null || i.destroying), 3f, "Dual TNT hits every eligible cell in its clipped 9x9 footprint");
             for (int i = 0; i < 3; i++) { yield return new WaitForSeconds(.08f); yield return Shot("tnt-tnt-blast"); }
             yield return Settled();
             yield return Until(() => StoryOriginalTnt.ActiveBlasts == 0, 6f, "TNT+TNT blast retired");
 
+            yield return ValidateRules();
             StoryRoyalVfx.StateChanged(GameState.PrepareGame);
             Require(StoryOriginalTnt.ActiveBlasts == 0, "Level reset leaves no blast");
+        }
+
+        IEnumerator ValidateRules()
+        {
+            var manager = LevelManager.THIS;
+            var first = Centre();
+            var second = FindObjectsByType<Item>().FirstOrDefault(i => i != first && i.square != null &&
+                i.currentType == ItemsTypes.NONE && !i.destroying && !i.falling &&
+                Mathf.Max(Mathf.Abs(i.square.col - first.square.col), Mathf.Abs(i.square.row - first.square.row)) == 2);
+            Require(second != null, "A second TNT is available in ring two for a chain");
+            foreach (var item in new[] {first, second}) { item.NextType = ItemsTypes.PACKAGE; item.ChangeType(); }
+            yield return Until(() => Piece(first) != null && Piece(second) != null && !Piece(first).Revealing && !Piece(second).Revealing,
+                6f, "Chained TNTs finished creation");
+            yield return Settled();
+            int ignitions = StoryOriginalTnt.Ignitions, moves = manager.Limit;
+            Require(first.TapActivate(), "Chain starts with a single tap");
+            yield return Until(() => StoryOriginalTnt.Ignitions >= ignitions + 2, 4f, "The outer ring lights the caught TNT's own fuse");
+            Require(StoryOriginalTnt.Anticipating, "Refill remains held during a caught TNT fuse");
+            Require(manager.Limit == moves - 1, "Chained TNT costs no extra move");
+            yield return Until(() => second == null, 4f, "Caught TNT detonates rather than disappearing");
+            yield return Settled();
+            yield return Until(() => StoryOriginalTnt.ActiveBlasts == 0, 6f, "Chain blast particles retired");
+
+            // Fire from the board corner: negative coordinates must clip, never wrap or double hit.
+            var corner = FindObjectsByType<Item>().Where(i => i.square != null && i.currentType == ItemsTypes.NONE && !i.destroying && !i.falling)
+                .OrderBy(i => i.square.col + i.square.row).First();
+            var targets = Area(corner.square, StoryOriginalTnt.SingleRadius);
+            var outside = Area(corner.square, StoryOriginalTnt.SingleRadius + 1).Except(targets).ToArray();
+            var guard = targets.First(i => i != corner);
+            var guardType = guard.square.type;
+            guard.square.type = SquareTypes.UNDESTROYABLE;
+            var ingredient = targets.First(i => i != corner && i != guard);
+            ingredient.currentType = ItemsTypes.INGREDIENT;
+            targets = targets.Where(i => i != guard && i != ingredient).ToArray();
+            corner.NextType = ItemsTypes.PACKAGE; corner.ChangeType();
+            yield return Until(() => Piece(corner) != null && !Piece(corner).Revealing, 6f, "Corner TNT finished creation");
+            Require(corner.TapActivate(), "Corner TNT tap accepted");
+            yield return Until(() => targets.All(i => i == null || i.destroying), 4f, "Corner blast clears only eligible clipped 5x5 cells");
+            Require(guard != null && !guard.destroying, "Unbreakable square survives the TNT wave");
+            Require(ingredient != null && !ingredient.destroying, "Ingredient survives the TNT wave");
+            Require(outside.All(i => i != null && !i.destroying), "Corner blast does not wrap into cells outside its radius");
+            guard.square.type = guardType;
+            ingredient.currentType = ItemsTypes.NONE;
+            yield return Settled();
+            yield return Until(() => StoryOriginalTnt.ActiveBlasts == 0 && !StoryOriginalTnt.Anticipating, 6f, "Corner blast retires and releases refill");
+        }
+
+        static Item[] Area(Square origin, int radius)
+        {
+            var manager = LevelManager.THIS;
+            return FindObjectsByType<Item>().Where(i => i.square != null && i.square.item == i &&
+                !i.destroying && !i.square.IsNone() && i.square.type != SquareTypes.UNDESTROYABLE &&
+                i.currentType != ItemsTypes.INGREDIENT &&
+                Mathf.Max(Mathf.Abs(i.square.col - origin.col), Mathf.Abs(i.square.row - origin.row)) <= radius).ToArray();
         }
 
         static StoryOriginalTntPiece Piece(Item item) => item != null ? item.GetComponent<StoryOriginalTntPiece>() : null;

@@ -621,6 +621,20 @@ namespace JellyGarden.Scripts
                 // STORY: the original TNT+TNT blast, over this whole clear.
                 JellyGarden.Scripts.Story.StoryOriginalBoosters.TntTnt(
                     item2.square != null ? item2.square.transform.position : item2.transform.position);
+                // STORY: royal-throne's TNT+TNT is one 9x9 wave from the centre (StoryOriginalTnt.ClearArea).
+                // The two TNTs are spent by it, as on the swap: no fuses or single blasts of their own.
+                if (JellyGarden.Scripts.Story.StoryOriginalTnt.OwnsBlast)
+                {
+                    JellyGarden.Scripts.Story.StoryOriginalTnt.ClearArea(item2.square,
+                        JellyGarden.Scripts.Story.StoryOriginalTnt.DualRadius, item1.square, item2.square);
+                    foreach (Item spent in new[] { item1, item2 })
+                    {
+                        JellyGarden.Scripts.Story.StoryOriginalMotion.Silence(spent);
+                        spent.currentType = ItemsTypes.NONE;
+                        spent.DestroyItem(true);
+                    }
+                    return;
+                }
                 List<Item> bigList = new List<Item>();
                 List<Item> itemsList = LevelManager.THIS.GetItemsAround(item2.square);
                 foreach (Item item in itemsList)
@@ -1506,6 +1520,12 @@ namespace JellyGarden.Scripts
 
             List<Item> itemsList = LevelManager.THIS.GetItemsAround(square);
             // STORY: these clears show ring by ring outward from this TNT (StoryOriginalTnt.WaveDelay).
+            // STORY: royal-throne's single blast is a 5x5 wave from this TNT, ring by ring,
+            // clipped to the board (StoryOriginalTnt.ClearArea); the kit's 3x3 is the fallback.
+            if (JellyGarden.Scripts.Story.StoryOriginalTnt.OwnsBlast)
+                JellyGarden.Scripts.Story.StoryOriginalTnt.ClearArea(square, JellyGarden.Scripts.Story.StoryOriginalTnt.SingleRadius);
+            else
+            {
             JellyGarden.Scripts.Story.StoryOriginalTnt.BeginWave(square);
             foreach (Item item in itemsList)
             {
@@ -1517,6 +1537,7 @@ namespace JellyGarden.Scripts
                     }
             }
             JellyGarden.Scripts.Story.StoryOriginalTnt.EndWave();
+            }
             if (!originalTnt)
                 SoundBase.Instance.PlaySound(SoundBase.Instance.explosion);
             currentType = ItemsTypes.NONE;

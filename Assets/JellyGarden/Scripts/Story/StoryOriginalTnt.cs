@@ -17,12 +17,9 @@
 //                fuse riding the socket, the board held; then the big blast,
 //                without the single blasts and the explosion sound
 //
-// WHAT IT DOES NOT CHANGE
-//
-// Item still owns which cells clear, their area, scoring and the cascade. Only
-// the moments are moved to the original's: the clear waits for the ignition,
-// and a TNT+TNT clear waits for its anticipation. (royal-throne's blast areas
-// were larger, 5x5 and 9x9; King Leo keeps its 3x3 and 5x5.)
+// Royal Throne's damage rules are also used: a 5x5 single blast and a 9x9
+// dual blast, clipped to the board. Every square is hit once per wave; chained
+// boosters activate when their ring is reached. The board waits for the wave.
 //
 // THE SWITCH
 //
@@ -90,7 +87,7 @@ namespace JellyGarden.Scripts.Story
         public static int ActiveBlasts => _host == null ? 0 : _host.Active;
 
         /// <summary>A TNT+TNT anticipation is playing; LevelManager holds the cascade for it.</summary>
-        public static bool Anticipating => _anticipating > 0;
+        public static bool Anticipating => _anticipating > 0 || _waves > 0 || _fusing > 0;
 
         /// <summary>This TNT is one of a TNT+TNT pair whose anticipation is playing.</summary>
         public static bool InCombo(Item item) => item != null && _combo.Contains(item);
@@ -108,7 +105,8 @@ namespace JellyGarden.Scripts.Story
 
         private static StoryOriginalTntHost _host;
         private static Square _waveOrigin;
-        private static int _anticipating;
+        private static int _anticipating, _waves, _fusing;
+        public const int SingleRadius = 2, DualRadius = 4;
         private static readonly HashSet<Item> _combo = new HashSet<Item>();
         private static Item _pairA, _pairB;
 
@@ -120,7 +118,7 @@ namespace JellyGarden.Scripts.Story
             _host = null;
             _heldFrame = -1;
             _waveOrigin = null;
-            _anticipating = 0;
+            _anticipating = _waves = _fusing = 0;
             _combo.Clear();
             ResolvingCombo = false;
             Ignitions = ComboAnticipations = 0;
@@ -180,20 +178,22 @@ namespace JellyGarden.Scripts.Story
             var piece = item.GetComponent<StoryOriginalTntPiece>();
             if (piece != null) piece.Igniting = true;
             GameObject fuse = null;
+            _fusing++;
             try
             {
-                if (wave > 0f) yield return new WaitForSeconds(wave);
+                if (wave > 0f) yield return Wait(wave);
                 Ignitions++;
                 float pitch = StoryBoardScale.Pitch;
                 Vector3 at = item.square != null ? item.square.transform.position : item.transform.position;
                 var host = Host();
                 fuse = ReferenceTnt.PlayVfx(ReferenceTnt.FuseVfx, host.transform, StoryRoyalVfx.EffectPosition(at, pitch), pitch, 0, ReferenceTnt.VfxOrder);
                 host.TrackFuse(fuse);
-                yield return new WaitForSeconds(ReferenceTnt.IgnitionDuration);
+                yield return Wait(ReferenceTnt.IgnitionDuration);
             }
             finally
             {
                 ReferenceTnt.StopEmission(fuse);
+                _fusing = Mathf.Max(0, _fusing - 1);
                 if (piece != null) piece.Igniting = false;
             }
         }
@@ -211,6 +211,62 @@ namespace JellyGarden.Scripts.Story
             if (_waveOrigin == null || item == null || item.square == null) return 0f;
             int ring = Mathf.Max(Mathf.Abs(item.square.col - _waveOrigin.col), Mathf.Abs(item.square.row - _waveOrigin.row));
             return WaveStart + ring * WavePerRing;
+        }
+
+        /// <summary>RoyalPowerupDirector.Explosion: one outward square wave, with no duplicate hits.</summary>
+        public static void ClearArea(Square origin, int radius, params Square[] consumed)
+        {
+            if (origin == null || !OwnsBlast) return;
+            _waves++;
+            Host().StartCoroutine(ClearWave(origin, radius, new HashSet<Square>(consumed)));
+        }
+
+        static IEnumerator ClearWave(Square origin, int radius, HashSet<Square> consumed)
+        {
+            try
+            {
+                yield return Wait(WaveStart);
+                var manager = LevelManager.THIS;
+                for (int ring = 0; ring <= radius; ring++)
+                {
+                    for (int y = -ring; y <= ring; y++)
+                        for (int x = -ring; x <= ring; x++)
+                        {
+                            if (Mathf.Max(Mathf.Abs(x), Mathf.Abs(y)) != ring) continue;
+                            int col = origin.col + x, row = origin.row + y;
+                            if (col < 0 || row < 0 || col >= manager.maxCols || row >= manager.maxRows) continue;
+                            var square = manager.GetSquare(col, row);
+                            if (square == null || square.IsNone() || square.type == SquareTypes.UNDESTROYABLE || consumed.Contains(square)) continue;
+                            var item = square.item;
+                            // The initiating TNT already hit its own blocker in DestroyCor.
+                            if (ring == 0 && item == null) continue;
+                            if (item != null && item.currentType != ItemsTypes.INGREDIENT)
+                            {
+                                item.NextType = ItemsTypes.NONE;
+                                // Royal Throne queues a caught Color Ball with its own colour, which a Color
+                                // Ball does not have (555), so it takes the most common (RoyalPowerupDirector.Orb).
+                                if (item.currentType == ItemsTypes.BOMB &&
+                                    !StoryOriginalColorBall.Fire(item, item.color, ItemsTypes.NONE, false))
+                                    item.DestroyColor(item.color);
+                                item.DestroyItem(true, "destroy_package");
+                            }
+                            else if (square.block.Count > 0) square.DestroyBlock();
+                        }
+                    yield return Wait(WavePerRing);
+                }
+            }
+            finally { _waves = Mathf.Max(0, _waves - 1); }
+        }
+
+        static IEnumerator Wait(float seconds)
+        {
+            float elapsed = 0f;
+            while (elapsed < seconds)
+            {
+                yield return null;
+                if (LevelManager.THIS == null || LevelManager.THIS.gameStatus != GameState.Pause)
+                    elapsed += Time.deltaTime;
+            }
         }
 
         // ── TNT + TNT ──────────────────────────────────────────────────────
@@ -257,7 +313,8 @@ namespace JellyGarden.Scripts.Story
                     // ReferenceVfxPool.Handle.Follow: sampled after the Animator moved the socket.
                     if (fuse != null && socket != null) fuse.transform.SetPositionAndRotation(socket.position, socket.rotation);
                     yield return null;
-                    elapsed += Time.deltaTime;
+                    if (LevelManager.THIS == null || LevelManager.THIS.gameStatus != GameState.Pause)
+                        elapsed += Time.deltaTime;
                 }
             }
             finally
@@ -296,7 +353,7 @@ namespace JellyGarden.Scripts.Story
         public static void Clear()
         {
             if (_host != null) _host.Clear();
-            _anticipating = 0;
+            _anticipating = _waves = _fusing = 0;
             _combo.Clear();
             _waveOrigin = null;
             ResolvingCombo = false;
