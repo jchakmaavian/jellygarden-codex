@@ -198,8 +198,10 @@ namespace RoyalThrone.Editor
                 Check(InitScript.Gems == coins + areas[0].rewardCoins && RoyalSave.GetInt("Stripes") == rockets + 1, "Opening the chest pays " + areas[0].rewardCoins + " coins and a rocket");
                 Check(!RoyalAreas.CollectChest(out _) && InitScript.Gems == coins + areas[0].rewardCoins, "The chest cannot pay twice");
                 view.StageButton.onClick.Invoke(); view.StageButton.onClick.Invoke();
-                yield return Seconds(1.2f);
+                yield return Seconds(1.5f);
+                Check(view.StageStep == 2, "Early taps leave the opening celebration visible");
                 yield return Shot("chest-rewards-open");
+                view.StageButton.onClick.Invoke();
                 yield return Until(() => view.StageStep == 3 || view.StageStep >= 4, 3);
                 Check(InitScript.Gems == coins + areas[0].rewardCoins, "Repeated taps on the chest pay nothing more");
                 yield return Until(() => view.StageStep == 4, 4);

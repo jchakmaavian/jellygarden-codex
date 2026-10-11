@@ -1,0 +1,1027 @@
+fileFormatVersion: 2
+guid: d2e20d635b84bf3478bd743cbb65deed
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7785187418502364339
+    second: area-chest-opening_0
+  - first:
+      213: 1750452816072910493
+    second: area-chest-opening_1
+  - first:
+      213: 2128364783598431687
+    second: area-chest-opening_2
+  - first:
+      213: 5258939161055086129
+    second: area-chest-opening_3
+  - first:
+      213: 8497439755309536281
+    second: area-chest-opening_4
+  - first:
+      213: 3528330564478023543
+    second: area-chest-opening_5
+  - first:
+      213: -2274263083739185543
+    second: area-chest-opening_6
+  - first:
+      213: 5971805132464525031
+    second: area-chest-opening_7
+  - first:
+      213: -2708726055988163244
+    second: area-chest-opening_8
+  - first:
+      213: 6334417466798973979
+    second: area-chest-opening_9
+  - first:
+      213: -4272007301069915769
+    second: area-chest-opening_10
+  - first:
+      213: 1106599773427202312
+    second: area-chest-opening_11
+  - first:
+      213: 2429219387521921190
+    second: area-chest-opening_12
+  - first:
+      213: -1081188586591909835
+    second: area-chest-opening_13
+  - first:
+      213: -2218974710441269885
+    second: area-chest-opening_14
+  - first:
+      213: -8131830608850729322
+    second: area-chest-opening_15
+  - first:
+      213: 7510924400681804436
+    second: area-chest-opening_16
+  - first:
+      213: -4837174710749907638
+    second: area-chest-opening_17
+  - first:
+      213: 4124008780876934689
+    second: area-chest-opening_18
+  - first:
+      213: 734027513769491900
+    second: area-chest-opening_19
+  - first:
+      213: -7694498784634680262
+    second: area-chest-opening_20
+  - first:
+      213: 1005942596170305810
+    second: area-chest-opening_21
+  - first:
+      213: -6020569299636679712
+    second: area-chest-opening_22
+  - first:
+      213: 8888638420726154553
+    second: area-chest-opening_23
+  - first:
+      213: -2840380492156756562
+    second: area-chest-opening_24
+  - first:
+      213: 4906677090661536804
+    second: area-chest-opening_25
+  - first:
+      213: 4661550425963858922
+    second: area-chest-opening_26
+  - first:
+      213: 275282721813963283
+    second: area-chest-opening_27
+  - first:
+      213: 6359698627786292192
+    second: area-chest-opening_28
+  - first:
+      213: 2860865411526441563
+    second: area-chest-opening_29
+  - first:
+      213: 4643903184025427930
+    second: area-chest-opening_30
+  - first:
+      213: 2461807914338472348
+    second: area-chest-opening_31
+  - first:
+      213: 903182371636329847
+    second: area-chest-opening_32
+  - first:
+      213: -2707062015318683288
+    second: area-chest-opening_33
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 0
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: area-chest-opening_0
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 1100
+        width: 166
+        height: 126
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4383526a4575f390800000000000000
+      internalID: -7785187418502364339
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_1
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 614
+        width: 652
+        height: 610
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d96ab1adf8bda4810800000000000000
+      internalID: 1750452816072910493
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_2
+      rect:
+        serializedVersion: 2
+        x: 985
+        y: 1189
+        width: 71
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cde5de7e78798d10800000000000000
+      internalID: 2128364783598431687
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_3
+      rect:
+        serializedVersion: 2
+        x: 1060
+        y: 1222
+        width: 40
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 136441ecd418bf840800000000000000
+      internalID: 5258939161055086129
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_4
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 1147
+        width: 61
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 914d183af68fce570800000000000000
+      internalID: 8497439755309536281
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_5
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 1126
+        width: 67
+        height: 94
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 777bdd954f527f030800000000000000
+      internalID: 3528330564478023543
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_6
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 1183
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97ef0ff56c13070e0800000000000000
+      internalID: -2274263083739185543
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_7
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 1159
+        width: 40
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ee0764c02d10e250800000000000000
+      internalID: 5971805132464525031
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_8
+      rect:
+        serializedVersion: 2
+        x: 1053
+        y: 1197
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45d0bf6e00ca86ad0800000000000000
+      internalID: -2708726055988163244
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_9
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 1195
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b142597ff1f58e750800000000000000
+      internalID: 6334417466798973979
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_10
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 1142
+        width: 80
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7893ad56ef7c6b4c0800000000000000
+      internalID: -4272007301069915769
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_11
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 1116
+        width: 76
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 809f7a381ae6b5f00800000000000000
+      internalID: 1106599773427202312
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_12
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 1100
+        width: 42
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a07cb2992256b120800000000000000
+      internalID: 2429219387521921190
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_13
+      rect:
+        serializedVersion: 2
+        x: 663
+        y: 1169
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5388bf875b8def0f0800000000000000
+      internalID: -1081188586591909835
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_14
+      rect:
+        serializedVersion: 2
+        x: 1163
+        y: 1160
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 385a29ae14e9431e0800000000000000
+      internalID: -2218974710441269885
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_15
+      rect:
+        serializedVersion: 2
+        x: 635
+        y: 1160
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 696cdc1452fe52f80800000000000000
+      internalID: -8131830608850729322
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_16
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 1136
+        width: 27
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 492e375a2f92c3860800000000000000
+      internalID: 7510924400681804436
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_17
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 1146
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a45bf31aa37eedcb0800000000000000
+      internalID: -4837174710749907638
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_18
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 1100
+        width: 44
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12ee2c2e22c6b3930800000000000000
+      internalID: 4124008780876934689
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_19
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 1076
+        width: 31
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbdf79d722acf2a00800000000000000
+      internalID: 734027513769491900
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_20
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 1126
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3ccc216f16a73590800000000000000
+      internalID: -7694498784634680262
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_21
+      rect:
+        serializedVersion: 2
+        x: 649
+        y: 1127
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2115a252673d5fd00800000000000000
+      internalID: 1005942596170305810
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_22
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 610
+        width: 586
+        height: 469
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0eb888dce14a27ca0800000000000000
+      internalID: -6020569299636679712
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_23
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 1076
+        width: 22
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9358544bc89ca5b70800000000000000
+      internalID: 8888638420726154553
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_24
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 0
+        width: 573
+        height: 612
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ead1c0acdf0f498d0800000000000000
+      internalID: -2840380492156756562
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_25
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 590
+        width: 24
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4249d6831d4081440800000000000000
+      internalID: 4906677090661536804
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_26
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 593
+        width: 21
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aeb852a1a6721b040800000000000000
+      internalID: 4661550425963858922
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_27
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 610
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 312268e4d2002d300800000000000000
+      internalID: 275282721813963283
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_28
+      rect:
+        serializedVersion: 2
+        x: 578
+        y: 536
+        width: 74
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ebbdb3f430324850800000000000000
+      internalID: 6359698627786292192
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_29
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 0
+        width: 594
+        height: 615
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5a3c3c2fe5d3b720800000000000000
+      internalID: 2860865411526441563
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_30
+      rect:
+        serializedVersion: 2
+        x: 159
+        y: 47
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adf14276755727040800000000000000
+      internalID: 4643903184025427930
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_31
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 47
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c91d36f31491a2220800000000000000
+      internalID: 2461807914338472348
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_32
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 29
+        width: 31
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77d37cce49fb88c00800000000000000
+      internalID: 903182371636329847
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: area-chest-opening_33
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 27
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData:
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8611aff80759e6ad0800000000000000
+      internalID: -2707062015318683288
+      vertices: []
+      indices:
+      edges: []
+      weights: []
+    outline: []
+    customData:
+    physicsShape: []
+    bones: []
+    spriteID:
+    internalID: 0
+    vertices: []
+    indices:
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      area-chest-opening_0: -7785187418502364339
+      area-chest-opening_1: 1750452816072910493
+      area-chest-opening_10: -4272007301069915769
+      area-chest-opening_11: 1106599773427202312
+      area-chest-opening_12: 2429219387521921190
+      area-chest-opening_13: -1081188586591909835
+      area-chest-opening_14: -2218974710441269885
+      area-chest-opening_15: -8131830608850729322
+      area-chest-opening_16: 7510924400681804436
+      area-chest-opening_17: -4837174710749907638
+      area-chest-opening_18: 4124008780876934689
+      area-chest-opening_19: 734027513769491900
+      area-chest-opening_2: 2128364783598431687
+      area-chest-opening_20: -7694498784634680262
+      area-chest-opening_21: 1005942596170305810
+      area-chest-opening_22: -6020569299636679712
+      area-chest-opening_23: 8888638420726154553
+      area-chest-opening_24: -2840380492156756562
+      area-chest-opening_25: 4906677090661536804
+      area-chest-opening_26: 4661550425963858922
+      area-chest-opening_27: 275282721813963283
+      area-chest-opening_28: 6359698627786292192
+      area-chest-opening_29: 2860865411526441563
+      area-chest-opening_3: 5258939161055086129
+      area-chest-opening_30: 4643903184025427930
+      area-chest-opening_31: 2461807914338472348
+      area-chest-opening_32: 903182371636329847
+      area-chest-opening_33: -2707062015318683288
+      area-chest-opening_4: 8497439755309536281
+      area-chest-opening_5: 3528330564478023543
+      area-chest-opening_6: -2274263083739185543
+      area-chest-opening_7: 5971805132464525031
+      area-chest-opening_8: -2708726055988163244
+      area-chest-opening_9: 6334417466798973979
+  mipmapLimitGroupName:
+  pSDRemoveMatte: 0
+  userData:
+  assetBundleName:
+  assetBundleVariant:

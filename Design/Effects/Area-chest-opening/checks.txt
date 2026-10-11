@@ -1,0 +1,40 @@
+RUNNING
+PASS Home visible
+PASS Closed chest waits for a tap at timeScale zero
+PASS Lid opens after the tap
+PASS Opening taps cannot skip the reveal
+PASS Correct coins and rocket paid once
+PASS Second collection refused
+PASS Continue accepted after reveal
+PASS Closed chest waits for a tap at timeScale zero
+PASS Lid opens after the tap
+PASS Opening taps cannot skip the reveal
+PASS Correct coins and rocket paid once
+PASS Second collection refused
+PASS Continue accepted after reveal
+PASS Closed chest waits for a tap at timeScale zero
+PASS Lid opens after the tap
+PASS Opening taps cannot skip the reveal
+PASS Correct coins and rocket paid once
+PASS Second collection refused
+PASS Continue accepted after reveal
+PASS Closed chest waits for a tap at timeScale zero
+PASS Lid opens after the tap
+PASS Opening taps cannot skip the reveal
+PASS Correct coins and rocket paid once
+PASS Second collection refused
+PASS Continue accepted after reveal
+PASS Closed chest waits for a tap at timeScale zero
+PASS Lid opens after the tap
+PASS Opening taps cannot skip the reveal
+PASS Correct coins and rocket paid once
+PASS Second collection refused
+PASS Continue accepted after reveal
+PASS Closed chest waits for a tap at timeScale zero
+PASS Lid opens after the tap
+PASS Opening taps cannot skip the reveal
+PASS Correct coins and rocket paid once
+PASS Second collection refused
+PASS Continue accepted after reveal
+PASS Real player balance and save profile restored
+FINISHED 38 checks

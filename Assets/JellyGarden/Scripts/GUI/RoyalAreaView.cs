@@ -274,6 +274,7 @@ namespace RoyalThrone.Presentation
             newNote = K.Words("Note", newNoteStrip, "", 32, K.Cream, TextAnchor.MiddleCenter); K.Inset(newNote.rectTransform, 18, 10, 18, 10); K.Lettering(newNote, CK.Ink.Light);
         }
 
+        RoyalAreaChestAnimation chestOpening;
         RectTransform stage; Image stageChest; RectTransform stageChestRect; Text stageHint; Button stageTap; RectTransform stageItems; Text stageCoins; Image stageCoin, stageBoost; int stageStep;
         void BuildStage()
         {
@@ -283,6 +284,7 @@ namespace RoyalThrone.Presentation
             stageTap.transition = Selectable.Transition.None; stageTap.onClick.AddListener(() => stageTapped = true);
             var mid = K.Node("Middle", stage); mid.anchorMin = mid.anchorMax = new Vector2(.5f, .5f); mid.sizeDelta = new Vector2(720, 1612); mids.Add(mid);
             stageChest =K.Picture("Chest", mid, K.Chest, 369, 956, 290, 230); stageChestRect = stageChest.rectTransform;
+            chestOpening = stage.gameObject.AddComponent<RoyalAreaChestAnimation>(); chestOpening.Prepare(stageChest);
             stageItems = K.Node("Rewards", mid);
             var coinArt = RoyalPieceSkin.CampaignArt("coin");
             stageCoin = K.Picture("Coin", stageItems, coinArt ? coinArt : K.Star, 290, 690, 120, 120);
@@ -821,7 +823,7 @@ namespace RoyalThrone.Presentation
             if (area == null || !RoyalAreas.Complete) { home.ClosePanel(); ceremony = null; yield break; }
             stage.gameObject.SetActive(true); stage.SetAsLastSibling(); stageItems.gameObject.SetActive(false);
             stageHint.text = "Tap to Open"; stageHint.gameObject.SetActive(false); stageTapped = false; stageStep = 1;
-            stageChestRect.localScale = Vector3.one; stageChest.enabled = true;
+            stageChestRect.localScale = Vector3.one; stageChest.enabled = true; chestOpening.ResetPose();
             // The chest comes out of the list (or the Area card) to the middle and waits there, hopping.
             var mid = (RectTransform)stageChestRect.parent;
             yield return null;   // the stage's layout (and scale) is applied before positions are read
@@ -852,22 +854,32 @@ namespace RoyalThrone.Presentation
             int coinsBefore = InitScript.Gems;
             if (!RoyalAreas.CollectChest(out lastReward)) { EndCeremony(false); yield break; }
             stageStep = 2; heldCoins = coinsBefore;
-            RoyalWinSequence.AreaBurst(stageChest.transform, 1.3f);
+
             stageCoins.text = lastReward.coins.ToString("N0");
             var boost = BoostArt(lastReward.boost.ToString()); stageBoost.sprite = boost; stageBoost.enabled = boost;
-            stageItems.gameObject.SetActive(true);
-            t = 0;
-            while (t < .5f)
+            t = 0; bool burst = false;
+            while (t < 1.4f)
             {
                 if (Gone) { EndCeremony(true); yield break; }
-                t += Time.unscaledDeltaTime; float u = Mathf.Clamp01(t / .5f), e = 1 - (1 - u) * (1 - u);
-                stageChestRect.localScale = Vector3.one * (1 + .12f * Mathf.Sin(u * Mathf.PI));
-                stageItems.localScale = Vector3.one * e; stageItems.anchoredPosition = new Vector2(0, -120 * (1 - e)); yield return null;
+                t += Time.unscaledDeltaTime;
+                chestOpening.Pose(t, Motion);
+                if (!burst && t >= .34f)
+                {
+                    burst = true; RoyalWinSequence.AreaBurst(stageChest.transform, 1.3f);
+                    if (Motion) RoyalWinSequence.AreaConfetti();
+                }
+                float u = Mathf.Clamp01((t - .52f) / .5f), e = 1 - Mathf.Pow(1 - u, 3);
+                stageItems.gameObject.SetActive(u > 0);
+                stageItems.localScale = Vector3.one * (Motion ? e : 1);
+                stageItems.anchoredPosition = new Vector2(0, Motion ? -200 * (1 - e) : 0);
+                // Opening taps cannot skip the reveal or collect the reward a second time.
+                stageTapped = false;
+                yield return null;
             }
-            yield return Wait(.6f);
+            stageItems.localScale = Vector3.one; stageItems.anchoredPosition = Vector2.zero;
             stageHint.text = "Tap to Continue"; stageHint.gameObject.SetActive(true);
             while (!stageTapped) { if (Gone) { EndCeremony(true); yield break; } yield return null; }
-            stageTapped = false; stageHint.gameObject.SetActive(false); stageStep = 3;
+            stageTapped = false; stageHint.gameObject.SetActive(false); stageStep = 3; chestOpening.Finish();
             // The rewards fly to their counters; the coin counter counts up as they land.
             const int Pieces = 8; int landed = 0;
             if (!RoyalWinSequence.AreaReward(stageCoin.transform, home.coinLabel.transform, Pieces, true, () => { landed++; heldCoins = coinsBefore + Mathf.RoundToInt(lastReward.coins * (float)landed / Pieces); }))
