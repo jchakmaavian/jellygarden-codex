@@ -136,9 +136,12 @@ namespace JellyGarden.Scripts.Story.Editor
             Item gem = PlainNeighbour(ball);
             Require(gem != null, "Color Ball has a plain neighbour");
             int balls = StoryOriginalBoosters.ColorBallPlays, rays = StoryOriginalBoosters.Rays;
+            yield return Settled();
             Time.timeScale = Slow;
+            string before = "ball " + Describe(ball) + ", gem " + Describe(gem);
             Swap(ball, gem);
-            yield return Until(() => StoryOriginalBoosters.ColorBallPlays == balls + 1, 5f, "Swap fired the original Color Ball");
+            yield return Until(() => StoryOriginalBoosters.ColorBallPlays == balls + 1, 5f,
+                "Swap fired the original Color Ball (before: " + before + "; after: ball " + Describe(ball) + ", gem " + Describe(gem) + ")");
             yield return Shots("color-ball-fire", 6, .12f);
             Require(StoryOriginalBoosters.Rays > rays, "Color Ball fired a beam per target");
             Time.timeScale = 1f;
@@ -339,13 +342,35 @@ namespace JellyGarden.Scripts.Story.Editor
                 .First();
         }
 
+        // Still, refilled, and still again a moment later: a swap on a board that is
+        // dropping new gems in can be taken by the cascade instead.
         IEnumerator Settled()
         {
-            yield return Until(() => LevelManager.THIS != null && LevelManager.THIS.gameStatus == GameState.Playing &&
-                !LevelManager.THIS.DragBlocked && !FindObjectsByType<Item>().Any(i => i.destroying || i.falling),
-                20f, "Board settled");
-            yield return new WaitForSeconds(0.15f);
+            for (int pass = 0; pass < 2; pass++)
+            {
+                yield return Until(() => Calm(), 20f, "Board settled");
+                yield return new WaitForSeconds(0.5f);
+            }
+            yield return Until(() => Calm(), 20f, "Board settled");
         }
+
+        static bool Calm()
+        {
+            var manager = LevelManager.THIS;
+            if (manager == null || manager.gameStatus != GameState.Playing || manager.DragBlocked) return false;
+            if (FindObjectsByType<Item>().Any(i => i.destroying || i.falling)) return false;
+            for (int r = 0; r < manager.maxRows; r++)
+                for (int c = 0; c < manager.maxCols; c++)
+                {
+                    var sq = manager.GetSquare(c, r);
+                    if (sq != null && !sq.IsNone() && sq.type == SquareTypes.EMPTY && sq.item == null) return false;
+                }
+            return true;
+        }
+
+        static string Describe(Item item) => item == null ? "gone" :
+            item.currentType + (item.destroying ? " destroying" : "") + (item.falling ? " falling" : "") +
+            (item.square != null ? " at " + item.square.col + "," + item.square.row : "");
 
         void OnDestroy()
         {
