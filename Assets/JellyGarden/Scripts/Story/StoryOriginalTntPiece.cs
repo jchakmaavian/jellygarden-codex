@@ -39,7 +39,7 @@ namespace JellyGarden.Scripts.Story
             enabled = true;
             ColorBallReveal = reveal && StoryOriginalBoosters.TakeColorBallReveal(item);
             if (reveal) _revealLeft = ReferenceTnt.Play(_animator, ColorBallReveal
-                ? ReferenceTnt.ColorBallCreationState : ReferenceTnt.CreationState);
+                ? ReferenceTnt.ColorBallTntCreationState : ReferenceTnt.CreationState);
             else { _revealLeft = 0f; ReferenceTnt.Idle(_animator); }
             Pose();
             return true;
