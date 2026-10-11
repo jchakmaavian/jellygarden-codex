@@ -43,8 +43,11 @@ namespace RoyalThrone.ReferenceGameplay.Preview
             return go;
         }
 
-        /// <summary>ReferenceVfxPool.Play with no colour: prefab scale × cell, sorting group, blast_part_* off.</summary>
-        public static GameObject PlayVfx(string key, Transform parent, Vector3 position, float cell, int sortingLayerId, int order)
+        // ReferenceVfxPool's names for the blast_part_* children, by board colour index.
+        static readonly string[] colorNames = { "red", "blue", "yellow", "green", "pink" };
+
+        /// <summary>ReferenceVfxPool.Play: prefab scale × cell, sorting group, only the <paramref name="color"/> blast_part_* on (none for -1).</summary>
+        public static GameObject PlayVfx(string key, Transform parent, Vector3 position, float cell, int sortingLayerId, int order, int color = -1)
         {
             var prefab = VfxPrefab(key);
             if (!prefab) { Debug.LogError("[Reference TNT] Missing VFX " + key); return null; }
@@ -54,7 +57,8 @@ namespace RoyalThrone.ReferenceGameplay.Preview
             foreach (var ps in go.GetComponentsInChildren<ParticleSystem>(true))
             {
                 ps.Stop(false, ParticleSystemStopBehavior.StopEmittingAndClear);
-                if (ps.name.StartsWith("blast_part_")) ps.gameObject.SetActive(false);
+                if (ps.name.StartsWith("blast_part_"))
+                    ps.gameObject.SetActive(color >= 0 && color < colorNames.Length && ps.name == "blast_part_" + colorNames[color]);
                 if (ps.gameObject.activeInHierarchy) ps.Play(false);
             }
             return go;
