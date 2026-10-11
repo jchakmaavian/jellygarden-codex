@@ -366,6 +366,8 @@ namespace JellyGarden.Scripts.Story
             var trails = new GameObject[2];
             var exits = new float[2];
             var nozzles = new float[2];
+            var flameSystems = new ParticleSystem[2][];
+            var previousNozzles = new Vector3[2];
             for (int i = 0; i < 2; i++)
             {
                 int d = i == 0 ? -1 : 1;
@@ -380,12 +382,14 @@ namespace JellyGarden.Scripts.Story
                 halves[i] = r;
                 nozzles[i] = horizontal ? r.bounds.extents.x : r.bounds.extents.y;
 
-                var trail = Own(ReferenceTnt.PlayVfx(RocketTrailVfx, transform, at, pitch, 0, ReferenceTnt.VfxOrder));
+                previousNozzles[i] = at - axis * d * nozzles[i];
+                var trail = Own(ReferenceTnt.PlayVfx(RocketTrailVfx, transform, previousNozzles[i], pitch, 0, ReferenceTnt.VfxOrder));
                 if (trail != null)
                 {
                     var tail = -axis * d;
                     trail.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(tail.y, tail.x) * Mathf.Rad2Deg - 90);
-                    foreach (var ps in trail.GetComponentsInChildren<ParticleSystem>(true)) { var main = ps.main; main.simulationSpeed = .95f; }
+                    flameSystems[i] = ConfigureRocketFlame(trail);
+                    EmitRocketFlame(flameSystems[i], previousNozzles[i], previousNozzles[i], pitch);
                 }
                 trails[i] = trail;
                 exits[i] = Mathf.Max((d < 0 ? negative : positive) + 1, ScreenExit(at, axis * d) / pitch + 1);
@@ -394,6 +398,7 @@ namespace JellyGarden.Scripts.Story
             float distance = 0, longest = Mathf.Max(exits[0], exits[1]);
             while (distance < longest)
             {
+                if (Time.deltaTime <= 0f) { yield return null; continue; }
                 distance += RocketCellsPerSecond * Time.deltaTime;
                 for (int i = 0; i < 2; i++)
                 {
@@ -401,7 +406,13 @@ namespace JellyGarden.Scripts.Story
                     Vector3 dir = axis * (i == 0 ? -1 : 1);
                     Vector3 head = at + dir * Mathf.Min(distance, exits[i]) * pitch;
                     halves[i].transform.position = head;
-                    if (trails[i] != null) trails[i].transform.position = head - dir * nozzles[i];
+                    if (trails[i] != null)
+                    {
+                        Vector3 nozzle = head - dir * nozzles[i];
+                        trails[i].transform.position = nozzle;
+                        EmitRocketFlame(flameSystems[i], previousNozzles[i], nozzle, pitch);
+                        previousNozzles[i] = nozzle;
+                    }
                     if (distance >= exits[i])
                     {
                         ReferenceTnt.StopEmission(trails[i]);
@@ -415,6 +426,40 @@ namespace JellyGarden.Scripts.Story
             while (ReferenceTnt.Alive(trails[0]) || ReferenceTnt.Alive(trails[1])) yield return null;
             Drop(trails[0]);
             Drop(trails[1]);
+        }
+
+        // World-space distance emission can finish behind a fast-moving emitter. Emit the
+        // native fire sprites after moving the head, including a sample at the current fins.
+        // Leave sparks/background emission and all authored lifetime/colour/size curves intact.
+        internal static ParticleSystem[] ConfigureRocketFlame(GameObject trail)
+        {
+            var fire = new List<ParticleSystem>();
+            foreach (var ps in trail.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                var main = ps.main;
+                main.simulationSpeed = .95f;
+                if (ps.name != "add_fire" && ps.name != "add_fire_core") continue;
+                main.simulationSpace = ParticleSystemSimulationSpace.World;
+                var emission = ps.emission;
+                emission.enabled = false;
+                fire.Add(ps);
+            }
+            return fire.ToArray();
+        }
+
+        internal static void EmitRocketFlame(ParticleSystem[] systems, Vector3 from, Vector3 to, float pitch)
+        {
+            if (systems == null) return;
+            int samples = Mathf.Max(1, Mathf.CeilToInt(Vector3.Distance(from, to) / (Mathf.Max(.001f, pitch) * .075f)));
+            for (int i = 1; i <= samples; i++)
+            {
+                var particle = new ParticleSystem.EmitParams
+                {
+                    position = Vector3.Lerp(from, to, (float)i / samples),
+                    applyShapeToPosition = false
+                };
+                foreach (var ps in systems) if (ps != null) ps.Emit(particle, 1);
+            }
         }
 
         static float ScreenExit(Vector3 from, Vector3 dir)
