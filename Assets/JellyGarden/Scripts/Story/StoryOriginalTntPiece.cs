@@ -21,6 +21,8 @@ namespace JellyGarden.Scripts.Story
 
         public bool Showing => _view != null && _view.activeSelf;
         public bool Revealing => Showing && _revealLeft > 0f;
+        /// <summary>The last reveal was a Color Ball's (TntLightballCreationAnimation).</summary>
+        public bool ColorBallReveal { get; private set; }
 
         internal bool Show(Item item, bool reveal)
         {
@@ -35,7 +37,9 @@ namespace JellyGarden.Scripts.Story
             _view.transform.localPosition = Vector3.zero;
             _view.SetActive(true);
             enabled = true;
-            if (reveal) _revealLeft = ReferenceTnt.Play(_animator, ReferenceTnt.CreationState);
+            ColorBallReveal = reveal && StoryOriginalBoosters.TakeColorBallReveal(item);
+            if (reveal) _revealLeft = ReferenceTnt.Play(_animator, ColorBallReveal
+                ? ReferenceTnt.ColorBallCreationState : ReferenceTnt.CreationState);
             else { _revealLeft = 0f; ReferenceTnt.Idle(_animator); }
             Pose();
             return true;

@@ -110,6 +110,7 @@ namespace JellyGarden.Scripts.Story
             _assets = null;
             _host = null;
             _matchSound = 0; _matchSoundFrame = -1; _colorBallFrame = -1;
+            _colorBallMade.Clear();
             RocketFlights = ColorBallPlays = ColorBallConverts = DualColorBallPlays = 0;
             RocketTntPlays = TntTntPlays = Rays = MatchBreaks = MovesSent = MovesInFlight = 0;
         }
@@ -124,6 +125,8 @@ namespace JellyGarden.Scripts.Story
         public static bool ShowPiece(Item item, bool reveal)
         {
             if (!Application.isPlaying || item == null || !IsPiece(item.currentType) || !Ready) return false;
+            // Only a TNT has a separate Color Ball reveal; a Rocket or Color Ball drops the mark.
+            TakeColorBallReveal(item);
             var piece = item.GetComponent<StoryOriginalPiece>();
             if (piece == null) piece = item.gameObject.AddComponent<StoryOriginalPiece>();
             if (!piece.Show(item, reveal)) return false;
@@ -171,6 +174,7 @@ namespace JellyGarden.Scripts.Story
                 var item = go.GetComponent<Item>();
                 if (item == null || item.color != colour || item.destroying) continue;
                 targets.Add(item.square != null ? item.square.transform.position : item.transform.position);
+                _colorBallMade.Add(item);
             }
             ColorBallConverts++;
             var host = Host();
@@ -242,6 +246,13 @@ namespace JellyGarden.Scripts.Story
             return true;
         }
 
+        /// <summary>
+        /// Whether a Color Ball made this item (ReferencePieceVisual.RevealFromColorBall):
+        /// its TNT then reveals with the dedicated clip. Asking clears the mark.
+        /// </summary>
+        public static bool TakeColorBallReveal(Item item) => item != null && _colorBallMade.Remove(item);
+        private static readonly HashSet<Item> _colorBallMade = new HashSet<Item>();
+
         internal static void Landed() => MovesInFlight = Mathf.Max(0, MovesInFlight - 1);
 
         internal static void CountRay() => Rays++;
@@ -255,6 +266,7 @@ namespace JellyGarden.Scripts.Story
         {
             if (_host != null) _host.Clear();
             MovesInFlight = 0;
+            _colorBallMade.Clear();
         }
 
         /// <summary>

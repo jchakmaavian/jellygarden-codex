@@ -270,6 +270,8 @@ namespace JellyGarden.Scripts.Story.Editor
                     ? i.GetComponent<StoryOriginalTntPiece>() != null && i.GetComponent<StoryOriginalTntPiece>().Showing
                     : i.GetComponent<StoryOriginalPiece>() != null && i.GetComponent<StoryOriginalPiece>().Showing),
                 label + ": every converted gem shows its original piece");
+            Require(converted.All(i => i.currentType != ItemsTypes.PACKAGE || i.GetComponent<StoryOriginalTntPiece>().ColorBallReveal),
+                label + ": Color Ball TNTs used the dedicated reveal clip");
             yield return Shot(label + "-converted");
             foreach (var item in converted) if (item != null && !item.destroying && item.CanTapActivate()) { item.TapActivate(); break; }
             yield return Shots(label, 2, .12f);

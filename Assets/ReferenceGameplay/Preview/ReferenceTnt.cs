@@ -11,6 +11,8 @@ namespace RoyalThrone.ReferenceGameplay.Preview
     {
         public const string PieceKey = "TNT", ComboKey = "TNTTNTComboRfv387";
         public const string CreationState = "TntCreationAnimation", ComboState = "TntTntComboExplodeAnimation";
+        // ReferencePieceVisual.RevealFromColorBall: a TNT a Color Ball made has its own creation clip.
+        public const string ColorBallCreationState = "TntLightballCreationAnimation";
         public const string FuseVfx = "TntItemFuseParticles", ExplodeVfx = "TntItemExplodeParticles";
         public const string ComboFuseVfx = "TntTntComboFuseParticles", ComboExplodeVfx = "TntTntComboExplodeParticles";
         public const string CreationAudio = "tnt_creation__15882", ExplodeAudio = "tnt_explode__15838", ComboAudio = "tnt_tnt_combo__rfv387_17741";
