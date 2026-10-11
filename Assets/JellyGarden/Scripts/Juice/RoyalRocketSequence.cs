@@ -233,6 +233,37 @@ namespace JellyGarden.Scripts.Juice
                 {float d=(sq.transform.position-position).sqrMagnitude;if(d<distance){nearest=sq;distance=d;}}
             if(nearest)yield return Rocket(nearest,horizontal,1,false);
         }
+        // The imported flame is world-space: emitter motion alone can leave its newest
+        // visible particles behind the fins. Sample after moving the head, ending exactly
+        // at its nozzle, while retaining the native sprites and lifetime/colour/size curves.
+        internal static ParticleSystem[] ConfigureNativeRocketFlame(GameObject trail)
+        {
+            var fire = new List<ParticleSystem>();
+            foreach (var ps in trail.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                var main = ps.main; main.simulationSpeed = RocketAnimationRate;
+                if (ps.name != "add_fire" && ps.name != "add_fire_core") continue;
+                main.simulationSpace = ParticleSystemSimulationSpace.World;
+                var emission = ps.emission; emission.enabled = false;
+                fire.Add(ps);
+            }
+            return fire.ToArray();
+        }
+        internal static void EmitNativeRocketFlame(ParticleSystem[] systems, Vector3 from, Vector3 to, float pitch)
+        {
+            if (systems == null) return;
+            int count = Mathf.Max(1, Mathf.CeilToInt(Vector3.Distance(from, to) / (Mathf.Max(.001f, pitch) * RocketExhaustSampleCells)));
+            for (int i = 1; i <= count; i++)
+            {
+                var particle = new ParticleSystem.EmitParams
+                {
+                    position = Vector3.Lerp(from, to, (float)i / count),
+                    applyShapeToPosition = false
+                };
+                foreach (var ps in systems) if (ps) ps.Emit(particle, 1);
+            }
+        }
+
         float RocketExitDistance(Vector3 origin,Vector3 direction,float pitch,float boardEdge)
         {
             var cam=Camera.main;if(!cam)return boardEdge+3f;
@@ -321,18 +352,27 @@ namespace JellyGarden.Scripts.Juice
             RocketImpact(p,true);RoyalAudioDirector.Get?.Play(RoyalCue.Rocket);
             foreach(var f in active)if(f!=null){f.go.transform.localScale=Vector3.one*RocketFlightScale(f.sprite.sprite,pitch);f.trail.Clear();f.core.Clear();f.trail.emitting=true;f.core.emitting=true;f.flame.enabled=true;f.exhaust.enabled=true;}
             bool nativeTrail = RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("RocketItemParticles");
-            if (nativeTrail) foreach (var f in active) if (f != null)
+            var nativeFlames = new ParticleSystem[active.Count][];
+            var nativeNozzles = new Vector3[active.Count];
+            if (nativeTrail) for (int i = 0; i < active.Count; i++)
             {
+                var f = active[i]; if (f == null) continue;
                 f.trail.emitting = false; f.core.emitting = false; f.flame.enabled = false; f.exhaust.enabled = false;
                 f.nativeRocket = RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("RocketItemParticles",f.go.transform.position,worldCell:pitch,sustained:true);
-                // The imported trail keeps pace with the Rocket's animation rate.
-                if (f.nativeRocket?.GameObject) foreach (var ps in f.nativeRocket.GameObject.GetComponentsInChildren<ParticleSystem>(true)) { var main = ps.main; main.simulationSpeed = RocketAnimationRate; }
+                if (f.nativeRocket?.GameObject)
+                {
+                    var tail = -axis * (i % 2 == 0 ? -1 : 1);
+                    f.nativeRocket.GameObject.transform.rotation = Quaternion.Euler(0,0,Mathf.Atan2(tail.y,tail.x)*Mathf.Rad2Deg-90);
+                    nativeFlames[i] = ConfigureNativeRocketFlame(f.nativeRocket.GameObject);
+                    nativeNozzles[i] = f.go.transform.position;
+                    EmitNativeRocketFlame(nativeFlames[i], nativeNozzles[i], nativeNozzles[i], pitch);
+                }
             }
             float distance=0;int stepDone=-1,sparkStepDone=-1;bool boardReleased=false;
             LastRocketMaxFlightFrame = 0;
             while(distance<maxExit)
             {
-                if(Paused){yield return null;continue;}
+                if(Paused || Time.deltaTime <= 0f){yield return null;continue;}
                 LastRocketMaxFlightFrame = Mathf.Max(LastRocketMaxFlightFrame, Time.unscaledDeltaTime);
                 // Anticipation owns ignition. Flight then keeps one constant velocity through board and screen.
                 distance=Mathf.Min(maxExit,distance+speed*Time.deltaTime);int index=0;
@@ -351,6 +391,8 @@ namespace JellyGarden.Scripts.Juice
                             native.position = f.go.transform.position;
                             var tail = -axis * d;
                             native.rotation = Quaternion.Euler(0,0,Mathf.Atan2(tail.y,tail.x)*Mathf.Rad2Deg-90);
+                            EmitNativeRocketFlame(nativeFlames[index-1], nativeNozzles[index-1], native.position, pitch);
+                            nativeNozzles[index-1] = native.position;
                         }
                         float visibleCells=Mathf.Min(Mathf.Min(distance,exit),exhaustLength);
                         f.flame.SetPosition(0,head-axis*d*visibleCells*pitch+Vector3.back*.6f);
