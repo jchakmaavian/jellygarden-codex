@@ -90,6 +90,7 @@ namespace JellyGarden.Scripts.Story
             TNTExplosionVFX.Clear();
             StoryOriginalTnt.Clear();
             StoryOriginalBoosters.Clear();
+            StoryOriginalMotion.Clear();
         }
 
         internal static Vector3 EffectPosition(Vector3 at, float pitch)

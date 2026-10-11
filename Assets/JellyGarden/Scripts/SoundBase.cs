@@ -70,6 +70,13 @@ namespace JellyGarden.Scripts
 				_audioSource.PlayOneShot(clip);
 		}
 
+		// STORY: a quieter one-shot (the Royal Throne landing and match sounds have
+		// their own gains); the player's volume still applies on top.
+		public void PlaySound(AudioClip clip, float volumeScale) {
+			if (_audioSource && clip)
+				_audioSource.PlayOneShot(clip, volumeScale);
+		}
+
 		public void SetVolume(float volume) {
 			if (_audioSource)
 				_audioSource.volume = volume;

@@ -611,6 +611,13 @@ namespace JellyGarden.Scripts
         {
             if (item1.currentType == ItemsTypes.PACKAGE && item2.currentType == ItemsTypes.PACKAGE)
             {
+                // STORY: the original TNT+TNT body, roof and fuse clip plays first (1.58s)
+                // with the board held; this clear then runs from its end
+                // (StoryOriginalTnt.ComboAnticipation). The swap's mirrored check is swallowed.
+                if (JellyGarden.Scripts.Story.StoryOriginalTnt.ComboAnticipation(item1, item2,
+                        item2.square != null ? item2.square.transform.position : item2.transform.position,
+                        () => CheckPackageAndPackage(item1, item2)))
+                    return;
                 // STORY: the original TNT+TNT blast, over this whole clear.
                 JellyGarden.Scripts.Story.StoryOriginalBoosters.TntTnt(
                     item2.square != null ? item2.square.transform.position : item2.transform.position);
@@ -623,6 +630,8 @@ namespace JellyGarden.Scripts
                         bigList.AddRange(LevelManager.THIS.GetItemsAround(item.square));
                     }
                 }
+                // STORY: and they show ring by ring outward from the centre.
+                JellyGarden.Scripts.Story.StoryOriginalTnt.BeginWave(item2.square);
                 foreach (Item item in bigList)
                 {
                     if (item != null)
@@ -631,6 +640,7 @@ namespace JellyGarden.Scripts
                             item.DestroyItem(true, "destroy_package");
                     }
                 }
+                JellyGarden.Scripts.Story.StoryOriginalTnt.EndWave();
 
                 item1.DestroyPackage();
                 item2.DestroyPackage();
@@ -754,6 +764,13 @@ namespace JellyGarden.Scripts
 
         IEnumerator FallingCor(Square _square, bool animate)
         {
+            // STORY: the Royal Throne fall, landing bounce and refill entry when on;
+            // see StoryOriginalMotion. The kit's fall below stays the fallback.
+            if (JellyGarden.Scripts.Story.StoryOriginalMotion.Ready)
+            {
+                yield return JellyGarden.Scripts.Story.StoryOriginalMotion.Fall(this, _square, animate);
+                yield break;
+            }
             falling = true;
             float startTime = Time.time;
             Vector3 startPos = transform.position;
@@ -1175,6 +1192,11 @@ namespace JellyGarden.Scripts
 
             if (destroying)
                 return;
+            // STORY: the two TNTs of a TNT+TNT anticipation are already spent, as royal-throne
+            // consumed them on the swap: a match or another blast does not take them while the
+            // clip plays. Their own clear runs when it ends (StoryOriginalTnt.ComboAnticipation).
+            if (JellyGarden.Scripts.Story.StoryOriginalTnt.InCombo(this))
+                return;
             // if (nextType != ItemsTypes.NONE) return;
             if (this == null)
                 return;
@@ -1250,9 +1272,12 @@ namespace JellyGarden.Scripts
             }
             else if (currentType != ItemsTypes.INGREDIENT && currentType != ItemsTypes.BOMB)
             {
+                // STORY: the Royal Throne break owns the pop, the explosion and its
+                // sound when on (StoryOriginalMotion, started below).
+                bool originalMotion = JellyGarden.Scripts.Story.StoryOriginalMotion.Ready;
                 // STORY: the original gem explosion, in this gem's colour, with
                 // its own match sound. Fire-and-forget, like the punch below.
-                bool originalBreak = JellyGarden.Scripts.Story.StoryOriginalBoosters.MatchBreak(
+                bool originalBreak = originalMotion || JellyGarden.Scripts.Story.StoryOriginalBoosters.MatchBreak(
                     square != null ? square.transform.position : transform.position, color);
                 if (!originalBreak)
                 SoundBase.Instance.PlaySound(SoundBase.Instance.destroy[Random.Range(0, SoundBase.Instance.destroy.Length)]);
@@ -1278,6 +1303,12 @@ namespace JellyGarden.Scripts
                 //    transform.localScale, which both reads the gem's RESTING
                 //    size (the idle breathing is mid-cycle at any given moment)
                 //    and tells AnimIdleStart to stop overwriting the transform.
+                //
+                // STORY: the Royal Throne break follows the same three rules.
+                if (originalMotion)
+                    LevelManager.THIS.StartCoroutine(JellyGarden.Scripts.Story.StoryOriginalMotion.Break(
+                        this, PopClaimForKit(), rocketHit, anim_name, SetAnimationDestroyingFinished));
+                else
                 LevelManager.THIS.StartCoroutine(Match3PieceMotion.Pop(
                     transform,
                     sprRenderer,
@@ -1299,8 +1330,10 @@ namespace JellyGarden.Scripts
                 // Fire-and-forget by contract: it must NOT be yielded on,
                 // because everything below this line in the destroy path is
                 // synchronous and the cascade waits on it.
+                // STORY: the Royal Throne break has neither the punch nor the kit's sparkle.
+                if (!originalMotion)
                 JellyGarden.Scripts.Story.StoryPunchVfx.Punch(this);
-                if (explEffect)
+                if (explEffect && !originalMotion)
                 {
                     GameObject partcl1 = Instantiate(Resources.Load("Prefabs/Effects/Replace"), transform.position, Quaternion.identity) as GameObject;
                     Destroy(partcl1, 1f);
@@ -1333,6 +1366,12 @@ namespace JellyGarden.Scripts
 
             while (!animationFinished && currentType == ItemsTypes.NONE)
                 yield return new WaitForFixedUpdate();
+
+            // STORY: the original TNT burns its fuse for 0.12s, piece still up, before
+            // DestroyPackage blasts; one caught in a blast waits for its ring first
+            // (StoryOriginalTnt.Ignite). No wait when the original TNT is off.
+            if (currentType == ItemsTypes.PACKAGE && JellyGarden.Scripts.Story.StoryOriginalTnt.OwnsBlast)
+                yield return JellyGarden.Scripts.Story.StoryOriginalTnt.Ignite(this);
 
             square.DestroyBlock();
             if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
@@ -1442,6 +1481,8 @@ namespace JellyGarden.Scripts
                 JellyGarden.Scripts.Story.StoryBombVfx.TintFor(color, 0f));
 
             List<Item> itemsList = LevelManager.THIS.GetItemsAround(square);
+            // STORY: these clears show ring by ring outward from this TNT (StoryOriginalTnt.WaveDelay).
+            JellyGarden.Scripts.Story.StoryOriginalTnt.BeginWave(square);
             foreach (Item item in itemsList)
             {
                 if (item != null)
@@ -1451,6 +1492,7 @@ namespace JellyGarden.Scripts
                             item.DestroyItem(true, "destroy_package");
                     }
             }
+            JellyGarden.Scripts.Story.StoryOriginalTnt.EndWave();
             if (!originalTnt)
                 SoundBase.Instance.PlaySound(SoundBase.Instance.explosion);
             currentType = ItemsTypes.NONE;

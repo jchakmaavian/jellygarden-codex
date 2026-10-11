@@ -1343,6 +1343,8 @@ namespace JellyGarden.Scripts
 
         void GenerateNewItems(bool falling = true)
         {
+            // STORY: the Royal Throne refill queues new gems above each column's top cell.
+            JellyGarden.Scripts.Story.StoryOriginalMotion.BeginRefill();
             for (int col = 0; col < maxCols; col++)
             {
                 for (int row = maxRows - 1; row >= 0; row--)
@@ -1353,7 +1355,10 @@ namespace JellyGarden.Scripts
                         {
                             if ((GetSquare(col, row).item == null && !GetSquare(col, row).IsHaveSolidAbove()) || !falling)
                             {
+                                // STORY: and fades each in across that edge (StoryOriginalMotion.Enter).
+                                Item storyCreated =
                                 GetSquare(col, row).GenItem(falling);
+                                JellyGarden.Scripts.Story.StoryOriginalMotion.Enter(storyCreated, falling, col, row);
                             }
                         }
                     }
@@ -1749,6 +1754,8 @@ namespace JellyGarden.Scripts
 
                         if (item.currentType != ItemsTypes.NONE)
                             yield return new WaitForSeconds(0.1f);
+                        // STORY: the Royal Throne break reads the group's size (StoryOriginalMotion).
+                        JellyGarden.Scripts.Story.StoryOriginalMotion.MarkMatch(item, desrtoyItems.Count, desrtoyItems.IndexOf(item));
                         item.DestroyItem(true);  //destroy items safely
                         if (item.currentType != ItemsTypes.NONE)
                         {
@@ -2029,6 +2036,8 @@ namespace JellyGarden.Scripts
         bool IsAllDestoyFinished()
         {
             if (JellyGarden.Scripts.Story.StoryRocketSweep.HasPendingHits) return false;
+            // STORY: a TNT+TNT anticipation holds the board until its clear has run.
+            if (JellyGarden.Scripts.Story.StoryOriginalTnt.Anticipating) return false;
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
             foreach (GameObject item in items)
             {

@@ -109,7 +109,7 @@ namespace JellyGarden.Scripts.Story
             _enabled = null;
             _assets = null;
             _host = null;
-            _matchSound = 0; _matchSoundFrame = -1; _colorBallFrame = -1;
+            _matchSound = 0; _matchSoundFrame = -1; _colorBallFrame = -1; _lastMatchSound = -10f;
             _colorBallMade.Clear();
             RocketFlights = ColorBallPlays = ColorBallConverts = DualColorBallPlays = 0;
             RocketTntPlays = TntTntPlays = Rays = MatchBreaks = MovesSent = MovesInFlight = 0;
@@ -210,26 +210,69 @@ namespace JellyGarden.Scripts.Story
             TntTntPlays++;
             float pitch = StoryBoardScale.Pitch;
             Host().Play(ReferenceTnt.ComboExplodeVfx, StoryRoyalVfx.EffectPosition(at, pitch), pitch);
-            Sound(ReferenceTnt.ComboAudio);
+            // The anticipation already played the combo sound (RoyalPowerupDirector.Explosion
+            // plays no explosion sound for the big blast); without one, the blast carries it.
+            if (!StoryOriginalTnt.ResolvingCombo && SoundBase.Instance != null)
+                SoundBase.Instance.PlaySound(ReferenceTnt.Clip(ReferenceTnt.ComboAudio), .45f);
             StoryOriginalTnt.HoldBlasts();
             return true;
         }
 
-        /// <summary>A plain gem cleared: the gem explosion in its colour, and one match sound a frame.</summary>
+        /// <summary>A Color Ball is clearing its gems this frame; its beams draw their bursts.</summary>
+        public static bool ColorBallClearing => Time.frameCount == _colorBallFrame;
+
+        /// <summary>
+        /// A plain gem cleared: the gem explosion in its colour, and the match sound as
+        /// RoyalAudioDirector played it (0.58, at most every 0.065s).
+        /// </summary>
         public static bool MatchBreak(Vector3 at, int colour)
         {
             if (!OwnsMatch) return false;
-            if (Time.frameCount == _colorBallFrame) return true;
+            if (ColorBallClearing) return true;
             MatchBreaks++;
             float pitch = StoryBoardScale.Pitch;
-            Host().Play(MatchVfx, StoryRoyalVfx.EffectPosition(at, pitch), pitch, PartColour(colour));
-            if (_matchSoundFrame != Time.frameCount)
+            MoreParticles(Host().Play(MatchVfx, StoryRoyalVfx.EffectPosition(at, pitch), pitch, PartColour(colour)), BreakParticleScale);
+            if (Time.unscaledTime - _lastMatchSound >= MatchSoundInterval && SoundBase.Instance != null)
             {
-                _matchSoundFrame = Time.frameCount;
-                Sound(MatchAudio[_matchSound++ % MatchAudio.Length]);
+                _lastMatchSound = Time.unscaledTime;
+                SoundBase.Instance.PlaySound(ReferenceTnt.Clip(MatchAudio[_matchSound++ % MatchAudio.Length]), MatchSoundGain);
             }
             return true;
         }
+
+        const float MatchSoundGain = .58f, MatchSoundInterval = .065f;
+
+        /// <summary>
+        /// The gem break's sparkle dots and falling coloured shards, times the original's
+        /// (the user asked for twice as many, 2026-10-11). Its single flash ring stays one.
+        /// Applied to each played copy; the imported prefab keeps the original counts.
+        /// </summary>
+        public const float BreakParticleScale = 2f;
+        const string BreakRing = "add_light_ring";
+
+        static void MoreParticles(GameObject vfx, float factor)
+        {
+            if (vfx == null || Mathf.Approximately(factor, 1f)) return;
+            foreach (var ps in vfx.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                if (ps.name == BreakRing) continue;
+                var emission = ps.emission;
+                emission.rateOverTimeMultiplier *= factor;
+                for (int i = 0; i < emission.burstCount; i++)
+                {
+                    var burst = emission.GetBurst(i);
+                    var count = burst.count;
+                    if (count.mode == ParticleSystemCurveMode.Constant) count.constant *= factor;
+                    else if (count.mode == ParticleSystemCurveMode.TwoConstants) { count.constantMin *= factor; count.constantMax *= factor; }
+                    else count.curveMultiplier *= factor;
+                    burst.count = count;
+                    emission.SetBurst(i, burst);
+                }
+                var main = ps.main;
+                main.maxParticles = Mathf.CeilToInt(main.maxParticles * factor);
+            }
+        }
+        private static float _lastMatchSound = -10f;
 
         /// <summary>
         /// A move left at a win flies in from the Moves counter; the gem changes into

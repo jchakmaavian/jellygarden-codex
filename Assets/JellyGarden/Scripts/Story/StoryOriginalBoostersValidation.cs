@@ -74,7 +74,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 if (value is IEnumerator nested) stack.Push(nested);
                 else yield return value;
             }
-            File.WriteAllText(Output + "/result.txt", "PASS " + checks + " checks: rockets, color ball, five combos, match break, pause, moves-left flight and win stars.");
+            File.WriteAllText(Output + "/result.txt", "PASS " + checks + " checks: gem break, fall, landing and refill, rockets, color ball, five combos, match break, pause, moves-left flight and win stars.");
             Destroy(gameObject);
         }
 
@@ -124,6 +124,9 @@ namespace JellyGarden.Scripts.Story.Editor
             foreach (var goal in manager.targetObject) goal.targetCount = int.MaxValue / 2;
             yield return Settled();
             Require(StoryOriginalBoosters.OwnsRocket, "The board's rockets fly as the original");
+
+            // 0. Gem break, fall, landing and refill (StoryOriginalMotion).
+            yield return Motion();
 
             // 1. Horizontal Rocket: original piece, creation clip, idle, tap, flight and timing.
             yield return RocketTapped(ItemsTypes.HORIZONTAL_STRIPPED, "rocket-h");
@@ -208,6 +211,112 @@ namespace JellyGarden.Scripts.Story.Editor
             Require(StoryOriginalBoosters.ActiveEffects == 0, "Level reset leaves no original effect");
         }
 
+        // The match loop's own calls: MarkMatch with the group, then DestroyItem, for a row of gems.
+        IEnumerator Motion()
+        {
+            Require(StoryOriginalMotion.Ready, "The Royal Throne gem motion is on");
+            var manager = LevelManager.THIS;
+
+            // A plain three breaks at once: no pop, the explosion on the first frame.
+            int immediate = StoryOriginalMotion.ImmediateBreaks, breaks = StoryOriginalBoosters.MatchBreaks;
+            var three = Row(3);
+            Require(three != null, "A row of three plain gems");
+            Time.timeScale = Slow;
+            for (int i = 0; i < three.Length; i++) StoryOriginalMotion.MarkMatch(three[i], 3, i);
+            foreach (var gem in three) gem.DestroyItem(true);
+            manager.FindMatches();   // as a match or tap does: the cascade then falls and refills
+            Require(StoryOriginalMotion.ImmediateBreaks == immediate + 3, "A three breaks at once");
+            Require(StoryOriginalBoosters.MatchBreaks == breaks + 3, "Each gem of the three explodes on the first frame");
+            Require(three.All(g => !g.sprRenderer.enabled), "The explosion replaces each gem's sprite");
+            // Twice the original's dots and falling shards (StoryOriginalBoosters.BreakParticleScale), one ring.
+            var burst = FindObjectsByType<Transform>().Where(t => t.name == "MatchItemExplodeParticles(Clone)").ToList();
+            Require(burst.Count >= 3, "Each break plays the imported gem explosion");
+            ParticleSystem Part(Transform root, Func<string, bool> name) =>
+                root.GetComponentsInChildren<ParticleSystem>(true).First(p => name(p.name));
+            float Burst(ParticleSystem ps) => ps.emission.GetBurst(0).count.constant;
+            Require(burst.All(b => Mathf.Approximately(Burst(Part(b, n => n == "add_blast_dots")), 20f)), "Each break bursts 20 sparkle dots (2x)");
+            // The shard layer in play is the one left active for the gem's colour.
+            Require(burst.All(b => Mathf.Approximately(Burst(b.GetComponentsInChildren<ParticleSystem>(false)
+                .First(p => p.name.StartsWith("blast_part_"))), 8f)), "Each break throws 8 coloured shards (2x)");
+            Require(burst.All(b => Mathf.Approximately(Burst(Part(b, n => n == "add_light_ring")), 1f)), "Each break keeps one flash ring");
+            yield return new WaitForSeconds(.05f);
+            yield return Shot("break-2x");
+            Require(burst.Where(b => b != null).Any(b => b.GetComponentsInChildren<ParticleSystem>().Sum(p => p.particleCount) >= 28),
+                "A break shows its doubled dots and shards");
+
+            // The refill: queued above the column's top cell, fading in, then falling and landing.
+            int entries = StoryOriginalMotion.Entries, falls = StoryOriginalMotion.Falls, landings = StoryOriginalMotion.Landings;
+            bool fading = false, squashed = false;
+            float end = Time.realtimeSinceStartup + 8f;
+            int shots = 0;
+            while (Time.realtimeSinceStartup < end && (!fading || !squashed || StoryOriginalMotion.Landings < landings + 3))
+            {
+                foreach (var state in FindObjectsByType<StoryOriginalFall>())
+                {
+                    var item = state.GetComponent<Item>();
+                    if (item == null || item.sprRenderer == null) continue;
+                    if (!float.IsNaN(state.EntryEdge) && item.sprRenderer.color.a < .99f) fading = true;
+                    if (state.Landing != null && item.currentType == ItemsTypes.NONE &&
+                        Mathf.Abs(item.transform.localScale.y - item.transform.localScale.x) > .001f) squashed = true;
+                }
+                if (shots < 6 && StoryOriginalMotion.Falls > falls) { yield return Shot("refill"); shots++; yield return new WaitForSeconds(.04f); }
+                else yield return null;
+            }
+            Require(StoryOriginalMotion.Entries >= entries + 3, "Three refill gems queued above the board");
+            Require(fading, "Refill gems fade in across the board's edge");
+            Require(StoryOriginalMotion.Falls >= falls + 3, "Gems fall with the Royal Throne gravity");
+            Require(StoryOriginalMotion.Landings >= landings + 3, "Gems land with the Royal Throne bounce");
+            Require(squashed, "A landing gem squashes");
+            Time.timeScale = 1f;
+            yield return Settled();
+            Require(!FindObjectsByType<Item>().Any(i => i.sprRenderer != null && i.sprRenderer.enabled && i.sprRenderer.color.a < .99f && !i.falling),
+                "Every settled gem is fully visible again");
+
+            // A bigger group pulls in, squashes and rebounds before it breaks.
+            int popped = StoryOriginalMotion.PoppedBreaks;
+            var four = Row(4);
+            Require(four != null, "A row of four plain gems");
+            Time.timeScale = .2f;
+            Vector3 rest = four[1].transform.localScale;
+            for (int i = 0; i < four.Length; i++) StoryOriginalMotion.MarkMatch(four[i], 4, i);
+            foreach (var gem in four) gem.DestroyItem(true);
+            manager.FindMatches();
+            Require(StoryOriginalMotion.PoppedBreaks == popped + 4, "A four pops before it breaks");
+            bool deformed = false;
+            for (int f = 0; f < 40 && !deformed; f++)
+            {
+                if (four[1] != null && four[1].sprRenderer.enabled && Mathf.Abs(four[1].transform.localScale.x - rest.x) > .002f) deformed = true;
+                if (f % 8 == 0) yield return Shot("pop-four");
+                yield return null;
+            }
+            Require(deformed, "The gem squashes and rebounds before breaking");
+            Time.timeScale = 1f;
+            yield return Settled();
+            Require(StoryOriginalMotion.Breaking == 0, "Every break finished and released the cascade");
+        }
+
+        // A horizontal run of plain, settled gems with plain gems on the board's interior.
+        static Item[] Row(int length)
+        {
+            var manager = LevelManager.THIS;
+            for (int r = 1; r < manager.maxRows - 1; r++)
+                for (int c = 0; c + length <= manager.maxCols; c++)
+                {
+                    var run = new Item[length];
+                    bool ok = true;
+                    for (int k = 0; k < length && ok; k++)
+                    {
+                        var sq = manager.GetSquare(c + k, r);
+                        var item = sq != null ? sq.item : null;
+                        ok = item != null && item.currentType == ItemsTypes.NONE && !item.destroying && !item.falling &&
+                            sq.type == SquareTypes.EMPTY;
+                        run[k] = item;
+                    }
+                    if (ok) return run;
+                }
+            return null;
+        }
+
         IEnumerator RocketTapped(ItemsTypes type, string label)
         {
             var manager = LevelManager.THIS;
@@ -252,7 +361,11 @@ namespace JellyGarden.Scripts.Story.Editor
             int before = counter();
             Time.timeScale = Slow;
             Swap(first, second);
-            yield return Until(() => counter() >= before + expected, 5f, label + " played the original combo");
+            float waitUntil = Time.realtimeSinceStartup + 12f;
+            while (counter() < before + expected && Time.realtimeSinceStartup < waitUntil) yield return null;
+            Require(counter() >= before + expected, label + " played the original combo (anticipating=" + StoryOriginalTnt.Anticipating +
+                " started=" + StoryOriginalTnt.LastComboStarted.ToString("0.00") + " resolved=" + StoryOriginalTnt.LastComboResolved.ToString("0.00") +
+                " now=" + Time.time.ToString("0.00") + " first=" + Describe(first) + " second=" + Describe(second) + ")");
             yield return Shots(label, 5, .1f);
             Time.timeScale = 1f;
             yield return Settled();

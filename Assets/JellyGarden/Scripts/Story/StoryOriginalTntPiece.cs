@@ -23,6 +23,10 @@ namespace JellyGarden.Scripts.Story
         public bool Revealing => Showing && _revealLeft > 0f;
         /// <summary>The last reveal was a Color Ball's (TntLightballCreationAnimation).</summary>
         public bool ColorBallReveal { get; private set; }
+        /// <summary>The TNT has fired and its fuse is burning: it stays up until the blast.</summary>
+        public bool Igniting { get; set; }
+        /// <summary>A TNT+TNT body stands in for this piece while it anticipates.</summary>
+        public bool Concealed { get; set; }
 
         internal bool Show(Item item, bool reveal)
         {
@@ -47,11 +51,18 @@ namespace JellyGarden.Scripts.Story
 
         private void LateUpdate()
         {
-            if (_item == null || _item.destroying || _item.currentType != ItemsTypes.PACKAGE)
+            if (_item == null || (_item.destroying && !Igniting) || _item.currentType != ItemsTypes.PACKAGE)
             {
                 Hide();
                 return;
             }
+            if (Concealed)
+            {
+                if (_view.activeSelf) _view.SetActive(false);
+                if (_item.sprRenderer != null) _item.sprRenderer.enabled = false;
+                return;
+            }
+            if (!_view.activeSelf) _view.SetActive(true);
 
             bool paused = LevelManager.THIS != null && LevelManager.THIS.gameStatus == GameState.Pause;
             if (_revealLeft > 0f && !paused)
@@ -85,6 +96,7 @@ namespace JellyGarden.Scripts.Story
         private void Hide()
         {
             _revealLeft = 0f;
+            Igniting = Concealed = false;
             if (_view != null) _view.SetActive(false);
             enabled = false;
             // A TNT turned back into a gem gets its sprite back. One being

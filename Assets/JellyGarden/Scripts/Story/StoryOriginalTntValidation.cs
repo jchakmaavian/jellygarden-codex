@@ -71,7 +71,7 @@ namespace JellyGarden.Scripts.Story.Editor
                 if (value is IEnumerator nested) stack.Push(nested);
                 else yield return value;
             }
-            File.WriteAllText(Output + "/result.txt", "PASS " + checks + " checks: match-made and ChangeType TNT pieces, reveal, idle, tap, blast, pause and cleanup.");
+            File.WriteAllText(Output + "/result.txt", "PASS " + checks + " checks: match-made and ChangeType TNT pieces, reveal, idle, tap, 0.12s ignition, blast wave, TNT+TNT anticipation, pause and cleanup.");
             Destroy(gameObject);
         }
 
@@ -136,10 +136,31 @@ namespace JellyGarden.Scripts.Story.Editor
             yield return Until(() => made != null && made.CanTapActivate(), 5f, "TNT can activate");
             int moves = manager.Limit;
             Time.timeScale = .25f;
+            var ring = LevelManager.THIS.GetItemsAround(made.square)
+                .Where(i => i != null && i != made && i.currentType == ItemsTypes.NONE && !i.destroying).ToList();
+            int ignitions = StoryOriginalTnt.Ignitions;
             Require(made.TapActivate(), "TNT tap accepted");
+            float tapped = Time.time;
             Require(manager.Limit == moves - 1, "TNT charged one move");
-            Require(StoryOriginalTnt.ActiveBlasts == 1, "Tap played the original blast");
-            for (int i = 0; i < 5; i++) { yield return new WaitForSeconds(.06f); yield return Shot("blast"); }
+            // RoyalPowerupDirector.Explosion: the fuse burns 0.12s, piece still up, before the blast.
+            Require(StoryOriginalTnt.Ignitions == ignitions + 1, "Tap lit the original fuse");
+            Require(StoryOriginalTnt.ActiveBlasts == 0, "No blast while the fuse burns");
+            Require(Piece(made) != null && Piece(made).Showing && Piece(made).Igniting, "The piece stays up while its fuse burns");
+            yield return Shot("ignition");
+            yield return Until(() => StoryOriginalTnt.ActiveBlasts == 1, 3f, "The original blast follows the fuse");
+            float fused = Time.time - tapped;
+            Require(fused >= ReferenceTnt.IgnitionDuration - .02f && fused <= ReferenceTnt.IgnitionDuration + .1f,
+                "The fuse burned 0.12s before the blast (" + fused.ToString("0.000") + "s)");
+            if (StoryOriginalMotion.Ready && ring.Count > 0)
+            {
+                // The wave: the cells next to the TNT shatter 0.012 + 0.025 + 0.018s after the blast.
+                Require(ring.All(i => i != null && i.sprRenderer.enabled), "The next ring is still whole at the blast");
+                float blasted = Time.time;
+                yield return Until(() => ring.All(i => i == null || !i.sprRenderer.enabled), 3f, "The next ring shattered");
+                float reached = Time.time - blasted;
+                Require(reached >= .05f, "The wave reached the next ring after 0.055s (" + reached.ToString("0.000") + "s)");
+            }
+            for (int i = 0; i < 4; i++) { yield return new WaitForSeconds(.06f); yield return Shot("blast"); }
             var blast = FindObjectsByType<ParticleSystem>().First(p => p.transform.root.name == "~OriginalTnt");
             manager.gameStatus = GameState.Pause;
             float age = blast.time;
@@ -164,11 +185,97 @@ namespace JellyGarden.Scripts.Story.Editor
             Require(!FindObjectsByType<StoryOriginalTntPiece>().Any(p => p.Showing && (p.GetComponent<Item>().currentType != ItemsTypes.PACKAGE)),
                 "No original piece left on a non-TNT item");
 
+            // 4. Two TNTs swapped together: the dedicated body/roof/fuse clip first, the board
+            //    held, then the big blast (NativeTntComboAnticipation).
+            Item first = Centre();
+            Item second = PlainNeighbour(first);
+            Require(second != null, "TNT+TNT has a neighbour for the second TNT");
+            foreach (var tnt in new[] { first, second })
+            {
+                tnt.NextType = ItemsTypes.PACKAGE;
+                tnt.ChangeType();
+            }
+            Func<bool> made2 = () => first != null && second != null &&
+                first.currentType == ItemsTypes.PACKAGE && second.currentType == ItemsTypes.PACKAGE &&
+                Piece(first) != null && !Piece(first).Revealing && Piece(second) != null && !Piece(second).Revealing;
+            float makeUntil = Time.realtimeSinceStartup + 6f;
+            while (!made2() && Time.realtimeSinceStartup < makeUntil) yield return null;
+            Require(made2(), "Two TNTs made (" + Making(first) + " / " + Making(second) + ")");
+            Require(first.currentType == ItemsTypes.PACKAGE && second.currentType == ItemsTypes.PACKAGE, "Both TNTs are on the board (" + ComboState(first, second) + ")");
+            yield return Settled();
+            int anticipations = StoryOriginalTnt.ComboAnticipations, combos = StoryOriginalBoosters.TntTntPlays;
+            ignitions = StoryOriginalTnt.Ignitions;
+            Swap(first, second);
+            yield return Until(() => StoryOriginalTnt.ComboAnticipations == anticipations + 1, 3f, "TNT+TNT plays the original anticipation");
+            float began = Time.time;
+            Require(StoryOriginalTnt.Anticipating, "The board is held during the anticipation");
+            Require(StoryOriginalTnt.LastComboLength > 1.5f, "The anticipation clip runs its full 1.58s");
+            Require(FindObjectsByType<Transform>().Any(t => t.name.StartsWith(ReferenceTnt.ComboKey)), "The combo body stands in for the two TNTs");
+            yield return null;
+            Require(!Piece(first).Showing && !Piece(second).Showing, "The two TNT pieces are hidden under the combo body");
+            Require(StoryOriginalBoosters.TntTntPlays == combos, "No blast during the anticipation");
+            for (int i = 0; i < 4; i++) { yield return new WaitForSeconds(.35f); yield return Shot("tnt-tnt-anticipation"); }
+            float waitUntil = Time.realtimeSinceStartup + 4f;
+            while (StoryOriginalBoosters.TntTntPlays != combos + 1 && Time.realtimeSinceStartup < waitUntil) yield return null;
+            Require(StoryOriginalBoosters.TntTntPlays == combos + 1, "The big blast follows the anticipation (" + ComboState(first, second) + ")");
+            float held = Time.time - began;
+            Require(held >= StoryOriginalTnt.LastComboLength - .05f, "The blast waited for the whole clip (" + held.ToString("0.00") + "s)");
+            float clip = StoryOriginalTnt.LastComboResolved - StoryOriginalTnt.LastComboStarted;
+            Require(Mathf.Abs(clip - StoryOriginalTnt.LastComboLength) < .1f,
+                "The clear ran when the clip ended (" + clip.ToString("0.000") + "s of " + StoryOriginalTnt.LastComboLength.ToString("0.000") + "s)");
+            Require(!StoryOriginalTnt.Anticipating, "The board is released after the clear starts");
+            Require(StoryOriginalTnt.Ignitions == ignitions,
+                "The combo's own TNTs light no fuse");
+            for (int i = 0; i < 3; i++) { yield return new WaitForSeconds(.08f); yield return Shot("tnt-tnt-blast"); }
+            yield return Settled();
+            yield return Until(() => StoryOriginalTnt.ActiveBlasts == 0, 6f, "TNT+TNT blast retired");
+
             StoryRoyalVfx.StateChanged(GameState.PrepareGame);
             Require(StoryOriginalTnt.ActiveBlasts == 0, "Level reset leaves no blast");
         }
 
         static StoryOriginalTntPiece Piece(Item item) => item != null ? item.GetComponent<StoryOriginalTntPiece>() : null;
+
+        static string ComboState(Item a, Item b) =>
+            "anticipating=" + StoryOriginalTnt.Anticipating + " started=" + StoryOriginalTnt.LastComboStarted.ToString("0.00") +
+            " resolved=" + StoryOriginalTnt.LastComboResolved.ToString("0.00") + " now=" + Time.time.ToString("0.00") +
+            " a=" + Describe(a) + " b=" + Describe(b) + " state=" + LevelManager.THIS.gameStatus;
+
+        // Where a ChangeType stands: type, next type, piece, and the kit Animator's state (ChangeTypeCor waits on "appear").
+        static string Making(Item item)
+        {
+            if (item == null) return "gone";
+            var piece = Piece(item);
+            var anim = item.GetComponentInChildren<Animator>();
+            string state = anim == null ? "no animator" : !anim.enabled ? "animator off" :
+                "anim " + anim.GetCurrentAnimatorStateInfo(0).shortNameHash + " speed " + anim.speed;
+            return Describe(item) + " next=" + item.NextType + " piece=" + (piece == null ? "none" : piece.Showing + "/" + piece.Revealing) + " " + state;
+        }
+
+        static string Describe(Item item) => item == null ? "gone" :
+            item.currentType + (item.destroying ? " destroying" : "") + (item.falling ? " falling" : "") +
+            (item.square != null ? " at " + item.square.col + "," + item.square.row : "");
+
+        // Item.SwitchDirection reads (where the finger started - where it is now).
+        static void Swap(Item from, Item to)
+        {
+            Square s = from.square;
+            Vector3 delta = to.square == s.GetNeighborLeft() ? new Vector3(1, 0, 0) :
+                to.square == s.GetNeighborRight() ? new Vector3(-1, 0, 0) :
+                to.square == s.GetNeighborBottom() ? new Vector3(0, 1, 0) : new Vector3(0, -1, 0);
+            from.switchDirection = Vector3.zero;
+            from.SwitchDirection(delta);
+        }
+
+        static Item PlainNeighbour(Item item)
+        {
+            Square s = item.square;
+            foreach (var n in new[] { s.GetNeighborRight(), s.GetNeighborLeft(), s.GetNeighborTop(), s.GetNeighborBottom() })
+                if (n != null && n.item != null && n.type != SquareTypes.WIREBLOCK && n.item.currentType == ItemsTypes.NONE &&
+                    !n.item.destroying && !n.item.falling)
+                    return n.item;
+            return null;
+        }
 
         static Item Centre()
         {
@@ -179,12 +286,30 @@ namespace JellyGarden.Scripts.Story.Editor
                 .First();
         }
 
+        // Still, refilled, and still again a moment later: gems picked from a board that is
+        // still dropping refills in can be taken by the cascade.
         IEnumerator Settled()
         {
-            yield return Until(() => LevelManager.THIS != null && LevelManager.THIS.gameStatus == GameState.Playing &&
-                !LevelManager.THIS.DragBlocked && !FindObjectsByType<Item>().Any(i => i.destroying || i.falling),
-                20f, "Board settled");
-            yield return new WaitForSeconds(0.15f);
+            for (int pass = 0; pass < 2; pass++)
+            {
+                yield return Until(() => Calm(), 20f, "Board settled");
+                yield return new WaitForSeconds(0.5f);
+            }
+            yield return Until(() => Calm(), 20f, "Board settled");
+        }
+
+        static bool Calm()
+        {
+            var manager = LevelManager.THIS;
+            if (manager == null || manager.gameStatus != GameState.Playing || manager.DragBlocked) return false;
+            if (FindObjectsByType<Item>().Any(i => i.destroying || i.falling)) return false;
+            for (int r = 0; r < manager.maxRows; r++)
+                for (int c = 0; c < manager.maxCols; c++)
+                {
+                    var sq = manager.GetSquare(c, r);
+                    if (sq != null && !sq.IsNone() && sq.type == SquareTypes.EMPTY && sq.item == null) return false;
+                }
+            return true;
         }
 
         void OnDestroy()
