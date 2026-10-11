@@ -750,12 +750,18 @@ namespace JellyGarden.Scripts
                 if (limitType == LIMIT.MOVES)
                     Limit--;
                 item.NextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
+                // STORY: the original game flies each move in from the Moves
+                // counter first; the gem changes when it lands (StoryOriginalBoosters).
+                if (!JellyGarden.Scripts.Story.StoryOriginalBoosters.SendMove(item))
                 item.ChangeType();
                 // 0.2s a gem, not the kit's 0.5. Fifteen leftover moves is the
                 // cap, so this is the difference between a 7.5-second wait
                 // before the win banner and a 3-second one.
                 yield return new WaitForSeconds(0.2f);
             }
+            // STORY: every move has landed and become its Rocket before the volley.
+            while (JellyGarden.Scripts.Story.StoryOriginalBoosters.MovesInFlight > 0)
+                yield return null;
             yield return new WaitForSeconds(0.3f);
             // One volley, not one gem at a time. The kit fired GetAllExtaItems()[0]
             // and then waited out its blast — 1.1 seconds plus the settle for

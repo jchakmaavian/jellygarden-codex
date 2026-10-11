@@ -26,6 +26,8 @@ namespace JellyGarden.Scripts.Story
         private Text _title, _caption;
         private Button _continue;
         private StoryWinStarVfx _starVfx;
+        // The original Royal Throne stars, in place of _starVfx while they are on.
+        private StoryOriginalWinStars _originalStars;
         private Action _onContinue;
         private Material _blurMaterial;
         private RenderTexture _blurred;
@@ -111,6 +113,7 @@ namespace JellyGarden.Scripts.Story
             star.preserveAspect = true;
             Place(star.rectTransform, new Vector2(0f, 36f), new Vector2(465f, 465f));
             _starVfx.SetStar(star.rectTransform);
+            _originalStars = StoryOriginalWinStars.Attach(effects, _starVfx);
 
             Image banner = Art("VictoryBanner", _card, "win_victory_banner", StoryArt.Load("win_caption"));
             banner.preserveAspect = true;
@@ -182,6 +185,7 @@ namespace JellyGarden.Scripts.Story
             Image star = StorybookArt.Image("Star", _card, StorybookArt.VictoryStar);
             Place(star.rectTransform, new Vector2(0, -56), new Vector2(422, 401));
             _starVfx.SetStar(star.rectTransform);
+            _originalStars = StoryOriginalWinStars.Attach(effects, _starVfx);
             RectTransform footer = StoryUi.Stretch(StoryUi.CreateRect("Footer", _card));
             _footer = footer.gameObject.AddComponent<CanvasGroup>();
             _caption = Label("RewardLabel", footer, "", 102, Navy, new Vector2(0, -326), new Vector2(840, 125));
@@ -279,6 +283,7 @@ namespace JellyGarden.Scripts.Story
             _openedAt = StoryClock.Now;
             _presenting = true;
             _starVfx.Play(_openedAt);
+            if (_originalStars != null) _originalStars.Play();
             Animate(0f);
         }
 

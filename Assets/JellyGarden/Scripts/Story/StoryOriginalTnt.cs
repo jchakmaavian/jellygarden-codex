@@ -75,6 +75,7 @@ namespace JellyGarden.Scripts.Story
             _enabled = null;
             _assets = null;
             _host = null;
+            _heldFrame = -1;
         }
 
         /// <summary>
@@ -100,6 +101,8 @@ namespace JellyGarden.Scripts.Story
         public static bool Blast(Vector3 at, float pitch)
         {
             if (!Application.isPlaying || !Ready) return false;
+            // A TNT+TNT combo drew its own big blast this frame (StoryOriginalBoosters.TntTnt).
+            if (Time.frameCount == _heldFrame) return true;
             var host = Host();
             var blast = ReferenceTnt.PlayVfx(ReferenceTnt.ExplodeVfx, host.transform, at, pitch, 0, ReferenceTnt.VfxOrder);
             if (blast == null) return false;
@@ -107,6 +110,10 @@ namespace JellyGarden.Scripts.Story
             Sound(ReferenceTnt.ExplodeAudio);
             return true;
         }
+
+        /// <summary>The single blasts of this frame belong to a combo blast already playing.</summary>
+        public static void HoldBlasts() => _heldFrame = Time.frameCount;
+        private static int _heldFrame = -1;
 
         public static void StateChanged(GameState state)
         {

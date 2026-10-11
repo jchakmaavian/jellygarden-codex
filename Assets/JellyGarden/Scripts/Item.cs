@@ -150,6 +150,9 @@ namespace JellyGarden.Scripts
                 // ChangeTypeCor (this consumes NextType first, so that exits).
                 if (currentType == ItemsTypes.PACKAGE)
                     JellyGarden.Scripts.Story.StoryOriginalTnt.Show(this, true);
+                // STORY: so does a Rocket or Color Ball; the original piece draws it.
+                else
+                    JellyGarden.Scripts.Story.StoryOriginalBoosters.ShowPiece(this, true);
             }
             else if (LevelManager.THIS.limitType == LIMIT.TIME && Random.Range(0, 28) == 1)
             {
@@ -608,6 +611,9 @@ namespace JellyGarden.Scripts
         {
             if (item1.currentType == ItemsTypes.PACKAGE && item2.currentType == ItemsTypes.PACKAGE)
             {
+                // STORY: the original TNT+TNT blast, over this whole clear.
+                JellyGarden.Scripts.Story.StoryOriginalBoosters.TntTnt(
+                    item2.square != null ? item2.square.transform.position : item2.transform.position);
                 List<Item> bigList = new List<Item>();
                 List<Item> itemsList = LevelManager.THIS.GetItemsAround(item2.square);
                 foreach (Item item in itemsList)
@@ -654,6 +660,9 @@ namespace JellyGarden.Scripts
                         }
                     }
                 }
+                // STORY: the original Rocket+TNT burst over the TNT.
+                JellyGarden.Scripts.Story.StoryOriginalBoosters.RocketTnt(
+                    item2.square != null ? item2.square.transform.position : item2.transform.position);
                 item2.DestroyPackage();
             }
         }
@@ -664,14 +673,28 @@ namespace JellyGarden.Scripts
                 return;
             if (item1.currentType == ItemsTypes.BOMB)
             {
+                // STORY: where the original Color Ball sequences start from.
+                Vector3 ballAt = item1.square != null ? item1.square.transform.position : item1.transform.position;
                 if (item2.currentType == ItemsTypes.NONE)
                     DestroyColor(item2.color);
                 else if (item2.currentType == ItemsTypes.HORIZONTAL_STRIPPED || item2.currentType == ItemsTypes.VERTICAL_STRIPPED)
+                {
+                    // STORY: beams to every gem that turns into a Rocket.
+                    JellyGarden.Scripts.Story.StoryOriginalBoosters.ColorBallConvert(ballAt, item2.color);
                     LevelManager.THIS.SetTypeByColor(item2.color, ItemsTypes.HORIZONTAL_STRIPPED);
+                }
                 else if (item2.currentType == ItemsTypes.PACKAGE)
+                {
+                    // STORY: and to every gem that turns into a TNT.
+                    JellyGarden.Scripts.Story.StoryOriginalBoosters.ColorBallConvert(ballAt, item2.color);
                     LevelManager.THIS.SetTypeByColor(item2.color, ItemsTypes.PACKAGE);
+                }
                 else if (item2.currentType == ItemsTypes.BOMB)
+                {
+                    // STORY: the original two-ball clip and blast.
+                    JellyGarden.Scripts.Story.StoryOriginalBoosters.DualColorBall(ballAt);
                     LevelManager.THIS.DestroyDoubleBomb(square.col);
+                }
 
 
 
@@ -867,12 +890,15 @@ namespace JellyGarden.Scripts
             if (NextType == ItemsTypes.HORIZONTAL_STRIPPED)
             {
                 anim.SetTrigger("appear");
-                SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
+                // STORY: the original Rocket brings its own creation sound.
+                if (!JellyGarden.Scripts.Story.StoryOriginalBoosters.Ready)
+                    SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
             }
             else if (NextType == ItemsTypes.VERTICAL_STRIPPED)
             {
                 anim.SetTrigger("appear");
-                SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
+                if (!JellyGarden.Scripts.Story.StoryOriginalBoosters.Ready)
+                    SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
             }
             else if (NextType == ItemsTypes.PACKAGE)
             {
@@ -885,7 +911,9 @@ namespace JellyGarden.Scripts
             else if (NextType == ItemsTypes.BOMB)
             {
                 anim.SetTrigger("appear");
-                SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
+                // STORY: so does the original Color Ball.
+                if (!JellyGarden.Scripts.Story.StoryOriginalBoosters.Ready)
+                    SoundBase.Instance.PlaySound(SoundBase.Instance.appearStipedColorBomb);
                 color = 555;
             }
             while (!appeared)
@@ -910,6 +938,9 @@ namespace JellyGarden.Scripts
             NextType = ItemsTypes.NONE;
             if (currentType == ItemsTypes.PACKAGE)
                 JellyGarden.Scripts.Story.StoryOriginalTnt.Show(this, true);
+            // STORY: a Rocket or Color Ball gets the original piece too.
+            else
+                JellyGarden.Scripts.Story.StoryOriginalBoosters.ShowPiece(this, true);
 
         }
 
@@ -1219,6 +1250,11 @@ namespace JellyGarden.Scripts
             }
             else if (currentType != ItemsTypes.INGREDIENT && currentType != ItemsTypes.BOMB)
             {
+                // STORY: the original gem explosion, in this gem's colour, with
+                // its own match sound. Fire-and-forget, like the punch below.
+                bool originalBreak = JellyGarden.Scripts.Story.StoryOriginalBoosters.MatchBreak(
+                    square != null ? square.transform.position : transform.position, color);
+                if (!originalBreak)
                 SoundBase.Instance.PlaySound(SoundBase.Instance.destroy[Random.Range(0, SoundBase.Instance.destroy.Length)]);
 
                 // The clear itself. Three things about how this is started
@@ -1330,7 +1366,9 @@ namespace JellyGarden.Scripts
 
         public void DestroyHorizontal()
         {
-            SoundBase.Instance.PlaySound(SoundBase.Instance.strippedExplosion);
+            // STORY: the original Rocket plays its own launch sound.
+            if (!JellyGarden.Scripts.Story.StoryOriginalBoosters.OwnsRocket)
+                SoundBase.Instance.PlaySound(SoundBase.Instance.strippedExplosion);
             if (!JellyGarden.Scripts.Story.StoryRocketVfx.Enabled)
                 LevelManager.THIS.StrippedShow(gameObject, true);
 
@@ -1357,7 +1395,8 @@ namespace JellyGarden.Scripts
 
         public void DestroyVertical()
         {
-            SoundBase.Instance.PlaySound(SoundBase.Instance.strippedExplosion);
+            if (!JellyGarden.Scripts.Story.StoryOriginalBoosters.OwnsRocket)
+                SoundBase.Instance.PlaySound(SoundBase.Instance.strippedExplosion);
             if (!JellyGarden.Scripts.Story.StoryRocketVfx.Enabled)
                 LevelManager.THIS.StrippedShow(gameObject, false);
 
@@ -1420,7 +1459,9 @@ namespace JellyGarden.Scripts
 
         public void DestroyColor(int p)
         {
-            SoundBase.Instance.PlaySound(SoundBase.Instance.colorBombExpl);
+            // STORY: the original Color Ball plays its own charge, beam and pulse sounds.
+            if (!JellyGarden.Scripts.Story.StoryOriginalBoosters.OwnsColorBall)
+                SoundBase.Instance.PlaySound(SoundBase.Instance.colorBombExpl);
 
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
 
@@ -1448,6 +1489,10 @@ namespace JellyGarden.Scripts
                     : other.transform.position);
             }
 
+            // STORY: the original Color Ball draws it when it is on; see
+            // StoryOriginalBoosters. The charge-mark-wave stays the fallback.
+            if (!JellyGarden.Scripts.Story.StoryOriginalBoosters.ColorBall(
+                    square != null ? square.transform.position : transform.position, p, targets))
             JellyGarden.Scripts.Story.StoryColorBombVfx.Fire(
                 square != null ? square.transform.position : transform.position,
                 JellyGarden.Scripts.Story.StoryBombVfx.TintFor(p, 0f),

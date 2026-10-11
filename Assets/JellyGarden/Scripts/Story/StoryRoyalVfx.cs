@@ -34,6 +34,9 @@ namespace JellyGarden.Scripts.Story
         public static bool FireRocket(Vector3 at, bool horizontal, int negative, int positive, float pitch)
         {
             if (!Application.isPlaying) return false;
+            // The original Royal Throne Rocket flies when it is on; see
+            // StoryOriginalBoosters. RoyalRocketVFX stays the fallback.
+            if (StoryOriginalBoosters.FireRocket(at, horizontal, negative, positive, pitch)) return true;
             var player = Rocket();
             if (player == null) return false;
             at = EffectPosition(at, pitch);
@@ -46,6 +49,8 @@ namespace JellyGarden.Scripts.Story
 
         public static float RocketReachesAt(int distance)
         {
+            // Cells clear as the original halves' noses reach them.
+            if (StoryOriginalBoosters.OwnsRocket) return StoryOriginalBoosters.RocketReachesAt(distance);
             var player = Application.isPlaying ? Rocket() : null;
             if (player == null) return StoryRocketFlight.ReachesAt(distance);
             var tuning = player.Tuning;
@@ -76,6 +81,7 @@ namespace JellyGarden.Scripts.Story
             if (RocketVFX.Player != null) RocketVFX.Player.Paused = paused;
             if (TNTExplosionVFX.Player != null) TNTExplosionVFX.Player.Paused = paused;
             StoryOriginalTnt.StateChanged(state);
+            StoryOriginalBoosters.StateChanged(state);
         }
 
         public static void Clear()
@@ -83,9 +89,10 @@ namespace JellyGarden.Scripts.Story
             RocketVFX.Clear();
             TNTExplosionVFX.Clear();
             StoryOriginalTnt.Clear();
+            StoryOriginalBoosters.Clear();
         }
 
-        static Vector3 EffectPosition(Vector3 at, float pitch)
+        internal static Vector3 EffectPosition(Vector3 at, float pitch)
         {
             // The board can sit on the orthographic camera's plane. Both ZIPs
             // offset layers toward -Z, and particles behind the lens disappear
