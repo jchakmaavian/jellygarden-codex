@@ -67,17 +67,22 @@ namespace RoyalThrone.Editor
                     int plays=fx.NativeTntComboPlays, moves=lm.Limit; Vector3 delta=a.transform.position-b.transform.position;
                     a.SwitchDirection(delta); a.SwitchDirection(delta);
                     Check(!RoyalPowerupDirector.Tap(a) && !RoyalPowerupDirector.Tap(b),name+": duplicate input blocked during merge");
-                    float deadline=Time.realtimeSinceStartup+20, preparedAt=-1, blastAt=-1; int frames=0; bool actor=false, unsupported=false;
+                    float deadline=Time.realtimeSinceStartup+20, preparedAt=-1, blastAt=-1; int frames=0; bool actor=false, unsupported=false, sunShown=false, wrongBand=false;
+                    var sun=UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Sprites/Items-SpecialItems-TntItem-Combo-kemer__21603.png");
                     while((RoyalPowerupDirector.Busy || lm.InputSwaps>0 || frames==0) && Time.realtimeSinceStartup<deadline)
                     {
                         yield return new WaitForEndOfFrame(); frames++;
                         if(ReferenceActivationVisual.ActiveCount>0) { actor=true; if(preparedAt<0) preparedAt=Time.time; }
+                        foreach(var view in Object.FindObjectsByType<ReferenceActivationVisual>()) if(view.Active)
+                        foreach(var renderer in view.GetComponentsInChildren<SpriteRenderer>(true)) if(renderer.name=="TntKemer" && renderer.enabled)
+                        { sunShown=true; wrongBand |= renderer.sprite!=sun; }
                         if(Blast() && blastAt<0) blastAt=Time.time;
                         foreach(var ps in Object.FindObjectsByType<ParticleSystem>()) if(ps.particleCount>0)
                         { var renderer=ps.GetComponent<ParticleSystemRenderer>(); unsupported |= renderer && (!renderer.sharedMaterial || !renderer.sharedMaterial.shader.isSupported); }
                         if(fps==60 && !vertical && frames%3==0) Capture(frames);
                     }
                     Check(actor && fx.NativeTntComboPlays==plays+1,name+": one dedicated native dual animation");
+                    Check(sun && sunShown && !wrongBand,name+": approved sun band used throughout animation, without TNT lettering");
                     Check(Mathf.Abs(fx.LastTntComboPreparation-1.583333f)<.002f,name+": authored 1.583-second preparation retained");
                     Check(blastAt>=0 && preparedAt>=0 && blastAt-preparedAt>=1.583333f-2f/fps,name+": blast follows preparation");
                     Check(lm.Limit==moves-1,name+": rapid repeated input costs exactly one move");

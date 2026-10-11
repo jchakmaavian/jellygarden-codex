@@ -24,6 +24,7 @@ PASS Pool reuse clears attachment and restores default order; stale handles cann
 PASS 15 FPS horizontal: both TNTs accept the initial input
 PASS 15 FPS horizontal: duplicate input blocked during merge
 PASS 15 FPS horizontal: one dedicated native dual animation
+PASS 15 FPS horizontal: approved sun band used throughout animation, without TNT lettering
 PASS 15 FPS horizontal: authored 1.583-second preparation retained
 PASS 15 FPS horizontal: blast follows preparation
 PASS 15 FPS horizontal: rapid repeated input costs exactly one move
@@ -33,6 +34,7 @@ PASS 15 FPS horizontal: actors and particle leases retire
 PASS 15 FPS vertical: both TNTs accept the initial input
 PASS 15 FPS vertical: duplicate input blocked during merge
 PASS 15 FPS vertical: one dedicated native dual animation
+PASS 15 FPS vertical: approved sun band used throughout animation, without TNT lettering
 PASS 15 FPS vertical: authored 1.583-second preparation retained
 PASS 15 FPS vertical: blast follows preparation
 PASS 15 FPS vertical: rapid repeated input costs exactly one move
@@ -42,6 +44,7 @@ PASS 15 FPS vertical: actors and particle leases retire
 PASS 30 FPS horizontal: both TNTs accept the initial input
 PASS 30 FPS horizontal: duplicate input blocked during merge
 PASS 30 FPS horizontal: one dedicated native dual animation
+PASS 30 FPS horizontal: approved sun band used throughout animation, without TNT lettering
 PASS 30 FPS horizontal: authored 1.583-second preparation retained
 PASS 30 FPS horizontal: blast follows preparation
 PASS 30 FPS horizontal: rapid repeated input costs exactly one move
@@ -51,6 +54,7 @@ PASS 30 FPS horizontal: actors and particle leases retire
 PASS 30 FPS vertical: both TNTs accept the initial input
 PASS 30 FPS vertical: duplicate input blocked during merge
 PASS 30 FPS vertical: one dedicated native dual animation
+PASS 30 FPS vertical: approved sun band used throughout animation, without TNT lettering
 PASS 30 FPS vertical: authored 1.583-second preparation retained
 PASS 30 FPS vertical: blast follows preparation
 PASS 30 FPS vertical: rapid repeated input costs exactly one move
@@ -60,6 +64,7 @@ PASS 30 FPS vertical: actors and particle leases retire
 PASS 60 FPS horizontal: both TNTs accept the initial input
 PASS 60 FPS horizontal: duplicate input blocked during merge
 PASS 60 FPS horizontal: one dedicated native dual animation
+PASS 60 FPS horizontal: approved sun band used throughout animation, without TNT lettering
 PASS 60 FPS horizontal: authored 1.583-second preparation retained
 PASS 60 FPS horizontal: blast follows preparation
 PASS 60 FPS horizontal: rapid repeated input costs exactly one move
@@ -69,6 +74,7 @@ PASS 60 FPS horizontal: actors and particle leases retire
 PASS 60 FPS vertical: both TNTs accept the initial input
 PASS 60 FPS vertical: duplicate input blocked during merge
 PASS 60 FPS vertical: one dedicated native dual animation
+PASS 60 FPS vertical: approved sun band used throughout animation, without TNT lettering
 PASS 60 FPS vertical: authored 1.583-second preparation retained
 PASS 60 FPS vertical: blast follows preparation
 PASS 60 FPS vertical: rapid repeated input costs exactly one move
@@ -77,4 +83,4 @@ PASS 60 FPS vertical: board refills and input recovers
 PASS 60 FPS vertical: actors and particle leases retire
 PASS No new Unity runtime errors
 PASS Real player balance and profile restored
-ALL DUAL TNT CHECKS PASSED 78 checks
+ALL DUAL TNT CHECKS PASSED 84 checks

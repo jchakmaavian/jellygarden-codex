@@ -48,7 +48,14 @@ public static class ReferenceDualComboImporter
    string ctrlName=kind=="TNTTNTCombo"?"TntTntComboRfv387":"BallBallComboRfv387";string ctrlPath=Animation+"Controllers/"+ctrlName+".controller";
    var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>(ctrlPath);if(!controller)controller=AnimatorController.CreateAnimatorControllerAtPath(ctrlPath);var sm=controller.layers[0].stateMachine;foreach(var st in sm.states)sm.RemoveState(st.state);var state=sm.AddState(name);state.motion=clip;state.speed=1;sm.defaultState=state;
    string viewPath=Animation+"Resources/ReferenceGameplay/Visuals/"+kind+".prefab";var view=PrefabUtility.LoadPrefabContents(viewPath);
-   try{foreach(var r in view.GetComponentsInChildren<SpriteRenderer>(true))if(r.sprite&&byName.TryGetValue(System.Text.RegularExpressions.Regex.Replace(r.sprite.name,@"__\d+$",""),out var exact))r.sprite=exact;view.GetComponentInChildren<Animator>(true).runtimeAnimatorController=controller;PrefabUtility.SaveAsPrefabAsset(view,Animation+"Resources/ReferenceGameplay/Visuals/"+kind+"Rfv387.prefab");}finally{PrefabUtility.UnloadPrefabContents(view);}
+   try{foreach(var r in view.GetComponentsInChildren<SpriteRenderer>(true))if(r.sprite&&byName.TryGetValue(System.Text.RegularExpressions.Regex.Replace(r.sprite.name,@"__\d+$",""),out var exact))r.sprite=exact;
+    // Keep the approved sun band when rebuilding the native dual TNT view.
+    if(kind=="TNTTNTCombo"){
+     var sun=AssetDatabase.LoadAssetAtPath<Sprite>("Assets/ReferenceGameplay/Art/Resources/ReferenceGameplay/Sprites/Items-SpecialItems-TntItem-Combo-kemer__21603.png");
+     if(!sun)throw new InvalidOperationException("Approved TNT sun band is missing.");
+     view.GetComponentsInChildren<SpriteRenderer>(true).Single(r=>r.name=="TntKemer").sprite=sun;
+    }
+    view.GetComponentInChildren<Animator>(true).runtimeAnimatorController=controller;PrefabUtility.SaveAsPrefabAsset(view,Animation+"Resources/ReferenceGameplay/Visuals/"+kind+"Rfv387.prefab");}finally{PrefabUtility.UnloadPrefabContents(view);}
   }
   AssetDatabase.SaveAssets();File.WriteAllText(Folder+"import-result.txt","PASS: "+systems+" native particle systems, "+bindings+" exact sprite bindings, 32 exact sprites, two dedicated combo views; supporting sprites retained when already exact.\n");Debug.Log("ALL_COMBO_ART_IMPORT_PASSED");
  }
