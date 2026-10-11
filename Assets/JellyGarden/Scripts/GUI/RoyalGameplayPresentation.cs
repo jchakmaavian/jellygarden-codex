@@ -531,17 +531,18 @@ namespace RoyalThrone.Presentation
             }
         }
 
-        // Ice blocks fill their cell edge to edge (2026-10-04): the ice art (its body is about 95% of its sprite, with
-        // rounded corners) is drawn 18% larger than the cell, so neighbouring tiles overlap well past their rounded corners and
-        // no lavender shows between them. Only blocks still standing (Square.block): a broken one flies off with its own
-        // animation, and other block kinds (crates, stone, chains) keep their size.
-        public const float BlockFill=1.18f;
+        // Ice blocks fill their cell edge to edge: the ice art's opaque body is 401x410 of its 414x430 crop
+        // (RoyalGameplayArt "ice"), so each axis is scaled by that ratio and neighbouring bodies meet exactly. The old 1.18
+        // drew every tile 18% past its cell, piling each one onto its neighbours (2026-10-11). Only blocks still standing
+        // (Square.block): a broken one flies off with its own animation, and other block kinds (crates, stone, chains) keep
+        // their size.
+        public static readonly Vector2 BlockFill=new Vector2(414f/401f,430f/410f);
         static void FitBlock(GameObject block,Vector2 cell)
         {
             if(!block)return;var r=block.GetComponent<SpriteRenderer>();if(!r||!r.sprite)return;
             string n=r.sprite.name;if(n!="block"&&n!="block_02")return;
             var b=r.sprite.bounds.size;var parent=block.transform.parent;var ps=parent?parent.lossyScale:Vector3.one;
-            float sx=cell.x*BlockFill/Mathf.Max(.0001f,b.x*Mathf.Abs(ps.x)),sy=cell.y*BlockFill/Mathf.Max(.0001f,b.y*Mathf.Abs(ps.y));
+            float sx=cell.x*BlockFill.x/Mathf.Max(.0001f,b.x*Mathf.Abs(ps.x)),sy=cell.y*BlockFill.y/Mathf.Max(.0001f,b.y*Mathf.Abs(ps.y));
             var s=block.transform.localScale;
             if(Mathf.Abs(s.x-sx)>.0005f||Mathf.Abs(s.y-sy)>.0005f)block.transform.localScale=new Vector3(sx,sy,s.z==0?1:s.z);
             if(r.drawMode!=SpriteDrawMode.Simple)r.drawMode=SpriteDrawMode.Simple;
