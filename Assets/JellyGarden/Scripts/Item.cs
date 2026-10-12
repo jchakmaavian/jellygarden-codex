@@ -1343,7 +1343,7 @@ namespace JellyGarden.Scripts
 
                 GameObject partcl = Instantiate(Resources.Load("Prefabs/Effects/Firework"), transform.position, Quaternion.identity) as GameObject;
                 var main = partcl.GetComponent<ParticleSystem>().main;
-                main.startColor = LevelManager.THIS.scoresColors[color];
+                main.startColor = GetJuiceColor();
                 Destroy(partcl, 1f);
             }
             else if (currentType != ItemsTypes.INGREDIENT && currentType != ItemsTypes.BOMB)
@@ -1400,7 +1400,7 @@ namespace JellyGarden.Scripts
 
             //Color color = sprRenderer.sprite.texture.GetPixel(sprRenderer.sprite.texture.width / 2 - 10, sprRenderer.sprite.texture.height / 2 - 10);
             if (showScore)
-                LevelManager.THIS.PopupScore( currentType != ItemsTypes.INGREDIENT?LevelManager.THIS.scoreForItem: LevelManager.THIS.scoreForIngredients, transform.position, color);
+                LevelManager.THIS.PopupScore( currentType != ItemsTypes.INGREDIENT?LevelManager.THIS.scoreForItem: LevelManager.THIS.scoreForIngredients, transform.position, PaletteSlot(color));
 
             LevelManager.THIS.CheckCollectedTarget(gameObject);
 
@@ -1441,11 +1441,6 @@ namespace JellyGarden.Scripts
         }
 
         /// <summary>
-        /// Colour the VFX inherits from this fruit. Uses the game's own per-colour
-        /// palette (the same array the score popups and firework already use) so the
-        /// sparkles stay consistent with the existing art direction.
-        /// </summary>
-        /// <summary>
         /// True if this transform belongs to the "5sec" time-bonus flyer, which owns its
         /// own animation and must not be touched by the destroy fade.
         /// </summary>
@@ -1459,13 +1454,30 @@ namespace JellyGarden.Scripts
             return false;
         }
 
+        // The kit's score palette (LevelManager.scoresColors / scoresColorsOutline) keeps its own fruit order: orange-red,
+        // amber, magenta, blue, yellow, green. The board draws colours 0-5 as RoyalGameplayArt's ruby, shield, crown, leaf,
+        // lily and King Leo's gold coin, so each board colour takes the kit slot of its own hue (the coin the amber one).
+        static readonly int[] KitPaletteSlots = { 0, 3, 4, 5, 2, 1 };
+
+        /// <summary>The kit palette slot (scoresColors, scoresColorsOutline) of a board colour; anything else unchanged.</summary>
+        public static int PaletteSlot(int boardColor)
+        {
+            return RoyalGameplayArt.IsGemColor(boardColor) ? KitPaletteSlots[boardColor] : boardColor;
+        }
+
+        /// <summary>
+        /// Colour the VFX inherits from this piece: the match burst, the match centre and the
+        /// firework. The game's own per-colour palette (the array the score popups use), read
+        /// in the board's colour order so a ruby bursts red and the coin gold.
+        /// </summary>
         public Color GetJuiceColor()
         {
             var lm = LevelManager.THIS;
+            int slot = PaletteSlot(color);
             if (lm != null && lm.scoresColors != null && lm.scoresColors.Length > 0 &&
-                color >= 0 && color < lm.scoresColors.Length)
+                slot >= 0 && slot < lm.scoresColors.Length)
             {
-                return lm.scoresColors[color];
+                return lm.scoresColors[slot];
             }
             return Color.white;
         }

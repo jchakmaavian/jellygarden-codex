@@ -136,8 +136,25 @@ namespace RoyalThrone.Presentation
         void OnApplicationFocus(bool focused){if(!focused&&!Application.isEditor)PauseForInterruption();}
         void PauseForInterruption()
         {
+            if(AutomationRunning())return;
             var lm=LevelManager.THIS;
             if(lm&&lm.gameStatus==GameState.Playing&&MenuManager.Instance&&!MenuManager.Instance.BlocksBoardInput)MenuManager.Instance.ShowMenuPause(true);
+        }
+        // Automation plays the board itself and loses focus to whatever else is on the desktop: a batchmode run, the
+        // story's player drivers (run_player.sh -storyplaytest and its siblings, or StoryPlaytest started from the Editor)
+        // and a QA session. None of them answers a pause menu, so an interruption leaves them playing.
+        static readonly string[] AutomationFlags={"-storyplaytest","-storyselftest","-storythemetest","-storydemo","-treasure-review"};
+        static int automationArgs=-1;
+        static bool AutomationRunning()
+        {
+            if(Application.isBatchMode||RoyalThrone.Testing.RoyalSave.Testing||RoyalThrone.Testing.RoyalSave.BlockGameplayInput)return true;
+            if(automationArgs<0)
+            {
+                automationArgs=0;
+                foreach(var arg in global::System.Environment.GetCommandLineArgs())
+                    foreach(var flag in AutomationFlags)if(arg.StartsWith(flag,global::System.StringComparison.Ordinal))automationArgs=1;
+            }
+            return automationArgs==1||FindAnyObjectByType<JellyGarden.Scripts.Story.StoryPlaytest>()!=null;
         }
         void OnDisable()
         {
@@ -344,7 +361,8 @@ namespace RoyalThrone.Presentation
             var portrait=RoyalGameplayHud.BuildPortrait(header);
             yield return null;
             // King Leo's own animated portrait (plan D2) fills the arched window, inside the gold ring, where Royal Throne
-            // mounted its King Vanguard rig. Without frames StoryAvatar draws a still crop and the reactions are skipped.
+            // mounted its King Vanguard rig. StoryAvatar reads Leo's shared frames in every campaign, Treasure Hunt included,
+            // so he breathes and reacts there too; only with no frames at all does it draw a still crop and skip reactions.
             var portraitMask=RoyalGameplayHud.WindowMask(portrait.slot,"King Leo portrait mask");
             var face=JellyGarden.Scripts.Story.StoryAvatar.Build(KingCharacter,portraitMask.rectTransform);
             kingAvatar=face?face.GetComponent<JellyGarden.Scripts.Story.StoryAvatar>():null;
@@ -358,11 +376,9 @@ namespace RoyalThrone.Presentation
             var pause=Fixed("Pause game",rail,new Vector2(.5f,.5f),new Vector2(2*BoostStride,0),new Vector2(BoostSize,BoostSize));
             var pauseFace=Rect("Royal HUD settings face",pause,0,0,1,1);RoyalGameplayHud.BuildButton(pauseFace,true);
             Pair("Settings gear",pauseFace,"Game-settings_button_gear",.22f,.22f,.78f,.78f);
-            // Pause only while the player is actually playing: not during the win celebration, the fail offer or over
-            // another popup (the legacy pause button had the same Playing check).
             var image=pause.gameObject.AddComponent<Image>();image.color=Color.clear;var button=pause.gameObject.AddComponent<Button>();button.transition=Selectable.Transition.None;
             pause.gameObject.AddComponent<RoyalHudPress>().parts=new[]{pauseFace};
-            button.onClick.AddListener(()=>{var state=LevelManager.THIS;if(state&&state.gameStatus==GameState.Playing&&!MenuManager.Instance.BlocksBoardInput)MenuManager.Instance.ShowMenuPause(true);});
+            button.onClick.AddListener(OpenSettings);
             var tools=gameObject.AddComponent<RoyalThrone.ReferenceGameplay.ReferenceBoosterBar>();
             tools.Attach(content,display);
             var lm=GetComponent<LevelManager>();
@@ -407,6 +423,17 @@ namespace RoyalThrone.Presentation
             backdrop.sprite=RoyalGameplayHud.Backdrop();backdrop.color=Color.white;
             group.alpha=0;group.blocksRaycasts=false;
             ready=true;
+        }
+        // The settings gear: the kit's click, then the in-level pause card (MenuManager's MenuPause in Royal Throne's skin,
+        // with its settings and the Quit Level? confirm), as Royal Throne opens it. Only while the player is actually
+        // playing: not during the win celebration, the fail offer or over another popup (the legacy pause button had the
+        // same Playing check).
+        void OpenSettings()
+        {
+            var state=LevelManager.THIS;var menus=MenuManager.Instance;
+            if(!state||state.gameStatus!=GameState.Playing||!menus||menus.BlocksBoardInput)return;
+            if(SoundBase.Instance)SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            menus.ShowMenuPause(true);
         }
         void LateUpdate()
         {
@@ -489,7 +516,10 @@ namespace RoyalThrone.Presentation
             int font=shown<=2?30:27;
             for(int i=0;i<shown;i++){
                 var target=lm.targetObject[i];var number=goalNumbers[i];
-                goalIcons[i].sprite=RoyalVisualCatalog.Goal(target,true);number.text=Mathf.Max(0,target.GetCount()+Flying(target)).ToString();
+                // The board's art for the goal, else the target's own icon; an Image with no sprite draws a white box, so
+                // with neither the icon is left off and the number stands alone.
+                var art=RoyalVisualCatalog.Goal(target,true);if(!art)art=target.icon;
+                goalIcons[i].sprite=art;goalIcons[i].enabled=art!=null;number.text=Mathf.Max(0,target.GetCount()+Flying(target)).ToString();
                 // Best fit stays off so every number shares one size; a box shorter than the font's line height would then
                 // truncate the text to nothing, so the numbers overflow vertically.
                 number.resizeTextForBestFit=false;number.horizontalOverflow=HorizontalWrapMode.Overflow;number.verticalOverflow=VerticalWrapMode.Overflow;number.fontSize=30;

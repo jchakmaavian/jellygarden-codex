@@ -95,7 +95,7 @@ namespace JellyGarden.Scripts
         public int TargetScore = 1000;
         public int currentLevel = 1;
         public int FailedCost;
-        /// <summary>Continues bought in this attempt (reset by PrepareGame).</summary>
+        /// <summary>Continues bought in this attempt: each one costs more (RoyalEconomy.ContinueCost). Reset by PrepareGame.</summary>
         [HideInInspector] public int ContinuesBought;
         public int ExtraFailedMoves = 5;
         public int ExtraFailedSecs = 30;
@@ -164,6 +164,11 @@ namespace JellyGarden.Scripts
                 }
             }
         }
+
+        /// <summary>Stars this win added to the Area balance: 1 on a level's first win, 0 on a replay (set by CommitWin).</summary>
+        public int StarsGained { get; private set; }
+        // A win's lasting effects are paid once per attempt (CommitWin), the moment its goals are met.
+        bool winCommitted; int committedCoins, committedCoinsBefore;
 
         SquareBlocks[] levelSquaresFile = new SquareBlocks[81];
         public int targetBlocks;
@@ -330,6 +335,7 @@ namespace JellyGarden.Scripts
                 }
                 else if (value == GameState.PreFailed)
                 {
+                    // "So Close!": the Continue offer for coins (PreFailed, RoyalEconomy.ContinueCost); giving up sets GameOver.
                     MenuManager.Instance.ShowPreFailed(true);
 
                 }
@@ -372,17 +378,19 @@ namespace JellyGarden.Scripts
                 }
                 else if (value == GameState.PreWinAnimations)
                 {
+                    CommitWin();
                     StartCoroutine(PreWinAnimationsCor());
                 }
                 else if (value == GameState.Win)
                 {
-                    //InitScript.THIS.AddGems(1);//Add coins after win
+                    // The coins, the star, the life refund and the unlock were committed when the goals were met (CommitWin); a
+                    // win reached another way commits here. The card and its coin flights present what was committed, and
+                    // every win shows exactly one star.
+                    CommitWin();
+                    stars = 1;
                     MenuManager.Instance.ShowMenuComplete();
-                    if (!InitScript.Instance.losingLifeEveryGame)
-                        InitScript.Instance.AddLife(1);
+                    Juice.RoyalWinSequence.Reward(this, committedCoins, committedCoinsBefore);
                     OnMenuComplete();
-                    if (PlayerPrefs.GetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), 0) < stars)
-                        PlayerPrefs.SetInt(string.Format("Level.{0:000}.StarsCount", currentLevel), stars);
                     if (Score > PlayerPrefs.GetInt("Score" + currentLevel))
                     {
                         PlayerPrefs.SetInt("Score" + currentLevel, Score);
@@ -566,7 +574,7 @@ namespace JellyGarden.Scripts
             ActivatedBoost = null;
             Score = 0;
             stars = 0;
-            ContinuesBought = 0;
+            winCommitted = false; StarsGained = 0; committedCoins = 0; ContinuesBought = 0;
             moveID = 0;
             // These survive a level otherwise: a win celebration interrupted by leaving the level
             // leaves preWinAnimationRunning set, and every later win then hangs before the banner.
@@ -818,7 +826,9 @@ namespace JellyGarden.Scripts
                 if (targetObject.Any(i => !i.Done())) lose = true;
                 if (lose)
                     gameStatus = GameState.PreFailed;
-                else if (Score >= THIS.star1 && targetObject.All(i => i.Done()))
+                // Goals met is a win, whatever the score (one star per win, as in the reference). With the old score
+                // condition a level whose goals were met on its last move, below star1, neither failed nor won: it hung.
+                else if (targetObject.All(i => i.Done()))
                 {
                     gameStatus = GameState.PreWinAnimations;
                 }
@@ -833,6 +843,35 @@ namespace JellyGarden.Scripts
 
 
             }
+        }
+
+        /// <summary>The coins this attempt's win paid (0 until its goals are met); the win card and its flights show them.</summary>
+        public int CommittedCoins => winCommitted ? committedCoins : 0;
+
+        /// <summary>
+        /// A win's lasting effects, once per attempt, the moment its goals are met: before the celebration and the finale,
+        /// which only present them, so a kill during the finale cannot lose the win (the reference keeps it by then too).
+        /// A win is worth exactly one star and 50 coins plus 5 per move left, up to 100 (RoyalEconomy). It refunds the life
+        /// spent on Play, saves the star that unlocks the next level and the best score, then flushes the save. King Leo's
+        /// area star is paid separately on OnWin (StoryFlow).
+        /// </summary>
+        void CommitWin()
+        {
+            if (winCommitted) return;
+            winCommitted = true;
+            stars = 1;
+            string starsKey = string.Format("Level.{0:000}.StarsCount", currentLevel);
+            StarsGained = PlayerPrefs.GetInt(starsKey, 0) > 0 ? 0 : 1;
+            committedCoinsBefore = InitScript.Gems;
+            committedCoins = Juice.RoyalEconomy.WinCoins(this);
+            InitScript.Instance.AddGems(committedCoins);
+            if (!InitScript.Instance.losingLifeEveryGame)
+                InitScript.Instance.AddLife(1);
+            if (PlayerPrefs.GetInt(starsKey, 0) < stars)
+                PlayerPrefs.SetInt(starsKey, stars);
+            if (Score > PlayerPrefs.GetInt("Score" + currentLevel))
+                PlayerPrefs.SetInt("Score" + currentLevel, Score);
+            PlayerPrefs.Save();
         }
 
         /// <summary>Set by a tap during the win celebration: the reward still plays out, faster.</summary>
@@ -856,53 +895,27 @@ namespace JellyGarden.Scripts
             SkipWinCelebration = false;
             Juice.AvatarEvents.NotifyGoalsCompleted(this);
 
-            // A goal is met when its last piece lands in the Goal panel, not when it leaves the board: the finish
-            // waits for those flights (at most 1 s).
+            // A goal is met when its last piece lands in the Goal panel, not when it leaves the board: the celebration dims the
+            // HUD and the booster session turns the panel into the Reward counter, so both wait for those flights (at most 1 s).
             float landed = Time.unscaledTime + 1f;
             while (gameStatus == GameState.PreWinAnimations && Time.unscaledTime < landed && RoyalThrone.Presentation.RoyalGameplayPresentation.GoalPiecesInFlight > 0)
                 yield return null;
             if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
 
-            MenuManager.Instance.ShowCompleteLabel(true);
-            yield return new WaitForSeconds(CelebrationWait(1f, .2f));
+            // The reference order: the celebration (the logo under pennants, fireworks, confetti, the complete fanfare) as
+            // soon as the goals are done, before the moves left are used. It replaces the inherited pre-complete banner; a
+            // tap shortens it.
+            yield return Juice.RoyalWinSequence.Celebrate(this);
+            if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
+            SkipWinCelebration = false;
 
-            // Leftover moves: each flies out of the Moves panel and becomes a rocket, then every power piece goes off
-            // and the board refills, round after round (ReferenceWinFinish). A tap shortens it.
+            // Then the booster session, with the goal panel turned into a Reward counter that the coins fly into.
+            Juice.RoyalWinSequence.BeginFinale(this);
             yield return RoyalThrone.ReferenceGameplay.ReferenceWinFinish.Play(this);
-            if (gameStatus != GameState.PreWinAnimations) { MenuManager.Instance.ShowCompleteLabel(false); preWinAnimationRunning = false; yield break; }
+            if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
+            yield return Juice.RoyalWinSequence.EndFinale(this);
+            if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
 
-            // A power piece the finish left behind (its round cap) still goes off: one volley a pass, until none is left.
-            // DestroyItem is self-guarding, so a piece caught in another's blast is a no-op.
-            for (int pass = 0; pass < 10 && gameStatus == GameState.PreWinAnimations &&
-                 GetAllExtaItems().Exists(RoyalThrone.ReferenceGameplay.ReferenceWinFinish.Power); pass++)
-            {
-                dragBlocked = true;
-                foreach (Item item in GetAllExtaItems())
-                {
-                    if (!RoyalThrone.ReferenceGameplay.ReferenceWinFinish.Power(item))
-                        continue;
-                    item.DestroyItem();
-                }
-                yield return new WaitForSeconds(0.1f);
-                FindMatches();
-                yield return new WaitForSeconds(CelebrationWait(1f, .2f));
-                float resolved = Time.unscaledTime + 6f;
-                while (dragBlocked && gameStatus == GameState.PreWinAnimations && Time.unscaledTime < resolved)
-                    yield return new WaitForFixedUpdate();
-            }
-            yield return new WaitForSeconds(CelebrationWait(1f, .2f));
-            // The board settles before the win panel (at most 6 s).
-            float settle = Time.unscaledTime + 6f;
-            while (gameStatus == GameState.PreWinAnimations && Time.unscaledTime < settle &&
-                   (dragBlocked || royalResolving || Juice.RoyalPowerupDirector.Busy || GetMatches().Count > 0))
-                yield return new WaitForSeconds(0.2f);
-            if (gameStatus != GameState.PreWinAnimations) { MenuManager.Instance.ShowCompleteLabel(false); preWinAnimationRunning = false; yield break; }
-
-            MenuManager.Instance.ShowCompleteLabel(false);
-            SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
-
-            // The kit's three-second pre-complete banner stays removed (main): a level goes straight from its last
-            // settle to the win panel.
             gameStatus = GameState.Win;
             preWinAnimationRunning = false;
             SkipWinCelebration = false;
@@ -2560,18 +2573,8 @@ namespace JellyGarden.Scripts
             {
                 stars = 1;
             }
-            if (Score >= star2 && stars <= 1)
-            {
-                stars = 2;
-            }
-            if (Score >= star3 && stars <= 2)
-            {
-                stars = 3;
-            }
-
-            // STORY: a level pays one star, never three. Additive — delete this
-            // line and the kit's three-star scoring is exactly as it shipped.
-            stars = Story.StoryOneStar.CapStars(stars);
+            // A win is worth exactly one star (the reference; the user's decision, 2026-09-29): the score no longer adds
+            // a second or third, so StoryOneStar's cap has nothing left to cap. The star markers below still light up.
 
             // STORY: the star markers live under Stars, a child of the kit's
             // header strip, which StoryLevelHud destroys along with the bar they

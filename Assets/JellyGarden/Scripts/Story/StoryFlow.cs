@@ -7,7 +7,10 @@
 // statements.
 //
 // Star awarding rides on LevelManager's existing OnWin event, so nothing in the
-// board, its animations or its particle systems is touched.
+// board, its animations or its particle systems is touched. The end of a level is
+// Royal Throne's: the celebration, the "Well Done!" card (MenuComplete) and the
+// "So Close!" offer and failed card (PreFailed, MenuFailed). This class only pays
+// the area star and decides where the player lands once those cards close.
 
 using JellyGarden.Scripts.GUI;
 using UnityEngine;
@@ -40,13 +43,11 @@ namespace JellyGarden.Scripts.Story
         private void OnEnable()
         {
             LevelManager.OnWin += HandleWin;
-            LevelManager.OnLose += HandleLose;
         }
 
         private void OnDisable()
         {
             LevelManager.OnWin -= HandleWin;
-            LevelManager.OnLose -= HandleLose;
         }
 
         #region Kit hooks
@@ -102,9 +103,10 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// Called when the complete menu is dismissed. The kit would step to the
-        /// next level number and reopen its pre-play popup; the story goes back to
-        /// the area so the player can spend the star they just earned.
+        /// Called when the complete menu (the Royal "Well Done!" card) is
+        /// dismissed. The kit would step to the next level number and reopen its
+        /// pre-play popup; the story ends the level on the shell's floor, where
+        /// the win's coins and star are collected.
         /// </summary>
         public static bool HandleLevelComplete()
         {
@@ -115,8 +117,8 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// Called when the failed menu is dismissed. Same destination as a win,
-        /// minus the star. No life is taken and no offer is shown.
+        /// Called when the failed menu is dismissed, after the "So Close!" offer
+        /// was declined. Same destination as a win, minus the star.
         /// </summary>
         public static bool HandleLevelFailed()
         {
@@ -187,21 +189,13 @@ namespace JellyGarden.Scripts.Story
             PlayingArea = 0;
             PlayingLevel = 0;
 
-            // The win panel closes itself when its own Continue is pressed, but
-            // that is only one of the doors out of a level: anything else that
-            // ends one — the playtest, a retry, a beat that leaves early — left
-            // the panel standing on the persistent canvas, over whatever came
-            // next. It survived the next LaunchLevel too, so from the second
-            // level of a run the player was looking at the previous level's
-            // result with a live board playing underneath it. Leaving the level
-            // is what closes it, whichever door was used.
-            //
-            // The kit's own two end panels go with them: the story panels stand
-            // in for those, and one left active is a second result screen behind
-            // the first.
+            // The story's own end panels are no longer opened by a level (the
+            // Royal cards are the end of a level), but a preview or review may
+            // still have one up; leaving the level closes it. The kit's
+            // MenuComplete, MenuFailed and PreFailed are left alone: they are the
+            // Royal cards, and they close themselves through their own buttons.
             StoryWinPopup.Close();
             StoryLosePopup.Close();
-            StoryLosePopup.HideKitPanel();
 
             // The power plate is a second of a level's opening; leaving the
             // level part-way through one would otherwise leave it on the area
@@ -230,7 +224,8 @@ namespace JellyGarden.Scripts.Story
             //
             // Where the level ends is the shell's decision, not this one's: with
             // the map on it is the area page as it always was, and with the shell
-            // on it is home, which is what Royal Match comes back to.
+            // on it is the Royal home, where RoyalWinSequence collects the win's
+            // coins and star into the counters.
             if (StoryPresentation.PlayPending(areaId, () => StoryShell.ShowAfterLevel(areaId)))
                 return;
 
@@ -246,6 +241,13 @@ namespace JellyGarden.Scripts.Story
 
         #region Star awarding
 
+        /// <summary>
+        /// Pays the area star a level's first win earns. The win is presented by
+        /// Royal Throne's card (LevelManager's Win state opens MenuComplete and
+        /// RoyalWinSequence fills it), so nothing is opened here; its Continue
+        /// goes through HandleLevelComplete. LevelManager has already saved the
+        /// win's coins and level star by the time OnWin is raised.
+        /// </summary>
         private void HandleWin()
         {
             if (PlayingArea <= 0 || LevelManager.THIS == null) return;
@@ -253,71 +255,27 @@ namespace JellyGarden.Scripts.Story
             int levelNumber = LevelManager.THIS.currentLevel;
 
             // Replaying a level the player has already beaten pays nothing. The
-            // level itself is still fully playable — retry is free and unlimited —
-            // it just cannot be farmed for repair stars.
+            // level itself is still fully playable — it just cannot be farmed
+            // for repair stars.
             if (StoryProgress.IsLevelBeaten(levelNumber))
             {
                 Debug.Log(string.Format(
                     "[Story] Level {0} replayed; no star awarded.", levelNumber));
-                ShowWinPanel(levelNumber, false);
                 return;
             }
 
             if (!StoryProgress.RecordLevelWin(levelNumber, PlayingArea))
             {
-                ShowWinPanel(levelNumber, false);
+                Debug.Log(string.Format(
+                    "[Story] Level {0} won; area {1} does not take its star.", levelNumber, PlayingArea));
                 return;
             }
-            StorySfx.PlayStarEarned();
 
-            // Boosters are earned, never sold. Winning is the price.
+            // A first win also earns one booster, seeded on the level number.
             StoryFreeGame.GrantBoosterForWin(levelNumber);
 
             Debug.Log(string.Format("[Story] Level {0} won: area {1} now holds {2} star(s).",
                 levelNumber, PlayingArea, StoryProgress.StarsIn(PlayingArea)));
-
-            ShowWinPanel(levelNumber, true);
-        }
-
-        /// <summary>
-        /// Puts the story's own level-complete panel up in place of the kit's.
-        ///
-        /// It is opened from here rather than from LevelManager's OnMenuComplete
-        /// because of the order the kit raises those two: OnMenuComplete fires at
-        /// the top of the Win branch and OnWin — which is what called this —
-        /// twenty lines below it, so a panel opened on OnMenuComplete would read
-        /// the area's totals from before this method added to them.
-        ///
-        /// Continue goes through HandleLevelComplete, the same door the kit's own
-        /// panel used, so nothing about where a level ends changes here.
-        /// </summary>
-        private static void ShowWinPanel(int levelNumber, bool paidStar)
-        {
-            int areaId = PlayingArea;
-            StoryWinPopup.Open(levelNumber, areaId, paidStar,
-                () => HandleLevelComplete());
-        }
-
-        /// <summary>
-        /// Puts the story's own level-failed panel up in place of the kit's.
-        ///
-        /// The kit raises OnLose in the same breath as ShowMenuFailed(true), so
-        /// unlike the win panel there is nothing to wait for: no total changes on
-        /// a loss. Continue goes through HandleLevelFailed, the same door the
-        /// kit's own Give Up used.
-        /// </summary>
-        private void HandleLose()
-        {
-            if (PlayingArea <= 0 || LevelManager.THIS == null) return;
-
-            int levelNumber = LevelManager.THIS.currentLevel;
-            int areaId = PlayingArea;
-            bool outOfTime = LevelManager.THIS.limitType == LIMIT.TIME;
-
-            Debug.Log(string.Format("[Story] Level {0} lost; no star awarded.", levelNumber));
-
-            StoryLosePopup.Open(levelNumber, areaId, outOfTime,
-                () => HandleLevelFailed());
         }
 
         #endregion

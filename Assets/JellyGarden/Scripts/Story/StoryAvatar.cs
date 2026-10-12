@@ -28,6 +28,12 @@
 //   the idle's opening pose. A reaction plays over a hold and hands back to it.
 //   The in-level HUD (RoyalGameplayPresentation) drives these from AvatarEvents.
 //
+//   Where — the frames are the character's own, not a campaign's. The active
+//   campaign's art is asked first (StoryArt); Treasure Hunt reads its art from
+//   its own folder and shares only the keys it lists, so the frames are then
+//   read from Resources/Story/Art directly (Frames). Without that fallback the
+//   Treasure Hunt HUD drew the still crop and never reacted.
+//
 //   A crop — with no frames authored, the full-body portrait is drawn scaled up
 //   and offset so that StoryArt.AvatarCrop fills the frame. Still, but framed
 //   the same way, so a character who has no animation yet still reads as a face
@@ -37,6 +43,7 @@
 // frame and nothing allocates once it is built. The clock is StoryClock, so an
 // editor test can step the animation rather than sleep through it.
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -122,7 +129,7 @@ namespace JellyGarden.Scripts.Story
         {
             if (window == null) return null;
 
-            Sprite[] frames = StoryArt.AvatarFrames(character);
+            Sprite[] frames = Frames(character, null);
 
             Image image = StoryUi.CreateImage("Face", window,
                 frames.Length > 0 ? frames[0] : StoryArt.Portrait(character), Color.white);
@@ -155,6 +162,50 @@ namespace JellyGarden.Scripts.Story
             image.enabled = image.sprite != null;
             return image;
         }
+
+        /// <summary>
+        /// The frames of a clip (null or empty: the idle), in order, or an
+        /// empty array. The active campaign's art first, as everywhere else;
+        /// then the shared Resources/Story/Art frames, which every campaign's
+        /// King Leo is drawn from. Treasure Hunt shares only the art keys its
+        /// manifest lists, and the avatar's frames are a naming convention
+        /// rather than a list, so they are read here instead of listed there.
+        /// </summary>
+        public static Sprite[] Frames(string character, string clip)
+        {
+            Sprite[] frames = StoryArt.AvatarFrames(character, clip);
+            if (frames.Length > 0 || string.IsNullOrEmpty(character)) return frames;
+
+            string prefix = string.IsNullOrEmpty(clip)
+                ? "avatar_" + character.Trim().ToLowerInvariant() + "_"
+                : "avatar_" + character.Trim().ToLowerInvariant() + "_" + clip.Trim().ToLowerInvariant() + "_";
+
+            // A clip found is cached so a reaction does not walk Resources each
+            // time it fires; a cached frame Unity has since unloaded reloads it.
+            // A miss is not cached, so art added later is still found.
+            Sprite[] shared;
+            if (_shared.TryGetValue(prefix, out shared) && shared[0] != null) return shared;
+
+            var found = new List<Sprite>();
+            for (int i = 0; i < MaxSharedFrames; i++)
+            {
+                Sprite frame = Resources.Load<Sprite>(string.Format("{0}{1}{2:00}", SharedArt, prefix, i));
+                if (frame == null) break;
+                found.Add(frame);
+            }
+            if (found.Count == 0) return frames;
+            shared = found.ToArray();
+            _shared[prefix] = shared;
+            return shared;
+        }
+
+        /// <summary>The folder every campaign's character frames live in.</summary>
+        private const string SharedArt = "Story/Art/";
+
+        /// <summary>StoryArt's ceiling, so a naming slip cannot become an unbounded loop.</summary>
+        private const int MaxSharedFrames = 64;
+
+        private static readonly Dictionary<string, Sprite[]> _shared = new Dictionary<string, Sprite[]>();
 
         /// <summary>
         /// Places a rect inside its parent so that <paramref name="crop"/> — a
@@ -197,7 +248,7 @@ namespace JellyGarden.Scripts.Story
             var image = GetComponent<Image>();
             if (image == null) return;
 
-            Sprite[] frames = StoryArt.AvatarFrames(Character);
+            Sprite[] frames = Frames(Character, null);
             if (frames.Length == 0) return;
 
             Play(image, frames, DefaultFps);
@@ -251,7 +302,7 @@ namespace JellyGarden.Scripts.Story
             if (_once && _clip == clip) return true;
             if (!_once && _heldClip == clip) return true;
 
-            Sprite[] frames = StoryArt.AvatarFrames(Character, clip);
+            Sprite[] frames = Frames(Character, clip);
             if (frames.Length == 0) return false;
 
             _frames = frames;
@@ -274,7 +325,7 @@ namespace JellyGarden.Scripts.Story
             if (string.IsNullOrEmpty(clip)) return false;
             if (_heldClip == clip) return true;
 
-            Sprite[] frames = StoryArt.AvatarFrames(Character, clip);
+            Sprite[] frames = Frames(Character, clip);
             if (frames.Length == 0) return false;
 
             _held = frames;

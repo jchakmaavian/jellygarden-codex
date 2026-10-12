@@ -34,6 +34,12 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 		{
 			LevelManager.OnLevelLoaded -= CheckNewTarget;
 			LevelManager.OnStartPlay -= DisableTutorial;
+			// Leaving the level (the Level object is deactivated) before the first touch left the hand active and
+			// bound to pieces that are then destroyed; re-entering level 1 re-enabled it with them and threw.
+			// Start clean: the tutorial is shown again for the new board, since the player never dismissed it.
+			if (tutorial)
+				tutorial.SetActive (false);
+			items.Clear ();
 		}
 
 		void DisableTutorial ()
@@ -58,6 +64,25 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 			//canvas.transform.position = Vector3.down * FindMaxY(items);
 			tutorial.SetActive (true);
 			ChangeLayerNum (4);
+			KeepCaptionClearOfBoard ();
+		}
+
+		// The caption keeps its authored height, which suited the old 9x5 first board; on a taller board its first line
+		// covered the bottom row. When they overlap it moves down to just below the board (the canvas is in world space,
+		// like the pieces, so heights compare directly).
+		void KeepCaptionClearOfBoard ()
+		{
+			var lm = LevelManager.THIS;
+			var rt = text ? text.transform as RectTransform : null;
+			if (!lm || !rt || lm.maxRows < 2) return;
+			var canvasOfText = rt.GetComponentInParent<Canvas> ();
+			if (canvasOfText && canvasOfText.renderMode == RenderMode.ScreenSpaceOverlay) return;
+			var last = lm.GetSquare (0, lm.maxRows - 1); var previous = lm.GetSquare (0, lm.maxRows - 2);
+			if (!last || !previous) return;
+			float cell = Mathf.Abs (previous.transform.position.y - last.transform.position.y);
+			float below = last.transform.position.y - cell * .62f;
+			float top = rt.TransformPoint (new Vector3 (0, rt.rect.yMax, 0)).y;
+			if (top > below) rt.position += Vector3.down * Mathf.Min (top - below, cell * 1.5f);
 		}
 
 		IEnumerator WaitForCombine ()
@@ -82,6 +107,8 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 
 		public Vector3[] GetItemsPositions ()
 		{
+			// A move made without a touch (the bot, QA tools) destroys pieces under the hand before it is dismissed.
+			items.RemoveAll (item => !item);
 			Vector3[] positions = new Vector3[items.Count];
 			for (int i = 0; i < items.Count; i++) {
 				positions [i] = items [i].transform.position + new Vector3 (1, -1, 0);

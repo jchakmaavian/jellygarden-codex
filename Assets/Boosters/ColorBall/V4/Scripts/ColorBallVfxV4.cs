@@ -41,7 +41,9 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         Renderer Part(string name,Material mat,int order){var g=new GameObject(name);g.transform.SetParent(transform,false);g.AddComponent<MeshFilter>().sharedMesh=quad;var r=g.AddComponent<MeshRenderer>();r.sharedMaterial=mat;r.sortingOrder=order;r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;r.receiveShadows=false;r.enabled=false;return r;}
         void Build(){flights=new Flight[BeamCapacity];for(int i=0;i<BeamCapacity;i++)flights[i]=new Flight{outer=Part("Colored moving tail",beam,referenceV5?30:41),inner=Part("White moving core",beamCore?beamCore:beam,referenceV5?31:42),head=Part("Traveling four point head",star,referenceV5?32:43),sourceFlare=referenceV5?Part("Aura discharge",beam,34):null};motes=new Mote[MoteCapacity];for(int i=0;i<MoteCapacity;i++)motes[i]=new Mote{view=Part("Pooled Color Ball accent",star,44)};}
         float Range(float a,float b)=>Mathf.Lerp(a,b,(float)random.NextDouble());
-        static Color Tint(int c){switch(c%6){case 0:return new Color(1,.39f,.38f);case 1:return new Color(.38f,.78f,1);case 2:return new Color(1,.82f,.23f);case 3:return new Color(.43f,1,.47f);case 4:return new Color(1,.44f,.92f);default:return new Color(.61f,.51f,1);}}
+        // The board's colour order (RoyalGameplayArt): ruby, shield, crown, leaf, lily, and colour 5 King Leo's gold coin,
+        // a warmer gold than the crown's yellow (it was a violet no gem on the board wears).
+        static Color Tint(int c){switch(c%6){case 0:return new Color(1,.39f,.38f);case 1:return new Color(.38f,.78f,1);case 2:return new Color(1,.82f,.23f);case 3:return new Color(.43f,1,.47f);case 4:return new Color(1,.44f,.92f);default:return new Color(1,.70f,.22f);}}
         public static Flight Launch(Vector3 from,Vector3 to,int color){Prewarm();foreach(var f in instance.flights)if(!f.visible){f.Lease++;f.Active=f.visible=true;f.Arrived=false;f.ArrivalNotice=null;f.age=0;f.from=from+Vector3.back*.9f;f.to=to+Vector3.back*.9f;f.tint=Tint(color);f.source=instance.referenceV5?ColorBallVisualV4.SourceAt(from):null;f.sourceLease=f.source?f.source.Lease:0;f.settings=f.source?f.source.GetComponent<ColorBallV5Presentation>()?.Settings:null;f.duration=Mathf.Clamp(Vector3.Distance(from,to)/ColorBallVisualV4.CellSize/17f,.14f,.37f);instance.NativeBeam(f);instance.Draw(f);return f;}return null;}
         void NativeBeam(Flight flight)
         {
@@ -131,7 +133,8 @@ namespace RoyalThrone.Boosters.ColorBall.V4
         // imported contact's round white burst and ring are left out (2026-10-04, the user: not a solid white blob).
         public static void Contact(Vector3 p,int color,bool shaped=false){
             Prewarm();
-            var native=ReferenceVfxPool.Play("LightballEffectedItemExplodeParticles",p,color,ColorBallVisualV4.CellSize);
+            // The imported burst has parts for colours 0-4 only; the coin (colour 5) breaks with the yellow part, as a match does.
+            var native=ReferenceVfxPool.Play("LightballEffectedItemExplodeParticles",p,JellyGarden.Scripts.Juice.RoyalGameplayArt.NativeVfxColor(color),ColorBallVisualV4.CellSize);
             if(native!=null&&native.Valid){
                 if(shaped)foreach(var ps in native.GameObject.GetComponentsInChildren<ParticleSystem>())if(ps.name=="bang_blast"||ps.name=="ring")ps.Stop(false,ParticleSystemStopBehavior.StopEmittingAndClear);
                 instance.nativeContacts[instance.nativeContactCursor++%BeamCapacity]=new NativeContact{position=p,until=Time.time+.5f};return;}

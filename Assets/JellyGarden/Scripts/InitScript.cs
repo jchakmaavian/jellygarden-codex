@@ -1,4 +1,4 @@
-﻿using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 // // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
@@ -13,6 +13,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using JellyGarden.Scripts.GUI;
 using UnityEngine.Events;
 using JellyGarden.Scripts.Integrations;
@@ -86,15 +87,18 @@ using Facebook.Unity;
 
         public static float RestLifeTimer;
         public static string DateOfExit;
-        // Royal Throne's QA checks list this save key; King Leo keeps the kit's RestLifeTimer model and never writes it.
+        // The refill schedule is a single absolute UTC deadline so it survives scene loads,
+        // backgrounding and quitting, and so elapsed time is never counted twice or lost.
         public const string NextLifeKey = "RoyalThrone.NextLifeUtc";
+        static DateTime nextLifeUtc;
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD) && !ROYAL_DISABLE_QA
-        // RoyalQaService snapshots and restores the life timer. Lives are never spent (StoryFreeGame),
-        // so there is no UTC deadline; the timer alone is saved and restored.
-        internal DateTime LifeRefillDeadline => DateTime.MinValue;
-        internal void RestoreLifeScheduleForTesting(DateTime deadline, float remaining) { RestLifeTimer = remaining; }
-        /// <summary>Test hook: makes the next life arrive in <paramref name="seconds"/>.</summary>
-        public void SetRefillSeconds(float seconds) { RestLifeTimer = Mathf.Max(0, seconds); }
+        internal DateTime LifeRefillDeadline => nextLifeUtc;
+        // Restoring a QA snapshot must not persist a new deadline to the player's save.
+        internal void RestoreLifeScheduleForTesting(DateTime deadline, float remaining)
+        {
+            nextLifeUtc = deadline;
+            RestLifeTimer = remaining;
+        }
 #endif
         public static DateTime today;
         public static DateTime DateOfRestLife;
@@ -113,8 +117,8 @@ using Facebook.Unity;
 
         public int CapOfLife = 5;
         public float TotalTimeForRestLifeHours = 0;
-        public float TotalTimeForRestLifeMin = 15;
-        public float TotalTimeForRestLifeSec = 60;
+        public float TotalTimeForRestLifeMin = 5;
+        public float TotalTimeForRestLifeSec = 0;
         public int FirstGems = 20;
         public static int Gems;
         public static int waitedPurchaseGems;
@@ -142,7 +146,6 @@ using Facebook.Unity;
         public RewardedAdsTime dailyRewardedFrequencyTime; //2.2.3
         public int[] dailyRewardedShown;
         public DateTime[] dailyRewardedShownDate;
-        private bool leftControl;
         #if GOOGLE_MOBILE_ADS
     private InterstitialAd interstitial;
     private AdRequest requestAdmob;
@@ -194,7 +197,6 @@ using Facebook.Unity;
             Instance = this;
             RestLifeTimer = PlayerPrefs.GetFloat("RestLifeTimer");
             DateOfExit = PlayerPrefs.GetString("DateOfExit", "");
-            print(DateOfExit);
             Gems = PlayerPrefs.GetInt("Gems");
             lifes = PlayerPrefs.GetInt("Lifes");
             {
@@ -212,7 +214,7 @@ using Facebook.Unity;
                 //First lauching
                 lifes = CapOfLife;
                 PlayerPrefs.SetInt("Lifes", lifes);
-                Gems = FirstGems;
+                Gems = Juice.RoyalEconomy.StartingCoins;   // the coin rules' starting purse, not the inspector's FirstGems
                 PlayerPrefs.SetInt("Gems", Gems);
                 PlayerPrefs.SetInt("Music", 1);
                 PlayerPrefs.SetInt("Sound", 1);
@@ -220,14 +222,24 @@ using Facebook.Unity;
                 PlayerPrefs.SetInt("Lauched", 1);
                 PlayerPrefs.Save();
             }
+            GrantStartingPurse();
+
+            LoadLifeSchedule();
 
             if (gameObject.GetComponent<AspectCamera>() == null)
-                gameObject.AddComponent<AspectCamera>().map = FindObjectOfType<LevelsMap>().transform
+                gameObject.AddComponent<AspectCamera>().map = FindAnyObjectByType<LevelsMap>().transform
                     .Find("map_background_01").GetComponent<SpriteRenderer>()
                     .sprite;
 
             MusicBase.Instance.SetVolume(PlayerPrefs.GetInt("Music"));
             SoundBase.Instance.SetVolume(PlayerPrefs.GetInt("Sound"));
+
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled)
+            {
+                enableUnityAds = enableGoogleMobileAds = enableChartboostAds = false;
+                if (facebookButton) facebookButton.SetActive(false);
+                return;
+            }
 
             #if UNITY_ADS //2.1.1
         enableUnityAds = true;
@@ -278,6 +290,7 @@ using Facebook.Unity;
 
     public void LoadInterstitialAd(string _adUnitId)
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         // Clean up the old ad before loading a new one.
         if (interstitial != null)
         {
@@ -338,25 +351,10 @@ using Facebook.Unity;
         #endif
 
 
-        void Update()
-        {
-            if (InputManager.Instance != null)
-            {
-                if (InputManager.Instance.Debug.DebugToggle.WasPressedThisFrame())
-                    leftControl = true;
-                if (InputManager.Instance.Debug.DebugToggle.WasReleasedThisFrame())
-                    leftControl = false;
-
-                if (InputManager.Instance.Debug.DebugToggle.WasReleasedThisFrame())
-                {
-                    print("11");
-                    for (int i = 1; i < GameObject.Find("Levels").transform.childCount; i++)
-                    {
-                        SaveLevelStarsCount(i, 1);
-                    }
-                }
-            }
-        }
+        // The inherited kit starred every level when Left Ctrl (or U) was released, so an
+        // ordinary Ctrl+S while the game had focus rewrote the player's whole progress.
+        // That debug shortcut is gone (King Leo has no mod menu to replace it), and Update()
+        // then only tracked that key in a field nothing read, so it was removed.
 
         public void SaveLevelStarsCount(int level, int starsCount)
         {
@@ -371,6 +369,7 @@ using Facebook.Unity;
 
         public bool GetRewardedUnityAdsReady()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return false;
             #if UNITY_ADS
         return UnityAdsController.Instance.isLoaded;
             #endif
@@ -380,6 +379,7 @@ using Facebook.Unity;
 
         public void ShowRewardedAds()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             #if UNITY_ADS
         Debug.Log("show Unity Rewarded ads video in " + LevelManager.THIS.gameStatus);
 
@@ -430,7 +430,7 @@ using Facebook.Unity;
             if (!JellyGarden.Scripts.Story.StoryFreeGame.AdsAllowed)
                 return;
             // --------------------------------------------------------------
-
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             //1.4 added
             foreach (AdEvents item in adsEvents)
             {
@@ -467,6 +467,7 @@ using Facebook.Unity;
 
         public void ShowInterstitial()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             Debug.Log("show Unity ads video on " + LevelManager.THIS.gameStatus + "  for Reward ==> " +
                       InitScript.Instance.currentReward);
             #if UNITY_ADS
@@ -481,6 +482,7 @@ using Facebook.Unity;
 
         public void ShowVideo()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             //1.4 added
             #if UNITY_ADS
         Debug.Log("show Unity Rewarded ads video in " + LevelManager.THIS.gameStatus + "  for Reward ==> " +
@@ -500,6 +502,7 @@ using Facebook.Unity;
 
         public void ShowAds(bool chartboost = true)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             if (chartboost)
             {
                 #if CHARTBOOST_ADS
@@ -547,6 +550,7 @@ using Facebook.Unity;
 
         public void ShowRate()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             if (MenuManager.Instance != null)
                 MenuManager.Instance.ShowRate(true);
         }
@@ -554,6 +558,8 @@ using Facebook.Unity;
 
         public void CheckRewardedAds()
         {
+            // The extra-moves video gives moves on the So Close offer; the reward card shows only coins or lives (bug review 2026-10-05).
+            if (currentReward == RewardedAdsType.GetGoOn) { MenuManager.Instance.ShowPreFailed(false); return; }
             RewardIcon reward = MenuManager.Instance.ShowReward().GetComponent<RewardIcon>();
             if (currentReward == RewardedAdsType.GetGems)
             {
@@ -574,6 +580,24 @@ using Facebook.Unity;
             {
                 MenuManager.Instance.ShowPreFailed(false);
             }
+        }
+
+        /// <summary>
+        /// King Leo saves launched before the coin economy hold the kit's FirstGems (5 coins), too few for anything the
+        /// shops sell. Such a purse is topped up once to RoyalEconomy.StartingCoins; a larger balance is kept as it is.
+        /// </summary>
+        public const string StartingPurseKey = "RoyalThrone.StartingPurseGranted";
+
+        void GrantStartingPurse()
+        {
+            if (PlayerPrefs.GetInt(StartingPurseKey, 0) != 0) return;
+            if (Gems < Juice.RoyalEconomy.StartingCoins)
+            {
+                Gems = Juice.RoyalEconomy.StartingCoins;
+                PlayerPrefs.SetInt("Gems", Gems);
+            }
+            PlayerPrefs.SetInt(StartingPurseKey, 1);
+            PlayerPrefs.Save();
         }
 
         public void SetGems(int count)
@@ -606,10 +630,122 @@ using Facebook.Unity;
         }
 
 
+        /// <summary>Seconds one life takes to refill, as configured on this component.</summary>
+        public float LifeIntervalSeconds =>
+            Mathf.Max(1f, TotalTimeForRestLifeHours * 3600f + TotalTimeForRestLifeMin * 60f + TotalTimeForRestLifeSec);
+
+        /// <summary>
+        /// Grants every life whose interval has already elapsed and returns the seconds left
+        /// until the next one. Safe to call every frame: it only writes when something changed.
+        /// </summary>
+        public float UpdateLives()
+        {
+            float interval = LifeIntervalSeconds;
+            DateTime now = DateTime.UtcNow;
+
+            if (lifes >= CapOfLife)
+            {
+                if (lifes > CapOfLife) lifes = CapOfLife;
+                if (nextLifeUtc != DateTime.MinValue)
+                {
+                    nextLifeUtc = DateTime.MinValue;
+                    SaveLifeSchedule();
+                    PlayerPrefs.Save();
+                }
+                RestLifeTimer = 0;
+                return 0;
+            }
+
+            bool scheduleChanged = false;
+            // A missing deadline (or one further away than a full interval, which means the
+            // device clock moved backwards) restarts the countdown from now.
+            if (nextLifeUtc == DateTime.MinValue || (nextLifeUtc - now).TotalSeconds > interval)
+            {
+                nextLifeUtc = now.AddSeconds(interval);
+                scheduleChanged = true;
+            }
+
+            int granted = 0;
+            while (lifes < CapOfLife && now >= nextLifeUtc)
+            {
+                lifes++;
+                granted++;
+                nextLifeUtc = nextLifeUtc.AddSeconds(interval);
+            }
+            if (lifes >= CapOfLife) nextLifeUtc = DateTime.MinValue;
+
+            RestLifeTimer = nextLifeUtc == DateTime.MinValue
+                ? 0
+                : Mathf.Max(0f, (float)(nextLifeUtc - now).TotalSeconds);
+
+            if (granted > 0)
+            {
+                PlayerPrefs.SetInt("Lifes", lifes);
+                SaveLifeSchedule();
+                PlayerPrefs.Save();
+            }
+            else if (scheduleChanged)
+            {
+                SaveLifeSchedule();
+                PlayerPrefs.Save();
+            }
+            return RestLifeTimer;
+        }
+
+        /// <summary>Test hook: makes the next life arrive in <paramref name="seconds"/>.</summary>
+        public void SetRefillSeconds(float seconds)
+        {
+            if (lifes >= CapOfLife)
+            {
+                nextLifeUtc = DateTime.MinValue;
+                RestLifeTimer = 0;
+            }
+            else
+            {
+                RestLifeTimer = Mathf.Max(0, seconds);
+                nextLifeUtc = DateTime.UtcNow.AddSeconds(RestLifeTimer);
+            }
+            SaveLifeSchedule();
+            PlayerPrefs.Save();
+        }
+
+        public void SaveLifeSchedule()
+        {
+            PlayerPrefs.SetString(NextLifeKey, nextLifeUtc == DateTime.MinValue
+                ? string.Empty
+                : nextLifeUtc.ToString("o", CultureInfo.InvariantCulture));
+            PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
+        }
+
+        /// <summary>Reads the stored deadline, migrating saves written before this schedule existed.</summary>
+        void LoadLifeSchedule()
+        {
+            nextLifeUtc = DateTime.MinValue;
+            string saved = PlayerPrefs.GetString(NextLifeKey, string.Empty);
+            if (!string.IsNullOrEmpty(saved) &&
+                DateTime.TryParse(saved, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime parsed))
+            {
+                nextLifeUtc = parsed.ToUniversalTime();
+            }
+            else if (lifes < CapOfLife)
+            {
+                // Old saves kept "seconds left" plus a local-time exit stamp. Fold both into a deadline.
+                float remaining = RestLifeTimer > 0 ? RestLifeTimer : LifeIntervalSeconds;
+                double away = 0;
+                if (!string.IsNullOrEmpty(DateOfExit) && DateTime.TryParse(DateOfExit, out DateTime exit))
+                    away = Math.Max(0, (DateTime.Now - exit).TotalSeconds);
+                nextLifeUtc = DateTime.UtcNow.AddSeconds(remaining - away);
+            }
+            UpdateLives();
+        }
+
         public void RestoreLifes()
         {
             lifes = CapOfLife;
+            nextLifeUtc = DateTime.MinValue;
+            RestLifeTimer = 0;
             PlayerPrefs.SetInt("Lifes", lifes);
+            SaveLifeSchedule();
             PlayerPrefs.Save();
         }
 
@@ -618,7 +754,13 @@ using Facebook.Unity;
             lifes += count;
             if (lifes > CapOfLife)
                 lifes = CapOfLife;
+            if (lifes >= CapOfLife)
+            {
+                nextLifeUtc = DateTime.MinValue;
+                RestLifeTimer = 0;
+            }
             PlayerPrefs.SetInt("Lifes", lifes);
+            SaveLifeSchedule();
             PlayerPrefs.Save();
         }
 
@@ -643,17 +785,26 @@ using Facebook.Unity;
         public void SpendLife(int count)
         {
             // --- King Leo story layer -------------------------------------
-            // The five-lives system exists to sell refills, and this game sells
-            // nothing (TECH.md). Retry is instant and unlimited. Additive:
-            // delete these two lines and lives work as the kit shipped them.
+            // Lives are on (Royal Throne's level end): a lost attempt costs a
+            // life and Royal Throne's refill schedule brings it back. Additive:
+            // StoryFreeGame.ShouldSpendLife false makes retries free again.
             if (!JellyGarden.Scripts.Story.StoryFreeGame.ShouldSpendLife)
                 return;
             // --------------------------------------------------------------
 
             if (lifes > 0)
             {
+                bool wasFull = lifes >= CapOfLife;
                 lifes -= count;
                 PlayerPrefs.SetInt("Lifes", lifes);
+                // Only the drop from a full set starts a countdown. Spending a life while one is
+                // already pending must never push its deadline back, or the timer could be reset at will.
+                if (wasFull)
+                {
+                    nextLifeUtc = DateTime.UtcNow.AddSeconds(LifeIntervalSeconds);
+                    RestLifeTimer = LifeIntervalSeconds;
+                }
+                SaveLifeSchedule();
                 PlayerPrefs.Save();
             }
             //else
@@ -708,13 +859,10 @@ using Facebook.Unity;
         {
             if (pauseStatus)
             {
-                if (RestLifeTimer > 0)
-                {
-                    PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
-                }
-
+                UpdateLives();
                 PlayerPrefs.SetInt("Lifes", lifes);
-                PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
+                SaveLifeSchedule();
+                PlayerPrefs.SetString("DateOfExit", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture));
                 PlayerPrefs.Save();
             }
         }
@@ -722,13 +870,10 @@ using Facebook.Unity;
         void OnApplicationQuit()
         {
             //1.4  added
-            if (RestLifeTimer > 0)
-            {
-                PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
-            }
-
+            UpdateLives();
             PlayerPrefs.SetInt("Lifes", lifes);
-            PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
+            SaveLifeSchedule();
+            PlayerPrefs.SetString("DateOfExit", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture));
             PlayerPrefs.Save();
             //print(RestLifeTimer)
         }
@@ -747,21 +892,10 @@ using Facebook.Unity;
                 return;
             // --------------------------------------------------------------
 
-            if (!MenuManager.Instance.menuPlay.activeSelf &&
-                !MenuManager.Instance.gemsShop.activeSelf &&
-                !MenuManager.Instance.liveShop.activeSelf &&
-                !MenuManager.Instance.settings.activeSelf)
-            {
-                PlayerPrefs.SetInt("OpenLevel", args.Number);
-                PlayerPrefs.Save();
-                LevelManager.THIS.MenuPlayEvent();
-                LevelManager.THIS.LoadLevel();
-                openLevel = args.Number;
-                MenuManager.Instance.ShowMenuPlay(true);
-            }
+            TryOpenLevel(args.Number);
         }
 
-        // Opens a level's pre-play menu without a map tap (Royal Throne's editor checks use it).
+        // Shared entry for world-map selection and the Royal Throne homepage UI.
         public bool TryOpenLevel(int number)
         {
             if (number < 1 || LevelsMap.IsLevelLocked(number) || LevelManager.THIS == null ||
@@ -792,11 +926,9 @@ using Facebook.Unity;
         {
             LevelsMap.LevelSelected -= OnLevelClicked;
 
-            //		if(RestLifeTimer>0){
-            PlayerPrefs.SetFloat("RestLifeTimer", RestLifeTimer);
-            //		}
             PlayerPrefs.SetInt("Lifes", lifes);
-            PlayerPrefs.SetString("DateOfExit", DateTime.Now.ToString());
+            SaveLifeSchedule();
+            PlayerPrefs.SetString("DateOfExit", DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture));
             PlayerPrefs.Save();
 
 /*#if GOOGLE_MOBILE_ADS

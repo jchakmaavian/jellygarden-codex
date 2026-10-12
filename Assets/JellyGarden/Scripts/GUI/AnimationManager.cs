@@ -75,12 +75,15 @@ namespace JellyGarden.Scripts.GUI
                 SoundBase.Instance.PlaySound(SoundBase.Instance.gameOver[0]);
                 transform.Find("Video").gameObject.SetActive(true);
                 transform.Find("Buy").GetComponent<Button>().interactable = true;
+                failedChoiceMade = false;
 
                 GetComponent<Animation>().Play();
             }
 
             if (name == "Settings" || name == "MenuPause")
             {
+                var leaveConfirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
+                if (leaveConfirm) leaveConfirm.gameObject.SetActive(false);   // a reopened pause menu never shows a stale question
                 if (PlayerPrefs.GetInt("Sound") == 0)
                     transform.Find("Image/Sound/SoundOff").gameObject.SetActive(true);
                 else
@@ -99,6 +102,19 @@ namespace JellyGarden.Scripts.GUI
                 {
                     transform.Find("Image/Pack" + i + "/Count").GetComponent<Text>().text = "" + LevelManager.THIS.gemsProducts[i - 1].count;
                     transform.Find("Image/Pack" + i + "/Buy/Price").GetComponent<Text>().text = "$" + LevelManager.THIS.gemsProducts[i - 1].price;
+                }
+                // With store services off (the offline build) Buy does nothing, so show the packs as unavailable
+                // instead of real-money prices on buttons that silently ignore the tap.
+                if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled)
+                {
+                    for (int i = 1; i <= 4; i++)
+                    {
+                        var buy = transform.Find("Image/Pack" + i + "/Buy");
+                        buy.GetComponent<Button>().interactable = false;
+                        buy.Find("Price").GetComponent<Text>().text = "Unavailable";
+                    }
+                    var subtitle = transform.Find("Image/Royal subtitle");
+                    if (subtitle) subtitle.GetComponent<Text>().text = "Coin packs are not available in this version";
                 }
             }
             if (name == "MenuComplete")
@@ -143,12 +159,43 @@ namespace JellyGarden.Scripts.GUI
 
         }
 
+        // One Back release, one action: a card that closed on it earlier in this frame uncovers the card under it, which
+        // must not act on the same release (Royal Throne's RoyalBackButton did this across screens; it was not ported).
+        static int backHandledFrame = -1;
+
         void Update()
         {
-            if (InputManager.Instance != null && InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
+            if (InputManager.Instance != null && InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame() && !CoveredByLaterPopup())
             {
-                if (name == "MenuPlay" || name == "Settings" || name == "BoostInfo" || name == "GemsShop" || name == "LiveShop" || name == "BoostShop" || name == "Reward")
+                if (backHandledFrame == Time.frameCount) return;
+                // The shop over a popup takes Back itself (it closes); the popup under it must not act on the same press, or
+                // Back over the shop on So Close ended the level (bug review 2026-10-05).
+                if (RoyalThrone.Presentation.RoyalShopPage.IsOpen) return;
+                if (name == "MenuPlay" || name == "Settings" || name == "BoostInfo" || name == "GemsShop" || name == "LiveShop" || name == "BoostShop" || name == "Reward" || name == "Tutorial")
+                {
                     CloseMenu();
+                    backHandledFrame = Time.frameCount;
+                }
+                // The level-end cards take Back as their quiet choice: END LEVEL on the So Close offer, closing the Level Failed
+                // card, and CONTINUE on the win card (UI polish, 2026-09-30; Back did nothing on them).
+                else if (name == "PreFailed" && !failedChoiceMade)
+                {
+                    GiveUp();
+                    backHandledFrame = Time.frameCount;
+                }
+                else if (name == "MenuFailed" || name == "MenuComplete")
+                {
+                    Next();
+                    backHandledFrame = Time.frameCount;
+                }
+                else if (name == "MenuPause" && !IsOpen("Tutorial"))   // How-to-play on top of the pause menu closes first
+                {
+                    // Back first dismisses the leave question; otherwise it resumes, exactly like the Continue button.
+                    var leaveConfirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
+                    if (leaveConfirm && leaveConfirm.gameObject.activeSelf) leaveConfirm.gameObject.SetActive(false);
+                    else Play();
+                    backHandledFrame = Time.frameCount;
+                }
             }
         }
 
@@ -256,7 +303,9 @@ namespace JellyGarden.Scripts.GUI
         {
             if (name == "PreFailed")
             {
-                GetComponent<Animation>()["bannerFailed"].speed = 0;
+                // Hold for the player's choice, unless it was already made while the banner was still arriving.
+                if (!failedChoiceMade)
+                    GetComponent<Animation>()["bannerFailed"].speed = 0;
                 #if UNITY_ADS
 
             if (InitScript.Instance.enableUnityAds)
@@ -298,6 +347,9 @@ namespace JellyGarden.Scripts.GUI
         IEnumerator MenuCompleteScoring()
         {
             Text scores = transform.Find("Image").Find("Score").GetComponent<Text>();
+            // The win card hides the score (one star per win): write it once instead of counting it up, frame by frame, unseen.
+            var hidden = scores.GetComponent<CanvasGroup>();
+            if (hidden && hidden.alpha <= 0) { scores.text = "" + LevelManager.Score; yield break; }
             for (int i = 0; i <= LevelManager.Score; i += 500)
             {
                 scores.text = "" + i;
@@ -329,10 +381,11 @@ namespace JellyGarden.Scripts.GUI
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
 
             // --- King Leo story layer -------------------------------------
-            // The kit steps to the next level number and reopens its pre-play
-            // popup. The story goes back to the area instead, so the player can
-            // spend the star they just earned on a repair. Additive: delete this
-            // block and the original behaviour returns untouched.
+            // A level the story launched ends through StoryFlow: the area star
+            // and any story beat owed run there, and the player lands back in
+            // the shell (home), where Royal Throne's reward collection plays.
+            // Additive: delete this block and Royal Throne's own ending below
+            // (back to the map with the next level selected) runs untouched.
             if (gameObject.name == "MenuComplete" &&
                 JellyGarden.Scripts.Story.StoryFlow.HandleLevelComplete())
             {
@@ -351,10 +404,16 @@ namespace JellyGarden.Scripts.GUI
             {
                 LevelManager.THIS.gameStatus = GameState.Map;
                 LevelManager.THIS.gameStatus = GameState.Map;
-                PlayerPrefs.SetInt("OpenLevel", LevelManager.THIS.currentLevel + 1);
-                LevelManager.THIS.LoadLevel();
-                if (LevelsMap._instance.GetMapLevels().Count >= LevelManager.THIS.currentLevel)
-                    MenuManager.Instance.ShowMenuPlay(true);
+                int nextLevel = LevelManager.THIS.currentLevel + 1;
+                // Every won level returns Home for the star and coin collection. Select the next authored level for its Home
+                // button; opening its entry card is the player's choice. After the last authored level there is no level to
+                // open: CONTINUE returns to the home screen instead of loading a missing level file.
+                if (Resources.Load<TextAsset>("Levels/" + nextLevel) != null)
+                {
+                    PlayerPrefs.SetInt("OpenLevel", nextLevel);
+                    // LoadLevel only reads the next layout; it does not raise OnLevelLoaded or cancel the pending reward.
+                    LevelManager.THIS.LoadLevel();
+                }
             }
             if (gameObject.name == "MenuFailed")
             {
@@ -363,7 +422,8 @@ namespace JellyGarden.Scripts.GUI
 
             if (SceneManager.GetActiveScene().name == "game")
             {
-                if (LevelManager.Instance.gameStatus == GameState.Pause)
+                // How-to-play opened from the pause menu returns to that menu; only closing the pause menu itself resumes.
+                if (LevelManager.Instance.gameStatus == GameState.Pause && !(name == "Tutorial" && IsOpen("MenuPause")))
                 {
                     LevelManager.Instance.gameStatus = GameState.WaitAfterClose;
 
@@ -372,6 +432,27 @@ namespace JellyGarden.Scripts.GUI
             SoundBase.Instance.PlaySound(SoundBase.Instance.swish[1]);
 
             gameObject.SetActive(false);
+        }
+
+        static bool IsOpen(string menu)
+        {
+            var canvas = MenuManager.Instance ? MenuManager.Instance.GetCanvasGlobal() : null;
+            var popup = canvas ? canvas.Find(menu) : null;
+            return popup && popup.gameObject.activeSelf;
+        }
+
+        // Popups stack (the booster guide or a shop over the level card, the coin shop over a shop), and a later child of the
+        // global canvas draws on top. Back belongs to the top one: which popup's Update runs first is not defined.
+        bool CoveredByLaterPopup()
+        {
+            var parent = transform.parent;
+            if (!parent) return false;
+            for (int i = transform.GetSiblingIndex() + 1; i < parent.childCount; i++)
+            {
+                var sibling = parent.GetChild(i);
+                if (sibling.gameObject.activeSelf && sibling.GetComponent<AnimationManager>()) return true;
+            }
+            return false;
         }
 
         public void SwishSound()
@@ -423,8 +504,11 @@ namespace JellyGarden.Scripts.GUI
             }
             else if (gameObject.name == "MenuPause")
             {
+                // Resume only a paused game: if the goals were met while the card was opening, the celebration runs on (setting
+                // Playing then stopped the win flow and left a frozen board; bug review 2026-10-05).
+                var before = LevelManager.Instance.gameStatus;
                 CloseMenu();
-                LevelManager.Instance.gameStatus = GameState.Playing;
+                if (before == GameState.Pause || before == GameState.Playing) LevelManager.Instance.gameStatus = GameState.Playing;
             }
         }
 
@@ -438,15 +522,63 @@ namespace JellyGarden.Scripts.GUI
 
         public void BackToMap()
         {
+            if (name == "MenuPause")
+            {
+                // Leaving costs the life spent on this level: the pause menu asks first (Quit Level? calls back here).
+                var confirm = transform.Find("Image/" + RoyalThrone.Presentation.RoyalMenuSkin.LeaveConfirmName);
+                if (confirm && !confirm.gameObject.activeSelf)
+                {
+                    SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+                    confirm.gameObject.SetActive(true);
+                    return;
+                }
+                if (confirm) confirm.gameObject.SetActive(false);
+            }
             Time.timeScale = 1;
-            LevelManager.THIS.gameStatus = GameState.GameOver;
+            // Leaving from the pause menu is not a defeat: no failed card, straight back out of the level.
+            // The life stays spent, exactly as it was when the level was opened.
+            LevelManager.THIS.gameStatus = GameState.Map;
             CloseMenu();
+
+            // --- King Leo story layer -------------------------------------
+            // A story level left part-way goes back to the shell the way a lost
+            // one does, without a star. Without this the story still counts
+            // the level as playing and the shell never comes back.
+            JellyGarden.Scripts.Story.StoryFlow.HandleLevelFailed();
+            // --------------------------------------------------------------
         }
 
         public void Next()
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
             CloseMenu();
+        }
+
+        /// <summary>
+        /// "Try Again" on the failed card (RoyalCards points its button here). It used to call <see cref="Next"/>, which
+        /// only left the level. This reopens the same level through its normal start: King Leo's level popup for a story
+        /// level, the kit's pre-level panel otherwise, so the player can start it (spending a life) or close it.
+        /// </summary>
+        public void RetryLevel()
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            int level = LevelManager.THIS.currentLevel;
+            int area = JellyGarden.Scripts.Story.StoryFlow.PlayingArea;
+            CloseMenu();
+            // This panel is deactivated by CloseMenu, so the wait has to run on a live object.
+            LevelManager.THIS.StartCoroutine(ReopenLevel(level, area));
+        }
+
+        IEnumerator ReopenLevel(int level, int area)
+        {
+            // Back in the shell first, and any story beat owed on the way out has finished.
+            float deadline = Time.unscaledTime + 5f;
+            while ((LevelManager.THIS.gameStatus != GameState.Map || JellyGarden.Scripts.Story.StoryShell.StoryIsPlaying) && Time.unscaledTime < deadline)
+                yield return null;
+            yield return null;
+            if (LevelManager.THIS.gameStatus != GameState.Map || JellyGarden.Scripts.Story.StoryShell.StoryIsPlaying) yield break;
+            if (area > 0) JellyGarden.Scripts.Story.StoryLevelPopup.Open(level, area, null);
+            else InitScript.Instance.TryOpenLevel(level);
         }
 
         public void Again()//2.2.2
@@ -456,14 +588,32 @@ namespace JellyGarden.Scripts.GUI
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
+        // The coin shop is the Royal shop's Coins tab (2026-10-05), behind King Leo's shop switch (StoryFreeGame).
         public void BuyGems()
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-            MenuManager.Instance.ShowGemsShop(true);
+            OpenCoinShop();
+        }
+
+        static void OpenCoinShop()
+        {
+            if (!JellyGarden.Scripts.Story.StoryFreeGame.ShopsAllowed) return;
+            RoyalThrone.Presentation.RoyalShopPage.Open(RoyalThrone.Presentation.RoyalShopPage.Tab.Coins);
+        }
+
+        // Not enough coins for `near` (the button that asked): the card says so beside the button, and the shop opens on its
+        // Coins tab over the card, so the player can buy coins and come back to the same offer.
+        void NotEnoughCoins(Transform near)
+        {
+            SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            RoyalThrone.Presentation.RoyalNotice.NotEnoughCoins(near ? near : transform, InitScript.Gems);
+            OpenCoinShop();
         }
 
         public void Buy(GameObject pack)
         {
+            // Real-money packs stay off while the store services are (RoyalOfflineMode).
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
             if (pack.name == "Pack1")
             {
@@ -538,6 +688,8 @@ namespace JellyGarden.Scripts.GUI
         public void BuyLife(GameObject button)
         {
             SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+            // A life may have come back while the card was open: full lives are not sold again (bug review 2026-10-05).
+            if (InitScript.lifes >= InitScript.Instance.CapOfLife) { CloseMenu(); return; }
             if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
             {
                 InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));
@@ -546,30 +698,49 @@ namespace JellyGarden.Scripts.GUI
             }
             else
             {
-                MenuManager.Instance.ShowGemsShop(true);
+                NotEnoughCoins(button.transform);
             }
 
         }
 
+        // PreFailed: the buttons are in place about 0.4 s after the offer opens, but the clip only holds at its
+        // WaitForGiveUp event (2.05 s); CONTINUE used to require that hold and END LEVEL was re-held by it, so early
+        // taps were lost. A choice is now accepted as soon as it is made, once per showing.
+        bool failedChoiceMade;
+
+        void SkipFailedBannerHold()
+        {
+            // An early choice continues from the hold point, so the exit plays at once as it does after a late choice.
+            var animation = GetComponent<Animation>();
+            var state = animation ? animation["bannerFailed"] : null;
+            if (state == null || !state.clip) return;
+            foreach (var e in state.clip.events)
+                if (e.functionName == "WaitForGiveUp" && state.time < e.time)
+                    state.time = e.time + 0.01f;
+        }
+
         public void BuyFailed(GameObject button)
         {
-            if (GetComponent<Animation>()["bannerFailed"].speed == 0)
+            if (!failedChoiceMade)
             {
                 if (InitScript.Gems >= int.Parse(button.transform.Find("Price").GetComponent<Text>().text))
                 {
                     InitScript.Instance.SpendGems(int.Parse(button.transform.Find("Price").GetComponent<Text>().text));
+                    LevelManager.THIS.ContinuesBought++;   // the next Continue in this attempt costs more
                     button.GetComponent<Button>().interactable = false;
                     GoOnFailed();
                 }
                 else
                 {
-                    MenuManager.Instance.ShowGemsShop(true);
+                    NotEnoughCoins(button.transform);
                 }
             }
         }
 
         public void GoOnFailed()
         {
+            failedChoiceMade = true;
+            SkipFailedBannerHold();
             if (LevelManager.THIS.limitType == LIMIT.MOVES)
                 LevelManager.THIS.Limit += LevelManager.THIS.ExtraFailedMoves;
             else
@@ -581,6 +752,9 @@ namespace JellyGarden.Scripts.GUI
 
         public void GiveUp()
         {
+            if (failedChoiceMade) return;
+            failedChoiceMade = true;
+            SkipFailedBannerHold();
             GetComponent<Animation>()["bannerFailed"].speed = 1;
         }
 
@@ -592,13 +766,14 @@ namespace JellyGarden.Scripts.GUI
             if (InitScript.Gems >= price)
             {
                 InitScript.Instance.SpendGems(price);
-                InitScript.Instance.BuyBoost(boostType, price, count);
+                // InitScript.BuyBoost sets the stock (its other callers pass the new total): add the pack to what is owned.
+                InitScript.Instance.BuyBoost(boostType, price, PlayerPrefs.GetInt("" + boostType) + count);
                 //InitScript.Instance.SpendBoost(boostType);
                 CloseMenu();
             }
             else
             {
-                BuyGems();
+                NotEnoughCoins(transform.Find("Image") ? transform.Find("Image") : transform);
             }
         }
 

@@ -57,6 +57,7 @@ namespace JellyGarden.Scripts.GUI
             get
             {
                 if (Showing(prePlay)) return true;
+                if (RoyalThrone.Presentation.RoyalShopPage.IsOpen) return true;   // the shop, over a card or the board
                 if (canvasGlobal == null) return false;
                 foreach (Transform child in canvasGlobal)
                 {
@@ -139,8 +140,9 @@ namespace JellyGarden.Scripts.GUI
         public void ShowGemsShop(bool show = true)
         {
             // --- King Leo story layer -------------------------------------
-            // Nothing is for sale (TECH.md). Additive: delete this and the two
-            // lines in ShowLiveShop below, and the shops open again.
+            // King Leo's one switch for the shops (StoryFreeGame). Additive:
+            // delete this and the two lines in ShowLiveShop below, and the
+            // shops always open.
             if (show && !JellyGarden.Scripts.Story.StoryFreeGame.ShopsAllowed)
                 return;
             // --------------------------------------------------------------
@@ -271,10 +273,9 @@ namespace JellyGarden.Scripts.GUI
         public void ShowPreFailed(bool show = true)
         {
             // --- King Leo story layer -------------------------------------
-            // The PreFailed banner is the kit's last sales pitch: five more
-            // moves for twelve gems, or "Give Up". Nothing is for sale here, so
-            // the offer is one button the player cannot take and one they must
-            // press to see the result of a level they have already lost.
+            // The PreFailed banner is the "So Close!" offer: more moves for
+            // coins, or End Level. StoryFreeGame.PreFailOfferAllowed switches
+            // it; with the offer off the level goes straight to its end card.
             //
             // It cannot simply be skipped: this banner's own animation event is
             // what sets GameOver, and GameOver is what raises OnLose and puts the

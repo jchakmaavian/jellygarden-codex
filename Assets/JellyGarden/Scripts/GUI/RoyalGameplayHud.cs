@@ -277,16 +277,9 @@ namespace RoyalThrone.Presentation
 
         // ---- Small builders --------------------------------------------------------------------------------------------
 
-        // Centres `t` on its parent's centre at (x, y), w x h, unscaled and unrotated (Royal Throne's RoyalMenuSkin.Place,
-        // whose menu skin is not ported: the kit's menus keep King Leo's style).
-        public static RectTransform Place(Transform t, float x, float y, float w, float h)
-        {
-            var r = t as RectTransform;
-            if (!r) return null;
-            r.anchorMin = r.anchorMax = r.pivot = new Vector2(.5f, .5f); r.anchoredPosition = new Vector2(x, y);
-            r.sizeDelta = new Vector2(w, h); r.localScale = Vector3.one; r.localRotation = Quaternion.identity;
-            return r;
-        }
+        // Centres `t` on its parent's centre at (x, y), w x h, unscaled and unrotated: Royal Throne's RoyalMenuSkin.Place,
+        // kept under this name for the HUD's own callers (RoyalGameplayPresentation, ReferenceBoosterBar).
+        public static RectTransform Place(Transform t, float x, float y, float w, float h) => RoyalMenuSkin.Place(t, x, y, w, h);
 
         static RectTransform Box(Transform parent, string name, float x, float y, float w, float h)
         {

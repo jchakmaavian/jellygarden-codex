@@ -26,7 +26,8 @@ namespace RoyalThrone.ReferenceGameplay
                 // user, 2026-10-06: "I want this game experience", with the refill): a beat after the celebration's cut, each move
                 // left leaves the Moves panel as a comet, 0.1 s apart, and becomes a rocket where it lands; the new rockets sit a
                 // moment, then every power piece on the board goes off one after another, the board falls and refills, and the
-                // round repeats while moves or power pieces are left. King Leo's own win popup follows (D4).
+                // round repeats while moves or power pieces are left. The card follows the Reward counter's last coin and a short
+                // rest (RoyalWinSequence.EndFinale).
                 BuildLabel();skip.gameObject.SetActive(true);
                 yield return Delay(.25f,.05f);
                 int left=lm.limitType==LIMIT.MOVES?Mathf.Max(0,lm.Limit):8;

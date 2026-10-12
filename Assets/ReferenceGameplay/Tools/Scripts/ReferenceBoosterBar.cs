@@ -22,8 +22,9 @@ namespace RoyalThrone.ReferenceGameplay
         public static readonly BoostType[] Types={BoostType.RoyalHammer,BoostType.RoyalArrow,BoostType.RoyalCannon,BoostType.RoyalJester};
         static readonly int[] Icons={16599,21610,21411,21543};
         static readonly string[] Titles={"Royal Hammer","Arrow","Cannon","Jester Hat"};
+        static readonly string[] Descriptions={"Clear one object without using a move.","Clear a row without using a move.","Clear a column without using a move.","Shuffle the movable pieces without using a move."};
         public static bool IsTool(BoostType type)=>Array.IndexOf(Types,type)>=0;
-        public static bool OwnsInput=>Instance&&(Instance.Selected>=0||Instance.Busy);
+        public static bool OwnsInput=>Instance&&(Instance.Selected>=0||Instance.Busy||Instance.ShopOpen);
         // Levels 1-5 keep the in-level tools padlocked, as the reference build does (Design/RoyalMatchReference/OBSERVATIONS.md),
         // keyed to King Leo's level number (D8: no reference campaign). The QA practice board, which tests the tools, stays unlocked.
         public const int OpeningLevels=5;
@@ -35,14 +36,16 @@ namespace RoyalThrone.ReferenceGameplay
 #endif
         public int Selected {get;private set;}=-1;
         public bool Busy {get;private set;}
-        // D5: nothing is for sale, so there is no tool purchase panel. Kept for callers that ask.
-        public bool ShopOpen=>false;
-        // Back that cancelled a chosen tool this frame; LevelManager then does not also open the pause menu.
+        // Royal Throne's tool purchase panel (coins, RoyalEconomy.ToolPack) is over the board.
+        public bool ShopOpen=>shop!=null&&shop.IsOpen;
+        // Back that closed a panel or cancelled a chosen tool this frame; LevelManager then does not also open the pause
+        // menu. The coin shop (RoyalShopPage) spends Back through ConsumeBack too (Phase A: no RoyalBackButton).
         static int backConsumedFrame=-1;
         public static bool BackConsumedThisFrame=>backConsumedFrame==Time.frameCount;
+        public static void ConsumeBack(){backConsumedFrame=Time.frameCount;}
         public int LastHitCount {get;private set;}
         public string Status {get;private set;}="";
-        RectTransform hud,prompt;Text message;
+        RectTransform hud,prompt;Text message;PurchasePanel shop;int buying=-1;
         RectTransform rail;CanvasGroup railInput;Vector2 railRest;bool railMoving,railBlocks,railInteractable;float railDrop;
         Font font;readonly List<BoostIcon> buttons=new List<BoostIcon>();
         // UI polish (2026-09-30): the chosen tool eases up to 1.06x over 0.12 s with a soft gold halo behind it, and a tap on a
@@ -64,7 +67,7 @@ namespace RoyalThrone.ReferenceGameplay
         static Sprite Sprite(int id)=>Resources.Load<Sprite>("ReferenceGameplay/Tools/"+id);
         void Awake(){Instance=this;}
         void OnDestroy(){if(Instance==this)Instance=null;}
-        public void Attach(RectTransform parent,Font display){hud=parent;font=display;rail=parent.Find("Imported booster rail") as RectTransform;BuildPrompt();}
+        public void Attach(RectTransform parent,Font display){hud=parent;font=display;rail=parent.Find("Imported booster rail") as RectTransform;BuildPrompt();shop=PurchasePanel.Build(hud,font,CloseShop);}
         void PresentCannon(float elapsed)
         {
             if(!rail)return;
@@ -104,12 +107,13 @@ namespace RoyalThrone.ReferenceGameplay
             Picture(parent,"Native left",Sprite(id),-w/4,0,w/2,h,slice);
             Picture(parent,"Native right",Sprite(id),w/4,0,w/2,h,slice).rectTransform.localScale=new Vector3(-1,1,1);
         }
-        Text Label(Transform parent,string text,float x,float y,float w,float h,int size=26)
+        Text Label(Transform parent,string text,float x,float y,float w,float h,int size=26)=>Label(parent,font,text,x,y,w,h,size);
+        static Text Label(Transform parent,Font face,string text,float x,float y,float w,float h,int size=26)
         {
-            var t=Box("Label",parent,x,y,w,h).gameObject.AddComponent<Text>();t.font=font;t.text=text;t.fontSize=size;t.alignment=TextAnchor.MiddleCenter;
+            var t=Box("Label",parent,x,y,w,h).gameObject.AddComponent<Text>();t.font=face;t.text=text;t.fontSize=size;t.alignment=TextAnchor.MiddleCenter;
             t.color=new Color(1,.97f,.84f);t.raycastTarget=false;t.resizeTextForBestFit=true;t.resizeTextMinSize=14;t.resizeTextMaxSize=size;return t;
         }
-        Button Clickable(RectTransform r,Action click)
+        static Button Clickable(RectTransform r,Action click)
         {
             var im=r.gameObject.AddComponent<Image>();im.color=Color.clear;var b=r.gameObject.AddComponent<Button>();b.onClick.AddListener(()=>click());return b;
         }
@@ -203,15 +207,62 @@ namespace RoyalThrone.ReferenceGameplay
             message=Label(prompt,"",-25,0,485,90,24);message.color=new Color(.025f,.12f,.3f);
             var close=Box("Cancel tool",prompt,252,0,48,48);Halves(close,21805,48,48);Clickable(close,CancelSelection);prompt.gameObject.SetActive(false);
         }
-        // D5: the count StoryFreeGame grants, read and written through StoryBoosters (RoyalSave, keyed by BoostType name).
+        // Royal Throne's zero-stock purchase panel: a dim over the screen, the goal panel's banner with the item's name, its
+        // art and what it does, a green coin button for the pack and the purse under it. The bar builds one over the level
+        // HUD for its tools; StoryBoosters builds one over the level popup for the pre-level boosters.
+        public sealed class PurchasePanel
+        {
+            RectTransform root,buy;Text title,body,price,balance;Image art;Action onBuy;
+            public RectTransform Root=>root;
+            public bool IsOpen=>root&&root.gameObject.activeSelf;
+            public static PurchasePanel Build(RectTransform parent,Font font,Action closed)
+            {
+                var p=new PurchasePanel();
+                p.root=Box("Reference tool purchase",parent,0,0,0,0);p.root.anchorMin=Vector2.zero;p.root.anchorMax=Vector2.one;p.root.sizeDelta=Vector2.zero;
+                var dim=p.root.gameObject.AddComponent<Image>();dim.color=new Color(0,0,0,.72f);dim.raycastTarget=true;
+                var panel=Box("Tool purchase panel",p.root,0,0,600,670);var frameBody=Box("Panel body",panel,0,-42.5f,600,585);Halves(frameBody,16782,600,585,true);
+                var banner=Box("Title banner",panel,0,257,600,112);var ribbon=Resources.Load<Sprite>("ReferenceGameplay/Layout/Game-goal_panel_banner");
+                Picture(banner,"Banner left",ribbon,-150,0,300,112);
+                Picture(banner,"Banner right",ribbon,150,0,300,112).rectTransform.localScale=new Vector3(-1,1,1);
+                p.title=Label(panel,font,"",0,265,460,70,38);
+                var close=Box("Close purchase",panel,272,299,62,62);Halves(close,21805,62,62);Clickable(close,()=>{p.Close();closed?.Invoke();});
+                p.art=Picture(panel,"Tool artwork",null,0,103,155,155);p.art.preserveAspect=true;
+                p.body=Label(panel,font,"",0,-30,500,95,27);
+                p.buy=Box("Buy tool pack",panel,0,-155,420,92);Halves(p.buy,21955,420,92,true);Clickable(p.buy,()=>p.onBuy?.Invoke());
+                p.price=Label(p.buy,font,"",-28,0,285,72,32);Picture(p.buy,"Coin",Sprite(21613),139,0,54,54);
+                p.balance=Label(panel,font,"",0,-245,500,54,24);p.root.gameObject.SetActive(false);
+                return p;
+            }
+            // `buy` runs when the coin button is pressed; it pays (StoryBoosters.Buy) or calls NotEnoughCoins.
+            public void Show(string name,Sprite sprite,string description,int count,int cost,Action buy)
+            {
+                if(!root)return;
+                title.text=name;art.sprite=sprite;body.text=description;price.text="x"+count+"       "+cost;onBuy=buy;
+                balance.text="Your coins: "+InitScript.Gems;root.gameObject.SetActive(true);root.SetAsLastSibling();
+            }
+            // Royal Throne's "not enough coins": the purse line says so, a notice points at the button, and the coin shop
+            // opens over the panel so the player can come back to the same offer.
+            public void NotEnoughCoins()
+            {
+                if(!root)return;
+                balance.text="Not enough coins — you have "+InitScript.Gems;
+                if(SoundBase.Instance)SoundBase.Instance.PlaySound(SoundBase.Instance.click);
+                RoyalNotice.NotEnoughCoins(buy,InitScript.Gems);
+                RoyalShopPage.Open(RoyalShopPage.Tab.Coins);
+            }
+            public void Close(){if(root)root.gameObject.SetActive(false);onBuy=null;}
+        }
+        // The count StoryFreeGame's starter grants and the purchase panel add to, read and written through StoryBoosters
+        // (RoyalSave, keyed by BoostType name).
         public int Stock(int index)=>JellyGarden.Scripts.Story.StoryBoosters.Owned(Types[index]);
         void SetStock(int index,int count)=>JellyGarden.Scripts.Story.StoryBoosters.SetOwned(Types[index],count);
         public void Choose(BoostType type)
         {
             int index=Array.IndexOf(Types,type);if(index<0||Busy||!LM||LM.gameStatus!=GameState.Playing)return;
             if(Locked){LockedHint(index);return;}
+            if(ShopOpen)CloseShop();
             if(Selected==index){CancelSelection();return;}
-            CancelSelection();if(Stock(index)<=0){EmptyHint(index);return;}
+            CancelSelection();if(Stock(index)<=0){OpenShop(type);return;}
             Selected=index;currentBoard=LM.squaresArray;AI.THIS?.CancelVisibleHint();
             message.text=Titles[index]+"\n"+(index==3?"Tap Shuffle to rearrange the board.":index==0?"Tap an object to clear it.":index==1?"Tap a cell in the row to clear.":"Tap a cell in the column to clear.");
             prompt.gameObject.SetActive(true);prompt.SetAsLastSibling();
@@ -220,8 +271,6 @@ namespace RoyalThrone.ReferenceGameplay
         public void CancelSelection(){Selected=-1;lockedHintUntil=0;if(prompt)prompt.gameObject.SetActive(false);}
         // Tools open on the level after the opening ones (OpeningLevels).
         void LockedHint(int index)=>Hint(index,"Tools unlock at Level "+(OpeningLevels+1));
-        // D5: a tool with no stock is not offered for sale; the prompt says how more are earned.
-        void EmptyHint(int index)=>Hint(index,"None left. Win levels to earn more.");
         void Hint(int index,string line)
         {
             if(!prompt||!message)return;CancelSelection();
@@ -239,12 +288,26 @@ namespace RoyalThrone.ReferenceGameplay
             halo.from=new Color(1,.97f,.78f);halo.to=new Color(1,.8f,.3f);halo.color=new Color(1,1,1,0);
             return halos[index]=halo;
         }
-        // BoostShop.SetBoost routes the tools here. D5: there is no purchase panel (StoryFreeGame.ShopsAllowed); the tap explains instead.
+        // BoostShop.SetBoost routes the tools here, and Choose does for a tool with none left: the purchase panel sells a
+        // pack for coins. A padlocked tool (the opening levels) only says when tools unlock.
         public void OpenShop(BoostType type)
         {
             int index=Array.IndexOf(Types,type);if(index<0||Busy)return;
-            if(Locked)LockedHint(index);else if(Stock(index)<=0)EmptyHint(index);else Choose(type);
+            if(Locked){LockedHint(index);return;}
+            CancelSelection();if(shop==null)return;buying=index;
+            Offer(index,out int count,out int cost);
+            shop.Show(Titles[index],Art(index),Descriptions[index],count,cost,()=>Buy());
         }
+        // Tool packs come from the coin rules (RoyalEconomy.ToolPack: 3 for 150, or 180 for the Arrow and the Cannon).
+        public void Offer(int index,out int count,out int cost)=>RoyalEconomy.ToolPack(index,out count,out cost);
+        public bool Buy()
+        {
+            if(!ShopOpen||buying<0)return false;
+            Offer(buying,out int count,out int cost);
+            if(!JellyGarden.Scripts.Story.StoryBoosters.Buy(Types[buying],count,cost)){shop.NotEnoughCoins();return false;}
+            int index=buying;CloseShop();Choose(Types[index]);return true;
+        }
+        public void CloseShop(){if(shop!=null)shop.Close();buying=-1;}
         bool Stable()=>LM&&LM.gameStatus==GameState.Playing&&!LM.IsResolvingMatches&&LM.InputSwaps==0&&!RoyalPowerupDirector.Busy&&
             LM.GetItems().Where(i=>i).All(i=>!i.falling&&!i.destroying)&&!MenuManager.Instance.BlocksBoardInput;
         void Update()
@@ -252,7 +315,7 @@ namespace RoyalThrone.ReferenceGameplay
             if(!LM)return;
             ShowPadlocks();
             if(LM.gameStatus!=GameState.Playing||(currentBoard!=null&&currentBoard!=LM.squaresArray))
-            {CancelSelection();if(Busy&&(LM.gameStatus==GameState.Map||LM.gameStatus==GameState.PrepareGame||currentBoard!=LM.squaresArray))CancelOperation();currentBoard=LM.squaresArray;return;}
+            {CancelSelection();CloseShop();if(Busy&&(LM.gameStatus==GameState.Map||LM.gameStatus==GameState.PrepareGame||currentBoard!=LM.squaresArray))CancelOperation();currentBoard=LM.squaresArray;return;}
             if(lockedHintUntil>0&&Time.unscaledTime>=lockedHintUntil){lockedHintUntil=0;if(Selected<0&&prompt)prompt.gameObject.SetActive(false);}
             // Eased once per tool per frame (a tool's button can be bound more than once), then applied to its buttons.
             for(int ix=0;ix<chosen.Length;ix++)chosen[ix]=Mathf.MoveTowards(chosen[ix],Selected==ix?1:0,Time.unscaledDeltaTime/.12f);
@@ -263,12 +326,14 @@ namespace RoyalThrone.ReferenceGameplay
                 b.transform.localScale=Vector3.one*(1+.06f*e);
                 var halo=chosen[ix]>0||halos[ix]?Halo(b,ix):null;if(halo&&!Mathf.Approximately(halo.color.a,e))halo.color=new Color(1,1,1,e);
             }
-            // Back first cancels a chosen tool, instead of also opening the pause menu (BackConsumedThisFrame).
-            if(InputManager.Instance&&InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame()&&!BackConsumedThisFrame)
+            // Back first closes the purchase panel or cancels a chosen tool, instead of also opening the pause menu
+            // (BackConsumedThisFrame). With the coin shop over the panel, Back closes the coin shop alone (RoyalShopPage).
+            if(InputManager.Instance&&InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame()&&!RoyalShopPage.IsOpen&&!BackConsumedThisFrame)
             {
-                if(Selected>=0&&!Busy){CancelSelection();backConsumedFrame=Time.frameCount;return;}
+                if(ShopOpen){CloseShop();ConsumeBack();return;}
+                if(Selected>=0&&!Busy){CancelSelection();ConsumeBack();return;}
             }
-            if(Selected<0||Busy)return;
+            if(Selected<0||Busy||ShopOpen)return;
             if(MenuManager.Instance.BlocksBoardInput){CancelSelection();return;}
             if(InputManager.Instance&&InputManager.Instance.WasTouchPressed)
             {
@@ -370,6 +435,6 @@ namespace RoyalThrone.ReferenceGameplay
             foreach(var p in pieces)if(p)p.transform.position=p.square.transform.position;LastHitCount=0;
         }
         void CancelOperation(){if(operation!=null)StopCoroutine(operation);operation=null;Busy=false;usingTool=-1;if(LM&&!LM.IsResolvingMatches&&LM.InputSwaps==0)LM.DragBlocked=false;if(hammer)hammer.Cancel();if(archer)archer.Cancel();if(cannon)cannon.Cancel();}
-        void OnDisable(){CancelSelection();CancelOperation();}
+        void OnDisable(){CancelSelection();CloseShop();CancelOperation();}
     }
 }

@@ -85,7 +85,7 @@ namespace RoyalThrone.Testing
             normalDate=InitScript.DateOfExit;normalLevel=LM.currentLevel;normalRandom=UnityEngine.Random.state;
             normalMusic=MusicBase.Instance.GetVolume();normalSound=SoundBase.Instance.GetVolume();
             // Switch before leaving a board: any transition callback also writes QA keys.
-            ownsSession=true;RoyalSave.Testing=true;RoyalSave.SetInt("OpenLevelTest",0);
+            ownsSession=true;RoyalSave.Testing=true;IsolateStory();RoyalSave.SetInt("OpenLevelTest",0);
             ToMap();Hydrate();Level=Mathf.Max(1,normalLevel);
             Status="TEST PROFILE ACTIVE. Coins and Gems share one balance. Stars are per selected level (0–3).";Changed?.Invoke();
         }
@@ -109,10 +109,52 @@ namespace RoyalThrone.Testing
                 LM.currentLevel=normalLevel;UnityEngine.Random.state=normalRandom;Speed=1;Time.timeScale=1;practice=false;
                 MusicBase.Instance.SetVolume(normalMusic);SoundBase.Instance.SetVolume(normalSound);
                 // No yield or persistence between restoring runtime values and changing routes.
-                RoyalSave.Testing=false;ownsSession=false;
+                RestoreStory();RoyalSave.Testing=false;ownsSession=false;
                 Status="Test session ended. Normal player progress restored.";Visible=false;Changed?.Invoke();
             }
             finally { endingSession=false; }
+        }
+        // King Leo's campaign save (StoryProgress) is a JSON file, not PlayerPrefs, so RoyalSave cannot route it. A session
+        // plays against its own copy instead: whatever pays an area star on a win (Win instantly, or a QA level played to the
+        // end) or records a loss writes the copy, never the player's file. The copy starts from the player's progress, keeps
+        // its changes across sessions like the QA keys, and is re-copied by Reset test data.
+        static string StoryCopy=>global::System.IO.Path.Combine(Application.persistentDataPath,"RoyalThrone.QA.v1");
+        string normalStoryDirectory,playerStoryPath; bool storyIsolated;
+        void IsolateStory()
+        {
+            if(storyIsolated)return;
+            JellyGarden.Scripts.Story.StoryProgress.Flush(); // the player's pending write lands in the player's file
+            normalStoryDirectory=JellyGarden.Scripts.Story.StoryProgress.SaveDirectoryOverride;
+            playerStoryPath=JellyGarden.Scripts.Story.StoryProgress.SavePath;
+            JellyGarden.Scripts.Story.StoryProgress.SaveDirectoryOverride=StoryCopy;storyIsolated=true;
+            SeedStoryCopy(false);
+            JellyGarden.Scripts.Story.StoryProgress.ReloadFromDisk();
+        }
+        void RestoreStory()
+        {
+            if(!storyIsolated)return;
+            JellyGarden.Scripts.Story.StoryProgress.Flush(); // the session's pending write lands in the copy
+            JellyGarden.Scripts.Story.StoryProgress.SaveDirectoryOverride=normalStoryDirectory;storyIsolated=false;
+            JellyGarden.Scripts.Story.StoryProgress.ReloadFromDisk();
+        }
+        // Reset test data: the copy goes back to the player's progress.
+        void ResetStoryCopy()
+        {
+            if(!storyIsolated)return;
+            SeedStoryCopy(true);
+            JellyGarden.Scripts.Story.StoryProgress.ReloadFromDisk();
+        }
+        void SeedStoryCopy(bool replace)
+        {
+            string copy=JellyGarden.Scripts.Story.StoryProgress.SavePath;
+            try
+            {
+                global::System.IO.Directory.CreateDirectory(StoryCopy);
+                if(replace&&global::System.IO.File.Exists(copy))global::System.IO.File.Delete(copy);
+                if(!global::System.IO.File.Exists(copy)&&global::System.IO.File.Exists(playerStoryPath))global::System.IO.File.Copy(playerStoryPath,copy);
+            }
+            // The redirect stands either way: a copy that cannot be written fails its own saves, never the player's.
+            catch(Exception e){Debug.LogWarning("[Royal QA] Story save copy: "+e.Message);}
         }
         void ToMap()
         {
@@ -178,7 +220,7 @@ namespace RoyalThrone.Testing
             if(!RoyalSave.Testing||!Ready)throw new InvalidOperationException("Start the isolated test profile first.");
             if(!Commands.Values.Any(list=>list.Contains(command)))throw new InvalidOperationException("Unknown QA control.");
             Status="Running: "+command;Changed?.Invoke();
-            if(command=="Reset test data"){ToMap();yield return null;RoyalSave.ResetTesting();Hydrate();yield break;}
+            if(command=="Reset test data"){ToMap();yield return null;RoyalSave.ResetTesting();ResetStoryCopy();Hydrate();yield break;}
             if(command=="Grid / cells"){Grid=!Grid;yield break;}if(command=="Gem IDs / types"){Ids=!Ids;yield break;}
             if(command=="Valid moves"){ValidMoves=!ValidMoves;yield break;}if(command=="Detected matches"){Matches=!Matches;yield break;}
             if(command=="Hint candidate"){Candidate=!Candidate;yield break;}if(command=="FPS / particles"){Counters=!Counters;yield break;}
@@ -216,10 +258,11 @@ namespace RoyalThrone.Testing
                 if(LM.gameStatus!=GameState.Playing)throw new InvalidOperationException("Restart the level before another outcome.");
                 foreach(var target in LM.targetObject)target.countCollected=target.targetCount;
                 LevelManager.Score=Mathf.Max(LevelManager.Score,LM.star3);LM.stars=3;
-                if(command=="Win instantly"){LM.gameStatus=GameState.Win;RoyalSave.Save();} // the real event/save flow, exactly once
+                // The real event/save flow, exactly once; its StoryProgress area star goes to the session's copy (IsolateStory).
+                if(command=="Win instantly"){if(!storyIsolated)throw new InvalidOperationException("The story save is not isolated.");LM.gameStatus=GameState.Win;RoyalSave.Save();}
                 yield break;
             }
-            if(command=="Lose instantly"){if(LM.gameStatus!=GameState.Playing)throw new InvalidOperationException("Restart before another outcome.");LM.Limit=0;LM.gameStatus=GameState.GameOver;yield break;}
+            if(command=="Lose instantly"){if(LM.gameStatus!=GameState.Playing)throw new InvalidOperationException("Restart before another outcome.");if(!storyIsolated)throw new InvalidOperationException("The story save is not isolated.");LM.Limit=0;LM.gameStatus=GameState.GameOver;yield break;}
             if(command=="Spawn blocker")
             {
                 var square=Selected();if(square.block.Count>0)throw new InvalidOperationException("Selected cell already has a blocker.");
@@ -367,7 +410,8 @@ namespace RoyalThrone.Testing
             if(LM.gameStatus!=GameState.Pause)Time.timeScale=Speed;
             if(Loop&&!Busy&&!Visible&&LastReplay.Length>0&&Time.unscaledTime>=replayAt)Request(LastReplay);
         }
-        void OnDestroy(){if(Instance==this)Instance=null;Time.timeScale=1;}
+        // Leaving play mid-session (the Editor keeps statics with domain reload off) must not leave the story on the copy.
+        void OnDestroy(){if(Instance==this)Instance=null;Time.timeScale=1;RestoreStory();}
     }
 }
 #endif
