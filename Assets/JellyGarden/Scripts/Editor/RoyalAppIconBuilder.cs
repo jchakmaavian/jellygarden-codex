@@ -2,7 +2,10 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+#if UNITY_ANDROID
+// UnityEditor.Android only exists when Android Build Support is installed.
 using UnityEditor.Android;
+#endif
 using UnityEditor.Build;
 using UnityEngine;
 
@@ -37,6 +40,7 @@ namespace RoyalThrone.Editor
             var round=Load("royal-throne-icon-round");
             PlayerSettings.SetIcons(NamedBuildTarget.Unknown,new[]{icon},IconKind.Any);
             int slots=0;
+#if UNITY_ANDROID
             // Legacy and Round are deprecated in 6000.5 but still filled: dropping them changes the APK's icon
             // resources, which only a device build can verify. Revisit when Unity removes them (minSdk is 26).
 #pragma warning disable CS0618
@@ -52,6 +56,9 @@ namespace RoyalThrone.Editor
                 slots+=saved.Length;
             }
 #pragma warning restore CS0618
+#else
+            Debug.LogWarning("[Royal Throne Icon] Android Build Support is not installed (or Android is not the active target); Android icon slots were not set.");
+#endif
             AssetDatabase.SaveAssets();
             Directory.CreateDirectory("Design/Branding/AppIcon-v1");
             File.WriteAllText("Design/Branding/AppIcon-v1/checks.txt","Default icon assigned. Android Legacy/Round/Adaptive slots verified: "+slots+". "+safeZone+" Round slots use the adaptive layers in a circle.\n");
