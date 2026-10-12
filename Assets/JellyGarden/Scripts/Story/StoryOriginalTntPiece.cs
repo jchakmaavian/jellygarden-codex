@@ -73,6 +73,7 @@ namespace JellyGarden.Scripts.Story
                 cell / Mathf.Max(.0001f, Mathf.Abs(inherited.x)),
                 cell / Mathf.Max(.0001f, Mathf.Abs(inherited.y)),
                 1f);
+            if (_revealLeft <= 0f) StoryThroneGameplayArt.FitIdleBody(_view);
 
             var sprite = _item.sprRenderer;
             if (sprite == null) return;

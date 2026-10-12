@@ -301,7 +301,11 @@ namespace JellyGarden.Scripts.Story
             var fitter = image.GetComponent<AspectRatioFitter>();
             if (fitter == null) fitter = image.gameObject.AddComponent<AspectRatioFitter>();
             fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-            fitter.aspectRatio = sprite.rect.width / sprite.rect.height;
+            bool royalGradient = StoryThroneGameplayArt.IsGameplayBackdrop(sprite);
+            image.preserveAspect = !royalGradient;
+            var parent = image.transform.parent as RectTransform;
+            fitter.aspectRatio = royalGradient && parent != null && parent.rect.height > 0
+                ? parent.rect.width / parent.rect.height : sprite.rect.width / sprite.rect.height;
         }
 
         /// <summary>
