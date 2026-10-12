@@ -73,7 +73,7 @@ namespace RoyalThrone.Editor
                 check(expected.SetEquals(reversed.PreviewCells),label+" reversing swap arguments cannot change the marked group");
                 var rest=lm.squaresArray.ToDictionary(s=>s.item,s=>s.item.sprRenderer.transform.localScale);
                 check(presenter.Show(plan),label+" starts its single-group hint");
-                yield return new WaitForSecondsRealtime(.95f);yield return new WaitForEndOfFrame();
+                yield return new WaitForSecondsRealtime(.95f);yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                 check(presenter.VisibleSwapCount==2&&presenter.ContourCount==1&&presenter.OutlineCellCount==expected.Count,label+" shows one outline and one swap pair");
                 var affected=Affected(plan);
                 check(lm.squaresArray.Where(s=>!affected.Contains(s.item)).All(s=>s.item.sprRenderer.transform.localScale==rest[s.item]&&
@@ -106,7 +106,7 @@ namespace RoyalThrone.Editor
             var visited=new HashSet<string>{Key(chosen)};var previous=chosen;bool single=true,restored=true,wrapped=false;
             deadline=Time.unscaledTime+AI.HintSuggestionSeconds*choices.Count+2;
             while(Time.unscaledTime<deadline&&!wrapped){
-                yield return new WaitForEndOfFrame();var current=presenter.CurrentPlan;
+                yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());var current=presenter.CurrentPlan;
                 single &= current!=null&&current.IsCurrent(lm)&&presenter.ContourCount==1&&presenter.VisibleSwapCount==2;
                 if(current==null)break;
                 if(current!=previous){
@@ -180,7 +180,7 @@ namespace RoyalThrone.Editor
         }
         static IEnumerator Capture(string name)
         {
-            yield return new WaitForEndOfFrame();Directory.CreateDirectory(Folder);
+            if(UnityEngine.Application.isBatchMode)yield break;yield return new WaitForEndOfFrame();Directory.CreateDirectory(Folder);
             var texture=ScreenCapture.CaptureScreenshotAsTexture();
             try{File.WriteAllBytes(Folder+name+".png",texture.EncodeToPNG());}finally{UnityEngine.Object.Destroy(texture);}
         }
@@ -217,13 +217,13 @@ namespace RoyalThrone.Editor
                     RoyalHintSolver.Find(lm);
                     check(originalItems.Select((item,index)=>item.NextType==next[index]&&item.square.item==item).All(v=>v)&&UnityEngine.Random.state.Equals(solverRandom),example.Name+" preview leaves ownership, power creation and RNG untouched");
                     check(presenter.Show(plan),example.Name+" starts its native rendered hint");
-                    yield return new WaitForSecondsRealtime(.18f);yield return new WaitForEndOfFrame();
+                    yield return new WaitForSecondsRealtime(.18f);yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                     check(originalItems.Select((item,index)=>item.sprRenderer.transform.localPosition==sprites[index]&&Vector3.Distance(item.sprRenderer.transform.localScale,scales[index])<.001f).All(v=>v),example.Name+" waits gently before moving or growing either gem");
                     // Sample the actual rendered approach instead of assuming a
                     // fixed wait lands on the peak during first-use shader warmup.
                     float peakDeadline=Time.unscaledTime+2.5f;
                     while(Time.unscaledTime<peakDeadline&&plan.First.sprRenderer.transform.localScale.x/scales[Array.IndexOf(originalItems,plan.First)].x<1.057f)
-                        yield return new WaitForEndOfFrame();
+                        yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                     var direction=(plan.Second.transform.position-plan.First.transform.position).normalized;
                     var a=Array.IndexOf(originalItems,plan.First);var b=Array.IndexOf(originalItems,plan.Second);
                     Vector3 Delta(int index)=>originalItems[index].sprRenderer.transform.parent.TransformVector(originalItems[index].sprRenderer.transform.localPosition-sprites[index]);
@@ -267,7 +267,7 @@ namespace RoyalThrone.Editor
                 int frame=0;bool stationary=true,separated=true,firstPeak=false,secondPeak=false,returned=false;
                 var captureTimes=new List<string>();
                 while(Time.unscaledTime-loopStart<3.65f){
-                    yield return new WaitForEndOfFrame();float time=Time.unscaledTime-loopStart;
+                    yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());float time=Time.unscaledTime-loopStart;
                     stationary &= loopItems.Select((item,index)=>item.transform.position==loopRoots[index]&&item.GetComponent<BoxCollider2D>().bounds==loopBounds[index]&&item.square.item==item&&
                         (item==loopPlan.First||item==loopPlan.Second||item.sprRenderer.transform.localPosition==loopRest[index])).All(v=>v);
                     float scale=loopPlan.First.sprRenderer.transform.localScale.x/loopScale;
@@ -275,13 +275,13 @@ namespace RoyalThrone.Editor
                     if(time<1.3f&&scale>1.057f)firstPeak=true;
                     if(time>2.2f&&scale>1.057f)secondPeak=true;
                     if(time>1.6f&&time<1.95f&&Mathf.Abs(scale-1)<.001f)returned=true;
-                    if(time>=nextCapture){
+                    if(time>=nextCapture&&!UnityEngine.Application.isBatchMode){
                         Directory.CreateDirectory(Folder);var tex=ScreenCapture.CaptureScreenshotAsTexture();
                         try{File.WriteAllBytes(Folder+"loop-"+frame.ToString("D3")+".png",tex.EncodeToPNG());}finally{UnityEngine.Object.Destroy(tex);}
                         captureTimes.Add(time.ToString("F4",System.Globalization.CultureInfo.InvariantCulture));frame++;nextCapture=time+1f/15;
                     }
                 }
-                File.WriteAllLines(Folder+"loop-times.txt",captureTimes);
+                Directory.CreateDirectory(Folder);File.WriteAllLines(Folder+"loop-times.txt",captureTimes);
                 check(firstPeak&&secondPeak&&returned,"Interaction repeats two full approaches with a smooth return to normal size between them");
                 check(stationary,"Every sampled loop frame preserves all cell owners, root positions, hit areas and other gem positions");
                 check(separated,"No hinted gem overlaps any neighbour during either complete rendered cycle");
@@ -324,7 +324,7 @@ namespace RoyalThrone.Editor
                     "Natural idle finder reveals a real two-gem swap only after the quiet-time delay");
                 check(idlePlan.IsCurrent(lm)&&MatchesProductionResult(lm,idlePlan),
                     "Natural idle finder selects the complete match actually consumed by production gameplay");
-                yield return new WaitForSecondsRealtime(RoyalHintPresenter.PairStartDelay+.34f);yield return new WaitForEndOfFrame();
+                yield return new WaitForSecondsRealtime(RoyalHintPresenter.PairStartDelay+.34f);yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                 var idleDirection=(idlePlan.Second.transform.position-idlePlan.First.transform.position).normalized;
                 Vector3 IdleDelta(Item item)=>item.sprRenderer.transform.parent.TransformVector(item.sprRenderer.transform.localPosition-idleRest[item]);
                 check(presenter.CurrentPlan==idlePlan&&Vector3.Dot(IdleDelta(idlePlan.First),idleDirection)>lm.squareWidth*.005f&&

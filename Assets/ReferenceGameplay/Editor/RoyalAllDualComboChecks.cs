@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
 {
  public static class RoyalAllDualComboChecks
  {
-  const string Folder="Design/DualCombo-Reference/Verification/";
+  const string Folder="Logs/port-checks/DualCombo-Reference/Verification/";
   static readonly List<string> notes=new List<string>();
   static readonly List<string> errors=new List<string>();
   public static bool Running{get;private set;}

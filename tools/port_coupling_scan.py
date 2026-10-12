@@ -61,6 +61,8 @@ IMPORT_FILES = [
     JG + "GUI/RoyalPanelGraphic.cs", JG + "GUI/RoyalVisualCatalog.cs",
     JG + "GUI/RoyalTextStyle.cs", JG + "GUI/RoyalPressTracker.cs",
     JG + "RoyalSave.cs", JG + "RoyalQaService.cs",
+    # Editor files the import closure adds (IMPORT-MANIFEST.md §4, §7; AUDIT-REVIEW.md).
+    JG + "Editor/RoyalGameplayArtImporter.cs", JG + "Editor/RoyalWebPImporter.cs", JG + "Editor/RoyalVfxLab.cs",
     # Play-mode suites (Task 4.0) and the suites RoyalEffectsChecks runs.
 ] + [JG + "Editor/" + n + ".cs" for n in (
     "RoyalEffectsChecks", "RoyalHintPresentationChecks", "RoyalOverlapChecks",
@@ -75,9 +77,7 @@ IMPORT_FILES = [
 NOT_IMPORTED = {
     JG + "Juice/RoyalWinSequence.cs": "D4: main keeps its win flow; only ReferenceWinFinish is taken",
     JG + "Juice/RoyalEconomy.cs": "D5: no coin economy",
-    JG + "Juice/RoyalPropellerV2.cs": "dead V2 propeller; its Resources/RoyalPropellerV2 art is absent on royal-throne too",
-    JG + "Juice/RoyalPropellerPieceV2.cs": "dead V2 propeller (see RoyalPropellerV2.cs)",
-    JG + "Juice/RoyalPropellerV2Sequence.cs": "dead V2 propeller (see RoyalPropellerV2.cs)",
+    JG + "Juice/RoyalReviewAudioCapture.cs": "editor-only review capture; the import closure cuts it (IMPORT-MANIFEST.md §5, §7), so RoyalEffectsChecks drops its two uses",
     JG + "Editor/RoyalOfflineBuildPolicy.cs": "fails every build while main defines UNITY_ADS/UNITY_INAPPS; nothing imported uses it",
     "Assets/ReferenceGameplay/Home/Scripts/ReferenceHomeLayout.cs": "Royal Throne home screen",
     "Assets/ReferenceGameplay/Home/Scripts/ReferenceHomeSky.cs": "Royal Throne home screen",
@@ -134,7 +134,7 @@ RULES = [
      "replace-with-main-equivalent: StoryBoosters.Owned(Types[index]) (D5)", False),
     ("toolshop", r"\bOpenShop\(",
      "guard-off (D5: only when StoryFreeGame.ShopsAllowed, which is false)", True),
-    ("qaui", r"\bRoyalModMenu\b|\bRoyalQaMenu\b|\bRoyalHandoffCapture\b|\bRoyalVfxLab\b",
+    ("qaui", r"\bRoyalModMenu\b|\bRoyalQaMenu\b|\bRoyalHandoffCapture\b|\bRoyalReviewAudioCapture\b",
      "remove (QA mod-menu UI / capture tools, out of scope)", False),
     ("offline", r"\bRoyalOfflineMode\b|\bRoyalOfflineBuildPolicy\b",
      "remove", False),
@@ -144,7 +144,7 @@ RULES = [
      "remove (D3: no colour-5->1 remap)", False),
     ("colorcount", r"\bBoardColorCount\b",
      "import (D3: BoardColorCount becomes 6, the palette maximum)", True),
-    ("oldboosters", r"\bBoosters\.(Propeller\.V[234]|ColorBall\.V[23])\b|\bPropeller(Visual|Vfx|Seat|Gameplay|Audio|Motion)V[234]\b|\bColorBall(Visual|Vfx|Seat|Audio)V[23]\b|\broyalPropellerV[34]Clear\b|\bRoyalPropeller(Piece)?V2\w*",
+    ("oldboosters", r"\bBoosters\.(Propeller\.V[234]|ColorBall\.V[23])\b|\bPropeller(Visual|Vfx|Seat|Gameplay|Audio|Motion)V[234]\b|\bColorBall(Visual|Vfx|Seat|Audio)V[23]\b|\broyalPropellerV[34]Clear\b",
      "remove (Boosters V2/V3/V4 propeller and V2/V3 colour ball are not imported)", False),
     ("profile", r"\bRoyalProfile\w*",
      "remove (profile page, out of scope)", False),
@@ -153,7 +153,7 @@ RULES = [
     ("music", r"\bLevelMusic\b|RoyalGameplay/Music/|\bmusic\[0\]\.Play\(\)|\bDesiredMusic\(\)|\bMusicTarget\(|\bStartFade\(|\bmusicFilter\b|var musicHost|music=new AudioSource|_audioSource\.Stop\(\); return; \}",
      "guard-off (music is out of scope; main's MusicBase keeps playing)", False),
     ("font", r"RoyalGameplay/Display",
-     "replace-with-main-equivalent: StoryUi.DisplayFont (licence of BorisBlackBloxx unknown, Task 1.1)", False),
+     "import (Display.ttf is imported and byte-identical to main's Story/Fonts/story_display.ttf, PROVENANCE.md §4; pointing the load at StoryUi.DisplayFont is optional)", True),
     ("initscript", r"\bInitScript\.(NextLifeKey|Instance\.(LifeRefillDeadline|RestoreLifeScheduleForTesting|SetRefillSeconds|TryOpenLevel))\b",
      "remove (royal-throne-only InitScript member)", False),
     ("blocksinput", r"\bBlocksBoardInput\b",
@@ -192,7 +192,8 @@ OVERRIDES = [
     ("LevelManager.cs", "BeginMatchWave", "remove (D8)"),
     ("LevelManager.cs", "RoyalReferenceCampaign.Active)", "remove (D8: the campaign branch of GetRandomItems, lines 1591-1598; keep RT's fix below it)"),
     # ---- Item.cs
-    ("Item.cs", "square.DestroyBlock(royalRocketClear, royalCampaignHitWave, campaignAdjacentMatch)", "remove (D8: drop the two campaign arguments -> `square.DestroyBlock(royalRocketClear)`)"),
+    ("Item.cs", "square.DestroyBlock(royalRocketClear, royalCampaignHitWave, campaignAdjacentMatch)", "import (kept: plan §4 keeps Square.DestroyBlock(rocketClear, wave, matched) and merge-specs/INDEX.md §5 keeps the inert campaign arguments; they do nothing once HandleHit is cut)"),
+    ("Item.cs", "[HideInInspector] public int royalCampaignHitWave;", "import (kept: inert field, merge-specs/INDEX.md §5; only its RoyalCampaignBlockers assignment is cut)"),
     ("Item.cs", "COLOR = RoyalGameplayArt.BoardColor(value)", "remove (D3: `COLOR = value;`)"),
     ("Item.cs", "int paletteSize = Mathf.Clamp", "replace-with-main-equivalent: paletteSize = LevelManager.Instance.colorLimit (D3, no clamp)"),
     ("Item.cs", "NotifyPowerupCreated", "retarget:AvatarEvents.PowerupCreated"),
@@ -233,7 +234,6 @@ OVERRIDES = [
     ("RoyalGameplayPresentation.cs", "KingVanguardSlot.Mount(", "replace-with-main-equivalent: StoryAvatar.Build(<character>, portraitMask.rectTransform) (Task 4.7 Step 2)"),
     ("RoyalGameplayPresentation.cs", "readonly RoyalThrone.Characters.KingVanguardFeedbackQueue", "replace-with-main-equivalent: Juice/AvatarFeedbackQueue (copy of KingVanguardFeedbackQueue, pure C#; RT's throttle, Task 4.7 Step 3)"),
     ("RoyalGameplayPresentation.cs", "RoyalMenuSkin.Apply", "remove (restyles the kit menus; main restyles them with StorybookKitMenus)"),
-    ("RoyalGameplayPresentation.cs", "Resources.Load<Font>(\"RoyalGameplay/Display\")", "replace-with-main-equivalent: StoryUi.DisplayFont"),
     # ---- Juice
     ("RoyalGameplayArt.cs", "public const int BoardColorCount = 5", "replace-with-main-equivalent: 6 (palette maximum; the level's own count is LevelManager.colorLimit, D3)"),
     ("RoyalGameplayArt.cs", "public static int BoardColor(int color)", "remove (D3)"),
@@ -243,11 +243,9 @@ OVERRIDES = [
     ("RoyalPieceSkin.cs", "CampaignResourceRoot = ", "guard-off (D8, but see COUPLINGS.md §4: RoyalCampaignArt holds gem art)"),
     ("RoyalPieceSkin.cs", "", "guard-off (D8, but see COUPLINGS.md §4: RoyalCampaignArt holds gem art)"),
     ("RoyalPowerupDirector.cs", "PropellerVisualV4.Clear()", "remove (V2/V3/V4 propeller Clear() calls; keep the V5 one)"),
-    ("RoyalPowerupDirector.cs", "RoyalPropellerV2.ClearAll()", "remove (`RoyalPropellerV2.ClearAll();RoyalPropellerPieceV2.ClearSeated();`)"),
     ("RoyalPowerupDirector.cs", "item.color < RoyalGameplayArt.BoardColorCount", "import (D3: works with BoardColorCount = 6)"),
     ("RoyalPowerupDirector.cs", "new int[RoyalGameplayArt.BoardColorCount]", "import (D3: works with BoardColorCount = 6)"),
     ("RoyalPowerupDirector.cs", "colour>=RoyalGameplayArt.BoardColorCount", "import (D3: works with BoardColorCount = 6)"),
-    ("RoyalCelebration.cs", "RoyalGameplay/Display", "replace-with-main-equivalent: StoryUi.DisplayFont"),
     ("RoyalAudioDirector.cs", "", "guard-off (music is out of scope; main's MusicBase keeps playing)"),
     ("MusicBase.cs", "RoyalAudioDirector.Get", "remove (keep main's PlayMusic; music stays main's)"),
     # ---- GUI/RoyalGameplayHud.cs
@@ -276,7 +274,6 @@ OVERRIDES = [
     ("ReferenceBoosterBar.cs", "RoyalMenuSkin.Place", "replace-with-main-equivalent: RoyalGameplayHud.Place (copy of RoyalMenuSkin.Place, 5 lines)"),
     ("ReferenceBoosterBar.cs", "(UNITY_EDITOR || DEVELOPMENT_BUILD) && !ROYAL_DISABLE_QA", "import (keep the guard)"),
     # ---- ReferenceWinFinish.cs
-    ("ReferenceWinFinish.cs", "RoyalGameplay/Display", "replace-with-main-equivalent: StoryUi.DisplayFont"),
     # ---- Boosters
     ("PropellerGameplayV5.cs", "using RoyalThrone.Campaign;", "remove (D8; the namespace is not imported)"),
     ("PropellerGameplayV5.cs", "", "remove (D8: whole `if(RoyalReferenceCampaign.Active){...} else` branch, lines 43-51)"),
@@ -288,7 +285,7 @@ OVERRIDES = [
     ("RoyalQaChecks.cs", "RoyalReferenceCampaign.Active&&LevelManager.THIS.colorLimit", "replace-with-main-equivalent: Check(LevelManager.THIS.colorLimit==5, ...) (practice fixture, see RoyalQaService.Practice)"),
     ("RoyalQaChecks.cs", "for(int color=0;color<RoyalGameplayArt.BoardColorCount", "import (D3: loops over 6 colours once BoardColorCount = 6)"),
     ("RoyalQaChecks.cs", "RoyalEconomy.WinCoins", "remove (D4/D5: drop the win-coins assertion; keep the win-state check)"),
-    ("RoyalRocketChecks.cs", "RoyalVfxLab", "replace-with-main-equivalent: inline loop `foreach(var s in new[]{.5f,1f}){Time.timeScale=s;yield return FocusedAtSpeed(lm,seed,colours,check,s);}` and restore timeScale (RoyalVfxLab.cs:87-100 without its EditorWindow)"),
+    ("RoyalEffectsChecks.cs", "RoyalReviewAudioCapture", "remove (Juice/RoyalReviewAudioCapture.cs is not imported: drop the `capture` field, its Begin() call and every later use of `capture`)"),
     ("ReferenceArcherChecks.cs", "RoyalTitleScreen", "remove (title-screen wait)"),
     ("ReferenceHammerChecks.cs", "RoyalTitleScreen", "remove (title-screen wait)"),
     ("ReferenceCannonChecks.cs", "RoyalTitleScreen", "remove (title-screen wait)"),

@@ -33,7 +33,7 @@ namespace RoyalThrone.Editor
      if(pattern=="void"){var sq=lm.GetSquare(2,2);Empty(sq);sq.type=SquareTypes.NONE;blockers.Add(sq);}
      yield return null;int repairs=RoyalBoardIntegrity.Repairs;lm.FindMatches();
      int calm=0,f=0;for(;f<fps*15;f++){
-      yield return new WaitForEndOfFrame();
+      yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
       bool busy=lm.IsResolvingMatches||lm.InputSwaps>0||RoyalPowerupDirector.Busy||lm.GetItems().Any(i=>i&&(i.falling||i.destroying||i.justCreatedItem));
       calm=busy?0:calm+1;if(calm>=fps/2)break;
      }

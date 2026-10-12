@@ -39,7 +39,7 @@ namespace RoyalThrone.Editor
                     float deadline = Time.realtimeSinceStartup + 20;
                     while ((RoyalPowerupDirector.Busy || frames == 0) && Time.realtimeSinceStartup < deadline)
                     {
-                        yield return new WaitForEndOfFrame();
+                        yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                         var fuse = Fuse();
                         var view = Object.FindObjectsByType<ReferenceActivationVisual>().FirstOrDefault(v => v.Active && v.Socket("FitilPartikul").name == "FitilPartikul");
                         if (view && fuse)
@@ -54,15 +54,15 @@ namespace RoyalThrone.Editor
                             if (lit == 12)
                             {
                                 lm.gameStatus = GameState.Pause;
-                                yield return null; yield return new WaitForEndOfFrame();
+                                yield return null; yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                                 Vector3 paused = socket.position;
-                                yield return null; yield return new WaitForEndOfFrame();
+                                yield return null; yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                                 check(Vector3.Distance(paused,socket.position) < .0001f && fuse.GetComponentsInChildren<ParticleSystem>().All(p=>!p.isPlaying), fps + " FPS: fuse and fire pause together");
                                 lm.gameStatus = GameState.Playing;
                             }
                         }
                         exploded |= Object.FindObjectsByType<SortingGroup>().Any(g => g.name.StartsWith("TntTntComboExplodeParticles"));
-                        if (fps == 60 && frames % 2 == 0)
+                        if (fps == 60 && frames % 2 == 0 && !UnityEngine.Application.isBatchMode)
                         {
                             var image = ScreenCapture.CaptureScreenshotAsTexture();
                             File.WriteAllBytes(Folder + frames.ToString("D3") + ".png",image.EncodeToPNG());
@@ -91,7 +91,7 @@ namespace RoyalThrone.Editor
                     var reused = ReferenceVfxPool.Play("TntTntComboFuseParticles",Vector3.one,sustained:true);
                     handle.Follow(socketOwner.transform,99);
                     socketOwner.transform.position = Vector3.one * 5;
-                    yield return new WaitForEndOfFrame();
+                    yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                     check(reused.GameObject.transform.position == Vector3.one && reused.GameObject.GetComponent<SortingGroup>().sortingOrder == 35,
                         "Pool reuse clears attachment and restores default order; stale handles cannot modify a new lease");
                     reused.Stop();

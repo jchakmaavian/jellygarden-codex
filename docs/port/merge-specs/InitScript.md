@@ -24,7 +24,7 @@ Royal Throne's InitScript changes are **not** taken. That includes:
 
 These public or internal members exist only in Royal Throne's `InitScript`: `LifeIntervalSeconds`, `LifeRefillDeadline`, `NextLifeKey`, `RestoreLifeScheduleForTesting`, `SaveLifeSchedule`, `SetRefillSeconds`, `TryOpenLevel` and `UpdateLives`. Main's file lacks them.
 
-The import set searched was: `Juice/**`, the §5 GUI subset, `RoyalSave.cs`, `RoyalQaService.cs`, `ReferenceGameplay/{Scripts,Tools/Scripts,Editor}`, `ReferenceWinFinish.cs`, and `Boosters/{Propeller/V5,ColorBall/V4,ColorBall/V5}`. Only these three are called, all from `RoyalQaService.cs`, which is QA-only and wrapped in `#if (UNITY_EDITOR || DEVELOPMENT_BUILD) && !ROYAL_DISABLE_QA`:
+The import set searched was: `Juice/**`, the §5 GUI subset, `RoyalSave.cs`, `RoyalQaService.cs`, `ReferenceGameplay/{Scripts,Tools/Scripts,Editor}`, `ReferenceWinFinish.cs`, and `Boosters/{Propeller/V5,ColorBall/V4,ColorBall/V5}`. In that set only these three are called, all from `RoyalQaService.cs`, which is QA-only and wrapped in `#if (UNITY_EDITOR || DEVELOPMENT_BUILD) && !ROYAL_DISABLE_QA`. The Task 4.0 editor suites call two more, `InitScript.NextLifeKey` (`RoyalQaChecks.cs:34`) and `InitScript.Instance.TryOpenLevel` (`RoyalEffectsChecks.cs:23`); `COUPLINGS.md` §4 cuts those callers (added by the audit review):
 
 | Member | Caller (`origin/royal-throne`) | Royal Throne definition |
 |---|---|---|
@@ -34,7 +34,9 @@ The import set searched was: `Juice/**`, the §5 GUI subset, `RoyalSave.cs`, `Ro
 
 Every other `InitScript` member the import set uses exists on main with the same signature (verified): `Gems`, `lifes`, `Instance`, `SetGems(int)`, `AddGems(int)`, `AddLife(int)`, `SpendLife(int)`, `BuyBoost(BoostType,int,int)`, `SpendBoost(BoostType)`, `SaveLevelStarsCount(int,int)`, `CapOfLife`, `RestLifeTimer`, `DateOfExit`, and `TotalTimeForRestLife{Hours,Min,Sec}`.
 
-**Default: add QA shims to main's file.** Royal Throne's real implementations depend on its life schedule (`nextLifeUtc`), which main does not have. Main keeps the kit's `RestLifeTimer` / `DateOfExit` model, and lives are never spent (`StoryFreeGame.ShouldSpendLife`). **Anchor:** main `InitScript.cs`, directly after `public static string DateOfExit;` (main:87). Insert:
+**Default (audit review, matching plan §4 and `COUPLINGS.md` §4): add nothing to `InitScript`; cut the callers.** Plan §4 says main's `InitScript` keeps its own file and only `MenuManager` gains a member. `COUPLINGS.md` §4 resolves every caller: `RoyalQaService.cs:72` (snapshot `RestLifeTimer` only), `:98` (`InitScript.RestLifeTimer = normalTimer`), `:136` (`InitScript.RestLifeTimer = seconds`), `RoyalQaChecks.cs:34` (drop `NextLifeKey` from the snapshot) and `RoyalEffectsChecks.cs:23` (`PortChecks` opens the level). `tools/port_coupling_scan.py --worktree` enforces those cuts (rule `initscript`).
+
+**Alternative: add QA shims to main's file.** Royal Throne's real implementations depend on its life schedule (`nextLifeUtc`), which main does not have. Main keeps the kit's `RestLifeTimer` / `DateOfExit` model, and lives are never spent (`StoryFreeGame.ShouldSpendLife`). Use this only if the callers are kept; with the cuts above the shims are dead code. **Anchor:** main `InitScript.cs`, directly after `public static string DateOfExit;` (main:87). Insert:
 
 ```csharp
 #if (UNITY_EDITOR || DEVELOPMENT_BUILD) && !ROYAL_DISABLE_QA
@@ -49,7 +51,7 @@ Every other `InitScript` member the import set uses exists on main with the same
 
 `DateTime` resolves through main's `using System;` (main:13). `Mathf` resolves through `using UnityEngine;` (main:20).
 
-**Alternative:** do not touch `InitScript`. Instead delete `RoyalQaService.cs` lines 72, 98 and 136 and the `normalLifeDeadline` field. Record that in `COUPLINGS.md`.
+(The earlier draft made the shims the default and the caller cuts the alternative. That contradicted `COUPLINGS.md` §4 and the scanner; the audit review flipped it. `tools/port_merge_dryrun.py` no longer inserts the shims.)
 
 ### Recommended one-line addition: `RoyalSave` alias
 

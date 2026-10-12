@@ -294,11 +294,11 @@ namespace RoyalThrone.Editor
             RoyalCelebration.Play(4);yield return new WaitForSeconds(.25f);
             yield return CaptureFrame("celebration-bravo");
         }
-        static void Capture(string name) => RoyalRegressionRunner.Run(CaptureFrame(name));
+        static void Capture(string name){if(UnityEngine.Application.isBatchMode)return;RoyalRegressionRunner.Run(CaptureFrame(name));} // batchmode has no Game view to read
         static IEnumerator CaptureFrame(string name)
         {
             // Read the completed Game view, not an intermediate Editor render target.
-            yield return new WaitForEndOfFrame();Directory.CreateDirectory(Folder);
+            if(UnityEngine.Application.isBatchMode)yield break;yield return new WaitForEndOfFrame();Directory.CreateDirectory(Folder);
             var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+".png",tex.EncodeToPNG());Object.Destroy(tex);
         }
         static void Finish()

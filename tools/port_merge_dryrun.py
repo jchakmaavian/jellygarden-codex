@@ -158,10 +158,12 @@ s = show("origin/royal-throne", J + "GUI/BoostShop.cs")
 s = delete_line(s, "Juice.RoyalEconomy.Apply(boostProducts);   // pack sizes and prices come from the coin rules", label="BS")
 write("BoostShop.cs", s)
 write("BoostIcon.cs", show("origin/royal-throne", J + "GUI/BoostIcon.cs"))
-# ---------------- InitScript (main + QA shims + alias)
+# ---------------- InitScript (main + RoyalSave alias; default adds no members, InitScript.md §3)
 s = show("origin/main", J + "InitScript.cs")
-blk = code_blocks("InitScript.md", r"^\*\*Default: add QA shims")[0]
-s = rep(s, "        public static string DateOfExit;\n", "        public static string DateOfExit;\n" + blk, label="IS")
+if os.environ.get("PORT_DRYRUN_INITSCRIPT_SHIMS"):   # the spec's alternative: QA shims
+    blk = code_blocks("InitScript.md", r"^\*\*Alternative: add QA shims")[0]
+    s = rep(s, "        public static string DateOfExit;\n", "        public static string DateOfExit;\n" + blk, label="IS")
+s = rep(s, "        public static string DateOfExit;\n", "        public static string DateOfExit;\n", label="IS anchor")
 s = "using PlayerPrefs = RoyalThrone.Testing.RoyalSave;\n" + s
 write("InitScript.cs", s)
 write("AnimationManager.cs", show("origin/main", J + "GUI/AnimationManager.cs"))

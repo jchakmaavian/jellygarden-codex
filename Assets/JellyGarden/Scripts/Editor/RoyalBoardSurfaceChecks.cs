@@ -45,7 +45,7 @@ namespace RoyalThrone.Editor
                     check(Mathf.Abs(Mathf.Max(x,y)-fill)<.004f&&x<=.95f&&y<=.95f,
                         "Gameplay "+pieceType+" colour "+color+" fills "+Mathf.RoundToInt(fill*100)+"% of its cell without crossing the cell bounds");
                 }
-                item.currentType=ItemsTypes.VERTICAL_STRIPPED;skin.ApplyNow();yield return new WaitForEndOfFrame();
+                item.currentType=ItemsTypes.VERTICAL_STRIPPED;skin.ApplyNow();yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                 var vertical=RoyalGameplayArt.Art("rocket-vertical");var horizontal=RoyalGameplayArt.Art("rocket");
                 check(vertical&&horizontal&&vertical.texture!=horizontal.texture&&item.sprRenderer.sprite==vertical,
                     "Vertical rocket renders the dedicated vertical artwork after the Animator and skin update");
@@ -55,7 +55,7 @@ namespace RoyalThrone.Editor
                 var presentation=lm.GetComponent<RoyalGameplayPresentation>();
                 if(presentation)
                 {
-                    presentation.StyleBoard(lm);yield return new WaitForEndOfFrame();
+                    presentation.StyleBoard(lm);yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                     check(squares.All(s=>{
                         var cell=s.GetComponent<SpriteRenderer>();var bounds=cell.bounds;
                         return cell.enabled&&Mathf.Abs(bounds.size.x-lm.squareWidth)<.004f&&Mathf.Abs(bounds.size.y-lm.squareHeight)<.004f&&

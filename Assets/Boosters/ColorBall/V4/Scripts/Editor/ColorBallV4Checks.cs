@@ -14,7 +14,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4.Editor
 {
     public static class ColorBallV4Checks
     {
-        const string Root=ColorBallV4Builder.Root+"Animation/Review/";
+        const string Root="Logs/port-checks/ColorBallV4/";
         static RoyalQaService qa;static bool running;static int frame,fps=30,phaseSamples;
         static string label;static float begin,activation=-1,chargeAt,firstBeam,lastContact,lastConversion,sequenceEnd,completed,resolved;
         static int fired,hit,converted,launches,expected,activationLease;static ItemsTypes payload;
@@ -24,7 +24,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4.Editor
         static readonly HashSet<ColorBallAudioV4.Cue> cues=new HashSet<ColorBallAudioV4.Cue>();
         static readonly HashSet<string> captured=new HashSet<string>();
         [MenuItem("Tools/Royal Throne/Color Ball V4/Run focused checks with audio %&#F10")]
-        static void Run(){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready)throw new Exception("Enter the game first.");running=true;checks.Clear();events.Clear();sounds.Clear();errors.Clear();cues.Clear();captured.Clear();phaseSamples=0;fps=30;RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite());}
+        static void Run(){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready)throw new Exception("Enter the game first.");running=true;checks.Clear();events.Clear();sounds.Clear();errors.Clear();cues.Clear();captured.Clear();phaseSamples=0;fps=30;Directory.CreateDirectory(Root);RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite());}
         static void Check(bool ok,string text){if(!ok)throw new Exception("Color Ball V4: "+text);checks.Add("PASS "+text);}
         static void Log(string m,string s,LogType t){if(t==LogType.Error||t==LogType.Exception||t==LogType.Assert)errors.Add(m);}
         static void Sound(ColorBallAudioV4.Cue cue,int lease){cues.Add(cue);sounds.Add(Time.time.ToString("F4")+","+label+","+lease+","+cue);}
@@ -47,7 +47,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4.Editor
             }
         }
         static IEnumerator Command(string command){qa.Request(command);while(qa.Busy)yield return null;qa.Visible=false;}
-        static void Begin(string name){ColorBallV4Capture.End();label=name;frame=0;begin=Time.time;activation=-1;fired=hit=converted=0;contacts.Clear();flashes.Clear();prepared.Clear();angles.Clear();ColorBallV4Capture.Begin(Root+".Capture/"+name);File.WriteAllText(Root+".Capture/"+name+"/motion.csv","frame,time,phase,age,angle,speed,charge,x,y,scaleX,scaleY,beams,orbitAngle,orbitSpeed,sourcePulse\n");File.WriteAllText(Root+"progress.txt",name);}
+        static void Begin(string name){ColorBallV4Capture.End();label=name;frame=0;begin=Time.time;activation=-1;fired=hit=converted=0;contacts.Clear();flashes.Clear();prepared.Clear();angles.Clear();if(UnityEngine.Application.isBatchMode)Directory.CreateDirectory(Root+".Capture/"+name);else ColorBallV4Capture.Begin(Root+".Capture/"+name);File.WriteAllText(Root+".Capture/"+name+"/motion.csv","frame,time,phase,age,angle,speed,charge,x,y,scaleX,scaleY,beams,orbitAngle,orbitSpeed,sourcePulse\n");File.WriteAllText(Root+"progress.txt",name);}
         static void Record(bool capture=true){
             foreach(var v in Object.FindObjectsByType<ColorBallVisualV4>()){
                 if(v.Current==ColorBallVisualV4.Phase.Free)continue;
@@ -65,12 +65,12 @@ namespace RoyalThrone.Boosters.ColorBall.V4.Editor
                 if(activation>=0&&(RoyalPowerupDirector.Get.ColorBallState==RoyalPowerupDirector.ColorBallPhase.SpinUp||RoyalPowerupDirector.Get.ColorBallState==RoyalPowerupDirector.ColorBallPhase.Converting||RoyalPowerupDirector.Get.ColorBallState==RoyalPowerupDirector.ColorBallPhase.Finish)&&RoyalPowerupDirector.Get.RocketLaunches!=launches)throw new Exception("Rocket fired before Color Ball payoff");
                 if(capture){File.AppendAllText(Root+".Capture/"+label+"/motion.csv",frame+","+(Time.time-begin).ToString("F4")+","+v.Current+","+v.Age.ToString("F4")+","+v.Angle.ToString("F4")+","+v.Speed.ToString("F4")+","+v.Charge.ToString("F4")+","+v.Anchor.x.ToString("F4")+","+v.Anchor.y.ToString("F4")+","+v.bodyLayer.localScale.x.ToString("F4")+","+v.bodyLayer.localScale.y.ToString("F4")+","+ColorBallVfxV4.ActiveBeams+","+v.OrbitAngle.ToString("F4")+","+v.OrbitSpeed.ToString("F4")+","+v.SourcePulse.ToString("F4")+"\n");}
                 bool moment=v.Current==ColorBallVisualV4.Phase.Reveal?v.Age>.32f:v.Current==ColorBallVisualV4.Phase.Charge?v.Age>.4f:v.Current==ColorBallVisualV4.Phase.Finish?v.Age>.07f:v.Age>.15f;
-                if(capture&&moment&&captured.Add(label+"-"+v.Current)){var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Root+label+"-"+v.Current+".png",t.EncodeToPNG());Object.Destroy(t);}
+                if(capture&&moment&&!UnityEngine.Application.isBatchMode&&captured.Add(label+"-"+v.Current)){var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Root+label+"-"+v.Current+".png",t.EncodeToPNG());Object.Destroy(t);}
             }
-            if(capture){ColorBallV4Capture.Frame();frame++;}
+            if(capture){if(!UnityEngine.Application.isBatchMode)ColorBallV4Capture.Frame();frame++;}
         }
         static void CheckAlignment(ColorBallVisualV4 v){if(v.bodyLayer.localPosition!=v.colorSurfaceLayer.localPosition||v.bodyLayer.localScale!=v.colorSurfaceLayer.localScale||v.bodyLayer.rotation!=v.colorSurfaceLayer.rotation)throw new Exception("Body/energy center or volume mismatch");if(v.orbitBack.sortingOrder>=v.body.sortingOrder||v.orbitFront.sortingOrder<=v.energy.sortingOrder||v.orbitBack.sharedMaterial.renderQueue!=v.body.sharedMaterial.renderQueue)throw new Exception("Orbit depth ordering mismatch");if(!v.body.sharedMaterial.shader.isSupported||!v.energy.sharedMaterial.shader.isSupported)throw new Exception("Sphere shader unsupported");}
-        static IEnumerator Observe(float seconds,bool capture=true){float until=Time.time+seconds;while(Time.time<until){yield return new WaitForEndOfFrame();Record(capture);}}
+        static IEnumerator Observe(float seconds,bool capture=true){float until=Time.time+seconds;while(Time.time<until){yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());Record(capture);}}
         static Item Create(int x,int y,ItemsTypes type){var i=LevelManager.THIS.GetSquare(x,y).item;i.NextType=type;i.ChangeType();return i;}
         static IEnumerator Combo(string name,int x,int y,ItemsTypes type,bool high=false){
             yield return Command("Practice board");
@@ -79,7 +79,7 @@ namespace RoyalThrone.Boosters.ColorBall.V4.Editor
             var v=ball.GetComponent<ColorBallSeatV4>().View;Check(v.Current==ColorBallVisualV4.Phase.Idle,"Reveal ends on Idle "+name);Check(Mathf.Abs(v.bodyLayer.localScale.x-.84f)<.001f,"Cell-sized stable Idle "+name);
             int[] counts=new int[6];foreach(var i in LevelManager.THIS.GetItems())if(i&&i!=ball&&i!=partner&&i.color>=0&&i.color<6)counts[i.color]++;expected=counts.Max();launches=RoyalPowerupDirector.Get.RocketLaunches;
             activationLease=v.Lease;Check(RoyalPowerupDirector.TrySwap(ball,partner),"Existing live combo accepted "+name);LevelManager.THIS.FindMatches();
-            float deadline=Time.time+25;do{yield return new WaitForEndOfFrame();Record();}while((RoyalPowerupDirector.Busy||LevelManager.THIS.IsResolvingMatches)&&Time.time<deadline);
+            float deadline=Time.time+25;do{yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());Record();}while((RoyalPowerupDirector.Busy||LevelManager.THIS.IsResolvingMatches)&&Time.time<deadline);
             yield return Observe(.65f);Check(!RoyalPowerupDirector.Busy&&!LevelManager.THIS.IsResolvingMatches,"Gameplay finishes "+name);
             float baseline=high?3.4333f:fps==60?1.8333f:1.7333f;float slowdown=(lastConversion-firstBeam)/baseline;Check(slowdown>=1.14f&&slowdown<=1.27f,"Conversion volley 15-25% slower than measured V2 (frame tolerance): "+slowdown.ToString("F3"));
             Check(fired==hit&&hit==converted&&converted==expected,"All selected targets contacted/converted exactly once "+name+": "+converted);

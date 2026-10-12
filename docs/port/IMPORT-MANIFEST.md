@@ -412,7 +412,7 @@ Folder .meta present on both sides with different bytes (keep main's; GUID-AUDIT
 
 **`code` (restore verbatim).**
 - New runtime and editor scripts: `Juice/*` except 3 cut files, the in-level GUI subset, `RoyalSave`, `RoyalQaService`, `RoyalOfflineMode`, `ReferenceGameplay/Scripts` except 2 coin scripts, `Tools/Scripts`, `ReferenceWinFinish`, and the three booster folders.
-- `RoyalOfflineMode.cs` is new against plan §5. Royal-throne's `LevelManager` references it, at the `RoyalOfflineMode` token.
+- `RoyalOfflineMode.cs` is new against plan §5. Royal-throne's unmerged `LevelManager` references it (`:506`, `:515`). `merge-specs/LevelManager.md` C7 and `COUPLINGS.md` finding 4 revert those two lines to main's, so after the merge nothing calls it. Importing it is harmless (a 10-line constant class); dropping it is also fine (audit review).
 - `Editor/RoyalWebPImporter.cs` is a `ScriptedImporter` for `.webp`. The 19 imported `RoyalGameplay/*.webp` sprites need it. It shells out to **FFmpeg** in the Editor, looking in `ROYAL_THRONE_FFMPEG`, `/opt/homebrew/bin/ffmpeg`, `/usr/local/bin/ffmpeg` and `/usr/bin/ffmpeg`.
   - It is present on this machine at `/opt/homebrew/bin/ffmpeg`.
   - Every other machine that imports the project needs FFmpeg, or these sprites fail to import.
@@ -465,12 +465,12 @@ Folder .meta present on both sides with different bytes (keep main's; GUID-AUDIT
 | Kit file (keep main's) | Royal-throne member the closure needs | Used at (royal-throne lines) |
 |---|---|---|
 | `GUI/MenuManager.cs` | `BlocksBoardInput` | `RoyalGameplayPresentation.cs:126,167,223`; `Item.cs:1843`; `LevelManager.cs:257,955,1011`; `ReferenceBoosterBar.cs:271,296` |
-| `GUI/AnimationManager.cs` | `IsOpen` | `ReferenceBoosterBar.cs:290` (shop branch, cut with D5) |
-| `InitScript.cs` | `LifeRefillDeadline`, `RestoreLifeScheduleForTesting`, `SetRefillSeconds` | `RoyalQaService.cs:72,98,136` |
-| `InitScript.cs` | `NextLifeKey` | `RoyalQaChecks.cs:34` |
-| `InitScript.cs` | `TryOpenLevel` | `RoyalEffectsChecks.cs:23` (and `RoyalPresentationChecks.cs:26`, not imported) |
+| `GUI/AnimationManager.cs` | none. **False positive (audit review):** the `IsOpen` at `ReferenceBoosterBar.cs:290` is `RoyalShopPage.IsOpen` (cut with D5). Royal-throne's `AnimationManager.IsOpen(string)` (`:409`) is a private static helper that no imported file calls. | — |
+| `InitScript.cs` | `LifeRefillDeadline`, `RestoreLifeScheduleForTesting`, `SetRefillSeconds` | `RoyalQaService.cs:72,98,136`. Resolution: cut the callers (`COUPLINGS.md` §4, `merge-specs/InitScript.md` §3 default); nothing is added to main's file |
+| `InitScript.cs` | `NextLifeKey` | `RoyalQaChecks.cs:34`. Resolution: cut the caller (`COUPLINGS.md` §4) |
+| `InitScript.cs` | `TryOpenLevel` | `RoyalEffectsChecks.cs:23` (and `RoyalPresentationChecks.cs:26`, not imported). Resolution: cut the caller; `PortChecks` opens the level (`COUPLINGS.md` §4) |
 | `SoundBase.cs` | `RoyalAudioDirector` / `RoyalCue` routing | union per plan §4 |
-| `MusicBase.cs` | routes music to `RoyalAudioDirector` | music is out of scope; recommend keeping main's `MusicBase` unchanged |
+| `MusicBase.cs` | routes music to `RoyalAudioDirector` | music is out of scope. `merge-specs/MusicBase.md` takes royal-throne's file minus that gate, which keeps RT's singleton/`SetParent(null)` fix; either way the gate is not merged |
 
 **`kit-keep-main`.**
 - Royal-throne changed these kit files, but nothing in the closure needs those changes. The reason for each file is in the table.
@@ -609,7 +609,7 @@ The `kit level data` and `kit prefabs` rows are kit resources that main already 
 
 | Plan says | Closure says |
 |---|---|
-| `Juice/**` | All except `RoyalEconomy.cs`, `RoyalWinSequence.cs` and `RoyalReviewAudioCapture.cs` (cut areas) |
+| `Juice/**` | All except `RoyalEconomy.cs`, `RoyalWinSequence.cs` and `RoyalReviewAudioCapture.cs` (cut areas). `RoyalReviewAudioCapture` is an editor-only review capture rather than music; it is cut, so `RoyalEffectsChecks.cs:55,145` drop their uses (`COUPLINGS.md` finding 6). The dead `RoyalPropellerV2*` files are imported and deleted in Task 6.1 |
 | GUI subset of 7 files "plus whatever Task 1.3 proves" | 9 files: the plan's 7 plus `RoyalPressTracker.cs` and `RoyalTextStyle.cs` (both used by `RoyalGameplayHud`) |
 | — | `RoyalOfflineMode.cs`, `Editor/RoyalWebPImporter.cs` (needs FFmpeg), `Editor/RoyalGameplayArtImporter.cs`, `ReferenceGameplay/Editor/ReferenceSpriteImporter.cs` are needed |
 | `Assets/ReferenceGameplay/Scripts/**` | All except `ReferenceCoinAnimation.cs` / `ReferenceCoinParticles.cs`: their only user is `RoyalWinSequence` (cut) |
@@ -617,7 +617,7 @@ The `kit level data` and `kit prefabs` rows are kit resources that main already 
 | Shaders `RoyalTNTBody`, `RoyalTNTGlow` | Not needed (only `Resources/RoyalTNT/*.mat` use them) |
 | `RoyalGameplay/**` except EffectsProfile/Music/Win | 59 of 103 files (§4). `EffectsProfile.asset` is listed as a `# held back:` comment |
 | `RoyalColorBall/**` | 4 shaders only; `Frames/**` dead, `VFX/**` unreferenced |
-| `Assets/ReferenceGameplay/Resources/ReferenceGameplay/{Visuals,VFX,Audio,Sprites,Tools,Layout}/**` | Those keys are spread over 10 `Resources/` roots (§1); 482 asset files are needed, 343 already identical on main |
+| `Assets/ReferenceGameplay/Resources/ReferenceGameplay/{Visuals,VFX,Audio,Sprites,Tools,Layout}/**` | Those keys are spread over 13 `Resources/` roots, 10 of them used by the port (§1); 482 asset files are needed, 343 already identical on main |
 | `Assets/ReferenceGameplay/{Animation,Art,Audio,VFX}/**` | Only the guid-referenced subset (see the `assets` table) |
 | Task 4.0 suite list | Plus 8 compile dependencies of `RoyalEffectsChecks`/`RoyalRocketChecks`; `RoyalTNTChecks`/`RoyalColorBallChecks` need assets this list does not import |
 | AllIn1 demo textures only | 31 files including 2 demo prefabs, 11 materials, 1 mesh and 2 demo scripts |

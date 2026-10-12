@@ -39,14 +39,14 @@ namespace RoyalThrone.Editor
                     check(lm.InputSwaps==1,label+": actual player swap started");
                     for(int frame=0;frame<fps*2;frame++)
                     {
-                        yield return new WaitForEndOfFrame();
+                        yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                         if(lm.InputSwaps>0)safe&=group.All(i=>i&&!i.destroying&&i.sprRenderer.enabled);
                         else if(commit<0)commit=frame;
                         int hidden=group.Count(i=>!i||!i.sprRenderer.enabled);
                         if(hidden>0&&first<0)first=frame;
                         if(hidden==3&&last<0){last=frame;credit=LevelManager.Score==score+3*lm.scoreForItem;}
                         fragments|=CandyShatterService.Instance.ActiveFragments>0 || Object.FindObjectsByType<ParticleSystem>().Any(p=>p.particleCount>0 && p.GetComponentInParent<UnityEngine.Rendering.SortingGroup>() is var g && g && g.name.StartsWith("MatchItemExplodeParticles"));
-                        if(fps==60&&!vertical&&frame<55){var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(folder+frame.ToString("D3")+".png",tex.EncodeToPNG());Object.Destroy(tex);}
+                        if(fps==60&&!vertical&&frame<55&&!UnityEngine.Application.isBatchMode){var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(folder+frame.ToString("D3")+".png",tex.EncodeToPNG());Object.Destroy(tex);}
                     }
                     int delay=first-commit,spread=last-first;
                     check(first>=0&&commit>=0&&last>=0,label+": commit-to-first-break "+delay+" rendered frames; first-to-last "+spread+" frames");

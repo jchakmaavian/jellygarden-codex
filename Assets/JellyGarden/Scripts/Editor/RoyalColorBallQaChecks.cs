@@ -40,7 +40,7 @@ namespace RoyalThrone.Editor
         }
         static void Capture(string name)
         {
-            var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+".png",t.EncodeToPNG());Object.Destroy(t);
+            if(UnityEngine.Application.isBatchMode)return;var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+".png",t.EncodeToPNG());Object.Destroy(t);
         }
         static IEnumerator Observe(string command,string label,bool convert,Item[] untouched=null,bool record=false)
         {
@@ -57,7 +57,7 @@ namespace RoyalThrone.Editor
             string frames="Temp/ColorBall-live-v5-"+label+"/";if(record)Directory.CreateDirectory(frames);
             while(qa.Busy&&Time.realtimeSinceStartup<end)
             {
-                yield return new WaitForEndOfFrame();
+                yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                 var balls=Object.FindObjectsByType<ColorBallFrameAnimator>();
                 foreach(var ball in balls)
                 {
@@ -96,7 +96,7 @@ namespace RoyalThrone.Editor
                     if(boost.Current==ColorBallBoostView.Phase.Finish&&!sawFinish){Capture(label+"-finish");sawFinish=true;}
                 }
                 else if(sawFinish&&!settledCapture){Capture(label+"-handoff-refill");settledCapture=true;}
-                if(record&&Time.realtimeSinceStartup-lastCapture>=1f/30f)
+                if(record&&!UnityEngine.Application.isBatchMode&&Time.realtimeSinceStartup-lastCapture>=1f/30f)
                 {
                     lastCapture=Time.realtimeSinceStartup;
                     var t=ScreenCapture.CaptureScreenshotAsTexture();

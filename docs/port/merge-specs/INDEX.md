@@ -27,7 +27,7 @@ Phase 3 is **one compile unit** (plan Task 3.8). Nothing below compiles alone, s
 | 12 | [TargetsGroup.md](TargetsGroup.md) | `Targets/TargetsGroup.cs` | royal-throne | 3.4 S4 | — (main = kit) | reference-campaign branch | — |
 | 13 | [BoostShop.md](BoostShop.md) | `GUI/BoostShop.cs` | royal-throne | 3.4 S5 | — (main = kit) | `RoyalEconomy.Apply` | — |
 | 14 | [BoostIcon.md](BoostIcon.md) | `GUI/BoostIcon.cs` | royal-throne | 3.4 S5 | — (main = kit) | — | — |
-| 15 | [InitScript.md](InitScript.md) | `InitScript.cs` | **main** | §4 | all | — (QA shims added) | — |
+| 15 | [InitScript.md](InitScript.md) | `InitScript.cs` | **main** | §4 | all | — (no members added; the QA callers are cut, `COUPLINGS.md` §4; `RoyalSave` alias recommended) | — |
 | 16 | [AnimationManager.md](AnimationManager.md) | `GUI/AnimationManager.cs` | **main** | §4 | all | — | — |
 
 **Pairs that must be merged together:**
@@ -36,7 +36,7 @@ Phase 3 is **one compile unit** (plan Task 3.8). Nothing below compiles alone, s
 - **10 + 11:** `TargetIcon`'s lookup depends on what `TargetObject.DeepCopy` puts in `icon`.
 - **1 + 2 + 3:** `Square.GenItem(..., campaignRefill)` and `Square.DestroyBlock(rocketClear, wave, matched)` keep their signatures because `Item.cs` passes those arguments.
 - **0 before 1 and 2:** `AvatarEvents` must exist.
-- **15:** needed once `RoyalQaService.cs` is imported (Task 3.5).
+- **15:** only the `RoyalSave` alias (recommended). The `InitScript` members that imported QA code calls are cut at the callers (`COUPLINGS.md` §4), not added here.
 
 ## 2. How to apply and test
 
@@ -85,6 +85,8 @@ namespace JellyGarden.Scripts.Juice
 }
 ```
 
+**Event names.** The plan (Task 3.2 Step 4, Task 4.7) names the events `Worried`, `Matched`, `ExtraMoves`. The `AvatarEvents.cs` committed on `port/royal-throne-level` (`5f71ea88`) names them `WorriedChanged`, `MatchResolved`, `ExtraMovesGranted`, and types `ToolUsed`/`ToolStruck` as `Action<int>`. The `Notify*` methods the kit files call are the same in both, so Phase 3 compiles either way; only Task 4.7's subscribers depend on the event names. Task 4.7 should use the committed names and treat the plan's table as the event-to-clip mapping (audit review).
+
 Inside `namespace JellyGarden.Scripts.Juice`, a qualified `System.Action` resolves to the kit namespace `JellyGarden.Scripts.System` first. Write `global::System.Action`, as above, or add `using System;` at file level and write `Action<...>`, as `Juice/RoyalHintSettings.cs` does.
 
 Call sites the specs convert. Record them in `COUPLINGS.md`:
@@ -103,7 +105,7 @@ Call sites the specs convert. Record them in `COUPLINGS.md`:
 1. **`Juice/RoyalWinSequence.cs` must not be imported** (D4). The merged `LevelManager` drops `CommittedCoins`, `StarsGained` and `CommitWin`, which only `RoyalWinSequence` reads (`RoyalWinSequence.cs:33,894`). It is referenced only by home and win-card files that are not imported, and by a comment in `ReferenceWinFinish.cs:30`. If it is imported anyway, keep `CommittedCoins`/`StarsGained` in `LevelManager`.
 2. **`ReferenceWinFinish.Regular()`** (`Assets/ReferenceGameplay/Home/Scripts/ReferenceWinFinish.cs:17`) calls `RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(i)`. Cut that term (D8), or the K11 finish does not compile.
 3. **`RoyalAudioDirector` plays its own music** (`Build()` → `music[0].Play()`, castle theme, then level music). With `MusicBase`'s gate removed (MusicBase.md), both tracks would play once the switch is on. Cut the director's music or set its volume to 0.
-4. **`RoyalQaService.cs`** needs `InitScript.LifeRefillDeadline`, `RestoreLifeScheduleForTesting` and `SetRefillSeconds` (InitScript.md §3, shims given). It also calls `RoyalHomeScreen.RefreshProgress` and `RoyalReferenceCampaign.Select`, which must be cut.
+4. **`RoyalQaService.cs`** calls `InitScript.LifeRefillDeadline`, `RestoreLifeScheduleForTesting` and `SetRefillSeconds`; `RoyalQaChecks.cs:34` reads `InitScript.NextLifeKey` and `RoyalEffectsChecks.cs:23` calls `InitScript.Instance.TryOpenLevel`. Main's `InitScript` has none of them. Default: cut those callers (`COUPLINGS.md` §4; InitScript.md §3 gives shims only as the alternative). `RoyalQaService` also calls `RoyalHomeScreen.RefreshProgress` and `RoyalReferenceCampaign.Select`, which must be cut.
 5. **`Juice/RoyalGameplayArt.BoardColor` / `BoardColorCount`** still remap and clamp visuals until Task 4.2. Their callers in Juice (`RoyalPowerupDirector.cs:323,330,342`, `RoyalGameplayArt.For`) and `RoyalQaService.cs:223,311` are Task 4.2's.
 6. **Item prefab skin (Task 3.6).** The one-line runtime `AddComponent<RoyalPieceSkin>()` change for `Item.Awake` is given in Item.md §6.
 
@@ -115,12 +117,12 @@ Call sites the specs convert. Record them in `COUPLINGS.md`:
 | LevelManager K11 (D4) | main's `ShowCompleteLabel` + sound + no banner around `ReferenceWinFinish.Play`; bounded settle wait | Main's `dragBlocked \|\| GetMatches()` wait can spin forever. Task 4.10 checks the kit label against the Royal HUD. |
 | LevelManager K7 | `guiObj == null → return` (not main's `_item.SetActive(false)`) | Deactivating the item would kill `Item.DestroyCor`; Royal Throne hides only the renderers. |
 | LevelManager C6 | `DateOfExit = DateTime.Now.ToString()` (main) | Main's `InitScript` and `LIFESAddCounter` are kept and parse it with `DateTime.Parse`. |
-| LevelManager C7 | main's `FacebookEnable` / `UnityInAppsIntegration` lines | `RoyalOfflineMode.cs` is not imported. Alternative: import it (always `false`) to force services off. |
+| LevelManager C7 | main's `FacebookEnable` / `UnityInAppsIntegration` lines | `RoyalOfflineMode.cs` is in `import-paths.txt` (harmless, always `false`), but nothing calls it once C7 is applied. Alternative: keep RT's two lines to force services off. |
 | MusicBase | delete the `RoyalAudioDirector` gate | Music is out of scope (§2); main's `StoryMusic` themes keep playing. |
 | TargetIcon | main's `StorybookBoardArt.Goal` plus a lookup that also matches the art's name | Keeps the badge bound to the live `TargetObject` copy. Task 4.6 later moves both files to `RoyalVisualCatalog.Goal`. |
 | InputManager | no main lines re-applied | `TrackPressPointer` reads the pressing pointer; an optional non-pointer fallback is given. |
 | BoostShop | plain Royal Throne take minus `RoyalEconomy`; a `StoryFreeGame.ShopsAllowed` guard is **recommended** | D5. Zero-count kit boosts on the Royal rail would otherwise open the gem shop. |
-| InitScript / AnimationManager | main's files; QA shims; `RoyalSave` alias recommended | Without the alias, QA sessions write the player's real save through `InitScript.BuyBoost/SetGems/...`. |
+| InitScript / AnimationManager | main's files; no members added (QA callers cut, `COUPLINGS.md` §4); `RoyalSave` alias recommended | Without the alias, QA sessions write the player's real save through `InitScript.BuyBoost/SetGems/...`. |
 | Square / Item | keep the unused `campaignRefill`, `campaignWave`, `campaignMatchedItem` params and the `royalCampaignHitWave` field | Smallest diff; Royal Throne callers keep compiling. |
 
 ## 6. Not covered by these specs (verified, for completeness)

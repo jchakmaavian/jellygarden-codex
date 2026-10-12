@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
 {
     public static class RoyalDualColorBallChecks
     {
-        const string Folder = "Design/DualColorBall-Reference/Verification/";
+        const string Folder = "Logs/port-checks/DualColorBall-Reference/Verification/";
         static readonly List<string> notes = new List<string>();
         static readonly List<string> errors = new List<string>();
         public static bool Running { get; private set; }
@@ -64,7 +64,7 @@ namespace RoyalThrone.Editor
                     float deadline = Time.realtimeSinceStartup + 25;
                     while ((RoyalPowerupDirector.Busy || frame == 0) && Time.realtimeSinceStartup < deadline)
                     {
-                        yield return new WaitForEndOfFrame();
+                        yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                         var actor = Object.FindObjectsByType<ReferenceDualColorBallVisual>().FirstOrDefault(v => v.Active);
                         if (actor && director.DualColorBallClearFrame < 0)
                         {
@@ -74,16 +74,16 @@ namespace RoyalThrone.Editor
                             if (!paused && actor.Elapsed > .6f)
                             {
                                 lm.gameStatus = GameState.Pause;
-                                yield return null; yield return new WaitForEndOfFrame();
+                                yield return null; yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                                 var pos = actor.GetComponentsInChildren<SpriteRenderer>().Select(r => r.transform.position).ToArray(); float time = actor.Elapsed;
-                                yield return null; yield return new WaitForEndOfFrame(); yield return null; yield return new WaitForEndOfFrame();
+                                yield return null; yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame()); yield return null; yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
                                 Check(Mathf.Abs(actor.Elapsed - time) < .00001f && pos.SequenceEqual(actor.GetComponentsInChildren<SpriteRenderer>().Select(r => r.transform.position)), fps + " FPS: body and sequence pause together");
                                 Check(Object.FindObjectsByType<ParticleSystem>().Where(p => p.name == "add_energy_lines" || p.name == "add_energy_dots").All(p => !p.isPlaying), fps + " FPS: native charging VFX pause");
                                 lm.gameStatus = GameState.Playing; paused = true;
                             }
                         }
                         blastVisible |= Object.FindObjectsByType<ParticleSystem>().Any(p => p.name == "add_ring" && p.particleCount > 0);
-                        if (fps == 60 && frame % 2 == 0)
+                        if (fps == 60 && frame % 2 == 0 && !UnityEngine.Application.isBatchMode)
                         {
                             string frames = Folder + "Frames/"; Directory.CreateDirectory(frames);
                             var image = ScreenCapture.CaptureScreenshotAsTexture();

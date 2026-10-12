@@ -39,7 +39,7 @@ namespace RoyalThrone.Editor
         {
             int calm=0;
             for(int f=0;f<fps*12;f++) {
-                yield return new WaitForEndOfFrame();Sample(lm,fps);
+                yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());Sample(lm,fps);
                 calm=Busy(lm)?0:calm+1;
                 if(calm>=fps)yield break; // includes landing motion and integrity watchdog window
             }
@@ -104,7 +104,7 @@ namespace RoyalThrone.Editor
                     AI.THIS.StopAllCoroutines();AI.THIS.CancelVisibleHint();AI.THIS.allowShowTip=false;
                     ResetCounters();int startRepairs=RoyalBoardIntegrity.Repairs,started=0,duringResolution=0;
                     for(int frame=0;frame<fps*25&&started<24;frame++) {
-                        yield return new WaitForEndOfFrame();Sample(lm,fps);
+                        yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());Sample(lm,fps);
                         if(frame%Mathf.Max(1,fps/10)!=0)continue;
                         var plan=RoyalHintSolver.FindAll(lm).FirstOrDefault(p=>!p.IsTap&&p.First&&p.Second&&p.First.CanAcceptInput&&p.Second.CanAcceptInput);
                         if(plan==null)continue;
@@ -115,7 +115,7 @@ namespace RoyalThrone.Editor
                     yield return Settle(lm,fps);
                     check(started>=12,fps+" FPS rapid sequence: "+started+" swaps started, "+duringResolution+" during active resolution");
                     Audit(lm,check,fps+" FPS rapid sequence",startRepairs);
-                    var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+"settled-"+fps+".png",tex.EncodeToPNG());Object.Destroy(tex);
+                    if(!UnityEngine.Application.isBatchMode){var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+"settled-"+fps+".png",tex.EncodeToPNG());Object.Destroy(tex);}
                 }
                 check(sampledFrames>1000,"Monitored "+sampledFrames+" rendered frames for live scene ownership and stuck destruction");
             }

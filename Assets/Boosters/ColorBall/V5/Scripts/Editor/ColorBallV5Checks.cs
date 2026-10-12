@@ -41,7 +41,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
         static void SingleSequence(){Run(false,true);}
         [MenuItem("Tools/Royal Throne/Color Ball V5/Combo and actual frame rate checks")]
         static void Full(){Run(false);}
-        static void Run(bool proof,bool singleSequence=false){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready){Debug.LogError("Color Ball: enter the game before the focused test.");return;}testProfile=ColorBallV5Presentation.ActiveProfile;Root=ColorBallV5Builder.Root+"Animation/Review/Links-"+testProfile+"/";Directory.CreateDirectory(Root);running=true;notes.Clear();events.Clear();errors.Clear();notes.Add("Presentation profile: "+testProfile+"; same live gameplay, target selection and Rocket handoff.");RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite(proof,singleSequence));}
+        static void Run(bool proof,bool singleSequence=false){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready){Debug.LogError("Color Ball: enter the game before the focused test.");return;}testProfile=ColorBallV5Presentation.ActiveProfile;Root="Logs/port-checks/ColorBallV5/Links-"+testProfile+"/";Directory.CreateDirectory(Root);running=true;notes.Clear();events.Clear();errors.Clear();notes.Add("Presentation profile: "+testProfile+"; same live gameplay, target selection and Rocket handoff.");RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite(proof,singleSequence));}
         static void Check(bool condition,string message){if(!condition)throw new Exception("Color Ball V5: "+message);notes.Add("PASS "+message);}
         static void Error(string m,string stack,LogType type){if(type==LogType.Error||type==LogType.Exception||type==LogType.Assert)errors.Add(m+"\n"+stack);}
         static void Event(ColorBallEvent e,ColorBallVisualV4 v,Vector3 p){
@@ -86,15 +86,15 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
                     previousLease=v.Lease;previousPhase=v.Current;previousAngle=v.Angle;previousTime=Time.time;
                 }
             }
-            if(record)ColorBallV4Capture.Frame();
+            if(record&&!UnityEngine.Application.isBatchMode)ColorBallV4Capture.Frame();
         }
-        static IEnumerator Observe(float duration){float until=Time.time+duration;while(Time.time<until){yield return new WaitForEndOfFrame();Sample();}}
+        static IEnumerator Observe(float duration){float until=Time.time+duration;while(Time.time<until){yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());Sample();}}
         static IEnumerator Combo(string name,bool proof,bool capture,bool high,int targetFps){
             yield return Practice();label=name;frames=fired=hits=converted=0;rigidSamples=spinSamples=previousLease=0;contacts.Clear();frameTimes.Clear();linkCounts.Clear();activation=chargeAt=finishAt=completed=0;record=capture;
             if(high)foreach(var s in LevelManager.THIS.squaresArray)if(s&&s.item)s.item.SetColor((s.col+s.row)%2==0?0:(s.col+s.row*2)%4+1);
             payload=high?ItemsTypes.VERTICAL_STRIPPED:ItemsTypes.HORIZONTAL_STRIPPED;
             begin=Time.time;launches=RoyalPowerupDirector.Get.RocketLaunches;
-            if(record)ColorBallV4Capture.Begin(Root+".Capture/"+name);
+            if(record&&!UnityEngine.Application.isBatchMode)ColorBallV4Capture.Begin(Root+".Capture/"+name);
             var ball=Create(3,3,ItemsTypes.BOMB);var partner=Create(4,3,payload);
             yield return Observe(.95f);var view=ball.GetComponent<ColorBallSeatV4>().View;
             Check(view&&view.referenceV5&&view.Current==ColorBallVisualV4.Phase.Idle,"V5 reveal settles to pooled Idle");
@@ -108,7 +108,7 @@ namespace RoyalThrone.Boosters.ColorBall.V5.Editor
             int[] counts=new int[6];foreach(var i in LevelManager.THIS.GetItems())if(i&&i!=ball&&i!=partner&&i.color>=0&&i.color<6)counts[i.color]++;expected=counts.Max();
             Check(RoyalPowerupDirector.TrySwap(ball,partner),"Live Color Ball + Rocket combo starts");LevelManager.THIS.FindMatches();
             float deadline=Time.time+25;
-            do{yield return new WaitForEndOfFrame();Sample();if(proof&&converted>0&&Time.time-firstContact>.72f)break;}while((RoyalPowerupDirector.Busy||LevelManager.THIS.IsResolvingMatches)&&Time.time<deadline);
+            do{yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());Sample();if(proof&&converted>0&&Time.time-firstContact>.72f)break;}while((RoyalPowerupDirector.Busy||LevelManager.THIS.IsResolvingMatches)&&Time.time<deadline);
             if(proof){Check(converted>=4&&hits>=converted&&contacts.Count==hits,"Short proof reaches multiple unique hit/conversion events");Check(RoyalPowerupDirector.Get.RocketLaunches==launches,"Proof ends before Rocket handoff");}
             if(!proof){
                 yield return Observe(.8f);
