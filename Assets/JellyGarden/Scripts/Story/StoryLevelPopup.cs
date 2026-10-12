@@ -93,7 +93,8 @@ namespace JellyGarden.Scripts.Story
             _instance._onClose=onClose;
             _instance.gameObject.SetActive(true);
             _instance.Refresh();
-            _instance._backdrop.Capture();
+            if (StorybookUi.Enabled) _instance._backdrop.ShowTexture(StoryOriginalBackdrop.Sprite.texture);
+            else _instance._backdrop.Capture();
         }
         public static void Close()
         {
@@ -319,7 +320,8 @@ namespace JellyGarden.Scripts.Story
                 // art the player is about to read over the board. It used to cut
                 // its own `score-token` from the concept sheet — a blue droplet,
                 // which is nothing the board contains.
-                slot.Icon.sprite=target.Icon!=null?target.Icon:StoryUi.StarSprite;
+                slot.Icon.sprite=StorybookUi.Enabled ? StoryThroneGameplayArt.PopupGoal(target) : target.Icon;
+                if (slot.Icon.sprite == null) slot.Icon.sprite = StoryUi.StarSprite;
                 slot.Icon.enabled=slot.Icon.sprite!=null;
                 slot.Backing.sprite=target.Backing;
                 slot.Backing.enabled=target.Backing!=null;
@@ -387,6 +389,7 @@ namespace JellyGarden.Scripts.Story
             int selectedCount=0;
             foreach(BoosterSlot slot in _boosters)
             {
+                if (StorybookUi.Enabled) slot.Icon.sprite = StoryThroneGameplayArt.PopupBooster(slot.Boost, StoryBoosters.IconOf(slot.Boost));
                 int owned=Mathf.Max(0,StoryBoosters.Owned(slot.Boost));
                 bool selected=owned>0 && StoryBoosters.IsSelected(slot.Boost);
                 slot.Count.text=owned.ToString();

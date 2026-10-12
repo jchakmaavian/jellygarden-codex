@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JellyGarden.Scripts.GUI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -86,12 +87,12 @@ namespace JellyGarden.Scripts.Story
             return sprite;
         }
 
-        public static Sprite Resolve(string key, Sprite original, bool blocker = false)
+        public static Sprite Resolve(string key, Sprite original, bool blocker = false, bool popup = false)
         {
             // Keep the existing coin texture; fit it to the same painted extent as the other gems.
-            if (!Gameplay || !original) return original;
+            if ((!Gameplay && !popup) || !original) return original;
             if (key == "courtyard") return Backdrop();
-            var source = key == "orange" || key == "coin" ? original : Source(key);
+            var source = key == "orange" || key == "coin" ? Resources.Load<Sprite>("Story/RoyalBoard/coin") : Source(key);
             if (!source) return original;
             string id = key + ":" + original.GetEntityId() + ":" + blocker;
             if (Fitted.TryGetValue(id, out var fitted)) return fitted;
@@ -112,6 +113,22 @@ namespace JellyGarden.Scripts.Story
             fitted.hideFlags = HideFlags.DontSave;
             Fitted[id] = fitted;
             return fitted;
+        }
+
+        public static Sprite PopupGoal(StoryLevelHud.HudTarget target)
+        {
+            if (target.IsScore) return Resolve("score", target.Icon ? target.Icon : StoryUi.StarSprite, false, true);
+            foreach (var key in new[] { "red", "orange", "purple", "blue", "green", "yellow", "ice", "locket", "ring" }) {
+                var current = StorybookBoardArt.Get(key);
+                if (current && target.Icon && current.texture == target.Icon.texture) return Resolve(key, current, false, true);
+            }
+            return target.Icon;
+        }
+        public static Sprite PopupBooster(BoostType type, Sprite original)
+        {
+            string key = type == BoostType.Stripes ? "rocket" : type == BoostType.Packages ? "area-bomb" :
+                type == BoostType.Colorful_bomb ? "rainbow-orb" : null;
+            return key == null ? original : Resolve(key, original, false, true);
         }
 
         public static void FitIdleBody(GameObject body)

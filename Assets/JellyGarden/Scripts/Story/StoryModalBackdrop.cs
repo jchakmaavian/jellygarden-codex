@@ -13,6 +13,7 @@ namespace JellyGarden.Scripts.Story
         private RenderTexture _texture;
         private Coroutine _capture;
         private Vector2Int _size;
+        private Texture _fixedBackground;
 
         public void Initialize()
         {
@@ -23,10 +24,22 @@ namespace JellyGarden.Scripts.Story
             _image.raycastTarget=false;
             _image.enabled=false;
         }
+        public void ShowTexture(Texture background)
+        {
+            if (_capture != null) StopCoroutine(_capture);
+            _capture = null; Release();
+            _fixedBackground = background;
+            _size = new Vector2Int(Screen.width, Screen.height);
+            _visuals.alpha = 1;
+            _image.texture = background;
+            _image.uvRect = new Rect(0, 0, 1, 1);
+            _image.enabled = background != null;
+        }
         public void Capture()
         {
             if(_capture!=null) StopCoroutine(_capture);
             _capture=null;
+            _fixedBackground=null;
             Release();
             _visuals.alpha=1;
             _size=new Vector2Int(Screen.width,Screen.height);
@@ -82,7 +95,9 @@ namespace JellyGarden.Scripts.Story
         }
         private void LateUpdate()
         {
-            if(_size!=new Vector2Int(Screen.width,Screen.height)) Capture();
+            if(_size!=new Vector2Int(Screen.width,Screen.height)) {
+                if (_fixedBackground != null) ShowTexture(_fixedBackground); else Capture();
+            }
         }
         private void Release()
         {
@@ -91,7 +106,7 @@ namespace JellyGarden.Scripts.Story
         }
         private void OnDisable()
         {
-            StopAllCoroutines();_capture=null;
+            StopAllCoroutines();_capture=null;_fixedBackground=null;
             if(_visuals!=null) _visuals.alpha=1;
             Release();
         }
