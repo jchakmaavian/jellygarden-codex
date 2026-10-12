@@ -31,7 +31,7 @@ namespace JellyGarden.Scripts.Story
                 sprite = Resources.Load<Sprite>("Story/RoyalBoard/" + royal);
                 Cache[key] = sprite = sprite != null ? sprite : Resources.Load<Sprite>("Story/TreasureHunt/Board/" + key);
             }
-            return sprite;
+            return StoryThroneGameplayArt.Resolve(key, sprite);
         }
         public static Sprite Piece(int colour) => Get(Colours[Mathf.Clamp(colour, 0, 5)]);
         public static Sprite Booster(BoostType type)

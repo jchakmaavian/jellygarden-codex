@@ -112,6 +112,7 @@ namespace JellyGarden.Scripts.Story
         {
             if (t == null) return;
             t.localScale = Vector3.one;
+            StoryThroneGameplayArt.DressBlocker(t.gameObject);
         }
 
         /// <summary>
