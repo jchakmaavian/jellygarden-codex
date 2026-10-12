@@ -1888,6 +1888,13 @@ namespace JellyGarden.Scripts
                     break;
             }
 
+            // PROBE (temporary, overlap investigation): a live piece its own cell no longer points at.
+            foreach (Item probe in FindObjectsByType<Item>())
+                if (probe != null && !probe.destroying && probe.square != null && probe.square.item != probe)
+                    Debug.LogWarning("[OverlapProbe] orphan '" + probe.name + "' type " + probe.currentType +
+                        " color " + probe.color + " at (" + probe.square.col + "," + probe.square.row + ") under '" +
+                        (probe.square.item != null ? probe.square.item.name : "nothing") + "'");
+
             List<Item> item_ = GetItems();
             for (int i = 0; i < item_.Count; i++)//2.1.5
             {

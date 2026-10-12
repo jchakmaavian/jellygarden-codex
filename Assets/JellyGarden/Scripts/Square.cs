@@ -82,6 +82,11 @@ namespace JellyGarden.Scripts
         {
             if (IsNone() && !CanGoInto())
                 return null;
+            // PROBE (temporary, overlap investigation): a spawn into a cell that already holds a piece.
+            if (item != null)
+                Debug.LogWarning("[OverlapProbe] GenItem into occupied cell (" + col + "," + row + "): occupant '" +
+                    item.name + "' type " + item.currentType + " color " + item.color +
+                    " falling " + item.falling + " destroying " + item.destroying);
             var itemInstance = Instantiate(LevelManager.THIS.itemPrefab);
 
             // The gem's size in its cell. An item sprite is 128px at 100 pixels
