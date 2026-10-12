@@ -139,14 +139,6 @@ namespace JellyGarden.Scripts.GUI
 
         public void ShowGemsShop(bool show = true)
         {
-            // --- King Leo story layer -------------------------------------
-            // King Leo's one switch for the shops (StoryFreeGame). Additive:
-            // delete this and the two lines in ShowLiveShop below, and the
-            // shops always open.
-            if (show && !JellyGarden.Scripts.Story.StoryFreeGame.ShopsAllowed)
-                return;
-            // --------------------------------------------------------------
-
             if (!show)
             {
                 Close(gemsShop);
@@ -160,9 +152,6 @@ namespace JellyGarden.Scripts.GUI
 
         public void ShowLiveShop(bool show = true)
         {
-            if (show && !JellyGarden.Scripts.Story.StoryFreeGame.ShopsAllowed)
-                return;
-
             if (!show)
             {
                 Close(liveShop);
@@ -240,16 +229,6 @@ namespace JellyGarden.Scripts.GUI
 
         public void ShowRate(bool show = true)
         {
-            // --- King Leo story layer -------------------------------------
-            // The rate prompt is the kit's, and it is asked for from
-            // GameState.Map — a screen this game never shows. Its panel lays a
-            // black scrim at 87% over the whole screen and then has nothing on
-            // it the player can press, so every level after the sixth is played
-            // in the dark. Additive: delete these two lines and it is back.
-            if (show && !JellyGarden.Scripts.Story.StoryFreeGame.RatePromptAllowed)
-                return;
-            // --------------------------------------------------------------
-
             if (!show)
             {
                 Close(rate);
@@ -272,25 +251,6 @@ namespace JellyGarden.Scripts.GUI
 
         public void ShowPreFailed(bool show = true)
         {
-            // --- King Leo story layer -------------------------------------
-            // The PreFailed banner is the "So Close!" offer: more moves for
-            // coins, or End Level. StoryFreeGame.PreFailOfferAllowed switches
-            // it; with the offer off the level goes straight to its end card.
-            //
-            // It cannot simply be skipped: this banner's own animation event is
-            // what sets GameOver, and GameOver is what raises OnLose and puts the
-            // story's fail panel up. So the state moves on instead, out of the
-            // gameStatus setter that called this — the same place and the same
-            // one-frame delay the banner's animation event would have used.
-            //
-            // Additive: delete this block and the kit's banner is back.
-            if (show && !JellyGarden.Scripts.Story.StoryFreeGame.PreFailOfferAllowed)
-            {
-                StartCoroutine(EndTheLostLevel());
-                return;
-            }
-            // --------------------------------------------------------------
-
             if (!show)
             {
                 preFailed.GetComponent<AnimationManager>().GoOnFailed();
@@ -298,17 +258,6 @@ namespace JellyGarden.Scripts.GUI
             }
             if (preFailed != null)
                 preFailed.SetActive(true);
-        }
-
-        /// <summary>
-        /// Part of the block above: what the PreFailed banner's animation event
-        /// does at the end of its slide, minus the banner.
-        /// </summary>
-        private global::System.Collections.IEnumerator EndTheLostLevel()
-        {
-            yield return null;
-            if (LevelManager.THIS != null && LevelManager.THIS.Limit <= 0)
-                LevelManager.THIS.gameStatus = GameState.GameOver;
         }
 
         public GameObject ShowReward(bool show = true)

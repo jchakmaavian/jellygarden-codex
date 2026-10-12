@@ -261,19 +261,16 @@ public class InputManager : MonoBehaviour
     {
         isTouching = true;
         wasTouchPressed = true;
-        TrackPressPointer(context, positionAction);
+        TrackPressPointer(context);
     }
 
-    private void TrackPressPointer(InputAction.CallbackContext context, InputAction fallbackPosition)
+    private void TrackPressPointer(InputAction.CallbackContext context)
     {
         if (context.control?.device is Pointer pointer)
         {
             pressPointer = pointer;
             lastPosition = pointer.position.ReadValue();
         }
-        // Not a pointer: read the position action so the press frame is not stale.
-        else if (fallbackPosition != null)
-            lastPosition = fallbackPosition.ReadValue<Vector2>();
     }
     
     private void OnTouchCanceled(InputAction.CallbackContext context)
@@ -291,7 +288,7 @@ public class InputManager : MonoBehaviour
     {
         isTouching = true;
         wasTouchPressed = true;
-        TrackPressPointer(context, panPositionAction);
+        TrackPressPointer(context);
     }
     
     private void OnPanCanceled(InputAction.CallbackContext context)

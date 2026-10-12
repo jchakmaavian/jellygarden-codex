@@ -12,10 +12,10 @@ namespace RoyalThrone.Editor
 {
     public static class RoyalColorBallChecks
     {
-        const string Folder="Logs/port-checks/Effects/ColorBall-live-v1/";
+        const string Folder="Design/Effects/ColorBall-live-v1/";
         static void Capture(string name)
         {
-            if(UnityEngine.Application.isBatchMode)return;var t=ScreenCapture.CaptureScreenshotAsTexture();
+            var t=ScreenCapture.CaptureScreenshotAsTexture();
             File.WriteAllBytes(Folder+name+".png",t.EncodeToPNG());Object.Destroy(t);
         }
         public static IEnumerator Run(LevelManager lm,Action seed,Action colours,Action<bool,string> check)
@@ -42,18 +42,18 @@ namespace RoyalThrone.Editor
                 float start=Time.time;bool capturedReveal=false;int samples=0;
                 while(anim.Current==ColorBallFrameAnimator.Phase.Reveal)
                 {
-                    yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
+                    yield return new WaitForEndOfFrame();
                     check(anim.View&&anim.View.enabled&&!ball.sprRenderer.enabled,"Reveal has exactly one visible renderer sample "+samples+++": "+label);
                     check(Mathf.Abs(anim.View.bounds.size.x/ColorBallFrameAnimator.Cell-512f/112f)<.005f,"Fixed padded canvas preserves authored 3x/1x size: "+label);
                     check(anim.View.maskInteraction==SpriteMaskInteraction.None,"Reveal ignores board/cell masks: "+label);
                     if(!capturedReveal&&Time.time-start>.32f){Capture(label+"-01-reveal");capturedReveal=true;}
                     if(Time.time-start>2)throw new Exception("Reveal stuck");
                 }
-                yield return new WaitForSeconds(.2f);yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
+                yield return new WaitForSeconds(.2f);yield return new WaitForEndOfFrame();
                 check(anim.Current==ColorBallFrameAnimator.Phase.Idle&&anim.View.sprite==ColorBallFrameAnimator.IdleFrame(0),"Reveal enters approved 1-cell Idle: "+label);
                 var idlePosition=anim.View.transform.position;var idleScale=anim.View.transform.lossyScale;
                 Capture(label+"-02-idle");
-                yield return new WaitForSeconds(2.05f);yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
+                yield return new WaitForSeconds(2.05f);yield return new WaitForEndOfFrame();
                 check(anim.Current==ColorBallFrameAnimator.Phase.Idle&&Vector3.Distance(idlePosition,anim.View.transform.position)<.001f&&Vector3.Distance(idleScale,anim.View.transform.lossyScale)<.001f,"Idle loops without scale/pivot drift: "+label);
                 var partner=lm.GetSquare(4,3).item;partner.NextType=orientation;partner.ChangeType();
                 yield return new WaitForSeconds(.45f);
@@ -64,7 +64,7 @@ namespace RoyalThrone.Editor
                 var expectedItems=expected.Select(s=>s.item).ToArray();
                 int launches=director.RocketLaunches,handoffs=director.ColorBallHandoffs;
                 check(RoyalPowerupDirector.TrySwap(ball,partner),"Live Color Ball + Rocket combo accepted: "+label);
-                yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
+                yield return new WaitForEndOfFrame();
                 var boost=Object.FindObjectsByType<ColorBallBoostView>().First(v=>v.Current!=ColorBallBoostView.Phase.Idle);
                 if(firstView)check(boost==firstView,"Boost animation object reused from pool");else firstView=boost;
                 check(!anim||!anim.View.enabled,"Idle stops immediately on activation: "+label);
@@ -73,7 +73,7 @@ namespace RoyalThrone.Editor
                 bool beamCapture=false,finishCapture=false,launchCapture=false;int lastConversions=0;float deadline=Time.realtimeSinceStartup+35;
                 while(RoyalPowerupDirector.Busy||ColorBallBoostView.Active>0||director.RocketVisualsActive)
                 {
-                    yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
+                    yield return new WaitForEndOfFrame();
                     if(Time.realtimeSinceStartup>deadline)throw new Exception("Color Ball/Rocket handoff failed to settle");
                     if(boost.Current!=ColorBallBoostView.Phase.Idle)
                     {

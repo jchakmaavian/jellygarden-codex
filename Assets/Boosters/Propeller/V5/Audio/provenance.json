@@ -1,0 +1,25 @@
+{
+  "provider": "ElevenLabs via Magnific, original generation for this task",
+  "referenceAudioCopied": false,
+  "processing": "trim, high/low pass, normalization, loop crossfade / click-free one-shot envelopes; no oscillator synthesis",
+  "clips": {
+    "RotorLoop": {
+      "source": "Motor.mp3",
+      "duration": 2.4,
+      "peak": 0.65,
+      "loopSeamDifference": 0.028514680322854043
+    },
+    "AirRelease": {
+      "source": "Air.mp3",
+      "duration": 0.25,
+      "peak": 0.65,
+      "loopSeamDifference": null
+    },
+    "PhysicalHit": {
+      "source": "Hit.mp3",
+      "duration": 0.22,
+      "peak": 0.65,
+      "loopSeamDifference": null
+    }
+  }
+}

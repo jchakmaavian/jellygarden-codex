@@ -24,9 +24,7 @@ namespace RoyalThrone.Editor
             bool hadLevel=PlayerPrefs.HasKey("OpenLevel");int openLevel=PlayerPrefs.GetInt("OpenLevel",1);
             var manager=MenuManager.Instance;var root=manager.GetCanvasGlobal();
             InitScript.Instance.TryOpenLevel(Mathf.Max(1,PlayerPrefs.GetInt("OpenLevel",1)));manager.menuPlay.SetActive(false);
-            // King Leo hides How to play (Royal Throne's lessons, RoyalLessonDemo, are not ported), so the Tutorial card is
-            // not reviewed.
-            foreach(string name in new[]{"MenuPlay","GemsShop","LiveShop","BoostShop","BoostInfo","Settings","MenuComplete","MenuFailed","PreFailed"}){
+            foreach(string name in new[]{"MenuPlay","GemsShop","LiveShop","BoostShop","BoostInfo","Settings","Tutorial","MenuComplete","MenuFailed","PreFailed"}){
                 var menu=root.Find(name);if(!menu){result.Add("FAIL missing "+name);continue;}
                 if(name=="BoostShop")menu.GetComponent<BoostShop>().SetBoost(BoostType.Stripes);else menu.gameObject.SetActive(true);
                 yield return new WaitForSecondsRealtime(name=="PreFailed"?2.2f:.85f);yield return new WaitForEndOfFrame();
@@ -42,6 +40,17 @@ namespace RoyalThrone.Editor
                 foreach(var button in menu.GetComponentsInChildren<Button>()){
                     if(!button.interactable)continue;var r=(RectTransform)button.transform;var corners=new Vector3[4];r.GetWorldCorners(corners);
                     if(corners[0].x<0||corners[2].x>Screen.width||corners[0].y<0||corners[2].y>Screen.height)result.Add("FAIL "+name+" control offscreen "+button.name);
+                }
+                // Each lesson (RoyalLessonDemo) is a small board playing its lesson on a loop: it must be playing, and its board
+                // must keep clear of the lesson's title and rule.
+                if(name=="Tutorial")for(int page=1;page<RoyalThrone.Presentation.RoyalLessonDemo.Count;page++){
+                    menu.GetComponent<Tutorial>().Next();yield return null;yield return new WaitForEndOfFrame();
+                    var lesson=menu.Find("Image/Royal lesson "+page);var stage=lesson?lesson.Find("Stage"):null;
+                    var demo=stage?stage.GetComponent<RoyalThrone.Presentation.RoyalLessonDemo>():null;var board=stage?stage.Find("Board") as RectTransform:null;
+                    var ruleText=lesson?lesson.Find("Rule") as RectTransform:null;var titleText=lesson?lesson.Find("Title") as RectTransform:null;
+                    bool clear=demo&&demo.Playing&&board&&ruleText&&titleText&&!Overlap(board,ruleText)&&!Overlap(board,titleText);
+                    result.Add((clear?"PASS ":"FAIL ")+"Tutorial page "+page+" plays its lesson clear of its title and rule");
+                    var shot=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+"Tutorial-"+page+".png",shot.EncodeToPNG());Object.Destroy(shot);
                 }
                 // End-screen dismissal normally advances progress; visual review must not invoke it.
                 if(name=="MenuComplete"||name=="MenuFailed"||name=="PreFailed")menu.gameObject.SetActive(false);

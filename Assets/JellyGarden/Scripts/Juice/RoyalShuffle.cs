@@ -7,7 +7,7 @@ namespace JellyGarden.Scripts.Juice
     // The board's shuffle (2026-10-04, the user: "if there is no match, shuffle automatically; keep the player satisfied").
     // When no swap makes a match, the plain gems already on the board are rearranged instead of the old rebuild (which
     // destroyed every gem, generated new ones and did not guarantee a move, so "No more matches" could repeat). Power-ups,
-    // obstacles and chained gems stay where they are. The new arrangement has no ready-made matches and
+    // obstacles, chained gems and campaign pieces stay where they are. The new arrangement has no ready-made matches and
     // at least one swap that matches; among a few hundred tries the one with the most moves wins (enough at 5). The gems
     // then glide to their new cells together, under a "SHUFFLE!" banner.
     public static class RoyalShuffle
@@ -22,7 +22,7 @@ namespace JellyGarden.Scripts.Juice
             {
                 if (!sq || sq.IsNone() || !sq.item) continue;
                 var it = sq.item;
-                if (it.currentType != ItemsTypes.NONE || it.destroying || it.falling) continue;
+                if (it.currentType != ItemsTypes.NONE || it.destroying || it.falling || RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(it)) continue;
                 if (sq.type == SquareTypes.WIREBLOCK || !sq.CanGoInto() || !sq.CanGoOut()) continue;
                 squares.Add(sq); items.Add(it);
             }
@@ -82,7 +82,7 @@ namespace JellyGarden.Scripts.Juice
         static int ColourAt(LevelManager lm, int col, int row)
         {
             var sq = lm.GetSquare(col, row);
-            if (!sq || sq.IsNone() || !sq.item || sq.item.currentType != ItemsTypes.NONE) return int.MinValue;
+            if (!sq || sq.IsNone() || !sq.item || sq.item.currentType != ItemsTypes.NONE || RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(sq.item)) return int.MinValue;
             return sq.item.color;
         }
 

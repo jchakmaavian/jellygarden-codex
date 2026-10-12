@@ -14,14 +14,14 @@ namespace RoyalThrone.Boosters.Propeller.V5.Editor
 {
     public static class PropellerV5Checks
     {
-        const string Root="Logs/port-checks/PropellerV5/";
+        const string Root=PropellerV5Builder.Root+"Animation/Review/";
         static int fps=30;static readonly Dictionary<int,float> lastPhase=new Dictionary<int,float>();static int phaseSamples;
         static RoyalQaService qa;static string label;static int frame,peakRigs;static bool running;
         static readonly List<string> results=new List<string>(),events=new List<string>(),sounds=new List<string>(),errors=new List<string>();
         static readonly Dictionary<int,float> flightStart=new Dictionary<int,float>();static readonly List<float> launches=new List<float>();
         static readonly HashSet<string> captures=new HashSet<string>();static readonly HashSet<PropellerAudioV5.Cue> heard=new HashSet<PropellerAudioV5.Cue>();
         [MenuItem("Tools/Royal Throne/Propeller V5/Run focused checks with audio %&#F12")]
-        static void Run(){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready)throw new Exception("Enter gameplay first.");running=true;results.Clear();events.Clear();sounds.Clear();errors.Clear();captures.Clear();heard.Clear();phaseSamples=0;fps=30;flightStart.Clear();peakRigs=0;Directory.CreateDirectory(Root);RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite());}
+        static void Run(){qa=RoyalQaService.Instance;if(running||!Application.isPlaying||!qa||!qa.Ready)throw new Exception("Enter gameplay first.");running=true;results.Clear();events.Clear();sounds.Clear();errors.Clear();captures.Clear();heard.Clear();phaseSamples=0;fps=30;flightStart.Clear();peakRigs=0;RoyalThrone.Editor.RoyalRegressionRunner.Run(Suite());}
         static void Check(bool ok,string text){if(!ok)throw new Exception("Propeller V5: "+text);results.Add("PASS "+text);}
         static void Log(string m,string s,LogType t){if(t==LogType.Error||t==LogType.Exception||t==LogType.Assert)errors.Add(m);}
         static void Sound(PropellerAudioV5.Cue c,int lease){heard.Add(c);sounds.Add(Time.time.ToString("F4")+","+label+","+lease+","+c);}
@@ -33,14 +33,14 @@ namespace RoyalThrone.Boosters.Propeller.V5.Editor
             if(e==PropellerEvent.PropellerTargetReached){Check(PropellerAudioV5.Loops==0||PropellerVisualV5.Active>1,"Flight audio stops at contact "+label);float actual=Time.time-flightStart[v.Lease];Check(Mathf.Abs(actual-v.FlightDuration)<.075f,"Distance flight duration "+label+": "+actual.ToString("F3")+" / "+v.FlightDuration.ToString("F3"));}
         }
         static IEnumerator Command(string c){qa.Request(c);while(qa.Busy)yield return null;qa.Visible=false;}
-        static void Begin(string name){lastPhase.Clear();PropellerCapture.End();label=name;frame=0;if(UnityEngine.Application.isBatchMode)Directory.CreateDirectory(Root+".Capture/"+name);else PropellerCapture.Begin(Root+".Capture/"+name);File.WriteAllText(Root+".Capture/"+name+"/motion.csv","frame,time,lease,phase,age,rotorSpeed,x,y,size,bank,flightDuration,rotorAngle,visibleSpeed,blur\n");}
+        static void Begin(string name){lastPhase.Clear();PropellerCapture.End();label=name;frame=0;PropellerCapture.Begin(Root+".Capture/"+name);File.WriteAllText(Root+".Capture/"+name+"/motion.csv","frame,time,lease,phase,age,rotorSpeed,x,y,size,bank,flightDuration,rotorAngle,visibleSpeed,blur\n");}
         static void Record()
         {
             var views=Object.FindObjectsByType<PropellerVisualV5>();peakRigs=Mathf.Max(peakRigs,views.Count(v=>v.Current==PropellerVisualV5.Phase.Activation||v.Current==PropellerVisualV5.Phase.Flight));
             foreach(var v in views){
                 File.AppendAllText(Root+".Capture/"+label+"/motion.csv",frame+","+Time.time.ToString("F4")+","+v.Lease+","+v.Current+","+v.Age.ToString("F4")+","+v.RotorSpeed.ToString("F2")+","+v.FlightPosition.x.ToString("F4")+","+v.FlightPosition.y.ToString("F4")+","+(v.pose.localScale.x/v.Cell).ToString("F4")+","+Mathf.DeltaAngle(0,v.pose.localEulerAngles.z).ToString("F2")+","+v.FlightDuration.ToString("F3")+","+v.RotorAngle.ToString("F4")+","+v.PresentationSpeed.ToString("F3")+","+v.Blur.ToString("F4")+"\n");
                 bool moment=v.Current==PropellerVisualV5.Phase.Impact?v.Age>.04f:v.Current==PropellerVisualV5.Phase.Activation?v.Age>.30f:v.Age>.13f;
-                if(moment&&!UnityEngine.Application.isBatchMode&&captures.Add(label+"-"+v.Current)){var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Root+label+"-"+v.Current+".png",t.EncodeToPNG());Object.Destroy(t);}
+                if(moment&&captures.Add(label+"-"+v.Current)){var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Root+label+"-"+v.Current+".png",t.EncodeToPNG());Object.Destroy(t);}
             }
             foreach(var v in views){
                 if(v.Current==PropellerVisualV5.Phase.Activation||v.Current==PropellerVisualV5.Phase.Flight){
@@ -49,10 +49,10 @@ namespace RoyalThrone.Boosters.Propeller.V5.Editor
                 }
             }
             if(PropellerAudioV5.Loops>5)throw new Exception("Rotor voice cap exceeded");
-            if(!UnityEngine.Application.isBatchMode)PropellerCapture.Frame();frame++;
+            PropellerCapture.Frame();frame++;
         }
-        static IEnumerator Observe(float seconds){float end=Time.time+seconds;while(Time.time<end){yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());Record();}}
-        static IEnumerator Finish(){float timeout=Time.realtimeSinceStartup+40;do{yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());Record();}while((RoyalPowerupDirector.Busy||LevelManager.THIS.IsResolvingMatches)&&Time.realtimeSinceStartup<timeout);yield return Observe(.55f);Check(!RoyalPowerupDirector.Busy,"Gameplay finishes "+label);Check(PropellerVfxV5.Active==0&&PropellerAudioV5.Active==0,"No VFX/audio leftovers "+label);Check(PropellerCapture.Clipped==0,"Audio mix has no clipped samples "+label);PropellerCapture.End();}
+        static IEnumerator Observe(float seconds){float end=Time.time+seconds;while(Time.time<end){yield return new WaitForEndOfFrame();Record();}}
+        static IEnumerator Finish(){float timeout=Time.realtimeSinceStartup+40;do{yield return new WaitForEndOfFrame();Record();}while((RoyalPowerupDirector.Busy||LevelManager.THIS.IsResolvingMatches)&&Time.realtimeSinceStartup<timeout);yield return Observe(.55f);Check(!RoyalPowerupDirector.Busy,"Gameplay finishes "+label);Check(PropellerVfxV5.Active==0&&PropellerAudioV5.Active==0,"No VFX/audio leftovers "+label);Check(PropellerCapture.Clipped==0,"Audio mix has no clipped samples "+label);PropellerCapture.End();}
         static Item Create(int x,int y){var item=LevelManager.THIS.GetSquare(x,y).item;item.NextType=ItemsTypes.HELICOPTER;item.ChangeType();return item;}
         static IEnumerator TargetCase(string name,Vector2Int origin,Vector2Int target,float idle=0)
         {

@@ -40,6 +40,10 @@ namespace JellyGarden.Scripts.Juice
         public static void Early(Square square)
         {
             if (!square || square.type != SquareTypes.BLOCK || square.block == null || square.block.Count == 0) return;
+            // A campaign-blocker square (grass, boxes) may take this hit itself (RoyalCampaignBlockers.HandleHit): leave its
+            // ice to Square.DestroyBlock, which only breaks it if the hit really reaches it.
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.GoalAt(square) != null || RoyalThrone.Campaign.RoyalCampaignBlockers.GrassAt(square) > 0 ||
+                RoyalThrone.Campaign.RoyalCampaignBlockers.HealthAt(square) > 0) return;
             var top = square.block[square.block.Count - 1]; if (!top) return;
             var r = top.GetComponent<SpriteRenderer>();
             if (!IsIce(r) || !r.enabled || top.GetComponent<Marker>()) return;

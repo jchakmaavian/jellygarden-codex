@@ -1,0 +1,152 @@
+[
+  {
+    "name": "hud-ivory-plate",
+    "file": "assets/surfaces/hud-ivory-plate.png",
+    "width": 510,
+    "height": 175,
+    "hasAlpha": true,
+    "sha256": "4e72f476125d8ce0587030d70af5b2a536b0ff9dc4c1fe48bef1629b6cffc6d7",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 180,
+      "height": 46
+    },
+    "padding": 12,
+    "scale": 2.5
+  },
+  {
+    "name": "profile-gold-frame",
+    "file": "assets/surfaces/profile-gold-frame.png",
+    "width": 240,
+    "height": 255,
+    "hasAlpha": true,
+    "sha256": "9e199850127e895c694c925052d08b52a55f1dea97a7d86359944cd50bbefb7c",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 72,
+      "height": 78
+    },
+    "padding": 12,
+    "scale": 2.5
+  },
+  {
+    "name": "area-gold-panel",
+    "file": "assets/surfaces/area-gold-panel.png",
+    "width": 555,
+    "height": 285,
+    "hasAlpha": true,
+    "sha256": "418221d2e007e02c13abee7bc801e372dab6557f0b7f131ee76ca3543752395a",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 198,
+      "height": 90
+    },
+    "padding": 12,
+    "scale": 2.5
+  },
+  {
+    "name": "bottom-nav-blue-gold",
+    "file": "assets/surfaces/bottom-nav-blue-gold.png",
+    "width": 1140,
+    "height": 320,
+    "hasAlpha": true,
+    "sha256": "a546aac793de8475d3ec9cd1b1513b9ea62eb395d6f24d39b250d074a9ad8555",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 432,
+      "height": 104
+    },
+    "padding": 12,
+    "scale": 2.5
+  },
+  {
+    "name": "progress-track",
+    "file": "assets/surfaces/progress-track.png",
+    "width": 510,
+    "height": 125,
+    "hasAlpha": true,
+    "sha256": "6896eaf795b364885b2acd86f030ca0d9d3fe8469c7dcd3c985a25b4f14f6633",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 180,
+      "height": 26
+    },
+    "padding": 12,
+    "scale": 2.5
+  },
+  {
+    "name": "progress-blue-fill",
+    "file": "assets/surfaces/progress-blue-fill.png",
+    "width": 510,
+    "height": 125,
+    "hasAlpha": true,
+    "sha256": "238a53e40cfff91ce21ffa0a218774b743b57697db5fd7ba64e0fefb6b65dc3c",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 180,
+      "height": 26
+    },
+    "padding": 12,
+    "scale": 2.5
+  },
+  {
+    "name": "dialog-ivory-panel",
+    "file": "assets/surfaces/dialog-ivory-panel.png",
+    "width": 960,
+    "height": 860,
+    "hasAlpha": true,
+    "sha256": "63ee8f4d8be0509abf6e9e8aac06254b77bdaa0d7344360251c31eb4fc15fdf7",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 360,
+      "height": 320
+    },
+    "padding": 12,
+    "scale": 2.5
+  },
+  {
+    "name": "dialog-blue-button",
+    "file": "assets/surfaces/dialog-blue-button.png",
+    "width": 710,
+    "height": 200,
+    "hasAlpha": true,
+    "sha256": "b10d55f5cbcf7076761b36b61d0e79b9b89e5ea3519d1b41e778ce9967e4e7d1",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 260,
+      "height": 56
+    },
+    "padding": 12,
+    "scale": 2.5
+  },
+  {
+    "name": "close-button",
+    "file": "assets/surfaces/close-button.png",
+    "width": 170,
+    "height": 170,
+    "hasAlpha": true,
+    "sha256": "b9ff84891acfecf8b51ddc28ba28f0803c619e1068a5ef98b6fcb18cfc3162ba",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 44,
+      "height": 44
+    },
+    "padding": 12,
+    "scale": 2.5
+  },
+  {
+    "name": "add-coins-button",
+    "file": "assets/surfaces/add-coins-button.png",
+    "width": 120,
+    "height": 120,
+    "hasAlpha": true,
+    "sha256": "7c9b10ad6143a8d023c5cfe842e678e205cd3c8f9f7f63daadcfa925ee5e8bda",
+    "source": "Native UI CSS in home-preview.template.html",
+    "logicalSize": {
+      "width": 24,
+      "height": 24
+    },
+    "padding": 12,
+    "scale": 2.5
+  }
+]

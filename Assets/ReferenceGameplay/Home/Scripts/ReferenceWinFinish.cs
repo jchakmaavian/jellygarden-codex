@@ -14,7 +14,7 @@ namespace RoyalThrone.ReferenceGameplay
         public int Sent {get;private set;} public int Converted {get;private set;} public int Fired {get;private set;}
         public bool Running {get;private set;} int travelling; LevelManager lm; Text skip; readonly List<ReferenceVfxPool.Handle> leases=new List<ReferenceVfxPool.Handle>();
         public static bool Power(Item i)=>i&&!i.destroying&&(i.currentType==ItemsTypes.HORIZONTAL_STRIPPED||i.currentType==ItemsTypes.VERTICAL_STRIPPED||i.currentType==ItemsTypes.PACKAGE||i.currentType==ItemsTypes.BOMB||i.currentType==ItemsTypes.HELICOPTER);
-        List<Item> Regular()=>lm.GetItems().Where(i=>i&&!i.destroying&&!i.falling&&i.currentType==ItemsTypes.NONE&&i.NextType==ItemsTypes.NONE&&i.square&&i.square.CanGoOut()).ToList();
+        List<Item> Regular()=>lm.GetItems().Where(i=>i&&!i.destroying&&!i.falling&&i.currentType==ItemsTypes.NONE&&i.NextType==ItemsTypes.NONE&&i.square&&i.square.CanGoOut()&&!RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(i)).ToList();
         bool Active=>lm&&lm.gameStatus==GameState.PreWinAnimations;
         public static IEnumerator Play(LevelManager owner){var view=owner.GetComponent<ReferenceWinFinish>();if(!view)view=owner.gameObject.AddComponent<ReferenceWinFinish>();yield return view.Run(owner);}
         IEnumerator Delay(float normal,float fast){float t=0;while(Active&&t<(lm.SkipWinCelebration?fast:normal)){t+=Time.deltaTime;yield return null;}}

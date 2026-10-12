@@ -23,12 +23,6 @@ MonoBehaviour:
     - type: 2
       icon: {fileID: 21300000, guid: 63938c0f13ed90f44a5a7ad659f6262a, type: 3}
       color: 0
-      targetCount: 20
-      countCollected: 0
-      guiObj: {fileID: 0}
-    - type: 0
-      icon: {fileID: 21300000, guid: 26b9cedaba2de3b40b482c3891c9be56, type: 3}
-      color: 0
-      targetCount: 4500
+      targetCount: 4
       countCollected: 0
       guiObj: {fileID: 0}

@@ -83,8 +83,7 @@ namespace JellyGarden.Scripts
             }
             set
             {
-                // The level's own colour count is kept (D3): no 5-colour remap.
-                COLOR = value;
+                COLOR = RoyalGameplayArt.BoardColor(value);
             }
         }
 
@@ -151,8 +150,6 @@ namespace JellyGarden.Scripts
         {
             _boxCollider2D = GetComponent<BoxCollider2D>();
             royalSkin = GetComponent<Juice.RoyalPieceSkin>();
-            // The kit prefab is left untouched; the skin (no serialized fields) is added at runtime.
-            if (!royalSkin && Juice.RoyalEffectsProfile.Get != null) royalSkin = gameObject.AddComponent<Juice.RoyalPieceSkin>();
         }
 
         // Use this for initialization
@@ -194,12 +191,13 @@ namespace JellyGarden.Scripts
 
         public void GenColor(int exceptColor = -1, bool onlyNONEType = false)
         {
+            if(RoyalThrone.Campaign.RoyalReferenceCampaign.TryColor(this,exceptColor))
+            {StartCoroutine(FallingCor(square,true));return;}
             int row = square.row;
             int col = square.col;
 
             List<int> remainColors = new List<int>();
-            // The level's COLOR LIMIT (3-6) is used as is (D3); items.Length is only the index bound.
-            int paletteSize = Mathf.Clamp(LevelManager.Instance.colorLimit, 1, items.Length);
+            int paletteSize = Mathf.Clamp(LevelManager.Instance.colorLimit, 1, RoyalGameplayArt.BoardColorCount);
             // The win's finale refills without making new lines of three, as in the user's Royal Match Level 13 clip (the board
             // fills once and rests before the card): a chain of cascades only kept the card waiting (6 s measured, 2026-10-06).
             // Normal play keeps its own colouring.
@@ -434,6 +432,7 @@ namespace JellyGarden.Scripts
         public void SwitchDirection(Vector3 delta)
         {
             if (!CanAcceptInput) { ResetDrag(); return; }
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(this)) { ResetDrag(); return; }
             neighborSquare = null;
             switchItem = null;
             switchDirection = Vector3.zero;
@@ -468,6 +467,7 @@ namespace JellyGarden.Scripts
                     switchItem = neighborSquare.item;
                 if (switchItem != null && switchItem.CanAcceptInput)
                 {
+                    if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(switchItem)) { ResetDrag(); return; }
                     if (switchItem.square.type != SquareTypes.WIREBLOCK)
                         StartCoroutine(Switching());
                     else if ((currentType != ItemsTypes.NONE || switchItem.currentType != ItemsTypes.NONE) && switchItem.square.type != SquareTypes.WIREBLOCK)   //1.4.1   1.6.1
@@ -1181,7 +1181,7 @@ namespace JellyGarden.Scripts
                     royalSkin?.ApplyNow();
                 }
                 if (previousType != currentType)
-                    AvatarEvents.NotifyPowerupCreated(LevelManager.THIS, this);
+                    RoyalThrone.Characters.KingVanguardActivityEvents.NotifyPowerupCreated(LevelManager.THIS, this);
                 if (RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Attach(this, true)) yield break;
                 if (tnt) TNT3DAnimator.RevealSprite(this);
                 else
@@ -1240,7 +1240,7 @@ namespace JellyGarden.Scripts
             NextType = ItemsTypes.NONE;
 
             if (previousLegacyType != currentType)
-                AvatarEvents.NotifyPowerupCreated(LevelManager.THIS, this);
+                RoyalThrone.Characters.KingVanguardActivityEvents.NotifyPowerupCreated(LevelManager.THIS, this);
 
         }
 
@@ -1298,6 +1298,8 @@ namespace JellyGarden.Scripts
                 return;
             StopIdleAnim();
             destroying = true;
+            royalCampaignHitWave = RoyalThrone.Campaign.RoyalCampaignBlockers.CurrentWave;
+            RoyalThrone.Campaign.RoyalCampaignBlockers.OnItemDestroying(this);
             square.item = null;
             if (NextType != ItemsTypes.NONE) square.Reserve(this);   // a power-up will appear here: see Square.reservedFor
             _boxCollider2D.enabled = false;//2.1.5 prevents to early moving
@@ -1323,15 +1325,19 @@ namespace JellyGarden.Scripts
         IEnumerator DestroyCor(bool showScore = false, string anim_name = "", bool explEffect = false)
         {
             bool royalSpecial = RoyalEffectsProfile.Get && RoyalPowerupDirector.IsPower(currentType);
-            if (royalSpecial || royalConsumed)
+            // An accepted campaign coin hit already owns its recovered particles and SFX.
+            // Release the board through the same completion path without a second fruit pop.
+            bool royalCoin = RoyalThrone.Campaign.RoyalCampaignBlockers.HasCoinPresentation(this);
+            if (royalSpecial || royalConsumed || royalCoin)
             {
-                if (!royalConsumed) RoyalPowerupDirector.Get.Queue(this);
+                if (royalSpecial) RoyalWinSequence.FinaleBoosterActivated(this);
+                if (!royalConsumed && !royalCoin) RoyalPowerupDirector.Get.Queue(this);
                 sprRenderer.enabled = false; if (anim) anim.enabled = false; SetAnimationDestroyingFinished();
             }
             //if (anim_name == "")
             //{
             if (royalSpecialGather) yield return RoyalSpecialFormation.Gather(this);
-            else if (royalSpecial || royalConsumed) { }
+            else if (royalSpecial || royalConsumed || royalCoin) { }
             else if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
                 PlayDestroyAnimation("destroy");
             else if (currentType == ItemsTypes.VERTICAL_STRIPPED)
@@ -1343,7 +1349,7 @@ namespace JellyGarden.Scripts
 
                 GameObject partcl = Instantiate(Resources.Load("Prefabs/Effects/Firework"), transform.position, Quaternion.identity) as GameObject;
                 var main = partcl.GetComponent<ParticleSystem>().main;
-                main.startColor = GetJuiceColor();
+                main.startColor = LevelManager.THIS.scoresColors[color];
                 Destroy(partcl, 1f);
             }
             else if (currentType != ItemsTypes.INGREDIENT && currentType != ItemsTypes.BOMB)
@@ -1400,7 +1406,7 @@ namespace JellyGarden.Scripts
 
             //Color color = sprRenderer.sprite.texture.GetPixel(sprRenderer.sprite.texture.width / 2 - 10, sprRenderer.sprite.texture.height / 2 - 10);
             if (showScore)
-                LevelManager.THIS.PopupScore( currentType != ItemsTypes.INGREDIENT?LevelManager.THIS.scoreForItem: LevelManager.THIS.scoreForIngredients, transform.position, PaletteSlot(color));
+                LevelManager.THIS.PopupScore( currentType != ItemsTypes.INGREDIENT?LevelManager.THIS.scoreForItem: LevelManager.THIS.scoreForIngredients, transform.position, color);
 
             LevelManager.THIS.CheckCollectedTarget(gameObject);
 
@@ -1408,7 +1414,7 @@ namespace JellyGarden.Scripts
                 yield return new WaitForFixedUpdate();
 
             bool campaignAdjacentMatch = royalMatchSize >= 3 && !royalBlastClear && !royalRocketClear &&
-                currentType == ItemsTypes.NONE;
+                currentType == ItemsTypes.NONE && !RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(this);
             square.DestroyBlock(royalRocketClear, royalCampaignHitWave, campaignAdjacentMatch);
             if (royalSpecial || royalConsumed) { }
             else if (currentType == ItemsTypes.HORIZONTAL_STRIPPED)
@@ -1432,6 +1438,8 @@ namespace JellyGarden.Scripts
                 i.SetColor(color);
                 i.ChangeType();
                 if (royalSpecialGather) RoyalSpecialCreationFlash.Attach(i);
+                // The profile counts the power-ups matches make while the level is played (RoyalProfile).
+                if (LevelManager.THIS && LevelManager.THIS.gameStatus == GameState.Playing && Juice.RoyalPowerupDirector.IsPower(i.currentType)) RoyalThrone.RoyalProfile.PowerupMade();
             }
 
             if (destroying)
@@ -1440,6 +1448,11 @@ namespace JellyGarden.Scripts
             }
         }
 
+        /// <summary>
+        /// Colour the VFX inherits from this fruit. Uses the game's own per-colour
+        /// palette (the same array the score popups and firework already use) so the
+        /// sparkles stay consistent with the existing art direction.
+        /// </summary>
         /// <summary>
         /// True if this transform belongs to the "5sec" time-bonus flyer, which owns its
         /// own animation and must not be touched by the destroy fade.
@@ -1454,30 +1467,13 @@ namespace JellyGarden.Scripts
             return false;
         }
 
-        // The kit's score palette (LevelManager.scoresColors / scoresColorsOutline) keeps its own fruit order: orange-red,
-        // amber, magenta, blue, yellow, green. The board draws colours 0-5 as RoyalGameplayArt's ruby, shield, crown, leaf,
-        // lily and King Leo's gold coin, so each board colour takes the kit slot of its own hue (the coin the amber one).
-        static readonly int[] KitPaletteSlots = { 0, 3, 4, 5, 2, 1 };
-
-        /// <summary>The kit palette slot (scoresColors, scoresColorsOutline) of a board colour; anything else unchanged.</summary>
-        public static int PaletteSlot(int boardColor)
-        {
-            return RoyalGameplayArt.IsGemColor(boardColor) ? KitPaletteSlots[boardColor] : boardColor;
-        }
-
-        /// <summary>
-        /// Colour the VFX inherits from this piece: the match burst, the match centre and the
-        /// firework. The game's own per-colour palette (the array the score popups use), read
-        /// in the board's colour order so a ruby bursts red and the coin gold.
-        /// </summary>
         public Color GetJuiceColor()
         {
             var lm = LevelManager.THIS;
-            int slot = PaletteSlot(color);
             if (lm != null && lm.scoresColors != null && lm.scoresColors.Length > 0 &&
-                slot >= 0 && slot < lm.scoresColors.Length)
+                color >= 0 && color < lm.scoresColors.Length)
             {
-                return lm.scoresColors[slot];
+                return lm.scoresColors[color];
             }
             return Color.white;
         }
@@ -1496,6 +1492,8 @@ namespace JellyGarden.Scripts
         /// resolves while the particles are still finishing on their own.
         /// </summary>
         [HideInInspector] public bool royalBlastClear;
+        [HideInInspector] public bool royalPropellerV3Clear;
+        [HideInInspector] public bool royalPropellerV4Clear;
         [HideInInspector] public bool royalPropellerV5Clear;
         [HideInInspector] public bool royalTntClear;
         [HideInInspector] public Vector3 royalTntOrigin;
@@ -1536,10 +1534,29 @@ namespace JellyGarden.Scripts
                 yield break;
             }
 
-            // Independent V5 cosmetic hit; protected TNT/Rocket handling above remains authoritative.
+            // Independent V4 cosmetic hit; protected TNT/Rocket handling above remains authoritative.
             if (royalPropellerV5Clear)
             {
                 RoyalThrone.Boosters.Propeller.V5.PropellerVfxV5.Break(sprRenderer, color);
+                foreach (var renderer in GetComponentsInChildren<SpriteRenderer>(true))
+                    if (renderer && !IsBonusFlyer(renderer.transform)) renderer.enabled = false;
+                yield return new WaitForSeconds(.065f);
+                SetAnimationDestroyingFinished(); yield break;
+            }
+
+            if (royalPropellerV4Clear)
+            {
+                RoyalThrone.Boosters.Propeller.V4.PropellerVfxV4.Break(sprRenderer, color);
+                foreach (var renderer in GetComponentsInChildren<SpriteRenderer>(true))
+                    if (renderer && !IsBonusFlyer(renderer.transform)) renderer.enabled = false;
+                yield return new WaitForSeconds(.065f);
+                SetAnimationDestroyingFinished(); yield break;
+            }
+
+            // V3's precise air hit uses its own tiny chip pool. TNT/Rocket branches above are unchanged.
+            if (royalPropellerV3Clear)
+            {
+                RoyalThrone.Boosters.Propeller.V3.PropellerVfxV3.Break(sprRenderer, color);
                 foreach (var renderer in GetComponentsInChildren<SpriteRenderer>(true))
                     if (renderer && !IsBonusFlyer(renderer.transform)) renderer.enabled = false;
                 yield return new WaitForSeconds(.065f);

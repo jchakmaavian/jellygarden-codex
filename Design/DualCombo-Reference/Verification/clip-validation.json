@@ -1,0 +1,344 @@
+{
+  "clips": 2,
+  "curves": 147,
+  "scalarChecks": 9372,
+  "compatibilityAdjustments": [
+    {
+      "clip": "TntTntComboExplodeAnimation",
+      "path": "Fitil",
+      "property": "m_SortingOrder",
+      "key": 0,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "TntTntComboExplodeAnimation",
+      "path": "Fitil",
+      "property": "m_SortingOrder",
+      "key": 0,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "TntTntComboExplodeAnimation",
+      "path": "Fitil",
+      "property": "m_SortingOrder",
+      "key": 1,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "TntTntComboExplodeAnimation",
+      "path": "Fitil",
+      "property": "m_SortingOrder",
+      "key": 1,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "TntTntComboExplodeAnimation",
+      "path": "Fitil",
+      "property": "m_SortingOrder",
+      "key": 2,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "TntTntComboExplodeAnimation",
+      "path": "Fitil",
+      "property": "m_SortingOrder",
+      "key": 2,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 0,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 0,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 1,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 1,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 2,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 2,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 3,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 3,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 4,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 4,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 5,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 5,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 6,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 6,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 7,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 7,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 8,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_1",
+      "property": "m_Enabled",
+      "key": 8,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 0,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 0,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 1,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 1,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 2,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 2,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 3,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 3,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 4,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 4,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 5,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 5,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 6,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 6,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 7,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 7,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 8,
+      "field": "inSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    },
+    {
+      "clip": "BallBallExplodeAnimation",
+      "path": "Ball_2",
+      "property": "m_Enabled",
+      "key": 8,
+      "field": "outSlope",
+      "reason": "Unity discrete renderer property uses step tangents; native key times and integer values retained."
+    }
+  ],
+  "differences": []
+}

@@ -26,35 +26,17 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 
 		void PrepareAnimateHand ()
 		{
-			// STORY: the call to tutorialManager.GetItemsPositions() was here and
-			// threw a NullReferenceException on every loop of the tutorial hand.
-			// Its list holds Items that have already been matched and destroyed,
-			// and it reads .transform off each one.
-			//
-			// Nothing was lost by dropping it: AnimateHand never read the array.
-			// It takes every position it uses from AI.THIS.tipItem and
-			// AI.THIS.vDirection, so the result was computed, thrown on, and
-			// discarded. Restoring the original behaviour is restoring the line.
-			StartCoroutine (AnimateHand ());
+			Vector3[] positions = tutorialManager.GetItemsPositions ();
+			StartCoroutine (AnimateHand (positions));
 		}
 
-		IEnumerator AnimateHand ()
+		IEnumerator AnimateHand (Vector3[] positions)
 		{
-			// STORY: the hand restarts itself at the end of every pass, so it
-			// comes back around after the player has made the move it was
-			// pointing at — and by then AI.THIS.tipItem is the destroyed Item
-			// that used to be there. Every line below reads it. Stopping is what
-			// "there is no move to point at" means; throwing was not.
-			if (AI.THIS == null || AI.THIS.tipItem == null)
-				yield break;
-
 			float speed = 1;
 			int posNum = 0;
+			if (!AI.THIS || !AI.THIS.tipItem) yield break;   // its piece is gone (see TutorialManager.GetItemsPositions)
 
 //		for (int i = 0; i < 2; i++) {
-			int i = 0;
-			if (AI.THIS.combineType == CombineType.VShape)
-				i = 1;
 			transform.position = AI.THIS.tipItem.transform.position;
 			posNum++;
 			Vector3 offset = new Vector3 (0.5f, -1f);

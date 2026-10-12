@@ -1,0 +1,1214 @@
+{
+  "schemaVersion": 1,
+  "apkSha256": "4493ea05602f18aa3b26ab989acaee33f652aa2a85bd9f3dc3f92360441935a1",
+  "runtimeResource": "ReferenceGameplay/levels01-50",
+  "runtimeSha256": "b2a5953c1137c3d4cda463d5871c5876304ab3bf1338ac1cc2aafad271d0aab6",
+  "decodedSource": "Design/Inspection-Levels01-50/reference-levels01-50-decoded.json",
+  "decodedSourceSha256": "d06f61d90a1df215bc0d486d282e881d846437a7c7d3ad3656a522b8c897ccdd",
+  "schemaEvidence": "Design/Inspection-Levels01-50/reference-schema-evidence.json",
+  "schemaEvidenceSha256": "bcef70bdc5b84654fa5c514ea5bcd66592c5a2c6e9cc2b6be832f4612850a239",
+  "gridConversion": "Source row-major bottom-up converted to Royal Throne row-major top-down; cells, goals, moves, colors and authored feeds/sets unchanged.",
+  "rulesStatus": "Imported layout/configuration; existing Royal Throne execution. Exact reference runtime rules remain incomplete: see RULE-PROVENANCE.md.",
+  "levels": [
+    {
+      "number": 1,
+      "name": "00001v02_L",
+      "sourceSha256": "082143359b983027fcb7ab7331e120328fcbd30759e454ee6d857728f80aa009",
+      "sourcePathId": 1219,
+      "sourceByteOffset": 8353008,
+      "payloadBytes": 4200,
+      "width": 9,
+      "height": 8,
+      "moves": 30,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 36,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level01.bytes"
+    },
+    {
+      "number": 2,
+      "name": "00002v02_L",
+      "sourceSha256": "c58ae44ce07143a75598039cf3cce997208d0027e266365bf3f3c150b55c5c42",
+      "sourcePathId": 8258,
+      "sourceByteOffset": 31951008,
+      "payloadBytes": 1760,
+      "width": 9,
+      "height": 9,
+      "moves": 27,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 36,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level02.bytes"
+    },
+    {
+      "number": 3,
+      "name": "00003v02_L",
+      "sourceSha256": "cbfa2f75c8da4f567acfb62562768ca00de9177d219c17cb2df82b0e44b1deaa",
+      "sourcePathId": 10716,
+      "sourceByteOffset": 40560264,
+      "payloadBytes": 1760,
+      "width": 9,
+      "height": 9,
+      "moves": 27,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 25,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level03.bytes"
+    },
+    {
+      "number": 4,
+      "name": "00004v02_L",
+      "sourceSha256": "254ba073ba3e8620f946af76492833c062d7722f0f4d82d2a2d150441c657d93",
+      "sourcePathId": 1977,
+      "sourceByteOffset": 10838456,
+      "payloadBytes": 4296,
+      "width": 9,
+      "height": 9,
+      "moves": 30,
+      "goals": [
+        {
+          "name": "Grass",
+          "count": 49,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level04.bytes"
+    },
+    {
+      "number": 5,
+      "name": "00005v02_L",
+      "sourceSha256": "da57a67ae4bbafc524a302cbedfc0140ed7bd7ac716ba5ac220514b1e9cf303a",
+      "sourcePathId": 4837,
+      "sourceByteOffset": 20162480,
+      "payloadBytes": 2088,
+      "width": 9,
+      "height": 9,
+      "moves": 30,
+      "goals": [
+        {
+          "name": "Grass",
+          "count": 73,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level05.bytes"
+    },
+    {
+      "number": 6,
+      "name": "00006v02_L",
+      "sourceSha256": "a05ffff23159a9acc4d8bf78611d72cc9a48a984afe1fd29dd2e695cf3a3295a",
+      "sourcePathId": 3176,
+      "sourceByteOffset": 14988272,
+      "payloadBytes": 2092,
+      "width": 9,
+      "height": 9,
+      "moves": 35,
+      "goals": [
+        {
+          "name": "Grass",
+          "count": 72,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level06.bytes"
+    },
+    {
+      "number": 7,
+      "name": "00007v03_L",
+      "sourceSha256": "d0d3794ea95c83d0be6b72b750a168c8fb8683176313272d109ebf28dd4243e6",
+      "sourcePathId": 9006,
+      "sourceByteOffset": 34011960,
+      "payloadBytes": 1944,
+      "width": 9,
+      "height": 9,
+      "moves": 25,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 17,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 32,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level07.bytes"
+    },
+    {
+      "number": 8,
+      "name": "00008v03_L",
+      "sourceSha256": "fc2f2ec06ebb73a589e4ae566064853a232d762fc6ceec33eb39e6cae93d796a",
+      "sourcePathId": 7826,
+      "sourceByteOffset": 30747240,
+      "payloadBytes": 2076,
+      "width": 9,
+      "height": 9,
+      "moves": 27,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 34,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 25,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level08.bytes"
+    },
+    {
+      "number": 9,
+      "name": "00009v02_L",
+      "sourceSha256": "3d5d93c146f2c2df5c031ca3e38c3fc3e9da29f0ccfb0d929c8d0a5a8754f61d",
+      "sourcePathId": 1379,
+      "sourceByteOffset": 8805704,
+      "payloadBytes": 1552,
+      "width": 8,
+      "height": 8,
+      "moves": 30,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 40,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level09.bytes"
+    },
+    {
+      "number": 10,
+      "name": "00010v03_L",
+      "sourceSha256": "a586976fbe2323ba0fde081129d6db33b5f401116bc9029d52809a1b19cbdd80",
+      "sourcePathId": 6189,
+      "sourceByteOffset": 25323160,
+      "payloadBytes": 1948,
+      "width": 9,
+      "height": 9,
+      "moves": 32,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 27,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 27,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level10.bytes"
+    },
+    {
+      "number": 11,
+      "name": "00011v03_L",
+      "sourceSha256": "47940b8cfeb48c60951b229a9f21ac7515eb3db51b24c51407d8c3e16645f0e4",
+      "sourcePathId": 5040,
+      "sourceByteOffset": 20706328,
+      "payloadBytes": 1776,
+      "width": 9,
+      "height": 9,
+      "moves": 27,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 40,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level11.bytes"
+    },
+    {
+      "number": 12,
+      "name": "00012v04_L",
+      "sourceSha256": "c5b6cbf9570c813edcd29cafd45da211cc34d0f2fe920fa4701668135dabdea2",
+      "sourcePathId": 3655,
+      "sourceByteOffset": 16910152,
+      "payloadBytes": 1680,
+      "width": 8,
+      "height": 9,
+      "moves": 30,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 40,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 32,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level12.bytes"
+    },
+    {
+      "number": 13,
+      "name": "00013v02_L",
+      "sourceSha256": "5888209d1bc106a35fc35b4befd2624cd5c8041985789fe5defee758fe949c4c",
+      "sourcePathId": 3374,
+      "sourceByteOffset": 15541512,
+      "payloadBytes": 2460,
+      "width": 9,
+      "height": 8,
+      "moves": 30,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 30,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 40,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 12,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level13.bytes"
+    },
+    {
+      "number": 14,
+      "name": "00014v03_L",
+      "sourceSha256": "bb07de98a0a890c718a25e183f1241595ce9d98b22dc82858efc77710aa3ebda",
+      "sourcePathId": 6400,
+      "sourceByteOffset": 26352888,
+      "payloadBytes": 2692,
+      "width": 8,
+      "height": 8,
+      "moves": 27,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 60,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 8,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 24,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level14.bytes"
+    },
+    {
+      "number": 15,
+      "name": "00015v04_L",
+      "sourceSha256": "4f51268edcece957d499935cf769d5b3f9ca6dace0fd9371413a061838a83603",
+      "sourcePathId": 2264,
+      "sourceByteOffset": 11621616,
+      "payloadBytes": 1984,
+      "width": 9,
+      "height": 9,
+      "moves": 23,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 36,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 36,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level15.bytes"
+    },
+    {
+      "number": 16,
+      "name": "00016v04_L",
+      "sourceSha256": "cbaa1b29807ad86137379705732c58f86642b5f26a031bd3810c9b3c723312fe",
+      "sourcePathId": 3181,
+      "sourceByteOffset": 15000400,
+      "payloadBytes": 1896,
+      "width": 8,
+      "height": 10,
+      "moves": 35,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 60,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 24,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level16.bytes"
+    },
+    {
+      "number": 17,
+      "name": "00017v05_L",
+      "sourceSha256": "1b4041b932a4500806b58f07b03baa9baa3ffb7263b1d20bc65a6439ae35ec99",
+      "sourcePathId": 6684,
+      "sourceByteOffset": 27142008,
+      "payloadBytes": 2240,
+      "width": 9,
+      "height": 9,
+      "moves": 23,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 63,
+          "fromSettings": false
+        },
+        {
+          "name": "Cupboard",
+          "count": 20,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level17.bytes"
+    },
+    {
+      "number": 18,
+      "name": "00018v03_L",
+      "sourceSha256": "ed308886f293f4934389ab8da63475faee6c3d45174d4b05ad1cf4c7d93febc5",
+      "sourcePathId": 1843,
+      "sourceByteOffset": 10472536,
+      "payloadBytes": 1832,
+      "width": 8,
+      "height": 9,
+      "moves": 24,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 18,
+          "fromSettings": false
+        },
+        {
+          "name": "Cupboard",
+          "count": 40,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 16,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level18.bytes"
+    },
+    {
+      "number": 19,
+      "name": "00019v03_L",
+      "sourceSha256": "8066a17410105a34dd50de662ceeb4802c5ceca93925a4c6046544ee065c56c3",
+      "sourcePathId": 2701,
+      "sourceByteOffset": 12818408,
+      "payloadBytes": 2084,
+      "width": 9,
+      "height": 10,
+      "moves": 27,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 40,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 20,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 32,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level19.bytes"
+    },
+    {
+      "number": 20,
+      "name": "00020v02_L",
+      "sourceSha256": "0c3ae6b840b96ce829cdc64a0c736aaa08a030781db3af0403ab958c87b07eca",
+      "sourcePathId": 13192,
+      "sourceByteOffset": 48161944,
+      "payloadBytes": 1860,
+      "width": 9,
+      "height": 9,
+      "moves": 20,
+      "goals": [
+        {
+          "name": "Coin",
+          "count": 0,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level20.bytes"
+    },
+    {
+      "number": 21,
+      "name": "00021v02_L",
+      "sourceSha256": "696f7d8454b354c89f1369b4bc0c3749db5ad56f2da2b1fd2a1462441546de96",
+      "sourcePathId": 6266,
+      "sourceByteOffset": 25971000,
+      "payloadBytes": 1584,
+      "width": 8,
+      "height": 8,
+      "moves": 28,
+      "goals": [
+        {
+          "name": "Mail",
+          "count": 50,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level21.bytes"
+    },
+    {
+      "number": 22,
+      "name": "00022v01_L",
+      "sourceSha256": "26362ad96bb23c286586b386072dfa3c8f56e76e47d4212ecbef91dcd5606f7d",
+      "sourcePathId": 2797,
+      "sourceByteOffset": 13923016,
+      "payloadBytes": 1772,
+      "width": 9,
+      "height": 9,
+      "moves": 25,
+      "goals": [
+        {
+          "name": "Mail",
+          "count": 60,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level22.bytes"
+    },
+    {
+      "number": 23,
+      "name": "00023v02_L",
+      "sourceSha256": "3f70b8fd547c7b2b683b05979ed80dec3b20924479412d1d0600297b88c5b25a",
+      "sourcePathId": 4422,
+      "sourceByteOffset": 19025672,
+      "payloadBytes": 1600,
+      "width": 8,
+      "height": 8,
+      "moves": 20,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 25,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 45,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level23.bytes"
+    },
+    {
+      "number": 24,
+      "name": "00024v03_L",
+      "sourceSha256": "de7c11a56e93acb03a786d3319937b40649e533250250f430ec552ba58b0fae2",
+      "sourcePathId": 12041,
+      "sourceByteOffset": 44430664,
+      "payloadBytes": 1980,
+      "width": 9,
+      "height": 9,
+      "moves": 26,
+      "goals": [
+        {
+          "name": "Grass",
+          "count": 32,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 40,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level24.bytes"
+    },
+    {
+      "number": 25,
+      "name": "00025v03_L",
+      "sourceSha256": "52dd27f1fdb9496f2da28af5f7d2da9e470889da4f76e2c9fc39ca9418047c3f",
+      "sourcePathId": 5092,
+      "sourceByteOffset": 20897152,
+      "payloadBytes": 1948,
+      "width": 9,
+      "height": 10,
+      "moves": 26,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 36,
+          "fromSettings": false
+        },
+        {
+          "name": "Cupboard",
+          "count": 30,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 30,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level25.bytes"
+    },
+    {
+      "number": 26,
+      "name": "00026v03_L",
+      "sourceSha256": "b930af178f412d848f890844c94e2d399ce4e50f8e92470c0f9d0af62b44543f",
+      "sourcePathId": 4093,
+      "sourceByteOffset": 18102608,
+      "payloadBytes": 1960,
+      "width": 9,
+      "height": 9,
+      "moves": 23,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 15,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 36,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level26.bytes"
+    },
+    {
+      "number": 27,
+      "name": "00027v03_L",
+      "sourceSha256": "70f9ee5db38fb80781d7b6721af0cb91f7948e22d0d9f4dd59326dffc77ddb95",
+      "sourcePathId": 4457,
+      "sourceByteOffset": 19128752,
+      "payloadBytes": 1728,
+      "width": 8,
+      "height": 8,
+      "moves": 21,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 40,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 16,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 16,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level27.bytes"
+    },
+    {
+      "number": 28,
+      "name": "00028v03_L",
+      "sourceSha256": "e36038c21536860ddbd4a2fc7041b4b75680e8d6cefcdc61d13a2e675f775d50",
+      "sourcePathId": 11714,
+      "sourceByteOffset": 43541928,
+      "payloadBytes": 1776,
+      "width": 8,
+      "height": 10,
+      "moves": 27,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 120,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 30,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level28.bytes"
+    },
+    {
+      "number": 29,
+      "name": "00029v03_L",
+      "sourceSha256": "cfad167cceab2992673fea8d8ed2331b927dbc3d813919cf26815aff893eeb21",
+      "sourcePathId": 7746,
+      "sourceByteOffset": 30519328,
+      "payloadBytes": 2068,
+      "width": 9,
+      "height": 10,
+      "moves": 25,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 27,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 18,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 50,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level29.bytes"
+    },
+    {
+      "number": 30,
+      "name": "00030v03_L",
+      "sourceSha256": "ddb9f22cb11356a688fef777a828050905c7840a5c5c6c1a9a838a609a767f2b",
+      "sourcePathId": 4098,
+      "sourceByteOffset": 18119208,
+      "payloadBytes": 1552,
+      "width": 8,
+      "height": 8,
+      "moves": 22,
+      "goals": [
+        {
+          "name": "Mail",
+          "count": 200,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level30.bytes"
+    },
+    {
+      "number": 31,
+      "name": "00031v02_L",
+      "sourceSha256": "e87106ad7472bc628419e8d510d2faa7cedde36955185bbfec1a3b679223a266",
+      "sourcePathId": 1543,
+      "sourceByteOffset": 9595896,
+      "payloadBytes": 1748,
+      "width": 8,
+      "height": 10,
+      "moves": 28,
+      "goals": [
+        {
+          "name": "Egg",
+          "count": 60,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level31.bytes"
+    },
+    {
+      "number": 32,
+      "name": "00032v02_L",
+      "sourceSha256": "158e1ec436404fcc8b08f080c030d42ce6a2dad821c21c0d734cd025a575d82a",
+      "sourcePathId": 3550,
+      "sourceByteOffset": 16605696,
+      "payloadBytes": 1900,
+      "width": 9,
+      "height": 10,
+      "moves": 22,
+      "goals": [
+        {
+          "name": "Egg",
+          "count": 36,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 18,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level32.bytes"
+    },
+    {
+      "number": 33,
+      "name": "00033v03_L",
+      "sourceSha256": "947e5a9674c9be9a4dc45f3a5395ed0b95f7a48cebf9b520caa152aca8c3017a",
+      "sourcePathId": 5198,
+      "sourceByteOffset": 21180608,
+      "payloadBytes": 1964,
+      "width": 9,
+      "height": 9,
+      "moves": 25,
+      "goals": [
+        {
+          "name": "Egg",
+          "count": 32,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 32,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level33.bytes"
+    },
+    {
+      "number": 34,
+      "name": "00034v03_L",
+      "sourceSha256": "0700035d331a3fde260771f8dd09a162b5bfe491357edba942128455fdbfc6ab",
+      "sourcePathId": 8220,
+      "sourceByteOffset": 31849008,
+      "payloadBytes": 1912,
+      "width": 9,
+      "height": 10,
+      "moves": 20,
+      "goals": [
+        {
+          "name": "Egg",
+          "count": 54,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 50,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level34.bytes"
+    },
+    {
+      "number": 35,
+      "name": "00035v03_L",
+      "sourceSha256": "56e4b5363cdb9a99c02f91a8df1508ef7218c478696a4173d25cb7becb0fc4ae",
+      "sourcePathId": 8311,
+      "sourceByteOffset": 32089800,
+      "payloadBytes": 1904,
+      "width": 9,
+      "height": 10,
+      "moves": 20,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 30,
+          "fromSettings": false
+        },
+        {
+          "name": "Egg",
+          "count": 48,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level35.bytes"
+    },
+    {
+      "number": 36,
+      "name": "00036v03_L",
+      "sourceSha256": "bb2e03fffb7814ee2eb20ffb6eb1f11bc8750b7c43cf29fab83ffb0bbabad215",
+      "sourcePathId": 12212,
+      "sourceByteOffset": 45322664,
+      "payloadBytes": 1808,
+      "width": 9,
+      "height": 9,
+      "moves": 25,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 38,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 50,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level36.bytes"
+    },
+    {
+      "number": 37,
+      "name": "00037v04_L",
+      "sourceSha256": "5524fdfb9883f1b81d03b88f84dffc5b72c6add7b6becc357d6985884408917c",
+      "sourcePathId": 5632,
+      "sourceByteOffset": 22394144,
+      "payloadBytes": 1896,
+      "width": 8,
+      "height": 10,
+      "moves": 23,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 32,
+          "fromSettings": false
+        },
+        {
+          "name": "Cupboard",
+          "count": 40,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 16,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level37.bytes"
+    },
+    {
+      "number": 38,
+      "name": "00038v03_L",
+      "sourceSha256": "c214d51504cc5ecdbf3a7e8ca2a00d7c1e33336c909083fe878b15e634625d56",
+      "sourcePathId": 3979,
+      "sourceByteOffset": 17782000,
+      "payloadBytes": 2024,
+      "width": 8,
+      "height": 11,
+      "moves": 24,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 40,
+          "fromSettings": false
+        },
+        {
+          "name": "Egg",
+          "count": 32,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 24,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level38.bytes"
+    },
+    {
+      "number": 39,
+      "name": "00039v04_L",
+      "sourceSha256": "7dbfea88a55d4d2fff6abc8f520697449dbe31d388f0e8a541b5b6dee13f7591",
+      "sourcePathId": 5155,
+      "sourceByteOffset": 21069064,
+      "payloadBytes": 1948,
+      "width": 9,
+      "height": 10,
+      "moves": 23,
+      "goals": [
+        {
+          "name": "Egg",
+          "count": 63,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 9,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 30,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level39.bytes"
+    },
+    {
+      "number": 40,
+      "name": "00040v02_L",
+      "sourceSha256": "ee63d17492762a53bc543496521ece8be7d21f623c5c8b9332f47f0f490fcf46",
+      "sourcePathId": 12497,
+      "sourceByteOffset": 46131936,
+      "payloadBytes": 1696,
+      "width": 8,
+      "height": 9,
+      "moves": 20,
+      "goals": [
+        {
+          "name": "Coin",
+          "count": 0,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level40.bytes"
+    },
+    {
+      "number": 41,
+      "name": "00041v02_L",
+      "sourceSha256": "859f57eb88277776e2212d60b04f93e1e467f322eb085e513edbf37afd801b9b",
+      "sourcePathId": 1377,
+      "sourceByteOffset": 8801264,
+      "payloadBytes": 1548,
+      "width": 8,
+      "height": 8,
+      "moves": 22,
+      "goals": [
+        {
+          "name": "Potion",
+          "count": 16,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level41.bytes"
+    },
+    {
+      "number": 42,
+      "name": "00042v03_L",
+      "sourceSha256": "154253247b90e9734fa4932871b622e874f88c3b9c392e6bc4bb97c0e8998c45",
+      "sourcePathId": 9982,
+      "sourceByteOffset": 38435864,
+      "payloadBytes": 1584,
+      "width": 8,
+      "height": 8,
+      "moves": 24,
+      "goals": [
+        {
+          "name": "Potion",
+          "count": 28,
+          "fromSettings": false
+        },
+        {
+          "name": "Egg",
+          "count": 27,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level42.bytes"
+    },
+    {
+      "number": 43,
+      "name": "00043v03_L",
+      "sourceSha256": "ed79ee98768d28face80c48707118b1fa1df222eda97ae59b81948658054a33d",
+      "sourcePathId": 2302,
+      "sourceByteOffset": 11720712,
+      "payloadBytes": 1776,
+      "width": 8,
+      "height": 10,
+      "moves": 20,
+      "goals": [
+        {
+          "name": "Potion",
+          "count": 32,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 8,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level43.bytes"
+    },
+    {
+      "number": 44,
+      "name": "00044v05_L",
+      "sourceSha256": "db8a3bf112b6a0dc3689d3f99a105ff3f704351e23db024e11c15e5d0fd35bb2",
+      "sourcePathId": 12935,
+      "sourceByteOffset": 47402312,
+      "payloadBytes": 1792,
+      "width": 8,
+      "height": 10,
+      "moves": 26,
+      "goals": [
+        {
+          "name": "Potion",
+          "count": 40,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 40,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level44.bytes"
+    },
+    {
+      "number": 45,
+      "name": "00045v04_L",
+      "sourceSha256": "b118fba299ba54842bde02f10b52ccc5bf644c830484445ed34f59daef7a96e2",
+      "sourcePathId": 5585,
+      "sourceByteOffset": 22273160,
+      "payloadBytes": 1808,
+      "width": 8,
+      "height": 10,
+      "moves": 23,
+      "goals": [
+        {
+          "name": "Potion",
+          "count": 20,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 20,
+          "fromSettings": false
+        },
+        {
+          "name": "Cupboard",
+          "count": 50,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level45.bytes"
+    },
+    {
+      "number": 46,
+      "name": "00046v03_L",
+      "sourceSha256": "7b6c3e10df89d4ac72939adc6966bb2da4fa348a301fb2d903d3a625e7144e94",
+      "sourcePathId": 11460,
+      "sourceByteOffset": 42826376,
+      "payloadBytes": 1692,
+      "width": 8,
+      "height": 8,
+      "moves": 30,
+      "goals": [
+        {
+          "name": "Cupboard",
+          "count": 40,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 16,
+          "fromSettings": false
+        },
+        {
+          "name": "Egg",
+          "count": 150,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level46.bytes"
+    },
+    {
+      "number": 47,
+      "name": "00047v04_L",
+      "sourceSha256": "a30ab9e25fddeff6e7d4ae9bbd84f679b03832ce18e8a02ee24ba118dacc5c4a",
+      "sourcePathId": 5598,
+      "sourceByteOffset": 22305888,
+      "payloadBytes": 1924,
+      "width": 9,
+      "height": 9,
+      "moves": 32,
+      "goals": [
+        {
+          "name": "Box",
+          "count": 63,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 14,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 63,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level47.bytes"
+    },
+    {
+      "number": 48,
+      "name": "00048v03_L",
+      "sourceSha256": "1305c73b781044872fc29c2543c8c4620282419082f782907c719457a503c253",
+      "sourcePathId": 10390,
+      "sourceByteOffset": 39644760,
+      "payloadBytes": 1792,
+      "width": 9,
+      "height": 9,
+      "moves": 22,
+      "goals": [
+        {
+          "name": "Egg",
+          "count": 36,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 15,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level48.bytes"
+    },
+    {
+      "number": 49,
+      "name": "00049v03_L",
+      "sourceSha256": "4ce24a2b3d381b653def38b4b0d988b6875889d9170bc133e2e6e96d08629708",
+      "sourcePathId": 4643,
+      "sourceByteOffset": 19644568,
+      "payloadBytes": 2132,
+      "width": 9,
+      "height": 10,
+      "moves": 26,
+      "goals": [
+        {
+          "name": "Potion",
+          "count": 8,
+          "fromSettings": false
+        },
+        {
+          "name": "Box",
+          "count": 28,
+          "fromSettings": false
+        },
+        {
+          "name": "Grass",
+          "count": 32,
+          "fromSettings": false
+        },
+        {
+          "name": "Mail",
+          "count": 40,
+          "fromSettings": true
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level49.bytes"
+    },
+    {
+      "number": 50,
+      "name": "00050v02_L",
+      "sourceSha256": "77eab48336c07b549293a5ef80170997be9fc4ac5f765aa98d073a4a886369c6",
+      "sourcePathId": 9273,
+      "sourceByteOffset": 35973456,
+      "payloadBytes": 2208,
+      "width": 9,
+      "height": 10,
+      "moves": 20,
+      "goals": [
+        {
+          "name": "Potion",
+          "count": 4,
+          "fromSettings": false
+        },
+        {
+          "name": "Egg",
+          "count": 72,
+          "fromSettings": false
+        }
+      ],
+      "rawPayload": "Design/Inspection-Levels01-50/ReferenceLevelsRaw/level50.bytes"
+    }
+  ]
+}

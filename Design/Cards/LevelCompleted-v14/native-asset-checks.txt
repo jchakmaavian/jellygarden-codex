@@ -1,0 +1,3 @@
+StarHitParticles: validated particle systems, materials, shaders, sprite references and emitter mesh
+StarIdleParticles: validated particle systems, materials, shaders, sprite references and emitter mesh
+PASS 13 native ParticleSystems; no missing referenced sprites, materials or active emitter meshes.

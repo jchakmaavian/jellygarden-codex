@@ -96,7 +96,7 @@ namespace JellyGarden.Scripts.Juice
             foreach(var item in conversionInputLeases)if(item)item.inputConversionLocks=0;
             conversionInputLeases.Clear();
         }
-        public void Cancel(){RoyalThrone.Boosters.Propeller.V5.PropellerVisualV5.Clear();OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();RoyalToolkitImpact.Existing?.Clear();ClearRocketVfx();}
+        public void Cancel(){RoyalThrone.Boosters.Propeller.V5.PropellerVisualV5.Clear();RoyalThrone.Boosters.Propeller.V4.PropellerVisualV4.Clear();RoyalThrone.Boosters.Propeller.V3.PropellerVisualV3.Clear();RoyalThrone.Boosters.Propeller.V2.PropellerVisualV2.Clear();OnDisable();if(systems!=null)foreach(var ps in systems)if(ps)ps.Clear();RoyalToolkitImpact.Existing?.Clear();ClearRocketVfx();}
         void Update()
         {
             var level=LevelManager.THIS;
@@ -320,13 +320,14 @@ namespace JellyGarden.Scripts.Juice
             // Special pieces can retain their former gem colour. They must not
             // inflate the majority count or become ordinary colour targets.
             return item && item.isActiveAndEnabled && !item.destroying && !item.royalConsumed &&
-                item.currentType == ItemsTypes.NONE && RoyalGameplayArt.IsGemColor(item.color) &&
+                item.currentType == ItemsTypes.NONE && item.color >= 0 && item.color < RoyalGameplayArt.BoardColorCount &&
                 item.square && item.square.item == item && !item.square.IsNone() &&
-                item.square.type != SquareTypes.UNDESTROYABLE;
+                item.square.type != SquareTypes.UNDESTROYABLE &&
+                !RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(item);
         }
         internal static int MostCommonColorBallColour(IEnumerable<Item> items)
         {
-            int[] counts = new int[RoyalGameplayArt.MaxBoardColorCount];
+            int[] counts = new int[RoyalGameplayArt.BoardColorCount];
             foreach (var item in items) if (EligibleColorBallTarget(item)) counts[item.color]++;
             int best = 0;
             for (int colour = 1; colour < counts.Length; colour++) if (counts[colour] > counts[best]) best = colour;
@@ -338,7 +339,7 @@ namespace JellyGarden.Scripts.Juice
             while(lm.InputSwaps>0)yield return null;
             // A normal-gem swap supplies its explicit colour. Direct activation
             // and the existing combo rules request a count with the sentinel -1.
-            if(!RoyalGameplayArt.IsGemColor(colour))colour=MostCommonColorBallColour(lm.GetItems());
+            if(colour<0||colour>=RoyalGameplayArt.BoardColorCount)colour=MostCommonColorBallColour(lm.GetItems());
             var targets=new List<Square>();for(int r=0;r<lm.maxRows;r++)for(int c=0;c<lm.maxCols;c++){var sq=lm.GetSquare(c,r);if(sq&&(all||EligibleColorBallTarget(sq.item)&&sq.item.color==colour))targets.Add(sq);}
             // Only selected pieces are reserved through conversion/handoff. Everything
             // else remains interactive; overlapping Color Balls own separate leases.

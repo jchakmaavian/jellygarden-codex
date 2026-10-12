@@ -1,1 +1,0 @@
-PASS 87 checks: ZIP players, contacts, both axes, edge, pause, chain, TNT, cleanup and refill.

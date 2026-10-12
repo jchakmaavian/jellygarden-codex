@@ -16,7 +16,7 @@ namespace RoyalThrone.Boosters.Propeller.V5.Editor
 {
     public static class PropellerReferenceChecks
     {
-        const string Output="Logs/port-checks/PropellerReference/Runtime-checks.txt";
+        const string Output="Design/Inspection-rfv387/Propeller/Runtime-checks.txt";
         static readonly List<string> lines=new List<string>();
         static readonly List<Vector3> contacts=new List<Vector3>();
         static int carriedPeak;static bool running,errors;

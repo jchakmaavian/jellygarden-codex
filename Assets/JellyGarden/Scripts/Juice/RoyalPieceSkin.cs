@@ -9,6 +9,13 @@ namespace JellyGarden.Scripts.Juice
         public static readonly string[] Colours={"ruby","shield","crown","leaf","lily","vase"};
         static Sprite[] colours; static Sprite rocket,tnt,orb,heli;
         static readonly Dictionary<string,Sprite> artCache=new Dictionary<string,Sprite>();
+        public const string CampaignResourceRoot = "RoyalCampaignArt/";
+        public static readonly string[] CampaignKeys = {
+            "king-idle", "king-cheer", "king-think", "dog", "steward",
+            "ruby", "shield", "crown", "leaf", "lily", "gem", "coin",
+            "box1", "box2", "box3", "grass", "cupboard", "mailbox", "egg", "potion"
+        };
+        static readonly HashSet<string> campaignKeys = new HashSet<string>(CampaignKeys);
         Item item; Vector3 originalScale, itemRestScale; bool ready, scaleReady;
         BoxCollider2D hitBox;Vector2 fittedCell;
         SpriteRenderer contactShadow;
@@ -20,15 +27,41 @@ namespace JellyGarden.Scripts.Juice
         public const float CellFill = .94f;
         public const float RocketIdleCellFill = .78f;
         public const float MaxDestroyCellFill = 1.12f;
+        public static string CampaignResourcePath(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+            switch (name)
+            {
+                case "avatar-king": name = "king-idle"; break;
+                case "vase": name = "gem"; break;
+                case "icon-coin": name = "coin"; break;
+                case "crate": name = "box1"; break;
+                case "grass-full": case "grass-partial": case "grass-border": name = "grass"; break;
+            }
+            bool optionalBooster = name == "rocket" || name == "rocket-vertical" || name == "tnt" || name == "orb" || name == "helicopter";
+            return campaignKeys.Contains(name) || optionalBooster ? CampaignResourceRoot + name : null;
+        }
+        public static Sprite CampaignArt(string name)
+        {
+            // Share the sun TNT artwork across board activation and menu icons.
+            if(name=="tnt"){var sun=RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.Art("tnt");if(sun)return sun;}
+            string path = CampaignResourcePath(name);
+            if (path == null) return null;
+            if (artCache.TryGetValue(path, out var sprite)) return sprite;
+            sprite = Resources.Load<Sprite>(path);
+            artCache[path] = sprite;
+            return sprite;
+        }
         public static Sprite Art(string name)
         {
             if (string.IsNullOrEmpty(name)) return null;
-            // Menus (the pre-level row, the booster guide, How to play) show the Rocket, TNT and Color Ball the board
-            // uses now; the V4 pack covers imports being off. Royal Throne's campaign art is not ported (D8).
-            if (name == "rocket" || name == "tnt" || name == "orb") { var board = RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.Art(name); return board ? board : RoyalGameplayArt.LegacyArt(name); }
+            var campaign = CampaignArt(name); if (campaign) return campaign;
+            // Menus (the Level Start card, the booster guide and shop, How to play) show the Rocket and Color Ball the board
+            // uses now. The older RoyalGameplay/rocket and orb art was removed; the built-in pack covers imports being off.
+            if (name == "rocket" || name == "orb") { var board = RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.Art(name); return board ? board : RoyalGameplayArt.LegacyArt(name); }
             string path = "RoyalGameplay/" + name;
-            if (!artCache.TryGetValue(path, out var sprite)) { sprite = Resources.Load<Sprite>(path); artCache[path] = sprite; }
-            return sprite ? sprite : RoyalGameplayArt.LegacyArt(name);
+            if (artCache.TryGetValue(path, out var sprite)) return sprite;
+            sprite = Resources.Load<Sprite>(path); artCache[path] = sprite; return sprite;
         }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         public static void ResetArtCache()
@@ -93,6 +126,7 @@ namespace JellyGarden.Scripts.Juice
         {
             if(!ready){item=GetComponent<Item>();if(!item||!item.sprRenderer)return; originalScale=item.sprRenderer.transform.localScale;hitBox=GetComponent<BoxCollider2D>();ready=true;}
             var sprite=For(item.currentType,item.color);
+            if(item.currentType==ItemsTypes.NONE&&item.TryGetComponent(out RoyalThrone.Campaign.RoyalCampaignItem campaignItem)&&campaignItem)sprite=campaignItem.Visual;
             if(item.currentType==ItemsTypes.INGREDIENT)sprite=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(item.sprRenderer.sprite,true);
             if(!sprite)return;
             item.sprRenderer.sprite=sprite;

@@ -56,8 +56,7 @@ namespace JellyGarden.Scripts.GUI
         // Update is called once per frame
         public void SetBoost (BoostType _boostType ) 
         {
-            if(RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.IsTool(_boostType)){var bar=RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Instance;if(bar)bar.OpenShop(_boostType);return;}
-            if (!JellyGarden.Scripts.Story.StoryFreeGame.ShopsAllowed) return;   // King Leo's shop switch
+            if(RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.IsTool(_boostType)){RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Instance.OpenShop(_boostType);return;}
             boostType = _boostType;
             Juice.RoyalEconomy.Apply(boostProducts);   // pack sizes and prices come from the coin rules
             gameObject.SetActive( true );

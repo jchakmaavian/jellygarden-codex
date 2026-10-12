@@ -1,0 +1,29 @@
+Native level-win star VFX - 2026-10-08
+Source: royal_thron_rfv387.apk, existing extracted resources.assets in the 20261005 backup.
+Source hashes are recorded in source-hashes.json.
+LevelWinDialog GameObject 48038:
+  StarHitParticles GameObject 38664: 6 particle systems.
+  StarIdleParticles GameObject 45587: 7 particle systems.
+Recovered: native particle modules, transform hierarchy, 7 atlas sprite references,
+3 original textures, 2 materials, and mesh 991 (star emitter).
+Assets: Assets/ReferenceGameplay/WinVFX.
+No APK gameplay code was imported.
+
+Unity adaptation:
+- Preserves imported native emission, velocity, size/color curves and sprite animation.
+- Uses existing available Unity shaders named by the source materials.
+- Resolves the native emitter mesh exported as OBJ; preserves the source .meta files after import.
+- Native renderers draw to a 512px offscreen texture composited additively behind the reward star.
+- Card adapter controls start time (.20s impact), placement, deterministic seed, lifecycle and reduced motion.
+- Reduced motion freezes the native simulation at .8s.
+- Replaces procedural confetti, rays, halo sparkle, flash and glow layers.
+- One unused source default-resource mesh pointer on a billboard renderer is not required for rendering.
+- Parent transform outside the extracted hierarchy is intentionally replaced by the card presentation stage.
+
+Validation:
+- Unity compilation passed.
+- Native prefab audit: 13 particle systems; materials/shaders supported; all sprite and active mesh references resolved.
+- Presentation QA: 53 passed, 0 failed; 1080x1920, 720x1280, 1536x2048, reduced motion, reopen, Continue/close, real-save and economy preservation.
+- Review capture: 119 rendered frames, encoded to 5-second MP4 and decoded successfully.
+- Settled native screenshot visually reviewed.
+- Android performance/device validation has not been run.

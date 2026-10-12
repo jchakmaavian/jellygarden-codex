@@ -1,2 +1,0 @@
-/private/tmp/storybook-layers-export-matte.log:[Storybook] Packaged 33 RGBA production layers.
-/private/tmp/storybook-layers-build-installed.log:[Story] Build Succeeded (release): 0 errors, 348 warnings, 419.5 MB, 9s -> Builds/Mac/KingLeo.app

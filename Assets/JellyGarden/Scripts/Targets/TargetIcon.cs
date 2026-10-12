@@ -47,9 +47,7 @@ namespace JellyGarden.Scripts.Targets
                 ? LevelManager.THIS.targetObject.FirstOrDefault(t=>t.type==target.type&&t.color==target.color&&t.icon&&target.icon&&t.icon.name==target.icon.name)??target
                 : target;
             checkObject.gameObject.SetActive(false);
-            var goalArt = RoyalThrone.Presentation.RoyalVisualCatalog.Goal(target);
-            if (!goalArt) goalArt = JellyGarden.Scripts.Story.StorybookBoardArt.Goal(target);   // main's art when the catalog has none
-            imageRenderer.sprite = goalArt;
+            imageRenderer.sprite = RoyalThrone.Presentation.RoyalVisualCatalog.Goal(target);
             count = target.targetCount;
             textObj.text = target.targetCount.ToString();
             if (target.type == Target.SCORE)

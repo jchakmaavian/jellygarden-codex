@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using RoyalThrone.Campaign;
 using RoyalThrone.Boosters.Propeller.V5;
 using UnityEngine;
 
@@ -18,10 +19,19 @@ namespace JellyGarden.Scripts.Juice
             (!square.item || square.item.currentType != ItemsTypes.INGREDIENT) &&
             (square.item && !square.item.destroying || square.block.Count > 0);
 
+        static bool PropellerGoalRemaining(string name)
+        {
+            var level=LevelManager.THIS;
+            if(string.IsNullOrEmpty(name)||!level||level.targetObject==null)return false;
+            foreach(var goal in level.targetObject)
+                if(goal!=null&&goal.referenceGoal==name&&!goal.Done())return true;
+            return false;
+        }
+
         public static int PropellerObjectiveScore(Square target, ItemsTypes payload)
         {
             var level=LevelManager.THIS;if(!level||!target)return 0;
-            int result=0;
+            int result=0;var obstacles=new List<Square>();
             foreach(var cell in level.squaresArray)
             {
                 if(!cell||cell.IsNone()||cell.type==SquareTypes.UNDESTROYABLE)continue;
@@ -29,14 +39,24 @@ namespace JellyGarden.Scripts.Juice
                 if(payload==ItemsTypes.PACKAGE)reached=Mathf.Abs(cell.col-target.col)<=2&&Mathf.Abs(cell.row-target.row)<=2;
                 else if(payload==ItemsTypes.HORIZONTAL_STRIPPED)reached=cell.row==target.row;
                 else if(payload==ItemsTypes.VERTICAL_STRIPPED)reached=cell.col==target.col;
-                if(!reached||level.targetObject==null)continue;
-                // King Leo's goals (D8: no campaign blockers). COLLECT counts a plain piece of the goal colour, BLOCKS
-                // a cell with a block. INGREDIENT and SCORE goals give no target: an ingredient is never hit.
-                foreach(var goal in level.targetObject)
+                if(!reached)continue;
+                if(RoyalReferenceCampaign.Active)
                 {
-                    if(goal==null||goal.Done())continue;
-                    if(goal.type==global::JellyGarden.Scripts.Target.COLLECT&&cell.item&&!cell.item.destroying&&cell.item.currentType==ItemsTypes.NONE&&cell.item.color==goal.color)result++;
-                    else if(goal.type==global::JellyGarden.Scripts.Target.BLOCKS&&cell.block.Count>0)result++;
+                    if(RoyalCampaignBlockers.GrassAt(cell)>0&&PropellerGoalRemaining("Grass"))result++;
+                    string goal=RoyalCampaignBlockers.GoalAt(cell);
+                    if(PropellerGoalRemaining(goal)&&!obstacles.Exists(previous=>RoyalCampaignBlockers.SharesObstacle(previous,cell)))
+                    {result++;obstacles.Add(cell);}
+                    var special=cell.item?cell.item.GetComponent<RoyalCampaignItem>():null;
+                    if(special&&!cell.item.destroying&&PropellerGoalRemaining(special.GoalName))result++;
+                }
+                else if(level.targetObject!=null)
+                {
+                    foreach(var goal in level.targetObject)
+                    {
+                        if(goal==null||goal.Done())continue;
+                        if(goal.type==global::JellyGarden.Scripts.Target.COLLECT&&cell.item&&!cell.item.destroying&&cell.item.currentType==ItemsTypes.NONE&&cell.item.color==goal.color)result++;
+                        else if(goal.type==global::JellyGarden.Scripts.Target.BLOCKS&&cell.block.Count>0)result++;
+                    }
                 }
             }
             return result;

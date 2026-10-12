@@ -32,8 +32,8 @@ namespace RoyalThrone.Editor
                 {
                     // Inspect the rendered pose after Animator and RoyalPieceSkin
                     // LateUpdate, including the real stagger before fracture.
-                    yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
-                    if(capturePrefix!=null && !UnityEngine.Application.isBatchMode && captureFrame<captureTimes.Length && Time.time-started>=captureTimes[captureFrame])
+                    yield return new WaitForEndOfFrame();
+                    if(capturePrefix!=null && captureFrame<captureTimes.Length && Time.time-started>=captureTimes[captureFrame])
                     {
                         var texture=ScreenCapture.CaptureScreenshotAsTexture();
                         System.IO.File.WriteAllBytes(capturePrefix+"-"+captureFrame+".png",texture.EncodeToPNG());

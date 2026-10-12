@@ -40,7 +40,7 @@ namespace JellyGarden.Scripts.Targets
         public Target type;
         public Sprite icon;
         public int color;
-        // Royal Throne's reference campaign set this; that campaign is not ported, so it stays null.
+        // Set only on runtime copies loaded by the isolated reference campaign.
         [NonSerialized] public string referenceGoal;
         [FormerlySerializedAs("count")]public int targetCount;
         [HideInInspector] public int countCollected;
@@ -49,9 +49,13 @@ namespace JellyGarden.Scripts.Targets
         public SpriteList blockSprites;
         public TargetObject DeepCopy()
         {
-            // Copies keep the authored icon and colour: goals match by icon name and colour,
-            // and RoyalVisualCatalog.Goal draws the goal art where it is shown.
             TargetObject other = (TargetObject) MemberwiseClone();
+            // Migrate runtime copies only; retain authored assets and player progress.
+            if (other.type == Target.COLLECT && other.color == 5)
+            {
+                other.color = Juice.RoyalGameplayArt.BoardColor(other.color);
+                other.icon = Juice.RoyalGameplayArt.For(ItemsTypes.NONE, other.color) ?? other.icon;
+            }
             return other;
         }
 

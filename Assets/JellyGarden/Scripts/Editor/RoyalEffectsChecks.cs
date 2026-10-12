@@ -16,13 +16,13 @@ namespace RoyalThrone.Editor
 {
     public static class RoyalEffectsChecks
     {
-        // King Leo launches a level through StoryFlow (main keeps no InitScript.TryOpenLevel); lives are never spent there.
         [MenuItem("Tools/Royal Throne/Effects/Open current level for testing without life cost #F12")]
         public static void OpenBoard()
         {
             var level=LevelManager.THIS;if(!EditorApplication.isPlaying||!level||level.gameStatus!=GameState.Map)return;
-            int number=Mathf.Max(1,PlayerPrefs.GetInt("OpenLevel",1));
-            JellyGarden.Scripts.Story.StoryFlow.LaunchLevel(number,JellyGarden.Scripts.Story.StoryLevelPlan.AreaOf(number));
+            if(!JellyGarden.Scripts.GUI.MenuManager.Instance.menuPlay.activeSelf)InitScript.Instance.TryOpenLevel(Mathf.Max(1,PlayerPrefs.GetInt("OpenLevel",1)));
+            JellyGarden.Scripts.GUI.MenuManager.Instance.menuPlay.SetActive(false);
+            level.gameStatus=GameState.PrepareGame;
         }
         [MenuItem("Tools/Royal Throne/Effects/Inspect current board #F11")]
         public static void Inspect()
@@ -36,7 +36,7 @@ namespace RoyalThrone.Editor
         }
         static readonly List<string> checks=new List<string>(),errors=new List<string>();
         static bool cellBreakOnly,rocketOnly,tntOnly,colorBallOnly,inputOnly;
-        static string Folder=>colorBallOnly?"Logs/port-checks/Effects/ColorBall-live-v1/":tntOnly?"Logs/port-checks/Effects/TNT-review-v6/":rocketOnly?"Logs/port-checks/Effects/Rocket-review-v7/":cellBreakOnly?"Logs/port-checks/Effects/Unity-review-v6/":"Logs/port-checks/Effects/Unity-review-v4/";
+        static string Folder=>colorBallOnly?"Design/Effects/ColorBall-live-v1/":tntOnly?"Design/Effects/TNT-review-v6/":rocketOnly?"Design/Effects/Rocket-review-v7/":cellBreakOnly?"Design/Effects/Unity-review-v6/":"Design/Effects/Unity-review-v4/";
         [MenuItem("Tools/Royal Throne/Color Ball/Verify live Rocket conversion only %#F7")]
         public static void RunColorBall(){colorBallOnly=true;Run();}
         [MenuItem("Tools/Royal Throne/TNT/Verify TNT only at quarter and full speed %#F8")]
@@ -52,10 +52,11 @@ namespace RoyalThrone.Editor
         static int money,lives;static UnityEngine.Random.State random;
         static int originalMotion;static bool hadMotion;
         static readonly List<float> frames=new List<float>();static bool recording;
+        static RoyalReviewAudioCapture capture;
         [MenuItem("Tools/Royal Throne/Effects/Run board regression and capture #F10")]
         public static void Run()
         {
-            lm=LevelManager.THIS;
+            RoyalHomeScreenBuilder.RequireCopy();lm=LevelManager.THIS;
             if(!EditorApplication.isPlaying||!lm||lm.gameStatus!=GameState.Playing||lm.DragBlocked)throw new InvalidOperationException("Open a settled gameplay board in Play Mode first.");
             checks.Clear();errors.Clear();frames.Clear();Directory.CreateDirectory(Folder);Application.logMessageReceived+=Log;
             originalField=lm.GameField;originalSquares=lm.squaresArray;originalTargets=lm.targetObject;rows=lm.maxRows;cols=lm.maxCols;limit=lm.Limit;score=LevelManager.Score;move=lm.moveID;drag=lm.DragBlocked;showScores=lm.showPopupScores;
@@ -121,7 +122,8 @@ namespace RoyalThrone.Editor
                 }
                 Check(Resources.Load<GameObject>("RoyalGameplay/EffectsRig"),"Authored particle rig loads");
                 foreach(var name in RoyalPieceSkin.Colours.Concat(new[]{"rocket","tnt","helicopter","orb","smoke","gem","heart","star","ice","key","chest","chains","stone"}))Check(RoyalPieceSkin.Art(name),"WebP sprite loads: "+name);
-                foreach(var name in new[]{"match-a","match-b","rocket","tnt","helicopter","create","land","click","firework","celebrate","royal-fanfare"})Check(Resources.Load<AudioClip>("RoyalGameplay/Audio/"+name),"Audio imports: "+name);
+                foreach(var name in new[]{"match-a","match-b","rocket","tnt","helicopter","create","castle-theme","land","click","firework","celebrate","royal-fanfare"})Check(Resources.Load<AudioClip>("RoyalGameplay/Audio/"+name),"Audio imports: "+name);
+                foreach(var name in RoyalAudioDirector.LevelMusic)Check(Resources.Load<AudioClip>("RoyalGameplay/Music/"+name),"Level music imports: "+name);
                 foreach(var blockName in new[]{"Block","SolidBlock","ThrivingBlock","UndestrBlock","WireBlock"}){
                     var prefab=Resources.Load<GameObject>("Prefabs/"+blockName);var original=prefab.GetComponent<SpriteRenderer>().sprite;
                     var styled=RoyalThrone.Presentation.RoyalVisualCatalog.Replace(original,true);
@@ -140,6 +142,7 @@ namespace RoyalThrone.Editor
                 yield return PresentationChecks();
                 yield return RoyalToolkitChecks.Run(lm,Check);
                 Seed();yield return null;SetColours();yield return RoyalInputRegression.Run(lm,Check);
+                capture=RoyalReviewAudioCapture.Begin();
                 for(int n=3;n<=5;n++)
                 {
                     Seed();yield return null;SetColours();for(int x=1;x<=n;x++)At(x,3).SetColor(0);
@@ -177,6 +180,7 @@ namespace RoyalThrone.Editor
                 float timeout=Time.realtimeSinceStartup+15;while(lm.DragBlocked&&Time.realtimeSinceStartup<timeout)yield return null;
                 Check(!lm.DragBlocked&&!RoyalPowerupDirector.Busy,"Live gravity/refill/cascade finishes and input returns");
                 Check(lm.GetItems().Where(i=>i).All(i=>!i.destroying&&!i.falling&&i.square.item==i),"Refill has valid square ownership and no falling leftovers");
+                if(capture)capture.End();capture=null;
                 recording=true;previous=0;EditorApplication.update+=Frame;for(int i=0;i<12;i++){RoyalPowerupDirector.Get.Preview(i%2==0?"TNT":"Rocket",Vector3.zero);yield return new WaitForSeconds(.12f);}yield return new WaitForSeconds(.8f);recording=false;EditorApplication.update-=Frame;
                 Check(RoyalAudioDirector.Get.PeakVoices<=RoyalEffectsProfile.Get.soundVoices,"Simultaneous audio stays within voice cap");
                 Check(RoyalPowerupDirector.Get.PeakProjectiles<=RoyalEffectsProfile.Get.projectilePool,"Projectiles stay within pool cap");
@@ -294,15 +298,16 @@ namespace RoyalThrone.Editor
             RoyalCelebration.Play(4);yield return new WaitForSeconds(.25f);
             yield return CaptureFrame("celebration-bravo");
         }
-        static void Capture(string name){if(UnityEngine.Application.isBatchMode)return;RoyalRegressionRunner.Run(CaptureFrame(name));} // batchmode has no Game view to read
+        static void Capture(string name) => RoyalRegressionRunner.Run(CaptureFrame(name));
         static IEnumerator CaptureFrame(string name)
         {
             // Read the completed Game view, not an intermediate Editor render target.
-            if(UnityEngine.Application.isBatchMode)yield break;yield return new WaitForEndOfFrame();Directory.CreateDirectory(Folder);
+            yield return new WaitForEndOfFrame();Directory.CreateDirectory(Folder);
             var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+".png",tex.EncodeToPNG());Object.Destroy(tex);
         }
         static void Finish()
         {
+            if(capture)capture.End();capture=null;
             recording=false;EditorApplication.update-=Frame;Application.logMessageReceived-=Log;Time.timeScale=1;
             if(hadMotion)PlayerPrefs.SetInt("RoyalThrone.HomeMotion",originalMotion);else PlayerPrefs.DeleteKey("RoyalThrone.HomeMotion");
             CandyShatterService.Instance.Clear();MatchVFXService.Instance.Clear();lm.GetComponent<RoyalCelebration>()?.Cancel();

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: spine-unity::Spine.Unity.SpineAtlasAsset
   atlasFile: {fileID: 4900000, guid: 8ab1933ab4106ef45803e1a669b3d2b4, type: 3}
   materials:
-  - {fileID: 2100000, guid: 13f29ff467e654693ac80628d32bba9d, type: 2}
+  - {fileID: 2100000, guid: df257a8f6a355264eb714b74c90f3b03, type: 2}

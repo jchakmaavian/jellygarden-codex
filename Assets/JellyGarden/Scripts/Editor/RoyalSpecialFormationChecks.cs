@@ -14,7 +14,7 @@ namespace RoyalThrone.Editor
         public static IEnumerator Run(LevelManager lm, Action<bool,string> report, ItemsTypes type, string shape)
         {
             Action<bool,string> check = (ok, message) => report(ok, shape + ": " + message);
-            string folder="Logs/port-checks/QaFeedback/07-SpecialFormation/reveals-restored/"+shape+"/raw/";
+            string folder="Design/QaFeedback/07-SpecialFormation/reveals-restored/"+shape+"/raw/";
             Directory.CreateDirectory(folder);
             float oldCapture=Time.captureDeltaTime;
             try
@@ -39,7 +39,7 @@ namespace RoyalThrone.Editor
                     int frame=0,gatherFrames=0,createdAtHandoff=-1;float firstDistance=-1,lastDistance=-1;
                     while(frame<fps*2)
                     {
-                        yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
+                        yield return new WaitForEndOfFrame();
                         var gems=Object.FindObjectsByType<SpriteRenderer>().Where(s=>s.name=="Special gathering gem").ToArray();
                         if(gems.Length>0){
                             gatherFrames++;sawFour|=gems.Length==items.Length;
@@ -54,7 +54,7 @@ namespace RoyalThrone.Editor
                             if(!paused&&gatherFrames==3){
                                 paused=true;lm.gameStatus=GameState.Pause;
                                 var positions=gems.Select(g=>g.transform.position).ToArray();
-                                yield return null;yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
+                                yield return null;yield return new WaitForEndOfFrame();
                                 check(gems.Select((g,i)=>Vector3.Distance(g.transform.position,positions[i])<.0001f).All(v=>v),fps+" FPS: gathering pauses without movement");
                                 lm.gameStatus=GameState.Playing;
                             }
@@ -71,7 +71,7 @@ namespace RoyalThrone.Editor
                                 }
                             }
                         }
-                        if(fps==60&&frame<85&&!UnityEngine.Application.isBatchMode){var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(folder+frame.ToString("D3")+".png",tex.EncodeToPNG());Object.Destroy(tex);}
+                        if(fps==60&&frame<85){var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(folder+frame.ToString("D3")+".png",tex.EncodeToPNG());Object.Destroy(tex);}
                         frame++;
                     }
                     check(sawFour,fps+" FPS: all matched gems gather together");

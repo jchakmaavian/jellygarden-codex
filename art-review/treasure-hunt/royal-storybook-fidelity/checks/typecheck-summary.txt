@@ -1,3 +1,0 @@
-Build succeeded.
-    96 Warning(s)
-    0 Error(s)

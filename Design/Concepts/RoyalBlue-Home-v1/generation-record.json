@@ -1,0 +1,77 @@
+{
+  "tool": "Built-in image_gen",
+  "date": "2026-09-13",
+  "status": "Design preview only",
+  "records": [
+    {
+      "key": "home-castle",
+      "prompt": "Use case: style-transfer. Asset: portrait mobile-game home environment, background only. Image 1 is the Royal Throne castle identity and exact smooth 3D material/palette reference. Image 2 is a LAYOUT reference only; do not reproduce its castle architecture or UI. Pull the camera back from Image 1 to show the full ivory Royal Throne palace as a welcoming central home hub: preserve its rounded towers, sapphire conical roofs, central blue dome, gold roof finials, blue crown banners, warm gold windows and chunky smooth modeled forms. Expand the grounds into a symmetrical courtyard with a small ivory-and-gold fountain, pale lavender stone paths, low muted sage hedges and restrained blue/ivory flowers. Pale distant mountains and a little blue water behind the grounds. Portrait 9:20 layout: clean cobalt-to-periwinkle sky in top 16% for a separate resource HUD; complete castle spires visible starting around 20%, castle gate around 63%, fountain at 75%; quiet paved foreground at bottom 18% for separate buttons and navigation. Palace is broad, substantial and grand, never thin or crooked. Define the game identity with ROYAL BLUE, IVORY and GOLD; greenery muted and secondary. Smooth polished polygon-modeled 3D mobile game render, soft rounded bevels, excellent ambient occlusion, broad specular highlights, soft sunlight, no photographic texture. Friendly bright prestigious atmosphere. Entire environment only: no text, logos, UI buttons, interface panels, floating icons, game pieces, rays, people or watermark. High quality portrait composition.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-c67fb2a9-4c7e-4dfc-8506-0b6064dd6275.png"
+    },
+    {
+      "key": "button-crowned-blank",
+      "prompt": "Create one isolated blank game UI button sprite. A wide horizontal pill-like rounded rectangle of saturated sapphire-blue convex enamel, with a thick polished warm golden beveled rim. A small three-point gold crown with a blue sapphire gem rises from the top center. Short curled gold scroll handles at left and right edges. The blue face is COMPLETELY BLANK for a dynamic level number to be added later. Smooth 3D toy render, upper-left highlights, straight-on orthographic view. Overall silhouette about 2.7 times wider than tall including crown. Center on a square canvas with ample empty space above and below. Output a PNG with real alpha-channel transparent background. No text, no letters, no digits, no checkerboard, no background color, no scene, no throne or furniture. Only the single isolated blank blue-and-gold crowned button.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-a7d22b06-ef2e-4455-8aa0-cfc119279868.png"
+    },
+    {
+      "key": "avatar-king",
+      "prompt": "Use case: stylized-concept. Asset: Royal Throne player-profile avatar sprite. A friendly original young-adult storybook king, shoulder-length wavy deep-brown hair swept back, neatly trimmed short beard, warm brown eyes, welcoming confident smile, light-medium warm skin, simple gold crown with one sapphire, royal-blue tunic and ivory collar. Head and shoulders in a near-frontal three-quarter pose, looking toward the viewer. Smooth polished rounded 3D mobile game render, sculpted toy-like forms, broad gentle highlights, clean rich colors, sapphire blue ivory gold palette, no realistic skin texture. Compact clear silhouette readable at 48 pixels. Do not imitate an existing game's king character. One isolated portrait on genuine transparent background, entire crown and shoulders within square frame with margin. No frame, text, logo or watermark.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-e9f6261e-b99f-471e-a7ef-10518a90d977.png"
+    },
+    {
+      "key": "icon-coin",
+      "prompt": "Use case: stylized-concept. Asset: one separate high-quality Royal Throne mobile-game UI sprite. One thick polished gold coin, nearly frontal with a slight turn, with an embossed simple three-tip crown emblem centered on its face, stepped raised gold rim. Shared style: smooth polished polygon-modeled 3D render, rounded toy-like bevels, clean silhouette readable at 40 pixels, rich saturated sapphire blue and warm gold with ivory highlights, soft studio lighting from upper left, gentle local contact shading, no realistic textures or gritty detail. Center the single complete object in a square with 10 percent clear margin. Genuine TRANSPARENT alpha background, not a white rectangle or checkerboard; no environment, frame around the canvas, words, numbers, captions, extra objects, rays or watermark. Consistent premium casual royal match-3 game art.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-5c91bf39-2c3f-4062-91df-46fccd298232.png"
+    },
+    {
+      "key": "icon-heart",
+      "prompt": "Create ONE isolated mobile game UI icon: a SIMPLE RED HEART SHAPE. The WHOLE object is a red heart: two rounded lobes at the top, a single point at the bottom, plush convex face, rich cherry red with one clean upper-left white highlight, soft smooth 3D toy bevel. No throne, no chair, no crown, no shield, no furniture, no surrounding decoration, no pedestal, no frame, no words, no digits. Bold simple silhouette readable at 32 px. Center the heart with 10% clear padding. Square PNG with genuine alpha-channel TRANSPARENT background, no checkerboard drawn.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-3744b6d8-4aee-4cfc-aa4f-7248b6d75059.png"
+    },
+    {
+      "key": "icon-star",
+      "prompt": "Create ONE isolated mobile game UI icon: a SIMPLE GOLD FIVE-POINTED STAR. The WHOLE object is a thick five-pointed golden star, softly rounded bevels, five equal points, warm honey gold sides and lemon gold upper-left highlight, smooth polished 3D toy render, nearly straight-on view. No throne, no chair, no crown, no shield, no furniture, no pedestal, no frame, no words, no digits. Bold simple silhouette readable at 32 px. Center with 10% clear padding. Square PNG with genuine alpha-channel TRANSPARENT background, no checkerboard drawn.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-760cdf7b-54fe-4e04-a118-d2109b3cf979.png"
+    },
+    {
+      "key": "icon-settings",
+      "prompt": "Use case: stylized-concept. Asset: one separate high-quality Royal Throne mobile-game UI sprite. One compact circular sapphire enamel button with a polished thick gold rim and a raised clean gold six-tooth gear with navy-blue circular hole in the middle. Straight-on. Shared style: smooth polished polygon-modeled 3D render, rounded toy-like bevels, clean silhouette readable at 40 pixels, rich saturated sapphire blue and warm gold with ivory highlights, soft studio lighting from upper left, gentle local contact shading, no realistic textures or gritty detail. Center the single complete object in a square with 10 percent clear margin. Genuine TRANSPARENT alpha background, not a white rectangle or checkerboard; no environment, frame around the canvas, words, numbers, captions, extra objects, rays or watermark. Consistent premium casual royal match-3 game art.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-f0353c2b-f0f4-4696-b576-ec62810bddb5.png"
+    },
+    {
+      "key": "icon-chest",
+      "prompt": "Use case: stylized-concept. Asset: one separate high-quality Royal Throne mobile-game UI sprite. One closed royal treasure chest, slightly three-quarter view, rounded sapphire-blue lid and body, thick sculpted gold corner bands, little gold crown-shaped lock plate with sapphire jewel. Blue and gold, small purple side accents. No contents visible. Shared style: smooth polished polygon-modeled 3D render, rounded toy-like bevels, clean silhouette readable at 40 pixels, rich saturated sapphire blue and warm gold with ivory highlights, soft studio lighting from upper left, gentle local contact shading, no realistic textures or gritty detail. Center the single complete object in a square with 10 percent clear margin. Genuine TRANSPARENT alpha background, not a white rectangle or checkerboard; no environment, frame around the canvas, words, numbers, captions, extra objects, rays or watermark. Consistent premium casual royal match-3 game art.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-0e08f364-5120-4899-8fa8-48880a7f5d65.png"
+    },
+    {
+      "key": "icon-story",
+      "prompt": "Use case: stylized-concept. Asset: one separate high-quality Royal Throne mobile-game UI sprite. One chunky closed royal storybook upright, front cover rich royal blue with warm gold frame and a raised gold five-point star, short ivory ribbon bookmark, slight three-quarter view, small purple spine. Shared style: smooth polished polygon-modeled 3D render, rounded toy-like bevels, clean silhouette readable at 40 pixels, rich saturated sapphire blue and warm gold with ivory highlights, soft studio lighting from upper left, gentle local contact shading, no realistic textures or gritty detail. Center the single complete object in a square with 10 percent clear margin. Genuine TRANSPARENT alpha background, not a white rectangle or checkerboard; no environment, frame around the canvas, words, numbers, captions, extra objects, rays or watermark. Consistent premium casual royal match-3 game art.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-9f8ebd8f-3fed-43a0-8108-13794f0639f9.png"
+    },
+    {
+      "key": "icon-trophy",
+      "prompt": "Use case: stylized-concept. Asset: one separate high-quality Royal Throne mobile-game UI sprite. One prestigious small golden trophy cup, broad rounded bowl, two simple curled handles, thick short stem on a square sapphire-blue pedestal with a gold foot. No inscriptions. Shared style: smooth polished polygon-modeled 3D render, rounded toy-like bevels, clean silhouette readable at 40 pixels, rich saturated sapphire blue and warm gold with ivory highlights, soft studio lighting from upper left, gentle local contact shading, no realistic textures or gritty detail. Center the single complete object in a square with 10 percent clear margin. Genuine TRANSPARENT alpha background, not a white rectangle or checkerboard; no environment, frame around the canvas, words, numbers, captions, extra objects, rays or watermark. Consistent premium casual royal match-3 game art.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-b6be70d4-b2c3-4e11-9a11-4c3cac6a94ae.png"
+    },
+    {
+      "key": "icon-home",
+      "prompt": "Use case: stylized-concept. Asset: one separate high-quality Royal Throne mobile-game UI sprite. One miniature ivory Royal Throne palace icon, simple broad central building with gold arched doorway, central rounded sapphire dome, two chunky round side towers with conical sapphire roofs and gold finials. Three-quarter frontal view. Minimal blue crown banner. Clean compact silhouette. Shared style: smooth polished polygon-modeled 3D render, rounded toy-like bevels, clean silhouette readable at 40 pixels, rich saturated sapphire blue and warm gold with ivory highlights, soft studio lighting from upper left, gentle local contact shading, no realistic textures or gritty detail. Center the single complete object in a square with 10 percent clear margin. Genuine TRANSPARENT alpha background, not a white rectangle or checkerboard; no environment, frame around the canvas, words, numbers, captions, extra objects, rays or watermark. Consistent premium casual royal match-3 game art.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-cd7df616-3045-495d-a6e9-63317619d6a4.png"
+    },
+    {
+      "key": "icon-team",
+      "prompt": "Use case: stylized-concept. Asset: one separate high-quality Royal Throne mobile-game UI sprite. One friendly rounded sapphire-blue shield badge with a sculpted polished gold edge, three small simplified golden head-and-shoulder silhouettes grouped together, center person slightly raised. No text. Shared style: smooth polished polygon-modeled 3D render, rounded toy-like bevels, clean silhouette readable at 40 pixels, rich saturated sapphire blue and warm gold with ivory highlights, soft studio lighting from upper left, gentle local contact shading, no realistic textures or gritty detail. Center the single complete object in a square with 10 percent clear margin. Genuine TRANSPARENT alpha background, not a white rectangle or checkerboard; no environment, frame around the canvas, words, numbers, captions, extra objects, rays or watermark. Consistent premium casual royal match-3 game art.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-04fcc508-885e-4762-8e97-fb63f9772a4e.png"
+    },
+    {
+      "key": "icon-cards",
+      "prompt": "Use case: stylized-concept. Asset: one separate high-quality Royal Throne mobile-game UI sprite. A fan of three chunky collectible royal cards, rounded rectangular thick gold rims, sapphire-blue backs, center front card decorated with a large embossed golden three-tip crown and a tiny sapphire jewel. A little rich purple on rear card. No letters or numbers. Shared style: smooth polished polygon-modeled 3D render, rounded toy-like bevels, clean silhouette readable at 40 pixels, rich saturated sapphire blue and warm gold with ivory highlights, soft studio lighting from upper left, gentle local contact shading, no realistic textures or gritty detail. Center the single complete object in a square with 10 percent clear margin. Genuine TRANSPARENT alpha background, not a white rectangle or checkerboard; no environment, frame around the canvas, words, numbers, captions, extra objects, rays or watermark. Consistent premium casual royal match-3 game art.",
+      "source": "C:\\Users\\chakm\\.codex\\generated_images\\01a07f2d-f2b5-7123-a1e6-e3dba88553a7\\exec-e7dd1854-a859-4831-b541-c57147566b77.png"
+    }
+  ],
+  "iterationNotes": [
+    "Initial blank-button edits retained a baked checkerboard; replaced with a newly generated genuine-alpha blank crowned button.",
+    "Initial heart and star acquired unwanted throne shapes; replaced with simple heart and five-pointed star sprites.",
+    "The approved logo is copied byte-for-byte from the existing master; no new branding approval is implied."
+  ]
+}

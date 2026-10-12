@@ -1,4 +1,5 @@
-﻿// // ©2015 - 2026 Candy Smith
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -17,12 +18,22 @@ namespace JellyGarden.Scripts.System
 {
     public static class DateTimeManager
     {
+        // Dates are stored in the invariant round-trip format. Older saves used the device culture's format, which
+        // DateTime.Parse rejects after a language/region change (it threw in InitScript.Awake on every launch).
+        // A value that cannot be read in either form counts as "no date" instead of throwing.
+        static bool TryRead(string key, out DateTime date)
+        {
+            var s = PlayerPrefs.GetString(key);
+            date = DateTime.MinValue;
+            if (string.IsNullOrEmpty(s)) return false;
+            return DateTime.TryParse(s, global::System.Globalization.CultureInfo.InvariantCulture, global::System.Globalization.DateTimeStyles.RoundtripKind, out date)
+                || DateTime.TryParse(s, global::System.Globalization.CultureInfo.CurrentCulture, global::System.Globalization.DateTimeStyles.None, out date);
+        }
+
         public static bool IsDayPassed(string dateTime)
         {
-            var s = PlayerPrefs.GetString(dateTime);
-            if (s != "")
+            if (TryRead(dateTime, out var d))
             {
-                var d = DateTime.Parse(s);
                 if (DateTime.Now.Subtract(d).Days >= 1)
                 {
                     PlayerPrefs.SetInt(dateTime, 0);
@@ -35,11 +46,10 @@ namespace JellyGarden.Scripts.System
         }
         public static bool IsMinutesPassed(string dateTime)
         {
-            var s = PlayerPrefs.GetString(dateTime);
-            if (s != "")
+            if (TryRead(dateTime, out var d))
             {
-                var d = DateTime.Parse(s);
-                if (DateTime.Now.Subtract(d).Minutes >= 1)
+                // TotalMinutes, not Minutes: the Minutes component is 0 again after each full hour.
+                if (DateTime.Now.Subtract(d).TotalMinutes >= 1)
                 {
                     PlayerPrefs.SetInt(dateTime, 0);
                     return true;
@@ -52,11 +62,10 @@ namespace JellyGarden.Scripts.System
 
         public static bool IsHourPassed(string dateTime)
         {
-            var s = PlayerPrefs.GetString(dateTime);
-            if (s != "")
+            if (TryRead(dateTime, out var d))
             {
-                var d = DateTime.Parse(s);
-                if (DateTime.Now.Subtract(d).Hours >= 1)
+                // TotalHours, not Hours: the Hours component is 0 again after each full day.
+                if (DateTime.Now.Subtract(d).TotalHours >= 1)
                 {
                     PlayerPrefs.SetInt(dateTime, 0);
                     return true;
@@ -83,12 +92,12 @@ namespace JellyGarden.Scripts.System
 
         public static void SetDateTimeNow(string dateTime)
         {
-            PlayerPrefs.SetString(dateTime, DateTime.Now.ToString());
+            PlayerPrefs.SetString(dateTime, DateTime.Now.ToString("o", global::System.Globalization.CultureInfo.InvariantCulture));
         }
 
         public static DateTime GetLastDateTime(string dateTime)
         {
-            return DateTime.Parse(PlayerPrefs.GetString(dateTime, DateTime.Now.ToString()));
+            return TryRead(dateTime, out var d) ? d : DateTime.Now;
         }
 
     }

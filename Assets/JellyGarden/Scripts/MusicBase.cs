@@ -29,6 +29,7 @@ namespace JellyGarden.Scripts
         }
 
         public void PlayMusic(int index, bool loop = true) {
+            if (Juice.RoyalAudioDirector.Get) { if (_audioSource) _audioSource.Stop(); return; }
             if (_audioSource && index < music.Length) {
                 _audioSource.clip = music[index];
                 _audioSource.loop = loop;

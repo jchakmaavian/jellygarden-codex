@@ -1,0 +1,374 @@
+PASS Player profile isolated before all combo checks
+EDITOR ONLY: Unity Search startup exception excluded from runtime checks
+PASS RocketH-RocketH at 30 FPS: real pair starts
+PASS RocketH-RocketH at 30 FPS: gameplay completes without stuck resolver
+PASS RocketH-RocketH at 30 FPS: live VFX render with supported shaders
+PASS RocketH-RocketH at 30 FPS: presentation adds no extra move debit
+PASS RocketH-RocketH at 30 FPS: actors and VFX tails retire
+PASS RocketH-RocketH at 30 FPS: every conversion input lock released
+PASS RocketH-RocketV at 30 FPS: real pair starts
+PASS RocketH-RocketV at 30 FPS: gameplay completes without stuck resolver
+PASS RocketH-RocketV at 30 FPS: live VFX render with supported shaders
+PASS RocketH-RocketV at 30 FPS: presentation adds no extra move debit
+PASS RocketH-RocketV at 30 FPS: actors and VFX tails retire
+PASS RocketH-RocketV at 30 FPS: every conversion input lock released
+PASS RocketV-RocketV at 30 FPS: real pair starts
+PASS RocketV-RocketV at 30 FPS: gameplay completes without stuck resolver
+PASS RocketV-RocketV at 30 FPS: live VFX render with supported shaders
+PASS RocketV-RocketV at 30 FPS: presentation adds no extra move debit
+PASS RocketV-RocketV at 30 FPS: actors and VFX tails retire
+PASS RocketV-RocketV at 30 FPS: every conversion input lock released
+PASS TNT-TNT at 30 FPS: real pair starts
+PASS TNT-TNT at 30 FPS: gameplay completes without stuck resolver
+PASS TNT-TNT at 30 FPS: live VFX render with supported shaders
+PASS TNT-TNT at 30 FPS: presentation adds no extra move debit
+PASS TNT-TNT at 30 FPS: dedicated native body actually used
+PASS TNT-TNT at 30 FPS: authored duration retained
+PASS TNT-TNT at 30 FPS: fuse and combo blast particles render
+PASS TNT-TNT at 30 FPS: actors and VFX tails retire
+PASS TNT-TNT at 30 FPS: every conversion input lock released
+PASS Propeller-Propeller at 30 FPS: real pair starts
+PASS Propeller-Propeller at 30 FPS: gameplay completes without stuck resolver
+PASS Propeller-Propeller at 30 FPS: live VFX render with supported shaders
+PASS Propeller-Propeller at 30 FPS: presentation adds no extra move debit
+PASS Propeller-Propeller at 30 FPS: actors and VFX tails retire
+PASS Propeller-Propeller at 30 FPS: every conversion input lock released
+PASS Colorball-Colorball at 30 FPS: real pair starts
+PASS Colorball-Colorball at 30 FPS: gameplay completes without stuck resolver
+PASS Colorball-Colorball at 30 FPS: live VFX render with supported shaders
+PASS Colorball-Colorball at 30 FPS: presentation adds no extra move debit
+PASS Colorball-Colorball at 30 FPS: one native dual sequence and 64 selected cells
+PASS Colorball-Colorball at 30 FPS: native charge and rainbow blast render
+PASS Colorball-Colorball at 30 FPS: actors and VFX tails retire
+PASS Colorball-Colorball at 30 FPS: every conversion input lock released
+PASS RocketH-TNT at 30 FPS: real pair starts
+PASS RocketH-TNT at 30 FPS: gameplay completes without stuck resolver
+PASS RocketH-TNT at 30 FPS: live VFX render with supported shaders
+PASS RocketH-TNT at 30 FPS: presentation adds no extra move debit
+PASS RocketH-TNT at 30 FPS: dedicated combo owner used
+PASS RocketH-TNT at 30 FPS: dedicated charge and combo blast render
+PASS RocketH-TNT at 30 FPS: actors and VFX tails retire
+PASS RocketH-TNT at 30 FPS: every conversion input lock released
+PASS RocketV-TNT at 30 FPS: real pair starts
+PASS RocketV-TNT at 30 FPS: gameplay completes without stuck resolver
+PASS RocketV-TNT at 30 FPS: live VFX render with supported shaders
+PASS RocketV-TNT at 30 FPS: presentation adds no extra move debit
+PASS RocketV-TNT at 30 FPS: dedicated combo owner used
+PASS RocketV-TNT at 30 FPS: dedicated charge and combo blast render
+PASS RocketV-TNT at 30 FPS: actors and VFX tails retire
+PASS RocketV-TNT at 30 FPS: every conversion input lock released
+PASS Propeller-RocketH at 30 FPS: real pair starts
+PASS Propeller-RocketH at 30 FPS: gameplay completes without stuck resolver
+PASS Propeller-RocketH at 30 FPS: live VFX render with supported shaders
+PASS Propeller-RocketH at 30 FPS: combo explosion waits for contact
+PASS Propeller-RocketH at 30 FPS: presentation adds no extra move debit
+PASS Propeller-RocketH at 30 FPS: carried booster handed to existing damage owner once
+PASS Propeller-RocketH at 30 FPS: actors and VFX tails retire
+PASS Propeller-RocketH at 30 FPS: every conversion input lock released
+PASS Propeller-RocketV at 30 FPS: real pair starts
+PASS Propeller-RocketV at 30 FPS: gameplay completes without stuck resolver
+PASS Propeller-RocketV at 30 FPS: live VFX render with supported shaders
+PASS Propeller-RocketV at 30 FPS: combo explosion waits for contact
+PASS Propeller-RocketV at 30 FPS: presentation adds no extra move debit
+PASS Propeller-RocketV at 30 FPS: carried booster handed to existing damage owner once
+PASS Propeller-RocketV at 30 FPS: actors and VFX tails retire
+PASS Propeller-RocketV at 30 FPS: every conversion input lock released
+PASS Propeller-TNT at 30 FPS: real pair starts
+PASS Propeller-TNT at 30 FPS: gameplay completes without stuck resolver
+PASS Propeller-TNT at 30 FPS: live VFX render with supported shaders
+PASS Propeller-TNT at 30 FPS: presentation adds no extra move debit
+PASS Propeller-TNT at 30 FPS: carried booster handed to existing damage owner once
+PASS Propeller-TNT at 30 FPS: actors and VFX tails retire
+PASS Propeller-TNT at 30 FPS: every conversion input lock released
+PASS Colorball-RocketH at 30 FPS: real pair starts
+PASS Colorball-RocketH at 30 FPS: gameplay completes without stuck resolver
+PASS Colorball-RocketH at 30 FPS: live VFX render with supported shaders
+PASS Colorball-RocketH at 30 FPS: presentation adds no extra move debit
+PASS Colorball-RocketH at 30 FPS: every selected gem converts before booster handoff
+PASS Colorball-RocketH at 30 FPS: actors and VFX tails retire
+PASS Colorball-RocketH at 30 FPS: every conversion input lock released
+PASS Colorball-RocketV at 30 FPS: real pair starts
+PASS Colorball-RocketV at 30 FPS: gameplay completes without stuck resolver
+PASS Colorball-RocketV at 30 FPS: live VFX render with supported shaders
+PASS Colorball-RocketV at 30 FPS: presentation adds no extra move debit
+PASS Colorball-RocketV at 30 FPS: every selected gem converts before booster handoff
+PASS Colorball-RocketV at 30 FPS: actors and VFX tails retire
+PASS Colorball-RocketV at 30 FPS: every conversion input lock released
+PASS Colorball-TNT at 30 FPS: real pair starts
+PASS Colorball-TNT at 30 FPS: gameplay completes without stuck resolver
+PASS Colorball-TNT at 30 FPS: live VFX render with supported shaders
+PASS Colorball-TNT at 30 FPS: presentation adds no extra move debit
+PASS Colorball-TNT at 30 FPS: every selected gem converts before booster handoff
+PASS Colorball-TNT at 30 FPS: actors and VFX tails retire
+PASS Colorball-TNT at 30 FPS: every conversion input lock released
+PASS Colorball-Propeller at 30 FPS: real pair starts
+PASS Colorball-Propeller at 30 FPS: gameplay completes without stuck resolver
+PASS Colorball-Propeller at 30 FPS: live VFX render with supported shaders
+PASS Colorball-Propeller at 30 FPS: presentation adds no extra move debit
+PASS Colorball-Propeller at 30 FPS: every selected gem converts before booster handoff
+PASS Colorball-Propeller at 30 FPS: actors and VFX tails retire
+PASS Colorball-Propeller at 30 FPS: every conversion input lock released
+PASS RocketH-RocketH at 15 FPS: real pair starts
+PASS RocketH-RocketH at 15 FPS: gameplay completes without stuck resolver
+PASS RocketH-RocketH at 15 FPS: live VFX render with supported shaders
+PASS RocketH-RocketH at 15 FPS: presentation adds no extra move debit
+PASS RocketH-RocketH at 15 FPS: actors and VFX tails retire
+PASS RocketH-RocketH at 15 FPS: every conversion input lock released
+PASS RocketH-RocketV at 15 FPS: real pair starts
+PASS RocketH-RocketV at 15 FPS: gameplay completes without stuck resolver
+PASS RocketH-RocketV at 15 FPS: live VFX render with supported shaders
+PASS RocketH-RocketV at 15 FPS: presentation adds no extra move debit
+PASS RocketH-RocketV at 15 FPS: actors and VFX tails retire
+PASS RocketH-RocketV at 15 FPS: every conversion input lock released
+PASS RocketV-RocketV at 15 FPS: real pair starts
+PASS RocketV-RocketV at 15 FPS: gameplay completes without stuck resolver
+PASS RocketV-RocketV at 15 FPS: live VFX render with supported shaders
+PASS RocketV-RocketV at 15 FPS: presentation adds no extra move debit
+PASS RocketV-RocketV at 15 FPS: actors and VFX tails retire
+PASS RocketV-RocketV at 15 FPS: every conversion input lock released
+PASS TNT-TNT at 15 FPS: real pair starts
+PASS TNT-TNT at 15 FPS: gameplay completes without stuck resolver
+PASS TNT-TNT at 15 FPS: live VFX render with supported shaders
+PASS TNT-TNT at 15 FPS: presentation adds no extra move debit
+PASS TNT-TNT at 15 FPS: dedicated native body actually used
+PASS TNT-TNT at 15 FPS: authored duration retained
+PASS TNT-TNT at 15 FPS: fuse and combo blast particles render
+PASS TNT-TNT at 15 FPS: actors and VFX tails retire
+PASS TNT-TNT at 15 FPS: every conversion input lock released
+PASS Propeller-Propeller at 15 FPS: real pair starts
+PASS Propeller-Propeller at 15 FPS: gameplay completes without stuck resolver
+PASS Propeller-Propeller at 15 FPS: live VFX render with supported shaders
+PASS Propeller-Propeller at 15 FPS: presentation adds no extra move debit
+PASS Propeller-Propeller at 15 FPS: actors and VFX tails retire
+PASS Propeller-Propeller at 15 FPS: every conversion input lock released
+PASS Colorball-Colorball at 15 FPS: real pair starts
+PASS Colorball-Colorball at 15 FPS: gameplay completes without stuck resolver
+PASS Colorball-Colorball at 15 FPS: live VFX render with supported shaders
+PASS Colorball-Colorball at 15 FPS: presentation adds no extra move debit
+PASS Colorball-Colorball at 15 FPS: one native dual sequence and 64 selected cells
+PASS Colorball-Colorball at 15 FPS: native charge and rainbow blast render
+PASS Colorball-Colorball at 15 FPS: actors and VFX tails retire
+PASS Colorball-Colorball at 15 FPS: every conversion input lock released
+PASS RocketH-TNT at 15 FPS: real pair starts
+PASS RocketH-TNT at 15 FPS: gameplay completes without stuck resolver
+PASS RocketH-TNT at 15 FPS: live VFX render with supported shaders
+PASS RocketH-TNT at 15 FPS: presentation adds no extra move debit
+PASS RocketH-TNT at 15 FPS: dedicated combo owner used
+PASS RocketH-TNT at 15 FPS: dedicated charge and combo blast render
+PASS RocketH-TNT at 15 FPS: actors and VFX tails retire
+PASS RocketH-TNT at 15 FPS: every conversion input lock released
+PASS RocketV-TNT at 15 FPS: real pair starts
+PASS RocketV-TNT at 15 FPS: gameplay completes without stuck resolver
+PASS RocketV-TNT at 15 FPS: live VFX render with supported shaders
+PASS RocketV-TNT at 15 FPS: presentation adds no extra move debit
+PASS RocketV-TNT at 15 FPS: dedicated combo owner used
+PASS RocketV-TNT at 15 FPS: dedicated charge and combo blast render
+PASS RocketV-TNT at 15 FPS: actors and VFX tails retire
+PASS RocketV-TNT at 15 FPS: every conversion input lock released
+PASS Propeller-RocketH at 15 FPS: real pair starts
+PASS Propeller-RocketH at 15 FPS: gameplay completes without stuck resolver
+PASS Propeller-RocketH at 15 FPS: live VFX render with supported shaders
+PASS Propeller-RocketH at 15 FPS: combo explosion waits for contact
+PASS Propeller-RocketH at 15 FPS: presentation adds no extra move debit
+PASS Propeller-RocketH at 15 FPS: carried booster handed to existing damage owner once
+PASS Propeller-RocketH at 15 FPS: actors and VFX tails retire
+PASS Propeller-RocketH at 15 FPS: every conversion input lock released
+PASS Propeller-RocketV at 15 FPS: real pair starts
+PASS Propeller-RocketV at 15 FPS: gameplay completes without stuck resolver
+PASS Propeller-RocketV at 15 FPS: live VFX render with supported shaders
+PASS Propeller-RocketV at 15 FPS: combo explosion waits for contact
+PASS Propeller-RocketV at 15 FPS: presentation adds no extra move debit
+PASS Propeller-RocketV at 15 FPS: carried booster handed to existing damage owner once
+PASS Propeller-RocketV at 15 FPS: actors and VFX tails retire
+PASS Propeller-RocketV at 15 FPS: every conversion input lock released
+PASS Propeller-TNT at 15 FPS: real pair starts
+PASS Propeller-TNT at 15 FPS: gameplay completes without stuck resolver
+PASS Propeller-TNT at 15 FPS: live VFX render with supported shaders
+PASS Propeller-TNT at 15 FPS: presentation adds no extra move debit
+PASS Propeller-TNT at 15 FPS: carried booster handed to existing damage owner once
+PASS Propeller-TNT at 15 FPS: actors and VFX tails retire
+PASS Propeller-TNT at 15 FPS: every conversion input lock released
+PASS Colorball-RocketH at 15 FPS: real pair starts
+PASS Colorball-RocketH at 15 FPS: gameplay completes without stuck resolver
+PASS Colorball-RocketH at 15 FPS: live VFX render with supported shaders
+PASS Colorball-RocketH at 15 FPS: presentation adds no extra move debit
+PASS Colorball-RocketH at 15 FPS: every selected gem converts before booster handoff
+PASS Colorball-RocketH at 15 FPS: actors and VFX tails retire
+PASS Colorball-RocketH at 15 FPS: every conversion input lock released
+PASS Colorball-RocketV at 15 FPS: real pair starts
+PASS Colorball-RocketV at 15 FPS: gameplay completes without stuck resolver
+PASS Colorball-RocketV at 15 FPS: live VFX render with supported shaders
+PASS Colorball-RocketV at 15 FPS: presentation adds no extra move debit
+PASS Colorball-RocketV at 15 FPS: every selected gem converts before booster handoff
+PASS Colorball-RocketV at 15 FPS: actors and VFX tails retire
+PASS Colorball-RocketV at 15 FPS: every conversion input lock released
+PASS Colorball-TNT at 15 FPS: real pair starts
+PASS Colorball-TNT at 15 FPS: gameplay completes without stuck resolver
+PASS Colorball-TNT at 15 FPS: live VFX render with supported shaders
+PASS Colorball-TNT at 15 FPS: presentation adds no extra move debit
+PASS Colorball-TNT at 15 FPS: every selected gem converts before booster handoff
+PASS Colorball-TNT at 15 FPS: actors and VFX tails retire
+PASS Colorball-TNT at 15 FPS: every conversion input lock released
+PASS Colorball-Propeller at 15 FPS: real pair starts
+PASS Colorball-Propeller at 15 FPS: gameplay completes without stuck resolver
+PASS Colorball-Propeller at 15 FPS: live VFX render with supported shaders
+PASS Colorball-Propeller at 15 FPS: presentation adds no extra move debit
+PASS Colorball-Propeller at 15 FPS: every selected gem converts before booster handoff
+PASS Colorball-Propeller at 15 FPS: actors and VFX tails retire
+PASS Colorball-Propeller at 15 FPS: every conversion input lock released
+PASS RocketH-RocketH at 60 FPS: real pair starts
+PASS RocketH-RocketH at 60 FPS: native particles pause without advancing
+PASS RocketH-RocketH at 60 FPS: gameplay completes without stuck resolver
+PASS RocketH-RocketH at 60 FPS: live VFX render with supported shaders
+PASS RocketH-RocketH at 60 FPS: presentation adds no extra move debit
+PASS RocketH-RocketH at 60 FPS: actors and VFX tails retire
+PASS RocketH-RocketH at 60 FPS: every conversion input lock released
+PASS RocketH-RocketV at 60 FPS: real pair starts
+PASS RocketH-RocketV at 60 FPS: native particles pause without advancing
+PASS RocketH-RocketV at 60 FPS: gameplay completes without stuck resolver
+PASS RocketH-RocketV at 60 FPS: live VFX render with supported shaders
+PASS RocketH-RocketV at 60 FPS: presentation adds no extra move debit
+PASS RocketH-RocketV at 60 FPS: actors and VFX tails retire
+PASS RocketH-RocketV at 60 FPS: every conversion input lock released
+PASS RocketV-RocketV at 60 FPS: real pair starts
+PASS RocketV-RocketV at 60 FPS: native particles pause without advancing
+PASS RocketV-RocketV at 60 FPS: gameplay completes without stuck resolver
+PASS RocketV-RocketV at 60 FPS: live VFX render with supported shaders
+PASS RocketV-RocketV at 60 FPS: presentation adds no extra move debit
+PASS RocketV-RocketV at 60 FPS: actors and VFX tails retire
+PASS RocketV-RocketV at 60 FPS: every conversion input lock released
+PASS TNT-TNT at 60 FPS: real pair starts
+PASS TNT-TNT at 60 FPS: native particles pause without advancing
+PASS TNT-TNT at 60 FPS: gameplay completes without stuck resolver
+PASS TNT-TNT at 60 FPS: live VFX render with supported shaders
+PASS TNT-TNT at 60 FPS: presentation adds no extra move debit
+PASS TNT-TNT at 60 FPS: dedicated native body actually used
+PASS TNT-TNT at 60 FPS: authored duration retained
+PASS TNT-TNT at 60 FPS: fuse and combo blast particles render
+PASS TNT-TNT at 60 FPS: actors and VFX tails retire
+PASS TNT-TNT at 60 FPS: every conversion input lock released
+PASS Propeller-Propeller at 60 FPS: real pair starts
+PASS Propeller-Propeller at 60 FPS: native particles pause without advancing
+PASS Propeller-Propeller at 60 FPS: gameplay completes without stuck resolver
+PASS Propeller-Propeller at 60 FPS: live VFX render with supported shaders
+PASS Propeller-Propeller at 60 FPS: presentation adds no extra move debit
+PASS Propeller-Propeller at 60 FPS: actors and VFX tails retire
+PASS Propeller-Propeller at 60 FPS: every conversion input lock released
+PASS Colorball-Colorball at 60 FPS: real pair starts
+PASS Colorball-Colorball at 60 FPS: native particles pause without advancing
+PASS Colorball-Colorball at 60 FPS: gameplay completes without stuck resolver
+PASS Colorball-Colorball at 60 FPS: live VFX render with supported shaders
+PASS Colorball-Colorball at 60 FPS: presentation adds no extra move debit
+PASS Colorball-Colorball at 60 FPS: one native dual sequence and 64 selected cells
+PASS Colorball-Colorball at 60 FPS: native charge and rainbow blast render
+PASS Colorball-Colorball at 60 FPS: actors and VFX tails retire
+PASS Colorball-Colorball at 60 FPS: every conversion input lock released
+PASS RocketH-TNT at 60 FPS: real pair starts
+PASS RocketH-TNT at 60 FPS: native particles pause without advancing
+PASS RocketH-TNT at 60 FPS: gameplay completes without stuck resolver
+PASS RocketH-TNT at 60 FPS: live VFX render with supported shaders
+PASS RocketH-TNT at 60 FPS: presentation adds no extra move debit
+PASS RocketH-TNT at 60 FPS: dedicated combo owner used
+PASS RocketH-TNT at 60 FPS: dedicated charge and combo blast render
+PASS RocketH-TNT at 60 FPS: actors and VFX tails retire
+PASS RocketH-TNT at 60 FPS: every conversion input lock released
+PASS RocketV-TNT at 60 FPS: real pair starts
+PASS RocketV-TNT at 60 FPS: native particles pause without advancing
+PASS RocketV-TNT at 60 FPS: gameplay completes without stuck resolver
+PASS RocketV-TNT at 60 FPS: live VFX render with supported shaders
+PASS RocketV-TNT at 60 FPS: presentation adds no extra move debit
+PASS RocketV-TNT at 60 FPS: dedicated combo owner used
+PASS RocketV-TNT at 60 FPS: dedicated charge and combo blast render
+PASS RocketV-TNT at 60 FPS: actors and VFX tails retire
+PASS RocketV-TNT at 60 FPS: every conversion input lock released
+PASS Propeller-RocketH at 60 FPS: real pair starts
+PASS Propeller-RocketH at 60 FPS: native particles pause without advancing
+PASS Propeller-RocketH at 60 FPS: gameplay completes without stuck resolver
+PASS Propeller-RocketH at 60 FPS: live VFX render with supported shaders
+PASS Propeller-RocketH at 60 FPS: combo explosion waits for contact
+PASS Propeller-RocketH at 60 FPS: presentation adds no extra move debit
+PASS Propeller-RocketH at 60 FPS: carried booster handed to existing damage owner once
+PASS Propeller-RocketH at 60 FPS: actors and VFX tails retire
+PASS Propeller-RocketH at 60 FPS: every conversion input lock released
+PASS Propeller-RocketV at 60 FPS: real pair starts
+PASS Propeller-RocketV at 60 FPS: native particles pause without advancing
+PASS Propeller-RocketV at 60 FPS: gameplay completes without stuck resolver
+PASS Propeller-RocketV at 60 FPS: live VFX render with supported shaders
+PASS Propeller-RocketV at 60 FPS: combo explosion waits for contact
+PASS Propeller-RocketV at 60 FPS: presentation adds no extra move debit
+PASS Propeller-RocketV at 60 FPS: carried booster handed to existing damage owner once
+PASS Propeller-RocketV at 60 FPS: actors and VFX tails retire
+PASS Propeller-RocketV at 60 FPS: every conversion input lock released
+PASS Propeller-TNT at 60 FPS: real pair starts
+PASS Propeller-TNT at 60 FPS: native particles pause without advancing
+PASS Propeller-TNT at 60 FPS: gameplay completes without stuck resolver
+PASS Propeller-TNT at 60 FPS: live VFX render with supported shaders
+PASS Propeller-TNT at 60 FPS: presentation adds no extra move debit
+PASS Propeller-TNT at 60 FPS: carried booster handed to existing damage owner once
+PASS Propeller-TNT at 60 FPS: actors and VFX tails retire
+PASS Propeller-TNT at 60 FPS: every conversion input lock released
+PASS Colorball-RocketH at 60 FPS: real pair starts
+PASS Colorball-RocketH at 60 FPS: native particles pause without advancing
+PASS Colorball-RocketH at 60 FPS: gameplay completes without stuck resolver
+PASS Colorball-RocketH at 60 FPS: live VFX render with supported shaders
+PASS Colorball-RocketH at 60 FPS: presentation adds no extra move debit
+PASS Colorball-RocketH at 60 FPS: every selected gem converts before booster handoff
+PASS Colorball-RocketH at 60 FPS: actors and VFX tails retire
+PASS Colorball-RocketH at 60 FPS: every conversion input lock released
+PASS Colorball-RocketV at 60 FPS: real pair starts
+PASS Colorball-RocketV at 60 FPS: native particles pause without advancing
+PASS Colorball-RocketV at 60 FPS: gameplay completes without stuck resolver
+PASS Colorball-RocketV at 60 FPS: live VFX render with supported shaders
+PASS Colorball-RocketV at 60 FPS: presentation adds no extra move debit
+PASS Colorball-RocketV at 60 FPS: every selected gem converts before booster handoff
+PASS Colorball-RocketV at 60 FPS: actors and VFX tails retire
+PASS Colorball-RocketV at 60 FPS: every conversion input lock released
+PASS Colorball-TNT at 60 FPS: real pair starts
+PASS Colorball-TNT at 60 FPS: native particles pause without advancing
+PASS Colorball-TNT at 60 FPS: gameplay completes without stuck resolver
+PASS Colorball-TNT at 60 FPS: live VFX render with supported shaders
+PASS Colorball-TNT at 60 FPS: presentation adds no extra move debit
+PASS Colorball-TNT at 60 FPS: every selected gem converts before booster handoff
+PASS Colorball-TNT at 60 FPS: actors and VFX tails retire
+PASS Colorball-TNT at 60 FPS: every conversion input lock released
+PASS Colorball-Propeller at 60 FPS: real pair starts
+PASS Colorball-Propeller at 60 FPS: native particles pause without advancing
+PASS Colorball-Propeller at 60 FPS: gameplay completes without stuck resolver
+PASS Colorball-Propeller at 60 FPS: live VFX render with supported shaders
+PASS Colorball-Propeller at 60 FPS: presentation adds no extra move debit
+PASS Colorball-Propeller at 60 FPS: every selected gem converts before booster handoff
+PASS Colorball-Propeller at 60 FPS: actors and VFX tails retire
+PASS Colorball-Propeller at 60 FPS: every conversion input lock released
+PASS Cancel RocketH-RocketH: no active presentation leases
+PASS Cancel RocketH-RocketH: all target locks released
+PASS Cancel RocketH-RocketV: no active presentation leases
+PASS Cancel RocketH-RocketV: all target locks released
+PASS Cancel RocketV-RocketV: no active presentation leases
+PASS Cancel RocketV-RocketV: all target locks released
+PASS Cancel TNT-TNT: no active presentation leases
+PASS Cancel TNT-TNT: all target locks released
+PASS Cancel Propeller-Propeller: no active presentation leases
+PASS Cancel Propeller-Propeller: all target locks released
+PASS Cancel Colorball-Colorball: no active presentation leases
+PASS Cancel Colorball-Colorball: all target locks released
+PASS Cancel RocketH-TNT: no active presentation leases
+PASS Cancel RocketH-TNT: all target locks released
+PASS Cancel RocketV-TNT: no active presentation leases
+PASS Cancel RocketV-TNT: all target locks released
+PASS Cancel Propeller-RocketH: no active presentation leases
+PASS Cancel Propeller-RocketH: all target locks released
+PASS Cancel Propeller-RocketV: no active presentation leases
+PASS Cancel Propeller-RocketV: all target locks released
+PASS Cancel Propeller-TNT: no active presentation leases
+PASS Cancel Propeller-TNT: all target locks released
+PASS Cancel Colorball-RocketH: no active presentation leases
+PASS Cancel Colorball-RocketH: all target locks released
+PASS Cancel Colorball-RocketV: no active presentation leases
+PASS Cancel Colorball-RocketV: all target locks released
+PASS Cancel Colorball-TNT: no active presentation leases
+PASS Cancel Colorball-TNT: all target locks released
+PASS Cancel Colorball-Propeller: no active presentation leases
+PASS Cancel Colorball-Propeller: all target locks released
+PASS Normal player coins, lives and progress restored
+PASS No runtime errors during all combo checks
+ALL DUAL COMBO CHECKS PASSED

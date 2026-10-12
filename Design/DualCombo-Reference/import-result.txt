@@ -1,0 +1,1 @@
+PASS: 40 native particle systems, 41 exact sprite bindings, 32 exact sprites, two dedicated combo views.

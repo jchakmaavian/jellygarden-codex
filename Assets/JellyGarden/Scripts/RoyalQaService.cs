@@ -8,16 +8,13 @@ using JellyGarden.Scripts.GUI;
 using JellyGarden.Scripts.Juice;
 using JellyGarden.Scripts.MapScripts;
 using JellyGarden.Scripts.Targets;
+using RoyalThrone.Presentation;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace RoyalThrone.Testing
 {
     // Commands prepare fixtures; all matching, gravity, power-ups and rewards are
     // executed by the game. Nothing in this class is present in a release player.
-    // King Leo ports it for the Editor check suites only: there is no QA menu, so
-    // the service is installed hidden on the game scene (Install) and never blocks
-    // board input unless a command is running.
     public sealed class RoyalQaService : MonoBehaviour
     {
         public static RoyalQaService Instance { get; private set; }
@@ -30,10 +27,11 @@ namespace RoyalThrone.Testing
         public string Status="Start an isolated test session.", LastReplay="";
         public int Completed { get; private set; }
         public int Failed { get; private set; }
-        public bool Visible;
+        public bool Visible=true;
         public event Action Changed;
         int normalMoney,normalLives,normalLevel; float normalTimer,normalMusic,normalSound;
         string normalDate; UnityEngine.Random.State normalRandom;
+        DateTime normalLifeDeadline;
         bool ownsSession, endingSession;
         bool practice; float replayAt;
         /// <summary>The QA practice board is in place (it tests the tools, so the opening's padlocks stay off).</summary>
@@ -41,21 +39,8 @@ namespace RoyalThrone.Testing
         readonly List<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager> suspendedTutorials=new List<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager>();
         static readonly ItemsTypes[] Powers={ItemsTypes.PACKAGE,ItemsTypes.HORIZONTAL_STRIPPED,ItemsTypes.VERTICAL_STRIPPED,ItemsTypes.HELICOPTER,ItemsTypes.BOMB};
         public static readonly string[] PowerNames={"TNT","Rocket H","Rocket V","Propeller","Color ball"};
-        /// <summary>Colours on the practice board's refill: King Leo's full palette (plan D3).</summary>
-        public const int PracticeColors=RoyalGameplayArt.MaxBoardColorCount;
         LevelManager LM => LevelManager.THIS;
         public bool Ready => LM && InitScript.Instance && MenuManager.Instance;
-        // Royal Throne's mod menu created this service; King Leo has none, so it is installed with the game scene.
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void Install()
-        {
-            SceneManager.sceneLoaded-=OnScene;SceneManager.sceneLoaded+=OnScene;OnScene(SceneManager.GetActiveScene(),LoadSceneMode.Single);
-        }
-        static void OnScene(Scene scene,LoadSceneMode mode)
-        {
-            if(scene.name!="game"||Instance)return;
-            new GameObject("QA service",typeof(RoyalQaService));
-        }
         void Awake()
         {
             Instance=this;
@@ -67,6 +52,7 @@ namespace RoyalThrone.Testing
             Add("VFX TEST LAB","VFX Match 3","VFX Match 4","VFX Match 5","Ice Impact","Fire Impact","TNT explosion","Break particles","Falling fragments","Rocket trails","Propeller effect","Color-ball effect","Hint aura","Win effect","Reward effect");
             Add("ANIMATION TEST","Gem idle","Swap","Match animation","Hint animation","Invalid swap","Fall","Cascade animation","Booster creation","Booster activation","TNT animation","Character / reward");
             Add("LEVEL TESTING","Open level","Restart level","Practice board","Win instantly","Lose instantly","Set moves","Add moves","Remove moves","Complete targets","Spawn blocker","Clear board","Shuffle board");
+            Commands["LEVEL TESTING"].InsertRange(0,new[]{"Reference campaign 01–50","Original levels"});
             Add("DEBUG","Grid / cells","Gem IDs / types","Valid moves","Detected matches","Hint candidate","FPS / particles","Reset test data");
         }
         void Add(string category,params string[] labels)=>Commands[category]=new List<string>(labels);
@@ -79,20 +65,22 @@ namespace RoyalThrone.Testing
                 return; // Re-entry must never capture test values as the player's state.
             }
             if(!Ready||Busy)return;
-            // No refusal on the ads/purchase defines: this class exists only in the Editor and development builds, and
-            // King Leo's StoryFreeGame keeps ads, purchases and shops off at runtime there.
+#if PLAYFAB || GAMESPARKS || FACEBOOK || UNITY_INAPPS || UNITY_ADS || GOOGLE_MOBILE_ADS
+            Status="QA requires the project's offline build configuration (network, purchases and ads disabled).";Changed?.Invoke();return;
+#endif
             normalMoney=InitScript.Gems;normalLives=InitScript.lifes;normalTimer=InitScript.RestLifeTimer;
+            normalLifeDeadline=InitScript.Instance.LifeRefillDeadline;
             normalDate=InitScript.DateOfExit;normalLevel=LM.currentLevel;normalRandom=UnityEngine.Random.state;
             normalMusic=MusicBase.Instance.GetVolume();normalSound=SoundBase.Instance.GetVolume();
             // Switch before leaving a board: any transition callback also writes QA keys.
-            ownsSession=true;RoyalSave.Testing=true;IsolateStory();RoyalSave.SetInt("OpenLevelTest",0);
-            ToMap();Hydrate();Level=Mathf.Max(1,normalLevel);
+            ownsSession=true;RoyalSave.Testing=true;RoyalSave.SetInt("OpenLevelTest",0);
+            ToMap();Hydrate();Level=Mathf.Max(1,normalLevel);Visible=true;
             Status="TEST PROFILE ACTIVE. Coins and Gems share one balance. Stars are per selected level (0–3).";Changed?.Invoke();
         }
         void Hydrate()
         {
             InitScript.Gems=RoyalSave.GetInt("Gems",normalMoney);InitScript.lifes=RoyalSave.GetInt("Lifes",normalLives);
-            SetTimer(RoyalSave.GetFloat("RestLifeTimer",normalTimer));
+            SetTimer(RoyalSave.GetFloat("RestLifeTimer",normalTimer));Refresh();
         }
         public IEnumerator EndSession()
         {
@@ -105,56 +93,16 @@ namespace RoyalThrone.Testing
                 while(Busy)yield return null;
                 ToMap();yield return null; // retire old UI animation callbacks before switching profile
                 RoyalSave.Save();
-                InitScript.Gems=normalMoney;InitScript.lifes=normalLives;InitScript.DateOfExit=normalDate;InitScript.RestLifeTimer=normalTimer;
+                RoyalThrone.Campaign.RoyalReferenceCampaign.Select(false);
+                InitScript.Gems=normalMoney;InitScript.lifes=normalLives;InitScript.DateOfExit=normalDate;
+                InitScript.Instance.RestoreLifeScheduleForTesting(normalLifeDeadline,normalTimer);
                 LM.currentLevel=normalLevel;UnityEngine.Random.state=normalRandom;Speed=1;Time.timeScale=1;practice=false;
                 MusicBase.Instance.SetVolume(normalMusic);SoundBase.Instance.SetVolume(normalSound);
                 // No yield or persistence between restoring runtime values and changing routes.
-                RestoreStory();RoyalSave.Testing=false;ownsSession=false;
-                Status="Test session ended. Normal player progress restored.";Visible=false;Changed?.Invoke();
+                RoyalSave.Testing=false;ownsSession=false;
+                Refresh();Status="Test session ended. Normal player progress restored.";Visible=false;Changed?.Invoke();
             }
             finally { endingSession=false; }
-        }
-        // King Leo's campaign save (StoryProgress) is a JSON file, not PlayerPrefs, so RoyalSave cannot route it. A session
-        // plays against its own copy instead: whatever pays an area star on a win (Win instantly, or a QA level played to the
-        // end) or records a loss writes the copy, never the player's file. The copy starts from the player's progress, keeps
-        // its changes across sessions like the QA keys, and is re-copied by Reset test data.
-        static string StoryCopy=>global::System.IO.Path.Combine(Application.persistentDataPath,"RoyalThrone.QA.v1");
-        string normalStoryDirectory,playerStoryPath; bool storyIsolated;
-        void IsolateStory()
-        {
-            if(storyIsolated)return;
-            JellyGarden.Scripts.Story.StoryProgress.Flush(); // the player's pending write lands in the player's file
-            normalStoryDirectory=JellyGarden.Scripts.Story.StoryProgress.SaveDirectoryOverride;
-            playerStoryPath=JellyGarden.Scripts.Story.StoryProgress.SavePath;
-            JellyGarden.Scripts.Story.StoryProgress.SaveDirectoryOverride=StoryCopy;storyIsolated=true;
-            SeedStoryCopy(false);
-            JellyGarden.Scripts.Story.StoryProgress.ReloadFromDisk();
-        }
-        void RestoreStory()
-        {
-            if(!storyIsolated)return;
-            JellyGarden.Scripts.Story.StoryProgress.Flush(); // the session's pending write lands in the copy
-            JellyGarden.Scripts.Story.StoryProgress.SaveDirectoryOverride=normalStoryDirectory;storyIsolated=false;
-            JellyGarden.Scripts.Story.StoryProgress.ReloadFromDisk();
-        }
-        // Reset test data: the copy goes back to the player's progress.
-        void ResetStoryCopy()
-        {
-            if(!storyIsolated)return;
-            SeedStoryCopy(true);
-            JellyGarden.Scripts.Story.StoryProgress.ReloadFromDisk();
-        }
-        void SeedStoryCopy(bool replace)
-        {
-            string copy=JellyGarden.Scripts.Story.StoryProgress.SavePath;
-            try
-            {
-                global::System.IO.Directory.CreateDirectory(StoryCopy);
-                if(replace&&global::System.IO.File.Exists(copy))global::System.IO.File.Delete(copy);
-                if(!global::System.IO.File.Exists(copy)&&global::System.IO.File.Exists(playerStoryPath))global::System.IO.File.Copy(playerStoryPath,copy);
-            }
-            // The redirect stands either way: a copy that cannot be written fails its own saves, never the player's.
-            catch(Exception e){Debug.LogWarning("[Royal QA] Story save copy: "+e.Message);}
         }
         void ToMap()
         {
@@ -178,17 +126,15 @@ namespace RoyalThrone.Testing
             }
             foreach(var hand in FindObjectsByType<JellyGarden.Scripts.GUI.TutorialStuff.HandTutorial>(FindObjectsInactive.Include))hand.StopAllCoroutines();
         }
-        // King Leo keeps main's InitScript, whose setters write PlayerPrefs directly: QA values go through RoyalSave
-        // here instead, so the player's own keys are never written during a session.
-        static void SaveInt(string key,int value){RoyalSave.SetInt(key,value);RoyalSave.Save();}
-        static void SetGems(int value){InitScript.Gems=value;SaveInt("Gems",value);}
-        static void SetLives(int value){InitScript.lifes=Mathf.Clamp(value,0,InitScript.Instance.CapOfLife);SaveInt("Lifes",InitScript.lifes);}
-        // The kit's life counter (LIFESAddCounter) counts RestLifeTimer down from DateOfExit, in main's format.
+        void Refresh()
+        {
+            foreach(var home in FindObjectsByType<RoyalHomeScreen>(FindObjectsInactive.Include))home.RefreshProgress();
+        }
         void SetTimer(float seconds)
         {
-            InitScript.DateOfExit=DateTime.Now.ToString();
-            InitScript.RestLifeTimer=InitScript.lifes>=InitScript.Instance.CapOfLife?0:Mathf.Max(0,seconds);
-            RoyalSave.SetFloat("RestLifeTimer",InitScript.RestLifeTimer);RoyalSave.SetString("DateOfExit",InitScript.DateOfExit);RoyalSave.Save();
+            InitScript.DateOfExit=DateTime.UtcNow.ToString("o",System.Globalization.CultureInfo.InvariantCulture);
+            InitScript.Instance.SetRefillSeconds(seconds);
+            RoyalSave.SetString("DateOfExit",InitScript.DateOfExit);RoyalSave.Save();
             foreach(var timer in FindObjectsByType<LIFESAddCounter>(FindObjectsInactive.Include)){bool on=timer.enabled;timer.enabled=false;timer.enabled=on;}
         }
         float FullTimer=>InitScript.Instance.TotalTimeForRestLifeHours*3600+InitScript.Instance.TotalTimeForRestLifeMin*60+InitScript.Instance.TotalTimeForRestLifeSec;
@@ -220,32 +166,37 @@ namespace RoyalThrone.Testing
             if(!RoyalSave.Testing||!Ready)throw new InvalidOperationException("Start the isolated test profile first.");
             if(!Commands.Values.Any(list=>list.Contains(command)))throw new InvalidOperationException("Unknown QA control.");
             Status="Running: "+command;Changed?.Invoke();
-            if(command=="Reset test data"){ToMap();yield return null;RoyalSave.ResetTesting();ResetStoryCopy();Hydrate();yield break;}
+            if(command=="Reference campaign 01–50"||command=="Original levels")
+            {
+                ToMap();yield return null;RoyalThrone.Campaign.RoyalReferenceCampaign.Select(command=="Reference campaign 01–50");
+                Level=1;Hydrate();Status=RoyalThrone.Campaign.RoyalReferenceCampaign.Enabled?"Reference campaign selected in its own QA save. Set level 1–50 and Open level. Bonus outcome, refill weighting and blocker behavior are inspection adaptations.":"Original levels selected in the existing QA profile.";
+                Changed?.Invoke();yield break;
+            }
+            if(command=="Reset test data"){ToMap();yield return null;RoyalSave.ResetTesting();Hydrate();yield break;}
             if(command=="Grid / cells"){Grid=!Grid;yield break;}if(command=="Gem IDs / types"){Ids=!Ids;yield break;}
             if(command=="Valid moves"){ValidMoves=!ValidMoves;yield break;}if(command=="Detected matches"){Matches=!Matches;yield break;}
             if(command=="Hint candidate"){Candidate=!Candidate;yield break;}if(command=="FPS / particles"){Counters=!Counters;yield break;}
             if(command.EndsWith("gems")||command.EndsWith("coins"))
             {
                 int value=command.StartsWith("Add")?InitScript.Gems+Mathf.Clamp(Amount,0,1000000):command.StartsWith("Remove")?InitScript.Gems-Mathf.Clamp(Amount,0,1000000):command=="Refill coins"?10000:Amount;
-                SetGems(Mathf.Clamp(value,0,1000000));yield break;
+                InitScript.Instance.SetGems(Mathf.Clamp(value,0,1000000));Refresh();yield break;
             }
             if(command.EndsWith("stars"))
             {
                 ValidateLevel();int old=RoyalSave.GetInt(StarKey);int value=command.StartsWith("Add")?old+Mathf.Clamp(Amount,0,3):command.StartsWith("Remove")?old-Mathf.Clamp(Amount,0,3):Amount;
-                SaveInt(StarKey,Mathf.Clamp(value,0,3));yield break;
+                InitScript.Instance.SaveLevelStarsCount(Level,Mathf.Clamp(value,0,3));RoyalSave.Save();Refresh();yield break;
             }
             if(command.EndsWith("lives"))
             {
                 int value=command=="Refill lives"?InitScript.Instance.CapOfLife:command=="Empty lives"?0:Mathf.Clamp(Amount,0,InitScript.Instance.CapOfLife);
-                SetLives(value);SetTimer(value>=InitScript.Instance.CapOfLife?0:FullTimer);yield break;
+                InitScript.Instance.AddLife(value-InitScript.lifes);SetTimer(value>=InitScript.Instance.CapOfLife?0:FullTimer);Refresh();yield break;
             }
             if(command=="Test refill timer"||command=="Reset refill timer")
             {
-                // Main's SpendLife never takes a life in the free game (StoryFreeGame), so the life is taken here.
-                if(command=="Test refill timer"&&InitScript.lifes>=InitScript.Instance.CapOfLife)SetLives(InitScript.Instance.CapOfLife-1);
+                if(command=="Test refill timer"&&InitScript.lifes>=InitScript.Instance.CapOfLife)InitScript.Instance.SpendLife(1);
                 SetTimer(command=="Test refill timer"?3:FullTimer);yield break;
             }
-            if(command=="Set booster stock"){foreach(BoostType type in Enum.GetValues(typeof(BoostType)))if(type!=BoostType.None)RoyalSave.SetInt(type.ToString(),Mathf.Clamp(Amount,0,999));RoyalSave.Save();yield break;}
+            if(command=="Set booster stock"){foreach(BoostType type in Enum.GetValues(typeof(BoostType)))if(type!=BoostType.None)InitScript.Instance.BuyBoost(type,0,Mathf.Clamp(Amount,0,999));yield break;}
             if(command=="Open level"||command=="Restart level"){if(command=="Restart level")Level=LM.currentLevel;yield return OpenLevel();yield break;}
             if(command=="Practice board"){yield return Practice();yield break;}
             yield return Board();
@@ -258,11 +209,10 @@ namespace RoyalThrone.Testing
                 if(LM.gameStatus!=GameState.Playing)throw new InvalidOperationException("Restart the level before another outcome.");
                 foreach(var target in LM.targetObject)target.countCollected=target.targetCount;
                 LevelManager.Score=Mathf.Max(LevelManager.Score,LM.star3);LM.stars=3;
-                // The real event/save flow, exactly once; its StoryProgress area star goes to the session's copy (IsolateStory).
-                if(command=="Win instantly"){if(!storyIsolated)throw new InvalidOperationException("The story save is not isolated.");LM.gameStatus=GameState.Win;RoyalSave.Save();}
+                if(command=="Win instantly"){LM.gameStatus=GameState.Win;RoyalSave.Save();} // the real event/save flow, exactly once
                 yield break;
             }
-            if(command=="Lose instantly"){if(LM.gameStatus!=GameState.Playing)throw new InvalidOperationException("Restart before another outcome.");if(!storyIsolated)throw new InvalidOperationException("The story save is not isolated.");LM.Limit=0;LM.gameStatus=GameState.GameOver;yield break;}
+            if(command=="Lose instantly"){if(LM.gameStatus!=GameState.Playing)throw new InvalidOperationException("Restart before another outcome.");LM.Limit=0;LM.gameStatus=GameState.GameOver;yield break;}
             if(command=="Spawn blocker")
             {
                 var square=Selected();if(square.block.Count>0)throw new InvalidOperationException("Selected cell already has a blocker.");
@@ -270,7 +220,7 @@ namespace RoyalThrone.Testing
             }
             if(command=="Shuffle board"){LM.NoMatches();yield return Settled();yield break;}
             if(command=="Clear board"){foreach(var item in LM.GetItems().Where(i=>i).ToArray())item.DestroyItem();LM.FindMatches();yield return Settled();yield break;}
-            if(command=="Spawn selected gem"){var square=Selected();if(!square.item)square.GenItem(false);SetPiece(square.item,ItemsTypes.NONE,Mathf.Clamp(Gem,0,PracticeColors-1));yield break;}
+            if(command=="Spawn selected gem"){var square=Selected();if(!square.item)square.GenItem(false);SetPiece(square.item,ItemsTypes.NONE,Mathf.Clamp(Gem,0,RoyalGameplayArt.BoardColorCount-1));yield break;}
             int spawn=Array.IndexOf(new[]{"Spawn TNT","Spawn rocket H","Spawn rocket V","Spawn propeller","Spawn color ball"},command);
             if(spawn>=0){SetPiece(Selected().item,Powers[spawn],Gem);yield break;}
             if(command=="Combine selected")
@@ -281,10 +231,9 @@ namespace RoyalThrone.Testing
                 if(!RoyalPowerupDirector.TrySwap(a,b))throw new InvalidOperationException("Combination rejected by the game.");LM.FindMatches();yield return Settled();yield break;
             }
             if(command=="Activate selected"){var selected=Selected().item;yield return ColorBallReady(selected);if(!RoyalPowerupDirector.Tap(selected))throw new InvalidOperationException("Select a power-up.");yield return Settled();yield break;}
-            if(command=="Star reward"){ValidateLevel();SaveInt(StarKey,Mathf.Min(3,RoyalSave.GetInt(StarKey)+1));yield return RewardStars();yield break;}
+            if(command=="Star reward"){ValidateLevel();InitScript.Instance.SaveLevelStarsCount(Level,Mathf.Min(3,RoyalSave.GetInt(StarKey)+1));RoyalSave.Save();Refresh();yield return RewardStars();yield break;}
             if(command=="Star animation"||command=="Character / reward"||command=="Win effect"){yield return RewardStars();yield break;}
-            // King Leo has no coin presentation (plan D4/D5): the credit, the firework and the cue only.
-            if(command=="Coin reward"){SetGems(InitScript.Gems+Mathf.Clamp(Amount,0,1000000));RoyalPowerupDirector.Get.Firework(Center,1);RoyalAudioDirector.Get.Play(RoyalCue.Create);yield return new WaitForSeconds(1.2f);yield break;}
+            if(command=="Coin reward"){InitScript.Instance.AddGems(Mathf.Clamp(Amount,0,1000000));Refresh();RoyalPowerupDirector.Get.Firework(Center,1);RoyalAudioDirector.Get.Play(RoyalCue.Create);yield return GetComponent<RoyalQaMenu>().CoinReward();yield break;}
             if(command=="Reward effect"){RoyalPowerupDirector.Get.Preview("Celebration",Center);yield return new WaitForSeconds(1.4f);yield break;}
             if(command=="Ice Impact"||command=="Fire Impact")
             {if(command=="Ice Impact")RoyalToolkitImpact.TryPlayIce(Center,LM.squareWidth);else RoyalToolkitImpact.TryPlayFire(Center,LM.squareWidth);yield return new WaitForSeconds(1.6f);yield break;}
@@ -327,7 +276,11 @@ namespace RoyalThrone.Testing
         void ValidateLevel(){if(Level<1||!Resources.Load<TextAsset>("Levels/"+Level))throw new InvalidOperationException("No authored level "+Level+".");}
         public IEnumerator OpenLevel()
         {
+            RoyalThrone.Campaign.RoyalReferenceCampaign.RequirePlayable(Level);
             ValidateLevel();ToMap();yield return null;
+            if(RoyalThrone.Campaign.RoyalReferenceCampaign.Enabled)
+                foreach(var tutorial in FindObjectsByType<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager>(FindObjectsInactive.Include))
+                    if(tutorial.enabled){suspendedTutorials.Add(tutorial);tutorial.enabled=false;}
             RoyalSave.SetInt("OpenLevel",Level);RoyalSave.Save();LM.LoadLevel();LM.gameStatus=GameState.PrepareGame;
             float end=Time.realtimeSinceStartup+20;while(LM.gameStatus!=GameState.Playing&&Time.realtimeSinceStartup<end)yield return null;
             if(LM.gameStatus!=GameState.Playing)throw new InvalidOperationException("Level opening timed out.");yield return Settled();
@@ -352,8 +305,10 @@ namespace RoyalThrone.Testing
         public IEnumerator Practice()
         {
             yield return Board();LM.StopAllCoroutines();AI.THIS.StopAllCoroutines();AI.THIS.GetComponent<RoyalHintPresenter>()?.Hide();RoyalPowerupDirector.Get.Cancel();
-            // A fixture is not the preceding level: its refill draws on the full palette.
-            LM.colorLimit=PracticeColors;
+            // A fixture is not the preceding campaign level: discard its fixed opening,
+            // refill feeds and palette before generating the replacement board.
+            RoyalThrone.Campaign.RoyalReferenceCampaign.ReleaseBoard();
+            LM.colorLimit=RoyalGameplayArt.BoardColorCount;
             RetireTutorial();
             foreach(var tutorial in FindObjectsByType<JellyGarden.Scripts.GUI.TutorialStuff.TutorialManager>(FindObjectsInactive.Include))
                 if(tutorial.enabled){suspendedTutorials.Add(tutorial);tutorial.enabled=false;}
@@ -410,8 +365,7 @@ namespace RoyalThrone.Testing
             if(LM.gameStatus!=GameState.Pause)Time.timeScale=Speed;
             if(Loop&&!Busy&&!Visible&&LastReplay.Length>0&&Time.unscaledTime>=replayAt)Request(LastReplay);
         }
-        // Leaving play mid-session (the Editor keeps statics with domain reload off) must not leave the story on the copy.
-        void OnDestroy(){if(Instance==this)Instance=null;Time.timeScale=1;RestoreStory();}
+        void OnDestroy(){if(Instance==this)Instance=null;Time.timeScale=1;}
     }
 }
 #endif

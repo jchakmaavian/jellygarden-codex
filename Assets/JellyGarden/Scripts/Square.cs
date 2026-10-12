@@ -62,27 +62,13 @@ namespace JellyGarden.Scripts
         void Start()
         {
             // GenItem();
-            // The ingredient arrow marks where an ingredient has to arrive, so
-            // it belongs under the square CheckIngredient actually watches —
-            // the lowest cell of this column that is not a hole. The kit hung
-            // it on the last row of the GRID instead, which is the same square
-            // only on a board whose bottom row is solid all the way across. On
-            // the other 90 ingredient levels that drew 199 arrows onto holes
-            // (21 of them under a column with no playable cell at all) and left
-            // 178 real collection cells unmarked.
-            if (row == LevelManager.THIS.IngredientExitRow(col))
+            if (row == LevelManager.THIS.maxRows - 1)
             {
                 if(LevelManager.Instance.targetObject.Any(i=>i.type==Target.INGREDIENT))
                 {
                     GameObject obj = Instantiate(Resources.Load("Prefabs/arrow_ingredients")) as GameObject;
                     obj.transform.SetParent(transform);
                     obj.transform.localPosition = Vector3.zero + Vector3.down * 0.8f;
-                    if (Juice.RoyalEffectsProfile.Get != null)
-                    {
-                        // Compact exit markers leave room for the lower controls.
-                        obj.transform.localScale *= .35f;
-                        obj.transform.localPosition = Vector3.down * .55f;
-                    }
                 }
             }
 
@@ -112,6 +98,10 @@ namespace JellyGarden.Scripts
                 itemInstance.transform.position = transform.position + Vector3.back * 0.2f;
 
             this.item = itemInstance;
+            // An earned power-up replaces its matched piece; it is not a refill and
+            // must not consume a queued egg/coin or inherit that item's identity.
+            if (campaignRefill)
+                RoyalThrone.Campaign.RoyalReferenceCampaign.ConfigureSpawn(itemInstance, falling);
             return this.item;
         }
 
@@ -151,6 +141,8 @@ namespace JellyGarden.Scripts
             }
             ccc++;
             if (this.item == null)
+                return countedSquares;
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(this.item))
                 return countedSquares;
             if (this.item.destroying)
                 return countedSquares;
@@ -282,6 +274,7 @@ namespace JellyGarden.Scripts
 
         public bool CanGoOut()
         {
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(item)) return false;
             return type != SquareTypes.WIREBLOCK;
         }
 
@@ -292,6 +285,7 @@ namespace JellyGarden.Scripts
 
         public void DestroyBlock(bool rocketClear = false, int campaignWave = 0, bool campaignMatchedItem = false)
         {
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.HandleHit(this, rocketClear, campaignWave, campaignMatchedItem)) return;
             if (type == SquareTypes.UNDESTROYABLE)
                 return;
             if (type != SquareTypes.SOLIDBLOCK && type != SquareTypes.THRIVING)

@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
     // Tests the actual QA command entry points, with the real resolver/refill running.
     public static class RoyalColorBallQaChecks
     {
-        const string Folder="Logs/port-checks/Effects/ColorBall-live-v5/";
+        const string Folder="Design/Effects/ColorBall-live-v5/";
         static readonly List<string> checks=new List<string>(),errors=new List<string>();
         static RoyalQaService qa;
         static bool running;
@@ -40,7 +40,7 @@ namespace RoyalThrone.Editor
         }
         static void Capture(string name)
         {
-            if(UnityEngine.Application.isBatchMode)return;var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+".png",t.EncodeToPNG());Object.Destroy(t);
+            var t=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(Folder+name+".png",t.EncodeToPNG());Object.Destroy(t);
         }
         static IEnumerator Observe(string command,string label,bool convert,Item[] untouched=null,bool record=false)
         {
@@ -57,7 +57,7 @@ namespace RoyalThrone.Editor
             string frames="Temp/ColorBall-live-v5-"+label+"/";if(record)Directory.CreateDirectory(frames);
             while(qa.Busy&&Time.realtimeSinceStartup<end)
             {
-                yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
+                yield return new WaitForEndOfFrame();
                 var balls=Object.FindObjectsByType<ColorBallFrameAnimator>();
                 foreach(var ball in balls)
                 {
@@ -96,7 +96,7 @@ namespace RoyalThrone.Editor
                     if(boost.Current==ColorBallBoostView.Phase.Finish&&!sawFinish){Capture(label+"-finish");sawFinish=true;}
                 }
                 else if(sawFinish&&!settledCapture){Capture(label+"-handoff-refill");settledCapture=true;}
-                if(record&&!UnityEngine.Application.isBatchMode&&Time.realtimeSinceStartup-lastCapture>=1f/30f)
+                if(record&&Time.realtimeSinceStartup-lastCapture>=1f/30f)
                 {
                     lastCapture=Time.realtimeSinceStartup;
                     var t=ScreenCapture.CaptureScreenshotAsTexture();

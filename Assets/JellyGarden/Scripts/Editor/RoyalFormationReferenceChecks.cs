@@ -16,7 +16,7 @@ namespace RoyalThrone.Editor
     {
         public static IEnumerator Run(LevelManager lm, Action<bool,string> report, bool referenceTiming)
         {
-            string folder = "Logs/port-checks/QaFeedback/07-SpecialFormation/video-reference/" + (referenceTiming ? "after/" : "before/");
+            string folder = "Design/QaFeedback/07-SpecialFormation/video-reference/" + (referenceTiming ? "after/" : "before/");
             Directory.CreateDirectory(folder);
             float capture = Time.captureDeltaTime;
             try
@@ -45,7 +45,7 @@ namespace RoyalThrone.Editor
                     Check(lm.InputSwaps==1,"actual player swap started");
                     for(int frame=0;frame<fps*2;frame++)
                     {
-                        yield return (UnityEngine.Application.isBatchMode?null:new WaitForEndOfFrame());
+                        yield return new WaitForEndOfFrame();
                         if(lm.InputSwaps>0) safe &= group.All(i=>i&&!i.destroying);
                         else if(commit<0)commit=frame;
                         var gems=Object.FindObjectsByType<SpriteRenderer>().Where(s=>s.name=="Special gathering gem").ToArray();
@@ -76,7 +76,7 @@ namespace RoyalThrone.Editor
                         }
                         owns &= lm.squaresArray.Where(s=>s&&s.item).All(s=>s.item.square==s);
                         trace.Add($"{frame},{commit},{gems.Length},{(visual&&visual.Revealing)},{(created&&created.falling)},{(created?created.transform.position.x:0):F4},{(created?created.transform.position.y:0):F4},{normalized:F4}");
-                        if(fps==60&&vertical&&frame<85&&!UnityEngine.Application.isBatchMode) {var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(folder+frame.ToString("D3")+".png",tex.EncodeToPNG());Object.Destroy(tex);}
+                        if(fps==60&&vertical&&frame<85) {var tex=ScreenCapture.CaptureScreenshotAsTexture();File.WriteAllBytes(folder+frame.ToString("D3")+".png",tex.EncodeToPNG());Object.Destroy(tex);}
                     }
                     File.WriteAllLines(folder+fps+"-"+(vertical?"V":"H")+".csv",trace);
                     Check(gather>=commit&&reveal>gather,"commit="+commit+", gather="+gather+", reveal="+reveal+", first fall="+fall);

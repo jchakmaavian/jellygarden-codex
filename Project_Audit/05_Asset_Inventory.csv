@@ -1,0 +1,325 @@
+AssetName,Category,UnityType,FileFormat,FileSizeKB,ImportType,SpriteMode,PPU,MaxSize,Compression,NineSliced,Path,ReuseNotes,EvidenceState
+king_celebrate.jpg,"GameRedesign/Character/Expressions",Texture2D/Sprite,JPEG,319,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Expressions/king_celebrate.jpg,"UNUSED - 0 GUID refs outside GameRedesign",CONFIRMED
+king_concerned.jpg,"GameRedesign/Character/Expressions",Texture2D/Sprite,JPEG,321,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Expressions/king_concerned.jpg,"UNUSED - 0 GUID refs outside GameRedesign",CONFIRMED
+king_impressed.jpg,"GameRedesign/Character/Expressions",Texture2D/Sprite,JPEG,320,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Expressions/king_impressed.jpg,"UNUSED - 0 GUID refs outside GameRedesign",CONFIRMED
+king_neutral.jpg,"GameRedesign/Character/Expressions",Texture2D/Sprite,JPEG,309,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Expressions/king_neutral.jpg,"UNUSED; byte-identical to king_v1.jpg",CONFIRMED
+king_pleased.jpg,"GameRedesign/Character/Expressions",Texture2D/Sprite,JPEG,334,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Expressions/king_pleased.jpg,"UNUSED - 0 GUID refs outside GameRedesign",CONFIRMED
+king_sad.jpg,"GameRedesign/Character/Expressions",Texture2D/Sprite,JPEG,376,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Expressions/king_sad.jpg,"UNUSED - 0 GUID refs outside GameRedesign",CONFIRMED
+King_Celebrate.png,"GameRedesign/Character/Runtime",Texture2D/Sprite,PNG,1608,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Runtime/King_Celebrate.png,"UNUSED; duplicate of Resources/King_Celebrate.png",CONFIRMED
+King_Concerned.png,"GameRedesign/Character/Runtime",Texture2D/Sprite,PNG,1618,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Runtime/King_Concerned.png,"UNUSED; duplicate of Resources copy",CONFIRMED
+King_Impressed.png,"GameRedesign/Character/Runtime",Texture2D/Sprite,PNG,1658,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Runtime/King_Impressed.png,"UNUSED; duplicate of Resources copy",CONFIRMED
+King_Neutral.png,"GameRedesign/Character/Runtime",Texture2D/Sprite,PNG,1582,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Runtime/King_Neutral.png,"UNUSED; duplicate of Resources copy",CONFIRMED
+King_Pleased.png,"GameRedesign/Character/Runtime",Texture2D/Sprite,PNG,1743,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Runtime/King_Pleased.png,"UNUSED; duplicate of Resources copy",CONFIRMED
+King_Sad.png,"GameRedesign/Character/Runtime",Texture2D/Sprite,PNG,1983,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Runtime/King_Sad.png,"UNUSED; duplicate of Resources copy",CONFIRMED
+king_v1.jpg,"GameRedesign/Character/Source",Texture2D/Sprite,JPEG,309,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Source/king_v1.jpg,"UNUSED; chosen direction - identical to king_neutral.jpg",CONFIRMED
+king_v2.jpg,"GameRedesign/Character/Source",Texture2D/Sprite,JPEG,249,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Source/king_v2.jpg,"UNUSED - design iteration",CONFIRMED
+king_v3.jpg,"GameRedesign/Character/Source",Texture2D/Sprite,JPEG,327,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Source/king_v3.jpg,"UNUSED - design iteration",CONFIRMED
+king_v4.jpg,"GameRedesign/Character/Source",Texture2D/Sprite,JPEG,239,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Character/Source/king_v4.jpg,"UNUSED - design iteration",CONFIRMED
+RefGame.png,"GameRedesign/RefSource",Texture2D/Sprite,PNG,1939,Default(tt=0),Multiple,100,4096,None,No,Assets/GameRedesign/RefSource/RefGame.png,"UNUSED; 941x1672 full-screen redesign reference mock",CONFIRMED
+RefKing.png,"GameRedesign/RefSource",Texture2D/Sprite,PNG,2049,Default(tt=0),Multiple,100,4096,None,No,Assets/GameRedesign/RefSource/RefKing.png,"UNUSED; 1086x1448 character reference",CONFIRMED
+Coin_Gold.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,804,Sprite,Single,512,256,Normal,No,Assets/GameRedesign/Resources/Coin_Gold.png,"UNUSED but in Resources/ so force-packed into builds; duplicate of Reward copy",CONFIRMED
+HUD_Card.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,512,Sprite,Single,100,512,None,No,Assets/GameRedesign/Resources/HUD_Card.png,"UNUSED but in Resources/; duplicate of UI copy",CONFIRMED
+HUD_Medallion.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,913,Sprite,Single,100,512,None,No,Assets/GameRedesign/Resources/HUD_Medallion.png,"UNUSED but in Resources/; duplicate of UI copy",CONFIRMED
+HUD_Portrait.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,481,Sprite,Single,100,1024,None,No,Assets/GameRedesign/Resources/HUD_Portrait.png,"UNUSED but in Resources/; duplicate of UI copy",CONFIRMED
+HUD_Rail.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,296,Sprite,Single,100,1024,None,No,Assets/GameRedesign/Resources/HUD_Rail.png,"UNUSED but in Resources/; duplicate of UI copy",CONFIRMED
+King_Celebrate.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,1608,Sprite,Single,512,512,Normal,No,Assets/GameRedesign/Resources/King_Celebrate.png,"UNUSED but in Resources/ so force-packed into builds",CONFIRMED
+King_Concerned.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,1618,Sprite,Single,512,512,Normal,No,Assets/GameRedesign/Resources/King_Concerned.png,"UNUSED but in Resources/ so force-packed into builds",CONFIRMED
+King_Impressed.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,1658,Sprite,Single,512,512,Normal,No,Assets/GameRedesign/Resources/King_Impressed.png,"UNUSED but in Resources/ so force-packed into builds",CONFIRMED
+King_Neutral.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,1582,Sprite,Single,512,512,Normal,No,Assets/GameRedesign/Resources/King_Neutral.png,"UNUSED but in Resources/ so force-packed into builds",CONFIRMED
+King_Pleased.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,1743,Sprite,Single,512,512,Normal,No,Assets/GameRedesign/Resources/King_Pleased.png,"UNUSED but in Resources/ so force-packed into builds",CONFIRMED
+King_Sad.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,1983,Sprite,Single,512,512,Normal,No,Assets/GameRedesign/Resources/King_Sad.png,"UNUSED but in Resources/ so force-packed into builds",CONFIRMED
+REF_BottomBar.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,442,Sprite,Single,100,1024,None,No,Assets/GameRedesign/Resources/REF_BottomBar.png,"UNUSED; 920x250 crop from reference mock",CONFIRMED
+REF_Crest.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,89,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Resources/REF_Crest.png,"UNUSED; 175x250 crop from reference mock",CONFIRMED
+REF_KingHead.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,174,Sprite,Single,100,1024,None,No,Assets/GameRedesign/Resources/REF_KingHead.png,"UNUSED; 250x340 crop from reference mock",CONFIRMED
+REF_KingSlot.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,302,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Resources/REF_KingSlot.png,"UNUSED; 325x445 crop from reference mock",CONFIRMED
+REF_Moves.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,138,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Resources/REF_Moves.png,"UNUSED; 295x290 crop from reference mock",CONFIRMED
+REF_Pause.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,16,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Resources/REF_Pause.png,"UNUSED; 85x85 crop from reference mock",CONFIRMED
+REF_ScoreChip.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,39,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Resources/REF_ScoreChip.png,"UNUSED; 285x70 crop from reference mock",CONFIRMED
+REF_StarChip.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,41,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Resources/REF_StarChip.png,"UNUSED; 295x70 crop from reference mock",CONFIRMED
+REF_Target.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,143,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Resources/REF_Target.png,"UNUSED; 295x290 crop from reference mock",CONFIRMED
+REF_TopHud.png,"GameRedesign/Resources",Texture2D/Sprite,PNG,611,Sprite,Single,100,1024,None,No,Assets/GameRedesign/Resources/REF_TopHud.png,"UNUSED; 900x450 crop from reference mock",CONFIRMED
+Coin_Gold.png,"GameRedesign/Reward",Texture2D/Sprite,PNG,804,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Reward/Coin_Gold.png,"UNUSED; duplicate of Resources copy with different import settings",CONFIRMED
+coin_v1.jpg,"GameRedesign/Reward",Texture2D/Sprite,JPEG,194,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Reward/coin_v1.jpg,"UNUSED - design iteration",CONFIRMED
+coin_v2.jpg,"GameRedesign/Reward",Texture2D/Sprite,JPEG,174,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/Reward/coin_v2.jpg,"UNUSED - design iteration",CONFIRMED
+HUD_Card.png,"GameRedesign/UI",Texture2D/Sprite,PNG,512,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/HUD_Card.png,"UNUSED; 1872x1248 gold-framed blue plaque; duplicate of Resources copy",CONFIRMED
+HUD_Medallion.png,"GameRedesign/UI",Texture2D/Sprite,PNG,913,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/HUD_Medallion.png,"UNUSED; 1536x1536 circular portrait ring; duplicate of Resources copy",CONFIRMED
+HUD_Portrait.png,"GameRedesign/UI",Texture2D/Sprite,PNG,481,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/HUD_Portrait.png,"UNUSED; 1760x1328; duplicate of Resources copy",CONFIRMED
+HUD_Rail.png,"GameRedesign/UI",Texture2D/Sprite,PNG,296,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/HUD_Rail.png,"UNUSED; 1536x768 bottom booster bar; duplicate of Resources copy",CONFIRMED
+card_v1.jpg,"GameRedesign/UI",Texture2D/Sprite,JPEG,158,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/card_v1.jpg,"UNUSED - design iteration",CONFIRMED
+card_v2.jpg,"GameRedesign/UI",Texture2D/Sprite,JPEG,121,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/card_v2.jpg,"UNUSED - design iteration",CONFIRMED
+medallion_v1.jpg,"GameRedesign/UI",Texture2D/Sprite,JPEG,210,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/medallion_v1.jpg,"UNUSED - design iteration",CONFIRMED
+medallion_v2.jpg,"GameRedesign/UI",Texture2D/Sprite,JPEG,219,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/medallion_v2.jpg,"UNUSED - design iteration",CONFIRMED
+portrait_v1.jpg,"GameRedesign/UI",Texture2D/Sprite,JPEG,138,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/portrait_v1.jpg,"UNUSED - design iteration",CONFIRMED
+rail_v1.png,"GameRedesign/UI",Texture2D/Sprite,PNG,970,Sprite,Multiple,100,2048,Normal,No,Assets/GameRedesign/UI/rail_v1.png,"UNUSED; still opaque - background not yet removed",CONFIRMED
+Foam.png,"Fonts/Textures",Texture2D,PNG,1,Cursor/Legacy(tt=5),n/a,100,n/a,unset,No,Assets/JellyGarden/Fonts/Textures/Foam.png,"64x64 particle texture misfiled under Fonts/",CONFIRMED
+Ripple.png,"Fonts/Textures",Texture2D,PNG,2,Cursor/Legacy(tt=5),n/a,100,n/a,unset,No,Assets/JellyGarden/Fonts/Textures/Ripple.png,"128x128 particle texture misfiled under Fonts/",CONFIRMED
+Splash_4Frames.png,"Fonts/Textures",Texture2D,PNG,6,Cursor/Legacy(tt=5),n/a,100,n/a,unset,No,Assets/JellyGarden/Fonts/Textures/Splash_4Frames.png,"512x128 4-frame water strip misfiled under Fonts/",CONFIRMED
+bg.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Prefabs/Sprites/bg.png,"ORPHAN - no prefab/scene/material/anim reference found",CONFIRMED
+character.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,13,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Prefabs/Sprites/character.png,"ORPHAN - original kit character sprite, abandoned",CONFIRMED
+lock.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,3,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Prefabs/Sprites/lock.png,"ORPHAN - no reference found",CONFIRMED
+map_background.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,701,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Prefabs/Sprites/map_background.png,"ORPHAN - largest dead asset (1024x768)",CONFIRMED
+map_level.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,5,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Prefabs/Sprites/map_level.png,"ORPHAN - no reference found",CONFIRMED
+no_button.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,1,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Prefabs/Sprites/no_button.png,"ORPHAN - no reference found",CONFIRMED
+stars0.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,6,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Prefabs/Sprites/stars0.png,"LIVE - level map star rating",CONFIRMED
+stars1.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,6,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Prefabs/Sprites/stars1.png,"LIVE - level map star rating",CONFIRMED
+stars2.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,7,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Prefabs/Sprites/stars2.png,"LIVE - level map star rating",CONFIRMED
+stars3.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,7,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Prefabs/Sprites/stars3.png,"LIVE - level map star rating",CONFIRMED
+yes_button.png,"Prefabs/Sprites",Texture2D/Sprite,PNG,1,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Prefabs/Sprites/yes_button.png,"ORPHAN - no reference found",CONFIRMED
+block.png,"Textures/Blocks",Texture2D/Sprite,PNG,14,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/block.png,"LIVE - 82x82 board obstacle",CONFIRMED
+block_02.png,"Textures/Blocks",Texture2D/Sprite,PNG,13,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/block_02.png,"LIVE - board obstacle variant",CONFIRMED
+border_01.png,"Textures/Blocks",Texture2D/Sprite,PNG,3,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/border_01.png,"LIVE - board edge trim",CONFIRMED
+border_02.png,"Textures/Blocks",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/border_02.png,"LIVE - board edge trim",CONFIRMED
+border_03.png,"Textures/Blocks",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/border_03.png,"LIVE - board edge trim",CONFIRMED
+solidBlock.png,"Textures/Blocks",Texture2D/Sprite,PNG,9,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/solidBlock.png,"LIVE - used by Resources/Prefabs/SolidBlock.prefab",CONFIRMED
+square.png,"Textures/Blocks",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/square.png,"LIVE - board cell tile",CONFIRMED
+square_2.png,"Textures/Blocks",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/square_2.png,"LIVE - board cell tile (checker variant)",CONFIRMED
+thriving_block.png,"Textures/Blocks",Texture2D/Sprite,PNG,7,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/thriving_block.png,"LIVE - ThrivingBlock.prefab",CONFIRMED
+undestroyable.png,"Textures/Blocks",Texture2D/Sprite,PNG,10,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/undestroyable.png,"LIVE - UndestrBlock.prefab",CONFIRMED
+wireBlock.png,"Textures/Blocks",Texture2D/Sprite,PNG,12,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Blocks/wireBlock.png,"LIVE - WireBlock.prefab",CONFIRMED
+5sec.png,"Textures/Boosts",Texture2D/Sprite,PNG,2,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Boosts/5sec.png,"LIVE - 5sec.prefab booster label",CONFIRMED
+1.png,"Textures/Boosts/animations_lollipop",Texture2D/Sprite,PNG,5,Sprite,Single,100,2048,Normal,No,Assets/JellyGarden/Textures/Boosts/animations_lollipop/1.png,"LIVE - frame 1 of 4-frame lollipop loop (loose files, no sheet)",CONFIRMED
+2.png,"Textures/Boosts/animations_lollipop",Texture2D/Sprite,PNG,7,Sprite,Single,100,2048,Normal,No,Assets/JellyGarden/Textures/Boosts/animations_lollipop/2.png,"LIVE - frame 2 of 4",CONFIRMED
+3.png,"Textures/Boosts/animations_lollipop",Texture2D/Sprite,PNG,9,Sprite,Single,100,2048,Normal,No,Assets/JellyGarden/Textures/Boosts/animations_lollipop/3.png,"LIVE - frame 3 of 4",CONFIRMED
+4.png,"Textures/Boosts/animations_lollipop",Texture2D/Sprite,PNG,11,Sprite,Single,100,2048,Normal,No,Assets/JellyGarden/Textures/Boosts/animations_lollipop/4.png,"LIVE - frame 4 of 4",CONFIRMED
+boost_5_mooves.png,"Textures/Boosts",Texture2D/Sprite,PNG,20,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Boosts/boost_5_mooves.png,"LIVE - booster icon (note misspelling in filename)",CONFIRMED
+boost_5_time.png,"Textures/Boosts",Texture2D/Sprite,PNG,19,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Boosts/boost_5_time.png,"LIVE - booster icon",CONFIRMED
+boost_bomb.png,"Textures/Boosts",Texture2D/Sprite,PNG,24,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Boosts/boost_bomb.png,"LIVE - booster icon",CONFIRMED
+boost_hand.png,"Textures/Boosts",Texture2D/Sprite,PNG,16,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Boosts/boost_hand.png,"LIVE - booster icon",CONFIRMED
+boost_nomber.png,"Textures/Boosts",Texture2D/Sprite,PNG,5,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Boosts/boost_nomber.png,"LIVE - booster count badge (note misspelling)",CONFIRMED
+boost_over_button.png,"Textures/Boosts",Texture2D/Sprite,PNG,15,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Boosts/boost_over_button.png,"LIVE - booster button state",CONFIRMED
+boost_plus_button.png,"Textures/Boosts",Texture2D/Sprite,PNG,7,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Boosts/boost_plus_button.png,"LIVE - add-booster button",CONFIRMED
+boost_random_color.png,"Textures/Boosts",Texture2D/Sprite,PNG,25,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Boosts/boost_random_color.png,"LIVE - booster icon",CONFIRMED
+lollipop.png,"Textures/Boosts",Texture2D/Sprite,PNG,40,Sprite,Single,200,2048,None,No,Assets/JellyGarden/Textures/Boosts/lollipop.png,"ORPHAN - 273x408; only sprite in project at PPU 200",CONFIRMED
+star.png,"Textures/Boosts",Texture2D/Sprite,PNG,6,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/Boosts/star.png,"ORPHAN - no reference found",CONFIRMED
+icon_192.png,"Textures/Icon",Texture2D/Sprite,PNG,52,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/Icon/icon_192.png,"LIVE - 192x192 app icon, referenced from ProjectSettings.asset only",CONFIRMED
+candy10_choco.png,"Textures/Items",Texture2D/Sprite,PNG,19,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/candy10_choco.png,"LIVE - chocolate blocker piece",CONFIRMED
+ingredient_01.png,"Textures/Items",Texture2D/Sprite,PNG,22,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/ingredient_01.png,"LIVE - collectible ingredient",CONFIRMED
+ingredient_02.png,"Textures/Items",Texture2D/Sprite,PNG,18,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/ingredient_02.png,"LIVE - collectible ingredient",CONFIRMED
+item_01.png,"Textures/Items",Texture2D/Sprite,PNG,16,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_01.png,"LIVE - 128x128 match colour 1 base",CONFIRMED
+item_01_extra.png,"Textures/Items",Texture2D/Sprite,PNG,23,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_01_extra.png,"LIVE - colour 1 wrapped/bonus state",CONFIRMED
+item_01_stripes_horiz.png,"Textures/Items",Texture2D/Sprite,PNG,18,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_01_stripes_horiz.png,"LIVE - colour 1 horizontal striped",CONFIRMED
+item_01_stripes_vert.png,"Textures/Items",Texture2D/Sprite,PNG,18,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_01_stripes_vert.png,"LIVE - colour 1 vertical striped",CONFIRMED
+item_02.png,"Textures/Items",Texture2D/Sprite,PNG,18,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_02.png,"LIVE - match colour 2 base",CONFIRMED
+item_02_extra.png,"Textures/Items",Texture2D/Sprite,PNG,24,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_02_extra.png,"LIVE - colour 2 wrapped/bonus state",CONFIRMED
+item_02_stripes_horiz.png,"Textures/Items",Texture2D/Sprite,PNG,19,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_02_stripes_horiz.png,"LIVE - colour 2 horizontal striped",CONFIRMED
+item_02_stripes_vert.png,"Textures/Items",Texture2D/Sprite,PNG,19,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_02_stripes_vert.png,"LIVE - colour 2 vertical striped",CONFIRMED
+item_03.png,"Textures/Items",Texture2D/Sprite,PNG,20,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_03.png,"LIVE - match colour 3 base",CONFIRMED
+item_03_extra.png,"Textures/Items",Texture2D/Sprite,PNG,24,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_03_extra.png,"LIVE - colour 3 wrapped/bonus state",CONFIRMED
+item_03_stripes_horiz.png,"Textures/Items",Texture2D/Sprite,PNG,21,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_03_stripes_horiz.png,"LIVE - colour 3 horizontal striped",CONFIRMED
+item_03_stripes_vert.png,"Textures/Items",Texture2D/Sprite,PNG,20,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_03_stripes_vert.png,"LIVE - colour 3 vertical striped",CONFIRMED
+item_04.png,"Textures/Items",Texture2D/Sprite,PNG,13,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_04.png,"LIVE - match colour 4 base",CONFIRMED
+item_04_extra.png,"Textures/Items",Texture2D/Sprite,PNG,20,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_04_extra.png,"LIVE - colour 4 wrapped/bonus state",CONFIRMED
+item_04_stripes_horiz.png,"Textures/Items",Texture2D/Sprite,PNG,15,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_04_stripes_horiz.png,"LIVE - colour 4 horizontal striped",CONFIRMED
+item_04_stripes_vert.png,"Textures/Items",Texture2D/Sprite,PNG,15,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_04_stripes_vert.png,"LIVE - colour 4 vertical striped",CONFIRMED
+item_05.png,"Textures/Items",Texture2D/Sprite,PNG,14,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_05.png,"LIVE - match colour 5 base",CONFIRMED
+item_05_extra.png,"Textures/Items",Texture2D/Sprite,PNG,24,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_05_extra.png,"LIVE - colour 5 wrapped/bonus state",CONFIRMED
+item_05_stripes_horiz.png,"Textures/Items",Texture2D/Sprite,PNG,16,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_05_stripes_horiz.png,"LIVE - colour 5 horizontal striped",CONFIRMED
+item_05_stripes_vert.png,"Textures/Items",Texture2D/Sprite,PNG,16,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_05_stripes_vert.png,"LIVE - colour 5 vertical striped",CONFIRMED
+item_06.png,"Textures/Items",Texture2D/Sprite,PNG,15,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_06.png,"LIVE - match colour 6 base",CONFIRMED
+item_06_extra.png,"Textures/Items",Texture2D/Sprite,PNG,22,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_06_extra.png,"LIVE - colour 6 wrapped/bonus state",CONFIRMED
+item_06_stripes_horiz.png,"Textures/Items",Texture2D/Sprite,PNG,16,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_06_stripes_horiz.png,"LIVE - colour 6 horizontal striped",CONFIRMED
+item_06_stripes_vert.png,"Textures/Items",Texture2D/Sprite,PNG,17,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/Items/item_06_stripes_vert.png,"LIVE - colour 6 vertical striped",CONFIRMED
+background_01.png,"Textures/backgrounds",Texture2D/Sprite,PNG,244,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/backgrounds/background_01.png,"LIVE - 800x1280 gameplay backdrop; UNCOMPRESSED (~4MB VRAM); 5:8 ratio",CONFIRMED
+background_02.png,"Textures/backgrounds",Texture2D/Sprite,PNG,324,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/backgrounds/background_02.png,"LIVE - 800x1280; UNCOMPRESSED",CONFIRMED
+background_03.png,"Textures/backgrounds",Texture2D/Sprite,PNG,332,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/backgrounds/background_03.png,"LIVE - 800x1280; UNCOMPRESSED",CONFIRMED
+background_04.png,"Textures/backgrounds",Texture2D/Sprite,PNG,237,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/backgrounds/background_04.png,"LIVE - 800x1280; UNCOMPRESSED",CONFIRMED
+background_05.png,"Textures/backgrounds",Texture2D/Sprite,PNG,346,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/backgrounds/background_05.png,"LIVE - 800x1280; UNCOMPRESSED",CONFIRMED
+Bolt.png,"Textures/effects",Texture2D,PNG,9,Cursor/Legacy(tt=5),n/a,100,n/a,unset,No,Assets/JellyGarden/Textures/effects/Bolt.png,"LIVE - particle texture for ElectricBolt_Add 1.mat",CONFIRMED
+Bubble.png,"Textures/effects",Texture2D,PNG,18,Cursor/Legacy(tt=5),n/a,100,n/a,unset,No,Assets/JellyGarden/Textures/effects/Bubble.png,"LIVE - particle texture for Bubble.mat",CONFIRMED
+Star_particle.tga,"Textures/effects",Texture2D/Sprite,TGA,4,Sprite,Single,100,32,None,No,Assets/JellyGarden/Textures/effects/Star_particle.tga,"LIVE - ONLY TGA in project; maxTextureSize capped at 32",CONFIRMED
+emty_sprite.png,"Textures/effects",Texture2D/Sprite,PNG,1,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/emty_sprite.png,"LIVE - deliberate blank placeholder (filename misspelled 'emty')",CONFIRMED
+explosion-of-purple-candy-1.png,"Textures/effects/explosion_item_01",Texture2D/Sprite,PNG,24,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_01/explosion-of-purple-candy-1.png,"LIVE - 163x163 frame 1/4; loose files, not a sheet",CONFIRMED
+explosion-of-purple-candy-2.png,"Textures/effects/explosion_item_01",Texture2D/Sprite,PNG,32,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_01/explosion-of-purple-candy-2.png,"LIVE - frame 2/4",CONFIRMED
+explosion-of-purple-candy-3.png,"Textures/effects/explosion_item_01",Texture2D/Sprite,PNG,21,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_01/explosion-of-purple-candy-3.png,"LIVE - frame 3/4",CONFIRMED
+explosion-of-red-candy-4.png,"Textures/effects/explosion_item_01",Texture2D/Sprite,PNG,10,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_01/explosion-of-red-candy-4.png,"LIVE - frame 4/4; NAME MISMATCH - 'red' in a purple set",CONFIRMED
+explosion-of-orange-candy-1.png,"Textures/effects/explosion_item_02",Texture2D/Sprite,PNG,23,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_02/explosion-of-orange-candy-1.png,"LIVE - frame 1/4",CONFIRMED
+explosion-of-orange-candy-2.png,"Textures/effects/explosion_item_02",Texture2D/Sprite,PNG,26,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_02/explosion-of-orange-candy-2.png,"LIVE - frame 2/4",CONFIRMED
+explosion-of-orange-candy-3.png,"Textures/effects/explosion_item_02",Texture2D/Sprite,PNG,23,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_02/explosion-of-orange-candy-3.png,"LIVE - frame 3/4",CONFIRMED
+explosion-of-orange-candy-4.png,"Textures/effects/explosion_item_02",Texture2D/Sprite,PNG,13,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_02/explosion-of-orange-candy-4.png,"LIVE - frame 4/4",CONFIRMED
+explosion-of-purple-candy-1.png,"Textures/effects/explosion_item_03",Texture2D/Sprite,PNG,35,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_03/explosion-of-purple-candy-1.png,"LIVE - frame 1/4; name collides with explosion_item_01 set",CONFIRMED
+explosion-of-purple-candy-2.png,"Textures/effects/explosion_item_03",Texture2D/Sprite,PNG,27,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_03/explosion-of-purple-candy-2.png,"LIVE - frame 2/4",CONFIRMED
+explosion-of-purple-candy-3.png,"Textures/effects/explosion_item_03",Texture2D/Sprite,PNG,24,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_03/explosion-of-purple-candy-3.png,"LIVE - frame 3/4",CONFIRMED
+explosion-of-purple-candy-4.png,"Textures/effects/explosion_item_03",Texture2D/Sprite,PNG,15,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_03/explosion-of-purple-candy-4.png,"LIVE - frame 4/4",CONFIRMED
+explosion-of-blue-candy-1.png,"Textures/effects/explosion_item_04",Texture2D/Sprite,PNG,32,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/effects/explosion_item_04/explosion-of-blue-candy-1.png,"LIVE - frame 1/4; UNCOMPRESSED unlike sibling sets",CONFIRMED
+explosion-of-blue-candy-2.png,"Textures/effects/explosion_item_04",Texture2D/Sprite,PNG,30,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/effects/explosion_item_04/explosion-of-blue-candy-2.png,"LIVE - frame 2/4; UNCOMPRESSED",CONFIRMED
+explosion-of-blue-candy-3.png,"Textures/effects/explosion_item_04",Texture2D/Sprite,PNG,26,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/effects/explosion_item_04/explosion-of-blue-candy-3.png,"LIVE - frame 3/4; UNCOMPRESSED",CONFIRMED
+explosion-of-blue-candy-4.png,"Textures/effects/explosion_item_04",Texture2D/Sprite,PNG,19,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/effects/explosion_item_04/explosion-of-blue-candy-4.png,"LIVE - frame 4/4; UNCOMPRESSED",CONFIRMED
+explosion-of-green-candy-1.png,"Textures/effects/explosion_item_05",Texture2D/Sprite,PNG,27,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_05/explosion-of-green-candy-1.png,"LIVE - frame 1/4",CONFIRMED
+explosion-of-green-candy-2.png,"Textures/effects/explosion_item_05",Texture2D/Sprite,PNG,27,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_05/explosion-of-green-candy-2.png,"LIVE - frame 2/4",CONFIRMED
+explosion-of-green-candy-3.png,"Textures/effects/explosion_item_05",Texture2D/Sprite,PNG,22,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_05/explosion-of-green-candy-3.png,"LIVE - frame 3/4",CONFIRMED
+explosion-of-green-candy-4.png,"Textures/effects/explosion_item_05",Texture2D/Sprite,PNG,11,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_05/explosion-of-green-candy-4.png,"LIVE - frame 4/4",CONFIRMED
+explosion-of-yellow-candy-1.png,"Textures/effects/explosion_item_06",Texture2D/Sprite,PNG,40,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_06/explosion-of-yellow-candy-1.png,"LIVE - frame 1/4",CONFIRMED
+explosion-of-yellow-candy-2.png,"Textures/effects/explosion_item_06",Texture2D/Sprite,PNG,37,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_06/explosion-of-yellow-candy-2.png,"LIVE - frame 2/4",CONFIRMED
+explosion-of-yellow-candy-3.png,"Textures/effects/explosion_item_06",Texture2D/Sprite,PNG,30,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_06/explosion-of-yellow-candy-3.png,"LIVE - frame 3/4",CONFIRMED
+explosion-of-yellow-candy-4.png,"Textures/effects/explosion_item_06",Texture2D/Sprite,PNG,18,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/explosion_item_06/explosion-of-yellow-candy-4.png,"LIVE - frame 4/4",CONFIRMED
+snow.png,"Textures/effects",Texture2D,PNG,3,Cursor/Legacy(tt=5),n/a,100,n/a,unset,No,Assets/JellyGarden/Textures/effects/snow.png,"LIVE - particle texture for snow.mat",CONFIRMED
+stipes_destroy.png,"Textures/effects",Texture2D/Sprite,PNG,7,Sprite,Single,100,1024,Normal,No,Assets/JellyGarden/Textures/effects/stipes_destroy.png,"LIVE - striped-clear VFX (filename misspelled 'stipes')",CONFIRMED
+map_background_01.png,"Textures/map",Texture2D/Sprite,PNG,392,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_background_01.png,"LIVE - level map panel; UNCOMPRESSED",CONFIRMED
+map_background_02.png,"Textures/map",Texture2D/Sprite,PNG,370,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_background_02.png,"LIVE - level map panel; UNCOMPRESSED",CONFIRMED
+map_background_03.png,"Textures/map",Texture2D/Sprite,PNG,678,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_background_03.png,"LIVE - 800x1280; 3rd largest asset; UNCOMPRESSED",CONFIRMED
+map_background_04.png,"Textures/map",Texture2D/Sprite,PNG,425,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_background_04.png,"LIVE - level map panel; UNCOMPRESSED",CONFIRMED
+map_background_05.png,"Textures/map",Texture2D/Sprite,PNG,506,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_background_05.png,"LIVE - level map panel; UNCOMPRESSED",CONFIRMED
+map_overlay_01.png,"Textures/map",Texture2D/Sprite,PNG,9,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_overlay_01.png,"LIVE - map decoration overlay",CONFIRMED
+map_overlay_02.png,"Textures/map",Texture2D/Sprite,PNG,9,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_overlay_02.png,"LIVE - map decoration overlay",CONFIRMED
+map_target_01.png,"Textures/map",Texture2D/Sprite,PNG,3,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_target_01.png,"LIVE - level goal icon on map",CONFIRMED
+map_target_02.png,"Textures/map",Texture2D/Sprite,PNG,2,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_target_02.png,"LIVE - level goal icon on map",CONFIRMED
+map_target_03.png,"Textures/map",Texture2D/Sprite,PNG,2,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_target_03.png,"LIVE - level goal icon on map",CONFIRMED
+map_target_04.png,"Textures/map",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_target_04.png,"LIVE - level goal icon on map",CONFIRMED
+map_target_05.png,"Textures/map",Texture2D/Sprite,PNG,3,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/map_target_05.png,"LIVE - level goal icon on map",CONFIRMED
+player_icon.png,"Textures/map",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/player_icon.png,"LIVE - player position marker on map",CONFIRMED
+star1.png,"Textures/map",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/star1.png,"LIVE - map star rating",CONFIRMED
+star2.png,"Textures/map",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/star2.png,"LIVE - map star rating",CONFIRMED
+star3.png,"Textures/map",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/star3.png,"LIVE - map star rating",CONFIRMED
+start_flag.png,"Textures/map",Texture2D/Sprite,PNG,9,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/map/start_flag.png,"LIVE - map start marker",CONFIRMED
+booster_30_times_icon.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,44,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_30_times_icon.png,"LIVE - shop item icon",CONFIRMED
+booster_5_moves_icon.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,50,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_5_moves_icon.png,"LIVE - shop item icon",CONFIRMED
+booster_5_pakages.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,51,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_5_pakages.png,"LIVE - shop item icon (filename misspelled 'pakages')",CONFIRMED
+booster_5_stripes_jelly.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,49,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_5_stripes_jelly.png,"LIVE - shop item icon",CONFIRMED
+booster_bomb.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,53,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_bomb.png,"LIVE - shop item icon",CONFIRMED
+booster_colorful_bomb.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,46,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_colorful_bomb.png,"LIVE - shop item icon",CONFIRMED
+booster_hand.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,44,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_hand.png,"LIVE - shop item icon",CONFIRMED
+booster_info_banner.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,203,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_info_banner.png,"LIVE - modal panel; fixed bitmap, cannot be resized (no 9-slice)",CONFIRMED
+booster_randome_color.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,59,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_randome_color.png,"LIVE - shop item icon (filename misspelled 'randome')",CONFIRMED
+booster_shop_banner.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,117,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_shop_banner.png,"LIVE - modal panel; fixed bitmap, no 9-slice",CONFIRMED
+booster_shop_button.png,"Textures/menu/booster_shop",Texture2D/Sprite,PNG,16,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/booster_shop/booster_shop_button.png,"LIVE - button; no 9-slice border, resizing will distort",CONFIRMED
+bomb_01.png,"Textures/menu/boosts_items",Texture2D/Sprite,PNG,27,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/boosts_items/bomb_01.png,"LIVE - in-game booster item art",CONFIRMED
+bomb_02.png,"Textures/menu/boosts_items",Texture2D/Sprite,PNG,27,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/boosts_items/bomb_02.png,"LIVE - in-game booster item art",CONFIRMED
+random_color_item.png,"Textures/menu/boosts_items",Texture2D/Sprite,PNG,26,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/boosts_items/random_color_item.png,"LIVE - in-game booster item art",CONFIRMED
+complete_banner.png,"Textures/menu/complete_menu",Texture2D/Sprite,PNG,220,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/complete_menu/complete_banner.png,"LIVE - 642x1007 level-complete panel; fixed bitmap, no 9-slice",CONFIRMED
+next_button.png,"Textures/menu/complete_menu",Texture2D/Sprite,PNG,25,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/complete_menu/next_button.png,"LIVE - button; no 9-slice",CONFIRMED
+facebook_button.png,"Textures/menu/facebook",Texture2D/Sprite,PNG,9,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/facebook/facebook_button.png,"LIVE - social login button; dated third-party branding",CONFIRMED
+fb_logout-button.png,"Textures/menu/facebook",Texture2D/Sprite,PNG,24,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/menu/facebook/fb_logout-button.png,"LIVE - social logout button; dated third-party branding",CONFIRMED
+share_score_button.png,"Textures/menu/facebook",Texture2D/Sprite,PNG,25,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/facebook/share_score_button.png,"LIVE - social share button",CONFIRMED
+again_button.png,"Textures/menu/failed_menu",Texture2D/Sprite,PNG,25,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/failed_menu/again_button.png,"LIVE - retry button; no 9-slice",CONFIRMED
+failed_banner_01.png,"Textures/menu/failed_menu",Texture2D/Sprite,PNG,77,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/failed_menu/failed_banner_01.png,"LIVE - fail panel; fixed bitmap, no 9-slice",CONFIRMED
+failed_banner_02.png,"Textures/menu/failed_menu",Texture2D/Sprite,PNG,170,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/failed_menu/failed_banner_02.png,"LIVE - fail panel variant; no 9-slice",CONFIRMED
+give_up_button.png,"Textures/menu/failed_menu",Texture2D/Sprite,PNG,24,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/failed_menu/give_up_button.png,"LIVE - button; no 9-slice",CONFIRMED
+save_button_30_sec.png,"Textures/menu/failed_menu",Texture2D/Sprite,PNG,60,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/failed_menu/save_button_30_sec.png,"LIVE - continue-offer button; text baked into art",CONFIRMED
+save_button_5_moves.png,"Textures/menu/failed_menu",Texture2D/Sprite,PNG,60,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/failed_menu/save_button_5_moves.png,"LIVE - continue-offer button; text baked into art",CONFIRMED
+v_completed.png,"Textures/menu/failed_menu",Texture2D/Sprite,PNG,7,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/failed_menu/v_completed.png,"LIVE - goal tick mark",CONFIRMED
+x_failed.png,"Textures/menu/failed_menu",Texture2D/Sprite,PNG,8,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/failed_menu/x_failed.png,"LIVE - goal cross mark",CONFIRMED
+arrow_ingredients.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,10,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/arrow_ingredients.png,"LIVE - arrow_ingredients.prefab",CONFIRMED
+gui.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,43,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/gui.png,"LIVE - 800x182 top HUD wooden bar; fixed bitmap, no 9-slice",CONFIRMED
+gui_bottom.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,45,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/gui_bottom.png,"LIVE - bottom HUD bar; no 9-slice",CONFIRMED
+gui_for_star_bar_01.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,2,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/gui_for_star_bar_01.png,"LIVE - star progress bar frame",CONFIRMED
+level_txt.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/level_txt.png,"LIVE - LABEL BAKED AS IMAGE - not localisable without new art",CONFIRMED
+moves_txt.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/moves_txt.png,"LIVE - LABEL BAKED AS IMAGE - not localisable without new art",CONFIRMED
+pause_button.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,10,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/pause_button.png,"LIVE - HUD pause button",CONFIRMED
+score_txt.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/score_txt.png,"LIVE - LABEL BAKED AS IMAGE - not localisable without new art",CONFIRMED
+star_bar.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,2,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/star_bar.png,"LIVE - star progress bar fill",CONFIRMED
+star_for_bar_01.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,3,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/star_for_bar_01.png,"LIVE - star bar pip (empty)",CONFIRMED
+star_for_bar_02.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/star_for_bar_02.png,"LIVE - star bar pip (filled)",CONFIRMED
+target_txt.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,4,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/target_txt.png,"LIVE - LABEL BAKED AS IMAGE - not localisable without new art",CONFIRMED
+timer_txt.png,"Textures/menu/game_menu",Texture2D/Sprite,PNG,3,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/game_menu/timer_txt.png,"LIVE - LABEL BAKED AS IMAGE - not localisable without new art",CONFIRMED
+leadboard.png,"Textures/menu",Texture2D/Sprite,PNG,34,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/menu/leadboard.png,"LIVE - Leadboard.prefab (filename misspelled 'leadboard')",CONFIRMED
+leadboard_player_icon.png,"Textures/menu",Texture2D/Sprite,PNG,5,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/menu/leadboard_player_icon.png,"LIVE - LeadboardPlayerIcon.prefab",CONFIRMED
+loading.png,"Textures/menu/main_menu",Texture2D/Sprite,PNG,1043,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/main_menu/loading.png,"LIVE - LARGEST ASSET IN PROJECT; 800x1280 UNCOMPRESSED splash",CONFIRMED
+logo.png,"Textures/menu/main_menu",Texture2D/Sprite,PNG,90,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/main_menu/logo.png,"LIVE - game wordmark; raster only, no vector source exists",CONFIRMED
+main_menu_banner.png,"Textures/menu/main_menu",Texture2D/Sprite,PNG,469,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/main_menu/main_menu_banner.png,"LIVE - 800x1280 main menu backdrop; UNCOMPRESSED",CONFIRMED
+play_main_menu_button.png,"Textures/menu/main_menu",Texture2D/Sprite,PNG,25,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/main_menu/play_main_menu_button.png,"LIVE - primary CTA; no 9-slice",CONFIRMED
+wheel.png,"Textures/menu/main_menu",Texture2D/Sprite,PNG,80,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/main_menu/wheel.png,"LIVE - rotating decoration (see rotation.anim)",CONFIRMED
+ask_life.png,"Textures/menu/map_menu",Texture2D/Sprite,PNG,129,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/map_menu/ask_life.png,"LIVE - modal panel; no 9-slice",CONFIRMED
+boost_plus_button.png,"Textures/menu/map_menu",Texture2D/Sprite,PNG,9,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/map_menu/boost_plus_button.png,"LIVE - duplicate concept of Boosts/boost_plus_button.png",CONFIRMED
+buy_life.png,"Textures/menu/map_menu",Texture2D/Sprite,PNG,23,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/map_menu/buy_life.png,"LIVE - monetisation button",CONFIRMED
+gold.png,"Textures/menu/map_menu",Texture2D/Sprite,PNG,10,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/map_menu/gold.png,"LIVE - soft currency icon",CONFIRMED
+gold_bank.png,"Textures/menu/map_menu",Texture2D/Sprite,PNG,139,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/map_menu/gold_bank.png,"LIVE - currency store panel; no 9-slice",CONFIRMED
+gold_bank_button.png,"Textures/menu/map_menu",Texture2D/Sprite,PNG,10,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/map_menu/gold_bank_button.png,"LIVE - currency store entry button",CONFIRMED
+heart.png,"Textures/menu/map_menu",Texture2D/Sprite,PNG,12,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/map_menu/heart.png,"LIVE - lives icon",CONFIRMED
+setting_banner.png,"Textures/menu/map_menu",Texture2D/Sprite,PNG,176,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/map_menu/setting_banner.png,"LIVE - settings panel; no 9-slice",CONFIRMED
+setting_button.png,"Textures/menu/map_menu",Texture2D/Sprite,PNG,17,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/map_menu/setting_button.png,"LIVE - settings entry button",CONFIRMED
+pause_banner.png,"Textures/menu/pause_menu",Texture2D/Sprite,PNG,60,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/pause_menu/pause_banner.png,"LIVE - pause panel; no 9-slice",CONFIRMED
+pause_continue_button.png,"Textures/menu/pause_menu",Texture2D/Sprite,PNG,19,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/pause_menu/pause_continue_button.png,"LIVE - pause menu button",CONFIRMED
+pause_map_button.png,"Textures/menu/pause_menu",Texture2D/Sprite,PNG,9,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/pause_menu/pause_map_button.png,"LIVE - pause menu button",CONFIRMED
+pause_music_off_button.png,"Textures/menu/pause_menu",Texture2D/Sprite,PNG,5,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/pause_menu/pause_music_off_button.png,"LIVE - toggle state art (off)",CONFIRMED
+pause_music_on_button.png,"Textures/menu/pause_menu",Texture2D/Sprite,PNG,8,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/pause_menu/pause_music_on_button.png,"LIVE - toggle state art (on)",CONFIRMED
+pause_sound_off_button.png,"Textures/menu/pause_menu",Texture2D/Sprite,PNG,5,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/pause_menu/pause_sound_off_button.png,"LIVE - toggle state art (off)",CONFIRMED
+pause_sound_on_button.png,"Textures/menu/pause_menu",Texture2D/Sprite,PNG,9,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/pause_menu/pause_sound_on_button.png,"LIVE - toggle state art (on)",CONFIRMED
+boost_info_button.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,7,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/boost_info_button.png,"LIVE - pre-level info button",CONFIRMED
+booster_plus_button.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,9,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/booster_plus_button.png,"LIVE - third near-identical plus-button variant",CONFIRMED
+cloud.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,15,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/cloud.png,"LIVE - decorative cloud",CONFIRMED
+game_play_01_banner.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,59,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/game_play_01_banner.png,"LIVE - pre-level panel header; no 9-slice",CONFIRMED
+number_button.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,6,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/number_button.png,"LIVE - count badge",CONFIRMED
+play_booster_01.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,32,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/play_booster_01.png,"LIVE - pre-level booster slot",CONFIRMED
+play_booster_02.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,35,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/play_booster_02.png,"LIVE - pre-level booster slot",CONFIRMED
+play_booster_03.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,40,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/play_booster_03.png,"LIVE - pre-level booster slot",CONFIRMED
+play_booster_locked.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,23,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/play_booster_locked.png,"LIVE - locked booster state",CONFIRMED
+play_button.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,23,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/play_button.png,"LIVE - level start CTA; no 9-slice",CONFIRMED
+play_menu_01.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,179,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/play_menu_01.png,"LIVE - pre-level panel; no 9-slice",CONFIRMED
+star_01.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,11,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/star_01.png,"LIVE - star rating; 3rd separate star art set in project",CONFIRMED
+star_02.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,11,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/star_02.png,"LIVE - star rating",CONFIRMED
+star_03.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,11,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/star_03.png,"LIVE - star rating",CONFIRMED
+x_button.png,"Textures/menu/play_menu",Texture2D/Sprite,PNG,14,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/play_menu/x_button.png,"LIVE - modal close button",CONFIRMED
+rate_banner.png,"Textures/menu/rate",Texture2D/Sprite,PNG,33,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/rate/rate_banner.png,"LIVE - Rate.prefab; no 9-slice",CONFIRMED
+rate_button.png,"Textures/menu/rate",Texture2D/Sprite,PNG,19,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/rate/rate_button.png,"LIVE - Rate.prefab CTA",CONFIRMED
+rate_lebel.png,"Textures/menu/rate",Texture2D/Sprite,PNG,50,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/rate/rate_lebel.png,"LIVE - rate prompt label (filename misspelled 'lebel')",CONFIRMED
+gems_refilled.png,"Textures/menu/rewards",Texture2D/Sprite,PNG,50,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/rewards/gems_refilled.png,"LIVE - reward popup art",CONFIRMED
+heart_refilled.png,"Textures/menu/rewards",Texture2D/Sprite,PNG,35,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/rewards/heart_refilled.png,"LIVE - reward popup art",CONFIRMED
+main_rewards_banner.png,"Textures/menu/rewards",Texture2D/Sprite,PNG,202,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/rewards/main_rewards_banner.png,"LIVE - reward panel; no 9-slice",CONFIRMED
+ok_button.png,"Textures/menu/rewards",Texture2D/Sprite,PNG,17,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/rewards/ok_button.png,"LIVE - reward confirm button",CONFIRMED
+see_ads_button.png,"Textures/menu",Texture2D/Sprite,PNG,19,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/see_ads_button.png,"LIVE - rewarded-ad CTA",CONFIRMED
+finger_for_tutorial.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,22,Sprite,Single,100,2048,None,No,Assets/JellyGarden/Textures/menu/tutorial/finger_for_tutorial.png,"LIVE - tutorial pointer (see tip.anim / tip1.anim)",CONFIRMED
+info_button.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,10,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/info_button.png,"LIVE - tutorial entry button",CONFIRMED
+next_back_button.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,10,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/next_back_button.png,"LIVE - tutorial paging arrow (mirrored for both directions)",CONFIRMED
+tutorial_01.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,116,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_01.png,"LIVE - 483x346 tutorial page; ART CONTAINS TEXT - not localisable",CONFIRMED
+tutorial_02.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,109,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_02.png,"LIVE - tutorial page; art contains text",CONFIRMED
+tutorial_03.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,118,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_03.png,"LIVE - tutorial page; art contains text",CONFIRMED
+tutorial_04.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,53,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_04.png,"LIVE - tutorial page; art contains text",CONFIRMED
+tutorial_05.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,108,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_05.png,"LIVE - tutorial page; art contains text",CONFIRMED
+tutorial_06.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,57,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_06.png,"LIVE - tutorial page; art contains text",CONFIRMED
+tutorial_07.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,118,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_07.png,"LIVE - tutorial page; art contains text",CONFIRMED
+tutorial_08.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,108,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_08.png,"LIVE - tutorial page; art contains text",CONFIRMED
+tutorial_09.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,140,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_09.png,"LIVE - tutorial page; art contains text",CONFIRMED
+tutorial_banner.png,"Textures/menu/tutorial",Texture2D/Sprite,PNG,66,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/menu/tutorial/tutorial_banner.png,"LIVE - tutorial frame; no 9-slice",CONFIRMED
+fantastic_text.png,"Textures/text",Texture2D/Sprite,PNG,68,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/text/fantastic_text.png,"LIVE - praise word as bitmap; not localisable without new art",CONFIRMED
+good_text.png,"Textures/text",Texture2D/Sprite,PNG,54,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/text/good_text.png,"LIVE - 377x216 praise word as bitmap; not localisable",CONFIRMED
+great_text.png,"Textures/text",Texture2D/Sprite,PNG,54,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/text/great_text.png,"LIVE - praise word as bitmap; not localisable",CONFIRMED
+level_completed_text.png,"Textures/text",Texture2D/Sprite,PNG,54,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/text/level_completed_text.png,"LIVE - outcome word as bitmap; not localisable",CONFIRMED
+level_failed_text.png,"Textures/text",Texture2D/Sprite,PNG,53,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/text/level_failed_text.png,"ORPHAN - the only unreferenced member of the text/ set",CONFIRMED
+no_match_text.png,"Textures/text",Texture2D/Sprite,PNG,54,Sprite,Single,100,1024,None,No,Assets/JellyGarden/Textures/text/no_match_text.png,"LIVE - warning word as bitmap; not localisable",CONFIRMED
+BorisBlackBloxx.ttf,Fonts,Font,TTF,52,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Fonts/BorisBlackBloxx.ttf,"LIVE - 1 reference in game.unity; legacy UI.Text only, no TMP asset",CONFIRMED
+Candy Script_0.ttf,Fonts,Font,TTF,306,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Fonts/Candy Script_0.ttf,"LIVE - primary display face, 51 references in game.unity",CONFIRMED
+FONTH__.TTF,Fonts,Font,TTF,35,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Fonts/FONTH__.TTF,"LIVE - 5 references in game.unity",CONFIRMED
+snow.mat,Materials,Material,MAT,n/a,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Fonts/Materials/snow.mat,"Built-in shader fileID 200; legacy Particles family; URP risk",CONFIRMED
+AddSoft.mat,Materials,Material,MAT,n/a,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Fonts/Materials/Water/AddSoft.mat,"Built-in shader fileID 202; legacy Particles family; URP risk",CONFIRMED
+m_AddSoft.mat,Materials,Material,MAT,n/a,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Fonts/Materials/Water/m_AddSoft.mat,"Built-in shader fileID 202; near-duplicate of AddSoft.mat",CONFIRMED
+Splash_4frms.mat,Materials,Material,MAT,n/a,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Fonts/Materials/Water/Splash_4frms.mat,"Built-in shader fileID 202; legacy Particles family; URP risk",CONFIRMED
+Bubble.mat,Materials,Material,MAT,n/a,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Materials/Bubble.mat,"Built-in shader fileID 202; uses effects/Bubble.png; URP risk",CONFIRMED
+ElectricBolt_Add 1.mat,Materials,Material,MAT,n/a,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Materials/ElectricBolt_Add 1.mat,"Built-in shader fileID 200; ' 1' suffix suggests a stray copy",CONFIRMED
+package_particle.mat,Materials,Material,MAT,n/a,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Materials/package_particle.mat,"Built-in shader fileID 10721; legacy Particles family; URP risk",CONFIRMED
+JuiceAdditive.mat,Materials,Material,MAT,1,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Resources/JuiceAdditive.mat,"ADDED BY AI AGENT - uses custom Shaders/JuiceAdditive.shader",CONFIRMED
+JuiceAdditive.shader,Shaders,Shader,SHADER,4,n/a,n/a,n/a,n/a,n/a,n/a,Assets/JellyGarden/Shaders/JuiceAdditive.shader,"ADDED BY AI AGENT - the only custom shader in the project",CONFIRMED
+game_map_music.wav,Audio,AudioClip,WAV,14827,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/game_map_music.wav,"LARGEST AUDIO FILE; loadType 0 Decompress-On-Load, should stream",CONFIRMED
+game_music.wav,Audio,AudioClip,WAV,4594,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/game_music.wav,"Gameplay music; Decompress-On-Load, should stream",CONFIRMED
+Cheers.wav,Audio,AudioClip,WAV,454,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Cheers.wav,"SFX",CONFIRMED
+Level _complete.wav,Audio,AudioClip,WAV,437,n/a,n/a,n/a,n/a,unread,n/a,Assets/JellyGarden/Audio/wav/Level _complete.wav,"NEAR-DUPLICATE of Level_complete.wav (note space in filename)",CONFIRMED
+No_match.wav,Audio,AudioClip,WAV,287,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/No_match.wav,"SFX",CONFIRMED
+Star_win_03.wav,Audio,AudioClip,WAV,275,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Star_win_03.wav,"SFX",CONFIRMED
+Star_win_02.wav,Audio,AudioClip,WAV,244,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Star_win_02.wav,"SFX",CONFIRMED
+Package_destroy.wav,Audio,AudioClip,WAV,226,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Package_destroy.wav,"SFX",CONFIRMED
+Color_bomb.wav,Audio,AudioClip,WAV,226,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Color_bomb.wav,"SFX",CONFIRMED
+Game_over_1.wav,Audio,AudioClip,WAV,207,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Game_over_1.wav,"SFX",CONFIRMED
+Game_over_2.wav,Audio,AudioClip,WAV,193,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Game_over_2.wav,"SFX",CONFIRMED
+Star_win_01.wav,Audio,AudioClip,WAV,172,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Star_win_01.wav,"SFX",CONFIRMED
+Create_bonus.wav,Audio,AudioClip,WAV,148,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Create_bonus.wav,"SFX",CONFIRMED
+Warning_time.wav,Audio,AudioClip,WAV,137,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Warning_time.wav,"SFX",CONFIRMED
+Alert.wav,Audio,AudioClip,WAV,131,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Alert.wav,"SFX",CONFIRMED
+Stripes_bonus.wav,Audio,AudioClip,WAV,123,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Stripes_bonus.wav,"SFX",CONFIRMED
+Level_complete.wav,Audio,AudioClip,WAV,122,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Level_complete.wav,"NEAR-DUPLICATE of 'Level _complete.wav'",CONFIRMED
+Get_star_ingredient.wav,Audio,AudioClip,WAV,120,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Get_star_ingredient.wav,"SFX",CONFIRMED
+Burning_wick.wav,Audio,AudioClip,WAV,106,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Burning_wick.wav,"SFX",CONFIRMED
+Lollipop.wav,Audio,AudioClip,WAV,85,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Lollipop.wav,"SFX",CONFIRMED
+Package.wav,Audio,AudioClip,WAV,82,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Package.wav,"SFX",CONFIRMED
+Cash.wav,Audio,AudioClip,WAV,63,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Cash.wav,"SFX",CONFIRMED
+Jelly_crash.wav,Audio,AudioClip,WAV,46,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Jelly_crash.wav,"SFX",CONFIRMED
+Drop.wav,Audio,AudioClip,WAV,32,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Drop.wav,"SFX",CONFIRMED
+Explosion.wav,Audio,AudioClip,WAV,21,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Explosion.wav,"SFX",CONFIRMED
+drop2.wav,Audio,AudioClip,WAV,18,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/drop2.wav,"SFX",CONFIRMED
+drop1.wav,Audio,AudioClip,WAV,18,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/drop1.wav,"SFX",CONFIRMED
+Wrong_match.wav,Audio,AudioClip,WAV,16,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Wrong_match.wav,"SFX",CONFIRMED
+Jelly_destroy.wav,Audio,AudioClip,WAV,12,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Jelly_destroy.wav,"SFX",CONFIRMED
+Jelly_destroy_02.wav,Audio,AudioClip,WAV,8,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Jelly_destroy_02.wav,"SFX",CONFIRMED
+Swishe_banner.wav,Audio,AudioClip,WAV,8,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Swishe_banner.wav,"SFX - UI panel whoosh",CONFIRMED
+Swishe_banner_02.wav,Audio,AudioClip,WAV,8,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Swishe_banner_02.wav,"SFX - UI panel whoosh",CONFIRMED
+Block_jelly_choco_destroy.wav,Audio,AudioClip,WAV,7,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Block_jelly_choco_destroy.wav,"SFX",CONFIRMED
+Combo 01.wav,Audio,AudioClip,WAV,6,n/a,n/a,n/a,n/a,unread,n/a,Assets/JellyGarden/Audio/wav/Combo 01.wav,"SFX - filename contains a space",CONFIRMED
+Button.wav,Audio,AudioClip,WAV,5,n/a,n/a,n/a,n/a,Vorbis,n/a,Assets/JellyGarden/Audio/wav/Button.wav,"SFX - the single UI button click",CONFIRMED

@@ -104,7 +104,7 @@ namespace JellyGarden.Scripts.Juice
                 {
                     var sprite=pieces==null?fallback:pieces[p].sprite;
                     Rect rect=sprite.rect;
-                    // The sixth gem (King Leo's coin) has no burst sheet: cut its own painted surface into four shards.
+                    // The sixth gem is porcelain: cut its own painted surface into four shards.
                     if(pieces==null)rect=new Rect(rect.x+(p%2)*rect.width*.5f,rect.y+(p/2)*rect.height*.5f,rect.width*.5f,rect.height*.5f);
                     var mesh=ChipMesh(rect,texture);meshes.Add(mesh);
                     var go=new GameObject("Match chip "+color+"/"+p);go.transform.SetParent(transform,false);

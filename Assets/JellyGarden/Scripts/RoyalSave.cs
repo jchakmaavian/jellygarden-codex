@@ -7,6 +7,7 @@ namespace RoyalThrone.Testing
     public static class RoyalSave
     {
         public static bool Testing { get; internal set; }
+        internal static bool ReferenceCampaign { get; set; }
         public static bool BlockGameplayInput
         {
             get
@@ -19,8 +20,7 @@ namespace RoyalThrone.Testing
 #endif
             }
         }
-        // Royal Throne's reference-campaign profile is not ported (plan D8): one QA profile.
-        const string Prefix = "RoyalThrone.QA.v1/";
+        static string Prefix => ReferenceCampaign ? "RoyalThrone.QA.Reference50.v1/" : "RoyalThrone.QA.v1/";
         static string Index => Prefix + "keys";
         static string WriteKey(string key)
         {
@@ -31,7 +31,8 @@ namespace RoyalThrone.Testing
             UnityEngine.PlayerPrefs.SetInt(Prefix + "seen/" + key, 1);
             return Prefix + "data/" + key;
         }
-        static string ReadKey(string key) => Testing && UnityEngine.PlayerPrefs.HasKey(Prefix + "seen/" + key) ? Prefix + "data/" + key : key;
+        static string ReadKey(string key) => Testing && (UnityEngine.PlayerPrefs.HasKey(Prefix + "seen/" + key) ||
+            (ReferenceCampaign && (key.StartsWith("Level.") || key.StartsWith("Score") || key=="OpenLevel" || key=="OpenLevelTest"))) ? Prefix + "data/" + key : key;
         public static int GetInt(string key, int value = 0) => UnityEngine.PlayerPrefs.GetInt(ReadKey(key), value);
         public static float GetFloat(string key, float value = 0) => UnityEngine.PlayerPrefs.GetFloat(ReadKey(key), value);
         public static string GetString(string key, string value = "") => UnityEngine.PlayerPrefs.GetString(ReadKey(key), value);
@@ -54,6 +55,6 @@ namespace RoyalThrone.Testing
             UnityEngine.PlayerPrefs.DeleteKey(Index); Save();
         }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetSession() { Testing = false; }
+        static void ResetSession() { Testing = false; ReferenceCampaign = false; }
     }
 }

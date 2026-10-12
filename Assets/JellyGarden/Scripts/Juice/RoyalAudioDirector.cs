@@ -7,32 +7,44 @@ namespace JellyGarden.Scripts.Juice
     public sealed class RoyalAudioDirector : MonoBehaviour
     {
         static RoyalAudioDirector instance;
-        // Effects only: King Leo's MusicBase keeps the music, so this director plays none.
-        AudioSource[] voices;
+        AudioSource[] voices; AudioSource[] music;
         readonly AudioClip[] clips = new AudioClip[11];
         readonly float[] last = new float[9];
         float[] voiceGains;
-        int variation;
+        int variation, musicIndex; float duck, fade=-1, winSince=-1;
+        // Home keeps the castle theme; level n plays track (n-1) mod count, each an original seamless loop (Design/Audio/LevelMusic).
+        // The user rejected the first ten tracks, The King's Quest and Crown of Fire; on 8 Oct 2026 they asked for a melodic march,
+        // and The Royal Parade March is on trial.
+        public static readonly string[] LevelMusic={"level-royal-march"};
+        readonly AudioClip[] levelClips=new AudioClip[LevelMusic.Length];
+        readonly bool[] levelTried=new bool[LevelMusic.Length];
+        AudioLowPassFilter musicFilter;
         public int PeakVoices { get; private set; }
         public static RoyalAudioDirector Get
         {
             get
             {
                 if (!Application.isPlaying || !RoyalEffectsProfile.Get) return null;
-                if (!instance) { var go = new GameObject("Royal audio — capped voices"); instance=go.AddComponent<RoyalAudioDirector>(); DontDestroyOnLoad(go); instance.Build(); }
+                if (!instance) { var go = new GameObject("Royal audio — capped voices + music crossfade"); instance=go.AddComponent<RoyalAudioDirector>(); DontDestroyOnLoad(go); instance.Build(); }
                 return instance;
             }
         }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)] static void ResetStatics() { instance=null; }
         void Build()
         {
-            // Slot 6 held Royal Throne's castle theme; music stays King Leo's.
-            string[] names={"match-a","match-b","rocket","tnt","helicopter","create",null,"land","click","firework","celebrate"};
-            for(int i=0;i<names.Length;i++) if(names[i]!=null) clips[i]=Resources.Load<AudioClip>("RoyalGameplay/Audio/"+names[i]);
+            string[] names={"match-a","match-b","rocket","tnt","helicopter","create","castle-theme","land","click","firework","celebrate"};
+            for(int i=0;i<names.Length;i++) clips[i]=Resources.Load<AudioClip>("RoyalGameplay/Audio/"+names[i]);
             voices=new AudioSource[RoyalEffectsProfile.Get.soundVoices];
             voiceGains=new float[voices.Length];
             for(int i=0;i<voices.Length;i++) { voices[i]=gameObject.AddComponent<AudioSource>(); voices[i].playOnAwake=false; voices[i].spatialBlend=0; voices[i].priority=160; }
+            // The music has a child of its own, so the card can muffle it (a low-pass filter acts on its GameObject's sources)
+            // without muffling the effects.
+            var musicHost=new GameObject("Music"); musicHost.transform.SetParent(transform,false);
+            music=new AudioSource[2];
+            for(int i=0;i<2;i++) { music[i]=musicHost.AddComponent<AudioSource>(); music[i].playOnAwake=false; music[i].clip=clips[6]; music[i].priority=0; music[i].volume=0; }
+            musicFilter=musicHost.AddComponent<AudioLowPassFilter>(); musicFilter.cutoffFrequency=22000; musicFilter.lowpassResonanceQ=1;
             for(int i=0;i<last.Length;i++) last[i]=-10;
+            music[0].Play();
         }
         public void Play(RoyalCue cue,float strength=1)
         {
@@ -48,6 +60,9 @@ namespace JellyGarden.Scripts.Juice
             int priority=cue==RoyalCue.Land?200:cue==RoyalCue.Match?160:cue==RoyalCue.Firework?90:60;
             // Restrained variation keeps repeated contacts organic without squeaky pitch climbs.
             PlayClip(clip,gain*Mathf.Clamp(strength,.6f,1.2f),priority, !imported&&cue==RoyalCue.Match?1+((variation%5)-2)*.012f:1);
+            // No ducking while a won level plays out: the win sets the music's level itself (MusicTarget).
+            var level = LevelManager.THIS; bool winning = level && (level.gameStatus == GameState.PreWinAnimations || level.gameStatus == GameState.Win);
+            if((cue==RoyalCue.Tnt||cue==RoyalCue.Rocket||cue==RoyalCue.Celebrate) && !winning) duck=.42f;
         }
         public void PlayClip(AudioClip clip,float gain=1,int priority=150,float pitch=1)
         {
@@ -70,7 +85,7 @@ namespace JellyGarden.Scripts.Juice
                 voice.Stop(); voice.clip = null; instance.voiceGains[i] = 0;
             }
         }
-        // Cancel only the owning presentation's cue; other gameplay voices continue.
+        // Cancel only the owning presentation's cue; music and other gameplay voices continue.
         public void StopClip(AudioClip clip)
         {
             if (!clip || voices == null) return;
@@ -86,9 +101,44 @@ namespace JellyGarden.Scripts.Juice
             float headroom=Mathf.Min(1, .68f/Mathf.Max(.001f,total));
             for(int i=0;i<voices.Length;i++) voices[i].volume=voiceGains[i]*headroom*sfxGate;
         }
-        // Switching Sound off fades the effects over 0.1 s instead of cutting them.
-        const float SfxFade=.1f;
-        float sfxGate=1;
+        // Smooth starts and stops (the user, 2026-10-08: "all the music play and pause must be smooth"). Every change of the
+        // music's loudness glides instead of jumping: Music on or off, the duck under big blasts, the win's fade and return,
+        // the Settings slider, and coming back to the app. Silent music is paused where it is and resumes from there. The win's
+        // muffle glides, and switching Sound off fades the effects over 0.1 s instead of cutting them.
+        const float MusicGlide=.2f, MuffleGlide=.25f, SfxFade=.1f;
+        float musicLevel, cutoff=22000, cutoffTarget=22000, sfxGate=1; bool musicPaused;
+        void OnApplicationPause(bool paused)
+        {
+            // Unity resumes the audio as it was; start the music from silence and let it glide back in.
+            if(paused||music==null) return;
+            musicLevel=0; foreach(var m in music) if(m) m.volume=0;
+        }
+        // The end of a won level follows the user's Royal Match Level 13 clip (the user, 2026-10-06: "music like the clip",
+        // replacing 10-05's music that held through the win): the level music fades out once the goals are met, so the
+        // fanfare and the boosters play alone; on the card it comes back softly and muffled, after the star has landed (about
+        // 0.9 s); Home brings it back in full.
+        float MusicTarget(float normal)
+        {
+            var level=LevelManager.THIS; var state=level?level.gameStatus:GameState.Map;
+            if(state==GameState.Win){ if(winSince<0)winSince=Time.unscaledTime; } else winSince=-1;
+            cutoffTarget=state==GameState.Win?1100:22000;
+            if(state==GameState.PreWinAnimations) return 0;
+            if(state==GameState.Win) return normal*.45f*Mathf.Clamp01((Time.unscaledTime-winSince-.9f)/1f);
+            return normal;
+        }
+        AudioClip DesiredMusic()
+        {
+            var level=LevelManager.THIS;
+            if(!level||level.gameStatus==GameState.Map) return clips[6];
+            int i=((level.currentLevel-1)%LevelMusic.Length+LevelMusic.Length)%LevelMusic.Length;
+            if(!levelTried[i]) { levelTried[i]=true; levelClips[i]=Resources.Load<AudioClip>("RoyalGameplay/Music/"+LevelMusic[i]); }
+            return levelClips[i]?levelClips[i]:clips[6];
+        }
+        void StartFade(AudioClip clip)
+        {
+            var next=music[1-musicIndex]; next.clip=clip; next.loop=clip!=clips[6]; next.time=0; next.volume=0; next.Play(); fade=0;
+            musicPaused=false;
+        }
         void Update()
         {
             if(voices==null)return;
@@ -98,6 +148,43 @@ namespace JellyGarden.Scripts.Juice
             foreach(var v in voices){ if(v.isPlaying)count++; if(soundOff&&sfxGate<=0&&v.isPlaying)v.Stop(); }
             PeakVoices=Mathf.Max(PeakVoices,count);
             BalanceVoices();
+            if(!clips[6])return;
+            duck=Mathf.Max(0,duck-dt);
+            float target=MusicTarget(PlayerPrefs.GetInt("Music",1)*RoyalEffectsProfile.Get.musicVolume*(duck>0?.55f:1));
+            musicLevel+=(target-musicLevel)*(1-Mathf.Exp(-dt/MusicGlide));
+            if(Mathf.Abs(target-musicLevel)<.0005f) musicLevel=target;
+            cutoff=Mathf.Exp(Mathf.Lerp(Mathf.Log(cutoff),Mathf.Log(cutoffTarget),1-Mathf.Exp(-dt/MuffleGlide)));
+            if(musicFilter) musicFilter.cutoffFrequency=cutoff;
+            float duration=RoyalEffectsProfile.Get.musicCrossfade;
+            var current=music[musicIndex]; var want=DesiredMusic();
+            if(fade<0&&want&&current.clip!=want)
+            {
+                // Entering a level or coming Home crossfades to that place's music once its data has loaded in the background.
+                if(want.loadState==AudioDataLoadState.Unloaded) want.LoadAudioData();
+                if(want.loadState==AudioDataLoadState.Loaded) StartFade(want);
+            }
+            // The castle theme loops by crossfading into itself; level tracks are seamless loops and repeat on their own.
+            else if(fade<0&&!current.loop&&current.clip&&current.time>=current.clip.length-duration) StartFade(current.clip);
+            if(fade>=0)
+            {
+                fade+=Time.unscaledDeltaTime; float t=Mathf.Clamp01(fade/duration);
+                music[musicIndex].volume=Mathf.Cos(t*Mathf.PI*.5f)*musicLevel;
+                music[1-musicIndex].volume=Mathf.Sin(t*Mathf.PI*.5f)*musicLevel;
+                if(t>=1)
+                {
+                    var old=music[musicIndex]; old.Stop();
+                    if(old.clip&&old.clip!=clips[6]&&old.clip!=music[1-musicIndex].clip) old.clip.UnloadAudioData();
+                    musicIndex=1-musicIndex; fade=-1;
+                }
+            }
+            else
+            {
+                var source=music[musicIndex]; source.volume=musicLevel; music[1-musicIndex].volume=0;
+                // Faded all the way out (Music off, the celebration): pause in place; when wanted again, resume from there.
+                if(target<=0&&musicLevel<=0) { if(source.isPlaying) { source.Pause(); musicPaused=true; } }
+                else if(musicPaused) { source.UnPause(); musicPaused=false; }
+                else if(!source.isPlaying) source.Play();
+            }
         }
     }
 }

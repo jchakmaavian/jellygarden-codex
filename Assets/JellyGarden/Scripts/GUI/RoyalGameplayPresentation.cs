@@ -11,25 +11,15 @@ namespace RoyalThrone.Presentation
 {
     public sealed class RoyalGameplayPresentation : MonoBehaviour
     {
-        CanvasGroup group; RectTransform content;Text moves,level,goals;
+        CanvasGroup group; RectTransform content,king; Image kingImage;Text moves,level,goals;
         SpriteRenderer backdrop;float lastRefresh;bool built,ready;
         float hudFade,backdropFade;
-        // King Leo's portrait (plan D2): Royal Throne's King Vanguard behaviour, drawn with King Leo's own StoryAvatar
-        // clips. The level reports through AvatarEvents; this HUD plays one reaction at a time while the portrait shows.
-        const string KingCharacter="leo",CheerClip="cheer",PopClip="pop",WorryClip="worry",SlumpClip="slump";
-        // Royal Throne's StartWorryMoveCount. A time limit is not a move count, so a timed level never worries him.
-        const int WorryMoveCount=3;
-        JellyGarden.Scripts.Story.StoryAvatar kingAvatar;
-        readonly KingFeedbackQueue kingFeedback=new KingFeedbackQueue();
+        RoyalThrone.Characters.KingVanguardSlot kingVanguard;
+        readonly RoyalThrone.Characters.KingVanguardFeedbackQueue kingFeedback=new RoyalThrone.Characters.KingVanguardFeedbackQueue();
         LevelManager feedbackKingLevel; Transform feedbackKingField; int feedbackKingAttempt;
         enum PendingKingActivity { None, ExtraMoves, Relief }
         PendingKingActivity pendingKingActivity;
         LevelManager pendingKingLevel; Transform pendingKingField; int pendingKingAttempt;
-        // What the portrait is playing as this HUD started it: a light reaction gives way to a strong one; a committed
-        // outcome (relief, extra moves) and the slump give way to nothing.
-        enum KingClip { None, Light, Strong, Priority }
-        KingClip kingClip;string kingClipName;
-        bool kingWorried;LevelManager worryLevel;int worryAttempt;
         readonly HashSet<Square> styled=new HashSet<Square>();
         readonly List<CanvasGroup> hidden=new List<CanvasGroup>();
         // Timed levels: the limit header reads "Time" (m:ss) instead of "Moves"; the four rebound rail tools stay
@@ -74,8 +64,9 @@ namespace RoyalThrone.Presentation
         {
             var r=Rect(name,parent,anchor.x,anchor.y,anchor.x,anchor.y);r.sizeDelta=size;r.anchoredPosition=position;return r;
         }
-        // The build runs all at once, here (King Leo has no Royal Throne loading screen to spread it under).
-        void Awake(){current=this;var steps=Build();while(steps.MoveNext()){}}
+        // Under the startup loading screen this build runs in frames of its own after the scene's first frame
+        // (RoyalTitleScreen.QueueStartupWork); otherwise all at once, here, as before. LateUpdate waits until it is complete.
+        void Awake(){current=this;var steps=Build();if(!RoyalTitleScreen.QueueStartupWork(this,steps))while(steps.MoveNext()){}}
 
         // Collected goal pieces fly into this HUD's Goal panel (2026-10-04, the user: they landed beside the Moves panel,
         // where the hidden imported header keeps its own goal icons). LevelManager.FlyToGoal draws the flight on a layer of
@@ -116,18 +107,13 @@ namespace RoyalThrone.Presentation
         }
         void OnEnable()
         {
-            // The effects report to the portrait through AvatarEvents (this HUD forwards them); the tool bar raises its own
-            // AvatarEvents.ToolUsed/ToolStruck (plan Task 4.7).
-            RoyalPowerupDirector.Reaction+=ForwardReaction;
-            AvatarEvents.ExtraMovesGranted+=KingExtraMoves;
-            AvatarEvents.GoalsCompleted+=KingGoalsCompleted;
-            AvatarEvents.MatchResolved+=KingMatchResolved;
-            AvatarEvents.PowerupCreated+=KingPowerupCreated;
-            AvatarEvents.WorriedChanged+=KingWorried;
-            AvatarEvents.Lost+=KingLost;
-            AvatarEvents.Reaction+=React;
-            AvatarEvents.ToolUsed+=KingToolUsed;
-            AvatarEvents.ToolStruck+=KingToolStruck;
+            RoyalPowerupDirector.Reaction+=React;
+            RoyalThrone.Characters.KingVanguardActivityEvents.ExtraMovesGranted+=KingExtraMoves;
+            RoyalThrone.Characters.KingVanguardActivityEvents.GoalsCompleted+=KingGoalsCompleted;
+            RoyalThrone.Characters.KingVanguardActivityEvents.MatchResolved+=KingMatchResolved;
+            RoyalThrone.Characters.KingVanguardActivityEvents.PowerupCreated+=KingPowerupCreated;
+            RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.ToolUsed+=KingToolUsed;
+            RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.ToolStruck+=KingToolStruck;
         }
         // A level interrupted by the OS (app sent to the background; on devices also focus loss, e.g. the notification
         // shade) comes back to the pause menu instead of straight into live play. Only while actually playing with no
@@ -136,140 +122,54 @@ namespace RoyalThrone.Presentation
         void OnApplicationFocus(bool focused){if(!focused&&!Application.isEditor)PauseForInterruption();}
         void PauseForInterruption()
         {
-            if(AutomationRunning())return;
             var lm=LevelManager.THIS;
             if(lm&&lm.gameStatus==GameState.Playing&&MenuManager.Instance&&!MenuManager.Instance.BlocksBoardInput)MenuManager.Instance.ShowMenuPause(true);
         }
-        // Automation plays the board itself and loses focus to whatever else is on the desktop: a batchmode run, the
-        // story's player drivers (run_player.sh -storyplaytest and its siblings, or StoryPlaytest started from the Editor)
-        // and a QA session. None of them answers a pause menu, so an interruption leaves them playing.
-        static readonly string[] AutomationFlags={"-storyplaytest","-storyselftest","-storythemetest","-storydemo","-treasure-review"};
-        static int automationArgs=-1;
-        static bool AutomationRunning()
-        {
-            if(Application.isBatchMode||RoyalThrone.Testing.RoyalSave.Testing||RoyalThrone.Testing.RoyalSave.BlockGameplayInput)return true;
-            if(automationArgs<0)
-            {
-                automationArgs=0;
-                foreach(var arg in global::System.Environment.GetCommandLineArgs())
-                    foreach(var flag in AutomationFlags)if(arg.StartsWith(flag,global::System.StringComparison.Ordinal))automationArgs=1;
-            }
-            return automationArgs==1||FindAnyObjectByType<JellyGarden.Scripts.Story.StoryPlaytest>()!=null;
-        }
         void OnDisable()
         {
-            RoyalPowerupDirector.Reaction-=ForwardReaction;
-            AvatarEvents.ExtraMovesGranted-=KingExtraMoves;
-            AvatarEvents.GoalsCompleted-=KingGoalsCompleted;
-            AvatarEvents.MatchResolved-=KingMatchResolved;
-            AvatarEvents.PowerupCreated-=KingPowerupCreated;
-            AvatarEvents.WorriedChanged-=KingWorried;
-            AvatarEvents.Lost-=KingLost;
-            AvatarEvents.Reaction-=React;
-            AvatarEvents.ToolUsed-=KingToolUsed;
-            AvatarEvents.ToolStruck-=KingToolStruck;
+            RoyalPowerupDirector.Reaction-=React;
+            RoyalThrone.Characters.KingVanguardActivityEvents.ExtraMovesGranted-=KingExtraMoves;
+            RoyalThrone.Characters.KingVanguardActivityEvents.GoalsCompleted-=KingGoalsCompleted;
+            RoyalThrone.Characters.KingVanguardActivityEvents.MatchResolved-=KingMatchResolved;
+            RoyalThrone.Characters.KingVanguardActivityEvents.PowerupCreated-=KingPowerupCreated;
+            RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.ToolUsed-=KingToolUsed;
+            RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.ToolStruck-=KingToolStruck;
             ClearKingActivity();ClearKingFeedback();kingToolUntil=0;
         }
-        static void ForwardReaction(float strength){AvatarEvents.NotifyReaction(strength);}
-
-        // One recent positive response, never a cascade backlog (Royal Throne's KingVanguardFeedbackQueue): a match pops,
-        // a power-up cheers, and an impact or a tool's hit cheers at once over a lighter reaction, at most every 4 s.
-        sealed class KingFeedbackQueue
-        {
-            public enum Feedback { None, Match, Powerup, Impact }
-            const float ImpactThreshold=.75f,ImpactCooldown=4f,MatchSpacing=2f,PowerupSpacing=4f;
-            public static Feedback FromStrength(float strength)=>strength>=ImpactThreshold?Feedback.Impact:strength>.5f?Feedback.Powerup:Feedback.None;
-            Feedback pending;float expiresAt,nextAllowedAt,nextImpactAt=float.NegativeInfinity;
-            public void Offer(Feedback feedback,float now)
-            {
-                Expire(now);
-                if(feedback==Feedback.None||feedback<pending)return;
-                pending=feedback;expiresAt=now+(feedback==Feedback.Impact?1.25f:feedback==Feedback.Powerup?3f:2f);
-            }
-            public bool TryGet(float now,out Feedback feedback)
-            {
-                Expire(now);feedback=pending;
-                return pending==Feedback.Impact?now>=nextImpactAt:pending!=Feedback.None&&now>=nextAllowedAt;
-            }
-            // Call only once the portrait took the response; a busy portrait leaves the one pending request intact.
-            public void Accepted(float now)
-            {
-                if(pending==Feedback.None)return;
-                if(pending==Feedback.Impact)nextImpactAt=now+ImpactCooldown;
-                nextAllowedAt=now+(pending==Feedback.Impact?ImpactCooldown:pending==Feedback.Powerup?PowerupSpacing:MatchSpacing);
-                pending=Feedback.None;
-            }
-            public void Clear(){pending=Feedback.None;expiresAt=nextAllowedAt=0;}
-            void Expire(float now){if(pending!=Feedback.None&&now>=expiresAt)pending=Feedback.None;}
-        }
-        KingClip KingPlaying
-        {
-            get
-            {
-                if(kingClip!=KingClip.None&&(!kingAvatar||kingAvatar.Playing!=kingClipName))kingClip=KingClip.None;
-                return kingClip;
-            }
-        }
-        bool PlayKing(string clip,KingClip kind)
-        {
-            if(!kingAvatar||!kingAvatar.PlayClip(clip))return false;
-            kingClip=kind;kingClipName=clip;return true;
-        }
         // The bottom-bar tools (2026-10-04, the user: the King must react really excited when one is used). On the tap that
-        // commits a tool he pops (tried for a second in case a lighter reaction is still finishing), and when the tool
-        // strikes he cheers: the strong reaction, which cuts in over a lighter one and keeps its own 4 s cooldown.
+        // commits a tool he gets excited (Heyecan_1; tried for a second in case a lighter cheer is still finishing), and when
+        // the tool strikes he laughs: the impact reaction, which cuts in over a cheer and keeps its own 4 s cooldown.
         float kingToolUntil;
         void KingToolUsed(int tool){kingToolUntil=Time.unscaledTime+1f;}
-        void KingToolStruck(int tool){kingToolUntil=0;QueueKingFeedback(LevelManager.THIS,KingFeedbackQueue.Feedback.Impact);}
+        void KingToolStruck(int tool){kingToolUntil=0;QueueKingFeedback(LevelManager.THIS,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Impact);}
         void PresentKingTool(LevelManager level)
         {
             if(kingToolUntil<=0)return;
             if(Time.unscaledTime>kingToolUntil){kingToolUntil=0;return;}
-            if(CheckKingFeedbackScope(level)&&kingAvatar.Playing==null&&PlayKing(PopClip,KingClip.Light))kingToolUntil=0;
+            if(CheckKingFeedbackScope(level)&&kingVanguard.Character.PlayExcited())kingToolUntil=0;
         }
         void React(float value)
         {
-            // Actual blast/rocket impacts get the strong cheer; creation and ordinary matches retain smaller responses.
-            var feedback=KingFeedbackQueue.FromStrength(value);
-            if(feedback!=KingFeedbackQueue.Feedback.None)QueueKingFeedback(LevelManager.THIS,feedback);
+            // Actual blast/rocket impacts get the laugh; creation and ordinary matches retain smaller responses.
+            var feedback=RoyalThrone.Characters.KingVanguardFeedbackQueue.FromImpactStrength(value);
+            if(feedback!=RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.None)QueueKingFeedback(LevelManager.THIS,feedback);
         }
         void KingMatchResolved(LevelManager level,int matchedPieces)
-        {QueueKingFeedback(level,KingFeedbackQueue.Feedback.Match);}
+        {QueueKingFeedback(level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Match);}
         void KingPowerupCreated(LevelManager level,Item item)
-        {QueueKingFeedback(level,KingFeedbackQueue.Feedback.Powerup);}
-        // Worry is held while it lasts; a reaction plays over it and hands back to it.
-        void KingWorried(LevelManager level,bool worried)
-        {
-            if(!kingAvatar||level!=LevelManager.THIS)return;
-            if(worried)kingAvatar.Hold(WorryClip);else kingAvatar.Release();
-        }
-        void KingLost(LevelManager level)
-        {
-            if(!kingAvatar||level!=LevelManager.THIS)return;
-            ClearKingActivity();ClearKingFeedback();kingToolUntil=0;
-            kingAvatar.Release();PlayKing(SlumpClip,KingClip.Priority);
-        }
-        // Royal Throne's rule: worried at 3 moves or fewer on a moves level. Read only during live play, so a pause, a fail
-        // fade or an automatic shuffle keeps the latest context; a new board attempt starts unworried.
-        void WatchWorry(LevelManager lm)
-        {
-            if(worryLevel!=lm||worryAttempt!=lm.passLevelCounter)
-            {
-                worryLevel=lm;worryAttempt=lm.passLevelCounter;
-                if(kingWorried){kingWorried=false;AvatarEvents.NotifyWorried(lm,false);}
-            }
-            if(lm.gameStatus!=GameState.Playing)return;
-            bool worried=lm.limitType!=LIMIT.TIME&&lm.Limit<=WorryMoveCount;
-            if(worried!=kingWorried){kingWorried=worried;AvatarEvents.NotifyWorried(lm,worried);}
-        }
+        {QueueKingFeedback(level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup);}
         bool CanPresentKingFeedback(LevelManager level)
         {
             if(!isActiveAndEnabled||!ready||!level||level!=LevelManager.THIS||level.gameStatus!=GameState.Playing||
                 !level.GameField||!level.GameField.gameObject.activeInHierarchy||!group||group.alpha<=0||
-                (prePlay&&prePlay.gameObject.activeInHierarchy)||!kingAvatar||!kingAvatar.isActiveAndEnabled||
-                pendingKingActivity!=PendingKingActivity.None||
+                (prePlay&&prePlay.gameObject.activeInHierarchy)||!kingVanguard||!kingVanguard.Mounted||
+                !kingVanguard.Character.isActiveAndEnabled||pendingKingActivity!=PendingKingActivity.None||
                 (MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput))return false;
-            return KingPlaying!=KingClip.Priority;
+            var activity=kingVanguard.Character.CurrentActivity;
+            return activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.ExtraMoves&&
+                activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.Relief&&
+                activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.Sad&&
+                activity!=RoyalThrone.Characters.KingVanguardCharacter.Activity.Celebration;
         }
         void ClearKingFeedback()
         {kingFeedback.Clear();feedbackKingLevel=null;feedbackKingField=null;feedbackKingAttempt=0;}
@@ -281,22 +181,22 @@ namespace RoyalThrone.Presentation
                 bool changed=feedbackKingLevel||feedbackKingField;
                 ClearKingFeedback();
                 feedbackKingLevel=level;feedbackKingField=level.GameField;feedbackKingAttempt=level.passLevelCounter;
-                if(changed)kingAvatar.EndReaction();
+                if(changed)kingVanguard.Character.ResetToIdle();
             }
             return true;
         }
-        void QueueKingFeedback(LevelManager level,KingFeedbackQueue.Feedback feedback)
+        void QueueKingFeedback(LevelManager level,RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback feedback)
         {
             if(!level||level!=LevelManager.THIS)return;
-            if(KingPlaying==KingClip.Strong)return;
+            if(kingVanguard&&kingVanguard.Character&&kingVanguard.Character.CurrentActivity==RoyalThrone.Characters.KingVanguardCharacter.Activity.Laughing)return;
             if(CheckKingFeedbackScope(level))kingFeedback.Offer(feedback,Time.unscaledTime);
         }
         void PresentKingFeedback(LevelManager level)
         {
             if(!CheckKingFeedbackScope(level)||!kingFeedback.TryGet(Time.unscaledTime,out var feedback))return;
-            bool accepted=feedback==KingFeedbackQueue.Feedback.Impact
-                ?(kingAvatar.Playing==null||KingPlaying==KingClip.Light)&&PlayKing(CheerClip,KingClip.Strong)
-                :kingAvatar.Playing==null&&PlayKing(feedback==KingFeedbackQueue.Feedback.Powerup?CheerClip:PopClip,KingClip.Light);
+            bool accepted=feedback==RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Impact
+                ?kingVanguard.Character.PlayImpactReaction():feedback==RoyalThrone.Characters.KingVanguardFeedbackQueue.Feedback.Powerup
+                ?kingVanguard.PlayHappy():kingVanguard.Character.PlayMatchAcknowledgement();
             if(accepted)kingFeedback.Accepted(Time.unscaledTime);
         }
         void KingExtraMoves(LevelManager level){QueueKingActivity(level,PendingKingActivity.ExtraMoves);}
@@ -316,23 +216,24 @@ namespace RoyalThrone.Presentation
             bool allowed=pendingKingActivity==PendingKingActivity.Relief?level.gameStatus==GameState.PreWinAnimations:level.gameStatus==GameState.Playing;
             if(level!=pendingKingLevel||level.passLevelCounter!=pendingKingAttempt||level.GameField!=pendingKingField||!pendingKingField||!pendingKingField.gameObject.activeInHierarchy||!allowed)ClearKingActivity();
         }
-        void PresentKingActivity(LevelManager level)
+        void PresentKingActivity()
         {
-            if(pendingKingActivity==PendingKingActivity.None||!kingAvatar||group.alpha<=0)return;
+            if(pendingKingActivity==PendingKingActivity.None||!kingVanguard||!kingVanguard.Mounted||group.alpha<=0)return;
             // A continue-purchase banner can still be leaving after Playing resumes. Wait until the portrait is uncovered.
             if(pendingKingActivity==PendingKingActivity.ExtraMoves&&MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput)return;
             ClearKingFeedback();
-            // Goals met: the worry ends with them.
-            if(pendingKingActivity==PendingKingActivity.Relief&&kingWorried){kingWorried=false;AvatarEvents.NotifyWorried(level,false);}
-            if(PlayKing(CheerClip,KingClip.Priority))ClearKingActivity();
+            bool accepted;
+            if(pendingKingActivity==PendingKingActivity.Relief){kingVanguard.SetWorried(false);accepted=kingVanguard.Character.PlayRelief();}
+            else accepted=kingVanguard.Character.PlayExtraMoves();
+            if(accepted)ClearKingActivity();
         }
-        // Each yield only marks where Royal Throne's loading screen split this build; Awake runs it straight through.
+        // Each yield only marks a frame boundary for the startup loading screen; run straight through, it is the same build.
         IEnumerator Build()
         {
             if(built)yield break;built=true;
             display=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             var font=Resources.Load<Font>("RoyalGameplay/Display");if(font)display=font;
-            // The kit's menus (CanvasGlobal) keep King Leo's StorybookKitMenus style; only the level's own HUD is built here.
+            var menus=GameObject.Find("CanvasGlobal");if(menus)RoyalMenuSkin.Apply(menus.transform,display);
             var root=Rect("Royal gameplay HUD",transform,0,0,1,1);
             var canvas=root.gameObject.AddComponent<Canvas>();canvas.renderMode=RenderMode.ScreenSpaceOverlay;canvas.sortingOrder=20;
             var scaler=root.gameObject.AddComponent<CanvasScaler>();scaler.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;scaler.referenceResolution=new Vector2(720,1280);scaler.screenMatchMode=CanvasScaler.ScreenMatchMode.Expand;
@@ -359,13 +260,13 @@ namespace RoyalThrone.Presentation
             moves.rectTransform.offsetMin=new Vector2(4,10.8f);moves.rectTransform.offsetMax=new Vector2(-4,10.8f);
             RoyalGameplayHud.Style(moves,new Color(.09f,.24f,.53f),new Color(.045f,.14f,.36f),Color.clear,0,Color.clear,0,new Color(1,1,1,.35f),new Vector2(0,-1.6f));
             var portrait=RoyalGameplayHud.BuildPortrait(header);
-            yield return null;
-            // King Leo's own animated portrait (plan D2) fills the arched window, inside the gold ring, where Royal Throne
-            // mounted its King Vanguard rig. StoryAvatar reads Leo's shared frames in every campaign, Treasure Hunt included,
-            // so he breathes and reacts there too; only with no frames at all does it draw a still crop and skip reactions.
-            var portraitMask=RoyalGameplayHud.WindowMask(portrait.slot,"King Leo portrait mask");
-            var face=JellyGarden.Scripts.Story.StoryAvatar.Build(KingCharacter,portraitMask.rectTransform);
-            kingAvatar=face?face.GetComponent<JellyGarden.Scripts.Story.StoryAvatar>():null;
+            king=Rect("King reactions",portrait.slot,.5f,.5f,.5f,.5f);king.sizeDelta=new Vector2(196,217);king.anchoredPosition=new Vector2(0,5);
+            kingImage=king.gameObject.AddComponent<Image>();kingImage.enabled=false;kingImage.raycastTarget=false;
+            yield return null;   // the king's rig below is the build's largest single piece: a frame of its own
+            // The fresh APK-derived King Vanguard rig uses the existing UI arch and gold ring.
+            var portraitMask=RoyalGameplayHud.WindowMask(portrait.slot,"King Vanguard portrait mask");
+            kingVanguard=RoyalThrone.Characters.KingVanguardSlot.Mount(kingImage,RoyalThrone.Characters.KingVanguardCharacter.Framing.GameplayPortrait,RoyalThrone.Characters.KingVanguardSlot.Mode.Idle,portraitMask.rectTransform,false);
+            if(!kingVanguard)Destroy(portraitMask.gameObject);
             yield return null;
             // Keep the live level label available to existing diagnostics, without adding
             // a heading that is absent from the source gameplay hierarchy.
@@ -376,16 +277,18 @@ namespace RoyalThrone.Presentation
             var pause=Fixed("Pause game",rail,new Vector2(.5f,.5f),new Vector2(2*BoostStride,0),new Vector2(BoostSize,BoostSize));
             var pauseFace=Rect("Royal HUD settings face",pause,0,0,1,1);RoyalGameplayHud.BuildButton(pauseFace,true);
             Pair("Settings gear",pauseFace,"Game-settings_button_gear",.22f,.22f,.78f,.78f);
+            // Pause only while the player is actually playing: not during the win celebration, the fail offer or over
+            // another popup (the legacy pause button had the same Playing check).
             var image=pause.gameObject.AddComponent<Image>();image.color=Color.clear;var button=pause.gameObject.AddComponent<Button>();button.transition=Selectable.Transition.None;
             pause.gameObject.AddComponent<RoyalHudPress>().parts=new[]{pauseFace};
-            button.onClick.AddListener(OpenSettings);
+            button.onClick.AddListener(()=>{var state=LevelManager.THIS;if(state&&state.gameStatus==GameState.Playing&&!MenuManager.Instance.BlocksBoardInput)MenuManager.Instance.ShowMenuPause(true);});
             var tools=gameObject.AddComponent<RoyalThrone.ReferenceGameplay.ReferenceBoosterBar>();
             tools.Attach(content,display);
             var lm=GetComponent<LevelManager>();
             if(lm)
             {
-                // The kit's goals card stays as King Leo has it (StoryPrePlay stands in for it); the HUD only waits for it.
                 var preplay=lm.GameField.parent.Find("Canvas/PrePlay");prePlay=preplay;
+                if(preplay)preplay.gameObject.AddComponent<RoyalMenuPresenter>().ConfigurePrePlay();
                 foreach(string path in new[]{"Canvas/Panel","Canvas/BottomPanel"})
                 {var old=lm.GameField.parent.Find(path);if(old){var cg=old.gameObject.GetComponent<CanvasGroup>();if(!cg)cg=old.gameObject.AddComponent<CanvasGroup>();if(cg){cg.alpha=0;cg.blocksRaycasts=false;hidden.Add(cg);}}}
                 var back=lm.GameField.parent.Find("CanvasBack");if(back)back.gameObject.SetActive(false);
@@ -400,20 +303,20 @@ namespace RoyalThrone.Presentation
                     boost.anchoredPosition=new Vector2((i-2)*BoostStride,0);
                     boost.localScale=Vector3.one;
                     var graphic=boost.GetComponent<Image>();if(graphic)graphic.color=Color.clear;
-                    var boostFace=Rect("Imported booster face",boost,0,0,1,1);boostFace.SetAsFirstSibling();
-                    RoyalGameplayHud.BuildButton(boostFace,false);
-                    var art=Rect("Existing booster action",boostFace,.16f,.16f,.84f,.84f).gameObject.AddComponent<Image>();
+                    var face=Rect("Imported booster face",boost,0,0,1,1);face.SetAsFirstSibling();
+                    RoyalGameplayHud.BuildButton(face,false);
+                    var art=Rect("Existing booster action",face,.16f,.16f,.84f,.84f).gameObject.AddComponent<Image>();
                     art.sprite=RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Art(i);art.preserveAspect=true;art.raycastTarget=false;
                     foreach(var text in boost.GetComponentsInChildren<Text>(true)){text.font=display;text.color=new Color(1,.96f,.8f);}
                     tools.Bind(boost.GetComponent<BoostIcon>(),i);railTools.Add(boost.gameObject);
                     // The badges in the reference's style, over the ones Bind placed: the red count, and the green + once used up.
                     var indicator=boost.Find("Indicator");var plate=indicator?indicator.Find("Image") as RectTransform:null;var plus=indicator?indicator.Find("Plus") as RectTransform:null;
-                    if(indicator)RoyalGameplayHud.Place(indicator,0,0,BoostSize,BoostSize);
+                    if(indicator)RoyalMenuSkin.Place(indicator,0,0,BoostSize,BoostSize);
                     foreach(var part in new[]{plate,plus})if(part)foreach(var old in part.GetComponentsInChildren<Image>(true))if(old.name.StartsWith("Native "))old.enabled=false;
                     if(plate)RoyalGameplayHud.BuildBadge(plate,false);if(plus)RoyalGameplayHud.BuildBadge(plus,true);
                     var boostIcon=boost.GetComponent<BoostIcon>();if(boostIcon&&boostIcon.boostCount)RoyalGameplayHud.StyleCount(boostIcon.boostCount,display);
                     var press=boost.GetComponent<Button>();if(press)press.transition=Selectable.Transition.None;
-                    boost.gameObject.AddComponent<RoyalHudPress>().parts=indicator?new[]{boostFace,(RectTransform)indicator}:new[]{boostFace};
+                    boost.gameObject.AddComponent<RoyalHudPress>().parts=indicator?new[]{face,(RectTransform)indicator}:new[]{face};
                 }
             }
             // Retain the real boost buttons and their inventory/payment behaviour.
@@ -424,21 +327,10 @@ namespace RoyalThrone.Presentation
             group.alpha=0;group.blocksRaycasts=false;
             ready=true;
         }
-        // The settings gear: the kit's click, then the in-level pause card (MenuManager's MenuPause in Royal Throne's skin,
-        // with its settings and the Quit Level? confirm), as Royal Throne opens it. Only while the player is actually
-        // playing: not during the win celebration, the fail offer or over another popup (the legacy pause button had the
-        // same Playing check).
-        void OpenSettings()
-        {
-            var state=LevelManager.THIS;var menus=MenuManager.Instance;
-            if(!state||state.gameStatus!=GameState.Playing||!menus||menus.BlocksBoardInput)return;
-            if(SoundBase.Instance)SoundBase.Instance.PlaySound(SoundBase.Instance.click);
-            menus.ShowMenuPause(true);
-        }
         void LateUpdate()
         {
             var lm=LevelManager.THIS;if(!lm||!ready)return;
-            CheckKingActivity(lm);WatchWorry(lm);
+            CheckKingActivity(lm);
             // The board appears with the HUD, the backdrop and its styled cells from the moment it exists, its entrance slide
             // (WaitForPopup) included; only the goals card, which this overlay would cover, keeps them back.
             bool show=lm.GameField&&lm.gameStatus!=GameState.Map&&lm.GameField.gameObject.activeInHierarchy&&!(prePlay&&prePlay.gameObject.activeInHierarchy);
@@ -455,13 +347,9 @@ namespace RoyalThrone.Presentation
             hudFade=Mathf.MoveTowards(hudFade,hudShown?1:0,fadeStep);backdropFade=Mathf.MoveTowards(backdropFade,show||board?1:0,fadeStep);
             group.alpha=hudFade;group.blocksRaycasts=hudShown;
             backdrop.enabled=backdropFade>0;if(backdrop.color.a!=backdropFade)backdrop.color=new Color(1,1,1,backdropFade);
-            // This HUD hides by CanvasGroup, so explicitly end a stale reaction for the return (a hold and a committed
-            // outcome's cheer stay: they are the level's state, not a passing response).
-            if(group.alpha<=0)
-            {
-                ClearKingFeedback();kingToolUntil=0;
-                var playing=KingPlaying;if(playing==KingClip.Light||playing==KingClip.Strong)kingAvatar.EndReaction();
-            }
+            // This HUD hides by CanvasGroup, so explicitly close its character slot to clear a stale reaction on return.
+            if(kingVanguard)kingVanguard.SetShown(group.alpha>0);
+            if(group.alpha<=0)ClearKingFeedback();
             // This overlay canvas sits above the popup canvas, so while any popup is open the HUD must not take its taps.
             if(MenuManager.Instance&&MenuManager.Instance.BlocksBoardInput)group.blocksRaycasts=false;
             if(!show)return;
@@ -484,12 +372,22 @@ namespace RoyalThrone.Presentation
                 float since=Time.unscaledTime-goalLanded[i],pop=since<.26f?1+.22f*Mathf.Sin(since/.26f*Mathf.PI)*(1-since/.26f*.35f):1;
                 var s=goalIcons[i].rectTransform.localScale.x;if(!Mathf.Approximately(s,pop))goalIcons[i].rectTransform.localScale=Vector3.one*pop;
             }
-            // A finite reaction plays, then the latest context resumes: the worry hold (WatchWorry), else the idle.
-            if(kingAvatar)
+            if(kingVanguard&&kingVanguard.Mounted)
             {
-                PresentKingActivity(lm);
+                // The imported APK KingUi uses its finite positive reaction, then resumes the latest low-move context.
+                // The packaged StartWorryMoveCount is 3. Time limits are not move counts.
+                // A pause/fail fade or an automatic board shuffle does not improve
+                // the remaining moves. Preserve that context until live play resumes;
+                // committed relief explicitly clears it in PresentKingActivity.
+                if(lm.gameStatus==GameState.Playing)
+                    kingVanguard.SetWorried(lm.limitType!=LIMIT.TIME&&lm.Limit<=RoyalThrone.Characters.KingVanguardCharacter.WorryMoveCount);
+                PresentKingActivity();
                 PresentKingTool(lm);
                 PresentKingFeedback(lm);
+            }
+            else
+            {
+                kingImage.enabled=false; // a failed new import must never expose the superseded character
             }
             var cam=Camera.main;if(cam){if(cam.backgroundColor!=BackdropNavy)cam.backgroundColor=BackdropNavy;FrameBoard(lm,cam);backdrop.transform.position=cam.ViewportToWorldPoint(new Vector3(.5f,.5f,18));var bounds=backdrop.sprite.bounds.size;backdrop.transform.localScale=new Vector3(cam.orthographicSize*2*cam.aspect/bounds.x,cam.orthographicSize*2/bounds.y,1);}
             // A new board is styled in its first frame; after that every 0.3 s.
@@ -516,10 +414,7 @@ namespace RoyalThrone.Presentation
             int font=shown<=2?30:27;
             for(int i=0;i<shown;i++){
                 var target=lm.targetObject[i];var number=goalNumbers[i];
-                // The board's art for the goal, else the target's own icon; an Image with no sprite draws a white box, so
-                // with neither the icon is left off and the number stands alone.
-                var art=RoyalVisualCatalog.Goal(target,true);if(!art)art=target.icon;
-                goalIcons[i].sprite=art;goalIcons[i].enabled=art!=null;number.text=Mathf.Max(0,target.GetCount()+Flying(target)).ToString();
+                goalIcons[i].sprite=RoyalVisualCatalog.Goal(target,true);number.text=Mathf.Max(0,target.GetCount()+Flying(target)).ToString();
                 // Best fit stays off so every number shares one size; a box shorter than the font's line height would then
                 // truncate the text to nothing, so the numbers overflow vertically.
                 number.resizeTextForBestFit=false;number.horizontalOverflow=HorizontalWrapMode.Overflow;number.verticalOverflow=VerticalWrapMode.Overflow;number.fontSize=30;

@@ -41,6 +41,7 @@ namespace RoyalThrone.Editor
         [MenuItem("Tools/Royal Throne/Gameplay/Import and verify gameplay art v4")]
         public static void ImportAndVerify()
         {
+            RoyalHomeScreenBuilder.RequireCopy();
             if (EditorApplication.isPlayingOrWillChangePlaymode)
                 throw new InvalidOperationException("Stop Play Mode before importing gameplay art.");
             AssetDatabase.Refresh();

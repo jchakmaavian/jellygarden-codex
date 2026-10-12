@@ -137,24 +137,98 @@ namespace RoyalThrone.Presentation
             Motion(menu, p, H, new List<RoyalCardControl> { Feedback(close, false) }, null);
         }
 
-        // How to Play (Royal Throne's RoyalLessonDemo pages) was not ported: the kit's Tutorial card keeps its own look, and
-        // the HELP entries that opened it are hidden (Pause below, RoyalSettingsPage).
+        // How to play (redesigned 2026-09-30), on the level-end cards' ribbon system: "How to Play" on the ribbon with the red
+        // close, one cream panel holding the lesson (RoyalLessonDemo: its title, a small board playing it on a loop, its rule),
+        // a row of page dots, then BACK and NEXT side by side. BACK rests dimmed on the first lesson; on the last, NEXT reads
+        // GOT IT and closes the card (Tutorial.Next).
+        public const float LessonCardHeight = 940, LessonPanelTop = 96, LessonPanelHeight = 600, LessonDotsRow = 730, LessonButtonRow = 834;
+        public const float LessonButtonWidth = 270, LessonButtonHeight = 100, LessonButtonX = 150;
+        public static float LessonPageY => LessonCardHeight * .5f - LessonPanelTop - LessonPanelHeight * .5f;
+        public const float LessonY = -4;   // where the older lesson pages sat
+        public static void Lessons(Transform menu, Transform p)   // Tutorial
+        {
+            const float H = LessonCardHeight, top = H * .5f;
+            var skin = RibbonCard(menu, p, H, "How to Play");
+            var close = RedClose(p.Find("Close"), H);
+            var panel = Panel(p, "Royal lesson panel", 0, LessonPageY, RoyalLessonDemo.PageWidth + 20, LessonPanelHeight, 26);
+            panel.SetSiblingIndex(p.Find("Royal skin").GetSiblingIndex() + 1);
+            var dots = Container(p, "Royal lesson dots");
+            RoyalMenuSkin.Place(dots, 0, top - LessonDotsRow, 40 * RoyalLessonDemo.Count, 30);
+            for (int i = 0; i < RoyalLessonDemo.Count; i++)
+            {
+                var dot = Container(dots, "Dot " + i);
+                RoyalMenuSkin.Place(dot, (i - (RoyalLessonDemo.Count - 1) * .5f) * 30, 0, 16, 16);
+                Inset(dot, "Edge", 0, 8, C("071a4c", .85f), C("071a4c", .85f));
+                Inset(dot, "Face", 2, 6, C("5c7fd0"), C("3a5cb0"));
+            }
+            float y = top - LessonButtonRow, w = LessonButtonWidth, h = LessonButtonHeight;
+            var back = CleanButton(p.Find("Back"), "BACK", -LessonButtonX, y, w, h, Kind.Secondary, 36);
+            var next = CleanButton(p.Find("Next"), "NEXT", LessonButtonX, y, w, h, Kind.Primary, 40);
+            if (next) ButtonShadow(skin, LessonButtonX, y, w, h);
+            Motion(menu, p, H, new List<RoyalCardControl> { Feedback(close, false), Feedback(next, true), Feedback(back, false) }, next);
+            int page = 0;
+            for (int i = 0; i < RoyalLessonDemo.Count; i++) { var shown = p.Find("Royal lesson " + i); if (shown && shown.gameObject.activeSelf) page = i; }
+            LessonProgress(p, page);
+        }
+
+        // The page dots (the current one gold and larger), NEXT or GOT IT, and BACK off on the first lesson.
+        public static void LessonProgress(Transform card, int page)
+        {
+            if (!card) return;
+            var dots = card.Find("Royal lesson dots");
+            if (dots)
+                for (int i = 0; i < dots.childCount; i++)
+                {
+                    var dot = dots.GetChild(i);
+                    bool on = i == page;
+                    dot.localScale = Vector3.one * (on ? 1.3f : 1);
+                    var face = dot.Find("Face") ? dot.Find("Face").GetComponent<RoyalCardShape>() : null;
+                    var edge = dot.Find("Edge") ? dot.Find("Edge").GetComponent<RoyalCardShape>() : null;
+                    if (face) { face.from = on ? C("ffe27a") : C("5c7fd0"); face.to = on ? C("e6a22a") : C("3a5cb0"); face.SetVerticesDirty(); }
+                    if (edge) { edge.from = edge.to = on ? C("7a3a12") : C("071a4c", .85f); edge.SetVerticesDirty(); }
+                }
+            var caption = card.Find("Next/Royal caption");
+            var text = caption ? caption.GetComponent<Text>() : null;
+            if (text) text.text = page >= RoyalLessonDemo.Count - 1 ? "GOT IT" : "NEXT";
+            var back = card.Find("Back");
+            var button = back ? back.GetComponent<UnityEngine.UI.Button>() : null;
+            if (button) button.interactable = page > 0;
+        }
+
+        // The pages before the 2026-09-30 redesign (static art); RoyalLessonDemo's pages carry "Royal styled" from the start.
+        public static void Lesson(Transform page)
+        {
+            if (!page || page.Find("Royal styled")) return;
+            new GameObject("Royal styled", typeof(RectTransform)).transform.SetParent(page, false);
+            RoyalMenuSkin.Place(page, 0, LessonY, 530, 430);
+            var title = page.Find("Title");
+            if (title) Field(title, 0, 184, 500, 26, Ink.HeadingOnCream);
+            var rule = page.Find("Rule");
+            if (rule) Wrap(Field(rule, 0, -165, 520, 21, Ink.BodyOnCream), 520, 70);
+        }
 
         // ---- Pause and settings ----------------------------------------------------------------------------------------
 
         public static void Pause(Transform menu, Transform p, bool paused)   // MenuPause, Settings
         {
-            // Rows from the card's top edge: CONTINUE (the pause menu only), MUSIC and SFX, the matching hints, then HOME.
-            // Royal Throne's HELP (How to Play) was not ported, so the kit's Info entry stays hidden.
+            // Rows from the card's top edge: CONTINUE (the pause menu only), MUSIC and SFX, the matching hints, then HOME
+            // and HELP side by side (pause) or stacked (settings, where either may be absent).
             var resume = p.Find("Continue");
             var home = p.Find("Map");
+            var info = p.Find("Info");
             bool showResume = resume && (paused || resume.gameObject.activeSelf);
-            bool showHome = home && (paused || home.gameObject.activeSelf);
+            bool showHome = home && (paused || home.gameObject.activeSelf), showInfo = paused || info && info.gameObject.activeSelf;
             float row = 238, resumeRow = row;
             if (showResume) row += 118;
             // Volume sliders sit under MUSIC and SFX (the user's request, 2026-10-07).
-            float soundRow = row, volumeRow = row + 70, hintRow = row + 160;
-            float homeRow = hintRow + (paused ? 128 : 96), last = showHome ? homeRow : hintRow;
+            float soundRow = row, volumeRow = row + 70, hintRow = row + 160, helpRow, homeRow, last;
+            if (paused) { helpRow = homeRow = hintRow + 128; last = homeRow; }
+            else
+            {
+                helpRow = hintRow + 96;
+                homeRow = showInfo ? helpRow + 96 : helpRow;
+                last = showHome ? homeRow : showInfo ? helpRow : hintRow;
+            }
             float H = Mathf.Round(last + 38 + BottomGap), top = H * .5f;
 
             var skin = Card(menu, p, H, paused ? "TAKE A BREATHER" : "SETTINGS");
@@ -187,11 +261,26 @@ namespace RoyalThrone.Presentation
                 hint.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => { RoyalHintSettings.Enabled = !RoyalHintSettings.Enabled; RoyalAudioDirector.Get?.Play(RoyalCue.Click); });
             }
             buttons.Add(Feedback(Button(hint, "MATCHING HINTS ON", 0, top - hintRow, 500, 76, Kind.Secondary), false));
-            if (paused) Wrap(Words(p, "Royal hint description", "Always shows the best move on the board", 0, top - hintRow - 56, 520, 19, Ink.Body), 540, 30);
-            if (showHome) buttons.Add(Feedback(Button(home, "HOME", 0, top - homeRow, 300, 76, Kind.Secondary), false));
-            else Hide(home);
-            Hide(p.Find("Info"));
-            if (paused) LeaveConfirm(menu, p);
+            if (paused)
+            {
+                Wrap(Words(p, "Royal hint description", "Always shows the best move on the board", 0, top - hintRow - 56, 520, 19, Ink.Body), 540, 30);
+                // HELP opens the existing How-to-play lessons. The pause menu has no Info object, so the button is made here,
+                // beside HOME. The lessons' motion runs on the unscaled clock, so it plays while the game is paused.
+                if (!info)
+                {
+                    info = new GameObject("Info", typeof(RectTransform), typeof(Image), typeof(UnityEngine.UI.Button)).transform;
+                    info.SetParent(p, false);
+                    info.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() => { RoyalAudioDirector.Get?.Play(RoyalCue.Click); MenuManager.Instance.ShowTutorial(true); });
+                }
+                buttons.Add(Feedback(Button(home, "HOME", -128, top - homeRow, 244, 76, Kind.Secondary), false));
+                buttons.Add(Feedback(Button(info, "HELP", 128, top - helpRow, 244, 76, Kind.Secondary), false));
+                LeaveConfirm(menu, p);
+            }
+            else
+            {
+                if (showInfo) buttons.Add(Feedback(Button(info, "HELP", 0, top - helpRow, 300, 76, Kind.Secondary), false));
+                if (showHome) buttons.Add(Feedback(Button(home, "HOME", 0, top - homeRow, 300, 76, Kind.Secondary), false));
+            }
             Ornament(skin, H);
             Motion(menu, p, H, buttons, primary);
         }

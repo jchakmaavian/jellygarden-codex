@@ -12,14 +12,14 @@ namespace JellyGarden.Scripts.Juice
     /// The end of a won level, staged after the user's Royal Match Level 13 clip (Design/RoyalMatchReference/OBSERVATIONS.md,
     /// "Level 13 completion"; the user, 2026-10-06: "I want this game experience"), in Royal Throne's own art:
     /// 1. <see cref="Celebrate"/> as soon as the goals are done, before the moves left are used: the board dims below the HUD,
-    ///    King Leo's logo pops in (Royal Throne's layered lockup if it is missing), pennants unroll, trumpets swing in and
-    ///    fireworks rise and burst; the logo swells and shrinks to a point and the dim is cut (about 3 s).
+    ///    the logo is built (emblem, ROYAL letter by letter, THRONE), pennants unroll, trumpets swing in and fireworks rise
+    ///    and burst; the logo swells and shrinks to a point and the dim is cut (about 3 s).
     /// 2. <see cref="BeginFinale"/> on that frame: the HUD's goal panel turns into a Reward coin counter; the booster
     ///    session (ReferenceWinFinish) turns the moves left into rockets and fires them, the board refills, and coins pop out
     ///    of each booster into the counter; <see cref="EndFinale"/> lands the rest and lets the board rest a moment.
     /// 3. <see cref="Reward"/> on the win card: one large star lands on its pillow; the committed award waits for Home.
     /// 4. After CONTINUE, on Home: the scene alone, the controls slide in, the star curves into its counter and the coins
-    ///    stream into theirs. (Royal Throne then opened its own Area task list; King Leo's areas are its own AreaScreen.)
+    ///    stream into theirs, and the Area task list opens if its next task is affordable.
     /// The level music stops with the celebration and comes back softly on the card (RoyalAudioDirector).
     /// Presentation only: LevelManager credits the coins and stars before the card opens. Nothing here takes input. A tap
     /// shortens the celebration and the boosters (LevelManager.SkipWinCelebration).
@@ -94,9 +94,9 @@ namespace JellyGarden.Scripts.Juice
             }
             spot.SetPixels(sp); spot.Apply(); soft = Sprite.Create(spot, new Rect(0, 0, N, N), new Vector2(.5f, .5f), N);
             pennant = MakePennant();
-            // King Leo's own logo (the splash's): the celebration pops it whole. Royal Throne's layered lockup below is only
-            // the fallback when it is missing, so the win never spells out another game's name.
-            logo = Resources.Load<Sprite>("Story/Art/splash_logo");
+            // The approved Royal Throne logo (Design/Branding): the game scene references it, so it is loaded with the scene.
+            foreach (var s in Resources.FindObjectsOfTypeAll<Sprite>())
+                if (s && s.name == "logo" && s.texture && s.texture.width >= 512) { logo = s; break; }
             logoPart = new Sprite[LogoParts.Length];
             for (int i = 0; i < LogoParts.Length; i++) logoPart[i] = Resources.Load<Sprite>("RoyalGameplay/Win/win-logo-" + LogoParts[i]);
             trumpet = Resources.Load<Sprite>("RoyalGameplay/Win/win-trumpet");
@@ -282,8 +282,7 @@ namespace JellyGarden.Scripts.Juice
             if (pillFlash) { flash = Mathf.Max(0, flash - dt * 3.2f); pillFlash.color = new Color(1, .92f, .6f, .55f * flash); if (pill) pill.localScale = Vector3.one * (1 + .035f * flash); }
             UpdateFinale();
             var lm = LevelManager.THIS;
-            // King Leo may play a story beat (the opening, a clue, an arc scene) before Home comes back; collect after it.
-            if (pending != null && !homeRunning && lm && lm.gameStatus == GameState.Map && !JellyGarden.Scripts.Story.StoryShell.StoryIsPlaying)
+            if (pending != null && !homeRunning && lm && lm.gameStatus == GameState.Map)
             {
                 // Home's first frame already shows the area scene alone; the controls slide in when the payout starts.
                 HideHomeControls();
@@ -578,10 +577,10 @@ namespace JellyGarden.Scripts.Juice
                 rolls[i] = Picture("Pennant roll", front, flagRoll ? flagRoll : piece, new Vector2(fx, dimTop), new Vector2(flagW * 1.16f, flagW * 1.16f * 60 / 228f), flagRoll ? Color.white : Color.clear);
             }
 
-            // The lockup: King Leo's logo whole, else Royal Throne's layers, else the name in letters.
+            // The lockup: the logo's layers, or the whole logo (or the name in letters) if they are missing.
             float logoW = 470, logoY = h.y * .08f;
-            var lockup = Node("Win lockup", front, new Vector2(0, logoY), new Vector2(logoW, logoW));
-            bool layered = !logo && logoPart != null && global::System.Array.TrueForAll(logoPart, s => s);
+            var lockup = Node("Royal Throne lockup", front, new Vector2(0, logoY), new Vector2(logoW, logoW));
+            bool layered = logoPart != null && global::System.Array.TrueForAll(logoPart, s => s);
             RectTransform[] parts;
             float[] partIn;
             if (layered)
@@ -596,8 +595,8 @@ namespace JellyGarden.Scripts.Juice
             }
             else
             {
-                var whole = logo ? Picture("Win logo", lockup, logo, Vector2.zero, new Vector2(logoW, logoW * logo.rect.height / Mathf.Max(1, logo.rect.width)), Color.white).rectTransform
-                                 : Words("Win name", lockup, "KING LEO", 96, Vector2.zero, new Vector2(700, 160), Gold, 4).rectTransform;
+                var whole = logo ? Picture("Royal Throne logo", lockup, logo, Vector2.zero, new Vector2(logoW, logoW * logo.rect.height / Mathf.Max(1, logo.rect.width)), Color.white).rectTransform
+                                 : Words("Royal Throne", lockup, "ROYAL THRONE", 96, Vector2.zero, new Vector2(700, 160), Gold, 4).rectTransform;
                 whole.localScale = Vector3.zero; parts = new[] { whole }; partIn = new[] { LogoIn[0] };
             }
 
@@ -1033,12 +1032,13 @@ namespace JellyGarden.Scripts.Juice
                     homeCoins = p.before + p.coins;
                     home.RefreshProgress();
                     completed = true;
+                    int starsAvailable = home.Progress.available;
+                    if (Affordable(starsAvailable) && home.areaButton && !(home.AreaView && home.AreaView.GuideFirstTask())) home.OpenPanel("area", RoyalThrone.Presentation.RoyalAreaView.Entry(home).gameObject);
                     yield break;
                 }
-                // Hold the counters at their old values while the rewards fly. The star counter is read off its label: on
-                // King Leo's Home it counts the area's repair stars (StoryProgress), which StoryFlow paid on OnWin.
-                homeCoins = p.before; home.RefreshProgress(); int starsNow = ShownStars(home); int starsShown = Mathf.Max(0, starsNow - p.stars);
-                void Hold() { if (home.coinLabel) home.coinLabel.text = homeCoins.ToString("N0"); if (home.starLabel && starsNow >= 0) home.starLabel.text = starsShown.ToString(); }
+                // Hold the counters at their old values while the rewards fly.
+                homeCoins = p.before; home.RefreshProgress(); int starsNow = home.Progress.available; int starsShown = Mathf.Max(0, starsNow - p.stars);
+                void Hold() { if (home.coinLabel) home.coinLabel.text = homeCoins.ToString("N0"); if (home.starLabel) home.starLabel.text = starsShown.ToString(); }
                 heldHome = home; homeHold = Hold; Canvas.willRenderCanvases += homeHold;
                 try
                 {
@@ -1063,7 +1063,7 @@ namespace JellyGarden.Scripts.Juice
                         var starParent = home.starLabel.transform.parent;
                         var starReceiver = starParent.Find("Imported 16674") ?? starParent.Find("Stars icon");
                         var starArt = Resources.Load<Sprite>("RoyalGameplay/win-star");
-                        if (!starArt) starArt = JellyGarden.Scripts.Story.StoryUi.StarSprite ? JellyGarden.Scripts.Story.StoryUi.StarSprite : star;
+                        if (!starArt) starArt = RoyalThrone.Presentation.RoyalAreaKit.Star ? RoyalThrone.Presentation.RoyalAreaKit.Star : star;
                         StartCoroutine(HomeStar(starArt, origin, starReceiver ? starReceiver : home.starLabel.transform,
                             () => { starLanded = true; starsShown = starsNow; RoyalAudioDirector.Get?.Play(RoyalCue.Create); if (starReceiver) PulseCoin(starReceiver as RectTransform); }));
                         // The coins appear under it while it is still in the air.
@@ -1083,6 +1083,9 @@ namespace JellyGarden.Scripts.Juice
                     completed = coinsLanded && starLanded;
                 }
                 finally { ReleaseHomeHold(); }
+                // The task list opens by itself when the current area's next task can be paid for.
+                // The very first time, the reference points at the Area card instead (RoyalAreaView.GuideFirstTask).
+                if (lm.gameStatus == GameState.Map && Affordable(starsNow) && home.areaButton && !(home.AreaView && home.AreaView.GuideFirstTask())) home.OpenPanel("area", RoyalThrone.Presentation.RoyalAreaView.Entry(home).gameObject);
             }
             finally
             {
@@ -1203,10 +1206,163 @@ namespace JellyGarden.Scripts.Juice
             done?.Invoke();
         }
 
-        // The number Home's star counter shows once refreshed; -1 when it is not a plain number (it is then left alone).
-        static int ShownStars(RoyalThrone.Presentation.RoyalHomeScreen home) =>
-            home.starLabel && int.TryParse(home.starLabel.text, global::System.Globalization.NumberStyles.AllowThousands,
-                global::System.Globalization.CultureInfo.CurrentCulture, out int shown) ? shown : -1;
+        static bool Affordable(int starsLeft)
+        {
+            var area = RoyalThrone.Presentation.RoyalAreas.CurrentArea; if (area == null || area.tasks == null) return false;
+            for (int i = 0; i < area.tasks.Length; i++) if (!RoyalThrone.Presentation.RoyalAreas.IsDone(i)) return area.tasks[i].cost <= starsLeft;
+            return false;
+        }
+
+        // ---------------------------------------------------------------- Areas (RoyalAreaView): stars, streaks, puffs, the chest
+
+        static RoyalWinSequence Area()
+        {
+            var lm = LevelManager.THIS; if (!lm) return null;
+            var s = Get(lm); s.reduced = PlayerPrefs.GetInt("RoyalThrone.HomeMotion", 1) == 0; return s;
+        }
+
+        /// <summary>
+        /// A star leaves the counter (<paramref name="depart"/> as it goes) and arcs out to the left and down, then in to Do It
+        /// (<paramref name="land"/>), trailing sparkles: the reference's spend (GAPS.md A-09). False when there is no overlay.
+        /// </summary>
+        public static bool AreaStar(Transform from, Transform to, float delay, float flight, global::System.Action depart, global::System.Action land)
+        {
+            var s = Area(); if (!s || !from || !to) return false;
+            s.StartCoroutine(s.RunAreaStar(from, to, delay, flight, depart, land)); return true;
+        }
+        IEnumerator RunAreaStar(Transform from, Transform to, float delay, float flight, global::System.Action depart, global::System.Action land)
+        {
+            yield return Scaled();
+            float end = Time.unscaledTime + delay; while (Time.unscaledTime < end) yield return null;
+            if (!from || !to) { depart?.Invoke(); land?.Invoke(); yield break; }
+            Vector2 a = Local(from), b = Local(to), c = new Vector2(Mathf.Min(a.x, b.x) - 330, Mathf.Lerp(a.y, b.y, .45f));
+            var art = RoyalThrone.Presentation.RoyalAreaKit.Star ? RoyalThrone.Presentation.RoyalAreaKit.Star : star;
+            var img = Picture("Area star", root, art, a, new Vector2(80, 80), Color.white);
+            depart?.Invoke();
+            float t = 0;
+            while (t < flight)
+            {
+                t += Time.unscaledDeltaTime; float u = Mathf.Clamp01(t / flight), w = u * u * (3 - 2 * u);
+                Vector2 p = (1 - w) * (1 - w) * a + 2 * (1 - w) * w * c + w * w * b;
+                img.rectTransform.anchoredPosition = p; img.rectTransform.localScale = Vector3.one * Mathf.Lerp(1.1f, .72f, u);
+                if (!reduced && Random.value < .75f) Spawn(1, p + Random.insideUnitCircle * 10, Random.insideUnitCircle * 40, .45f, Random.Range(12f, 20f), new Color(1, .92f, .6f));
+                yield return null;
+            }
+            Destroy(img.gameObject);
+            if (to) { var p2 = Local(to); SparkleBurst(p2, 6, 200, Gold, 20); RingFlash(p2, 110, new Color(1, .95f, .7f)); }
+            RoyalAudioDirector.Get?.Play(RoyalCue.Create);
+            land?.Invoke();
+        }
+
+        /// <summary>A light streak from a new object to the Area card, landing with a ring (A-13).</summary>
+        public static bool AreaStreak(Transform from, Transform to, float duration, global::System.Action land)
+        {
+            var s = Area(); if (!s || !from || !to) return false;
+            s.StartCoroutine(s.RunAreaStreak(from, to, duration, land)); return true;
+        }
+        IEnumerator RunAreaStreak(Transform from, Transform to, float duration, global::System.Action land)
+        {
+            yield return Scaled();
+            Vector2 a = Local(from), b = Local(to), c = new Vector2(Mathf.Lerp(a.x, b.x, .25f), Mathf.Max(a.y, b.y) + 160);
+            var halo = Picture("Area streak", root, soft, a, new Vector2(130, 130), new Color(1, .93f, .55f, 1)); halo.preserveAspect = false;
+            var core = Picture("Area streak core", root, sparkle, a, new Vector2(84, 84), Color.white);
+            float t = 0;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime; float u = Mathf.Clamp01(t / duration), w = u * u;
+                Vector2 p = (1 - w) * (1 - w) * a + 2 * (1 - w) * w * c + w * w * b;
+                halo.rectTransform.anchoredPosition = p; core.rectTransform.anchoredPosition = p; core.rectTransform.localRotation = Quaternion.Euler(0, 0, t * 360);
+                int n = reduced ? 2 : 5;
+                for (int i = 0; i < n; i++) Spawn(1, p + Random.insideUnitCircle * 14, Random.insideUnitCircle * 26, Random.Range(.5f, .85f), Random.Range(18f, 30f), i % 2 == 0 ? Color.white : new Color(1, .86f, .38f));
+                var trail = Spawn(3, p, Vector2.zero, .45f, 70, new Color(1, .9f, .5f, .75f)); if (trail != null) trail.grow = 10;
+                yield return null;
+            }
+            Destroy(halo.gameObject); Destroy(core.gameObject);
+            RingFlash(b, 190, new Color(1, .92f, .6f)); SparkleBurst(b, 10, 260, Gold, 22);
+            RoyalAudioDirector.Get?.Play(RoyalCue.Click);
+            land?.Invoke();
+        }
+
+        /// <summary>Dust and sparkles at a new object's foot as it rises (A-12). <paramref name="width"/> in Home canvas units.</summary>
+        public static void AreaPuff(Transform at, float width)
+        {
+            var s = Area(); if (!s || !at) return;
+            s.StartCoroutine(s.RunAreaPuff(at, width));
+        }
+        IEnumerator RunAreaPuff(Transform at, float width)
+        {
+            yield return Scaled();
+            if (!at) yield break;
+            var p = Local(at); float w = Mathf.Clamp(width * 1.1f, 120, 700);
+            int puffs = reduced ? 3 : 9;
+            for (int i = 0; i < puffs; i++)
+            {
+                var b = Spawn(3, p + new Vector2(Random.Range(-.45f, .45f) * w, Random.Range(-10f, 30f)), new Vector2(Random.Range(-.5f, .5f) * w, Random.Range(40f, 120f)),
+                              Random.Range(.6f, .9f), Random.Range(.25f, .4f) * w, new Color(1, .97f, .92f, .8f));
+                if (b != null) { b.grow = w * .3f; b.drag = 2.5f; }
+            }
+            SparkleBurst(p + new Vector2(0, 40), 12, 320, Color.white, 22);
+            RoyalAudioDirector.Get?.Play(RoyalCue.Create);
+        }
+
+        /// <summary>The chest opening: a warm flash, a ring and a spray of sparkles (A-19).</summary>
+        public static void AreaBurst(Transform at, float scale)
+        {
+            var s = Area(); if (!s || !at) return;
+            var p = s.Local(at);
+            var core = s.Spawn(3, p, Vector2.zero, .5f, 220 * scale, new Color(1, .95f, .75f)); if (core != null) core.grow = 320 * scale;
+            s.RingFlash(p, 320 * scale, s.GoldTint); s.SparkleBurst(p, 26, 560, Gold, 28);
+            RoyalAudioDirector.Get?.Play(RoyalCue.Create);
+        }
+        Color GoldTint => new Color(1, .9f, .55f);
+
+        /// <summary>Confetti over the whole screen for "Area Completed!".</summary>
+        public static void AreaConfetti()
+        {
+            var s = Area(); if (!s) return;
+            s.StartCoroutine(s.RunAreaConfetti());
+        }
+        IEnumerator RunAreaConfetti()
+        {
+            yield return Scaled();
+            ConfettiBurst(new Vector2(-Half.x, Half.y * .85f), -35, 28, 46);
+            ConfettiBurst(new Vector2(Half.x, Half.y * .85f), 215, 28, 46);
+            float t = 0;
+            while (t < 2.4f)
+            {
+                t += Time.unscaledDeltaTime;
+                if (!reduced && Random.value < .6f)
+                    Spawn(0, new Vector2(Random.Range(-Half.x, Half.x), Half.y + 30), new Vector2(Random.Range(-60f, 60f), Random.Range(-260f, -120f)), Random.Range(2.2f, 3f), Random.Range(20f, 30f), Confetti[Random.Range(0, Confetti.Length)]);
+                yield return null;
+            }
+        }
+
+        /// <summary>A ring of gold sparkles opening over a newly unlocked area.</summary>
+        public static void AreaUnlockRing(Transform at)
+        {
+            var s = Area(); if (!s || !at) return;
+            var p = s.Local(at);
+            s.RingFlash(p, 520, s.GoldTint); s.SparkleBurst(p, 36, 700, Gold, 26);
+        }
+
+        /// <summary>A reward's pieces fly from where it is shown to a counter; <paramref name="land"/> runs once per piece. Coins
+        /// turn as every coin flight does; anything else (a booster) keeps its own face on the way.</summary>
+        public static bool AreaReward(Transform from, Transform to, int pieces, bool coins, global::System.Action land)
+        {
+            var s = Area(); if (!s || !from || !to) return false;
+            var img = from.GetComponent<Image>();
+            var art = img && img.sprite ? img.sprite : s.coin ? s.coin : RoyalPieceSkin.Art("coin");
+            s.StartCoroutine(s.RunAreaReward(from, to, pieces, art, coins, land)); return true;
+        }
+        IEnumerator RunAreaReward(Transform from, Transform to, int pieces, Sprite art, bool coins, global::System.Action land)
+        {
+            int generation = previewGeneration;
+            yield return Scaled();
+            if (generation != previewGeneration) yield break;
+            if (!from || !to) { for (int i = 0; i < pieces; i++) land?.Invoke(); yield break; }
+            Vector2 a = Local(from), b = Local(to) + new Vector2(-60, 0);
+            for (int i = 0; i < pieces; i++) Fly(art, a, b, i * .05f, 76, .6f, () => { RoyalAudioDirector.Get?.Play(RoyalCue.Click); land?.Invoke(); }, coins);
+        }
 
         void OnDestroy()
         {

@@ -4,51 +4,17 @@ using UnityEngine;
 namespace JellyGarden.Scripts.Juice
 {
     /// <summary>
-    /// Board art: the imported reference catalog first, then the V4 gameplay pack.
+    /// Prefer original Royal Throne campaign art, then the existing gameplay pack.
     /// Cached legacy sprite views preserve their audited bounds and centered pivots.
     /// </summary>
     public static class RoyalGameplayArt
     {
         public const string ResourceRoot = "RoyalGameplayV4/";
         public const int AssetCount = 77;
-        // King Leo levels keep their own COLOR LIMIT, 3 to 6 (D3).
-        public const int MinBoardColorCount = 3, MaxBoardColorCount = 6;
-        // Royal Throne's native gem art and match burst cover colours 0-4; colour 5 is King Leo's coin.
-        public const int SixthColor = 5;
-        const string SixthGemPath = "Story/RoyalBoard/coin";
-        static Sprite sixthGem; static bool sixthGemLoaded;
-
-        /// <summary>Colours in play: the loaded level's COLOR LIMIT, or the full palette when no level is loaded.</summary>
-        public static int BoardColorCount
-        {
-            get
-            {
-                var lm = LevelManager.THIS;
-                return lm ? Mathf.Clamp(lm.colorLimit, MinBoardColorCount, MaxBoardColorCount) : MaxBoardColorCount;
-            }
-        }
-
-        /// <summary>True for any plain gem colour (0-5), whatever the level's limit.</summary>
-        public static bool IsGemColor(int color) => color >= 0 && color < MaxBoardColorCount;
-
-        // Every colour keeps its own art (D3); no remap.
-        public static int BoardColor(int color) => color;
-
-        /// <summary>The native match burst's colour part: the gold coin breaks with the yellow part.</summary>
-        public static int NativeVfxColor(int color) => color == SixthColor ? 2 : color;
-
-        /// <summary>King Leo's coin, the sixth gem Royal Throne's five-gem art lacks.</summary>
-        public static Sprite SixthGem
-        {
-            get
-            {
-                if (!sixthGemLoaded) { sixthGem = Resources.Load<Sprite>(SixthGemPath); sixthGemLoaded = true; }
-                return sixthGem;
-            }
-        }
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetSixthGem() { sixthGem = null; sixthGemLoaded = false; }
+        public const int BoardColorCount = 5;
+        // Retired sixth crystal: migrate old board/goal references to the blue shield.
+        // Special-piece sentinel IDs are deliberately left unchanged.
+        public static int BoardColor(int color) => color == 5 ? 1 : color;
 
         sealed class Entry
         {
@@ -62,9 +28,13 @@ namespace JellyGarden.Scripts.Juice
         static readonly Dictionary<string, Entry> entries = Build();
         static readonly string[] colours = { "ruby", "shield", "crown", "leaf", "lily", "vase" };
 
-        /// <summary>Load a gameplay sprite once. Unknown keys return null for legacy fallback.
-        /// Royal Throne's campaign art came first here; it is not ported (D8).</summary>
-        public static Sprite Art(string key) => LegacyArt(key);
+        /// <summary>Load a gameplay sprite once. Unknown keys return null for legacy fallback.</summary>
+        public static Sprite Art(string key)
+        {
+            var campaign = RoyalPieceSkin.CampaignArt(key);
+            if (campaign) return campaign;
+            return LegacyArt(key);
+        }
 
         /// <summary>Retain the previous pack for fallback and its own authoring checks.</summary>
         public static Sprite LegacyArt(string key)
@@ -81,6 +51,7 @@ namespace JellyGarden.Scripts.Juice
 
         public static Sprite For(ItemsTypes type, int color)
         {
+            color = BoardColor(color);
             var imported = RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.For(type, color);
             if (imported) return imported;
             switch (type)
@@ -91,9 +62,7 @@ namespace JellyGarden.Scripts.Juice
                 case ItemsTypes.PACKAGE: return Art("tnt");
                 case ItemsTypes.BOMB: return Art("orb");
                 case ItemsTypes.HELICOPTER: return Art("helicopter");
-                default:
-                    if (color == SixthColor && SixthGem) return SixthGem;
-                    return Art(colours[Mathf.Clamp(color, 0, colours.Length - 1)]);
+                default: return Art(colours[Mathf.Clamp(color, 0, colours.Length - 1)]);
             }
         }
 

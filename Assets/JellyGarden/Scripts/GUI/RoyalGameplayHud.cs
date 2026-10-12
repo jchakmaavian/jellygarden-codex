@@ -115,7 +115,7 @@ namespace RoyalThrone.Presentation
             return new Portrait { root = root, slot = slot };
         }
 
-        // The portrait window's shape as a mask (not drawn), for King Leo's avatar inside the slot.
+        // The portrait window's shape as a mask (not drawn), for the king rig inside the slot.
         public static RoyalArchShape WindowMask(Transform slot, string name)
         {
             float ww = PortraitWidth - 2 * Ring, wh = PortraitHeight - 2 * Ring;
@@ -159,7 +159,7 @@ namespace RoyalThrone.Presentation
         // badge's object (its text stays the live count); the badge art is inserted beneath its children.
         public static void BuildBadge(RectTransform plate, bool plus)
         {
-            Place(plate, BadgeX, BadgeY, BadgeSize, BadgeSize);
+            RoyalMenuSkin.Place(plate, BadgeX, BadgeY, BadgeSize, BadgeSize);
             var art = Box(plate, "Royal HUD badge", 0, 0, BadgeSize, BadgeSize);
             art.SetAsFirstSibling();
             var shadow = Circle(art, "Shadow", 0, -1.5f, BadgeSize + 2, C("1a0206", .45f), C("1a0206", .45f)); shadow.softness = 5;
@@ -177,7 +177,7 @@ namespace RoyalThrone.Presentation
         // The live count on a badge: white, bold, centred.
         public static void StyleCount(Text count, Font font)
         {
-            Place(count.transform, 0, 32 * CapDrop, BadgeSize, BadgeSize);
+            RoyalMenuSkin.Place(count.transform, 0, 32 * CapDrop, BadgeSize, BadgeSize);
             count.font = font; count.fontSize = 32; count.resizeTextForBestFit = true; count.resizeTextMinSize = 14; count.resizeTextMaxSize = 32;
             count.alignment = TextAnchor.MiddleCenter; count.color = Color.white; count.raycastTarget = false;
             count.transform.SetAsLastSibling();
@@ -277,15 +277,11 @@ namespace RoyalThrone.Presentation
 
         // ---- Small builders --------------------------------------------------------------------------------------------
 
-        // Centres `t` on its parent's centre at (x, y), w x h, unscaled and unrotated: Royal Throne's RoyalMenuSkin.Place,
-        // kept under this name for the HUD's own callers (RoyalGameplayPresentation, ReferenceBoosterBar).
-        public static RectTransform Place(Transform t, float x, float y, float w, float h) => RoyalMenuSkin.Place(t, x, y, w, h);
-
         static RectTransform Box(Transform parent, string name, float x, float y, float w, float h)
         {
             var r = new GameObject(name, typeof(RectTransform)).GetComponent<RectTransform>();
             r.SetParent(parent, false);
-            Place(r, x, y, w, h);
+            RoyalMenuSkin.Place(r, x, y, w, h);
             return r;
         }
 

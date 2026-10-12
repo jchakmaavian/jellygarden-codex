@@ -357,10 +357,10 @@ namespace JellyGarden.Scripts.Juice
                 // Native special-item feedback is owned by its existing collection event;
                 // booster activation owns its own source particles. Do not overlay the
                 // previous generated gem fracture on those imported objects.
-                if (owner && RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Has(owner.currentType)) return;
-                if (owner && owner.currentType == ItemsTypes.NONE && RoyalGameplayArt.IsGemColor(owner.color))
+                if (owner && (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(owner) || RoyalThrone.ReferenceGameplay.ReferencePieceVisual.Has(owner.currentType))) return;
+                if (owner && owner.currentType == ItemsTypes.NONE && owner.color >= 0 && owner.color < 5)
                 {
-                    RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("MatchItemExplodeParticles", source.transform.position, RoyalGameplayArt.NativeVfxColor(owner.color));
+                    RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Play("MatchItemExplodeParticles", source.transform.position, owner.color);
                     return;
                 }
             }

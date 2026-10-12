@@ -64,6 +64,10 @@ namespace JellyGarden.Scripts.GUI.TutorialStuff
 			//canvas.transform.position = Vector3.down * FindMaxY(items);
 			tutorial.SetActive (true);
 			ChangeLayerNum (4);
+			// The verified first level's goal is crates, and its first lesson says so (Design/RoyalMatchReference).
+			var words = text ? text.GetComponent<UnityEngine.UI.Text> () : null;
+			if (words && RoyalThrone.Campaign.RoyalReferenceCampaign.Opening)
+				words.text = "Match next to a crate to smash it!";
 			KeepCaptionClearOfBoard ();
 		}
 

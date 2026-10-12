@@ -76,7 +76,7 @@ namespace JellyGarden.Scripts.MapScripts.Editor.SmartLevelsMap
         private void InsertMapLevel(int ind, List<MapLevel> mapLevels)
         {
             Vector2 position = GetInterpolatedPosition(ind, mapLevels);
-            LevelsMap levelsMap = FindObjectOfType<LevelsMap>();
+            LevelsMap levelsMap = FindAnyObjectByType<LevelsMap>();
             MapLevel mapLevel = CreateMapLevel(position, ind, levelsMap.MapLevelPrefab);
             mapLevel.transform.parent = _mapLevel.transform.parent;
             mapLevel.transform.SetSiblingIndex(ind);
@@ -108,7 +108,7 @@ namespace JellyGarden.Scripts.MapScripts.Editor.SmartLevelsMap
             mapLevels.Remove(_mapLevel);
             UpdateLevelsNumber(mapLevels);
             UpdatePathWaypoints(mapLevels);
-            LevelsMap levelsMap = FindObjectOfType<LevelsMap>();
+            LevelsMap levelsMap = FindAnyObjectByType<LevelsMap>();
             Selection.activeGameObject =
                 mapLevels.Any()
                     ? mapLevels[Mathf.Max(0, ind - 1)].gameObject

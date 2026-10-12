@@ -1,0 +1,24 @@
+{
+  "reusedReferences": {
+    "387000011": "Assets/ReferenceGameplay/VFX/Materials/387000011.mat"
+  },
+  "sourceParticleSystems": 8,
+  "newSprites": 8,
+  "sourceSoundId": 17531,
+  "audio": [
+    {
+      "name": "lightball_lightball_combo",
+      "pathId": 17531,
+      "assetPath": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/lightball_lightball_combo__rfv387_17531.wav",
+      "resourcesPath": "ReferenceGameplay/Audio/lightball_lightball_combo__rfv387_17531",
+      "sourcePayloadSHA256": "c1f0786db7459894f4070d2577d7ff63b8288327ccf0979242fb7aeee16beec0",
+      "length": 4.3960771560668945,
+      "channels": 1,
+      "sampleRate": 44100
+    }
+  ],
+  "limitations": [
+    "Native MonoBehaviour excluded; C# scheduling reconstructed from authored animation completion and particle lifetimes.",
+    "Custom BlackBg mesh-mask runtime is not part of the imported particle hierarchies."
+  ]
+}

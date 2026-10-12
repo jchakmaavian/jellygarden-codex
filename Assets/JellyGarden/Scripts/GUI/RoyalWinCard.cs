@@ -534,8 +534,7 @@ namespace RoyalThrone.Presentation
             rect.localRotation = Quaternion.Euler(0, 0, angle); image.color = color;
         }
 
-        // Ease-out cubic (as RoyalLevelCardMotion.EaseOutCubic), kept here so the card does not depend on the level card.
-        static float Ease(float value) { value = Mathf.Clamp01(value); float u = 1 - value; return 1 - u * u * u; }
+        static float Ease(float value) => RoyalLevelCardMotion.EaseOutCubic(value);
         static float Hash(int n) { uint x = (uint)n * 2654435761u; x ^= x >> 15; x *= 2246822519u; x ^= x >> 13; return (x & 0xffffff) / (float)0x1000000; }
         static Color Fade(Color color, float alpha) { color.a = alpha; return color; }
     }

@@ -12,7 +12,7 @@ namespace RoyalThrone.Editor
 {
     public static class RoyalRocketChecks
     {
-        const string Folder="Logs/port-checks/Effects/Rocket-review-v7/";
+        const string Folder="Design/Effects/Rocket-review-v7/";
         public static IEnumerator Run(LevelManager lm,Action seed,Action colours,Action<bool,string> check)
         {
             // A level-one host can have a tutorial overlay. Hide only its graphics

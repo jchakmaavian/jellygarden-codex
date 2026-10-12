@@ -14,7 +14,7 @@ namespace RoyalThrone.Editor
     {
         public static IEnumerator RunRestored(LevelManager lm,Action seed,Action colours,Action<bool,string> check)
         {
-            const string review="Logs/port-checks/Effects/Unity-review-v6/";
+            const string review="Design/Effects/Unity-review-v6/";
             Directory.CreateDirectory(review);
             var service=RoyalToolkitImpact.Existing;
             check(service,"Original toolkit pool is ready");
@@ -61,7 +61,7 @@ namespace RoyalThrone.Editor
             yield return new WaitForSeconds(.45f);
             check(CandyShatterService.Instance.ActiveFragments==0,"Smooth fragment tail cleans up by0.85s");
         }
-        const string Folder="Logs/port-checks/Effects/Unity-review-v5/";
+        const string Folder="Design/Effects/Unity-review-v5/";
         public static IEnumerator Run(LevelManager lm,Action seed,Action colours,Action<bool,string> check)
         {
             Directory.CreateDirectory(Folder);

@@ -1,4 +1,5 @@
-﻿// // ©2015 - 2026 Candy Smith
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -92,6 +93,7 @@ namespace JellyGarden.Network
         // Use this for initialization
         void Start()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             THIS = this;
             //#if ((UNITY_PS4 || UNITY_XBOXONE) && !UNITY_EDITOR) || GS_FORCE_NATIVE_PLATFORM
 
@@ -124,11 +126,13 @@ namespace JellyGarden.Network
 
         public void LoginWithFB(string accessToken)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             loginManger.LoginWithFB(accessToken, titleId);
         }
 
         public void UpdateName(string userName)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             loginManger.UpdateName(userName);
         }
 

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "rocket_tnt_combo__rfv387_17431",
+    "length": 2.1253514289855957,
+    "channels": 1,
+    "frequency": 44100,
+    "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/rocket_tnt_combo__rfv387_17431.wav",
+    "payloadSHA256": "877a6feb88eaefb43a1055f600e30954f8adbd5e34b65e0341aaa55602dd733b"
+  },
+  {
+    "name": "propeller_tnt_combo__rfv387_17641",
+    "length": 1.1525397300720215,
+    "channels": 1,
+    "frequency": 44100,
+    "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/propeller_tnt_combo__rfv387_17641.wav",
+    "payloadSHA256": "fdf3452ba3c559c8a83ec3c348cee7eec739f166839898eae9cb13cb6bbc5bab"
+  },
+  {
+    "name": "tnt_tnt_combo__rfv387_17741",
+    "length": 3.7506802082061768,
+    "channels": 1,
+    "frequency": 44100,
+    "path": "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/tnt_tnt_combo__rfv387_17741.wav",
+    "payloadSHA256": "efd685954350f37e2b3e91ec9c1f19e5181e9c1138691569deeeda97cddb5de2"
+  }
+]

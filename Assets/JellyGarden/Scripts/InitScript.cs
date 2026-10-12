@@ -222,7 +222,6 @@ using Facebook.Unity;
                 PlayerPrefs.SetInt("Lauched", 1);
                 PlayerPrefs.Save();
             }
-            GrantStartingPurse();
 
             LoadLifeSchedule();
 
@@ -353,8 +352,8 @@ using Facebook.Unity;
 
         // The inherited kit starred every level when Left Ctrl (or U) was released, so an
         // ordinary Ctrl+S while the game had focus rewrote the player's whole progress.
-        // That debug shortcut is gone (King Leo has no mod menu to replace it), and Update()
-        // then only tracked that key in a field nothing read, so it was removed.
+        // Star control now lives in Settings -> Mod Menu, which is save-isolated.
+        // Update() then only tracked that key in a field nothing read, so it was removed.
 
         public void SaveLevelStarsCount(int level, int starsCount)
         {
@@ -422,14 +421,6 @@ using Facebook.Unity;
 
         public void CheckAdsEvents(GameState state)
         {
-            // --- King Leo story layer -------------------------------------
-            // No ads, no network permission (TECH.md). This is the single point
-            // every ad request passes through, so short-circuiting it here means
-            // no ad is ever requested by any path. Additive: delete these two
-            // lines and the kit's ad events fire again.
-            if (!JellyGarden.Scripts.Story.StoryFreeGame.AdsAllowed)
-                return;
-            // --------------------------------------------------------------
             if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             //1.4 added
             foreach (AdEvents item in adsEvents)
@@ -580,24 +571,6 @@ using Facebook.Unity;
             {
                 MenuManager.Instance.ShowPreFailed(false);
             }
-        }
-
-        /// <summary>
-        /// King Leo saves launched before the coin economy hold the kit's FirstGems (5 coins), too few for anything the
-        /// shops sell. Such a purse is topped up once to RoyalEconomy.StartingCoins; a larger balance is kept as it is.
-        /// </summary>
-        public const string StartingPurseKey = "RoyalThrone.StartingPurseGranted";
-
-        void GrantStartingPurse()
-        {
-            if (PlayerPrefs.GetInt(StartingPurseKey, 0) != 0) return;
-            if (Gems < Juice.RoyalEconomy.StartingCoins)
-            {
-                Gems = Juice.RoyalEconomy.StartingCoins;
-                PlayerPrefs.SetInt("Gems", Gems);
-            }
-            PlayerPrefs.SetInt(StartingPurseKey, 1);
-            PlayerPrefs.Save();
         }
 
         public void SetGems(int count)
@@ -784,14 +757,6 @@ using Facebook.Unity;
 
         public void SpendLife(int count)
         {
-            // --- King Leo story layer -------------------------------------
-            // Lives are on (Royal Throne's level end): a lost attempt costs a
-            // life and Royal Throne's refill schedule brings it back. Additive:
-            // StoryFreeGame.ShouldSpendLife false makes retries free again.
-            if (!JellyGarden.Scripts.Story.StoryFreeGame.ShouldSpendLife)
-                return;
-            // --------------------------------------------------------------
-
             if (lifes > 0)
             {
                 bool wasFull = lifes >= CapOfLife;
@@ -882,16 +847,6 @@ using Facebook.Unity;
         {
             if (EventSystem.current.IsPointerOverGameObject(-1))
                 return;
-
-            // --- King Leo story layer -------------------------------------
-            // A map node is a story area, not a level. The area screen shows the
-            // room's goal and repair tasks and decides which level to launch, so
-            // the kit's pre-play popup is skipped. Additive: delete these two
-            // lines and the original behaviour returns untouched.
-            if (JellyGarden.Scripts.Story.StoryFlow.HandleMapNodeClicked(args.Number))
-                return;
-            // --------------------------------------------------------------
-
             TryOpenLevel(args.Number);
         }
 

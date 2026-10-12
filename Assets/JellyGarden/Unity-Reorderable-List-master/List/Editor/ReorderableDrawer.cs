@@ -11,7 +11,7 @@ namespace Malee.Editor {
 
 		private static Dictionary<int, ReorderableList> lists = new Dictionary<int, ReorderableList>();
 
-		public override bool CanCacheInspectorGUI(SerializedProperty property) {
+		[System.Obsolete] public override bool CanCacheInspectorGUI(SerializedProperty property) {
 
 			return false;
 		}

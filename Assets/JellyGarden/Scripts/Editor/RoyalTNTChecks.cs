@@ -11,7 +11,7 @@ namespace RoyalThrone.Editor
 {
     public static class RoyalTNTChecks
     {
-        const string Folder="Logs/port-checks/Effects/TNT-review-v6/";
+        const string Folder="Design/Effects/TNT-review-v6/";
         static IEnumerator RecordReplay()
         {
             const string frames="Temp/TNT-v6-replay/";Directory.CreateDirectory(frames);

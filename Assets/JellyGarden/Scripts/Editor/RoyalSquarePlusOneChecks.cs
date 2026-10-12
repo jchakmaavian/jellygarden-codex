@@ -5,7 +5,7 @@ namespace RoyalThrone.Editor
  public static class RoyalSquarePlusOneChecks
  {
 public static System.Collections.IEnumerator Run(System.Action<bool,string> Check){
- const string folder="Logs/port-checks/QaFeedback/11-SquarePlusOne/four-gem-merge/";System.IO.Directory.CreateDirectory(folder);
+ const string folder="Design/QaFeedback/11-SquarePlusOne/four-gem-merge/";System.IO.Directory.CreateDirectory(folder);
  var qa=RoyalThrone.Testing.RoyalQaService.Instance;
  if(!RoyalThrone.Testing.RoyalSave.Testing)throw new System.InvalidOperationException("Requires isolated QA session");
  qa.Level=1;qa.Visible=false;qa.Loop=false;qa.Speed=1;
@@ -22,14 +22,14 @@ public static System.Collections.IEnumerator Run(System.Action<bool,string> Chec
  var extra=lm.GetSquare(cases[k,0],cases[k,1]).item;group.Add(extra);group.Add(cascade?dest.item:source);
  foreach(var item in group){item.SetColor(0);item.GetComponent<JellyGarden.Scripts.Juice.RoyalPieceSkin>()?.ApplyNow();}
  string label=(cascade?"Cascade":fps+" FPS")+" extra("+cases[k,0]+","+cases[k,1]+")";
- if(fps==60&&!cascade&&!UnityEngine.Application.isBatchMode){yield return new UnityEngine.WaitForEndOfFrame();var tex=UnityEngine.ScreenCapture.CaptureScreenshotAsTexture();System.IO.File.WriteAllBytes(folder+"case-"+k+"-before.jpg",tex.EncodeToJPG(92));UnityEngine.Object.Destroy(tex);}
+ if(fps==60&&!cascade){yield return new UnityEngine.WaitForEndOfFrame();var tex=UnityEngine.ScreenCapture.CaptureScreenshotAsTexture();System.IO.File.WriteAllBytes(folder+"case-"+k+"-before.jpg",tex.EncodeToJPG(92));UnityEngine.Object.Destroy(tex);}
  int repairs=JellyGarden.Scripts.Juice.RoyalBoardIntegrity.Repairs;
  if(cascade)lm.FindMatches();else source.SwitchDirection(source.transform.position-dest.transform.position);
  Check(cascade?lm.IsResolvingMatches:lm.InputSwaps==1,label+": requested resolver or player swap started");
  bool ownership=true;int calm=0,peakPropellers=0,peakTnt=0;bool sawGather=false,onlySquareGathered=true,extraClearedNormally=false;int peakGather=0;int frame=0;
  for(;frame<fps*12;frame++){
- yield return (UnityEngine.Application.isBatchMode?null:new UnityEngine.WaitForEndOfFrame());
- if(fps==60&&!cascade&&k==0&&frame<120&&!UnityEngine.Application.isBatchMode){System.IO.Directory.CreateDirectory(folder+"frames/");var capture=UnityEngine.ScreenCapture.CaptureScreenshotAsTexture();System.IO.File.WriteAllBytes(folder+"frames/"+frame.ToString("D4")+".jpg",capture.EncodeToJPG(92));UnityEngine.Object.Destroy(capture);}
+ yield return new UnityEngine.WaitForEndOfFrame();
+ if(fps==60&&!cascade&&k==0&&frame<120){System.IO.Directory.CreateDirectory(folder+"frames/");var capture=UnityEngine.ScreenCapture.CaptureScreenshotAsTexture();System.IO.File.WriteAllBytes(folder+"frames/"+frame.ToString("D4")+".jpg",capture.EncodeToJPG(92));UnityEngine.Object.Destroy(capture);}
  bool busy=lm.IsResolvingMatches||lm.InputSwaps>0||JellyGarden.Scripts.Juice.RoyalPowerupDirector.Busy;int propellers=0,tnt=0;
  var owners=new System.Collections.Generic.HashSet<JellyGarden.Scripts.Square>();
  foreach(var item in lm.GameField.GetComponentsInChildren<JellyGarden.Scripts.Item>())if(item){
@@ -53,7 +53,7 @@ public static System.Collections.IEnumerator Run(System.Action<bool,string> Chec
  Check(extraClearedNormally,label+": extra gem runs ordinary destruction separately");
  Check(ownership&&JellyGarden.Scripts.Juice.RoyalBoardIntegrity.Repairs==repairs,label+": unique reciprocal ownership without integrity repair");
  Check(frame<fps*12&&!lm.IsResolvingMatches&&!lm.DragBlocked,label+": board settles and input unlocks");
- if(fps==60&&!cascade&&!UnityEngine.Application.isBatchMode){var tex=UnityEngine.ScreenCapture.CaptureScreenshotAsTexture();System.IO.File.WriteAllBytes(folder+"case-"+k+"-after.jpg",tex.EncodeToJPG(92));UnityEngine.Object.Destroy(tex);}
+ if(fps==60&&!cascade){var tex=UnityEngine.ScreenCapture.CaptureScreenshotAsTexture();System.IO.File.WriteAllBytes(folder+"case-"+k+"-after.jpg",tex.EncodeToJPG(92));UnityEngine.Object.Destroy(tex);}
  }}finally{UnityEngine.Time.captureDeltaTime=original;}
 }
 

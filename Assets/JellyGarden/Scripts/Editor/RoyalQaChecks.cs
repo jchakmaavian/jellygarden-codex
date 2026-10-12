@@ -10,12 +10,13 @@ using JellyGarden.Scripts.Juice;
 using RoyalThrone.Testing;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RoyalThrone.Editor
 {
     public static class RoyalQaChecks
     {
-        const string Folder="Logs/port-checks/QA-Mode/PlayMode/";
+        const string Folder="Design/QA-Mode/PlayMode/";
         static readonly List<string> lines=new List<string>();static readonly List<string> errors=new List<string>();
         static RoyalQaService qa;static bool running;
         [MenuItem("Tools/Royal Throne/QA/Verify every testing control %#F6")]
@@ -30,7 +31,7 @@ namespace RoyalThrone.Editor
         static void Log(string message,string stack,LogType type){if(type==LogType.Exception||type==LogType.Error||type==LogType.Assert)errors.Add(message);}
         static Dictionary<string,string> Snapshot()
         {
-            var keys=new HashSet<string>{"Gems","Lifes","RestLifeTimer","DateOfExit","OpenLevel","OpenLevelTest","Music","Sound","RoyalThrone.ShowHints","RoyalThrone.HomeMotion","Lauched"};
+            var keys=new HashSet<string>{"Gems","Lifes","RestLifeTimer","DateOfExit",InitScript.NextLifeKey,"OpenLevel","OpenLevelTest","Music","Sound","RoyalThrone.ShowHints","RoyalThrone.HomeMotion","Lauched"};
             foreach(var level in Resources.LoadAll<TextAsset>("Levels"))if(int.TryParse(level.name,out int number)){keys.Add(string.Format("Level.{0:000}.StarsCount",number));keys.Add("Score"+number);}
             foreach(BoostType boost in Enum.GetValues(typeof(BoostType)))keys.Add(boost.ToString());
             return keys.ToDictionary(k=>k,k=>UnityEngine.PlayerPrefs.HasKey(k)+"/"+UnityEngine.PlayerPrefs.GetInt(k)+"/"+UnityEngine.PlayerPrefs.GetFloat(k)+"/"+UnityEngine.PlayerPrefs.GetString(k));
@@ -61,8 +62,8 @@ namespace RoyalThrone.Editor
                 }
                 finally {routing.SetValue(null,false);}
                 qa.StartSession();Check(RoyalSave.Testing,"QA session enters isolated save routing");qa.Level=1;qa.Amount=10;qa.Speed=1;qa.Loop=false;
-                // King Leo has no QA menu: the service is installed hidden and must not hold the board's input.
-                Check(!qa.Visible&&!RoyalSave.BlockGameplayInput,"QA session leaves board input to the game");
+                // Since 2026-09-22 the Mod Menu replaces the Game Testing Mode screen; its Settings entry reads "Mod Menu".
+                Check(FindButtons().Any(b=>b.GetComponentInChildren<Text>()?.text=="Mod Menu"),"Settings exposes the internal menu entry");
                 // Save semantics: missing/delete tombstones must not fall back to the player's value.
                 int raw=UnityEngine.PlayerPrefs.GetInt("Gems");RoyalSave.SetInt("Gems",4321);Check(RoyalSave.GetInt("Gems")==4321&&UnityEngine.PlayerPrefs.GetInt("Gems")==raw,"Writes land only in QA keys");
                 RoyalSave.DeleteKey("Gems");Check(!RoyalSave.HasKey("Gems")&&RoyalSave.GetInt("Gems",-7)==-7,"Deleted QA key does not expose the player value");RoyalSave.SetInt("Gems",money);
@@ -84,7 +85,7 @@ namespace RoyalThrone.Editor
                 yield return Command("Reset refill timer");Check(InitScript.RestLifeTimer>3,"Reset uses the authored refill duration");
                 qa.Amount=8;yield return Command("Set booster stock");foreach(BoostType boost in Enum.GetValues(typeof(BoostType)))if(boost!=BoostType.None)Check(RoyalSave.GetInt(boost.ToString())==8,"Booster stock uses existing key: "+boost);
                 yield return Command("Open level");yield return Command("Restart level");yield return Command("Practice board");
-                Check(LevelManager.THIS.colorLimit==RoyalQaService.PracticeColors,"Practice board refills from the full palette");
+                Check(!RoyalThrone.Campaign.RoyalReferenceCampaign.Active&&LevelManager.THIS.colorLimit==RoyalGameplayArt.BoardColorCount,"Practice board releases campaign opening/refill rules and restores its full palette");
                 // No-move fixture with one piece still falling: the idle hint scan must
                 // wait, not regenerate the board underneath an active resolution.
                 foreach(var cell in LevelManager.THIS.squaresArray)cell.item.SetColor((cell.col+cell.row*2)%5);
@@ -99,7 +100,7 @@ namespace RoyalThrone.Editor
                 while(LevelManager.THIS.gameStatus==GameState.Playing&&Time.realtimeSinceStartup<shuffleUntil)yield return null;
                 Check(LevelManager.THIS.gameStatus==GameState.RegenLevel,"No-move shuffle resumes when the board becomes idle");
                 yield return qa.Settled();yield return Command("Practice board");
-                for(int color=0;color<RoyalQaService.PracticeColors;color++){qa.Gem=color;yield return Command("Spawn selected gem");Check(LevelManager.THIS.GetSquare(3,3).item.color==color,"Spawned selected gem "+color);}
+                for(int color=0;color<RoyalGameplayArt.BoardColorCount;color++){qa.Gem=color;yield return Command("Spawn selected gem");Check(LevelManager.THIS.GetSquare(3,3).item.color==color,"Spawned selected gem "+color);}
                 string[] spawns={"Spawn TNT","Spawn rocket H","Spawn rocket V","Spawn propeller","Spawn color ball"};
                 ItemsTypes[] types={ItemsTypes.PACKAGE,ItemsTypes.HORIZONTAL_STRIPPED,ItemsTypes.VERTICAL_STRIPPED,ItemsTypes.HELICOPTER,ItemsTypes.BOMB};
                 for(int n=0;n<spawns.Length;n++){yield return Command(spawns[n]);Check(LevelManager.THIS.GetSquare(3,3).item.currentType==types[n],"Native power type: "+types[n]);}
@@ -118,7 +119,7 @@ namespace RoyalThrone.Editor
                 foreach(string command in qa.Commands["DEBUG"].Where(c=>c!="Reset test data")){yield return Command(command);yield return Command(command);}
                 yield return Command("Complete targets");Check(LevelManager.THIS.targetObject.All(t=>t.Done()),"All targets complete in runtime copies");
                 int coinsBeforeWin=InitScript.Gems;yield return Command("Win instantly");Check(LevelManager.THIS.gameStatus==GameState.Win,"Instant win follows the real win state");int rewardLives=InitScript.lifes,rewardCoins=InitScript.Gems;
-                Check(rewardCoins==coinsBeforeWin,"A win changes no coins (King Leo's free game, plan D4/D5)");
+                Check(rewardCoins==coinsBeforeWin+JellyGarden.Scripts.Juice.RoyalEconomy.WinCoins(LevelManager.THIS)&&rewardCoins-coinsBeforeWin>=50&&rewardCoins-coinsBeforeWin<=100,"A win credits 50 coins plus 5 per move left, up to 100");
                 int fail=qa.Failed;qa.Request("Win instantly");while(qa.Busy)yield return null;Check(qa.Failed==fail+1&&InitScript.lifes==rewardLives&&InitScript.Gems==rewardCoins,"Repeated win rejected without a duplicated life or coin reward");
                 yield return Command("Restart level");yield return Command("Lose instantly");Check(LevelManager.THIS.gameStatus==GameState.GameOver,"Instant lose follows the real lose state");
                 yield return Command("Reset test data");Check(InitScript.Gems==money,"Reset test data restores initial player-derived QA balance");
@@ -139,6 +140,7 @@ namespace RoyalThrone.Editor
                 lines.Add(success?"ALL QA CONTROLS PASSED":"FAILED — see the Console; QA profile is being restored.");lines.AddRange(errors);File.WriteAllLines(Folder+"checks.txt",lines);Debug.Log("[Royal QA Checks] "+(success?"PASS":"FAIL")+" "+lines.Count+" checks recorded.");
             }
         }
+        static Button[] FindButtons()=>UnityEngine.Object.FindObjectsByType<Button>(FindObjectsInactive.Include);
     }
 }
 #endif
