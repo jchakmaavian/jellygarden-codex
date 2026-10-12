@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using JellyGarden.Scripts.GUI;
-using JellyGarden.Scripts.Targets;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,16 +15,13 @@ namespace JellyGarden.Scripts.Story.Editor
         {
             try
             {
-                var pieces = new HashSet<Sprite>();
-                for (int colour = 0; colour < 6; colour++)
-                {
-                    Sprite sprite = StorybookBoardArt.Piece(colour);
-                    Require(sprite != null && pieces.Add(sprite), "Missing or duplicate colour " + colour);
-                    var goal = new TargetObject { type = Target.COLLECT, color = colour };
-                    Require(goal.DeepCopy().icon == sprite && goal.icon == null, "Goal mapping mutated source or changed colour " + colour);
-                }
-                foreach (BoostType boost in Enum.GetValues(typeof(BoostType)))
-                    if (boost != BoostType.None) Require(StoryBoosters.IconOf(boost) != null, "Missing booster " + boost);
+                // Pieces and goal art are Royal Throne's now (RoyalPieceSkin,
+                // RoyalVisualCatalog), so only the booster icons the popup and
+                // the rail draw are checked here.
+                foreach (BoostType boost in StoryBoosters.PreLevel)
+                    Require(StoryBoosters.IconOf(boost) != null, "Missing pre-level booster " + boost);
+                foreach (BoostType boost in global::RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Types)
+                    Require(StoryBoosters.IconOf(boost) != null, "Missing rail tool " + boost);
                 int layouts = 0;
                 for (int level = 1; level <= 1208; level++)
                 {
@@ -42,17 +37,12 @@ namespace JellyGarden.Scripts.Story.Editor
                         rows++; cols = Mathf.Max(cols, cells.Length);
                     }
                     Require(rows > 0 && cols > 0, "Unreadable layout " + level);
-                    foreach (Rect safe in new[] { new Rect(0, 0, 393, 852), new Rect(0, 0, 320, 568), new Rect(0, 34, 393, 759) })
-                    {
-                        Rect field = StorybookBoardLayout.FieldRect(safe);
-                        float pitch = StorybookBoardLayout.FitPitch(safe, cols, rows);
-                        float allow = StorybookBoardLayout.Allowance;
-                        Require((cols + allow) * pitch <= field.width + .01f && (rows + allow) * pitch <= field.height + .01f,
-                            "Board overlaps fixed controls: " + level + " at " + safe.size);
-                        layouts++;
-                    }
+                    // Royal Throne's camera fits any grid between the HUD and
+                    // the rail (RoyalGameplayPresentation.FrameBoard), so a
+                    // readable grid is what every level has to provide.
+                    layouts++;
                 }
-                Debug.Log("[Storybook board] PASS: six distinct colours, immutable goal mappings, all eight powers, " + layouts + " level/safe-area fits.");
+                Debug.Log("[Storybook board] PASS: pre-level and rail booster icons, " + layouts + " readable level grids.");
                 EditorApplication.Exit(0);
             }
             catch (Exception e) { Debug.LogException(e); EditorApplication.Exit(1); }

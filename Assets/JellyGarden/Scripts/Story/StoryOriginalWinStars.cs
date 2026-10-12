@@ -1,15 +1,15 @@
-// The original Royal Throne win stars on King Leo's win card. See StoryOriginalBoosters.
+// The original Royal Throne win stars on King Leo's win card.
 //
 // After royal-throne's RoyalWinConfetti: the imported StarHitParticles and
 // StarIdleParticles play on a hidden stage far from the board, a camera renders
 // them into a texture, and this graphic adds that texture over the card behind
 // the star (Hidden/RoyalThrone/UIWinGlow). The card is an overlay canvas, which
 // world-space particles cannot reach any other way. It stands in for the card's
-// own StoryWinStarVfx while it plays; with the switch off it is never added.
+// own StoryWinStarVfx while it plays; with any imported asset missing it is
+// never added and the card keeps its own effect.
 
 using UnityEngine;
 using UnityEngine.UI;
-using static RoyalThrone.ReferenceGameplay.Preview.ReferenceBoosters;
 
 namespace JellyGarden.Scripts.Story
 {
@@ -17,6 +17,8 @@ namespace JellyGarden.Scripts.Story
     public sealed class StoryOriginalWinStars : MaskableGraphic
     {
         const int StageLayer = 31;
+        // The imported prefabs under Resources/ReferenceGameplay/VFX (ReferenceBoosters' names).
+        const string StarHitVfx = "StarHitParticles", StarIdleVfx = "StarIdleParticles";
 
         GameObject _stage;
         Camera _camera;
@@ -31,11 +33,11 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>
         /// Adds the stars over <paramref name="effects"/>, in its place among the card's
-        /// children, and hides the card's own star effect. Null when off or missing.
+        /// children, and hides the card's own star effect. Null when an asset is missing.
         /// </summary>
         public static StoryOriginalWinStars Attach(RectTransform effects, Graphic replaced)
         {
-            if (!Application.isPlaying || effects == null || !StoryOriginalBoosters.Ready) return null;
+            if (!Application.isPlaying || effects == null) return null;
             var go = new GameObject("OriginalWinStars", typeof(RectTransform));
             var rect = (RectTransform)go.transform;
             rect.SetParent(effects.parent, false);

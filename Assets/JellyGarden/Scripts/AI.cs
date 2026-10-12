@@ -48,6 +48,49 @@ namespace JellyGarden.Scripts
 		/// The tip items
 		/// </summary>
 		private List<Item> nextMoveItems;
+		readonly List<Item> visibleHintItems = new List<Item>();
+		Coroutine hintRoutine;
+		int visibleHintMove;
+		Juice.RoyalHintPresenter hintPresenter;
+		public int VisibleHintCount => hintPresenter && hintPresenter.IsVisible ? hintPresenter.VisibleSwapCount : 0;
+		// Start with the strongest move, then rotate through other legal exchanges,
+		// keeping one suggestion visible for two complete interaction cycles.
+		public const float HintIdleSeconds = 1f;
+		public const float HintSuggestionSeconds = Juice.RoyalHintPresenter.PairStartDelay +
+			2 * (Juice.RoyalHintPresenter.PairTravelSeconds + Juice.RoyalHintPresenter.PairRestSeconds);
+		void OnEnable() { Juice.RoyalHintSettings.Changed += HintPreferenceChanged; }
+		void OnDisable()
+		{
+			Juice.RoyalHintSettings.Changed -= HintPreferenceChanged;
+			CancelVisibleHint();
+			if (hintRoutine != null) StopCoroutine(hintRoutine);
+			hintRoutine = null; corCount = 0;
+		}
+		void HintPreferenceChanged(bool enabled) { if (!enabled) CancelVisibleHint(); }
+		void Update()
+		{
+			var level = LevelManager.THIS;
+			if (visibleHintItems.Count > 0 && (!Juice.RoyalHintSettings.Enabled || !level ||
+				level.gameStatus != GameState.Playing || level.DragBlocked || level.moveID != visibleHintMove ||
+				InputManager.Instance.IsTouching || !HintCandidatesPresent(visibleHintItems))) CancelVisibleHint();
+		}
+		public void CancelVisibleHint()
+		{
+			if (hintPresenter) hintPresenter.Hide();
+			foreach (var item in visibleHintItems)
+			{
+				if (!item || !item.anim) continue;
+				item.anim.ResetTrigger("tip");
+				var state = item.anim.GetCurrentAnimatorStateInfo(0);
+				bool nextTip = item.anim.IsInTransition(0) && item.anim.GetNextAnimatorStateInfo(0).IsName("tip");
+				if (!item.destroying && !item.falling && (state.IsName("tip") || nextTip))
+				{
+					item.anim.Play("stop", 0, 1f);
+					if (item.sprRenderer) item.sprRenderer.transform.localPosition = Vector3.zero;
+				}
+			}
+			visibleHintItems.Clear();
+		}
 		// Use this for initialization
 		void Start()
 		{
@@ -96,7 +139,9 @@ namespace JellyGarden.Scripts
 
 		public List<Item> GetCombine()
 		{
-			return nextMoveItems;
+			// A level restart can retire these pieces before the next solver pass.
+			// Tutorial consumers must wait for a live candidate from the current board.
+			return nextMoveItems != null && HintCandidatesPresent(nextMoveItems) ? nextMoveItems : null;
 		}
 
 		/// <summary>
@@ -111,10 +156,6 @@ namespace JellyGarden.Scripts
 			//allow to show tips
 			allowShowTip = true;
 
-			//get max positions of squares
-			int maxRow = LevelManager.THIS.maxRows;
-			int maxCol = LevelManager.THIS.maxCols;
-
 			//variable to check: are we got tip or not
 			gotTip = false;
 
@@ -124,10 +165,14 @@ namespace JellyGarden.Scripts
 				yield return new WaitForEndOfFrame();
 			}
 			//if game is not in Playing status - wait
-			while (LevelManager.THIS.gameStatus != GameState.Playing)
+			// Input can remain responsive during combos. DragBlocked alone no longer
+			// means the board is ready for hints or a destructive no-moves shuffle.
+			while (LevelManager.THIS.gameStatus != GameState.Playing || BoardSettling(LevelManager.THIS))
 			{
-				yield return new WaitForEndOfFrame();
+				yield return null;
 			}
+			int maxRow = LevelManager.THIS.maxRows;
+			int maxCol = LevelManager.THIS.maxCols;
 
 			//if drag have not blocked and game status Playing - continue
 			if (!LevelManager.THIS.DragBlocked && LevelManager.THIS.gameStatus == GameState.Playing)
@@ -137,10 +182,22 @@ namespace JellyGarden.Scripts
 				if (LevelManager.THIS.gameStatus != GameState.Playing)
 					yield break;
 
+				// The hint solver decides (2026-10-04): the best colour match is the tip; with no colour match the board
+				// shuffles (LevelManager.NoMatches -> RoyalShuffle), even when power-ups could be tapped. The legacy pattern
+				// scan below is kept for reference but no longer runs.
+				var royalPlan = Juice.RoyalHintSolver.Find(LevelManager.THIS);
+				bool royalDecided = true;
+				if (royalPlan != null)
+				{
+					nextMoveItems.Add(royalPlan.First); if (royalPlan.Second) nextMoveItems.Add(royalPlan.Second);
+					tipItem = royalPlan.First; showTip(nextMoveItems); yield break;
+				}
+
 				// Get item component from the prefab
 				Item it = LevelManager.THIS.itemPrefab.GetComponent<Item>();
 
 				//Iteration for search possible combination
+				if (!royalDecided)
 				for (int COLOR = 0; COLOR < it.items.Length; COLOR++)
 				{
 					for (int col = 0; col < LevelManager.THIS.maxCols; col++)
@@ -494,6 +551,11 @@ namespace JellyGarden.Scripts
 
 
 				}
+				if (!royalDecided && Juice.RoyalEffectsProfile.Get)
+				{
+					var royalHint = Juice.RoyalPatterns.ExtraHint();
+					if (royalHint != null) { nextMoveItems = royalHint; tipItem = royalHint[0]; showTip(royalHint); yield break; }
+				}
 				//if we don't get any tip.  call nomatches to regenerate level
 				if (!LevelManager.THIS.DragBlocked)
 				{
@@ -510,57 +572,83 @@ namespace JellyGarden.Scripts
 			// }
 		}
 
+		static bool BoardSettling(LevelManager level)
+		{
+			if (level.IsResolvingMatches || level.InputSwaps > 0 || Juice.RoyalPowerupDirector.Busy) return true;
+			foreach (var item in level.GetItems())
+				if (item && (item.falling || item.destroying)) return true;
+			return false;
+		}
+
 		//show tip function calls coroutine for
 		void showTip(List<Item> nextMoveItems)
 		{
-			//        print("show tip");
-			StopCoroutine(showTipCor(nextMoveItems));
-			StartCoroutine(showTipCor(nextMoveItems));
+			// Discovery must remain true even when visual hints are disabled: otherwise
+			// the no-moves solver would incorrectly shuffle a perfectly playable board.
+			gotTip = true;
+			// A hint already showing for this board stays: several finders start at once (entering Playing, the level start,
+			// the end of a cascade) and each used to cancel and restart it, so it blinked.
+			if (hintRoutine != null && hintPresenter && hintPresenter.IsVisible && LevelManager.THIS && visibleHintMove == LevelManager.THIS.moveID) return;
+			if (hintRoutine != null) StopCoroutine(hintRoutine);
+			CancelVisibleHint();
+			hintRoutine = StartCoroutine(showTipCor(new List<Item>(nextMoveItems)));
+		}
+
+		static bool HintCandidatesPresent(List<Item> items)
+		{
+			foreach (var item in items)
+				if (!item || item.destroying || !item.gameObject.activeInHierarchy || !item.square || item.square.item != item) return false;
+			return items.Count > 0;
 		}
 
 		//show tip coroutine
 		IEnumerator showTipCor(List<Item> nextMoveItems)
 		{
-			gotTip = true;
-			corCount++;
-			if (corCount > 1)
-			{
-				corCount--;
-				yield break;
-			}
-			if (LevelManager.THIS.DragBlocked && !allowShowTip)
-			{
-				corCount--;
-				yield break;
-			}
+			corCount = 1;
 			tipID = LevelManager.THIS.moveID;
-			//while (!LevelManager.THIS.DragBlocked && allowShowTip)
-			//{
-			yield return new WaitForSeconds(1);
-			if (LevelManager.THIS.DragBlocked && !allowShowTip && tipID != LevelManager.THIS.moveID)
+			float idle = 0;
+			while (idle < HintIdleSeconds)
 			{
-				corCount--;
-				yield break;
+				var level = LevelManager.THIS;
+				if (!level || level.moveID != tipID || !HintCandidatesPresent(nextMoveItems)) break;
+				bool settled = level.gameStatus == GameState.Playing && !level.DragBlocked && allowShowTip && !InputManager.Instance.IsTouching;
+				foreach (var item in nextMoveItems) if (!item || item.destroying || item.falling) settled = false;
+				idle = settled ? idle + Time.deltaTime : 0;
+				yield return null;
 			}
-			foreach (Item item in nextMoveItems)
+			var lm = LevelManager.THIS;
+			if (lm && lm.moveID == tipID && lm.gameStatus == GameState.Playing && !lm.DragBlocked &&
+				allowShowTip && Juice.RoyalHintSettings.Enabled && idle >= HintIdleSeconds &&
+				!InputManager.Instance.IsTouching && HintCandidatesPresent(nextMoveItems))
 			{
-				if (item == null)
+				// The legacy discovery sample omits the swap partner and longer runs.
+				// Preview the complete result without changing real cells or match state.
+				var options = Juice.RoyalHintSolver.FindAll(lm);
+				var plan = options.Count > 0 ? options[0] : null;
+				if (!hintPresenter) hintPresenter = GetComponent<Juice.RoyalHintPresenter>() ?? gameObject.AddComponent<Juice.RoyalHintPresenter>();
+				if (hintPresenter.Show(plan))
 				{
-					corCount--;
-					yield break;
+					visibleHintMove = tipID;
+					visibleHintItems.Add(plan.First);
+					if (plan.Second) visibleHintItems.Add(plan.Second);
+					int option=0;float nextSuggestion=Time.unscaledTime+HintSuggestionSeconds;
+					while (hintPresenter.IsVisible)
+					{
+						if(!allowShowTip||BoardSettling(lm))break;
+						if(options.Count>1&&Time.unscaledTime>=nextSuggestion){
+							option=(option+1)%options.Count;var next=options[option];
+							if(!next.IsCurrent(lm)||!hintPresenter.Show(next))break;
+							visibleHintItems.Clear();visibleHintItems.Add(next.First);if(next.Second)visibleHintItems.Add(next.Second);
+							this.nextMoveItems=new List<Item>(visibleHintItems);tipItem=next.First;
+							nextSuggestion=Time.unscaledTime+HintSuggestionSeconds;
+						}
+						yield return null;
+					}
 				}
-
 			}
-			//call animation trigger for every found item to show tip
-			foreach (Item item in nextMoveItems)
-			{
-				if (item != null)
-					item.anim.SetTrigger("tip");
-			}
-			yield return new WaitForSeconds(0);
-			StartCoroutine(CheckPossibleCombines());
-			corCount--;
-			// }
+			CancelVisibleHint();
+			corCount = 0; hintRoutine = null;
+			if (lm && lm.gameStatus == GameState.Playing) StartCoroutine(CheckPossibleCombines());
 		}
 
 

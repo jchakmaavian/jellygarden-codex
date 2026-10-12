@@ -42,10 +42,14 @@ namespace JellyGarden.Scripts.Targets
 
         public void SetTarget(TargetObject target)
         {
+            // Cache the data reference before replacing the visual sprite.
+            targetObject=LevelManager.THIS&&LevelManager.THIS.targetObject!=null
+                ? LevelManager.THIS.targetObject.FirstOrDefault(t=>t.type==target.type&&t.color==target.color&&t.icon&&target.icon&&t.icon.name==target.icon.name)??target
+                : target;
             checkObject.gameObject.SetActive(false);
-            imageRenderer.sprite = target.icon;
-            // Match the live copy's art; the lazy target lookup below uses its sprite name.
-            imageRenderer.sprite = JellyGarden.Scripts.Story.StorybookBoardArt.Goal(target);
+            var goalArt = RoyalThrone.Presentation.RoyalVisualCatalog.Goal(target);
+            if (!goalArt) goalArt = JellyGarden.Scripts.Story.StorybookBoardArt.Goal(target);   // main's art when the catalog has none
+            imageRenderer.sprite = goalArt;
             count = target.targetCount;
             textObj.text = target.targetCount.ToString();
             if (target.type == Target.SCORE)

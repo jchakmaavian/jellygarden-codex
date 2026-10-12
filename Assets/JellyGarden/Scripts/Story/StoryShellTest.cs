@@ -81,7 +81,7 @@ namespace JellyGarden.Scripts.Story
         /// <summary>How long to give one repair's cutscene and payoff before calling it stuck.</summary>
         private const float BeatTimeout = 45f;
 
-        /// <summary>How long to wait for the board self-test to have had its run.</summary>
+        /// <summary>How long to wait for any level still open to close.</summary>
         private const float BoardTestTimeout = 180f;
 
         private const float Poll = 0.2f;
@@ -103,7 +103,7 @@ namespace JellyGarden.Scripts.Story
             if (!StorySelfTests.Requested) return;
             if (_instance != null) return;
 
-            // Installed from whichever scene is up, like the board self-test: this
+            // Installed from whichever scene is up: this
             // host survives scene loads, and the walk waits for the game scene
             // itself rather than for the scene it was installed in.
             var host = new GameObject("StoryShellTest");
@@ -151,9 +151,8 @@ namespace JellyGarden.Scripts.Story
         {
             _running = true;
 
-            // The board self-test loads the game scene and plays level 1 on every
-            // session. Opening an area screen over that would be measuring the
-            // collision rather than the shell.
+            // Opening an area screen over a level still in play would be
+            // measuring the collision rather than the shell.
             yield return WaitForTheBoardTest();
             yield return WaitForCalm(BeatTimeout);
 
@@ -419,17 +418,15 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// The board self-test owns the first stretch of every play session: it
-        /// loads the game scene and plays a level in it. This gets out of its way
-        /// rather than racing it.
+        /// Waits until the game scene is up and no level is in play, so the walk
+        /// starts from the shell rather than racing a board.
         /// </summary>
         private IEnumerator WaitForTheBoardTest()
         {
             float waited = 0f;
             while (waited < BoardTestTimeout)
             {
-                if (StoryPowerupTest.IsFinished && !StoryNavBar.LevelIsPlaying &&
-                    StoryShell.InGameScene)
+                if (!StoryNavBar.LevelIsPlaying && StoryShell.InGameScene)
                     yield break;
 
                 yield return new WaitForSeconds(Poll);
@@ -437,7 +434,7 @@ namespace JellyGarden.Scripts.Story
             }
 
             Debug.LogWarning(
-                "[Story] shell test: gave up waiting for the board self-test; running anyway.");
+                "[Story] shell test: gave up waiting for the level to close; running anyway.");
         }
 
         #endregion

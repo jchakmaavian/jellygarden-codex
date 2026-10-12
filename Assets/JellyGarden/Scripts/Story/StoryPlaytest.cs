@@ -1,9 +1,9 @@
 // Plays a level by itself and reports what went wrong.
 //
-// StoryPowerupTest proves two specific powerup rules on a live board. This is
-// the blunter instrument next to it: it opens a level, finds a legal move,
-// makes it, waits for the cascade to settle, and repeats until the level ends
-// — recording every error Unity raised on the way and every place the board
+// Royal Throne's Port checks prove specific board rules. This is the blunter
+// instrument next to them: it opens a level, finds a legal move, makes it,
+// waits for the cascade to settle, and repeats until the level ends —
+// recording every error Unity raised on the way and every place the board
 // stopped answering.
 //
 // It exists because the bugs that matter here do not show up in a headless
@@ -18,7 +18,8 @@
 //
 // The report is written to Application.persistentDataPath/playtest.txt and
 // echoed to the log, so a batchmode run can be read from either. Two PNGs per
-// level land next to it in Application.persistentDataPath/playtest/.
+// level land next to it in Application.persistentDataPath/playtest/, except in
+// batchmode, where no shots are taken.
 
 using System.Collections;
 using System.Collections.Generic;
@@ -404,6 +405,28 @@ namespace JellyGarden.Scripts.Story
                 manager.targetObject == null ? 0 : manager.targetObject.Length, manager.star1));
             Say("targets: " + Targets());
 
+            int repairsBefore = JellyGarden.Scripts.Juice.RoyalBoardIntegrity.Repairs;
+            yield return PlayMoves(manager);
+            ReportIntegrity(repairsBefore);
+        }
+
+        /// <summary>
+        /// Royal Throne's board guard repairs a cell that two pieces claimed, or
+        /// a piece no cell owns. Each repair is an ownership fault the player
+        /// may have seen, so any on a level is a finding.
+        /// </summary>
+        private void ReportIntegrity(int repairsBefore)
+        {
+            int repairs = JellyGarden.Scripts.Juice.RoyalBoardIntegrity.Repairs - repairsBefore;
+            Say(string.Format("board integrity repairs this level: {0} (session {1}).",
+                repairs, JellyGarden.Scripts.Juice.RoyalBoardIntegrity.Repairs));
+            if (repairs > 0)
+                Finding(string.Format("RoyalBoardIntegrity repaired the board {0} time(s); last: {1}",
+                    repairs, JellyGarden.Scripts.Juice.RoyalBoardIntegrity.LastReport));
+        }
+
+        private IEnumerator PlayMoves(LevelManager manager)
+        {
             int move = 0;
             int noMoveRuns = 0;
 
@@ -425,7 +448,7 @@ namespace JellyGarden.Scripts.Story
                 if (!settled)
                 {
                     Finding(string.Format(
-                        "the board never settled after move {0} — DragBlocked stayed true for {1}s. " +
+                        "the board never settled after move {0} — it was still resolving after {1}s. " +
                         "That is a cascade that stopped halfway; the level cannot end from here.",
                         move, SettleTimeout));
                     yield break;
@@ -458,6 +481,8 @@ namespace JellyGarden.Scripts.Story
                 int before = manager.Limit;
                 int scoreBefore = LevelManager.Score;
 
+                // The same entry a finger drag reaches; it re-checks CanAcceptInput
+                // on both pieces and drops the swap if either is no longer free.
                 found.Item.switchDirection = Vector3.zero;
                 found.Item.SwitchDirection(found.Delta);
 
@@ -629,7 +654,6 @@ namespace JellyGarden.Scripts.Story
                 "s); state " + manager.gameStatus + ".");
         }
 
-        /// <summary>True when the board is idle: nothing blocked, nothing falling, nothing matched.</summary>
         /// <summary>
         /// Waits out a reshuffle, and reports one that never ends.
         ///
@@ -663,6 +687,17 @@ namespace JellyGarden.Scripts.Story
             Say("reshuffled after " + wait + "s; state " + manager.gameStatus + ".");
         }
 
+        /// <summary>
+        /// True when the board is idle in Royal Throne's terms: the resolver is
+        /// not running, no power-up is in flight, no swap is held and nothing
+        /// is falling.
+        /// </summary>
+        private static bool Settled(LevelManager manager)
+        {
+            return !manager.IsResolvingMatches && !JellyGarden.Scripts.Juice.RoyalPowerupDirector.Busy &&
+                   manager.InputSwaps == 0 && !AnythingFalling();
+        }
+
         private IEnumerator Settle(global::System.Action<bool> report)
         {
             LevelManager manager = LevelManager.THIS;
@@ -677,7 +712,7 @@ namespace JellyGarden.Scripts.Story
                     yield break;
                 }
 
-                if (!manager.DragBlocked && !AnythingFalling() && manager.GetMatches().Count == 0)
+                if (Settled(manager))
                 {
                     report(true);
                     yield break;
@@ -714,10 +749,11 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         private void OpenShotDir()
         {
-            // -nographics has no frame to wait for the end of, so WaitForEndOfFrame
-            // never returns there and a shot would hang the whole sweep. A headless
-            // run gets the text report and no pictures.
-            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+            // -nographics has no frame to wait for the end of, and a batchmode
+            // Editor hung on WaitForEndOfFrame in the baseline run, so a shot
+            // would hang the whole sweep. Those runs get the text report only.
+            if (Application.isBatchMode ||
+                SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
             {
                 _shotDir = string.Empty;
                 return;
@@ -815,6 +851,9 @@ namespace JellyGarden.Scripts.Story
         /// The deltas are the ones Item.SwitchDirection reads, and they are
         /// inverted against the direction of travel because the kit computes its
         /// drag as (where the finger started - where it is now).
+        ///
+        /// Only pieces whose CanAcceptInput is true are tried: a piece that is
+        /// reserved, leased to a swap or mid-flight would refuse the swap.
         /// </summary>
         private Move FindMove()
         {
@@ -842,7 +881,7 @@ namespace JellyGarden.Scripts.Story
 
             Item mine = square.item;
             Item theirs = neighbour.item;
-            if (mine.falling || theirs.falling) return null;
+            if (!mine.CanAcceptInput || !theirs.CanAcceptInput) return null;
             if (mine.currentType == ItemsTypes.INGREDIENT || theirs.currentType == ItemsTypes.INGREDIENT) return null;
 
             neighbour.item = mine;

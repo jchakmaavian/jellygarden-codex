@@ -1,21 +1,16 @@
-// Opens one board in every arc and says whether it is wearing that arc.
+// Opens one board in every arc and says whether it reached the screen.
 //
-// tools/check_themes.py reads themes.json and the art beside it and can prove
-// what the theme SAYS. It cannot prove what reaches a board: whether
-// StoryArt.Load actually found the picture in a built player's Resources,
-// whether ApplyBackdrop fell back to the kit's own, whether the ground reached
-// the cells or the level opened before the theme did. Those only show on a live
-// board, and the fault they produce — arc 6 wearing arc 1's tiles, or the kit's
-// untinted default — raises no error and ends no level.
-//
-// So this is the runtime half: six levels, one per arc, each launched into the
-// area it belongs to, each verified and each photographed.
+// Levels wear Royal Throne's board backdrop now (port decision D6), so an arc's
+// theme no longer dresses the board and nothing here asserts a backdrop or a
+// cell ground. What is left is the check that caught a board drawn under a
+// black scrim: launch the first level of each arc into its own area, read the
+// frame back, and report a frame too dark to be a board.
 //
 //     tools/run_player.sh -storythemetest
 //
 // The report is Application.persistentDataPath/themetest.txt and the six PNGs
-// are next to it in themetest/. A FINDING line is an arc that is not wearing
-// itself; the pictures are for everything a check cannot see.
+// are next to it in themetest/. A FINDING line is an arc whose board did not
+// reach the screen; the pictures are for everything a check cannot see.
 
 using System.Collections;
 using System.Collections.Generic;
@@ -100,15 +95,6 @@ namespace JellyGarden.Scripts.Story
             StartCoroutine(Drive());
         }
 
-        /// <summary>
-        /// What each arc turned out to be wearing, so the last arc can be told
-        /// apart from the first. Two arcs that resolve to the same picture and
-        /// the same ground are one arc as far as a player is concerned, and that
-        /// is invisible in either arc's own screenshot.
-        /// </summary>
-        private readonly Dictionary<string, int> _backdropSeen = new Dictionary<string, int>();
-        private readonly Dictionary<string, int> _groundSeen = new Dictionary<string, int>();
-
         private IEnumerator Drive()
         {
             OpenShotDir();
@@ -128,28 +114,21 @@ namespace JellyGarden.Scripts.Story
             {
                 _arc = arc;
 
+                // The theme only names the shot now; the board does not wear it.
                 ArcTheme theme = StoryTheme.ForArc(arc);
-                if (theme == null)
-                {
-                    // Not a cosmetic miss: StoryBoardTheme.Apply returns early on
-                    // a null theme, so every level in the arc keeps the kit's own
-                    // look and nothing says so.
-                    Finding("has no theme in Resources/Story/themes.json, so every " +
-                            "board in it keeps the kit's own backdrop and black checker");
-                    continue;
-                }
+                string themeKey = theme == null ? "arc" + arc : theme.ThemeKey;
 
                 int level = FirstLevelOf(arc);
                 if (level <= 0)
                 {
-                    Finding("no level in the plan belongs to it, so its theme is " +
-                            "never exercised by anything");
+                    Finding("no level in the plan belongs to it, so no board of it is " +
+                            "ever opened by anything");
                     continue;
                 }
 
                 int areaId = StoryLevelPlan.AreaOf(level);
                 Say(string.Format("---- arc {0} ({1}) — level {2}, area {3} ----",
-                    arc, theme.ThemeKey, level, areaId));
+                    arc, themeKey, level, areaId));
 
                 // Leaving the last level drops the player on home, and home is
                 // where the story's beats fire. Launch from a calm shell.
@@ -161,11 +140,11 @@ namespace JellyGarden.Scripts.Story
                 {
                     Finding(string.Format(
                         "level {0} never became playable — state {1}. Nothing was drawn, " +
-                        "so the theme could not be looked at.", level,
+                        "so the board could not be looked at.", level,
                         LevelManager.THIS == null
                             ? "no LevelManager"
                             : LevelManager.THIS.gameStatus.ToString()));
-                    yield return Shot(arc, theme.ThemeKey);
+                    yield return Shot(arc, themeKey);
                     continue;
                 }
 
@@ -185,9 +164,8 @@ namespace JellyGarden.Scripts.Story
 
                 yield return new WaitForSecondsRealtime(1f);
 
-                Verify(arc, theme, level);
-                yield return MeasureFrame(theme);
-                yield return Shot(arc, theme.ThemeKey);
+                yield return MeasureFrame();
+                yield return Shot(arc, themeKey);
                 yield return LeaveLevel();
             }
 
@@ -238,9 +216,8 @@ namespace JellyGarden.Scripts.Story
                 waited += 0.25f;
             }
 
-            // The theme is applied on OnLevelLoaded and again on OnStartPlay, and
-            // the board finishes falling in after both. This is a picture of a
-            // board, so it waits for the board to be still.
+            // The board finishes falling in after it starts playing. This is a
+            // picture of a board, so it waits for the board to be still.
             yield return new WaitForSecondsRealtime(2.5f);
         }
 
@@ -267,216 +244,6 @@ namespace JellyGarden.Scripts.Story
             }
 
             if (hidden > 0) Say("kit tutorial overlay hidden for the shot.");
-        }
-
-        /// <summary>Everything about this arc's board that a check can settle.</summary>
-        private void Verify(int arc, ArcTheme theme, int level)
-        {
-            // 1. The theme the board actually resolved, through the level rather
-            //    than through the arc — that is the path the game uses.
-            ArcTheme viaLevel = StoryTheme.ForLevel(level);
-            if (viaLevel == null)
-            {
-                Finding(string.Format(
-                    "level {0} resolves to no theme, so StoryBoardTheme.Apply returns " +
-                    "before it dresses anything", level));
-            }
-            else if (viaLevel.Arc != arc)
-            {
-                Finding(string.Format(
-                    "level {0} resolves to arc {1}'s theme ({2}), not its own",
-                    level, viaLevel.Arc, viaLevel.ThemeKey));
-            }
-
-            // 2. What went behind the board, read off the Image rather than off
-            //    this layer's own bookkeeping.
-            string backdrop = "none";
-            var background = FindFirstObjectByType<Background>(FindObjectsInactive.Include);
-            Image image = background == null ? null : background.GetComponent<Image>();
-            if (image == null || image.sprite == null)
-            {
-                Finding("nothing is drawn behind the board — no Background image");
-            }
-            else
-            {
-                backdrop = image.sprite.name;
-
-                // The board wears the KIT's background — StoryBoardTheme.
-                // UseStoryBackdrop is false. What is checked is therefore that
-                // the kit's own rule was honoured, not that the story's room
-                // art arrived; the story art is still checked everywhere it is
-                // actually used, on the home screen and the area page.
-                if (!StoryBoardTheme.UseStoryBackdrop)
-                {
-                    Sprite[] pictures = background.pictures;
-                    if (pictures == null || pictures.Length == 0)
-                    {
-                        Finding("the kit's Background has no pictures, so the board " +
-                                "is wearing whatever the scene last left on it");
-                    }
-                    else
-                    {
-                        int every = Mathf.Max(1, background.changeBackgoundEveryLevels);
-                        int index = Mathf.Clamp(
-                            (int)((float)level / every - 0.01f), 0, pictures.Length - 1);
-                        if (image.sprite != pictures[index])
-                        {
-                            Finding(string.Format(
-                                "the board is wearing '{0}' and not the kit's picture {1} " +
-                                "for level {2}", backdrop, index, level));
-                        }
-                    }
-                }
-                else
-                {
-                    int areaId = StoryLevelPlan.AreaOf(level);
-                    Sprite expected = StoryArt.AreaAtProgress(areaId) ?? StoryArt.Load(theme.BoardBackdrop);
-                    if (expected == null)
-                    {
-                        Finding(string.Format(
-                            "its room art and fallback are missing: Resources/Story/Art/{0}. The board " +
-                            "is wearing the kit's own '{1}' instead.",
-                            theme.BoardBackdrop, backdrop));
-                    }
-                    else if (image.sprite != expected)
-                    {
-                        Finding(string.Format(
-                            "the board is wearing '{0}' and not area {1}'s current room '{2}'",
-                            backdrop, areaId, expected.name));
-                    }
-                    else
-                    {
-                        ReportBackdropSharpness(image);
-                    }
-                }
-            }
-
-
-
-            if (StoryBoardTheme.LastBackdropWasKitDefault)
-            {
-                Finding("StoryBoardTheme fell back to the kit default: " +
-                        StoryBoardTheme.LastBackdrop);
-            }
-
-            // 3. The ground under the cells. A theme that names a fill and a
-            //    board that never got one look identical in the log and nothing
-            //    like each other on screen.
-            //
-            //    Unless the story is not drawing a ground at all: with
-            //    StoryBoardTheme.UseStoryCellFill off the cells are meant to be
-            //    the kit's black checker, and a board with no story ground on
-            //    it is the board working correctly.
-            if (!StoryBoardTheme.UseStoryCellFill)
-            {
-                Say("cells keep the kit's own checker; the arc's ground is off.");
-            }
-            else if (!theme.HasBoardFill)
-            {
-                Finding("names no board ground, so its cells keep the kit's flat " +
-                        "black checker whatever the arc is");
-            }
-            else if (StoryBoardTheme.LastFilledCells <= 0)
-            {
-                Finding("names a board ground but no cell carries it — the board was " +
-                        "built after the theme was applied, or every cell is a hole");
-            }
-            else
-            {
-                Say(string.Format("ground {0} on {1} cell(s); backdrop '{2}'.",
-                    Describe(StoryBoardTheme.LastFill), StoryBoardTheme.LastFilledCells,
-                    backdrop));
-            }
-
-            // 4. Told apart from the arcs already seen. Two arcs wearing the same
-            //    picture AND the same ground are one arc, and neither arc's own
-            //    screenshot can show that.
-            // With the cells on the kit's checker every arc's ground is the
-            // same, so the backdrop is the only thing telling two arcs apart —
-            // and it is the room being restored, which no two arcs share.
-            int firstArc;
-            if (_backdropSeen.TryGetValue(backdrop, out firstArc) && backdrop != "none")
-            {
-                string ground = StoryBoardTheme.UseStoryCellFill
-                    ? Describe(StoryBoardTheme.LastFill)
-                    : "the kit's checker";
-                int groundArc;
-                if (_groundSeen.TryGetValue(ground, out groundArc) && groundArc == firstArc)
-                {
-                    Finding(string.Format(
-                        "is the same board as arc {0}: the same backdrop '{1}' and the " +
-                        "same ground {2}", firstArc, backdrop, ground));
-                }
-                else
-                {
-                    Say(string.Format("shares backdrop '{0}' with arc {1}, separated by " +
-                                      "its ground.", backdrop, firstArc));
-                }
-            }
-            else if (backdrop != "none")
-            {
-                _backdropSeen[backdrop] = arc;
-            }
-
-            string key = Describe(StoryBoardTheme.LastFill);
-            if (!_groundSeen.ContainsKey(key)) _groundSeen[key] = arc;
-        }
-
-        /// <summary>
-        /// How many of the backdrop's own pixels reach each pixel it is drawn
-        /// into. Below 1 the picture is being magnified, and a magnified
-        /// painting is the blur behind the board that no check had ever
-        /// measured — it looks like an out-of-focus photograph of the place
-        /// rather than the place.
-        ///
-        /// One is the honest floor: at exactly one source pixel per screen pixel
-        /// the picture is as sharp as it was painted, and anything above is a
-        /// downscale, which is always fine.
-        /// </summary>
-        private const float MinBackdropPixelsPerScreenPixel = 1f;
-
-        private void ReportBackdropSharpness(Image image)
-        {
-            Sprite sprite = image.sprite;
-            if (sprite == null || sprite.texture == null) return;
-
-            var rect = image.rectTransform;
-            Vector3[] corners = new Vector3[4];
-            rect.GetWorldCorners(corners);
-
-            Canvas canvas = image.canvas;
-            Camera camera = canvas == null || canvas.renderMode == RenderMode.ScreenSpaceOverlay
-                ? null
-                : canvas.worldCamera;
-
-            Vector2 low = RectTransformUtility.WorldToScreenPoint(camera, corners[0]);
-            Vector2 high = RectTransformUtility.WorldToScreenPoint(camera, corners[2]);
-            float drawnWidth = Mathf.Abs(high.x - low.x);
-            float drawnHeight = Mathf.Abs(high.y - low.y);
-            if (drawnWidth <= 0f || drawnHeight <= 0f) return;
-
-            // Against the window's own pixels, because that is what
-            // StoryWindow.Capture now writes.
-            float perPixel = Mathf.Min(sprite.rect.width / drawnWidth,
-                                       sprite.rect.height / drawnHeight);
-
-            Say(string.Format(
-                "backdrop {0} is {1:0}x{2:0} in a {3}x{4} texture, drawn into {5:0}x{6:0} " +
-                "shot pixels — {7:0.00} source pixel(s) each.",
-                sprite.name, sprite.rect.width, sprite.rect.height,
-                sprite.texture.width, sprite.texture.height,
-                drawnWidth, drawnHeight, perPixel));
-
-            if (perPixel < MinBackdropPixelsPerScreenPixel)
-            {
-                Finding(string.Format(
-                    "the room behind the board is magnified {0:0.0}x: {1} carries only " +
-                    "{2:0.00} of its own pixels per pixel it is drawn into, which is why it " +
-                    "reads as an out-of-focus photograph rather than a place. Its texture is " +
-                    "{3}x{4}.",
-                    1f / Mathf.Max(perPixel, 0.0001f), sprite.name, perPixel,
-                    sprite.texture.width, sprite.texture.height));
-            }
         }
 
         /// <summary>A colour as it reads in a report: 0..255 per channel plus alpha.</summary>
@@ -543,30 +310,35 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>
         /// How bright the frame is allowed to come out, as a fraction of the
-        /// ground the theme asked for.
+        /// board backdrop's own luminance.
         ///
-        /// The frame is the board's ground over part of the screen and the arc's
-        /// backdrop over the rest, so it is always darker than the ground alone.
-        /// Take the worst honest case — a board covering only a third of the
-        /// screen, on the darkest backdrop the game ships (luminance 50) under
-        /// the darkest ground (170): 0.33*170 + 0.67*50 is 90, which is 0.53 of
-        /// that ground. So anything correct lands well above a half, and a third
-        /// is a floor no correctly drawn arc can reach while still catching a
-        /// scrim laid over the whole screen.
+        /// The whole frame is that backdrop with lighter pieces, cells and HUD
+        /// over it, so a correct frame reads at or above it. The kit's black
+        /// scrim at 0.87 takes any frame to about a seventh of itself, well
+        /// under this floor.
         /// </summary>
         private const float MinFrameBrightnessFraction = 0.35f;
 
         /// <summary>
-        /// Reads the frame the player would see and compares it with the ground
-        /// the theme asked for.
+        /// The camera clear and backdrop navy GUI/RoyalGameplayPresentation
+        /// draws behind every board.
+        /// </summary>
+        private static readonly Color BoardBackdrop = new Color(0.047f, 0.208f, 0.49f);
+
+        /// <summary>
+        /// Reads the frame the player would see and reports one too dark to be
+        /// a board.
         ///
         /// This is the one check here that cannot be fooled by the scene graph
         /// being correct. Everything else asks an object what it is set to; this
         /// asks the screen what it looks like.
         /// </summary>
-        private IEnumerator MeasureFrame(ArcTheme theme)
+        private IEnumerator MeasureFrame()
         {
-            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+            // WaitForEndOfFrame never returns under -nographics, and a batchmode
+            // Editor hung on it in the baseline run.
+            if (Application.isBatchMode ||
+                SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
                 yield break;
 
             yield return new WaitForEndOfFrame();
@@ -591,24 +363,22 @@ namespace JellyGarden.Scripts.Story
             }
 
             float mean = sum / pixels.Length;
-            float ground = 0.2126f * theme.BoardFill.r + 0.7152f * theme.BoardFill.g +
-                           0.0722f * theme.BoardFill.b;
+            float ground = 0.2126f * BoardBackdrop.r + 0.7152f * BoardBackdrop.g +
+                           0.0722f * BoardBackdrop.b;
 
             Say(string.Format("frame: mean luminance {0:0}, brightest {1:0}, " +
-                              "against a ground of {2:0}.",
+                              "against a board backdrop of {2:0}.",
                 mean * 255f, brightest * 255f, ground * 255f));
-
-            if (ground <= 0f) yield break;
 
             if (mean < ground * MinFrameBrightnessFraction)
             {
                 // The mean and not the brightest pixel: one stray highlight is
                 // enough to make a screen that is black to a player look fine to
                 // a max. Arc 6 measured a brightest of 255 while its mean sat at
-                // 40 against a ground of 170, and the picture is unreadable.
+                // 40, and the picture was unreadable.
                 Finding(string.Format(
-                    "the frame is dark: mean luminance {0:0} against a board ground of " +
-                    "{1:0} — the theme reached the board and something is drawn over it. {2}",
+                    "the frame is dark: mean luminance {0:0} against a board backdrop of " +
+                    "{1:0} — something is drawn over the board. {2}",
                     mean * 255f, ground * 255f, WhatCoversTheScreen()));
             }
         }
@@ -733,9 +503,10 @@ namespace JellyGarden.Scripts.Story
 
         private void OpenShotDir()
         {
-            // WaitForEndOfFrame never returns under -nographics, and there is
-            // nothing to photograph there either.
-            if (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
+            // WaitForEndOfFrame never returns under -nographics or in a batchmode
+            // Editor, and there is nothing to photograph there either.
+            if (Application.isBatchMode ||
+                SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null)
             {
                 _shotDir = string.Empty;
                 return;
@@ -775,7 +546,7 @@ namespace JellyGarden.Scripts.Story
         private void Finish()
         {
             var report = new StringBuilder();
-            report.AppendLine("King Leo — board theme, one level per arc");
+            report.AppendLine("King Leo — one board per arc");
             report.AppendLine(global::System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             report.AppendLine();
 

@@ -97,9 +97,8 @@ namespace JellyGarden.Scripts.Story.Editor
         }
 
         /// <summary>
-        /// Comes back from a level, the way finishing one does. StoryPowerupTest
-        /// launches level 1 on every play session and never finishes it, so a
-        /// session that has run it is still "in a level" as far as the story is
+        /// Comes back from a level, the way finishing one does. A level left
+        /// open in a play session is still "in a level" as far as the story is
         /// concerned — StoryFlow.PlayingArea is set and the board's gameStatus is
         /// not Map. Anything that hides itself during a level, the nav bar first
         /// among them, then stays hidden over a shell screen opened on top of it.

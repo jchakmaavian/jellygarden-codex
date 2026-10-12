@@ -40,6 +40,8 @@ namespace JellyGarden.Scripts.Targets
         public Target type;
         public Sprite icon;
         public int color;
+        // Royal Throne's reference campaign set this; that campaign is not ported, so it stays null.
+        [NonSerialized] public string referenceGoal;
         [FormerlySerializedAs("count")]public int targetCount;
         [HideInInspector] public int countCollected;
         [HideInInspector] public TargetIcon guiObj;
@@ -47,8 +49,9 @@ namespace JellyGarden.Scripts.Targets
         public SpriteList blockSprites;
         public TargetObject DeepCopy()
         {
+            // Copies keep the authored icon and colour: goals match by icon name and colour,
+            // and RoyalVisualCatalog.Goal draws the goal art where it is shown.
             TargetObject other = (TargetObject) MemberwiseClone();
-            other.icon = JellyGarden.Scripts.Story.StorybookBoardArt.Goal(other);
             return other;
         }
 
@@ -57,6 +60,7 @@ namespace JellyGarden.Scripts.Targets
 
         public bool SetOff(GameObject item, int c = 1)
         {
+            if(!string.IsNullOrEmpty(referenceGoal))return false;
             if (type == Target.COLLECT)
             {
                 if(item.GetComponent<Item>()?.color == color)

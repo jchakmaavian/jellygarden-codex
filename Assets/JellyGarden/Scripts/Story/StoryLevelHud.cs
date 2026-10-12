@@ -42,8 +42,13 @@
 //   reparented in and kept transparent: an anchor inside the new header rather
 //   than a second header behind it.
 //
-//   That means StoryLevelHud.Enabled = false no longer restores the kit's HUD
-//   within a session — the objects are gone until the level is reloaded.
+// RETIRED FROM THE LEVEL. Royal Throne's HUD (RoyalGameplayPresentation) is the
+// in-level HUD now. Nothing installs this one on a level any more. The copy
+// baked into game.unity only drives itself while the Royal layer is off (see
+// Enabled); with it on, the strip is inert under Royal Throne's hidden
+// Canvas/Panel. What stays is the goal model (HudModel, HudTarget, ReadLevel,
+// ReadLevelManager) that StoryLevelPopup reads, and the strip builder that
+// StoryHudBaker and the screen tests drive.
 
 using System;
 using System.Collections.Generic;
@@ -57,8 +62,15 @@ namespace JellyGarden.Scripts.Story
     [DisallowMultipleComponent]
     public sealed partial class StoryLevelHud : MonoBehaviour
     {
-        /// <summary>The whole feature, in one switch.</summary>
-        public static bool Enabled = true;
+        /// <summary>
+        /// Whether the baked strip drives itself. Only while the Royal layer is
+        /// off: LevelManager adds RoyalGameplayPresentation when the effects
+        /// profile loads, and that HUD then replaces this one.
+        /// </summary>
+        public static bool Enabled
+        {
+            get { return !JellyGarden.Scripts.Juice.RoyalEffectsProfile.Get; }
+        }
 
         public const string HostName = "StoryLevelHud";
 
@@ -316,9 +328,6 @@ namespace JellyGarden.Scripts.Story
 
         private readonly List<Slot> _slots = new List<Slot>();
 
-        /// <summary>The kit's HUD strip, kept so nothing here has to find it twice.</summary>
-        private Transform _kitStrip;
-
         private float _scale = 1f;
         private float _nextRefresh;
         private int _visibleSlots;
@@ -343,172 +352,7 @@ namespace JellyGarden.Scripts.Story
 
         #endregion
 
-        #region Install
-
-        private static bool _hooked;
-
-        /// <summary>
-        /// Called by StorySceneHooks on every scene load.
-        ///
-        /// The board is not there yet when a scene finishes loading —
-        /// LevelManager sets THIS in Start, and the level UI is inactive until a
-        /// level is opened, so nothing to attach to exists at that moment. The
-        /// kit already raises an event for exactly this, so the HUD attaches on
-        /// the level being loaded and on play starting, both of which are
-        /// idempotent.
-        /// </summary>
-        public static void Install()
-        {
-            if (!Enabled) return;
-
-            if (!_hooked)
-            {
-                _hooked = true;
-                LevelManager.OnLevelLoaded += Attach;
-                LevelManager.OnStartPlay += Attach;
-            }
-
-            Attach();
-        }
-
-        /// <summary>Takes over the kit's strip, once per strip. Cheap to repeat.</summary>
-        private static void Attach()
-        {
-            if (!Enabled) return;
-
-            Transform strip = FindKitHudStrip();
-            // No strip yet: the level UI is still inactive, and the next
-            // OnLevelLoaded will come back through here.
-            if (strip == null) return;
-
-            // The guard is on the STRIP, not on a static Instance. A strip that
-            // has already been taken over carries this HUD inside it; a strip the
-            // kit has just built carries nothing and needs one. A singleton
-            // cannot tell those apart — it only knows that SOME HUD exists — so a
-            // rebuilt kit strip kept its score bar, its stars and its own Pause
-            // for the rest of the session, which is the header players were
-            // still seeing.
-            // The HUD is BAKED INTO THE SCENE by StoryHudBaker, so the normal
-            // case is that it is already here. Nothing is built; it is bound to
-            // the objects the scene already holds and driven from there.
-            StoryLevelHud authored = strip.GetComponentInChildren<StoryLevelHud>(true);
-            if (authored != null)
-            {
-                authored.EnsureBound();
-                if (StorybookBoardArt.Enabled)
-                {
-                    authored.BuildSoftHud(strip);
-                    authored.Refresh();
-                    return;
-                }
-                authored.ApplyStorybookToBoundHud();
-
-                // The pause button is seated here as well as at bake time.
-                // StoryHudBaker calls MovePauseOutOfTheHudsWay once and saves
-                // the result into the scene, so a change to where the button
-                // belongs — new tray art, a different boss — reached nothing
-                // until the scene was re-baked, and every attempt to move it
-                // looked like a dead constant. It is idempotent: same parent,
-                // same anchors, same position, so running it per level costs
-                // one transform write and removes the bake from the loop.
-                authored.MovePauseOutOfTheHudsWay(strip);
-                authored.Refresh();
-                return;
-            }
-
-            // Built INSIDE the kit's strip rather than beside it. The strip is
-            // the header the kit itself shows and hides, so living in it means
-            // this HUD is shown and hidden with it, inherits its scaling and its
-            // sort order, and nothing has to mirror any of that per frame.
-            StoryLevelHud hud = Build(strip, ScaleOf(strip));
-            hud._kitStrip = strip;
-
-            hud.ReplaceKitHud(strip);
-            if (StorybookBoardArt.Enabled)
-            {
-                hud.BuildSoftHud(strip);
-                hud.Refresh();
-                return;
-            }
-            hud.MovePauseOutOfTheHudsWay(strip);
-            hud.ReplaceKitLevelPlate(strip);
-            hud.FillTheKitStrip();
-            hud.Refresh();
-
-            Debug.Log("[Story] Level HUD installed: the kit's strip, redrawn as " +
-                      "Target + portrait + Moves, no score bar.");
-            hud.ReportPlacement(strip.parent);
-        }
-
-        /// <summary>
-        /// Stretches the kit's strip over the panel it sat in, and silences its
-        /// own background.
-        ///
-        /// The metrics in this file were measured against that panel — the full
-        /// width and height of the level canvas — not against the band the kit
-        /// gave its score bar. Hosting the HUD in the strip therefore only holds
-        /// if the strip covers the same rect, so it is stretched to it.
-        ///
-        /// Safe because nothing of the kit's is left inside to distort: the
-        /// chrome is destroyed, the target icons are in this HUD, and Pause has
-        /// moved to the booster row. Its own Graphic is switched off for the same
-        /// reason the chrome went — at panel size it would paint over the board.
-        /// </summary>
-        private void FillTheKitStrip()
-        {
-            var rect = _kitStrip as RectTransform;
-            if (rect == null) return;
-
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-
-            Graphic background = rect.GetComponent<Graphic>();
-            if (background != null) background.enabled = false;
-        }
-
-        /// <summary>
-        /// Where the strip actually landed, in screen pixels.
-        ///
-        /// The strip is anchored to the top of the rect it is built in, so "is
-        /// there a band of bare backdrop above the HUD" is a question about that
-        /// rect and not about the strip. Answering it by eye off a screenshot
-        /// costs a build; this answers it from the log.
-        /// </summary>
-        private void ReportPlacement(Transform parent)
-        {
-            var parentRect = parent as RectTransform;
-            if (parentRect == null || _root == null) return;
-
-            Canvas.ForceUpdateCanvases();
-
-            var corners = new Vector3[4];
-            parentRect.GetWorldCorners(corners);
-            Camera camera = CameraFor(parentRect);
-            float parentTop = RectTransformUtility.WorldToScreenPoint(camera, corners[1]).y;
-
-            _root.GetWorldCorners(corners);
-            float rootTop = RectTransformUtility.WorldToScreenPoint(camera, corners[1]).y;
-
-            Rect safe = Screen.safeArea;
-
-            Debug.Log(string.Format(
-                "[Story] HUD placement: screen {0}x{1}, safe area {2}, host '{3}' top at y={4:0}, " +
-                "strip root top at y={5:0} — {6:0}px of screen above the strip.",
-                Screen.width, Screen.height, safe, parent.name,
-                parentTop, rootTop, Screen.height - rootTop));
-
-        }
-
-        private static Camera CameraFor(RectTransform rect)
-        {
-            Canvas canvas = rect.GetComponentInParent<Canvas>();
-            if (canvas == null) return null;
-            canvas = canvas.rootCanvas;
-            return canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
-        }
+        #region Binding
 
         private void Awake()
         {
@@ -560,53 +404,6 @@ namespace JellyGarden.Scripts.Story
                                ". Re-run JellyGarden/Story/Bake Level HUD into the scene.");
         }
 
-        // The shipping HUD is baked into game.unity. Style those bound instances
-        // as well as newly built HUDs, preserving the collect-animation anchors.
-        private void ApplyStorybookToBoundHud()
-        {
-            if (!StorybookUi.Enabled || _root == null || _root.Find("StorybookBound") != null) return;
-            StoryUi.CreateRect("StorybookBound", _root);
-            Transform strip = _root.Find("Strip");
-            if (strip != null) strip.GetComponent<Image>().enabled = false;
-            foreach (string name in new[] { "TargetPanel", "MovesPanel" })
-            {
-                Transform panel = _root.Find(name);
-                if (panel == null || panel.Find("PaperPanel") != null) continue;
-                Image paper = StorybookUi.PaperCard("PaperPanel", panel, 3f * _scale, false);
-                StoryUi.Stretch(paper.rectTransform);
-                paper.transform.SetAsFirstSibling();
-            }
-            foreach (Text title in new[] { _targetTitle, _limitTitle, _limitValue })
-            {
-                if (title == null) continue;
-                title.color = StorybookUi.Ink;
-                title.font = StoryUi.BodyFont;
-                title.verticalOverflow = VerticalWrapMode.Overflow;
-                if (title != _limitValue)
-                {
-                    title.fontSize = Mathf.RoundToInt(38 * _scale);
-                    title.resizeTextForBestFit = false;
-                }
-                foreach (Shadow shadow in title.GetComponents<Shadow>()) shadow.enabled = false;
-            }
-            Transform card = _root.Find("MovesPanel/Content/MovesCard");
-            if (card != null)
-            {
-                Image image = card.GetComponent<Image>();
-                image.sprite = StoryUi.RoundedSprite(20);
-                image.type = Image.Type.Sliced;
-                image.color = StorybookUi.Paper;
-            }
-            Transform portrait = _root.Find("Portrait");
-            if (portrait != null && portrait.Find("GoldMedallion") == null)
-            {
-                Image ring = StoryUi.CreateImage("GoldMedallion", portrait, StoryUi.CircleSprite, StorybookUi.Gold);
-                Slab(ring.rectTransform, WindowMin, WindowMax, WindowTop, WindowHeight);
-                ring.rectTransform.sizeDelta += Vector2.one * (12 * _scale);
-                ring.transform.SetAsFirstSibling();
-            }
-        }
-
         private Text TextAt(string path)
         {
             Transform found = _root.Find(path);
@@ -650,23 +447,6 @@ namespace JellyGarden.Scripts.Story
             var scaler = parent.GetComponentInParent<CanvasScaler>(true);
             if (scaler == null || scaler.referenceResolution.x <= 0f) return 1f;
             return scaler.referenceResolution.x / DesignWidth;
-        }
-
-        /// <summary>
-        /// The kit's HUD strip, found from the kit's own components rather than a
-        /// scene path: the progress bar is inside it, and the pause button is the
-        /// one child name the strip is known by.
-        /// </summary>
-        private static Transform FindKitHudStrip()
-        {
-            ProgressBarScript bar = ProgressBarScript.Instance;
-            for (Transform t = bar == null ? null : bar.transform; t != null; t = t.parent)
-            {
-                if (t.Find("Pause") != null) return t;
-            }
-
-            GameObject byPath = GameObject.Find("Level/Canvas/Panel/Panel");
-            return byPath == null ? null : byPath.transform;
         }
 
         #endregion
@@ -834,6 +614,7 @@ namespace JellyGarden.Scripts.Story
 
         private void Update()
         {
+            if (!Enabled) return;
             if (Time.unscaledTime < _nextRefresh) return;
             _nextRefresh = Time.unscaledTime + RefreshInterval;
             Refresh();
@@ -841,6 +622,7 @@ namespace JellyGarden.Scripts.Story
 
         private void LateUpdate()
         {
+            if (!Enabled) return;
             AimKitIconsAtThisHud();
         }
 
@@ -849,7 +631,6 @@ namespace JellyGarden.Scripts.Story
         {
             HudModel model = Source != null ? Source() : ReadLevelManager();
             if (model == null) return;
-            if (_softRoot != null) { RefreshSoft(model); return; }
 
             SetText(_limitTitle, model.LimitTitle.ToUpperInvariant());
             SetText(_limitValue, model.LimitValue);
@@ -951,9 +732,8 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// Turns the kit's target list into slots, in the kit's own order — the
-        /// collect animation is aimed by index in <see cref="AimKitIconsAtThisHud"/>,
-        /// so reordering here would fly a matched piece at the wrong icon.
+        /// Turns the kit's target list into slots, in the kit's own order
+        /// (LevelManager.targetObject), so slot i is always target i.
         ///
         /// Every level the kit ships carries a <see cref="Target.SCORE"/> entry,
         /// and LevelManager.CheckWinLose requires it done like any other, so it
@@ -1021,9 +801,13 @@ namespace JellyGarden.Scripts.Story
         {
             if (target.type != Target.SCORE)
             {
+                // Same art as the board's goal icon (TargetIcon): the catalog
+                // first, main's storybook art where the catalog has none.
+                var art = RoyalThrone.Presentation.RoyalVisualCatalog.Goal(target);
+                if (!art) art = StorybookBoardArt.Goal(target);
                 return new HudTarget
                 {
-                    Icon = StorybookBoardArt.Goal(target),
+                    Icon = art,
                     // The KIT's block sprite is 55% opaque frost, so drawn alone
                     // on cream it read as a blank box with a number beside it —
                     // hence the gem behind it, the way `CreateSquare` stacks them
@@ -1264,76 +1048,6 @@ namespace JellyGarden.Scripts.Story
         #region Standing in for the kit's HUD
 
         /// <summary>
-        /// Hides the kit's score bar, its star markers and its counters, and
-        /// makes its target icons transparent without deactivating them.
-        ///
-        /// Nothing is destroyed: every object here is still in the scene, and
-        /// StoryLevelHud.Enabled = false leaves all of it alone.
-        /// </summary>
-        /// <summary>
-        /// Takes the kit's header off the screen for good, rather than leaving it
-        /// alive underneath this one.
-        ///
-        /// Everything that is chrome — the score bar, its star markers, the
-        /// static target slots — is DESTROYED. It used to be deactivated, which
-        /// left a second header sitting under the new one for anyone reading the
-        /// hierarchy or a screenshot.
-        ///
-        /// One object cannot be destroyed and is adopted instead: the group that
-        /// owns the kit's TargetIcons. `LevelManager.CheckCollectedTarget` flies
-        /// every matched piece to `TargetObject.guiObj`, one of those icons, and
-        /// `TargetsGroup.OnDisable` destroys the icons it made — so destroying
-        /// the group, or merely disabling it, leaves the board animating to a
-        /// dead transform. It is reparented INTO this HUD and kept transparent,
-        /// so it is an animation anchor inside the new header rather than a
-        /// second header behind it. Nothing of the kit's own strip survives as a
-        /// layer of its own.
-        /// </summary>
-        private void ReplaceKitHud(Transform strip)
-        {
-            var destroyed = new List<string>();
-            var adopted = new List<string>();
-
-            // Copied first: destroying children while enumerating the live
-            // Transform skips every other one.
-            var children = new List<Transform>();
-            foreach (Transform child in strip) children.Add(child);
-
-            foreach (Transform child in children)
-            {
-                if (child == null || child.name == "Pause") continue;
-
-                // This HUD is a child of the strip now, and the loop below
-                // destroys everything it does not recognise.
-                if (child == _root) continue;
-
-                if (child.GetComponentInChildren<TargetsGroup>(true) != null)
-                {
-                    child.SetParent(_root, false);
-                    Fade(child);
-                    adopted.Add(child.name);
-                    continue;
-                }
-
-                destroyed.Add(child.name);
-                Destroy(child.gameObject);
-            }
-
-            Debug.Log("[Story] Level HUD: destroyed " + string.Join(", ", destroyed.ToArray()) +
-                      "; adopted " + string.Join(", ", adopted.ToArray()) +
-                      " as the collect animation's anchor.");
-        }
-
-        private static void Fade(Transform target)
-        {
-            var group = target.GetComponent<CanvasGroup>();
-            if (group == null) group = target.gameObject.AddComponent<CanvasGroup>();
-            group.alpha = 0f;
-            group.blocksRaycasts = false;
-            group.interactable = false;
-        }
-
-        /// <summary>
         /// The kit's pause button sat inside the strip this HUD now covers, so
         /// it moves to the empty middle slot of the kit's booster row — which is
         /// where Royal Match keeps its settings button, and the one place on the
@@ -1443,58 +1157,6 @@ namespace JellyGarden.Scripts.Story
             return null;
         }
 
-        /// <summary>
-        /// Takes the kit's "Level" plate and its level number off the booster
-        /// row, rather than leaving them under the pause button that just moved
-        /// on top of them.
-        ///
-        /// The row carries three things: the boosters, the pause button this
-        /// HUD put there, and — from the kit — a `level_txt` image with the word
-        /// "Level" painted into it plus a Text that Counter_ fills with the
-        /// level number. The kit drew those because its bottom bar was the only
-        /// place a level was named. This game names the level twice already, on
-        /// the start popup and on the win panel, and neither of those is the
-        /// board; what is left on the bar is a stray word sitting behind the
-        /// pause button in all 1208 levels.
-        ///
-        /// Destroyed for the same reason the kit's header is: a deactivated one
-        /// is still a second layer for anyone reading the hierarchy, and the
-        /// baked-in label is exactly what StoryUi refuses to borrow.
-        /// </summary>
-        private void ReplaceKitLevelPlate(Transform strip)
-        {
-            RectTransform row = FindBoosterRow(strip);
-            if (row == null) return;
-
-            var children = new List<Transform>();
-            foreach (Transform child in row) children.Add(child);
-
-            // FindBoosterRow falls back to the whole bottom panel when it cannot
-            // find the row, and everything on the panel would then look like
-            // chrome to the loop below. Only a row that actually holds boosters
-            // is one whose other children are the kit's level plate.
-            bool isBoosterRow = false;
-            foreach (Transform child in children)
-                if (child != null && child.name.StartsWith("Boost")) isBoosterRow = true;
-            if (!isBoosterRow) return;
-
-            var destroyed = new List<string>();
-            foreach (Transform child in children)
-            {
-                if (child == null) continue;
-                if (child.name == "Pause") continue;
-                if (child.name.StartsWith("Boost")) continue;
-
-                destroyed.Add(child.name);
-                Destroy(child.gameObject);
-            }
-
-            if (destroyed.Count == 0) return;
-
-            Debug.Log("[Story] Level HUD: destroyed the kit's level plate on the booster row (" +
-                      string.Join(", ", destroyed.ToArray()) + ").");
-        }
-
         /// <summary>The kit's booster row, found from the boosters in it.</summary>
         public static RectTransform FindBoosterRow(Transform strip)
         {
@@ -1537,7 +1199,6 @@ namespace JellyGarden.Scripts.Story
 
         private void OnDestroy()
         {
-            if (_softRoot != null) Destroy(_softRoot.gameObject);
             if (Instance == this) Instance = null;
         }
     }

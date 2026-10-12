@@ -1,4 +1,5 @@
-﻿// // ©2015 - 2026 Candy Smith
+﻿using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -575,6 +576,7 @@ namespace JellyGarden.Scripts.GUI
                 LevelManager.THIS.Limit += LevelManager.THIS.ExtraFailedSecs;
             GetComponent<Animation>()["bannerFailed"].speed = 1;
             LevelManager.THIS.gameStatus = GameState.Playing;
+            JellyGarden.Scripts.Juice.AvatarEvents.NotifyExtraMovesGranted(LevelManager.THIS);
         }
 
         public void GiveUp()

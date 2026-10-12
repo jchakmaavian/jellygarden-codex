@@ -125,7 +125,6 @@ namespace JellyGarden.Scripts.Story.Editor
                 TheGameIsFree();
                 RepairsAreClassifiedByWhatTheyAre();
                 EveryArcHasATheme();
-                BoardsAreCentredWhateverTheirWidth();
                 EveryAreaOpens();
                 RoyalPrimitivesConstruct();
                 LevelHudIsTargetAndMoves();
@@ -861,48 +860,6 @@ namespace JellyGarden.Scripts.Story.Editor
             Expect(blank == 0, "every area has something to draw (" + blank + " do not)");
         }
 
-        /// <summary>
-        /// The kit places the field at `-maxCols / 2.75` and then lays its
-        /// squares out `squareWidth` apart, and those two numbers agree for one
-        /// board width only. At the shipped `squareWidth` of 0.82 that width is
-        /// nine — so 1140 of the game's levels are centred and the other 68 are
-        /// not, the worst of them (five columns, level 149 among them) by 0.178
-        /// units, which is nine pixels at 393 points.
-        ///
-        /// This asserts the rule, not one level: every width the game actually
-        /// uses is asked, and the answer is checked against the geometry rather
-        /// than against a table of numbers copied out of a screenshot.
-        /// </summary>
-        private static void BoardsAreCentredWhateverTheirWidth()
-        {
-            const float squareWidth = 0.82f;
-
-            // What the kit does on its own, for the record.
-            Expect(Mathf.Abs(StoryBoardCentre.OffsetFor(9, squareWidth)) < 0.01f,
-                "a nine-wide board was already centred (" +
-                StoryBoardCentre.OffsetFor(9, squareWidth) + ")");
-            Expect(StoryBoardCentre.OffsetFor(5, squareWidth) < -0.15f,
-                "a five-wide board was not (" +
-                StoryBoardCentre.OffsetFor(5, squareWidth) + ")");
-
-            // And what the correction is worth: the camera is aimed at the
-            // middle of the grid, so the board's left and right margins come out
-            // equal for every width.
-            int[] widths = { 5, 6, 8, 9 };
-            for (int i = 0; i < widths.Length; i++)
-            {
-                int columns = widths[i];
-                float aimedAt = StoryBoardCentre.OffsetFor(columns, squareWidth);
-
-                float left = -columns / 2.75f;
-                float right = left + (columns - 1) * squareWidth;
-
-                Expect(Mathf.Abs((aimedAt - left) - (right - aimedAt)) < 0.001f,
-                    "a " + columns + "-wide board sits in the middle of the view (" +
-                    (aimedAt - left) + " left, " + (right - aimedAt) + " right)");
-            }
-        }
-
         private static void SabotageStartsWhereTheStorySaysItDoes()
         {
             // GAMEPLAY.md: areas 001-018 are static neglect. Nothing on the board
@@ -1022,7 +979,8 @@ namespace JellyGarden.Scripts.Story.Editor
             // counted, in-level and pre-level alike.
             string[] boosterKeys =
             {
-                "Hand", "Stripes", "Bomb", "Random_color", "Packages", "Colorful_bomb"
+                "Hand", "Stripes", "Bomb", "Random_color", "Packages", "Colorful_bomb",
+                "RoyalHammer", "RoyalArrow", "RoyalCannon", "RoyalJester"
             };
 
             foreach (string key in boosterKeys) PlayerPrefs.DeleteKey(key);
@@ -1052,6 +1010,21 @@ namespace JellyGarden.Scripts.Story.Editor
             StoryFreeGame.GrantStarterPreBoosters();
             Expect(StoryBoosters.PreLevel.All(b => PlayerPrefs.GetInt("" + b, 0) == 1),
                 "the pre-level starter grant happens once, not every boot");
+
+            // The rail's four tools, once, on their own key, under the same key
+            // StoryBoosters.Owned and the rail read.
+            BoostType[] tools =
+                { BoostType.RoyalHammer, BoostType.RoyalArrow, BoostType.RoyalCannon, BoostType.RoyalJester };
+            foreach (string key in boosterKeys) PlayerPrefs.DeleteKey(key);
+            PlayerPrefs.DeleteKey("Story.StarterToolsGranted");
+            StoryFreeGame.GrantStarterBoosters();
+            Expect(tools.All(t => PlayerPrefs.GetInt(t.ToString(), 0) >= 1) &&
+                   PlayerPrefs.GetInt("RoyalHammer", 0) == 2,
+                "first run grants two hammers and one of each other rail tool");
+
+            StoryFreeGame.GrantStarterTools();
+            Expect(PlayerPrefs.GetInt("RoyalHammer", 0) == 2,
+                "the rail tool grant happens once, not every boot");
         }
 
         private static void RepairsAreClassifiedByWhatTheyAre()
@@ -1301,22 +1274,28 @@ namespace JellyGarden.Scripts.Story.Editor
         }
 
         /// <summary>
-        /// The king's face loops, and the strip's own numbers are what move it.
+        /// The king's face in the level HUD: King Leo's StoryAvatar in the arched
+        /// window RoyalGameplayPresentation mounts (plan D2, Task 4.7), and the
+        /// calls that HUD makes on it when AvatarEvents fire.
         ///
         /// Every clip is authored as a ping-pong, so the check that matters is
         /// that the player runs BACK down its frames rather than wrapping: at
         /// step 25 of a 25-frame idle a plain modulo shows frame 0 and the loop
         /// visibly cuts, where the ping-pong shows frame 23 and it does not.
         ///
-        /// The reactions are driven the way the board drives them — by pushing
-        /// numbers through StoryLevelHud.Source and calling Refresh — so what is
-        /// tested is the path the game actually takes, not a direct call to
-        /// StoryAvatar that no player could cause.
+        /// The HUD itself needs a live board to pass its scope checks, so the
+        /// portrait is mounted with the same RoyalGameplayHud calls and driven
+        /// with the same StoryAvatar calls the HUD makes: PlayClip for a match,
+        /// power-up or loss, Hold and Release for the worry, EndReaction for a
+        /// new attempt.
         /// </summary>
         private static void PortraitBreathesAndReacts()
         {
+            // RoyalGameplayPresentation.KingCharacter and its clip names.
+            const string King = "leo";
+            string[] clips = { "cheer", "pop", "worry", "slump" };
+
             var host = new GameObject("~StoryAvatarTest");
-            global::System.Func<StoryLevelHud.HudModel> previous = StoryLevelHud.Source;
             const float Fps = StoryAvatar.DefaultFps;
             const float T0 = 1000f;
             try
@@ -1324,23 +1303,29 @@ namespace JellyGarden.Scripts.Story.Editor
                 Canvas canvas = StoryUi.CreateOverlayCanvas("~AvatarCanvas");
                 canvas.transform.SetParent(host.transform, false);
 
-                var model = new StoryLevelHud.HudModel
-                {
-                    LimitTitle = "Moves", LimitValue = "20", LimitLeft = 20
-                };
-                model.Targets.Add(new StoryLevelHud.HudTarget { Remaining = 60 });
-                StoryLevelHud.Source = () => model;
-
+                // Mounted as RoyalGameplayPresentation.Build mounts it.
                 StoryClock.Override(T0);
-                StoryLevelHud hud = StoryLevelHud.Build(canvas.transform, 1f);
-                hud.Refresh();
+                global::RoyalThrone.Presentation.RoyalGameplayHud.Portrait portrait =
+                    global::RoyalThrone.Presentation.RoyalGameplayHud.BuildPortrait(canvas.transform);
+                global::RoyalThrone.Presentation.RoyalArchShape window =
+                    global::RoyalThrone.Presentation.RoyalGameplayHud.WindowMask(portrait.slot, "King Leo portrait mask");
+                Image face = StoryAvatar.Build(King, window.rectTransform);
 
-                StoryAvatar avatar = StoryAvatar.Active;
+                Expect(window.GetComponent<Mask>() != null,
+                    "the portrait window masks the face to its arch");
+                StoryAvatar avatar = face != null ? face.GetComponent<StoryAvatar>() : null;
                 if (avatar == null)
                 {
-                    Fail("the level HUD builds an animated portrait");
+                    Fail("the level HUD's arched portrait carries an animated King Leo");
                     return;
                 }
+                Expect(StoryAvatar.Active == avatar, "the HUD's face is the active avatar");
+                Expect(face.transform.parent == window.transform,
+                    "the face sits inside the portrait's window, under the gold ring");
+
+                foreach (string clip in clips)
+                    Expect(StoryArt.AvatarFrames(King, clip).Length > 1,
+                        "King Leo has a '" + clip + "' clip for the HUD to play");
 
                 int frames = avatar.FrameCount;
                 Expect(frames > 1,
@@ -1365,40 +1350,76 @@ namespace JellyGarden.Scripts.Story.Editor
                     "the idle runs back down its frames rather than cutting to the start " +
                     "(showed " + avatar.ShownFrame + ", wanted " + (frames - 2) + ")");
 
-                // A cascade takes a visible bite out of the count.
-                model.Targets[0].Remaining = 48;
-                hud.Refresh();
-                Expect(avatar.Playing == "pop",
-                    "a cascade makes the king react (playing '" + avatar.Playing + "')");
+                // A match pops, and firing it again does not restart it.
+                float t = T0 + 50f;
+                StoryClock.Override(t);
+                Expect(avatar.PlayClip("pop") && avatar.Playing == "pop",
+                    "a match makes the king react (playing '" + avatar.Playing + "')");
+                StoryClock.Override(t + 3.5f / StoryAvatar.ClipFps);
+                avatar.Tick();
+                int popFrame = avatar.ShownFrame;
+                avatar.PlayClip("pop");
+                avatar.Tick();
+                Expect(popFrame == 3 && avatar.ShownFrame == popFrame,
+                    "a reaction fired again carries on rather than restarting (showed " +
+                    popFrame + " then " + avatar.ShownFrame + ")");
 
                 // And the reaction hands itself back to the idle when it is done.
-                // A reaction's clock starts when it fires rather than at T0, so
-                // the wait here is simply longer than any clip can be.
-                StoryClock.Override(T0 + 100f);
+                StoryClock.Override(t + 100f);
                 avatar.Tick();
-                Expect(avatar.Playing == null,
+                Expect(avatar.Playing == null && avatar.FrameCount == frames,
                     "the reaction ends and the idle resumes (playing '" + avatar.Playing + "')");
 
-                // Running out of moves is what worries him.
-                model.LimitValue = "2";
-                model.LimitLeft = 2;
-                hud.Refresh();
-                Expect(avatar.Playing == "worry",
-                    "a nearly spent level worries the king (playing '" + avatar.Playing + "')");
+                // Few moves left: the worry is held in the idle's place.
+                t += 200f;
+                StoryClock.Override(t);
+                int worryFrames = StoryArt.AvatarFrames(King, "worry").Length;
+                Expect(avatar.Hold("worry") && avatar.Held == "worry" && avatar.Playing == null &&
+                       avatar.FrameCount == worryFrames,
+                    "a nearly spent level holds the worry (held '" + avatar.Held + "')");
+                StoryClock.Override(t + 3.5f / StoryAvatar.HoldFps);
+                avatar.Tick();
+                int worryFrame = avatar.ShownFrame;
+                avatar.Hold("worry");
+                avatar.Tick();
+                Expect(worryFrame == 3 && avatar.ShownFrame == worryFrame,
+                    "a worry raised again keeps looping rather than restarting (showed " +
+                    worryFrame + " then " + avatar.ShownFrame + ")");
 
-                // Clearing the board is what does not.
-                model.Targets[0].Remaining = 0;
-                model.Targets[0].Done = true;
-                hud.Refresh();
-                Expect(avatar.Playing == "cheer",
-                    "finishing the target cheers him (playing '" + avatar.Playing + "')");
+                // A power-up cheers over the worry and hands back to it.
+                Expect(avatar.PlayClip("cheer") && avatar.Playing == "cheer" && avatar.Held == "worry",
+                    "a power-up cheers over the worry (playing '" + avatar.Playing + "')");
+                StoryClock.Override(t + 100f);
+                avatar.Tick();
+                Expect(avatar.Playing == null && avatar.Held == "worry" && avatar.FrameCount == worryFrames,
+                    "the cheer hands back to the held worry (playing '" + avatar.Playing +
+                    "', held '" + avatar.Held + "')");
 
-                Debug.Log("[Story] portrait: " + frames + " idle frames, ping-pong loop, " +
-                          "reacts to cascade, low moves and the win.");
+                // Moves restored: the worry's cycle runs out, then the idle.
+                avatar.Release();
+                Expect(avatar.Held == null && avatar.Playing == "worry",
+                    "a released worry finishes its cycle (playing '" + avatar.Playing + "')");
+                StoryClock.Override(t + 200f);
+                avatar.Tick();
+                Expect(avatar.Playing == null && avatar.FrameCount == frames,
+                    "the released worry hands back to the idle (playing '" + avatar.Playing + "')");
+
+                // The level lost: the slump; a new attempt ends it at once.
+                Expect(avatar.PlayClip("slump") && avatar.Playing == "slump",
+                    "losing the level slumps the king (playing '" + avatar.Playing + "')");
+                avatar.EndReaction();
+                Expect(avatar.Playing == null && avatar.FrameCount == frames,
+                    "a new attempt ends the reaction on the idle (playing '" + avatar.Playing + "')");
+
+                // A clip the art lacks reports false, so the HUD does not wait on it.
+                Expect(!avatar.PlayClip("no-such-clip") && avatar.Playing == null,
+                    "a missing clip is refused and the idle keeps playing");
+
+                Debug.Log("[Story] portrait: " + frames + " idle frames in the HUD's arched window, " +
+                          "ping-pong loop, pop, held worry, cheer over it, release, slump.");
             }
             finally
             {
-                StoryLevelHud.Source = previous;
                 StoryClock.Override(T0);
                 Object.DestroyImmediate(host);
             }

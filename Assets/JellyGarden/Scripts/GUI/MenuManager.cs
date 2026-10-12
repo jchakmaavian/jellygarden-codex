@@ -43,6 +43,31 @@ namespace JellyGarden.Scripts.GUI
         [SerializeField] private GameObject progressBar;
         [SerializeField] private GameObject[] stars;
 
+        static bool Showing(GameObject popup) => popup != null && popup.activeInHierarchy;
+
+        /// <summary>
+        /// True while a popup owns the screen. The board sits behind these panels and its
+        /// colliders are still hit by a touch, so it has to ignore input while one is open.
+        /// Every popup is a child of the global canvas, including ones this manager holds no
+        /// reference to (the in-level booster shop), so the whole canvas is checked. The
+        /// tutorial and the goal banners on the level canvas are excluded: play continues under them.
+        /// </summary>
+        public bool BlocksBoardInput
+        {
+            get
+            {
+                if (Showing(prePlay)) return true;
+                if (canvasGlobal == null) return false;
+                foreach (Transform child in canvasGlobal)
+                {
+                    if (!child.gameObject.activeSelf) continue;
+                    if (tutorial != null && child.gameObject == tutorial) continue;
+                    return true;
+                }
+                return false;
+            }
+        }
+
         void Awake()
         {
             if (Instance == null)

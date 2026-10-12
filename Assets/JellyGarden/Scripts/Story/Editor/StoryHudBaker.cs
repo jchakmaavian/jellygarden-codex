@@ -1,5 +1,8 @@
 // Bakes the level HUD into game.unity, so nothing builds it at runtime.
 //
+// Retired by the royal-throne port: Bake now refuses (see RetiredReason), and
+// Verify still checks the strip the scene already holds.
+//
 // The HUD used to be constructed every time a level opened, which is what made
 // it race the kit's own header: whichever ran first won, and when Attach did
 // not run the player saw Jelly Garden's score bar. A header that is IN the
@@ -36,19 +39,26 @@ namespace JellyGarden.Scripts.Story.Editor
         /// <summary>The kit children that stay: the icons the board animates to, and Pause.</summary>
         private static readonly HashSet<string> Keep = new HashSet<string> { "Targets", "Pause" };
 
+        /// <summary>
+        /// Retired by the royal-throne port: RoyalGameplayPresentation draws the
+        /// level HUD and hides Canvas/Panel, so a re-bake would only rewrite a
+        /// hidden strip in game.unity (docs/port/RETIRE.md). Run is kept until
+        /// the strip itself is removed in Task 4.6.
+        /// </summary>
+        public const string RetiredReason =
+            "The level HUD is RoyalGameplayPresentation's now; baking the StoryLevelHud strip into " +
+            ScenePath + " is retired (docs/port/RETIRE.md).";
+
         [MenuItem("JellyGarden/Story/Bake Level HUD into the scene")]
         public static void Bake()
         {
-            List<string> problems = Run();
-            for (int i = 0; i < problems.Count; i++) Debug.LogError("[Story] " + problems[i]);
-            if (problems.Count == 0) Debug.Log("[Story] HUD baked into " + ScenePath + ".");
+            Debug.LogError("[Story] " + RetiredReason);
         }
 
         public static void BakeHeadless()
         {
-            List<string> problems = Run();
-            for (int i = 0; i < problems.Count; i++) Debug.LogError("[Story] " + problems[i]);
-            EditorApplication.Exit(problems.Count == 0 ? 0 : 1);
+            Debug.LogError("[Story] " + RetiredReason);
+            EditorApplication.Exit(1);
         }
 
         /// <summary>

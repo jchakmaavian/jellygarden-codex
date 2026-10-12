@@ -1,4 +1,5 @@
-﻿// // ©2015 - 2026 Candy Smith
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -25,8 +26,10 @@ namespace JellyGarden.Scripts.GUI
 		{
 			if (name != "Main Camera") {
 				if (LevelManager.THIS != null) {
-					if (LevelManager.THIS.gameStatus == GameState.Map)
-						transform.Find ("Indicator/Image/Check").gameObject.SetActive (false);
+					if (LevelManager.THIS.gameStatus == GameState.Map) {
+                        var mark=transform.Find("Indicator/Image/Check");
+                        if(mark)mark.gameObject.SetActive(false);
+                    }
 //				if (!LevelManager.THIS.enableInApps)
 //					gameObject.SetActive (false);
 				}
@@ -36,6 +39,7 @@ namespace JellyGarden.Scripts.GUI
 
 		public void ActivateBoost ()
 		{
+            if(RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.IsTool(type)){var bar=RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Instance;if(bar)bar.Choose(type);return;}
 			if (LevelManager.THIS.ActivatedBoost == this) {
 				UnCheckBoost ();
 				return;
@@ -148,10 +152,16 @@ namespace JellyGarden.Scripts.GUI
 		}
 
 
+		// The pref key and the count label were rebuilt every frame (three strings per icon per frame).
+		string countKey; BoostType keyType; int shownCount = int.MinValue; string shownText;
 		void Update ()
 		{
 			if (boostCount != null) {
-				boostCount.text = "" + PlayerPrefs.GetInt ("" + type);
+				if (countKey == null || keyType != type) { keyType = type; countKey = "" + type; }
+				int count = PlayerPrefs.GetInt (countKey);
+				// Rewrite the label when the count changes or other code replaced it. Text keeps its old string
+				// for equal content, so the reference is read back after setting.
+				if (count != shownCount || !ReferenceEquals (boostCount.text, shownText)) { shownCount = count; boostCount.text = "" + count; shownText = boostCount.text; }
 				if (!check) {
 					if (BoostCount () > 0)
 						ShowPlus (false);

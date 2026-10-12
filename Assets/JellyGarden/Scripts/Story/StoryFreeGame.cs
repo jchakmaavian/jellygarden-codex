@@ -25,7 +25,8 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>
         /// Boosters the story grants. Four, matching TECH.md's list — hammer,
-        /// rocket, bomb, shuffle — mapped onto the kit's own boost types.
+        /// rocket, bomb, shuffle — mapped onto the kit's own boost types, plus
+        /// Royal Throne's four in-level tools on the bottom rail.
         /// </summary>
         private static readonly BoostType[] Grantable =
         {
@@ -34,7 +35,20 @@ namespace JellyGarden.Scripts.Story
             BoostType.Bomb,          // Bomb: clears 3x3
             BoostType.Random_color,  // Shuffle's nearest equivalent in the kit
             BoostType.Packages,      // TNT: a pre-level booster on the level popup
-            BoostType.Colorful_bomb  // The ball of colour, likewise
+            BoostType.Colorful_bomb, // The ball of colour, likewise
+            BoostType.RoyalHammer,   // Rail tool: clears one cell
+            BoostType.RoyalArrow,    // Rail tool: clears the tapped row
+            BoostType.RoyalCannon,   // Rail tool: clears the tapped column
+            BoostType.RoyalJester    // Rail tool: shuffles the board
+        };
+
+        /// <summary>Royal Throne's in-level tools, in rail order.</summary>
+        private static readonly BoostType[] RailTools =
+        {
+            BoostType.RoyalHammer,
+            BoostType.RoyalArrow,
+            BoostType.RoyalCannon,
+            BoostType.RoyalJester
         };
 
         /// <summary>Two hammers and a shuffle on first run, so the mechanic is discoverable.</summary>
@@ -46,6 +60,12 @@ namespace JellyGarden.Scripts.Story
         /// save made before the popup existed still receives them.
         /// </summary>
         private const string StarterPreBoostKey = "Story.StarterPreBoostersGranted";
+
+        /// <summary>
+        /// The rail's four tools, granted once. Its own key, so a save that
+        /// already had its starter boosters still receives them.
+        /// </summary>
+        private const string StarterToolsKey = "Story.StarterToolsGranted";
 
         /// <summary>
         /// One random booster per level won. The player already paid for it by
@@ -67,11 +87,31 @@ namespace JellyGarden.Scripts.Story
         public static void GrantStarterBoosters()
         {
             if (!Enabled) return;
+
+            // Checked on its own key first, so a save past its starter grant
+            // still receives the rail's tools once.
+            GrantStarterTools();
+
             if (PlayerPrefs.GetInt(StarterGrantKey, 0) != 0) return;
 
             PlayerPrefs.SetInt(StarterGrantKey, 1);
             Grant(BoostType.Hand, 2);
             Grant(BoostType.Random_color, 1);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>
+        /// Two hammers and one of each other rail tool, once, so every tool on
+        /// the rail can be tried when it unlocks; nothing is for sale.
+        /// </summary>
+        public static void GrantStarterTools()
+        {
+            if (!Enabled) return;
+            if (PlayerPrefs.GetInt(StarterToolsKey, 0) != 0) return;
+
+            PlayerPrefs.SetInt(StarterToolsKey, 1);
+            for (int i = 0; i < RailTools.Length; i++)
+                Grant(RailTools[i], RailTools[i] == BoostType.RoyalHammer ? 2 : 1);
             PlayerPrefs.Save();
         }
 
@@ -94,14 +134,17 @@ namespace JellyGarden.Scripts.Story
 
         private static void Grant(BoostType boost, int count)
         {
-            int owned = PlayerPrefs.GetInt("" + boost, 0);
+            // Read and written under the key StoryBoosters.Owned and the rail use.
+            int owned = global::RoyalThrone.Testing.RoyalSave.GetInt(StoryBoosters.KeyOf(boost), 0);
 
             // BuyBoost is the kit's own setter; the price argument is unused by
             // it, which is why granting costs nothing rather than being faked.
-            if (InitScript.Instance != null)
+            // A QA session writes through RoyalSave instead, so it never lands
+            // in the player's real counts.
+            if (InitScript.Instance != null && !global::RoyalThrone.Testing.RoyalSave.Testing)
                 InitScript.Instance.BuyBoost(boost, 0, owned + count);
             else
-                PlayerPrefs.SetInt("" + boost, owned + count);
+                global::RoyalThrone.Testing.RoyalSave.SetInt(StoryBoosters.KeyOf(boost), owned + count);
         }
 
         /// <summary>

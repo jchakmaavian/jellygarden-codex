@@ -1,4 +1,4 @@
-﻿// // ©2015 - 2026 Candy Smith
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -74,7 +74,7 @@ namespace JellyGarden.Scripts.System
 				if (cmb.nextType != ItemsTypes.NONE) {
 					Item item = cmb.items [UnityEngine.Random.Range (0, cmb.items.Count)];
 
-					Item draggedItem = LevelManager.THIS.lastDraggedItem;
+					Item draggedItem = LevelManager.THIS.PreferredMatchHost(cmb.items);
 					if (draggedItem) {
 						if (draggedItem.color != item.color)
 							draggedItem = LevelManager.THIS.lastSwitchedItem;
@@ -90,7 +90,8 @@ namespace JellyGarden.Scripts.System
 				}
 				combinedItems.Add (cmb.items);			
 			}
-			return combinedItems;
+			if (Juice.RoyalEffectsProfile.Get) Juice.RoyalPatterns.AddSquares(combinedItems);
+            return combinedItems;
 		}
 
 		void CheckCombines ()
@@ -157,6 +158,18 @@ namespace JellyGarden.Scripts.System
 			if (combine.hCount >= 3 && combine.vCount >= 3)
 				return ItemsTypes.PACKAGE;
 			if (combine.hCount > 3 || combine.vCount > 3) {
+                if (Juice.RoyalEffectsProfile.Get) {
+                    var lm = LevelManager.THIS;
+                    // The supplied video swaps sideways into a vertical four and
+                    // creates a horizontal rocket. Only that active swap supplies
+                    // an orientation; cascade matches retain their line direction.
+                    var dragged = lm.lastDraggedItem;
+                    var switched = lm.lastSwitchedItem;
+                    if (dragged && switched && dragged.square && switched.square &&
+                        (combine.items.Contains(dragged) || combine.items.Contains(switched)))
+                        return dragged.square.row == switched.square.row ? ItemsTypes.HORIZONTAL_STRIPPED : ItemsTypes.VERTICAL_STRIPPED;
+                    return combine.hCount > 3 ? ItemsTypes.HORIZONTAL_STRIPPED : ItemsTypes.VERTICAL_STRIPPED;
+                }
 				if (LevelManager.THIS.lastDraggedItem) {
 					Vector2 dir = LevelManager.THIS.lastDraggedItem.moveDirection;
 					if (Math.Abs (dir.x) > Math.Abs (dir.y))
@@ -239,6 +252,7 @@ namespace JellyGarden.Scripts.System
 
 		bool CheckColor (Item item, Item nextItem)
 		{
+			if (Juice.RoyalEffectsProfile.Get && (item.currentType != ItemsTypes.NONE || nextItem && nextItem.currentType != ItemsTypes.NONE)) return false;
 			if (nextItem) {
 				if (nextItem.color == item.color && nextItem.currentType != ItemsTypes.BOMB && nextItem.currentType != ItemsTypes.INGREDIENT)//2.0
 					return true;

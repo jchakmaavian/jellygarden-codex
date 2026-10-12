@@ -46,16 +46,32 @@ namespace JellyGarden.Scripts.Story
         }
 
         /// <summary>
-        /// How many of a booster the player owns. Null is PlayerPrefs, which is
-        /// where the kit keeps them; a test replaces it so the row can be driven
-        /// at chosen counts without writing the player's save.
+        /// How many of a booster the player owns. Null is the save, keyed by the
+        /// BoostType name exactly as the kit and ReferenceBoosterBar key it; a
+        /// test replaces it so the row can be driven at chosen counts without
+        /// writing the player's save.
         /// </summary>
         public static Func<BoostType, int> OwnedSource;
 
+        /// <summary>The save key for a booster's count, shared with ReferenceBoosterBar.</summary>
+        public static string KeyOf(BoostType boost)
+        {
+            return boost.ToString();
+        }
+
+        // Read through RoyalSave so a QA session sees its own isolated counts,
+        // as the in-level tool bar does; outside QA this is plain PlayerPrefs.
         public static int Owned(BoostType boost)
         {
             if (OwnedSource != null) return OwnedSource(boost);
-            return PlayerPrefs.GetInt("" + boost, 0);
+            return global::RoyalThrone.Testing.RoyalSave.GetInt(KeyOf(boost), 0);
+        }
+
+        /// <summary>Writes a booster's count to the same key Owned reads.</summary>
+        public static void SetOwned(BoostType boost, int count)
+        {
+            global::RoyalThrone.Testing.RoyalSave.SetInt(KeyOf(boost), Mathf.Max(0, count));
+            global::RoyalThrone.Testing.RoyalSave.Save();
         }
 
         #region The selection
@@ -101,8 +117,20 @@ namespace JellyGarden.Scripts.Story
 
         public static Sprite IconOf(BoostType boost)
         {
-            if (StorybookBoardArt.Enabled) return StorybookBoardArt.Booster(boost);
-            // The legacy UI keeps its authored plates when the story style is off.
+            // A rail tool wears the rail's own icon.
+            int tool = Array.IndexOf(global::RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Types, boost);
+            if (tool >= 0) return global::RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.Art(tool);
+
+            // The board's own power-up art when Royal Throne's layer is on, so the
+            // popup shows the pieces the booster seats.
+            string key = RoyalArtOf(boost);
+            if (key != null && JellyGarden.Scripts.Juice.RoyalEffectsProfile.Get != null)
+            {
+                Sprite royal = JellyGarden.Scripts.Juice.RoyalPieceSkin.Art(key);
+                if (royal != null) return royal;
+            }
+
+            // The legacy UI keeps its authored plates otherwise.
             switch (boost)
             {
                 case BoostType.Stripes: return StoryUi.LoadSprite("booster_stripes");
@@ -111,6 +139,22 @@ namespace JellyGarden.Scripts.Story
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Royal Throne's piece art for a booster that seats a piece, as
+        /// GUI/BoostShop maps it; null for one with no piece art.
+        /// </summary>
+        private static string RoyalArtOf(BoostType boost)
+        {
+            switch (boost)
+            {
+                case BoostType.Stripes: return "rocket";
+                case BoostType.Packages:
+                case BoostType.Bomb: return "tnt";
+                case BoostType.Colorful_bomb: return "orb";
+                default: return null;
+            }
         }
 
         /// <summary>The kit's own locked-slot plate, so a locked slot is art

@@ -1,4 +1,5 @@
-﻿// // ©2015 - 2026 Candy Smith
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -94,6 +95,8 @@ namespace JellyGarden.Scripts
         public int TargetScore = 1000;
         public int currentLevel = 1;
         public int FailedCost;
+        /// <summary>Continues bought in this attempt (reset by PrepareGame).</summary>
+        [HideInInspector] public int ContinuesBought;
         public int ExtraFailedMoves = 5;
         public int ExtraFailedSecs = 30;
         public List<GemProduct> gemsProducts = new List<GemProduct>();
@@ -153,6 +156,8 @@ namespace JellyGarden.Scripts
                         else
                             LevelManager.THIS.Limit += 30;
 
+                        Juice.AvatarEvents.NotifyExtraMovesGranted(this);
+
                         ActivatedBoost = null;
                     }
 
@@ -188,8 +193,7 @@ namespace JellyGarden.Scripts
         public GameObject ingrObject;
         public GameObject blocksObject;
         public GameObject scoreTargetObject;
-        private bool matchesGot;
-        bool ingredientFly;
+        bool ingredientFly; Coroutine timeTick;   // the one TimeTick running: StopCoroutine(TimeTick()) stopped nothing
         public GameObject[] gratzWords;
 
         public GameObject Level;
@@ -239,17 +243,38 @@ namespace JellyGarden.Scripts
             }
         }
 
+        /// <summary>
+        /// Resolution locks board maintenance, not untouched pieces. Item.CanAcceptInput
+        /// protects individual swaps, falling pieces and already selected matches.
+        /// </summary>
+        public bool BoardInputAllowed =>
+            !RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.OwnsInput &&
+            gameStatus == GameState.Playing && Limit > 0 && (!DragBlocked || royalResolving || InputSwaps > 0) &&
+            (MenuManager.Instance == null || !MenuManager.Instance.BlocksBoardInput);
+
+        public int InputSwaps { get; private set; }
+        int inputRevision;
+        public void BeginInputSwap() { InputSwaps++; DragBlocked = true; }
+        public void EndInputSwap() { InputSwaps = Mathf.Max(0, InputSwaps - 1); if (InputSwaps == 0 && !royalResolving) DragBlocked = false; }
+        public Item PreferredMatchHost(List<Item> group)
+        {
+            Item host = null;
+            foreach (var piece in group)
+                if (piece && piece.inputMoveOrder > 0 && (!host || piece.inputMoveOrder > host.inputMoveOrder)) host = piece;
+            return host ? host : group.Contains(lastDraggedItem) ? lastDraggedItem : group.Contains(lastSwitchedItem) ? lastSwitchedItem : null;
+        }
+
         private GameState GameStatus;
         public bool itemsHided;
         public int moveID;
         public int lastRandColor;
         public bool onlyFalling;
         public bool levelLoaded;
-        public Hashtable countedSquares;
+        [global::System.NonSerialized] public Hashtable countedSquares;
         public Sprite doubleBlock;
         public bool FacebookEnable;
         internal int latstMatchColor;
-        public CombineManager combineManager;
+        [global::System.NonSerialized] public CombineManager combineManager;
         public TargetObject[] targetObject;
         Item itemTouched;
         [SerializeField]
@@ -281,8 +306,9 @@ namespace JellyGarden.Scripts
             }
             set
             {
+                // Repeated completion notifications must not pay the same win twice.
+                if (value == GameState.Win && GameStatus == GameState.Win) return;
                 GameStatus = value;
-                JellyGarden.Scripts.Story.StoryRoyalVfx.StateChanged(value);
                 InitScript.Instance.CheckAdsEvents(value);
 
                 if (value == GameState.PrepareGame)
@@ -297,6 +323,8 @@ namespace JellyGarden.Scripts
 
                     InitLevel();
                     OnLevelLoaded();
+                    // While the level card is up: load what the first match, Rocket and booster would otherwise load mid-play.
+                    Juice.RoyalGameplayWarmup.Begin(this);
 
 
                 }
@@ -338,6 +366,7 @@ namespace JellyGarden.Scripts
                 }
                 else if (value == GameState.GameOver)
                 {
+                    Juice.AvatarEvents.NotifyLost(this);
                     MenuManager.Instance.ShowMenuFailed(true);
                     OnLose();
                 }
@@ -358,6 +387,7 @@ namespace JellyGarden.Scripts
                     {
                         PlayerPrefs.SetInt("Score" + currentLevel, Score);
                     }
+                    PlayerPrefs.Save();
 
                     #if PLAYFAB || GAMESPARKS
                 NetworkManager.dataManager.SetPlayerScore(currentLevel, Score);
@@ -470,7 +500,7 @@ namespace JellyGarden.Scripts
         void Start()
         {
             #if FACEBOOK
-        FacebookEnable = true;//1.6.2
+        FacebookEnable = RoyalThrone.RoyalOfflineMode.ServicesEnabled;
         if (FacebookEnable)
             FacebookManager.THIS.CallFBInit();
             #else
@@ -479,8 +509,8 @@ namespace JellyGarden.Scripts
             #endif
             #if UNITY_INAPPS
 
-            gameObject.AddComponent<UnityInAppsIntegration>();
-            enableInApps = true;//1.6.1
+            enableInApps = RoyalThrone.RoyalOfflineMode.ServicesEnabled;
+            if (enableInApps) gameObject.AddComponent<UnityInAppsIntegration>();
             #else
         enableInApps = false;
 
@@ -488,12 +518,8 @@ namespace JellyGarden.Scripts
             combineManager = new CombineManager();
             THIS = this;
             Instance = this;
-
-            // Point the match-3 VFX kit at this board and build its pools now,
-            // so the first clear of the level does not hitch while they are
-            // allocated. Must follow THIS being assigned: the host reads
-            // LevelManager.THIS for cell size and the board's bottom edge.
-            JellyGarden.Scripts.Story.KingLeoVfxHost.Configure();
+            if (Juice.RoyalEffectsProfile.Get && !GetComponent<RoyalThrone.Presentation.RoyalGameplayPresentation>())
+                gameObject.AddComponent<RoyalThrone.Presentation.RoyalGameplayPresentation>();
             //        if (!LevelManager.THIS.enableInApps)
             //            GameObject.Find("CanvasMap/Gems").gameObject.SetActive(false);//2.1.2
 
@@ -510,13 +536,12 @@ namespace JellyGarden.Scripts
         {
 
             GenerateLevel();
-            if (JellyGarden.Scripts.Story.StoryBoardTheme.DrawKitOutline)
-                GenerateOutline();
+            GenerateOutline();
             ReGenLevel();
             if (limitType == LIMIT.TIME)
             {
-                StopCoroutine(TimeTick());
-                StartCoroutine(TimeTick());
+                if (timeTick != null) StopCoroutine(timeTick);
+                timeTick = StartCoroutine(TimeTick());
             }
 //        InitTargets();
             GameField.gameObject.SetActive(true);
@@ -535,20 +560,25 @@ namespace JellyGarden.Scripts
 
         void PrepareGame()
         {
+            royalResolving = false;
+            InputSwaps = 0;
+            inputRevision = 0;
             ActivatedBoost = null;
             Score = 0;
             stars = 0;
+            ContinuesBought = 0;
             moveID = 0;
+            // These survive a level otherwise: a win celebration interrupted by leaving the level
+            // leaves preWinAnimationRunning set, and every later win then hangs before the banner.
+            preWinAnimationRunning = false;
+            SkipWinCelebration = false;
+            ingredientFly = false;
+            DragBlocked = false;
 
 
-            // STORY: all six belong to the kit's header, and StoryLevelHud
-            // destroys that header once the first level of a session has
-            // loaded. Every level after the first therefore ran PrepareGame
-            // against the wreckage: SetActive on a destroyed GameObject throws,
-            // PrepareGame stopped on this line, and everything below it never
-            // ran — LoadLevel, the board, EnableMap, ShowPrePlay, OnEnterGame.
-            // That is why level 1 played and level 2 was a black screen.
-            // Replace Hide with SetActive(false) and the kit behaves as shipped.
+            // STORY: all six belong to the kit's header, which a story HUD may
+            // have destroyed; SetActive on a destroyed object throws and would
+            // stop PrepareGame before the board loads.
             Hide(blocksObject);
             Hide(ingrObject);
             Hide(scoreTargetObject);
@@ -607,14 +637,29 @@ namespace JellyGarden.Scripts
 
         public void CheckCollectedTarget(GameObject _item)
         {
-            void AnimateCollectedItem(Vector2 pos)
+            void AnimateCollectedItem(TargetObject objectTarget)
             {
+                var piece = _item.GetComponent<Item>();
+                var spriteRenderer = piece && piece.sprRenderer ? piece.sprRenderer : _item.GetComponentInChildren<SpriteRenderer>();
+                float height = spriteRenderer ? spriteRenderer.bounds.size.y : squareHeight;
+                // Keep the destruction coroutine alive while its visual clone flies to the goal.
+                foreach (var renderer in _item.GetComponentsInChildren<SpriteRenderer>()) renderer.enabled = false;
+                // The goal shown in the HUD's Goal panel; the old flight (to the imported header's hidden icon) is the fallback.
+                if (spriteRenderer && RoyalThrone.Presentation.RoyalGameplayPresentation.GoalIcon(objectTarget, out var icon, out var layer))
+                {
+                    StartCoroutine(FlyToGoal(objectTarget, spriteRenderer.sprite, _item.transform.position, height, icon, layer));
+                    return;
+                }
+                // guiObj can be null on the DeepCopy()d targets (TargetsGroup.OnEnable
+                // order). The target is already counted by SetOff; only the flight
+                // needs an icon, and throwing here would truncate Item.DestroyCor.
+                if (objectTarget.guiObj == null || !spriteRenderer)
+                    return;
+                Vector2 pos = objectTarget.guiObj.transform.position;
                 GameObject item = new GameObject();
                 item.transform.position = _item.transform.position;
-                _item.SetActive(false);
                 item.transform.localScale = Vector3.one / 2f;
                 SpriteRenderer spr = item.AddComponent<SpriteRenderer>();
-                var spriteRenderer = _item.GetComponentInChildren<SpriteRenderer>();
                 spr.sprite = spriteRenderer.sprite;
                 spr.sortingLayerName = "UI";
                 spr.sortingOrder = 1;
@@ -627,24 +672,30 @@ namespace JellyGarden.Scripts
                 if(!objectTarget.Done())
                 {
                     if(objectTarget.SetOff(_item))
-                    {
-                        // guiObj is set by TargetsGroup.OnEnable onto the
-                        // TargetObjects owned by the Targets/Level<n> asset,
-                        // while this plays from DeepCopy()s of them taken in
-                        // LoadDataFromLocal. Whichever runs second decides
-                        // whether the copies carry an icon, so on the orders
-                        // where the copy is taken first this was null — and it
-                        // threw from inside Item.DestroyCor, which truncates the
-                        // cascade that called it and leaves the board half
-                        // resolved. The target is already counted by SetOff
-                        // above; only the flight to the icon needs an icon.
-                        if (objectTarget.guiObj != null)
-                            AnimateCollectedItem(objectTarget.guiObj.transform.position);
-                        else
-                            _item.SetActive(false);
-                    }
+                        AnimateCollectedItem(objectTarget);
                 }
             }
+        }
+
+        /// <summary>
+        /// Presentation only. Fires the shared match-centre accent once the individual
+        /// fruits have finished their anticipation, so the ring reads as the result of
+        /// the pops rather than something that happened before them.
+        /// </summary>
+        IEnumerator PlayMatchCenterDelayed(Vector3 center, Color color, float intensity, float delay)
+        {
+            var sourceField = GameField;
+            int sourceLevel = currentLevel;
+            if (delay > 0f)
+                yield return new WaitForSeconds(delay);
+            // A paused match can be abandoned before this accent's beat arrives.
+            // Do not let an old board's delayed effect appear over Home or a new level.
+            if (!sourceField || sourceField != GameField || !sourceField.gameObject.activeInHierarchy ||
+                currentLevel != sourceLevel || gameStatus == GameState.Map || gameStatus == GameState.PrepareGame)
+                yield break;
+            var vfx = Juice.MatchVFXService.Instance;
+            if (vfx != null)
+                vfx.PlayMatchCenter(center, color, intensity);
         }
 
         public ItemAnimEvents GetExplFromPool()
@@ -660,17 +711,55 @@ namespace JellyGarden.Scripts
             return null;
         }
 
+        // A collected goal piece flies into its goal in the HUD's Goal panel, drawn above the panels: it lifts and swells a
+        // little, bends away, then sweeps in with growing speed while shrinking to the icon's size; the icon then pops and its
+        // number counts the piece (RoyalGameplayPresentation.GoalLanded). The ending is the old flight's.
+        IEnumerator FlyToGoal(TargetObject target, Sprite sprite, Vector3 world, float worldHeight, RectTransform icon, RectTransform layer)
+        {
+            ingredientFly = true;
+            var cam = Camera.main;
+            var rect = new GameObject("Collected goal piece", typeof(RectTransform)).GetComponent<RectTransform>();
+            rect.SetParent(layer, false);
+            var image = rect.gameObject.AddComponent<Image>(); image.sprite = sprite; image.preserveAspect = true; image.raycastTarget = false;
+            Vector2 Local(Vector2 screen) { RectTransformUtility.ScreenPointToLocalPointInRectangle(layer, screen, null, out var p); return p; }
+            float unit = Mathf.Max(.0001f, layer.lossyScale.y);
+            Vector2 from = cam ? Local(cam.WorldToScreenPoint(world)) : Vector2.zero;
+            float startSize = cam ? Mathf.Abs(cam.WorldToScreenPoint(world + Vector3.up * worldHeight).y - cam.WorldToScreenPoint(world).y) / unit : 70;
+            float aspect = sprite ? sprite.rect.width / Mathf.Max(1, sprite.rect.height) : 1;
+            // A little variety from where the piece was collected; the board's random sequence is left alone.
+            float vary = Mathf.Repeat(world.x * 7.31f + world.y * 3.17f, 1f);
+            float duration = .62f + .12f * vary, turn = (vary - .5f) * 40f, age = 0;
+            RoyalThrone.Presentation.RoyalGameplayPresentation.GoalLaunched(target, duration);
+            rect.localPosition = from; rect.sizeDelta = new Vector2(startSize * aspect, startSize);
+            while (age < duration && layer && gameStatus != GameState.Map)
+            {
+                yield return null;
+                if (gameStatus != GameState.Pause) age += Time.deltaTime;
+                float t = Mathf.Clamp01(age / duration);
+                Vector2 to = icon ? Local(RectTransformUtility.WorldToScreenPoint(null, icon.position)) : from;
+                float endSize = icon ? icon.rect.height * icon.lossyScale.y / unit : startSize * .5f;
+                Vector2 bend = from + new Vector2((from.x - to.x) * .3f, (to.y - from.y) * .2f + startSize * 1.1f);
+                float e = t < .5f ? 2 * t * t : 1 - Mathf.Pow(2 - 2 * t, 2) * .5f;
+                rect.localPosition = (1 - e) * (1 - e) * from + 2 * (1 - e) * e * bend + e * e * to;
+                float size = t < .16f ? Mathf.Lerp(startSize, startSize * 1.22f, Mathf.SmoothStep(0, 1, t / .16f))
+                                      : Mathf.Lerp(startSize * 1.22f, endSize, Mathf.SmoothStep(0, 1, (t - .16f) / .84f));
+                rect.sizeDelta = new Vector2(size * aspect, size);
+                rect.localRotation = Quaternion.Euler(0, 0, turn * Mathf.Sin(t * Mathf.PI));
+            }
+            if (rect) Destroy(rect.gameObject);
+            RoyalThrone.Presentation.RoyalGameplayPresentation.GoalLanded(target);
+            if (gameStatus == GameState.Playing && !IsIngredientFalling() && !BoardResolving())
+                CheckWinLose();
+            ingredientFly = false;
+        }
+
         IEnumerator StartAnimateIngredient(GameObject item, Vector2 pos)
         {
             ingredientFly = true;
             // STORY: ingrObject and blocksObject are the kit's header counters,
-            // which StoryLevelHud destroys. Nothing below reads `ingr` — the kit
-            // fills this array and never looks at it again — so once the header
-            // was gone these four lines did nothing but throw, and they threw
-            // from inside a coroutine, which killed the collect animation and
-            // the cascade that started it. The destination of the flight is
-            // TargetIcon, which the story HUD adopts rather than destroys, so
-            // the animation itself is unaffected.
+            // which a story HUD may destroy. Nothing below reads `ingr`, so they
+            // are only filled while they exist; a throw here would kill the
+            // collect animation and the cascade that started it.
             GameObject[] ingr = new GameObject[2];
             if (ingrObject != null)
             {
@@ -689,19 +778,31 @@ namespace JellyGarden.Scripts
             Vector3 startPos = item.transform.localPosition;
             float speed = UnityEngine.Random.Range(0.4f, 0.6f);
             float distCovered = 0;
+            Vector3 baseScale = item.transform.localScale;
+            float turn = UnityEngine.Random.Range(-1f, 1f) * 30f;
             while (distCovered < 0.5f)
             {
                 distCovered = (Time.time - startTime) * speed;
+                float k = Mathf.Clamp01(distCovered / 0.5f);
                 item.transform.localPosition = new Vector3(curveX.Evaluate(distCovered), curveY.Evaluate(distCovered), 0);
-                item.transform.Rotate(Vector3.back, Time.deltaTime * 1000);
-                yield return new WaitForFixedUpdate();
+                // Pops up to 1.25x in the first fifth, then settles to 0.8x as it lands in the goal.
+                float pop = k < .2f ? Mathf.Lerp(1f, 1.25f, Mathf.SmoothStep(0, 1, k / .2f)) : Mathf.Lerp(1.25f, .8f, Mathf.SmoothStep(0, 1, (k - .2f) / .8f));
+                item.transform.localScale = baseScale * pop;
+                item.transform.localRotation = Quaternion.Euler(0, 0, turn * Mathf.Sin(k * Mathf.PI));
+                yield return null;
             }
             //     SoundBase.Instance.audio.PlayOneShot(SoundBase.Instance.getStarIngr);
             Destroy(item);
-            if (gameStatus == GameState.Playing && !IsIngredientFalling())//1.6.1
+            if (gameStatus == GameState.Playing && !IsIngredientFalling() && !BoardResolving())//1.6.1
                 CheckWinLose();
             ingredientFly = false;
         }
+
+        // The board is still working out a move: matches resolving, pieces breaking or falling, a power-up firing. A win or
+        // lose decided now can miss goals the rest of the cascade collects (on the last move "So Close" opened on a level the
+        // cascade then completed; bug review 2026-10-05). The end of the cascade (FallingDown) checks again, or the last goal
+        // piece to land does once the board is still.
+        bool BoardResolving() => royalResolving || Juice.RoyalPowerupDirector.Busy || GetItems().Exists(i => i && (i.destroying || i.falling));
 
         public void CheckWinLose()
         {
@@ -734,84 +835,77 @@ namespace JellyGarden.Scripts
             }
         }
 
+        /// <summary>Set by a tap during the win celebration: the reward still plays out, faster.</summary>
+        public bool SkipWinCelebration { get; private set; }
+
+        public void RequestSkipWinCelebration()
+        {
+            if (gameStatus == GameState.PreWinAnimations) SkipWinCelebration = true;
+        }
+
+        // A celebration the player cannot leave is dead time. Each leftover move still becomes a
+        // rocket and still detonates, but the gaps are short, and a tap collapses them further.
+        float CelebrationWait(float normal, float skipped) => SkipWinCelebration ? skipped : normal;
+
         IEnumerator PreWinAnimationsCor()
         {
             if (preWinAnimationRunning)
                 yield break;
 
             preWinAnimationRunning = true;
+            SkipWinCelebration = false;
+            Juice.AvatarEvents.NotifyGoalsCompleted(this);
+
+            // A goal is met when its last piece lands in the Goal panel, not when it leaves the board: the finish
+            // waits for those flights (at most 1 s).
+            float landed = Time.unscaledTime + 1f;
+            while (gameStatus == GameState.PreWinAnimations && Time.unscaledTime < landed && RoyalThrone.Presentation.RoyalGameplayPresentation.GoalPiecesInFlight > 0)
+                yield return null;
+            if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
 
             MenuManager.Instance.ShowCompleteLabel(true);
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(CelebrationWait(1f, .2f));
 
-            List<Item> items = GetRandomItems(Mathf.Clamp(limitType == LIMIT.MOVES ? Limit : 8, 0, 15)); //2.2.2
-            foreach (Item item in items)
+            // Leftover moves: each flies out of the Moves panel and becomes a rocket, then every power piece goes off
+            // and the board refills, round after round (ReferenceWinFinish). A tap shortens it.
+            yield return RoyalThrone.ReferenceGameplay.ReferenceWinFinish.Play(this);
+            if (gameStatus != GameState.PreWinAnimations) { MenuManager.Instance.ShowCompleteLabel(false); preWinAnimationRunning = false; yield break; }
+
+            // A power piece the finish left behind (its round cap) still goes off: one volley a pass, until none is left.
+            // DestroyItem is self-guarding, so a piece caught in another's blast is a no-op.
+            for (int pass = 0; pass < 10 && gameStatus == GameState.PreWinAnimations &&
+                 GetAllExtaItems().Exists(RoyalThrone.ReferenceGameplay.ReferenceWinFinish.Power); pass++)
             {
-                if (limitType == LIMIT.MOVES)
-                    Limit--;
-                item.NextType = (ItemsTypes)UnityEngine.Random.Range(1, 3);
-                // STORY: the original game flies each move in from the Moves
-                // counter first; the gem changes when it lands (StoryOriginalBoosters).
-                if (!JellyGarden.Scripts.Story.StoryOriginalBoosters.SendMove(item))
-                item.ChangeType();
-                // 0.2s a gem, not the kit's 0.5. Fifteen leftover moves is the
-                // cap, so this is the difference between a 7.5-second wait
-                // before the win banner and a 3-second one.
-                yield return new WaitForSeconds(0.2f);
-            }
-            // STORY: every move has landed and become its Rocket before the volley.
-            while (JellyGarden.Scripts.Story.StoryOriginalBoosters.MovesInFlight > 0)
-                yield return null;
-            yield return new WaitForSeconds(0.3f);
-            // One volley, not one gem at a time. The kit fired GetAllExtaItems()[0]
-            // and then waited out its blast — 1.1 seconds plus the settle for
-            // every special on the board, so fifteen leftover moves cost a
-            // quarter of a minute of watching. Every special still alive when a
-            // pass begins now goes off together; DestroyItem is self-guarding
-            // (its `destroying` flag returns early on a second call), so a
-            // stripe caught in another stripe's blast is a no-op rather than a
-            // double destroy.
-            //
-            // The outer loop stays because a blast can leave a NEW special
-            // behind — a five-in-a-row formed by the fall — and that one is
-            // caught by the next pass. It ends the same way the kit's did:
-            // when no special is left.
-            while (GetAllExtaItems().Count > 0 && gameStatus != GameState.Win)
-            { //1.6
                 dragBlocked = true;
                 foreach (Item item in GetAllExtaItems())
                 {
-                    if (item == null)
+                    if (!RoyalThrone.ReferenceGameplay.ReferenceWinFinish.Power(item))
                         continue;
                     item.DestroyItem();
                 }
                 yield return new WaitForSeconds(0.1f);
                 FindMatches();
-                yield return new WaitForSeconds(1f);
-
-                //           GenerateNewItems();
-                while (dragBlocked)
+                yield return new WaitForSeconds(CelebrationWait(1f, .2f));
+                float resolved = Time.unscaledTime + 6f;
+                while (dragBlocked && gameStatus == GameState.PreWinAnimations && Time.unscaledTime < resolved)
                     yield return new WaitForFixedUpdate();
             }
-            yield return new WaitForSeconds(1f);
-            while (dragBlocked || GetMatches().Count > 0)
+            yield return new WaitForSeconds(CelebrationWait(1f, .2f));
+            // The board settles before the win panel (at most 6 s).
+            float settle = Time.unscaledTime + 6f;
+            while (gameStatus == GameState.PreWinAnimations && Time.unscaledTime < settle &&
+                   (dragBlocked || royalResolving || Juice.RoyalPowerupDirector.Busy || GetMatches().Count > 0))
                 yield return new WaitForSeconds(0.2f);
+            if (gameStatus != GameState.PreWinAnimations) { MenuManager.Instance.ShowCompleteLabel(false); preWinAnimationRunning = false; yield break; }
 
             MenuManager.Instance.ShowCompleteLabel(false);
             SoundBase.Instance.PlaySound(SoundBase.Instance.complete[0]);
 
-            // The three-second "Wonderful!" beat used to sit here:
-            //
-            //     ShowPreCompleteBanner(true);
-            //     yield return new WaitForSeconds(3);
-            //     ShowPreCompleteBanner(false);
-            //
-            // Removed deliberately. A level now goes straight from its last
-            // settle to the win panel. MenuManager.ShowPreCompleteBanner and
-            // the PreCompleteBanner object in the scene are both left alone, so
-            // putting those three lines back restores it exactly.
+            // The kit's three-second pre-complete banner stays removed (main): a level goes straight from its last
+            // settle to the win panel.
             gameStatus = GameState.Win;
             preWinAnimationRunning = false;
+            SkipWinCelebration = false;
         }
 
         void Update()
@@ -874,7 +968,8 @@ namespace JellyGarden.Scripts
 
                 if (InputManager.Instance.Gameplay.Cancel.WasReleasedThisFrame())
                 {
-                    if (LevelManager.THIS.gameStatus == GameState.Playing)
+                    // The tool bar (execution order -50) may already have spent this Back on cancelling a chosen tool.
+                    if (LevelManager.THIS.gameStatus == GameState.Playing && !RoyalThrone.ReferenceGameplay.ReferenceBoosterBar.BackConsumedThisFrame)
                         MenuManager.Instance.ShowMenuPause(true);
                     else if (LevelManager.THIS.gameStatus == GameState.Map)
                         Application.Quit();
@@ -883,28 +978,27 @@ namespace JellyGarden.Scripts
             }
 
 
-            if (LevelManager.THIS.gameStatus == GameState.Playing)
+            if (gameStatus == GameState.PreWinAnimations && InputManager.Instance != null &&
+                InputManager.Instance.WasTouchPressed)
+                RequestSkipWinCelebration();
+
+            if (LevelManager.THIS.gameStatus == GameState.Playing && InputManager.Instance != null)
             {
-                Vector3? pos = null;
-                if (InputManager.Instance != null)
+                // A release only ever ends the current drag. It used to fall through the same
+                // branch as a press with a zero position, which probed world origin (0,0).
+                if (InputManager.Instance.WasTouchReleased)
                 {
-                    if (InputManager.Instance.WasTouchPressed)
-                    {
-                        pos = InputManager.Instance.TouchPosition;
-                    }
-                    else if (InputManager.Instance.WasTouchReleased)
-                    {
-                        pos = Vector3.zero;
-                    }
+                    // Item owns press/drag/release; clearing it here raced its tap handler.
+                    itemTouched = null;
                 }
-                if (pos != null)
+                else if (InputManager.Instance.WasTouchPressed && LevelManager.THIS.BoardInputAllowed)
                 {
                     OnStartPlay();
-                    Collider2D hit = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint((Vector3) pos));
+                    Collider2D hit = Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(InputManager.Instance.TouchPosition));
                     if (hit != null)
                     {
                         itemTouched = hit.gameObject.GetComponent<Item>();
-                        if (!LevelManager.THIS.DragBlocked && LevelManager.THIS.gameStatus == GameState.Playing && itemTouched != null)
+                        if (itemTouched != null && itemTouched.CanAcceptInput)
                         {
                             if (LevelManager.THIS.ActivatedBoost.type == BoostType.Bomb && itemTouched.currentType != ItemsTypes.BOMB && itemTouched.currentType != ItemsTypes.INGREDIENT)
                             {
@@ -924,39 +1018,25 @@ namespace JellyGarden.Scripts
                                 obj.GetComponent<SpriteRenderer>().sortingOrder = 4;
                                 LevelManager.THIS.ActivatedBoost = null;
                             }
-                            else if (itemTouched.square.type != SquareTypes.WIREBLOCK)
-                            {
-                                itemTouched.dragThis = true;
-                                itemTouched.mousePos = itemTouched.GetMousePosition();
-                                itemTouched.deltaPos = Vector3.zero;
-                                itemTouched.BeginDragFromCurrentTouch();
-                            }
                         }
                     }
 
                 }
-                else if (pos == Vector3.zero)
-                {
-                    if (itemTouched != null)
-                    {
-                        itemTouched.dragThis = false;
-                        itemTouched.switchDirection = Vector3.zero;
-
-                    }
-                }
             }
         }
 
+        // A timed level's clock stands still while a popup is over the board (bug review 2026-10-05).
+        bool TimerHeld() => MenuManager.Instance && MenuManager.Instance.BlocksBoardInput;
         IEnumerator TimeTick()
         {
             while (true)
             {
-                if (gameStatus == GameState.Playing)
+                if (gameStatus == GameState.Playing && !TimerHeld())
                 {
                     if (LevelManager.Instance.limitType == LIMIT.TIME)
                     {
                         LevelManager.THIS.Limit--;
-                        if (IsAllItemsFallDown())
+                        if (IsAllItemsFallDown() && !BoardResolving())
                             CheckWinLose();
                     }
                 }
@@ -968,11 +1048,6 @@ namespace JellyGarden.Scripts
 
         private void GenerateLevel()
         {
-            // The story plays on a bigger cell than the kit ships. Set before
-            // anything is laid out, because every position below is a multiple
-            // of the pitch.
-            JellyGarden.Scripts.Story.StoryBoardScale.Apply(this);
-
             bool chessColor = false;
             Vector3 fieldPos = new Vector3(-maxCols / 2.75f, maxRows / 2.75f, -10);
             for (int row = 0; row < maxRows; row++)
@@ -998,7 +1073,12 @@ namespace JellyGarden.Scripts
                 yOffset = 0.3f;
             Animation anim = GameField.GetComponent<Animation>();
             AnimationClip clip = new AnimationClip();
-            AnimationCurve curveX = new AnimationCurve(new Keyframe(0, pos.x + 15), new Keyframe(0.7f, pos.x - 0.2f), new Keyframe(0.8f, pos.x));
+            // The board glides in from the right and settles without overshoot: ease-out cubic over 0.7 s, the Hermite
+            // tangents of 1 - (1 - t)^3 (2026-10-04, the user: the game start transition must be smooth). It used to run
+            // past its place by 0.2 and spring back. It waits 0.18 s first: the level's start (InitLevel, the warm-up)
+            // makes the first frames long, and the glide is fastest at its start, so it jumped.
+            const float travel = 15, wait = .18f, settle = .7f;
+            AnimationCurve curveX = new AnimationCurve(new Keyframe(0, pos.x + travel, 0, 0), new Keyframe(wait, pos.x + travel, 0, -3 * travel / settle), new Keyframe(wait + settle, pos.x, 0, 0));
             AnimationCurve curveY = new AnimationCurve(new Keyframe(0, pos.y + yOffset), new Keyframe(1, pos.y + yOffset));
             clip.legacy = true;//2.1.6
             clip.SetCurve("", typeof(Transform), "localPosition.x", curveX);
@@ -1020,13 +1100,6 @@ namespace JellyGarden.Scripts
             }
             square.transform.SetParent(GameField);
             square.transform.localPosition = firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight);
-
-            // The cell tile is exactly one kit-pitch wide, so it has to grow
-            // with the pitch or the board shows the gaps between its own cells.
-            // The blocks and obstacles below are parented to the square and
-            // ride this scale; the gems are not, and take StoryBoardScale.ItemScale.
-            square.transform.localScale =
-                Vector3.one * JellyGarden.Scripts.Story.StoryBoardScale.Factor;
             squaresArray[row * maxCols + col] = square.GetComponent<Square>();
             square.GetComponent<Square>().row = row;
             square.GetComponent<Square>().col = col;
@@ -1044,8 +1117,8 @@ namespace JellyGarden.Scripts
             else if (levelSquaresFile[row * maxCols + col].block == SquareTypes.BLOCK)
             {
                 GameObject block = Instantiate(blockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
+                SkinBlock(block);
                 block.transform.SetParent(square.transform);
-                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.01f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.BLOCK;
@@ -1056,16 +1129,16 @@ namespace JellyGarden.Scripts
             else if (levelSquaresFile[row * maxCols + col].block == SquareTypes.DOUBLEBLOCK)
             {
                 GameObject block = Instantiate(blockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
+                SkinBlock(block);
                 block.transform.SetParent(square.transform);
-                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.01f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.BLOCK;
 
                 //  TargetBlocks++;
                 block = Instantiate(blockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
+                SkinBlock(block);
                 block.transform.SetParent(square.transform);
-                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.01f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.BLOCK;
@@ -1288,13 +1361,20 @@ namespace JellyGarden.Scripts
             return outline;
         }
 
+        // The kit block prefabs stay as shipped; the Royal block skin is added at runtime while the Royal layer is on.
+        static void SkinBlock(GameObject block)
+        {
+            if (block != null && Juice.RoyalEffectsProfile.Get != null && !block.GetComponent<Juice.RoyalBlockSkin>())
+                block.AddComponent<Juice.RoyalBlockSkin>();
+        }
+
         void CreateObstacles(int col, int row, GameObject square, SquareTypes type)
         {
             if ((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.WIREBLOCK && type == SquareTypes.NONE) || type == SquareTypes.WIREBLOCK)
             {
                 GameObject block = Instantiate(wireBlockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
+                SkinBlock(block);
                 block.transform.SetParent(square.transform);
-                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.5f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.WIREBLOCK;
@@ -1304,8 +1384,8 @@ namespace JellyGarden.Scripts
             else if ((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.SOLIDBLOCK && type == SquareTypes.NONE) || type == SquareTypes.SOLIDBLOCK)
             {
                 GameObject block = Instantiate(solidBlockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
+                SkinBlock(block);
                 block.transform.SetParent(square.transform);
-                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.5f);
                 square.GetComponent<Square>().block.Add(block);
                 block.GetComponent<SpriteRenderer>().sortingOrder = 3;
@@ -1316,8 +1396,8 @@ namespace JellyGarden.Scripts
             else if ((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.UNDESTROYABLE && type == SquareTypes.NONE) || type == SquareTypes.UNDESTROYABLE)
             {
                 GameObject block = Instantiate(undesroyableBlockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
+                SkinBlock(block);
                 block.transform.SetParent(square.transform);
-                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.5f);
                 square.GetComponent<Square>().block.Add(block);
                 square.GetComponent<Square>().type = SquareTypes.UNDESTROYABLE;
@@ -1327,8 +1407,8 @@ namespace JellyGarden.Scripts
             else if ((levelSquaresFile[row * maxCols + col].obstacle == SquareTypes.THRIVING && type == SquareTypes.NONE) || type == SquareTypes.THRIVING)
             {
                 GameObject block = Instantiate(thrivingBlockPrefab, firstSquarePosition + new Vector2(col * squareWidth, -row * squareHeight), Quaternion.identity) as GameObject;
+                SkinBlock(block);
                 block.transform.SetParent(square.transform);
-                JellyGarden.Scripts.Story.StoryBoardScale.FitToCell(block.transform);
                 block.transform.localPosition = new Vector3(0, 0, -0.5f);
                 block.GetComponent<SpriteRenderer>().sortingOrder = 3;
                 if (square.GetComponent<Square>().item != null)
@@ -1341,30 +1421,47 @@ namespace JellyGarden.Scripts
 
         }
 
-        void GenerateNewItems(bool falling = true)
+        bool GenerateNewItems(bool falling = true, bool fillBlockedCells = false)
         {
-            // STORY: the Royal Throne refill queues new gems above each column's top cell.
-            JellyGarden.Scripts.Story.StoryOriginalMotion.BeginRefill();
+            // A gentle refill (2026-10-04): the new pieces of each column's run of cells are stacked just above that run's top
+            // edge, the lowest first, so they enter from the board's edge as one stream and fade in as they cross it
+            // (Item.royalEntryEdge); the columns start in a soft wave from the centre out (Item.royalFallDelay).
+            // The end of a level refills too, as in the user's Royal Match Level 13 clip (the user, 2026-10-06, replacing that
+            // morning's "no more fill up"): the boosters' cleared cells fall and fill, and the card opens over a full board.
+            bool generated = false;
+            bool gentle = falling && Juice.JuiceConfig.Instance.EnableJuice;
+            float cellWorld = squareHeight * (GameField ? Mathf.Abs(GameField.lossyScale.y) : 1f);
+            var stacked = new Dictionary<int, int>();
             for (int col = 0; col < maxCols; col++)
             {
+                stacked.Clear();
                 for (int row = maxRows - 1; row >= 0; row--)
                 {
                     if (GetSquare(col, row) != null)
                     {
                         if (!GetSquare(col, row).IsNone() && GetSquare(col, row).CanGoInto() && GetSquare(col, row).item == null)
                         {
-                            if ((GetSquare(col, row).item == null && !GetSquare(col, row).IsHaveSolidAbove()) || !falling)
+                            if ((GetSquare(col, row).item == null && !GetSquare(col, row).IsHaveSolidAbove()) || !falling || fillBlockedCells)
                             {
-                                // STORY: and fades each in across that edge (StoryOriginalMotion.Enter).
-                                Item storyCreated =
-                                GetSquare(col, row).GenItem(falling);
-                                JellyGarden.Scripts.Story.StoryOriginalMotion.Enter(storyCreated, falling, col, row);
+                                var created = GetSquare(col, row).GenItem(falling);
+                                generated |= created != null;
+                                if (gentle && created)
+                                {
+                                    int top = row;
+                                    while (top > 0 && GetSquare(col, top - 1) != null && GetSquare(col, top - 1).CanGoInto()) top--;
+                                    stacked.TryGetValue(top, out int k); stacked[top] = k + 1;
+                                    var topPosition = GetSquare(col, top).transform.position;
+                                    var target = GetSquare(col, row).transform.position;
+                                    created.transform.position = new Vector3(target.x, topPosition.y + cellWorld * (k + 1), target.z - 0.2f);
+                                    created.royalEntryEdge = topPosition.y + cellWorld * .5f;
+                                    created.royalFallDelay = .022f * Mathf.Abs(col - (maxCols - 1) * .5f);
+                                }
                             }
                         }
                     }
                 }
             }
-
+            return generated;
         }
 
         public void NoMatches()
@@ -1377,9 +1474,20 @@ namespace JellyGarden.Scripts
             if (gameStatus == GameState.Playing)
             {
                 SoundBase.Instance.PlaySound(SoundBase.Instance.noMatch);
-
-                MenuManager.Instance.ShowNoMoreMatches(true);
+                // No swap matches: shuffle the gems already on the board (RoyalShuffle) so the player always has a move.
+                // Power-ups and obstacles stay put. The old rebuild (new gems, no guaranteed move) is only the fallback.
                 gameStatus = GameState.RegenLevel;
+                bool shuffled = false;
+                yield return Juice.RoyalShuffle.Run(this, ok => shuffled = ok);
+                if (shuffled)
+                {
+                    DragBlocked = false;
+                    gameStatus = GameState.Playing;   // starts the hint search again
+                    // A goal that landed while the board shuffled was not checked (the board was busy): check now.
+                    if (!BoardResolving()) CheckWinLose();
+                    yield break;
+                }
+                MenuManager.Instance.ShowNoMoreMatches(true);
                 yield return new WaitForSeconds(1);
                 ReGenLevel();
             }
@@ -1425,12 +1533,16 @@ namespace JellyGarden.Scripts
             int i = 0;
             do
             {
+                // A 2x2 is discovered from more than one cell. Recolouring the
+                // same piece twice in this pass can undo its first change forever.
+                var recoloured = new HashSet<Item>();
                 foreach (List<Item> comb in combs)
                 {
                     int colorOffset = 0;
                     foreach (Item item in comb)
                     {
-                        item.GenColor(item.color + colorOffset);
+                        if (item && recoloured.Add(item))
+                            item.GenColor(item.color + colorOffset);
                         colorOffset++;
                     }
                 }
@@ -1515,6 +1627,10 @@ namespace JellyGarden.Scripts
                 }
             }
 
+            // Only plain pieces can be picked: asking for more than exist never finished (with none, every
+            // pass re-entered the Win state), which froze the game. Take as many as there are.
+            if (list.Count < count)
+                count = list.Count;
             while (list2.Count < count)
             {
 
@@ -1526,7 +1642,7 @@ namespace JellyGarden.Scripts
                         list2.Add(newItem);
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     gameStatus = GameState.Win;
                 }
@@ -1551,8 +1667,12 @@ namespace JellyGarden.Scripts
 
         public int GetIngredientsCount(string spritename)
         {
-            // Decorative renderers and newly spawned items can have no sprite yet.
-            return FindObjectsOfType<SpriteRenderer>().Count(i => i.sprite != null && i.sprite.name == spritename);
+            if (string.IsNullOrEmpty(spritename)) return 0;
+            // Count owned board pieces only. Particle renderers can have no sprite,
+            // and falling fragments can retain the ingredient's sprite name.
+            return GetItems().Count(item => item && !item.destroying &&
+                item.currentType == ItemsTypes.INGREDIENT && item.sprRenderer &&
+                item.sprRenderer.sprite && item.sprRenderer.sprite.name == spritename);
         }
 
 
@@ -1583,8 +1703,13 @@ namespace JellyGarden.Scripts
 
         }
 
+        bool royalResolving;
+        public bool IsResolvingMatches => royalResolving;
         public void FindMatches()
         {
+            inputRevision++;
+            if (royalResolving) return;
+            royalResolving = true;
             StartCoroutine(FallingDown());
         }
 
@@ -1635,7 +1760,6 @@ namespace JellyGarden.Scripts
                     }
                 }
             }
-            matchesGot = true;
             yield return new WaitForFixedUpdate();
 
         }
@@ -1691,11 +1815,16 @@ namespace JellyGarden.Scripts
             while (true)
             {
 
-                //find matches
-                yield return new WaitForSeconds(0.1f);
+                // Resolve as soon as the board is ready, rather than adding a
+                // fixed pause after a completed swap. Keep the ownership gates.
+                while (gameStatus == GameState.Pause || InputSwaps > 0 || !IsAllItemsFallDown()) yield return null;
+                int waveRevision = inputRevision;
+                foreach (var piece in GetItems()) if (piece) piece.inputMatchPending = false;
 
                 combinedItems.Clear();
                 combinedItems = combineManager.GetCombine(); //GetMatches();  //1.6
+                foreach (var group in combinedItems) foreach (var piece in group) if (piece) piece.inputMatchPending = true;
+                foreach (var piece in GetItems()) if (piece) piece.inputMoveOrder = 0;
                 //StartCoroutine(GetMatchesCor());
                 //while (!matchesGot)
                 //    yield return new WaitForFixedUpdate();
@@ -1715,23 +1844,15 @@ namespace JellyGarden.Scripts
 
                 if (combinedItems.Count > 0)
                     combo++;
-
-                // Walked over a snapshot, not the field.
-                //
-                // combinedItems is a field of this class and this loop yields
-                // inside itself, so a second pass through FallingDown reaches
-                // the Clear() above while this one is still enumerating — and
-                // .NET throws "Collection was modified" straight out of the
-                // foreach. That kills the coroutine where it stands, which
-                // leaves the cascade half finished and the board looking like it
-                // is thinking. It is what the playtest caught on level 9.
-                //
-                // Nothing else changes: the inner lists and the items in them
-                // are the same objects, in the same order, so every destroy,
-                // every score popup and every particle still fires exactly as
-                // it did.
+                // Walked over a snapshot: this loop yields, and a later pass reassigns the field (main).
                 foreach (List<Item> desrtoyItems in new List<List<Item>>(combinedItems))
                 {
+
+                    // The resolved group is the gameplay event. Keep character feedback independent of the VFX toggle;
+                    // failed swaps and groups without three live pieces never acknowledge a match.
+                    int matchedPieces = 0;
+                    foreach (var piece in desrtoyItems) if (piece) matchedPieces++;
+                    Juice.AvatarEvents.NotifyMatchResolved(this, matchedPieces);
 
                     //				if (lastDraggedItem == null) {  //1.6
                     //					if (desrtoyItems.Count == 4) {
@@ -1749,13 +1870,67 @@ namespace JellyGarden.Scripts
                     //
                     //				}
                     // if (desrtoyItems.Count > 0) PopupScore(scoreForItem * desrtoyItems.Count, desrtoyItems[(int)desrtoyItems.Count / 2].transform.position, Color.black);
+                    // --- presentation only: no match/score/target logic below ------
+                    // Emphasis scales with how big the match is and how deep the
+                    // cascade has gone, inside a hard ceiling from JuiceConfig.
+                    var juiceCfg = Juice.JuiceConfig.Instance;
+                    float groupIntensity = Juice.MatchVFXService.ComputeIntensity(desrtoyItems.Count, combo);
+
+                    bool specialFormation = Juice.RoyalSpecialFormation.Prepare(desrtoyItems);
+                    bool immediateThree = desrtoyItems.Count == 3 && desrtoyItems.TrueForAll(piece =>
+                        piece && piece.currentType == ItemsTypes.NONE && piece.NextType == ItemsTypes.NONE);
+                    if (juiceCfg.EnableJuice && !specialFormation)
+                    {
+                        Vector3 matchCenter = Vector3.zero;
+                        int centerCount = 0;
+                        for (int di = 0; di < desrtoyItems.Count; di++)
+                        {
+                            if (desrtoyItems[di] != null)
+                            {
+                                matchCenter += desrtoyItems[di].transform.position;
+                                centerCount++;
+                            }
+                        }
+                        if (centerCount > 0)
+                        {
+                            matchCenter /= centerCount;
+                            Juice.RoyalPowerupDirector.Get?.Match(matchCenter, groupIntensity);
+                            Item mid = desrtoyItems[Mathf.Clamp(desrtoyItems.Count / 2, 0, desrtoyItems.Count - 1)];
+                            Color centerColor = mid != null ? mid.GetJuiceColor() : Color.white;
+                            var vfxService = Juice.MatchVFXService.Instance;
+                            if (vfxService != null)
+                            {
+                                // One restored group accent, aligned with the gentler sprite pop.
+                                float centerDelay = immediateThree ? 0f : .12f;
+                                StartCoroutine(PlayMatchCenterDelayed(matchCenter, centerColor, groupIntensity, centerDelay));
+
+                                // One micro-freeze for the whole group, timed to the pop.
+                                // Per-fruit would read as lag in a long cascade.
+                                if (!immediateThree) vfxService.RequestHitStop(
+                                    centerDelay,
+                                    juiceCfg.HitStopDuration +
+                                        juiceCfg.HitStopIntensityBonus * (groupIntensity - 1f),
+                                    juiceCfg.HitStopScale);
+                            }
+                        }
+                    }
+
+                    int juiceIndex = 0;
                     foreach (Item item in desrtoyItems)
                     {//TODO items not destroy
 
+                        if (!item || item.destroying) continue;
+
                         if (item.currentType != ItemsTypes.NONE)
                             yield return new WaitForSeconds(0.1f);
-                        // STORY: the Royal Throne break reads the group's size (StoryOriginalMotion).
-                        JellyGarden.Scripts.Story.StoryOriginalMotion.MarkMatch(item, desrtoyItems.Count, desrtoyItems.IndexOf(item));
+                        if (!item || item.destroying) continue;
+                        // Tiny controlled offset between neighbours - still reads as
+                        // simultaneous, but gives the group a visual rhythm.
+                        item.juiceStagger = juiceCfg.EnableJuice && !immediateThree ? juiceIndex * juiceCfg.MatchStagger : 0f;
+                        item.juiceIntensity = groupIntensity;
+                        if (item.currentType == ItemsTypes.NONE && !item.destroying)
+                            item.royalMatchSize = desrtoyItems.Count;
+                        juiceIndex++;
                         item.DestroyItem(true);  //destroy items safely
                         if (item.currentType != ItemsTypes.NONE)
                         {
@@ -1789,7 +1964,10 @@ namespace JellyGarden.Scripts
                     //					lastSwitchedItem.ChangeType ();
                     //
                     //				}
-                    if (lastDraggedItem.NextType != ItemsTypes.NONE)
+                    // The visual gather already owns the merge duration. A second
+                    // fixed hold here strands the new piece above a cleared cell,
+                    // instead of letting its native Reveal continue during gravity.
+                    if (lastDraggedItem.NextType != ItemsTypes.NONE && !lastDraggedItem.royalSpecialGather)
                     {
                         //lastDraggedItem.ChangeType();
                         yield return new WaitForSeconds(0.5f);
@@ -1800,8 +1978,17 @@ namespace JellyGarden.Scripts
 
                 while (!IsAllDestoyFinished())
                 {
-                    yield return new WaitForSeconds(0.1f);
+                    if (waveRevision != inputRevision && InputSwaps == 0) break;
+                    yield return null;   // every frame: a 0.1 s poll left cleared cells empty for up to 0.1 s more
                 }
+
+                // A new move during the effects needs its matches resolved before gravity.
+                if (waveRevision != inputRevision) continue;
+                // Gravity waits for a swap that is still animating (2026-10-06, the user's overlapping gems): it moved a swapping
+                // piece down its column on paper, the swap then wrote its result from that new cell, and a piece was left drawn
+                // in a cell another piece owned. A swap that commits meanwhile starts a new wave, so its matches go first.
+                while (InputSwaps > 0) yield return null;
+                if (waveRevision != inputRevision) continue;
 
                 //falling down
                 for (int i = 0; i < 20; i++)
@@ -1817,7 +2004,9 @@ namespace JellyGarden.Scripts
                     // yield return new WaitForFixedUpdate();
                 }
                 if (!nearEmptySquareDetected)
-                    yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(Juice.RoyalEffectsProfile.Get ? .035f : .2f);
+
+                while (InputSwaps > 0) yield return null;
 
                 CheckIngredient();
                 for (int col = 0; col < maxCols; col++)
@@ -1882,18 +2071,23 @@ namespace JellyGarden.Scripts
                     yield return new WaitForSeconds(0.1f);
                 }
 
+                if (waveRevision != inputRevision || Juice.RoyalPowerupDirector.Busy) continue;
+
+                // Normal gravity and diagonal slides get first choice. A solid roof can
+                // isolate a playable cell from both, so refill remaining holes before
+                // declaring the board settled. GenItem preserves special reservations.
+                if (!nearEmptySquareDetected && GenerateNewItems(true, fillBlockedCells: true))
+                {
+                    yield return null; // Let newly spawned Items initialize their color and falling state.
+                    while (!IsAllItemsFallDown()) yield return null;
+                    continue; // Resolve any matches made by these new gems as usual.
+                }
+
                 if (destroyAnyway.Count > 0)
                     nearEmptySquareDetected = true;
                 if (GetMatches().Count <= 0 && !nearEmptySquareDetected)
                     break;
             }
-
-            // PROBE (temporary, overlap investigation): a live piece its own cell no longer points at.
-            foreach (Item probe in FindObjectsByType<Item>())
-                if (probe != null && !probe.destroying && probe.square != null && probe.square.item != probe)
-                    Debug.LogWarning("[OverlapProbe] orphan '" + probe.name + "' type " + probe.currentType +
-                        " color " + probe.color + " at (" + probe.square.col + "," + probe.square.row + ") under '" +
-                        (probe.square.item != null ? probe.square.item.name : "nothing") + "'");
 
             List<Item> item_ = GetItems();
             for (int i = 0; i < item_.Count; i++)//2.1.5
@@ -1956,11 +2150,12 @@ namespace JellyGarden.Scripts
 
             if (combo > 2 && gameStatus == GameState.Playing)
             {
-                gratzWords[UnityEngine.Random.Range(0, gratzWords.Length)].SetActive(true);
+                Juice.RoyalCelebration.Play(combo);
                 combo = 0;
             }
             LevelManager.THIS.latstMatchColor = -1;
             CheckItemsPositions();//1.6.1
+            royalResolving = false;
             DragBlocked = false;//2.1.5 prevents early move
             if (gameStatus == GameState.Playing)
                 StartCoroutine(AI.THIS.CheckPossibleCombines());
@@ -2028,7 +2223,7 @@ namespace JellyGarden.Scripts
         {
             if (!safe)
             {
-                if (row >= maxRows || col >= maxCols)
+                if (row < 0 || col < 0 || row >= maxRows || col >= maxCols)
                     return null;
                 return squaresArray[row * maxCols + col];
             }
@@ -2042,11 +2237,8 @@ namespace JellyGarden.Scripts
 
         bool IsAllDestoyFinished()
         {
-            if (JellyGarden.Scripts.Story.StoryRocketSweep.HasPendingHits) return false;
-            // STORY: a TNT+TNT anticipation holds the board until its clear has run.
-            if (JellyGarden.Scripts.Story.StoryOriginalTnt.Anticipating) return false;
-            // STORY: so does a Color Ball, from its charge to its last converted piece firing.
-            if (JellyGarden.Scripts.Story.StoryOriginalColorBall.Busy) return false;
+            if (InputSwaps > 0) return false;
+            if (Juice.RoyalPowerupDirector.Busy) return false;
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
             foreach (GameObject item in items)
             {
@@ -2081,6 +2273,7 @@ namespace JellyGarden.Scripts
 
         bool IsAllItemsFallDown()
         {
+            if (InputSwaps > 0) return false;
             if (gameStatus == GameState.PreWinAnimations)
                 return true;
             GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
@@ -2464,7 +2657,8 @@ namespace JellyGarden.Scripts
                 else if (line.StartsWith("COLOR LIMIT "))
                 {
                     string blocksString = line.Replace("COLOR LIMIT", string.Empty).Trim();
-                    colorLimit = int.Parse(blocksString);
+                    // D3: the level's own limit (3-6); bound only by the gem art, never by the previous level's limit.
+                    colorLimit = Mathf.Clamp(int.Parse(blocksString), 1, Juice.RoyalGameplayArt.MaxBoardColorCount);
                 }
                 else if (line.StartsWith("STARS"))
                 {

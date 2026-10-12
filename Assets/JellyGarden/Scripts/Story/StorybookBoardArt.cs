@@ -6,6 +6,8 @@ using UnityEngine;
 namespace JellyGarden.Scripts.Story
 {
     // Approved royal mockup sprites, kept in the kit's existing colour order.
+    // Used by the meta screens (level popup, pre-play, booster row) and as the
+    // goal art; the board's own pieces are Royal Throne's skins.
     public static class StorybookBoardArt
     {
         public static bool Enabled => StorybookUi.Enabled;
@@ -57,28 +59,6 @@ namespace JellyGarden.Scripts.Story
             if (target.type == Target.BLOCKS) return Get("ice");
             string name = target.icon == null ? "" : target.icon.name;
             return name == "ingredient_02" || name == "ring" ? Get("ring") : Get("locket");
-        }
-        public static void Apply(Item item)
-        {
-            if (!Enabled || Piece(0) == null) return;
-            // GenColor also recovers colour with Array.IndexOf(items, sprite).
-            // Replace the array before Start, including on every cascade spawn.
-            item.items = new Sprite[6];
-            item.stripedItems = new List<StripedItem>();
-            item.packageItems = new Sprite[6];
-            Sprite rocket = Get("rocket");
-            Sprite areaBomb = Get("area-bomb");
-            Sprite rainbow = Get("rainbow-orb");
-
-            for (int i = 0; i < 6; i++)
-            {
-                item.items[i] = Piece(i);
-                item.stripedItems.Add(new StripedItem { horizontal = rocket, vertical = rocket });
-                item.packageItems[i] = areaBomb;
-            }
-            item.bombItems = new[] { rainbow };
-            item.ingredientItems = new[] { Get("locket"), Get("ring") };
-            item.gameObject.AddComponent<StorybookRocketFacing>();
         }
     }
 }

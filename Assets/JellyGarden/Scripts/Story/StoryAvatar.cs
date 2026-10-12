@@ -18,9 +18,15 @@
 //   Reactions — avatar_{name}_{clip}_00, _01, … is a named clip: cheer, pop,
 //   worry, slump. StoryAvatar.React plays one ONCE and hands back to the idle.
 //   Because a clip ping-pongs, it ends on the pose the idle starts from, so the
-//   hand-back is not a cut either. What fires them is StoryLevelHud, off the
-//   numbers it already pulls, and StoryLosePopup when the level is lost — the
-//   kit's match, cascade and win paths are not touched to get any of it.
+//   hand-back is not a cut either. In a level the Royal HUD
+//   (RoyalGameplayPresentation) plays them from AvatarEvents; StoryLevelHud
+//   fires React off its own numbers only while the Royal layer is off (no
+//   RoyalEffectsProfile), and StoryLosePopup fires the slump when a level is lost.
+//
+//   Holds — StoryAvatar.Hold loops a clip in the idle's place (the worry while
+//   few moves are left) until Release, which lets the current cycle finish on
+//   the idle's opening pose. A reaction plays over a hold and hands back to it.
+//   The in-level HUD (RoyalGameplayPresentation) drives these from AvatarEvents.
 //
 //   A crop — with no frames authored, the full-body portrait is drawn scaled up
 //   and offset so that StoryArt.AvatarCrop fills the frame. Still, but framed
@@ -62,9 +68,17 @@ namespace JellyGarden.Scripts.Story
         /// </summary>
         public const float ClipFps = 12f;
 
+        /// <summary>
+        /// Frames a second for a HELD clip. Between the two: a worry looped at
+        /// the reaction rate is the fidget the idle was slowed down to avoid.
+        /// </summary>
+        public const float HoldFps = 8f;
+
         private Image _image;
         private Sprite[] _frames;
         private Sprite[] _idle;
+        private Sprite[] _held;
+        private string _heldClip;
         private string _clip;
         private bool _once;
         private float _fps = DefaultFps;
@@ -86,6 +100,9 @@ namespace JellyGarden.Scripts.Story
 
         /// <summary>The clip playing now, or null while the idle loops. Read by tests.</summary>
         public string Playing { get { return _once ? _clip : null; } }
+
+        /// <summary>The clip looping in the idle's place, or null.</summary>
+        public string Held { get { return _heldClip; } }
 
         /// <summary>How many frames are playing. Zero means the still crop. Read by tests.</summary>
         public int FrameCount { get { return _frames == null ? 0 : _frames.Length; } }
@@ -192,6 +209,8 @@ namespace JellyGarden.Scripts.Story
             _image = image;
             _frames = frames;
             _idle = frames;
+            _held = null;
+            _heldClip = null;
             _clip = null;
             _once = false;
             _fps = fps <= 0f ? DefaultFps : fps;
@@ -221,14 +240,19 @@ namespace JellyGarden.Scripts.Story
         /// the hand-back is not a cut. Re-firing the clip already playing is
         /// ignored rather than restarted, so a condition that stays true (three
         /// moves left, and still three) does not freeze the face on frame zero.
+        /// The clip being held is likewise left looping.
+        ///
+        /// Returns whether the clip is on screen now: false only when the
+        /// character has no such clip.
         /// </summary>
-        public void PlayClip(string clip)
+        public bool PlayClip(string clip)
         {
-            if (string.IsNullOrEmpty(clip)) return;
-            if (_once && _clip == clip) return;
+            if (string.IsNullOrEmpty(clip)) return false;
+            if (_once && _clip == clip) return true;
+            if (!_once && _heldClip == clip) return true;
 
             Sprite[] frames = StoryArt.AvatarFrames(Character, clip);
-            if (frames.Length == 0) return;
+            if (frames.Length == 0) return false;
 
             _frames = frames;
             _clip = clip;
@@ -237,6 +261,69 @@ namespace JellyGarden.Scripts.Story
             _startedAt = StoryClock.Now;
             _shown = -1;
             Tick();
+            return true;
+        }
+
+        /// <summary>
+        /// Loops <paramref name="clip"/> in the idle's place until
+        /// <see cref="Release"/>. A reaction already playing finishes first and
+        /// then hands back to the hold. Returns false when there is no such clip.
+        /// </summary>
+        public bool Hold(string clip)
+        {
+            if (string.IsNullOrEmpty(clip)) return false;
+            if (_heldClip == clip) return true;
+
+            Sprite[] frames = StoryArt.AvatarFrames(Character, clip);
+            if (frames.Length == 0) return false;
+
+            _held = frames;
+            _heldClip = clip;
+            if (!_once)
+            {
+                StartLoop();
+                Tick();
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Ends the hold. The cycle on screen runs out as a one-shot, so the face
+        /// comes back to the idle on the pose the idle starts from, not on a cut.
+        /// </summary>
+        public void Release()
+        {
+            if (_held == null) return;
+
+            if (!_once && _frames == _held && _fps > 0f)
+            {
+                float cycle = Period(_frames) / _fps;
+                float into = Mathf.Max(0f, StoryClock.Now - _startedAt) % cycle;
+                _startedAt = StoryClock.Now - into;
+                _clip = _heldClip;
+                _once = true;
+            }
+
+            _held = null;
+            _heldClip = null;
+        }
+
+        /// <summary>Stops a reaction where it is and goes back to the loop (the hold, else the idle).</summary>
+        public void EndReaction()
+        {
+            if (!_once) return;
+            StartLoop();
+            Tick();
+        }
+
+        private void StartLoop()
+        {
+            _frames = _held ?? _idle;
+            _clip = null;
+            _once = false;
+            _fps = _held != null ? HoldFps : _idleFps;
+            _startedAt = StoryClock.Now;
+            _shown = -1;
         }
 
         private void OnDestroy()
@@ -270,14 +357,11 @@ namespace JellyGarden.Scripts.Story
 
             // A one-shot that has run its whole ping-pong is over: it ended on
             // the pose the idle begins from, so handing back is a no-op on
-            // screen and the next Tick simply continues the loop.
+            // screen and the next Tick simply continues the loop (the hold, if
+            // one is set).
             if (_once && step >= Period(_frames))
             {
-                _frames = _idle;
-                _clip = null;
-                _once = false;
-                _fps = _idleFps;
-                _startedAt = StoryClock.Now;
+                StartLoop();
                 step = 0;
                 if (_frames == null || _frames.Length == 0) return;
             }

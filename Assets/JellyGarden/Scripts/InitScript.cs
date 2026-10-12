@@ -1,4 +1,5 @@
-﻿// // ©2015 - 2026 Candy Smith
+﻿using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -85,6 +86,16 @@ using Facebook.Unity;
 
         public static float RestLifeTimer;
         public static string DateOfExit;
+        // Royal Throne's QA checks list this save key; King Leo keeps the kit's RestLifeTimer model and never writes it.
+        public const string NextLifeKey = "RoyalThrone.NextLifeUtc";
+#if (UNITY_EDITOR || DEVELOPMENT_BUILD) && !ROYAL_DISABLE_QA
+        // RoyalQaService snapshots and restores the life timer. Lives are never spent (StoryFreeGame),
+        // so there is no UTC deadline; the timer alone is saved and restored.
+        internal DateTime LifeRefillDeadline => DateTime.MinValue;
+        internal void RestoreLifeScheduleForTesting(DateTime deadline, float remaining) { RestLifeTimer = remaining; }
+        /// <summary>Test hook: makes the next life arrive in <paramref name="seconds"/>.</summary>
+        public void SetRefillSeconds(float seconds) { RestLifeTimer = Mathf.Max(0, seconds); }
+#endif
         public static DateTime today;
         public static DateTime DateOfRestLife;
         public static string timeForReps;
@@ -748,6 +759,28 @@ using Facebook.Unity;
                 openLevel = args.Number;
                 MenuManager.Instance.ShowMenuPlay(true);
             }
+        }
+
+        // Opens a level's pre-play menu without a map tap (Royal Throne's editor checks use it).
+        public bool TryOpenLevel(int number)
+        {
+            if (number < 1 || LevelsMap.IsLevelLocked(number) || LevelManager.THIS == null ||
+                LevelManager.THIS.gameStatus != GameState.Map || MenuManager.Instance == null)
+                return false;
+            if (!MenuManager.Instance.menuPlay.activeSelf &&
+                !MenuManager.Instance.gemsShop.activeSelf &&
+                !MenuManager.Instance.liveShop.activeSelf &&
+                !MenuManager.Instance.settings.activeSelf)
+            {
+                PlayerPrefs.SetInt("OpenLevel", number);
+                PlayerPrefs.Save();
+                LevelManager.THIS.MenuPlayEvent();
+                LevelManager.THIS.LoadLevel();
+                openLevel = number;
+                MenuManager.Instance.ShowMenuPlay(true);
+                return true;
+            }
+            return false;
         }
 
         void OnEnable()

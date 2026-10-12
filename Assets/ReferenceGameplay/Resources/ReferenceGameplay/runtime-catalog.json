@@ -1,0 +1,238 @@
+{
+  "entries": [
+    {
+      "key": "ruby",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-book__22221",
+      "sourceName": "Items-MatchItem-book",
+      "sourcePathId": 22221
+    },
+    {
+      "key": "shield",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-shield__21626",
+      "sourceName": "Items-MatchItem-shield",
+      "sourcePathId": 21626
+    },
+    {
+      "key": "crown",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-crown__22208",
+      "sourceName": "Items-MatchItem-crown",
+      "sourcePathId": 22208
+    },
+    {
+      "key": "leaf",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-leaf__16451",
+      "sourceName": "Items-MatchItem-leaf",
+      "sourcePathId": 16451
+    },
+    {
+      "key": "lily",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-gem__16466",
+      "sourceName": "Items-MatchItem-gem",
+      "sourcePathId": 16466
+    },
+    {
+      "key": "gem",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MatchItem-gem__16466",
+      "sourceName": "Items-MatchItem-gem",
+      "sourcePathId": 16466
+    },
+    {
+      "key": "rocket",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-horizontal_rocket__16419",
+      "sourceName": "Items-SpecialItems-RocketItem-horizontal_rocket",
+      "sourcePathId": 16419
+    },
+    {
+      "key": "rocket-vertical",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-vertical_rocket__17198",
+      "sourceName": "Items-SpecialItems-RocketItem-vertical_rocket",
+      "sourcePathId": 17198
+    },
+    {
+      "key": "tnt",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-TntItem-tnt__16602",
+      "sourceName": "Items-SpecialItems-TntItem-tnt",
+      "sourcePathId": 16602
+    },
+    {
+      "key": "orb",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-LightballItem-default__16887",
+      "sourceName": "Items-SpecialItems-LightballItem-default",
+      "sourcePathId": 16887
+    },
+    {
+      "key": "propeller-blades-idle",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-PropellerItem-01__17013",
+      "sourceName": "Items-SpecialItems-PropellerItem-01",
+      "sourcePathId": 17013
+    },
+    {
+      "key": "helicopter",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-PropellerItem-01__17013",
+      "sourceName": "Items-SpecialItems-PropellerItem-01",
+      "sourcePathId": 17013
+    },
+    {
+      "key": "propeller-body",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-PropellerItem-body__16359",
+      "sourceName": "Items-SpecialItems-PropellerItem-body",
+      "sourcePathId": 16359
+    },
+    {
+      "key": "propeller-pin",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-PropellerItem-pin_01__17186",
+      "sourceName": "Items-SpecialItems-PropellerItem-pin_01",
+      "sourcePathId": 17186
+    },
+    {
+      "key": "propeller-rotor",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-PropellerItem-2d_pervane__00000__21239",
+      "sourceName": "Items-SpecialItems-PropellerItem-2d_pervane _00000",
+      "sourcePathId": 21239
+    },
+    {
+      "key": "rocket-up",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-vertical_rocket_part_top__16348",
+      "sourceName": "Items-SpecialItems-RocketItem-vertical_rocket_part_top",
+      "sourcePathId": 16348
+    },
+    {
+      "key": "rocket-down",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-vertical_rocket_part_bottom__21611",
+      "sourceName": "Items-SpecialItems-RocketItem-vertical_rocket_part_bottom",
+      "sourcePathId": 21611
+    },
+    {
+      "key": "rocket-left",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-horizontal_rocket_part_left__16907",
+      "sourceName": "Items-SpecialItems-RocketItem-horizontal_rocket_part_left",
+      "sourcePathId": 16907
+    },
+    {
+      "key": "rocket-right",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-SpecialItems-RocketItem-horizontal_rocket_part_right__21917",
+      "sourceName": "Items-SpecialItems-RocketItem-horizontal_rocket_part_right",
+      "sourcePathId": 21917
+    },
+    {
+      "key": "cell-front-effect",
+      "resourcesPath": "ReferenceGameplay/Sprites/cell_front__16827",
+      "sourceName": "cell_front",
+      "sourcePathId": 16827
+    },
+    {
+      "key": "crate",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-BoxItem-box_1__16297",
+      "sourceName": "Items-BoxItem-box_1",
+      "sourcePathId": 16297
+    },
+    {
+      "key": "box1",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-BoxItem-box_1__16297",
+      "sourceName": "Items-BoxItem-box_1",
+      "sourcePathId": 16297
+    },
+    {
+      "key": "box-2",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-BoxItem-box_2__16339",
+      "sourceName": "Items-BoxItem-box_2",
+      "sourcePathId": 16339
+    },
+    {
+      "key": "box2",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-BoxItem-box_2__16339",
+      "sourceName": "Items-BoxItem-box_2",
+      "sourcePathId": 16339
+    },
+    {
+      "key": "box-3",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-BoxItem-box_3__16442",
+      "sourceName": "Items-BoxItem-box_3",
+      "sourcePathId": 16442
+    },
+    {
+      "key": "box3",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-BoxItem-box_3__16442",
+      "sourceName": "Items-BoxItem-box_3",
+      "sourcePathId": 16442
+    },
+    {
+      "key": "grass-full",
+      "resourcesPath": "ReferenceGameplay/Sprites/StaticItems-Grass-light_base01__16396",
+      "sourceName": "StaticItems-Grass-light_base01",
+      "sourcePathId": 16396
+    },
+    {
+      "key": "grass",
+      "resourcesPath": "ReferenceGameplay/Sprites/StaticItems-Grass-light_base01__16396",
+      "sourceName": "StaticItems-Grass-light_base01",
+      "sourcePathId": 16396
+    },
+    {
+      "key": "hit-flash",
+      "resourcesPath": "ReferenceGameplay/Sprites/add_hit_blast__17147",
+      "sourceName": "add_hit_blast",
+      "sourcePathId": 17147
+    },
+    {
+      "key": "sparkle-01",
+      "resourcesPath": "ReferenceGameplay/Sprites/additive_star_01__21705",
+      "sourceName": "additive_star_01",
+      "sourcePathId": 21705
+    },
+    {
+      "key": "clear-ring",
+      "resourcesPath": "ReferenceGameplay/Sprites/additive_ring_01__16380",
+      "sourceName": "additive_ring_01",
+      "sourcePathId": 16380
+    },
+    {
+      "key": "glow",
+      "resourcesPath": "ReferenceGameplay/Sprites/additive_dot_01__22024",
+      "sourceName": "additive_dot_01",
+      "sourcePathId": 22024
+    },
+    {
+      "key": "beam",
+      "resourcesPath": "ReferenceGameplay/Sprites/add_lightline__17195",
+      "sourceName": "add_lightline",
+      "sourcePathId": 17195
+    },
+    {
+      "key": "smoke",
+      "resourcesPath": "ReferenceGameplay/Sprites/add_smoke_soft__21919",
+      "sourceName": "add_smoke_soft",
+      "sourcePathId": 21919
+    },
+    {
+      "key": "coin",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-CoinItem-coin__16660",
+      "sourceName": "Items-CoinItem-coin",
+      "sourcePathId": 16660
+    },
+    {
+      "key": "mailbox",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-MailBoxItem-envelope__21515",
+      "sourceName": "Items-MailBoxItem-envelope",
+      "sourcePathId": 21515
+    },
+    {
+      "key": "cupboard",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-CupboardItem-cupboard_goal__16487",
+      "sourceName": "Items-CupboardItem-cupboard_goal",
+      "sourcePathId": 16487
+    },
+    {
+      "key": "potion",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-PotionItem-potion_goal__21973",
+      "sourceName": "Items-PotionItem-potion_goal",
+      "sourcePathId": 21973
+    },
+    {
+      "key": "egg",
+      "resourcesPath": "ReferenceGameplay/Sprites/Items-EggItem-egg__16331",
+      "sourceName": "Items-EggItem-egg",
+      "sourcePathId": 16331
+    }
+  ]
+}
