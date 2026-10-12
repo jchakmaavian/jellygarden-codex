@@ -124,11 +124,12 @@ namespace JellyGarden.Scripts.Story
         private void Pose()
         {
             Vector3 inherited = transform.lossyScale;
-            float cell = StoryBoardScale.Pitch;
+            float cell = StoryBoardScale.Pitch * StoryThroneGameplayArt.CellArtScale;
             _view.transform.localScale = new Vector3(
                 cell / Mathf.Max(.0001f, Mathf.Abs(inherited.x)),
                 cell / Mathf.Max(.0001f, Mathf.Abs(inherited.y)),
                 1f);
+            if (_revealLeft <= 0f) StoryThroneGameplayArt.FitIdleBody(_view);
 
             var sprite = _item.sprRenderer;
             if (sprite == null) return;

@@ -10,7 +10,7 @@ namespace JellyGarden.Scripts.Story
         public const float FooterTop = 185;
         public const float SidePadding = 5;
         public const float Allowance = .22f;
-        public const float IceFill = 1.1228f;
+        public const float IceFill = 1f;
         public static float CellPixels { get; private set; }
         public static Rect Safe => Screen.safeArea.width > 0 ? Screen.safeArea : new Rect(0, 0, Screen.width, Screen.height);
         public static float DesignUnit(Rect safe) => Mathf.Min(safe.width / 393f, safe.height / 720f);
