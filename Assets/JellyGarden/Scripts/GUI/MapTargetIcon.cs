@@ -31,6 +31,9 @@ namespace JellyGarden.Scripts.GUI
 
         IEnumerator loadTarget()
         {
+            // Read the level a frame later, not inside OnEnable: the game scene enables and disables the whole map during its
+            // first frame, and an icon disabled again before then never needs its level read (the sprite is set after 0.1 s anyway).
+            yield return null;
             num = int.Parse(transform.parent.name.Replace("Level", ""));
             LoadLevel(num);
             var targetLevel = Resources.Load<TargetLevel>("Targets/Level" + num);
@@ -58,7 +61,6 @@ namespace JellyGarden.Scripts.GUI
                 string mapText = map.text;
                 string[] lines = mapText.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
 
-                int mapLine = 0;
                 foreach (string line in lines)
                 {
                     //check if line is game mode line

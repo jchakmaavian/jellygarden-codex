@@ -1,4 +1,4 @@
-﻿// // ©2015 - 2026 Candy Smith
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -41,6 +41,16 @@ namespace JellyGarden.Scripts
     public class Square : MonoBehaviour
     {
         public Item item;
+        // A matched piece that becomes a power-up here keeps its cell until the power-up exists (2026-10-06, the user's
+        // overlapping gems). DestroyItem frees the cell when the piece starts breaking, and its break waits on the physics
+        // tick before spawning the power-up; gravity, which checks every frame, could drop a piece into the cell in that gap,
+        // and the spawn then took the cell from it: that piece was never animated, stayed where it was, and the refill drew a
+        // new piece over it. Gravity, the diagonal slide and the refill treat a reserved cell as full. The reservation ends
+        // by itself once the breaking piece is gone, so it can never hold the board.
+        [global::System.NonSerialized] public Item reservedFor;
+        public bool Reserved => reservedFor && reservedFor.destroying;
+        public void Reserve(Item breaking) { reservedFor = breaking; }
+        public void Release(Item breaking) { if (reservedFor == breaking) reservedFor = null; }
         public int row;
         public int col;
         public SquareTypes type;
@@ -52,54 +62,28 @@ namespace JellyGarden.Scripts
         void Start()
         {
             // GenItem();
-            // The ingredient arrow marks where an ingredient has to arrive, so
-            // it belongs under the square CheckIngredient actually watches —
-            // the lowest cell of this column that is not a hole. The kit hung
-            // it on the last row of the GRID instead, which is the same square
-            // only on a board whose bottom row is solid all the way across. On
-            // the other 90 ingredient levels that drew 199 arrows onto holes
-            // (21 of them under a column with no playable cell at all) and left
-            // 178 real collection cells unmarked.
-            if (row == LevelManager.THIS.IngredientExitRow(col))
+            if (row == LevelManager.THIS.maxRows - 1)
             {
                 if(LevelManager.Instance.targetObject.Any(i=>i.type==Target.INGREDIENT))
                 {
                     GameObject obj = Instantiate(Resources.Load("Prefabs/arrow_ingredients")) as GameObject;
                     obj.transform.SetParent(transform);
                     obj.transform.localPosition = Vector3.zero + Vector3.down * 0.8f;
-                    if (Story.StorybookBoardArt.Enabled)
-                    {
-                        // Compact exit markers leave room for the lower controls.
-                        obj.transform.localScale *= .35f;
-                        obj.transform.localPosition = Vector3.down * .55f;
-                    }
                 }
             }
 
         }
 
-        public Item GenItem(bool falling = true)
+        public Item GenItem(bool falling = true, bool campaignRefill = true)
         {
             if (IsNone() && !CanGoInto())
                 return null;
-            // PROBE (temporary, overlap investigation): a spawn into a cell that already holds a piece.
-            if (item != null)
-                Debug.LogWarning("[OverlapProbe] GenItem into occupied cell (" + col + "," + row + "): occupant '" +
-                    item.name + "' type " + item.currentType + " color " + item.color +
-                    " falling " + item.falling + " destroying " + item.destroying);
+            if (Reserved) return null;   // a power-up is about to appear here
+            // A cell holding a live piece must never be given a second one: the first would be left drawn under it.
+            if (item && !item.destroying)
+                Debug.LogWarning("[Royal board] A new piece was made in cell " + col + "," + row + ", which still held one; the board's safety net will tidy it.");
             var itemInstance = Instantiate(LevelManager.THIS.itemPrefab);
-
-            // The gem's size in its cell. An item sprite is 128px at 100 pixels
-            // per unit and its painted art fills 114 of those, so it draws
-            // 1.14 * scale units wide. The kit's flat 0.6 left the gem at 83%
-            // of its cell, which reads small next to the blocks — their prefabs
-            // sit at scale 1 and spill over their own cell. StoryBoardScale
-            // holds 92% of a cell instead, and follows the board's pitch, so a
-            // bigger cell carries a bigger gem. The idle breath in
-            // Item.AnimIdleStart reads whatever is set here at Start and
-            // shrinks 0.05 from it, so it follows too.
-            itemInstance.transform.localScale =
-                Vector2.one * JellyGarden.Scripts.Story.StoryBoardScale.ItemScale;
+            itemInstance.transform.localScale = Vector2.one * 0.6f;
             itemInstance.square = this;
             //if (!falling)
             //    item.GetComponent<Item>().anim.SetTrigger("reAppear");
@@ -114,6 +98,10 @@ namespace JellyGarden.Scripts
                 itemInstance.transform.position = transform.position + Vector3.back * 0.2f;
 
             this.item = itemInstance;
+            // An earned power-up replaces its matched piece; it is not a refill and
+            // must not consume a queued egg/coin or inherit that item's identity.
+            if (campaignRefill)
+                RoyalThrone.Campaign.RoyalReferenceCampaign.ConfigureSpawn(itemInstance, falling);
             return this.item;
         }
 
@@ -147,22 +135,20 @@ namespace JellyGarden.Scripts
 
         Hashtable FindMoreMatches(int spr_COLOR, Hashtable countedSquares, FindSeparating separating, Hashtable countedSquaresGlobal = null)
         {
-            bool globalCounter = true;
             if (countedSquaresGlobal == null)
             {
-                globalCounter = false;
                 countedSquaresGlobal = new Hashtable();
             }
             ccc++;
             if (this.item == null)
                 return countedSquares;
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(this.item))
+                return countedSquares;
             if (this.item.destroying)
                 return countedSquares;
+            if (Juice.RoyalEffectsProfile.Get && item.currentType != ItemsTypes.NONE) return countedSquares;
             //    if (LevelManager.THIS.countedSquares.ContainsValue(this.item) && globalCounter) return countedSquares;
-            // Universal powerups are colour independent: they are fired by tapping or
-            // by landing, never by being matched. The kit already excluded the colour
-            // bomb here; the rocket and the bomb now join it. STORY: added.
-            if (this.item.color == spr_COLOR && !countedSquares.ContainsValue(this.item) && this.item.currentType != ItemsTypes.INGREDIENT && item.currentType != ItemsTypes.BOMB && !Item.IsUniversalPowerup(this.item))
+            if (this.item.color == spr_COLOR && !countedSquares.ContainsValue(this.item) && this.item.currentType != ItemsTypes.INGREDIENT && item.currentType != ItemsTypes.BOMB)
             {  //2.0
                 if (LevelManager.THIS.onlyFalling && this.item.justCreatedItem)
                     countedSquares.Add(countedSquares.Count - 1, this.item);
@@ -191,11 +177,9 @@ namespace JellyGarden.Scripts
 
         public List<Item> FindMatchesAround(FindSeparating separating = FindSeparating.NONE, int matches = 3, Hashtable countedSquaresGlobal = null)
         {
-            bool globalCounter = true;
             List<Item> newList = new List<Item>();
             if (countedSquaresGlobal == null)
             {
-                globalCounter = false;
                 countedSquaresGlobal = new Hashtable();
             }
             Hashtable countedSquares = new Hashtable();
@@ -233,6 +217,8 @@ namespace JellyGarden.Scripts
             {
                 newList.Add((Item)de.Value);
             }
+            if (separating == FindSeparating.NONE && matches == 3 && Juice.RoyalEffectsProfile.Get)
+                foreach (var match in Juice.RoyalPatterns.SquareAt(this)) if (!newList.Contains(match)) newList.Add(match);
             // print(countedSquares.Count);
             return newList;
         }
@@ -244,7 +230,8 @@ namespace JellyGarden.Scripts
 
         public void FallOut()
         {
-            if (item != null)
+            // A piece a swap holds stays put until the swap ends (2026-10-06): see LevelManager.FallingDown.
+            if (item != null && !item.inputSwapLocked)
             {
                 Square nextSquare = GetNeighborBottom();
                 if (nextSquare != null)
@@ -265,7 +252,7 @@ namespace JellyGarden.Scripts
                     }
                     if (nextSquare.CanGoInto())
                     {
-                        if (nextSquare.item == null)
+                        if (nextSquare.item == null && !nextSquare.Reserved)
                         {
                             item.CheckNeedToFall(nextSquare);
                         }
@@ -287,6 +274,7 @@ namespace JellyGarden.Scripts
 
         public bool CanGoOut()
         {
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.IsSpecialItem(item)) return false;
             return type != SquareTypes.WIREBLOCK;
         }
 
@@ -295,8 +283,9 @@ namespace JellyGarden.Scripts
             return type != SquareTypes.SOLIDBLOCK && type != SquareTypes.UNDESTROYABLE && type != SquareTypes.NONE && type != SquareTypes.THRIVING;
         }
 
-        public void DestroyBlock()
+        public void DestroyBlock(bool rocketClear = false, int campaignWave = 0, bool campaignMatchedItem = false)
         {
+            if (RoyalThrone.Campaign.RoyalCampaignBlockers.HandleHit(this, rocketClear, campaignWave, campaignMatchedItem)) return;
             if (type == SquareTypes.UNDESTROYABLE)
                 return;
             if (type != SquareTypes.SOLIDBLOCK && type != SquareTypes.THRIVING)
@@ -310,7 +299,15 @@ namespace JellyGarden.Scripts
             }
             if (block.Count > 0)
             {
+                Juice.RoyalPowerupDirector.Get?.Chip(transform.position);
                 var currentBlock = block[block.Count - 1];
+                // Ice cracks and bursts in place (RoyalIceBreak); a gem popping on it may already have broken it this hit.
+                bool ice = Juice.RoyalIceBreak.OnDestroyed(currentBlock, rocketClear ? 1.25f : 1f);
+                if (rocketClear && !ice)
+                {
+                    var rocketVisual = currentBlock.GetComponent<SpriteRenderer>();
+                    Juice.CandyShatterService.Instance.Shatter(rocketVisual, 1f, true, true);
+                }
                 if (type == SquareTypes.WIREBLOCK)
                 {
                     LevelManager.THIS.PopupScore(LevelManager.THIS.scoreForWireBlock, transform.position, 0);
@@ -333,20 +330,25 @@ namespace JellyGarden.Scripts
                 else
                 {
                     //Destroy( block[block.Count-1]);
-                    if (LevelManager.Instance.targetObject.Any(i => i.blockSprites.Any(x=>x.name == currentBlock.GetComponent<SpriteRenderer>().sprite.name)))
+                    if (LevelManager.Instance.targetObject.Any(i => i.blockSprites != null && i.blockSprites.Any(x=>x && x.name == currentBlock.GetComponent<SpriteRenderer>().sprite.name)))
                     {
                         currentBlock.GetComponent<SpriteRenderer>().enabled = false;
                         LevelManager.THIS.CheckCollectedTarget(currentBlock);
                     }
                     else
                     {
-                        SoundBase.Instance.PlaySound(SoundBase.Instance.block_destroy);
+                        if (!ice) SoundBase.Instance.PlaySound(SoundBase.Instance.block_destroy);
 
-                        currentBlock.GetComponent<Animation>().Play("BrickRotate");
-                        currentBlock.GetComponent<SpriteRenderer>().sortingOrder = 4;
-                        currentBlock.AddComponent<Rigidbody2D>();
-                        currentBlock.GetComponent<Rigidbody2D>()
-                            .AddRelativeForce(new Vector2(Random.insideUnitCircle.x * Random.Range(30, 200), Random.Range(100, 150)), ForceMode2D.Force);
+                        if(ice){}
+                        else if(Juice.RoyalEffectsProfile.Get){
+                            var visual=currentBlock.GetComponent<SpriteRenderer>();
+                            if (!rocketClear) Juice.CandyShatterService.Instance.Shatter(visual,.75f,true);visual.enabled=false;
+                        }else{
+                            currentBlock.GetComponent<Animation>().Play("BrickRotate");
+                            currentBlock.GetComponent<SpriteRenderer>().sortingOrder = 4;
+                            currentBlock.AddComponent<Rigidbody2D>();
+                            currentBlock.GetComponent<Rigidbody2D>().AddRelativeForce(new Vector2(Random.insideUnitCircle.x * Random.Range(30, 200), Random.Range(100, 150)), ForceMode2D.Force);
+                        }
                     }
                 }
                 GameObject.Destroy(currentBlock, 1.5f);

@@ -1,0 +1,311 @@
+{
+  "baseline": "1c05ec2",
+  "existingObjects": 1257,
+  "newObjects": 1946,
+  "unchangedExistingObjects": 1185,
+  "removedExistingObjects": [],
+  "originalBoardCanvasPreserved": true,
+  "changedTypes": {
+    "RenderSettings": 1,
+    "LightmapSettings": 1,
+    "Animator": 21,
+    "Animation": 36,
+    "SpriteRenderer": 2,
+    "Canvas": 5,
+    "LineRenderer": 1,
+    "BoxCollider2D": 1,
+    "AudioSource": 1,
+    "PrefabInstance": 2,
+    "SceneRoots": 1
+  },
+  "modifiedObjects": [
+    {
+      "id": "2",
+      "type": "RenderSettings"
+    },
+    {
+      "id": "4",
+      "type": "LightmapSettings"
+    },
+    {
+      "id": "8458961",
+      "type": "Animator"
+    },
+    {
+      "id": "8458962",
+      "type": "Animation"
+    },
+    {
+      "id": "19996776",
+      "type": "Animation"
+    },
+    {
+      "id": "23477390",
+      "type": "Animation"
+    },
+    {
+      "id": "81873890",
+      "type": "Animation"
+    },
+    {
+      "id": "87123502",
+      "type": "Animator"
+    },
+    {
+      "id": "87123503",
+      "type": "Animation"
+    },
+    {
+      "id": "98237521",
+      "type": "Animator"
+    },
+    {
+      "id": "98237522",
+      "type": "Animation"
+    },
+    {
+      "id": "214525773",
+      "type": "Animation"
+    },
+    {
+      "id": "269568133",
+      "type": "Animation"
+    },
+    {
+      "id": "285581708",
+      "type": "Animation"
+    },
+    {
+      "id": "335116574",
+      "type": "SpriteRenderer"
+    },
+    {
+      "id": "359125133",
+      "type": "Animation"
+    },
+    {
+      "id": "368617782",
+      "type": "Animator"
+    },
+    {
+      "id": "368617783",
+      "type": "Animation"
+    },
+    {
+      "id": "374269958",
+      "type": "Canvas"
+    },
+    {
+      "id": "385526681",
+      "type": "Animator"
+    },
+    {
+      "id": "385526682",
+      "type": "Animation"
+    },
+    {
+      "id": "390787065",
+      "type": "Animation"
+    },
+    {
+      "id": "471609003",
+      "type": "Animation"
+    },
+    {
+      "id": "511786110",
+      "type": "LineRenderer"
+    },
+    {
+      "id": "516058176",
+      "type": "BoxCollider2D"
+    },
+    {
+      "id": "516058177",
+      "type": "SpriteRenderer"
+    },
+    {
+      "id": "619790145",
+      "type": "Animator"
+    },
+    {
+      "id": "619790146",
+      "type": "Animation"
+    },
+    {
+      "id": "641363275",
+      "type": "Animation"
+    },
+    {
+      "id": "645168865",
+      "type": "Animator"
+    },
+    {
+      "id": "645168866",
+      "type": "Animation"
+    },
+    {
+      "id": "753642152",
+      "type": "Canvas"
+    },
+    {
+      "id": "764257763",
+      "type": "AudioSource"
+    },
+    {
+      "id": "818077472",
+      "type": "Animator"
+    },
+    {
+      "id": "818077473",
+      "type": "Animation"
+    },
+    {
+      "id": "831143987",
+      "type": "PrefabInstance"
+    },
+    {
+      "id": "840090740",
+      "type": "Animator"
+    },
+    {
+      "id": "840090741",
+      "type": "Animation"
+    },
+    {
+      "id": "863753174",
+      "type": "Animator"
+    },
+    {
+      "id": "863753175",
+      "type": "Animation"
+    },
+    {
+      "id": "889631139",
+      "type": "Animator"
+    },
+    {
+      "id": "915674655",
+      "type": "Animation"
+    },
+    {
+      "id": "940746677",
+      "type": "Animator"
+    },
+    {
+      "id": "1050245872",
+      "type": "Animation"
+    },
+    {
+      "id": "1050650064",
+      "type": "Animator"
+    },
+    {
+      "id": "1050650065",
+      "type": "Animation"
+    },
+    {
+      "id": "1162009078",
+      "type": "Animator"
+    },
+    {
+      "id": "1268009023",
+      "type": "PrefabInstance"
+    },
+    {
+      "id": "1289045753",
+      "type": "Animation"
+    },
+    {
+      "id": "1303933591",
+      "type": "Animator"
+    },
+    {
+      "id": "1326491401",
+      "type": "Animation"
+    },
+    {
+      "id": "1405427752",
+      "type": "Animator"
+    },
+    {
+      "id": "1447897530",
+      "type": "Animation"
+    },
+    {
+      "id": "1485123287",
+      "type": "Animation"
+    },
+    {
+      "id": "1528037297",
+      "type": "Canvas"
+    },
+    {
+      "id": "1537739777",
+      "type": "Animation"
+    },
+    {
+      "id": "1595662234",
+      "type": "Animator"
+    },
+    {
+      "id": "1595662235",
+      "type": "Animation"
+    },
+    {
+      "id": "1597434350",
+      "type": "Animation"
+    },
+    {
+      "id": "1673787293",
+      "type": "Animator"
+    },
+    {
+      "id": "1673787294",
+      "type": "Animation"
+    },
+    {
+      "id": "1676068914",
+      "type": "Canvas"
+    },
+    {
+      "id": "1738893291",
+      "type": "Animator"
+    },
+    {
+      "id": "1738893292",
+      "type": "Animation"
+    },
+    {
+      "id": "1889374604",
+      "type": "Animation"
+    },
+    {
+      "id": "1911521739",
+      "type": "Animation"
+    },
+    {
+      "id": "1970235633",
+      "type": "Canvas"
+    },
+    {
+      "id": "1984455125",
+      "type": "Animator"
+    },
+    {
+      "id": "1984455126",
+      "type": "Animation"
+    },
+    {
+      "id": "2137272041",
+      "type": "Animator"
+    },
+    {
+      "id": "2137272042",
+      "type": "Animation"
+    },
+    {
+      "id": "9223372036854775807",
+      "type": "SceneRoots"
+    }
+  ]
+}

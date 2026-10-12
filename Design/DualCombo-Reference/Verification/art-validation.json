@@ -1,0 +1,230 @@
+{
+  "sprites": 32,
+  "differences": [],
+  "checks": [
+    {
+      "sourceId": 18302,
+      "name": "light_ball-top_blur_4",
+      "nativeRGBAHash": "d2078fe2fbfbaf0971756837e82443360c760595ee3cd88a601de39acf7468a3",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 18340,
+      "name": "light_ball-top_blur_3",
+      "nativeRGBAHash": "1226a2403ed617869092d6e9c443607af122eb415579833426258281f802dbe1",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 18342,
+      "name": "Items-SpecialItems-TntItem-Combo-govde_alt",
+      "nativeRGBAHash": "a5ec044c24bc1580c037a523a9c46bde885f6065ddd06d0ceed67b6d126db794",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 18365,
+      "name": "add_bang02",
+      "nativeRGBAHash": "3fa5ea500bea3c2bcf8e7eda55d1e1ef83de7ec67c5a8aa3b864c0cd42e93fe4",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 18394,
+      "name": "additive_ring_01",
+      "nativeRGBAHash": "891833e79a44693cfa7d7fd107cc7fa7f05437b4b34565096facd1bc893424b6",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 18576,
+      "name": "light_ball-bot_blur_2",
+      "nativeRGBAHash": "aabf812a6b4e3aa518e0c7260b0cf13e9f911d1d7e65ad10cfa505f0b7b7789d",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 18596,
+      "name": "additive_round_02",
+      "nativeRGBAHash": "d1568e7d68b72d48c66a15d5b7cc0e90093f2e50214214d82ecfa80ba7772865",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 18767,
+      "name": "Items-SpecialItems-TntItem-tnt_shadow",
+      "nativeRGBAHash": "a940a9bb953e09daaf1d6ba0daddef3b64df2604ab695059e52e28dec4f710d6",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 18828,
+      "name": "additive_line_01",
+      "nativeRGBAHash": "d4bca326647b8d232f09904e5253a0fd7f7dfde9c9c07285a2caefd577878148",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 18958,
+      "name": "light_ball-top_blur_2",
+      "nativeRGBAHash": "c48d8f32ee41074b0ed84a3121099309a5180ffce3a2d352b93f1df7b0a4be98",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 19010,
+      "name": "1x1_white",
+      "nativeRGBAHash": "ad95131bc0b799c0b1af477fb14fcf26a6a9f76079e48bf090acb7e8367bfd0e",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 19051,
+      "name": "light_ball-top_blur_1",
+      "nativeRGBAHash": "bd72e66918b3edf44531fe9c086058afa24995a60a73dd76cff52b3a47e1900c",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 19055,
+      "name": "add_light_blast03",
+      "nativeRGBAHash": "8058c3ec2c741dc7423bb2d84465fe094cd746ff4af077e57f567decadc475bf",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 19071,
+      "name": "Items-SpecialItems-TntItem-Combo-govde_ust",
+      "nativeRGBAHash": "3c76f6697d3263bc5ebae6009c7aa328d7a24f448b3bb1a71d2765aa6651004f",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 19077,
+      "name": "light_ball-bot_blur_4",
+      "nativeRGBAHash": "2ec11781affd1abcd29469b6c9eefa6675fdce88df887360022c08e646b8a87d",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 19137,
+      "name": "add_smoke_hard",
+      "nativeRGBAHash": "807826af1287c6b366661f2469933ba99522920613030db370e71f34a35af598",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 19172,
+      "name": "add_light_blast04",
+      "nativeRGBAHash": "494cfbf946babe41e8caa6a514d9115477ea9574c765a6d4560a0f57e56ebd30",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 19226,
+      "name": "Items-SpecialItems-TntItem-Combo-kemer_golge",
+      "nativeRGBAHash": "817233434446906c8f6e007402a7d3eaf93a874754f19b599012333b084c1f1a",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 19233,
+      "name": "Items-SpecialItems-TntItem-Combo-fitil_golge",
+      "nativeRGBAHash": "edb0c8925bfaca5210fa01c30cb661fa43dd5977cf12b462d37b08f045c11a3d",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 23854,
+      "name": "light_ball-bot_blur_3",
+      "nativeRGBAHash": "327c6ddb56abb6706d07abccfec542fc45c422b1759031d1679ea68e2f2164a0",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 23928,
+      "name": "add_light_hor",
+      "nativeRGBAHash": "9b75a09664987bbc3e244765806cd154e7e79a427cf8d03e8b78bf0a9c3766b8",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 23992,
+      "name": "light_ball-top_blur_5",
+      "nativeRGBAHash": "5492b7537e5249490ccb87a71ae3a731c5ced2cebda896295348abad8fd02d32",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 23994,
+      "name": "add_sphere02",
+      "nativeRGBAHash": "04e160370489050576ee2aed9e75b5ed9ff72ed34a840875670bef24e8e24aa4",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 24136,
+      "name": "Items-SpecialItems-TntItem-Combo-kemer",
+      "nativeRGBAHash": "6205cef79461e8aa05ae8b8d6c5a025a929fcd0e1450f096a4d2032dcb600408",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 24169,
+      "name": "add_light_blast01",
+      "nativeRGBAHash": "1e4ec6267ec37b42b4eb1d256e3715a3f838646da6905ac8568f3a375eed0491",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 24183,
+      "name": "additive_round_01",
+      "nativeRGBAHash": "2d9b202296d1dd45071cdd797231d59b21ac4f481acbe1a9e45457d4ecbe5f16",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 24254,
+      "name": "add_fire_blast",
+      "nativeRGBAHash": "05499971a096cdb8468a9ec5dfaa1ce3484f865b598f1a85b8acce897024c147",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 24413,
+      "name": "light_ball-bot_blur_5",
+      "nativeRGBAHash": "e95a88e403c2ca28c87fda64db6782a35b7445ea60e60c717c0720acf426714b",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 24434,
+      "name": "Items-SpecialItems-TntItem-Combo-fitil",
+      "nativeRGBAHash": "fa1d1f851aac5cd6fd09e129f35245a461f327a76cef69be2b7135da5ac3a1ad",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 24556,
+      "name": "Effects-color_particle",
+      "nativeRGBAHash": "172cb160a2e12921c267408464e4cfb2a6384e9c42fa41e700fd29a0c3457fa8",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 24557,
+      "name": "additive_dot_01",
+      "nativeRGBAHash": "a3e176d345335c55eae316a9193cc3844bec9e4dc951651176488dcba4d3f428",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    },
+    {
+      "sourceId": 24703,
+      "name": "light_ball-bot_blur_1",
+      "nativeRGBAHash": "a4673c467acc2f285f12220ab900142126e32ea56ea481ac77f1d486355f6cbd",
+      "pixelIdentical": true,
+      "textureReferenceValid": true
+    }
+  ]
+}

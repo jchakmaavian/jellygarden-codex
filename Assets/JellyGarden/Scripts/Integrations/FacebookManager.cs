@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 // // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
@@ -126,6 +127,7 @@ using Facebook.Unity;
         #if FACEBOOK
     public void CallFBInit()
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         Debug.Log("init facebook");
         if (!FB.IsInitialized)
         {
@@ -165,6 +167,7 @@ using Facebook.Unity;
 
     public void CallFBLogin()
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         if (!loginOnce)
         {//2.1.3
             loginOnce = true;
@@ -175,6 +178,7 @@ using Facebook.Unity;
 
     public void CallFBLoginForPublish()
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         // It is generally good behavior to split asking for read and publish
         // permissions rather than ask for them all at once.
         //
@@ -185,6 +189,7 @@ using Facebook.Unity;
 
     public void CallFBLogout()
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         FB.LogOut();
         facebookButton.SetActive(true);
 
@@ -200,6 +205,7 @@ using Facebook.Unity;
 
     public void Share()
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         if (!FB.IsLoggedIn)
         {
             loginForSharing = true;
@@ -211,7 +217,7 @@ using Facebook.Unity;
             //2.1.4
             FB.FeedShare(
                link: new Uri("https://apps.facebook.com/" + FB.AppId + "/?challenge_brag=" + (FB.IsLoggedIn ? AccessToken.CurrentAccessToken.UserId : "guest")),
-               linkName: "Jelly Garden",
+               linkName: Application.productName,
                linkCaption: "I've got " + LevelManager.Score + " scores! Try to beat me!"
            //picture: "https://fbexternal-a.akamaihd.net/safe_image.php?d=AQCzlvjob906zmGv&w=128&h=128&url=https%3A%2F%2Ffbcdn-photos-h-a.akamaihd.net%2Fhphotos-ak-xtp1%2Ft39.2081-0%2F11891368_513258735497916_1832270581_n.png&cfs=1"
            );
@@ -311,6 +317,7 @@ using Facebook.Unity;
 
     IEnumerator loadPicture(string url)//2.1.4
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) yield break;
         WWW www = new WWW(url);
         yield return www;
 
@@ -347,6 +354,7 @@ using Facebook.Unity;
 
     public void SaveScores()
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         int score = 10000;
 
         var scoreData =
@@ -364,12 +372,14 @@ using Facebook.Unity;
 
     public void ReadScores()
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
 
         FB.API("/me/objects/object", HttpMethod.GET, APICallBack);
     }
 
     public void GetFriendsPicture()
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         FB.API("me/friends?fields=picture.width(128).height(128)", HttpMethod.GET, RequestFriendsCallback); //2.1.6
     }
 
@@ -407,11 +417,13 @@ using Facebook.Unity;
 
     public void GetPictureByURL(string url, FriendData friend)
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
         StartCoroutine(GetPictureCor(url, friend));
     }
 
     IEnumerator GetPictureCor(string url, FriendData friend)
     {
+        if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) yield break;
         WWW www = new WWW(url);
         yield return www;
         var sprite = Sprite.Create(www.texture, new Rect(0, 0, 128, 128), new Vector2(0, 0), 1f);

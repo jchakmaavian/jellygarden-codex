@@ -1,0 +1,27 @@
+{
+  "assets": [
+    "Assets/ReferenceGameplay/VFX/Textures/rfv387-dual-18394.png",
+    "Assets/ReferenceGameplay/VFX/Textures/rfv387-dual-18576.png",
+    "Assets/ReferenceGameplay/VFX/Textures/rfv387-dual-19055.png",
+    "Assets/ReferenceGameplay/VFX/Textures/rfv387-dual-19172.png",
+    "Assets/ReferenceGameplay/VFX/Textures/rfv387-dual-23928.png",
+    "Assets/ReferenceGameplay/VFX/Textures/rfv387-dual-24183.png",
+    "Assets/ReferenceGameplay/VFX/Textures/rfv387-dual-24556.png",
+    "Assets/ReferenceGameplay/VFX/Textures/rfv387-dual-24557.png",
+    "Assets/ReferenceGameplay/VFX/AtlasSprites/987018394.asset",
+    "Assets/ReferenceGameplay/VFX/AtlasSprites/987018576.asset",
+    "Assets/ReferenceGameplay/VFX/AtlasSprites/987019055.asset",
+    "Assets/ReferenceGameplay/VFX/AtlasSprites/987019172.asset",
+    "Assets/ReferenceGameplay/VFX/AtlasSprites/987023928.asset",
+    "Assets/ReferenceGameplay/VFX/AtlasSprites/987024183.asset",
+    "Assets/ReferenceGameplay/VFX/AtlasSprites/987024556.asset",
+    "Assets/ReferenceGameplay/VFX/AtlasSprites/987024557.asset",
+    "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/BallBallComboUseParticles.prefab",
+    "Assets/ReferenceGameplay/VFX/Resources/ReferenceGameplay/VFX/BallBallComboExplodeParticles.prefab",
+    "Assets/ReferenceGameplay/Animation/Clips/BallBallExplodeAnimationRfv387.anim",
+    "Assets/ReferenceGameplay/Animation/Controllers/BallBallComboRfv387.controller",
+    "Assets/ReferenceGameplay/Animation/Resources/ReferenceGameplay/Visuals/ColorBallColorBallComboRfv387.prefab",
+    "Assets/ReferenceGameplay/Audio/Resources/ReferenceGameplay/Audio/lightball_lightball_combo__rfv387_17531.wav"
+  ],
+  "preservedGuidMappings": []
+}

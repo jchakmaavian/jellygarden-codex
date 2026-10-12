@@ -1,0 +1,7 @@
+*
+!.gitignore
+!Compile.ps1
+!Compile-Staged.ps1
+!Backup-Source-Paths.txt
+!Backup-Evidence-Paths.txt
+!Backup-README.md

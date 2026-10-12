@@ -1,0 +1,175 @@
+<style>
+@font-face{font-family:RoyalDisplay;src:url('__FONT__') format('truetype');font-display:swap}
+#rt-home-study{width:100%;font-family:'Segoe UI',Arial,sans-serif;color:#fff4d7;isolation:isolate}
+#rt-home-study *{box-sizing:border-box}
+#rt-home-study .rt-phone{position:relative;width:100%;max-width:432px;aspect-ratio:9/20;margin:auto;overflow:hidden;container-type:inline-size;background:#2868e5;border-radius:22px;box-shadow:0 12px 38px #071b5438}
+#rt-home-study [hidden]{display:none!important}
+#rt-home-study button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#rt-home-study button:active{transform:translateY(2px) scale(.97)}
+#rt-home-study img{display:block;user-select:none;pointer-events:none}
+#rt-home-study .rt-backdrop{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#rt-home-study .rt-shade{position:absolute;inset:0;background:linear-gradient(#103bb747,transparent 19%,transparent 74%,#061a522b 93%);pointer-events:none}
+#rt-home-study .rt-hud{position:absolute;left:2.5%;right:2.5%;top:4%;display:grid;grid-template-columns:minmax(44px,15%) 1.6fr 1.35fr 1fr minmax(44px,14%);column-gap:.5%;align-items:center}
+#rt-home-study .rt-profile{position:relative;height:16cqw;min-height:48px;padding:0;border:2px solid #d69622;border-radius:14px;background:linear-gradient(145deg,#88baff,#0645bc 53%,#052478);box-shadow:inset 0 0 0 2px #ffe5a5,inset 0 -5px 5px #06194a66,0 4px 2px #09226860;overflow:hidden}
+#rt-home-study .rt-profile img{position:absolute;width:136%;height:120%;object-fit:contain;max-width:none;left:-18%;bottom:-13%}
+#rt-home-study .rt-resource{position:relative;min-height:44px;height:13cqw;border:0;background:none;padding:0}
+#rt-home-study .rt-resource-face{position:absolute;left:12%;right:0;top:15%;bottom:15%;border:2px solid #b78437;border-radius:11px;background:linear-gradient(#fff8e3,#f2dcaa);box-shadow:inset 0 2px 0 #fff,0 3px 1px #12357666;display:flex;align-items:center;justify-content:flex-end;padding-right:8%;color:#102966}
+#rt-home-study .rt-resource img{position:absolute;z-index:1;left:-6%;top:1%;width:49%;height:96%;object-fit:contain;filter:drop-shadow(0 2px 1px #08204c55)}
+#rt-home-study .rt-resource b{font-family:RoyalDisplay,'Arial Black',sans-serif;font-size:clamp(13px,4.3cqw,19px);font-weight:400;letter-spacing:-.04em;line-height:1;white-space:nowrap}
+#rt-home-study .rt-coin .rt-resource-face{padding-right:6%}
+#rt-home-study .rt-plus{position:absolute;z-index:2;left:24%;bottom:0;display:grid;place-items:center;width:19px;height:19px;background:linear-gradient(#9ade4b,#278514);border:1px solid #27590e;border-radius:50%;box-shadow:inset 0 1px #edffd0;color:white;font:bold 20px/1 Arial}
+#rt-home-study .rt-heart img{width:53%;left:-9%}
+#rt-home-study .rt-heart-count{position:absolute;z-index:2;left:9%;top:27%;font-family:RoyalDisplay,'Arial Black',sans-serif;font-size:clamp(16px,5cqw,22px);line-height:1;text-shadow:0 2px #911728}
+#rt-home-study .rt-heart .rt-resource-face{padding-right:7%}
+#rt-home-study .rt-heart .rt-resource-face b{font-size:clamp(12px,3.8cqw,17px)}
+#rt-home-study .rt-star img{width:65%;left:-12%}
+#rt-home-study .rt-settings{height:14cqw;min-height:44px;min-width:44px;border:0;background:none;padding:0}
+#rt-home-study .rt-settings img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 1px #09205a66)}
+#rt-home-study .rt-brand{position:absolute;top:11.7%;left:32%;width:36%;height:16.2%;object-fit:contain;filter:drop-shadow(0 4px 4px #062e6e35)}
+#rt-home-study .rt-glint{position:absolute;left:50%;top:60.2%;width:15%;height:2.8%;border-radius:50%;background:radial-gradient(ellipse,#e8fcff99,transparent 67%);transform:translateX(-50%);mix-blend-mode:screen;pointer-events:none;animation:rt-water-glow 3.5s ease-in-out infinite}
+#rt-home-study .rt-mote{position:absolute;left:75%;top:43%;width:3px;height:3px;border-radius:50%;background:#fff1b5;box-shadow:0 0 7px 2px #ffe0a477;pointer-events:none;animation:rt-mote-rise 6s ease-in-out infinite}
+#rt-home-study .rt-mote.two{left:24%;top:54%;animation-delay:-3s}
+#rt-home-study .rt-actions{position:absolute;bottom:12.6%;left:3%;right:3%;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:3%;align-items:end}
+#rt-home-study .rt-level{position:relative;aspect-ratio:2.35;min-height:62px;min-width:0;width:100%;background:none;border:0;padding:0;filter:drop-shadow(0 5px 2px #092d6777)}
+#rt-home-study .rt-level img{position:absolute;width:100%;height:100%;object-fit:fill;left:0;top:0}
+#rt-home-study .rt-level span{position:absolute;top:48%;height:42%;left:12%;right:12%;display:flex;align-items:center;justify-content:center;font-family:RoyalDisplay,'Arial Black',sans-serif;font-size:clamp(20px,6.5cqw,29px);line-height:1;white-space:nowrap;text-shadow:0 2px #65421c,1px 0 #65421c,-1px 0 #65421c;letter-spacing:-.055em;padding:0}
+#rt-home-study .rt-area{position:relative;min-height:62px;min-width:0;width:100%;aspect-ratio:2.2;border:3px solid #cc811b;border-radius:18px;padding:5% 35% 5% 6%;background:linear-gradient(#fff2ac,#ffdc55 30%,#eda629);box-shadow:inset 0 0 0 2px #fff6ba,inset 0 -5px 0 #bd681d,0 5px 1px #773e2477;color:#6a320d}
+#rt-home-study .rt-area-title{display:block;font-family:RoyalDisplay,'Arial Black',sans-serif;font-size:clamp(16px,5cqw,23px);white-space:nowrap;line-height:1.1;text-shadow:0 1px #fff5c4;letter-spacing:-.04em}
+#rt-home-study .rt-area img{position:absolute;width:40%;height:85%;object-fit:contain;right:0;top:9%;filter:drop-shadow(0 3px 1px #89552266)}
+#rt-home-study .rt-progress{position:relative;display:block;width:100%;height:5.5cqw;min-height:18px;margin-top:5px;border-radius:6px;background:#0c2865;overflow:hidden;box-shadow:inset 0 2px 3px #0005}
+#rt-home-study .rt-progress-fill{position:absolute;inset:0 auto 0 0;width:83.333%;background:linear-gradient(#65c2ff,#1463ec);border-radius:5px}
+#rt-home-study .rt-progress-label{position:relative;display:block;font-size:clamp(12px,3.8cqw,17px);font-weight:800;color:#fff7d9;line-height:max(18px,5.5cqw);text-align:center;text-shadow:0 1px 2px #123064}
+#rt-home-study .rt-nav{position:absolute;bottom:0;left:0;right:0;height:10.8%;display:grid;grid-template-columns:1fr 1fr 1.2fr 1fr 1fr;align-items:stretch;padding:0 1% 2.5%;background:linear-gradient(#248afa,#1663d7 44%,#0849aa);border-top:4px solid #ffd264;box-shadow:0 -3px 0 #c58225,inset 0 2px #fff0a9}
+#rt-home-study .rt-tab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;min-height:44px;padding:0 0 4%;border:0;background:none;border-right:1px solid #0a45976b;text-shadow:0 2px 1px #103976}
+#rt-home-study .rt-tab:last-child{border-right:0}
+#rt-home-study .rt-tab img{height:13cqw;width:15cqw;object-fit:contain;filter:drop-shadow(0 3px 1px #10357d66);margin-bottom:3px;transition:transform .18s ease}
+#rt-home-study .rt-tab span{font-size:clamp(11px,3.1cqw,14px);font-weight:800;line-height:1.1;white-space:nowrap}
+#rt-home-study .rt-tab[aria-current=page]{background:linear-gradient(#78bbff22,#72b5ff38);color:#fff6c8}
+#rt-home-study .rt-tab[aria-current=page]::before{content:'';position:absolute;top:-15%;height:70%;width:95%;background:radial-gradient(ellipse,#a6e6ff99,transparent 68%);pointer-events:none}
+#rt-home-study .rt-tab[aria-current=page] img{width:22cqw;height:22cqw;max-height:none;position:relative;margin-top:-8cqw;margin-bottom:0}
+#rt-home-study .rt-tab[aria-current=page] span{font-size:clamp(13px,4cqw,18px)}
+#rt-home-study .rt-veil{position:absolute;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;padding:6%;background:#05183d99;backdrop-filter:blur(3px)}
+#rt-home-study .rt-dialog{position:relative;width:100%;border:3px solid #d89829;border-radius:24px;background:linear-gradient(#fff5da,#f5e6c7);color:#143273;box-shadow:inset 0 0 0 2px #fff8e6,0 12px 30px #04174277;padding:9% 7% 7%;text-align:center}
+#rt-home-study .rt-close{position:absolute;right:-8px;top:-12px;width:44px;height:44px;border:2px solid #ffd76b;border-radius:50%;background:linear-gradient(#367eea,#0640a1);color:#fff6db;font:bold 27px/1 Arial;box-shadow:0 3px 0 #7a531a}
+#rt-home-study .rt-dialog-crest{width:29%;height:23cqw;object-fit:contain;margin:-1% auto 3%;filter:drop-shadow(0 3px 2px #2b387733)}
+#rt-home-study .rt-dialog h2{font-family:RoyalDisplay,'Arial Black',sans-serif;font-weight:400;font-size:clamp(23px,7cqw,31px);line-height:1.15;letter-spacing:-.04em;margin:0 0 5%;color:#13387f}
+#rt-home-study .rt-dialog p{font-size:clamp(14px,4cqw,18px);line-height:1.45;margin:0 0 5%;font-weight:600;color:#244172}
+#rt-home-study .rt-dialog-detail{background:#e1d5b8;border-radius:13px;padding:11px;margin-bottom:7%;font-size:clamp(13px,3.7cqw,16px);line-height:1.4;color:#254270}
+#rt-home-study .rt-dialog-cta{display:block;width:85%;margin:auto;min-height:48px;border:2px solid #ca8b28;border-radius:15px;background:linear-gradient(#53a7ff,#1263df 48%,#06449f);box-shadow:inset 0 2px #b5d8ff,inset 0 -4px #053985,0 3px #9f651b;color:#fff3ce;font-family:RoyalDisplay,'Arial Black',sans-serif;font-size:clamp(18px,5cqw,24px);font-weight:400;padding:10px 8px}
+#rt-home-study .rt-motion-row{min-height:44px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:16px;font-weight:700;margin:5% 0}
+#rt-home-study .rt-motion-row input{width:23px;height:23px;accent-color:#1764dc}
+#rt-home-study .rt-preview-note{display:block;margin-top:6%;font-size:11px;line-height:1.3;color:#536282}
+#rt-home-study[data-motion=off] .rt-glint,#rt-home-study[data-motion=off] .rt-mote{animation:none}
+#rt-home-study[data-format=short] .rt-phone{aspect-ratio:9/16}
+#rt-home-study[data-format=short] .rt-brand{width:30%;left:35%;top:11.5%;height:14.5%}
+#rt-home-study[data-format=short] .rt-actions{bottom:14.8%}
+#rt-home-study[data-format=short] .rt-nav{height:12.5%}
+#rt-home-study[data-format=short] .rt-glint{top:64%}
+@keyframes rt-water-glow{0%,100%{opacity:.25;transform:translateX(-50%) scaleX(.7)}50%{opacity:.9;transform:translateX(-50%) scaleX(1.1)}}
+@keyframes rt-mote-rise{0%,100%{opacity:0;transform:translateY(10px)}45%{opacity:.9}80%{opacity:0;transform:translateY(-25px)}}
+@media(prefers-reduced-motion:reduce){#rt-home-study .rt-glint,#rt-home-study .rt-mote{animation:none!important}#rt-home-study *{transition:none!important}}
+</style>
+<div id="rt-home-study" data-format="tall" data-motion="on" aria-label="Royal Throne home screen concept">
+  <div class="rt-phone">
+    <img class="rt-backdrop" src="__ASSET_home-castle__" alt="Ivory castle with sapphire roofs, a golden fountain, and a blue mountain lake">
+    <div class="rt-shade"></div>
+    <img class="rt-brand" src="__ASSET_logo-locked__" alt="Royal Throne">
+    <div class="rt-glint" aria-hidden="true"></div><div class="rt-mote" aria-hidden="true"></div><div class="rt-mote two" aria-hidden="true"></div>
+    <header class="rt-hud" aria-label="Player resources">
+      <button type="button" class="rt-profile" data-open="profile" aria-label="Player profile"><img src="__ASSET_avatar-king__" alt=""></button>
+      <button type="button" class="rt-resource rt-coin" data-open="coins" aria-label="Coins: 2,423. View coins"><span class="rt-resource-face"><b>2,423</b></span><img src="__ASSET_icon-coin__" alt=""><span class="rt-plus" aria-hidden="true">+</span></button>
+      <button type="button" class="rt-resource rt-heart" data-open="lives" aria-label="Lives: 5, full"><span class="rt-resource-face"><b>Full</b></span><img src="__ASSET_icon-heart__" alt=""><span class="rt-heart-count" aria-hidden="true">5</span></button>
+      <button type="button" class="rt-resource rt-star" data-open="stars" aria-label="Stars: 3"><span class="rt-resource-face"><b>3</b></span><img src="__ASSET_icon-star__" alt=""></button>
+      <button type="button" class="rt-settings" data-open="settings" aria-label="Settings"><img src="__ASSET_icon-settings__" alt=""></button>
+    </header>
+    <div class="rt-actions">
+      <button type="button" class="rt-level" data-open="level" aria-label="Level 12. Open level preview"><img src="__ASSET_button-crowned-blank__" alt=""><span>Level 12</span></button>
+      <button type="button" class="rt-area" data-open="area" aria-label="Area 1. 5 of 6 tasks complete. View reward"><span class="rt-area-title">Area 1</span><span class="rt-progress"><span class="rt-progress-fill"></span><span class="rt-progress-label">5/6</span></span><img src="__ASSET_icon-chest__" alt=""></button>
+    </div>
+    <nav class="rt-nav" aria-label="Main navigation">
+      <button type="button" class="rt-tab" data-open="story" aria-label="Story"><img src="__ASSET_icon-story__" alt=""><span>Story</span></button>
+      <button type="button" class="rt-tab" data-open="leagues" aria-label="Leagues"><img src="__ASSET_icon-trophy__" alt=""><span>Leagues</span></button>
+      <button type="button" class="rt-tab" data-home aria-label="Home" aria-current="page"><img src="__ASSET_icon-home__" alt=""><span>Home</span></button>
+      <button type="button" class="rt-tab" data-open="team" aria-label="Team"><img src="__ASSET_icon-team__" alt=""><span>Team</span></button>
+      <button type="button" class="rt-tab" data-open="collection" aria-label="Collection"><img src="__ASSET_icon-cards__" alt=""><span>Collection</span></button>
+    </nav>
+    <div class="rt-veil" hidden>
+      <section class="rt-dialog" role="dialog" aria-modal="true" aria-labelledby="rt-home-dialog-title" aria-describedby="rt-home-dialog-copy">
+        <button type="button" class="rt-close" aria-label="Close">×</button>
+        <img class="rt-dialog-crest" src="__ASSET_icon-chest__" alt="">
+        <h2 id="rt-home-dialog-title">Area 1</h2>
+        <p id="rt-home-dialog-copy">The Royal Courtyard</p>
+        <div class="rt-dialog-detail"></div>
+        <label class="rt-motion-row" hidden><span>Ambient motion</span><input type="checkbox" checked aria-label="Ambient motion"></label>
+        <button type="button" class="rt-dialog-cta">Back to home</button>
+        <small class="rt-preview-note">Design preview · Sample progress</small>
+      </section>
+    </div>
+  </div>
+</div>
+<script>
+(()=>{
+  const root=document.getElementById('rt-home-study');
+  const veil=root.querySelector('.rt-veil');
+  const modal=root.querySelector('.rt-dialog');
+  const close=root.querySelector('.rt-close');
+  const checkbox=root.querySelector('.rt-motion-row input');
+  const state={format:'tall',motion:!matchMedia('(prefers-reduced-motion: reduce)').matches};
+  const icons={
+    profile:root.querySelector('.rt-profile img').src,
+    coins:root.querySelector('.rt-coin img').src,
+    lives:root.querySelector('.rt-heart img').src,
+    stars:root.querySelector('.rt-star img').src,
+    settings:root.querySelector('.rt-settings img').src,
+    level:root.querySelector('[data-home] img').src,
+    area:root.querySelector('.rt-area img').src,
+    story:root.querySelector('[data-open=story] img').src,
+    leagues:root.querySelector('[data-open=leagues] img').src,
+    team:root.querySelector('[data-open=team] img').src,
+    collection:root.querySelector('[data-open=collection] img').src
+  };
+  const pages={
+    profile:['Your profile','Welcome to your kingdom.','A proposed king portrait for this design. Final character design is still open.'],
+    coins:['2,423 coins','A little help for your next challenge.','Coin balance shown for layout review. No purchases in this preview.'],
+    lives:['Lives full','5 / 5 lives','Your next level is ready when you are.'],
+    stars:['3 stars','Bring your kingdom to life.','Stars connect completed puzzles with castle restoration.'],
+    settings:['Settings','Make yourself at home.','Adjust the ambient animation in this preview.'],
+    level:['Level 12','Your next royal challenge','This opens the level entry design. The playable board stays in Unity.'],
+    area:['Area 1','The Royal Courtyard','5 of 6 tasks complete · Finish the courtyard to open the royal chest.'],
+    story:['Story','A kingdom to call your own','A proposed place for chapters and castle restoration tasks.'],
+    leagues:['Leagues','Rise through the royal ranks','A proposed home for competitions and rewards.'],
+    team:['Team','Build your royal circle','A proposed home for teamwork and helping friends.'],
+    collection:['Collection','Treasures of the kingdom','A proposed home for collected cards and completed sets.']
+  };
+  let returnFocus=null;
+  function render(){root.dataset.format=state.format;root.dataset.motion=state.motion?'on':'off';checkbox.checked=state.motion;}
+  function blockBackground(blocked){for(const group of root.querySelectorAll('.rt-hud,.rt-actions,.rt-nav')){if(blocked)group.setAttribute('aria-hidden','true');else group.removeAttribute('aria-hidden');group.querySelectorAll('button').forEach(button=>button.disabled=blocked);}}
+  function dismiss(){veil.hidden=true;blockBackground(false);if(returnFocus)returnFocus.focus({preventScroll:true});}
+  root.querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>{
+    const key=button.dataset.open;const data=pages[key];returnFocus=button;
+    root.querySelector('.rt-dialog-crest').src=icons[key];
+    root.querySelector('#rt-home-dialog-title').textContent=data[0];
+    root.querySelector('#rt-home-dialog-copy').textContent=data[1];
+    root.querySelector('.rt-dialog-detail').textContent=data[2];
+    root.querySelector('.rt-motion-row').hidden=key!=='settings';
+    veil.hidden=false;
+    close.focus({preventScroll:true});blockBackground(true);
+  }));
+  close.addEventListener('click',dismiss);
+  root.querySelector('.rt-dialog-cta').addEventListener('click',dismiss);
+  root.querySelector('[data-home]').addEventListener('click',dismiss);
+  veil.addEventListener('click',event=>{if(event.target===veil)dismiss();});
+  modal.addEventListener('keydown',event=>{
+    if(event.key==='Escape'){event.preventDefault();dismiss();}
+    if(event.key==='Tab'){
+      const buttons=[...modal.querySelectorAll('button,input')].filter(el=>el.getClientRects().length);
+      const first=buttons[0],last=buttons[buttons.length-1];
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+    }
+  });
+  checkbox.addEventListener('change',()=>{state.motion=checkbox.checked;render();});
+  render();
+  if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:render});tweak.addSelect(state,'format',{label:'Phone format',options:[{label:'Tall · 9:20',value:'tall'},{label:'Classic · 9:16',value:'short'}]});tweak.addToggle(state,'motion',{label:'Ambient motion'});}
+})();
+</script>

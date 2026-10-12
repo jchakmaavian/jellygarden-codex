@@ -1,0 +1,128 @@
+[
+  {
+    "sourcePathId": 18365,
+    "name": "add_bang02",
+    "size": [
+      70,
+      70
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 18394,
+    "name": "additive_ring_01",
+    "size": [
+      256,
+      256
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 18596,
+    "name": "additive_round_02",
+    "size": [
+      60,
+      60
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 18828,
+    "name": "additive_line_01",
+    "size": [
+      70,
+      40
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 19055,
+    "name": "add_light_blast03",
+    "size": [
+      70,
+      70
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 19137,
+    "name": "add_smoke_hard",
+    "size": [
+      140,
+      140
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 19172,
+    "name": "add_light_blast04",
+    "size": [
+      140,
+      140
+    ],
+    "identicalOlderPixels": false
+  },
+  {
+    "sourcePathId": 23928,
+    "name": "add_light_hor",
+    "size": [
+      70,
+      70
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 23994,
+    "name": "add_sphere02",
+    "size": [
+      140,
+      140
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 24169,
+    "name": "add_light_blast01",
+    "size": [
+      140,
+      140
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 24183,
+    "name": "additive_round_01",
+    "size": [
+      60,
+      60
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 24254,
+    "name": "add_fire_blast",
+    "size": [
+      140,
+      140
+    ],
+    "identicalOlderPixels": true
+  },
+  {
+    "sourcePathId": 24556,
+    "name": "Effects-color_particle",
+    "size": [
+      122,
+      122
+    ],
+    "identicalOlderPixels": false
+  },
+  {
+    "sourcePathId": 24557,
+    "name": "additive_dot_01",
+    "size": [
+      140,
+      140
+    ],
+    "identicalOlderPixels": true
+  }
+]

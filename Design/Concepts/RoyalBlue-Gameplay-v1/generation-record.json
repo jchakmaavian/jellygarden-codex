@@ -1,0 +1,44 @@
+{
+  "date": "2026-09-13",
+  "method": "Built-in image_gen, followed by Sharp crop/resize/WebP encoding preserving alpha",
+  "assets": [
+    {
+      "name": "Royal object atlas",
+      "prompt": "Use case: stylized-concept. Asset type: ONE production game sprite atlas texture for the original mobile match-3 game Royal Throne. Make a 4-column by 3-row evenly spaced grid on a genuinely transparent alpha background, no panels, no labels, no cast shadows beyond each object's small contact shadow. 12 clearly separated isolated objects, one centered in each equal cell with generous transparent gutters. Consistent smooth sculpted 3D toy-like rendered style, soft bevels, saturated enamel, simple bold silhouettes legible at 48px, directional warm top-left highlights, subtle lower-right shadows, premium polished casual puzzle art. Original designs, not exact copies of any game's assets. Row1 left to right: red faceted ruby cushion-cut jewel with simple gold base; royal blue enamel shield with subtle raised center and silver-blue rim; small three-point golden crown with one sapphire; emerald green sculpted leaf with one curved vein. Row2: purple sculpted fleur-de-lis token with chunky rounded petals; horizontal royal-blue-and-gold twin-ended rocket (horizontal orientation); red chunky cartoon TNT barrel with broad gold band and short unlit fuse, no letters; small rounded turquoise royal helicopter with gold rotor and skids, three-quarter view. Row3: glowing violet crystal orb held in a simple gold equatorial ring; square warm wooden royal crate with gold corner rivets and small embossed crown; ivory ceramic vase with cobalt blue band and a simple gold rim; chunky blue-and-gold royal hammer. Orthographic-like consistent game camera, not photorealistic, not flat vector, no candy, no jelly, no typography, no checkerboard painted into background. All twelve objects complete and fully inside their cells. Texture dimensions 1536x1152 if possible.",
+      "output": "exec-9addacfe-3b98-46a8-9521-c8254d8fed81.png",
+      "derived": [
+        "assets/ruby.webp",
+        "assets/shield.webp",
+        "assets/crown.webp",
+        "assets/leaf.webp",
+        "assets/lily.webp",
+        "assets/rocket.webp",
+        "assets/tnt.webp",
+        "assets/helicopter.webp",
+        "assets/orb.webp",
+        "assets/crate.webp",
+        "assets/vase.webp",
+        "assets/hammer.webp"
+      ]
+    },
+    {
+      "name": "King celebration",
+      "prompt": "Use case: identity-preserve. Input image is an edit target for the established Royal Throne king. Create a single transparent-background waist-up game reaction sprite of exactly this same man, preserving his brown eyes, wavy brown hair, short brown beard, face proportions, gold crown with blue diamond, royal blue tunic and cloak, ivory collar and gold trim. Change only his expression and pose to: joyful celebration, eyes slightly squinted with happiness, open smiling mouth, both hands raised in a small cheer visible beside his shoulders. Front view, entire crown and hands in frame, aligned centered head/torso, generous transparent margin around silhouette. Smooth polished sculpted 3D casual game render matching the reference. Genuine transparent alpha, no background, no border, no text, no extra characters.",
+      "output": "exec-2f7b1d87-7f93-4674-9eec-278440928cd0.png",
+      "derived": [
+        "assets/king-cheer.webp"
+      ]
+    },
+    {
+      "name": "King thoughtful",
+      "prompt": "Use case: identity-preserve. Input image is an edit target for the established Royal Throne king. Create a single transparent-background waist-up game reaction sprite of exactly this same man, preserving his brown eyes, wavy brown hair, short brown beard, face proportions, gold crown with blue diamond, royal blue tunic and cloak, ivory collar and gold trim. Change only his expression and pose to: gentle thoughtful concern, raised inner eyebrows and lips slightly pursed, gazing down toward a puzzle below him, encouraging not angry, both hands near his chest. Front view, entire crown and hands in frame, aligned centered head/torso, generous transparent margin around silhouette. Smooth polished sculpted 3D casual game render matching the reference. Genuine transparent alpha, no background, no border, no text, no extra characters.",
+      "output": "exec-0e45a2bf-28bd-4265-a382-c5c0bda99eff.png",
+      "derived": [
+        "assets/king-think.webp"
+      ]
+    }
+  ],
+  "referenceRole": "Existing approved RoyalBlue-Home-v1/avatar-king.png is the identity-preservation edit target. Royal Match imagery was not supplied to generation.",
+  "reusedAssets": "King idle, home castle, locked logo, star and settings from RoyalBlue-Home-v1, resized/re-encoded where needed.",
+  "sourceDirectory": "C:/Users/chakm/.codex/generated_images/01a07f2d-f2b5-7123-a1e6-e3dba88553a7"
+}

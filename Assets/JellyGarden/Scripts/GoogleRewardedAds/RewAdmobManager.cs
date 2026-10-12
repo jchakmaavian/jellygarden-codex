@@ -56,6 +56,7 @@ namespace JellyGarden.Scripts.GoogleRewardedAds
 
         private void RequestRewardBasedVideo()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
 #if UNITY_ANDROID
             string adUnitId = InitScript.Instance.admobRewardedUIDAndroid;
 #elif UNITY_IPHONE
@@ -121,11 +122,13 @@ namespace JellyGarden.Scripts.GoogleRewardedAds
 
         public bool IsRewardedAdIsLoaded()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return false;
             return rewardBasedVideo != null && rewardBasedVideo.CanShowAd();
         }
 
         public void ShowRewardedAd(Action resultCallback)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             if (!IsRewardedAdIsLoaded())
             {
                 Debug.Log("Rewarded ad is not ready yet.");

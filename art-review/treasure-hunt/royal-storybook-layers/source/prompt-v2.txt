@@ -1,5 +1,0 @@
-Use case: precise-object-edit. Edit the entire provided 1701x924 board IN PLACE. Preserve every other element exactly, including all positions, colors, lighting and textures. Make ONLY these three changes:
-1. Remove the round X close button on the AREA TASKS parchment (center approximately x803 y495), revealing uninterrupted original paper and its thin gold edge beneath.
-2. Remove the round X close button on the BEFORE LEVEL card (center approximately x1220 y350), revealing the continuous original blue ribbon tail/paper edge beneath.
-3. On the HOME screen bottom navigation dock only (x19..414, y804..902), remove the Home, Map and Collection icons, their three text labels, and the blue selected underline. Preserve the original blank ivory dock shape, its fine double gold edge, warm shading, and the two subtle vertical separators.
-Keep EVERYTHING ELSE in the image unchanged. Do not extract or rearrange. Do not restyle or redraw. Output the same whole four-screen board at 1701x924.

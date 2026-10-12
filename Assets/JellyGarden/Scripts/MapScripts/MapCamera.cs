@@ -26,7 +26,6 @@ namespace JellyGarden.Scripts.MapScripts
         Vector2 deltaV;
         private float currentTime;
         private float speed;
-        bool touched;
 
         public void Awake()
         {
@@ -63,7 +62,6 @@ namespace JellyGarden.Scripts.MapScripts
                 _prevPosition = InputManager.Instance.Map.PanPosition.ReadValue<Vector2>();
                 firstV = _prevPosition;
                 currentTime = Time.time;
-                touched = true;
             }
             else if (InputManager.Instance.Map.CameraPan.IsPressed())
             {
@@ -78,7 +76,6 @@ namespace JellyGarden.Scripts.MapScripts
                 speed = (Time.time - currentTime);
                 Vector3 diffV = (transform.position - (Vector3)deltaV);
                 Vector3 destination = (transform.position - diffV / 20);
-                touched = false;
             }
             else
             {

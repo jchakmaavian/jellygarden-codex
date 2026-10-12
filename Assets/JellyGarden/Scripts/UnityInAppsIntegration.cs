@@ -27,6 +27,7 @@ namespace JellyGarden.Scripts
 
         void Start()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             THIS = this;
             if (m_StoreController == null)
             {
@@ -36,6 +37,7 @@ namespace JellyGarden.Scripts
 
         public async void InitializePurchasing()
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             if (IsInitialized())
             {
                 return;
@@ -70,6 +72,7 @@ namespace JellyGarden.Scripts
 
         public void BuyProductID(string productId)
         {
+            if (!RoyalThrone.RoyalOfflineMode.ServicesEnabled) return;
             try
             {
                 if (IsInitialized())

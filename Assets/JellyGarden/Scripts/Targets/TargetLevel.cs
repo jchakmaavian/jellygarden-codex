@@ -40,6 +40,8 @@ namespace JellyGarden.Scripts.Targets
         public Target type;
         public Sprite icon;
         public int color;
+        // Set only on runtime copies loaded by the isolated reference campaign.
+        [NonSerialized] public string referenceGoal;
         [FormerlySerializedAs("count")]public int targetCount;
         [HideInInspector] public int countCollected;
         [HideInInspector] public TargetIcon guiObj;
@@ -48,7 +50,12 @@ namespace JellyGarden.Scripts.Targets
         public TargetObject DeepCopy()
         {
             TargetObject other = (TargetObject) MemberwiseClone();
-            other.icon = JellyGarden.Scripts.Story.StorybookBoardArt.Goal(other);
+            // Migrate runtime copies only; retain authored assets and player progress.
+            if (other.type == Target.COLLECT && other.color == 5)
+            {
+                other.color = Juice.RoyalGameplayArt.BoardColor(other.color);
+                other.icon = Juice.RoyalGameplayArt.For(ItemsTypes.NONE, other.color) ?? other.icon;
+            }
             return other;
         }
 
@@ -57,6 +64,7 @@ namespace JellyGarden.Scripts.Targets
 
         public bool SetOff(GameObject item, int c = 1)
         {
+            if(!string.IsNullOrEmpty(referenceGoal))return false;
             if (type == Target.COLLECT)
             {
                 if(item.GetComponent<Item>()?.color == color)

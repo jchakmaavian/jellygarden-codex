@@ -1,0 +1,41 @@
+{
+  "imageBytes": 412642,
+  "imageCount": 19,
+  "fontBytes": 53152,
+  "standaloneHTMLBytes": 683516,
+  "estimatedImageRGBABytes": 9206400,
+  "measuredOn": "Headless Microsoft Edge, local Windows host, no CPU throttling; not a mobile GPU benchmark",
+  "browserChecks": 27,
+  "layoutCombinations": 48,
+  "engineChecks": 18,
+  "actions": 20,
+  "peakParticles": 160,
+  "frameSamples": 438,
+  "frameMedianMs": 16.700000000000728,
+  "frameP95Ms": 16.799999999999272,
+  "engineMedianMs": 0.8999999985098839,
+  "engineP95Ms": 1.699999999254942,
+  "engineWorstMs": 1.699999999254942,
+  "effectKinds": [
+    "rocket",
+    "tnt",
+    "helicopter",
+    "orb",
+    "cross",
+    "cross3",
+    "big-tnt",
+    "transform",
+    "double-orb",
+    "hammer"
+  ],
+  "kingStates": [
+    "idle",
+    "cheer",
+    "think"
+  ],
+  "limits": [
+    "Image RGBA estimate excludes canvas, caches, mipmaps and general rendering overhead.",
+    "Browser frame observations are not a Unity or mobile performance benchmark.",
+    "No packaged mobile game, installed size, device RAM or phone GPU was measured."
+  ]
+}

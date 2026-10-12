@@ -19,6 +19,7 @@ public class InputManager : MonoBehaviour
     }
     
     public InputActionAsset inputActionAsset;
+    private InputActionAsset ownedActions;
     private InputActionMap gameplayMap;
     private InputActionMap mapMap;
     private InputActionMap debugMap;
@@ -33,11 +34,15 @@ public class InputManager : MonoBehaviour
     private bool wasTouchPressed;
     private bool wasTouchReleased;
     private bool isTouching;
-    
-    public bool IsTouching => isTouching;
-    public Vector2 TouchPosition => lastPosition;
-    public bool WasTouchPressed => wasTouchPressed;
-    public bool WasTouchReleased => wasTouchReleased;
+    // The device whose press started the current gesture. A Value action bound to several pointers follows
+    // whichever has the larger position, so a second touchscreen (Android lists the panel and adb/remote input
+    // separately) or a mouse left high on the screen froze swipes lower down (phone QA, 8 Oct 2026).
+    private Pointer pressPointer;
+
+    public bool IsTouching => isTouching && !RoyalThrone.Testing.RoyalSave.BlockGameplayInput;
+    public Vector2 TouchPosition => pressPointer != null && pressPointer.added ? pressPointer.position.ReadValue() : lastPosition;
+    public bool WasTouchPressed => wasTouchPressed && !RoyalThrone.Testing.RoyalSave.BlockGameplayInput;
+    public bool WasTouchReleased => wasTouchReleased && !RoyalThrone.Testing.RoyalSave.BlockGameplayInput;
     
     public class GameplayActions
     {
@@ -132,6 +137,10 @@ public class InputManager : MonoBehaviour
             return;
         }
         
+        // Each persistent manager owns its runtime state; the imported asset must not
+        // retain native input monitors between scene changes and Editor play sessions.
+        ownedActions=Instantiate(inputActionAsset);
+        inputActionAsset=ownedActions;
         gameplayMap = inputActionAsset.FindActionMap("Gameplay");
         mapMap = inputActionAsset.FindActionMap("Map");
         debugMap = inputActionAsset.FindActionMap("Debug");
@@ -184,6 +193,13 @@ public class InputManager : MonoBehaviour
         panPositionAction.performed += OnPanPositionChanged;
     }
     
+    /// <summary>
+    /// The debug map wins and loses levels, shuffles the board and stars every level on a
+    /// Left Ctrl release. Those belong to development only: in a player build a stray keystroke
+    /// (or an attached keyboard) would otherwise hand out progress.
+    /// </summary>
+    public static bool DebugKeysEnabled => Application.isEditor || UnityEngine.Debug.isDebugBuild;
+
     private void OnEnable()
     {
         if (gameplayMap != null)
@@ -191,7 +207,10 @@ public class InputManager : MonoBehaviour
         if (mapMap != null)
             mapMap.Enable();
         if (debugMap != null)
-            debugMap.Enable();
+        {
+            if (DebugKeysEnabled) debugMap.Enable();
+            else debugMap.Disable();
+        }
     }
     
     private void OnDisable()
@@ -229,6 +248,7 @@ public class InputManager : MonoBehaviour
         {
             panPositionAction.performed -= OnPanPositionChanged;
         }
+        if(ownedActions){ownedActions.Disable();Destroy(ownedActions);ownedActions=null;}
     }
     
     private void LateUpdate()
@@ -241,13 +261,16 @@ public class InputManager : MonoBehaviour
     {
         isTouching = true;
         wasTouchPressed = true;
-        // The press and the position are separate actions and the Input System
-        // does not promise which one it dispatches first. When the press lands
-        // first, lastPosition is still the previous touch's — so whatever reads
-        // TouchPosition on the press frame anchors to the wrong point. Reading
-        // the position action here makes the press frame correct either way.
-        if (positionAction != null)
-            lastPosition = positionAction.ReadValue<Vector2>();
+        TrackPressPointer(context);
+    }
+
+    private void TrackPressPointer(InputAction.CallbackContext context)
+    {
+        if (context.control?.device is Pointer pointer)
+        {
+            pressPointer = pointer;
+            lastPosition = pointer.position.ReadValue();
+        }
     }
     
     private void OnTouchCanceled(InputAction.CallbackContext context)
@@ -265,9 +288,7 @@ public class InputManager : MonoBehaviour
     {
         isTouching = true;
         wasTouchPressed = true;
-        // Same ordering problem as OnTouchPerformed, on the map's pan action.
-        if (panPositionAction != null)
-            lastPosition = panPositionAction.ReadValue<Vector2>();
+        TrackPressPointer(context);
     }
     
     private void OnPanCanceled(InputAction.CallbackContext context)

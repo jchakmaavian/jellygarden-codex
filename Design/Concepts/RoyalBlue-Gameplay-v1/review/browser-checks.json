@@ -1,0 +1,928 @@
+{
+  "passed": 27,
+  "failed": 0,
+  "checks": [
+    "All WebP images decode",
+    "48 responsive screen/layout combinations",
+    "Pre-level booster selection and goal introduction enter a playable board",
+    "Invalid click-swap returns pieces and protects moves",
+    "Pointer interaction: rocket",
+    "Pointer interaction: tnt",
+    "Pointer interaction: helicopter",
+    "Pointer interaction: orb",
+    "Pointer interaction: rocket-rocket",
+    "Pointer interaction: rocket-tnt",
+    "Pointer interaction: tnt-tnt",
+    "Pointer interaction: helicopter-helicopter",
+    "Pointer interaction: helicopter-rocket",
+    "Pointer interaction: helicopter-tnt",
+    "Pointer interaction: orb-rocket",
+    "Pointer interaction: orb-tnt",
+    "Pointer interaction: orb-helicopter",
+    "Pointer interaction: orb-orb",
+    "Hammer inventory and no move charge",
+    "Pause freezes an active resolution and resumes it",
+    "Captured full-motion helicopter flight and triple rocket blast",
+    "Low-move king state and greeting response",
+    "Skippable victory sequence and reward flight",
+    "Win flow returns to a new playable level",
+    "Restart cancels old effects and pending board changes",
+    "Bounded particle pool and no browser exceptions",
+    "System reduced-motion preference respected"
+  ],
+  "layouts": [
+    {
+      "width": 320,
+      "screen": "game",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 125,
+        "right": 320,
+        "bottom": 836.109375,
+        "width": 320,
+        "height": 711.109375
+      },
+      "boardWidth": 302,
+      "boardUnderHint": true,
+      "cellSize": 36.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 320,
+      "screen": "start",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 125,
+        "right": 320,
+        "bottom": 836.109375,
+        "width": 320,
+        "height": 711.109375
+      },
+      "boardWidth": 302,
+      "boardUnderHint": true,
+      "cellSize": 36.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 320,
+      "screen": "goals",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 125,
+        "right": 320,
+        "bottom": 836.109375,
+        "width": 320,
+        "height": 711.109375
+      },
+      "boardWidth": 302,
+      "boardUnderHint": true,
+      "cellSize": 36.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 320,
+      "screen": "pause",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 125,
+        "right": 320,
+        "bottom": 836.109375,
+        "width": 320,
+        "height": 711.109375
+      },
+      "boardWidth": 302,
+      "boardUnderHint": true,
+      "cellSize": 36.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 320,
+      "screen": "won",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 125,
+        "right": 320,
+        "bottom": 836.109375,
+        "width": 320,
+        "height": 711.109375
+      },
+      "boardWidth": 302,
+      "boardUnderHint": true,
+      "cellSize": 36.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 320,
+      "screen": "lost",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 125,
+        "right": 320,
+        "bottom": 836.109375,
+        "width": 320,
+        "height": 711.109375
+      },
+      "boardWidth": 302,
+      "boardUnderHint": true,
+      "cellSize": 36.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 320,
+      "screen": "guide",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 125,
+        "right": 320,
+        "bottom": 836.109375,
+        "width": 320,
+        "height": 711.109375
+      },
+      "boardWidth": 302,
+      "boardUnderHint": true,
+      "cellSize": 36.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 320,
+      "screen": "assets",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 125,
+        "right": 320,
+        "bottom": 836.109375,
+        "width": 320,
+        "height": 711.109375
+      },
+      "boardWidth": 302,
+      "boardUnderHint": true,
+      "cellSize": 36.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 360,
+      "screen": "game",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 360,
+        "bottom": 881,
+        "width": 360,
+        "height": 800
+      },
+      "boardWidth": 342,
+      "boardUnderHint": true,
+      "cellSize": 41.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 360,
+      "screen": "start",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 360,
+        "bottom": 881,
+        "width": 360,
+        "height": 800
+      },
+      "boardWidth": 342,
+      "boardUnderHint": true,
+      "cellSize": 41.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 360,
+      "screen": "goals",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 360,
+        "bottom": 881,
+        "width": 360,
+        "height": 800
+      },
+      "boardWidth": 342,
+      "boardUnderHint": true,
+      "cellSize": 41.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 360,
+      "screen": "pause",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 360,
+        "bottom": 881,
+        "width": 360,
+        "height": 800
+      },
+      "boardWidth": 342,
+      "boardUnderHint": true,
+      "cellSize": 41.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 360,
+      "screen": "won",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 360,
+        "bottom": 881,
+        "width": 360,
+        "height": 800
+      },
+      "boardWidth": 342,
+      "boardUnderHint": true,
+      "cellSize": 41.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 360,
+      "screen": "lost",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 360,
+        "bottom": 881,
+        "width": 360,
+        "height": 800
+      },
+      "boardWidth": 342,
+      "boardUnderHint": true,
+      "cellSize": 41.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 360,
+      "screen": "guide",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 360,
+        "bottom": 881,
+        "width": 360,
+        "height": 800
+      },
+      "boardWidth": 342,
+      "boardUnderHint": true,
+      "cellSize": 41.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 360,
+      "screen": "assets",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 360,
+        "bottom": 881,
+        "width": 360,
+        "height": 800
+      },
+      "boardWidth": 342,
+      "boardUnderHint": true,
+      "cellSize": 41.75,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 390,
+      "screen": "game",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 390,
+        "bottom": 904.328125,
+        "width": 390,
+        "height": 823.328125
+      },
+      "boardWidth": 364,
+      "boardUnderHint": true,
+      "cellSize": 44.25,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 390,
+      "screen": "start",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 390,
+        "bottom": 904.328125,
+        "width": 390,
+        "height": 823.328125
+      },
+      "boardWidth": 364,
+      "boardUnderHint": true,
+      "cellSize": 44.25,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 390,
+      "screen": "goals",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 390,
+        "bottom": 904.328125,
+        "width": 390,
+        "height": 823.328125
+      },
+      "boardWidth": 364,
+      "boardUnderHint": true,
+      "cellSize": 44.25,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 390,
+      "screen": "pause",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 390,
+        "bottom": 904.328125,
+        "width": 390,
+        "height": 823.328125
+      },
+      "boardWidth": 364,
+      "boardUnderHint": true,
+      "cellSize": 44.25,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 390,
+      "screen": "won",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 390,
+        "bottom": 904.328125,
+        "width": 390,
+        "height": 823.328125
+      },
+      "boardWidth": 364,
+      "boardUnderHint": true,
+      "cellSize": 44.25,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 390,
+      "screen": "lost",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 390,
+        "bottom": 904.328125,
+        "width": 390,
+        "height": 823.328125
+      },
+      "boardWidth": 364,
+      "boardUnderHint": true,
+      "cellSize": 44.25,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 390,
+      "screen": "guide",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 390,
+        "bottom": 904.328125,
+        "width": 390,
+        "height": 823.328125
+      },
+      "boardWidth": 364,
+      "boardUnderHint": true,
+      "cellSize": 44.25,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 390,
+      "screen": "assets",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 390,
+        "bottom": 904.328125,
+        "width": 390,
+        "height": 823.328125
+      },
+      "boardWidth": 364,
+      "boardUnderHint": true,
+      "cellSize": 44.25,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 420,
+      "screen": "game",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 420,
+        "bottom": 967.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 420,
+      "screen": "start",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 420,
+        "bottom": 967.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 420,
+      "screen": "goals",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 420,
+        "bottom": 967.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 420,
+      "screen": "pause",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 420,
+        "bottom": 967.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 420,
+      "screen": "won",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 420,
+        "bottom": 967.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 420,
+      "screen": "lost",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 420,
+        "bottom": 967.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 420,
+      "screen": "guide",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 420,
+        "bottom": 967.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 420,
+      "screen": "assets",
+      "overflow": false,
+      "phone": {
+        "x": 0,
+        "y": 81,
+        "right": 420,
+        "bottom": 967.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 736,
+      "screen": "game",
+      "overflow": false,
+      "phone": {
+        "x": 158,
+        "y": 93,
+        "right": 578,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 736,
+      "screen": "start",
+      "overflow": false,
+      "phone": {
+        "x": 158,
+        "y": 93,
+        "right": 578,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 736,
+      "screen": "goals",
+      "overflow": false,
+      "phone": {
+        "x": 158,
+        "y": 93,
+        "right": 578,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 736,
+      "screen": "pause",
+      "overflow": false,
+      "phone": {
+        "x": 158,
+        "y": 93,
+        "right": 578,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 736,
+      "screen": "won",
+      "overflow": false,
+      "phone": {
+        "x": 158,
+        "y": 93,
+        "right": 578,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 736,
+      "screen": "lost",
+      "overflow": false,
+      "phone": {
+        "x": 158,
+        "y": 93,
+        "right": 578,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 736,
+      "screen": "guide",
+      "overflow": false,
+      "phone": {
+        "x": 158,
+        "y": 93,
+        "right": 578,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 736,
+      "screen": "assets",
+      "overflow": false,
+      "phone": {
+        "x": 158,
+        "y": 93,
+        "right": 578,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 1024,
+      "screen": "game",
+      "overflow": false,
+      "phone": {
+        "x": 302,
+        "y": 93,
+        "right": 722,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 1024,
+      "screen": "start",
+      "overflow": false,
+      "phone": {
+        "x": 302,
+        "y": 93,
+        "right": 722,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 1024,
+      "screen": "goals",
+      "overflow": false,
+      "phone": {
+        "x": 302,
+        "y": 93,
+        "right": 722,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 1024,
+      "screen": "pause",
+      "overflow": false,
+      "phone": {
+        "x": 302,
+        "y": 93,
+        "right": 722,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 1024,
+      "screen": "won",
+      "overflow": false,
+      "phone": {
+        "x": 302,
+        "y": 93,
+        "right": 722,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 1024,
+      "screen": "lost",
+      "overflow": false,
+      "phone": {
+        "x": 302,
+        "y": 93,
+        "right": 722,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 1024,
+      "screen": "guide",
+      "overflow": false,
+      "phone": {
+        "x": 302,
+        "y": 93,
+        "right": 722,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    },
+    {
+      "width": 1024,
+      "screen": "assets",
+      "overflow": false,
+      "phone": {
+        "x": 302,
+        "y": 93,
+        "right": 722,
+        "bottom": 979.65625,
+        "width": 420,
+        "height": 886.65625
+      },
+      "boardWidth": 394,
+      "boardUnderHint": true,
+      "cellSize": 48,
+      "dialogOverflow": false,
+      "outside": []
+    }
+  ],
+  "metrics": {
+    "actions": 20,
+    "peakParticles": 160,
+    "frameSamples": 438,
+    "frameMedianMs": 16.700000000000728,
+    "frameP95Ms": 16.799999999999272,
+    "engineMedianMs": 0.8999999985098839,
+    "engineP95Ms": 1.699999999254942,
+    "engineWorstMs": 1.699999999254942,
+    "effectKinds": [
+      "rocket",
+      "tnt",
+      "helicopter",
+      "orb",
+      "cross",
+      "cross3",
+      "big-tnt",
+      "transform",
+      "double-orb",
+      "hammer"
+    ],
+    "kingStates": [
+      "idle",
+      "cheer",
+      "think"
+    ]
+  },
+  "errors": [],
+  "environment": "Headless Microsoft Edge, local Windows host, no CPU throttling; not a mobile GPU benchmark"
+}

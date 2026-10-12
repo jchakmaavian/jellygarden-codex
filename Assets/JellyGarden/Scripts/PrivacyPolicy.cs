@@ -18,8 +18,8 @@ namespace JellyGarden.Scripts
 
 		public void PolicyButton()
 		{
-			Application.OpenURL(
-				"https://docs.google.com/document/d/1EVNevGFTiZEzPnPoItmyY7p6duhcEEC9iO8d0bjF-qo/edit?usp=sharing");
+			// A Royal Throne privacy destination has not been verified. Never open the inherited one.
+			Debug.Log("Royal Throne uses local progress in this offline test build.");
 		}
 	}
 }

@@ -1,0 +1,12 @@
+ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.
+Parameter name: index
+  at System.Collections.Generic.List`1[T].get_Item (System.Int32 index) [0x00009] in <ee034d2b335a4869bde47687e6ac9c30>:0
+  at UnityEditor.Search.SearchDatabase+<EnumerateAll>d__76.MoveNext () [0x00089] in <040e6e74fe5842668db19387787a95f5>:0
+  at System.Linq.Enumerable.TryGetFirst[TSource] (System.Collections.Generic.IEnumerable`1[T] source, System.Boolean& found) [0x00045] in <d272082c47ef4e428bd2b5b770241b5a>:0
+  at System.Linq.Enumerable.First[TSource] (System.Collections.Generic.IEnumerable`1[T] source) [0x00000] in <d272082c47ef4e428bd2b5b770241b5a>:0
+  at UnityEditor.Search.SearchDatabase.GetDefaultSearchDatabase () [0x00005] in <040e6e74fe5842668db19387787a95f5>:0
+  at UnityEditor.Search.SearchInit.IndexationOnStartup () [0x0000a] in <040e6e74fe5842668db19387787a95f5>:0
+  at UnityEditor.EditorApplication.Internal_CallDelayFunctions () [0x00029] in <886e347bbf034f119b276a61ef97646f>:0
+
+Created GICache directory at C:/Users/chakm/AppData/LocalLow/Unity/Caches/GiCache. Took: 0.011s, timestamps: [22.371 - 22.382]
+TrimDiskCacheJob: Current cache size 0mb

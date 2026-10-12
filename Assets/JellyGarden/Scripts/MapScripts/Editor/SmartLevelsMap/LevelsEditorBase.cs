@@ -21,7 +21,7 @@ namespace JellyGarden.Scripts.MapScripts.Editor.SmartLevelsMap
     {
         protected List<MapLevel> GetMapLevels()
         {
-            return FindObjectsOfType<MapLevel>().OrderBy(ml => ml.Number).ToList();
+            return FindObjectsByType<MapLevel>().OrderBy(ml => ml.Number).ToList();
         }
 
         protected MapLevel CreateMapLevel(Vector3 position, int number, MapLevel mapLevelPrefab)
@@ -42,7 +42,7 @@ namespace JellyGarden.Scripts.MapScripts.Editor.SmartLevelsMap
 
         protected void UpdatePathWaypoints(List<MapLevel> mapLevels)
         {
-            Path path = FindObjectOfType<Path>();
+            Path path = FindAnyObjectByType<Path>();
             path.Waypoints.Clear();
             foreach (MapLevel mapLevel in mapLevels)
                 path.Waypoints.Add(mapLevel.PathPivot);

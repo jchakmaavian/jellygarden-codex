@@ -1,0 +1,23 @@
+{
+  "simulationFPS": 60,
+  "captureFPS": 30,
+  "overlayUI": false,
+  "audio": false,
+  "frames": {
+    "RocketH-RocketH": 40,
+    "RocketH-RocketV": 40,
+    "RocketV-RocketV": 40,
+    "TNT-TNT": 84,
+    "Propeller-Propeller": 72,
+    "Colorball-Colorball": 133,
+    "RocketH-TNT": 41,
+    "RocketV-TNT": 41,
+    "Propeller-RocketH": 82,
+    "Propeller-RocketV": 84,
+    "Propeller-TNT": 78,
+    "Colorball-RocketH": 120,
+    "Colorball-RocketV": 116,
+    "Colorball-TNT": 117,
+    "Colorball-Propeller": 152
+  }
+}

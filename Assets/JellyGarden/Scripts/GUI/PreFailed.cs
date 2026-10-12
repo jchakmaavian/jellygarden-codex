@@ -23,15 +23,18 @@ namespace JellyGarden.Scripts.GUI
 		// Use this for initialization
 		void OnEnable ()
 		{
-			FailedCost = LevelManager.THIS.FailedCost;
+			// The Continue price rises with each one bought in this attempt (RoyalEconomy: 150, 250, then 400).
+			FailedCost = LevelManager.THIS.FailedCost = Juice.RoyalEconomy.ContinueCost (LevelManager.THIS.ContinuesBought);
 			transform.Find ("Buy/Price").GetComponent<Text> ().text = "" + FailedCost;
 			if (LevelManager.THIS.limitType == LIMIT.MOVES)
 				buyButton.sprite = buyButtons [0];
 			else if (LevelManager.THIS.limitType == LIMIT.TIME)
 				buyButton.sprite = buyButtons [1];
-			if (!LevelManager.THIS.enableInApps)
-				transform.Find ("Buy").gameObject.SetActive (false);
-		
+			// Extra moves are bought with gems, not real money, so this offer must stay on
+			// screen even when the real-money packs are off. Hiding it left the popup promising
+			// "5 extra moves to finish your goals" with no way to take them.
+			transform.Find ("Buy").gameObject.SetActive (true);
+
 			SetTargets ();
 		}
 

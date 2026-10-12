@@ -1,1 +1,0 @@
-PASS 26 checks: live sprite mapping, shaped frame, targets, moves, booster callbacks, pause and three viewport sizes.

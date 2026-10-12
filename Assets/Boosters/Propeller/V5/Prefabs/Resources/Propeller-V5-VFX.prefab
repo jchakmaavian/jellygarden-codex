@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1574010569910403257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8607344170753425548}
+  - component: {fileID: 4095589905755129722}
+  m_Layer: 0
+  m_Name: Propeller-V5-VFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8607344170753425548
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574010569910403257}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4095589905755129722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574010569910403257}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 677003f9a9ca4bf408bf06b6c228a7de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoyalThrone.Boosters.Propeller.V5.PropellerVfxV5
+  quad: {fileID: 4300000, guid: f076306c72d113b42afa978732aa68eb, type: 2}
+  glow: {fileID: 2100000, guid: e2f7939676a344641a81cc01654de699, type: 2}
+  star: {fileID: 2100000, guid: 96eac9f4585c25e4499e81bfc08885cd, type: 2}
+  air: {fileID: 2100000, guid: f55613719f1073542bfe86891f836e95, type: 2}
+  pressure: {fileID: 2100000, guid: 3305e4de5bee8bc44a6b7eb05fc0c748, type: 2}
+  chipMeshes:
+  - {fileID: 4300000, guid: 789787d0d4eb87d42948d05734f28053, type: 2}
+  - {fileID: 4300000, guid: a6b314bc12feb4946bfdfed6b879be02, type: 2}
+  - {fileID: 4300000, guid: 3913bfa7d931fa549b31c15a913aa1ec, type: 2}
+  - {fileID: 4300000, guid: 7f3f377fe140b134c899ce393a44dd66, type: 2}
+  - {fileID: 4300000, guid: f911d68ec794dd24ba48bd7bcb26e8c3, type: 2}
+  - {fileID: 4300000, guid: 9813bc58f3630ca4395a7e5314fa916d, type: 2}
+  - {fileID: 4300000, guid: a39ed5cfb69d620429d657870f429850, type: 2}
+  - {fileID: 4300000, guid: cb2f2f96f9c811643b0219ef71f21d27, type: 2}
+  - {fileID: 4300000, guid: 4f5cdf83ca83aa9468657af8163c8a67, type: 2}
+  - {fileID: 4300000, guid: c5c4308562c4c404c9908fe03a9e6c98, type: 2}
+  - {fileID: 4300000, guid: 531e05c6594184341a98534ff7b061f0, type: 2}
+  - {fileID: 4300000, guid: bdb06fcf5fdd3554dbf858842dd394fb, type: 2}
+  - {fileID: 4300000, guid: 02332597e2c66ce43890b091591f9a69, type: 2}
+  - {fileID: 4300000, guid: 3887f181d9a5ab9478f61d5ceb904df0, type: 2}
+  - {fileID: 4300000, guid: 9bdc93e908f8fd64cbcfcd115234abdb, type: 2}
+  chipMaterials:
+  - {fileID: 2100000, guid: eb522b0dfeb3c7b4eaf7691946261fb7, type: 2}
+  - {fileID: 2100000, guid: aba3ae6e951acd94983f16a2dbfbf3d3, type: 2}
+  - {fileID: 2100000, guid: f6cbdc04243f1ea4e9ff674f790afcdb, type: 2}
+  - {fileID: 2100000, guid: e44868508a0dc5d4597e6a5c8580ccee, type: 2}
+  - {fileID: 2100000, guid: 2c0c23ef2aca69e48bb887ca34c68042, type: 2}

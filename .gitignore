@@ -113,18 +113,40 @@ InitTestScene*.unity*
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
 
-# Built players
-Builds/
+# Per-machine editor and automation configuration for this independent copy.
+/.vscode/
+/.mcp.json
 
-# Python bytecode from the generators in tools/
+# Design and review records: captures, recordings, reference material and
+# backups stay on this machine only; the game itself lives in Assets/.
+# Tracked exceptions: approved branding and concepts (the locked logo master,
+# RoyalBlue splash/home) and every Markdown design note, which project docs cite.
+/Design/**
+!/Design/**/
+!/Design/**/*.md
+!/Design/Branding/**
+!/Design/Concepts/**
+# Source for the generated game audio (renders stay local).
+!/Design/Audio/**/*.cs
+!/Design/Audio/**/*.py
+# Full project copies used as test fixtures, and any nested Unity cache:
+# their Markdown is package and duplicate documentation, not design notes.
+/Design/**/FullGameFixture/
+/Design/**/[Ll]ibrary/
+
+# Unity crash-recovery scenes.
+/[Aa]ssets/_Recovery/
+/[Aa]ssets/_Recovery.meta
+
+# Python bytecode caches from the tools.
 __pycache__/
-*.pyc
+*.py[cod]
 
-# macOS Finder metadata
+# OS-generated files.
+Thumbs.db
+ehthumbs.db
+desktop.ini
 .DS_Store
 
-# Python bytecode from tools/
-__pycache__/
-*.pyc
-ralph/ralph-run.log
-ralph/.ralph.pid
+# Local QA reports and spreadsheets (kept on disk, not in GitHub).
+/outputs/

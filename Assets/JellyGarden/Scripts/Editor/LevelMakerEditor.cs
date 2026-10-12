@@ -1,4 +1,5 @@
-﻿// // ©2015 - 2026 Candy Smith
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
+// // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
 // // Copy of this software can be obtained from unity asset store only.
@@ -27,10 +28,7 @@ namespace JellyGarden.Scripts.Editor
     [InitializeOnLoad]
     public class LevelMakerEditor : EditorWindow
     {
-        string myString = "Hello World";
         bool groupEnabled;
-        bool myBool = true;
-        float myFloat = 1.23f;
         int levelNumber = 1;
         int maxRows;
         int maxCols;
@@ -53,7 +51,6 @@ namespace JellyGarden.Scripts.Editor
         private Ingredients[] ingr = new Ingredients[2];
         private CollectItems[] collectItems = new CollectItems[2];
         private int limit;
-        private bool update;
         private LIMIT limitType;
         private int colorLimit;
         private static int selected;
@@ -275,23 +272,8 @@ namespace JellyGarden.Scripts.Editor
 
         void SetScriptingDefineSymbols()
         {
-            LevelManager lm = Camera.main.GetComponent<LevelManager>();
-            InitScript initscript = Camera.main.GetComponent<InitScript>();
-            string defines = "";
-            if (initscript.enableUnityAds)
-                defines = defines + "; UNITY_ADS";
-            if (initscript.enableGoogleMobileAds)
-                defines = defines + "; GOOGLE_MOBILE_ADS";
-            if (initscript.enableChartboostAds)
-                defines = defines + "; CHARTBOOST_ADS";
-            if (lm.FacebookEnable)
-                defines = defines + "; FACEBOOK";
-            if (lm.enableInApps)
-                defines = defines + "; UNITY_INAPPS";
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.Android, defines);
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.iOS, defines);
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(BuildTargetGroup.WP8, defines);
-
+            // Legacy inspector switches must not enable services or replace unrelated defines.
+            RoyalThrone.Editor.RoyalOfflineBuildPolicy.ConfigureCommonTargets();
         }
 
 
@@ -1932,7 +1914,6 @@ namespace JellyGarden.Scripts.Editor
                 levelSquares[row * maxCols + col].block = squareType;
                 levelSquares[row * maxCols + col].obstacle = SquareTypes.NONE;
             }
-            update = true;
             SaveLevel();
             // GetSquare(col, row).type = (int) squareType;
         }
@@ -1997,8 +1978,6 @@ namespace JellyGarden.Scripts.Editor
             if (mapText == null)
             {
                 return false;
-                SaveLevel();
-                mapText = Resources.Load("Levels/" + currentLevel) as TextAsset;
             }
             ProcessGameDataFromString(mapText.text);
             return true;

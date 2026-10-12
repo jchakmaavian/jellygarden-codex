@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbd81560c7a2cc4eab72163a236326a, type: 3}
+  m_Name: JuiceConfig
+  m_EditorClassIdentifier: Assembly-CSharp::JellyGarden.Scripts.Juice.JuiceConfig
+  SwapDuration: 0.13
+  InvalidSwapDuration: 0.22
+  InvalidSwapPushFraction: 0.42
+  MatchAnticipation: 0.015
+  MatchSquashDuration: 0.03
+  MatchReboundDuration: 0.02
+  MatchDestroyDuration: 0.05
+  MatchStagger: 0.012
+  MatchSquashAmount: 0.07
+  MatchAnticipationScale: 0.05
+  MatchReboundAmount: 0.12
+  FlashDuration: 0.065
+  FlashStartScale: 0.8
+  FlashEndScale: 1.25
+  StarParticleCount: 6
+  ParticleVelocity: 4.8
+  ParticleDrag: 3
+  ParticleLifetime: 0.34
+  StarSize: 0.26
+  MicroParticleCount: 8
+  MicroLifetime: 0.38
+  MicroSize: 0.09
+  FragmentCount: 1
+  FragmentLifetime: 0.3
+  FragmentSize: 0.12
+  StarDelay: 0.01
+  MicroDelay: 0.035
+  FragmentDelay: 0.02
+  FragmentColorBlend: 0.8
+  EnableCenterEmphasis: 1
+  CenterRingDuration: 0.24
+  CenterRingEndScale: 1.15
+  CenterStarCount: 5
+  FallSpeed: 4
+  FallAcceleration: 32
+  FallMaxSpeed: 19
+  LandingSquash: 0.05
+  LandingSquashDuration: 0.21
+  LandingBounce: 0.06
+  EnableHitStop: 0
+  HitStopDuration: 0.045
+  HitStopScale: 0.12
+  HitStopIntensityBonus: 0.025
+  CascadeIntensityMultiplier: 0.14
+  CascadeIntensityMax: 1.55
+  FourMatchBonus: 0.18
+  FiveMatchBonus: 0.36
+  EnableCandyShatter: 1
+  ShatterPoolSize: 240
+  ShatterSortingOrder: 20
+  ShatterBurstSpeed: 2.2
+  ShatterUpwardBias: 0.65
+  ShatterDirectionJitter: 0.85
+  ShatterGravity: -34
+  ShatterDrag: 1.1
+  ShatterSpinMin: 110
+  ShatterSpinMax: 460
+  ShatterLifetime: 1.8
+  ShatterFadeStart: 1
+  ShatterEndScale: 1
+  EnableBloom: 1
+  BloomThreshold: 1.05
+  BloomIntensity: 0.62
+  BloomScatter: 0.58
+  VfxHdrBoost: 1.55
+  VfxSortingOrder: 25
+  VfxSortingLayer: Default
+  EnableJuice: 1

@@ -1,0 +1,1 @@
+PASS: 2 native VFX prefabs, 8 particle systems, 8 exact-source sprites, native combo sound; existing clip, view and shared material unchanged.

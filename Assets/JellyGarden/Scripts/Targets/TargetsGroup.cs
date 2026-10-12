@@ -1,3 +1,4 @@
+using PlayerPrefs = RoyalThrone.Testing.RoyalSave;
 // // ©2015 - 2026 Candy Smith
 // // All rights reserved
 // // Redistribution of this software is strictly not allowed.
@@ -24,6 +25,14 @@ namespace JellyGarden.Scripts.Targets
         private void OnEnable()
         {
             levelNum = PlayerPrefs.GetInt("OpenLevel");
+            if(RoyalThrone.Campaign.RoyalReferenceCampaign.Active)
+            {
+                foreach(var target in LevelManager.THIS.targetObject)
+                {
+                    var obj=Instantiate<TargetIcon>(prefab,transform);obj.SetTarget(target);TargetIcons.Add(obj);target.guiObj=obj;
+                }
+                return;
+            }
             var targetObj = Resources.Load<TargetLevel>("Targets/Level" + levelNum);
             foreach (var target in targetObj.targets)
             {

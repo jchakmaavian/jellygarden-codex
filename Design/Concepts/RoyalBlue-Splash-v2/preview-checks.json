@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "loaded": true,
+  "haloMoves": true,
+  "layout": [
+    {
+      "width": 736,
+      "overflow": false,
+      "buttonWidth": 336,
+      "buttonHeight": 111.875
+    },
+    {
+      "width": 360,
+      "overflow": false,
+      "buttonWidth": 282.234375,
+      "buttonHeight": 93.96875
+    },
+    {
+      "width": 320,
+      "overflow": false,
+      "buttonWidth": 248.625,
+      "buttonHeight": 82.78125
+    }
+  ],
+  "previewProgress": 45,
+  "backgroundSwitch": true,
+  "haloToggle": true,
+  "haloPause": true,
+  "loadingReturnsToSplash": true,
+  "reducedMotion": "none",
+  "consoleErrors": [],
+  "fragmentBytes": 513504,
+  "scope": "Browser concept preview only; no Unity changes or device performance test."
+}
