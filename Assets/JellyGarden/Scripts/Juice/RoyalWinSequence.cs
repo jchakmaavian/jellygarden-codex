@@ -12,7 +12,7 @@ namespace JellyGarden.Scripts.Juice
     /// The end of a won level, staged after the user's Royal Match Level 13 clip (Design/RoyalMatchReference/OBSERVATIONS.md,
     /// "Level 13 completion"; the user, 2026-10-06: "I want this game experience"), in Royal Throne's own art:
     /// 1. <see cref="Celebrate"/> as soon as the goals are done, before the moves left are used: the board dims below the HUD,
-    ///    the logo is built (emblem, ROYAL letter by letter, THRONE), pennants unroll, trumpets swing in and fireworks rise
+    ///    the Royal Tales logo is revealed (crown, ROYAL, TALES), pennants unroll, trumpets swing in and fireworks rise
     ///    and burst; the logo swells and shrinks to a point and the dim is cut (about 3 s).
     /// 2. <see cref="BeginFinale"/> on that frame: the HUD's goal panel turns into a Reward coin counter; the booster
     ///    session (ReferenceWinFinish) turns the moves left into rockets and fires them, the board refills, and coins pop out
@@ -94,11 +94,21 @@ namespace JellyGarden.Scripts.Juice
             }
             spot.SetPixels(sp); spot.Apply(); soft = Sprite.Create(spot, new Rect(0, 0, N, N), new Vector2(.5f, .5f), N);
             pennant = MakePennant();
-            // The approved Royal Throne logo (Design/Branding): the game scene references it, so it is loaded with the scene.
+            // The Royal Tales logo shares the existing scene-bound sprite GUID.
             foreach (var s in Resources.FindObjectsOfTypeAll<Sprite>())
                 if (s && s.name == "logo" && s.texture && s.texture.width >= 512) { logo = s; break; }
             logoPart = new Sprite[LogoParts.Length];
-            for (int i = 0; i < LogoParts.Length; i++) logoPart[i] = Resources.Load<Sprite>("RoyalGameplay/Win/win-logo-" + LogoParts[i]);
+            // Three non-overlapping regions of the new master recompose it exactly.
+            // Do not load the archived Royal Throne letter layers into this celebration.
+            if (logo)
+                for (int i = 0; i < LogoParts.Length; i++)
+                {
+                    var l = LogoLayout[i]; var rect = logo.rect;
+                    logoPart[i] = Sprite.Create(logo.texture,
+                        new Rect(rect.x + (l.x + .5f - l.z * .5f) * rect.width, rect.y + (l.y + .5f - l.w * .5f) * rect.height, l.z * rect.width, l.w * rect.height),
+                        Vector2.one * .5f, logo.pixelsPerUnit, 0, SpriteMeshType.FullRect);
+                    logoPart[i].name = "Royal Tales " + LogoParts[i];
+                }
             trumpet = Resources.Load<Sprite>("RoyalGameplay/Win/win-trumpet");
             flagArt = Resources.Load<Sprite>("RoyalGameplay/Win/win-pennant");
             flagRoll = Resources.Load<Sprite>("RoyalGameplay/Win/win-pennant-roll");
@@ -481,21 +491,16 @@ namespace JellyGarden.Scripts.Juice
             while (!s.celebrationHandover && s && s.isActiveAndEnabled && lm.gameStatus == GameState.PreWinAnimations && Time.unscaledTime < until) yield return null;
         }
 
-        // The logo's layers (Resources/RoyalGameplay/Win), cut from the approved logo by
-        // Design/RoyalMatchReference/level13_completion/art/logo_layers.py: the emblem (crown, throne back and frame, with an
-        // empty velvet band), the letters of ROYAL, and the second line THRONE with its ornament. Centre x, y and size w, h are
-        // fractions of the logo's width, y up. Together they recompose the logo exactly.
-        static readonly string[] LogoParts = { "emblem", "r", "o", "y", "a", "l", "throne" };
+        // Royal Tales master: crown, ROYAL and TALES reveal on separate beats.
+        // Centre x, y and size w, h are fractions of the square master, y up.
+        static readonly string[] LogoParts = { "crown", "royal", "tales" };
         static readonly Vector4[] LogoLayout =
         {
-            new Vector4(-.0008f, .18341f, .89155f, .50558f), new Vector4(-.25478f, .02073f, .20335f, .21372f),
-            new Vector4(-.11284f, .02113f, .17624f, .19219f), new Vector4(.01754f, .02512f, .17544f, .19378f),
-            new Vector4(.12839f, .01715f, .17544f, .19856f), new Vector4(.25758f, .01994f, .18501f, .2201f),
-            new Vector4(.0004f, -.21691f, .94498f, .32217f)
+            new Vector4(0, .3125f, 1, .375f),
+            new Vector4(0, .03125f, 1, .1875f),
+            new Vector4(0, -.28125f, 1, .4375f)
         };
-        // When each layer pops in (s after the dim starts): the emblem widens in, ROYAL is written a letter every 0.06 s, and
-        // THRONE lands as one word with the larger overshoot, as the reference writes "ROYAL" and then lands "MATCH!".
-        static readonly float[] LogoIn = { .20f, .30f, .36f, .42f, .48f, .54f, .62f };
+        static readonly float[] LogoIn = { .20f, .38f, .62f };
         // The four herald trumpets: the bell's centre (fractions of the half screen), the angle the bell points (degrees up
         // from the side it comes from) and a size. Two come from each lower edge, bells up and in, as in the reference.
         static readonly Vector4[] Horns =
@@ -579,7 +584,7 @@ namespace JellyGarden.Scripts.Juice
 
             // The lockup: the logo's layers, or the whole logo (or the name in letters) if they are missing.
             float logoW = 470, logoY = h.y * .08f;
-            var lockup = Node("Royal Throne lockup", front, new Vector2(0, logoY), new Vector2(logoW, logoW));
+            var lockup = Node("Royal Tales lockup", front, new Vector2(0, logoY), new Vector2(logoW, logoW));
             bool layered = logoPart != null && global::System.Array.TrueForAll(logoPart, s => s);
             RectTransform[] parts;
             float[] partIn;
@@ -595,8 +600,8 @@ namespace JellyGarden.Scripts.Juice
             }
             else
             {
-                var whole = logo ? Picture("Royal Throne logo", lockup, logo, Vector2.zero, new Vector2(logoW, logoW * logo.rect.height / Mathf.Max(1, logo.rect.width)), Color.white).rectTransform
-                                 : Words("Royal Throne", lockup, "ROYAL THRONE", 96, Vector2.zero, new Vector2(700, 160), Gold, 4).rectTransform;
+                var whole = logo ? Picture("Royal Tales logo", lockup, logo, Vector2.zero, new Vector2(logoW, logoW * logo.rect.height / Mathf.Max(1, logo.rect.width)), Color.white).rectTransform
+                                 : Words("Royal Tales", lockup, "ROYAL TALES", 96, Vector2.zero, new Vector2(700, 160), Gold, 4).rectTransform;
                 whole.localScale = Vector3.zero; parts = new[] { whole }; partIn = new[] { LogoIn[0] };
             }
 
@@ -1366,6 +1371,7 @@ namespace JellyGarden.Scripts.Juice
             // The factory's textures are shared and cached: destroy only the sprites, and the textures made here.
             foreach (var s in new[] { piece, soft, pennant }) if (s && s.texture) Destroy(s.texture);
             foreach (var s in new[] { sparkle, star, glow, ring, piece, soft, pennant }) if (s) Destroy(s);
+            if (logoPart != null) foreach (var s in logoPart) if (s) Destroy(s);
         }
     }
 }

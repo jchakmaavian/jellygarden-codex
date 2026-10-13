@@ -56,7 +56,7 @@ namespace RoyalThrone.Editor
             foreach (var camera in UnityEngine.Object.FindObjectsByType<Camera>(FindObjectsInactive.Include))
                 if (camera.gameObject.scene == scene) { camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = SplashEdge; }
 
-            var rootRect = Rect("Royal Throne UI", null);
+            var rootRect = Rect("Royal Tales UI", null);
             SceneManager.MoveGameObjectToScene(rootRect.gameObject, scene);
             var canvas = rootRect.gameObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -92,7 +92,8 @@ namespace RoyalThrone.Editor
             var halo = Rect("Rotating logo halo", safe);
             var haloGraphic = halo.gameObject.AddComponent<RoyalLogoHalo>();
             haloGraphic.sprite = haloArt; haloGraphic.color = new Color(1, .99f, .96f, .3f); haloGraphic.raycastTarget = false; haloGraphic.SetAllDirty();
-            var logoImage = Picture("Royal Throne logo", safe, logo, false);
+            var logoImage = Picture("Royal Tales logo", safe, logo, false);
+            logoImage.gameObject.AddComponent<RoyalLogoMotion>();
             var label = Rect("Loading text", safe).gameObject.AddComponent<Text>();
             label.font = font; label.fontSize = 46; label.text = "Loading..."; label.alignment = TextAnchor.MiddleCenter; label.color = new Color(1, .98f, .92f);
             label.supportRichText = true; label.raycastTarget = false; label.horizontalOverflow = HorizontalWrapMode.Overflow; label.verticalOverflow = VerticalWrapMode.Overflow;

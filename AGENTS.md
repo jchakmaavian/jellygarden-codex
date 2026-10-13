@@ -11,6 +11,8 @@ This directory is the independent JellyGarden Codex development project. The use
 
 ## Current product direction
 
+- On 13 October 2026 the user finalized **Royal Tales** and explicitly requested the Royal Throne logo be backed up, a new Royal Tales logo and animation generated, and the current artwork replaced. This supersedes the earlier Royal Throne name/logo lock below. Use **Royal Tales** in new branding and **Royal Tales: Match 3** as the descriptive store title. Preserve the dated Royal Throne archive at `Design/Branding/Archive/Royal-Throne-2026-10-13/`. Technical save keys, namespaces and identifiers stay compatible; this decision is not trademark clearance or authorization to publish.
+
 - The user is a UX/UI designer. Collaborate with them across game design, development, and project management; communicate changes through player experience, visible results, and clear tradeoffs.
 - Current priorities are game logic, level design, story, visualization, character development, animation, and VFX. See `GAME-DIRECTION.md` for the working milestone and quality criteria.
 - The user locked the game name **Royal Throne** on 8 September 2026. Use this exact two-word spelling in new game branding, design documents, story titles, and creative assets. The descriptive store-title form is **Royal Throne: Match 3**. Naming is decided; do not reopen the shortlist unless the user requests it. `NAMING-BRIEF.md` records the decision. Earlier names in `NAMING-RESEARCH.md` are historical proposals, not active alternatives.

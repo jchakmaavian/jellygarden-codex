@@ -1,0 +1,12 @@
+Royal Tales branding and animation checks
+PASS Unity Play Mode
+PASS Logo sprite GUID preserved
+PASS Runtime PNG exactly matches the generated Royal Tales master
+PASS Actual startup reaches the homepage
+PASS Royal Tales logo appears during actual asynchronous loading
+PASS Logo entrance and breathing motion advance during loading
+PASS Win animation reveals crown, ROYAL and TALES from the new master
+PASS Old THRONE word is absent from the live win animation
+PASS Reduced motion keeps the logo still and hides decorative gleams
+PASS Normal player data restored
+ALL CHECKS PASSED

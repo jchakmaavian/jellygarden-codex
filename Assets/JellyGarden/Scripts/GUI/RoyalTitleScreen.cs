@@ -246,10 +246,10 @@ namespace RoyalThrone.Presentation
                 elapsed += Time.unscaledDeltaTime;
                 float t = Mathf.SmoothStep(0, 1, Mathf.Clamp01(elapsed / .35f));
                 loadingGroup.alpha = t;
-                if (loadingLogo) loadingLogo.localScale = Vector3.one * (MotionEnabled ? Mathf.Lerp(.94f, 1, 1 - Mathf.Pow(1 - t, 3)) : 1);
+                if (loadingLogo && !loadingLogo.GetComponent<RoyalLogoMotion>()) loadingLogo.localScale = Vector3.one * (MotionEnabled ? Mathf.Lerp(.94f, 1, 1 - Mathf.Pow(1 - t, 3)) : 1);
                 yield return null;
             }
-            loadingGroup.alpha = 1; if (loadingLogo) loadingLogo.localScale = Vector3.one;
+            loadingGroup.alpha = 1; if (loadingLogo && !loadingLogo.GetComponent<RoyalLogoMotion>()) loadingLogo.localScale = Vector3.one;
             splashGroup.gameObject.SetActive(false);
             // The loading screen is presented before any scene work starts.
             yield return new WaitForEndOfFrame();

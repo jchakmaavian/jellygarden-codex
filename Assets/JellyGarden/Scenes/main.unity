@@ -205,8 +205,9 @@ GameObject:
   - component: {fileID: 653293305}
   - component: {fileID: 653293307}
   - component: {fileID: 653293306}
+  - component: {fileID: 653293308}
   m_Layer: 5
-  m_Name: Royal Throne logo
+  m_Name: Royal Tales logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -269,6 +270,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 653293304}
   m_CullTransparentMesh: 1
+--- !u!114 &653293308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653293304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031495e6b5e95de438b850d6a8611285, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::RoyalThrone.Presentation.RoyalLogoMotion
 --- !u!1 &769397879
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,7 +364,7 @@ GameObject:
   - component: {fileID: 924584360}
   - component: {fileID: 924584359}
   m_Layer: 5
-  m_Name: Royal Throne UI
+  m_Name: Royal Tales UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

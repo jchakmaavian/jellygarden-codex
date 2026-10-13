@@ -1,5 +1,7 @@
 # Royal Throne splash and loading design
 
+**Branding update, 13 October 2026:** the user finalized **Royal Tales** and requested a new logo and animation. The old master is backed up; the current runtime sprite is now the Royal Tales artwork. See [Royal Tales logo and animation](royal-tales-splash-logo-v1.md). The earlier Royal Throne logo lock and hash below are historical.
+
 Initial implementation: 8 September 2026. Current royal-blue revision: 13 September 2026, after the user approved the visual study for integration with “add this in main game in unity.” All implementation is in the independent Codex copy.
 
 ## Visual design

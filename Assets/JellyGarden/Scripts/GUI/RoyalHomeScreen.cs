@@ -250,7 +250,7 @@ namespace RoyalThrone.Presentation
             string title = "", copy = "", detail = ""; int icon = 0;
             switch (panel)
             {
-                case "profile": title = RoyalOfflineMode.KingName; copy = "Welcome to Royal Throne"; detail = Count(Progress.completed, "level", "levels") + " completed\n" + Count(Progress.stars, "star", "stars") + " earned"; icon = 0; break;
+                case "profile": title = RoyalOfflineMode.KingName; copy = "Welcome to Royal Tales"; detail = Count(Progress.completed, "level", "levels") + " completed\n" + Count(Progress.stars, "star", "stars") + " earned"; icon = 0; break;
                 case "coins": title = Count(InitScript.Gems, "coin", "coins"); copy = "A little help for your next challenge"; detail = "Use your balance for boosts and extra moves during a level."; icon = 1; break;
                 case "lives": title = "Royal lives"; copy = "One heart, one new adventure"; icon = 2; break;
                 case "stars": title = Count(Progress.available, "star", "stars") + " to spend"; copy = "Restore your kingdom"; detail = "Win levels to earn up to three stars each, then spend them on area tasks. " + Count(Progress.stars, "star", "stars") + " earned so far."; icon = 3; break;
