@@ -32,7 +32,9 @@ namespace RoyalThrone.Presentation
         public static Image Art(Transform p,string name,string art,float x,float y,float w,float h)
         {
             var tr=p.Find(name);if(!tr){tr=new GameObject(name,typeof(RectTransform)).transform;tr.SetParent(p,false);}
-            Place(tr,x,y,w,h);var i=tr.GetComponent<Image>();if(!i)i=tr.gameObject.AddComponent<Image>();i.sprite=RoyalPieceSkin.Art(art);i.color=Color.white;i.preserveAspect=true;i.raycastTarget=false;return i;
+            Place(tr,x,y,w,h);var i=tr.GetComponent<Image>();if(!i)i=tr.gameObject.AddComponent<Image>();i.sprite=RoyalPieceSkin.Art(art);i.color=Color.white;
+            // A missing sprite draws a plain white rectangle: hide it and name the art. (An empty name means the caller assigns the sprite.)
+            i.enabled=i.sprite||string.IsNullOrEmpty(art);if(!i.enabled)Debug.LogWarning("Royal art missing: "+art);i.preserveAspect=true;i.raycastTarget=false;return i;
         }
         static RoyalPanelGraphic Layer(Transform p,string name,float inset,Color top,Color bottom,float radius)
         {

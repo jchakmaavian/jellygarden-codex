@@ -8,7 +8,7 @@ using UnityEngine;
 namespace RoyalThrone.Editor
 {
     // WebP remains the source format; PNG is an editor-only cache, never a player asset.
-    [ScriptedImporter(1, "webp")]
+    [ScriptedImporter(2, "webp")]
     public sealed class RoyalWebPImporter : ScriptedImporter
     {
         public float pixelsPerUnit = 160;
@@ -18,11 +18,7 @@ namespace RoyalThrone.Editor
         public bool astcOnMobile;
         public override void OnImportAsset(AssetImportContext ctx)
         {
-            string executable = Environment.GetEnvironmentVariable("ROYAL_THRONE_FFMPEG");
-            if (string.IsNullOrEmpty(executable)) executable = EditorPrefs.GetString("RoyalThrone.FFmpeg", "");
-            if (!File.Exists(executable))
-                foreach (string candidate in new[] { @"C:\Program Files\Softdeluxe\Free Download Manager\ffmpeg.exe", "/usr/local/bin/ffmpeg", "/opt/homebrew/bin/ffmpeg", "/usr/bin/ffmpeg" })
-                    if (File.Exists(candidate)) { executable = candidate; break; }
+            string executable = FindFFmpeg();
             if (!File.Exists(executable)) throw new FileNotFoundException("WebP import requires FFmpeg in the editor. Set ROYAL_THRONE_FFMPEG to its executable path. No decoder ships in the game.");
             Directory.CreateDirectory("Library/RoyalWebPCache");
             string cache = Path.GetFullPath("Library/RoyalWebPCache/" + AssetDatabase.AssetPathToGUID(ctx.assetPath) + ".png");
@@ -48,6 +44,34 @@ namespace RoyalThrone.Editor
             var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(.5f, .5f), pixelsPerUnit, 0, SpriteMeshType.FullRect);
             sprite.name = texture.name;
             ctx.AddObjectToAsset("texture", texture); ctx.AddObjectToAsset("sprite", sprite); ctx.SetMainObject(sprite);
+        }
+
+        // Explicit setting first, then known installs, then PATH (winget and package managers put FFmpeg there).
+        static string FindFFmpeg()
+        {
+            string executable = Environment.GetEnvironmentVariable("ROYAL_THRONE_FFMPEG");
+            if (string.IsNullOrEmpty(executable)) executable = EditorPrefs.GetString("RoyalThrone.FFmpeg", "");
+            if (File.Exists(executable)) return executable;
+            foreach (string candidate in new[] { @"C:\Program Files\Softdeluxe\Free Download Manager\ffmpeg.exe", @"C:\ffmpeg\bin\ffmpeg.exe", "/usr/local/bin/ffmpeg", "/opt/homebrew/bin/ffmpeg", "/usr/bin/ffmpeg" })
+                if (File.Exists(candidate)) return candidate;
+            string name = Application.platform == RuntimePlatform.WindowsEditor ? "ffmpeg.exe" : "ffmpeg";
+            // The editor's own PATH can predate an install, so the user's stored PATH is searched as well.
+            string path = Environment.GetEnvironmentVariable("PATH") + Path.PathSeparator
+                + Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.User) + Path.PathSeparator
+                + Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Machine);
+            foreach (string dir in path.Split(Path.PathSeparator))
+            {
+                if (string.IsNullOrWhiteSpace(dir)) continue;
+                try { string candidate = Path.Combine(dir.Trim().Trim('"'), name); if (File.Exists(candidate)) return candidate; }
+                catch (ArgumentException) { }
+            }
+            // winget installs Gyan.FFmpeg under its package folder.
+            string winget = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"Microsoft\WinGet\Packages");
+            if (Directory.Exists(winget))
+                foreach (string package in Directory.GetDirectories(winget, "*FFmpeg*"))
+                    foreach (string candidate in Directory.GetFiles(package, "ffmpeg.exe", SearchOption.AllDirectories))
+                        return candidate;
+            return null;
         }
 
         // Grows visible colour outward one ring per pass (alpha-weighted), leaving alpha at zero.
