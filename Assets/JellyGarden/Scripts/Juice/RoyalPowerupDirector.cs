@@ -13,7 +13,7 @@ namespace JellyGarden.Scripts.Juice
         static RoyalPowerupDirector instance;
         ParticleSystem smoke, sparks, embers, flash, ring, rays;
         ParticleSystem[] systems;
-        sealed class Flyer { public GameObject go,rotor; public SpriteRenderer sprite; public TrailRenderer trail, core; public LineRenderer flame; public MeshRenderer exhaust; public RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Handle nativeRocket; public Gradient preRocketGradient; public readonly MaterialPropertyBlock flameProperties=new MaterialPropertyBlock(); public bool used, rocket; }
+        sealed class Flyer { public GameObject go,rotor; public SpriteRenderer sprite; public TrailRenderer trail, core; public LineRenderer flame; public MeshRenderer exhaust; public RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Handle nativeRocket; public ParticleSystem[] nativeFire; public Vector3 nozzle;public Gradient preRocketGradient; public readonly MaterialPropertyBlock flameProperties=new MaterialPropertyBlock(); public bool used, rocket; }
         Flyer[] flyers;
         readonly HashSet<Square> reserved=new HashSet<Square>();
         readonly HashSet<Item> conversionInputLeases=new HashSet<Item>();
