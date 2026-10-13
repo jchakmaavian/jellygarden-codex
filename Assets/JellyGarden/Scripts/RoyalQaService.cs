@@ -362,7 +362,7 @@ namespace RoyalThrone.Testing
         void Update()
         {
             if(!RoyalSave.Testing||!Ready)return;
-            if(LM.gameStatus!=GameState.Pause)Time.timeScale=Speed;
+            if(LM.gameStatus!=GameState.Pause)Time.timeScale=Speed*(LM.gameStatus==GameState.Map?1f:LevelManager.GameplaySpeed);
             if(Loop&&!Busy&&!Visible&&LastReplay.Length>0&&Time.unscaledTime>=replayAt)Request(LastReplay);
         }
         void OnDestroy(){if(Instance==this)Instance=null;Time.timeScale=1;}

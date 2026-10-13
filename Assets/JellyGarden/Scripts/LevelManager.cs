@@ -302,6 +302,9 @@ namespace JellyGarden.Scripts
         public static event GameStateEvents OnWin;
         public static event GameStateEvents OnLose;
 
+        // Board play runs every animation, tween and particle at 80% speed; menus and the map stay at 1.
+        public const float GameplaySpeed = .8f;
+
         public GameState gameStatus
         {
             get
@@ -339,6 +342,7 @@ namespace JellyGarden.Scripts
                 }
                 else if (value == GameState.Map)
                 {
+                    Time.timeScale = 1;
                     if (PlayerPrefs.GetInt("OpenLevelTest") <= 0)
                     {
                         MusicBase.Instance.Stop();
@@ -365,7 +369,7 @@ namespace JellyGarden.Scripts
                 }
                 else if (value == GameState.Playing)
                 {
-                    Time.timeScale = 1;
+                    Time.timeScale = GameplaySpeed;
                     StartCoroutine(AI.THIS.CheckPossibleCombines());
                 }
                 else if (value == GameState.GameOver)
