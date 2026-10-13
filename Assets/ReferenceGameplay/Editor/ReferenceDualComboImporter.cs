@@ -48,7 +48,9 @@ public static class ReferenceDualComboImporter
    string ctrlName=kind=="TNTTNTCombo"?"TntTntComboRfv387":"BallBallComboRfv387";string ctrlPath=Animation+"Controllers/"+ctrlName+".controller";
    var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>(ctrlPath);if(!controller)controller=AnimatorController.CreateAnimatorControllerAtPath(ctrlPath);var sm=controller.layers[0].stateMachine;foreach(var st in sm.states)sm.RemoveState(st.state);var state=sm.AddState(name);state.motion=clip;state.speed=1;sm.defaultState=state;
    string viewPath=Animation+"Resources/ReferenceGameplay/Visuals/"+kind+".prefab";var view=PrefabUtility.LoadPrefabContents(viewPath);
-   try{foreach(var r in view.GetComponentsInChildren<SpriteRenderer>(true))if(r.sprite&&byName.TryGetValue(System.Text.RegularExpressions.Regex.Replace(r.sprite.name,@"__\d+$",""),out var exact))r.sprite=exact;view.GetComponentInChildren<Animator>(true).runtimeAnimatorController=controller;PrefabUtility.SaveAsPrefabAsset(view,Animation+"Resources/ReferenceGameplay/Visuals/"+kind+"Rfv387.prefab");}finally{PrefabUtility.UnloadPrefabContents(view);}
+   // The TNT source prefab carries Royal Throne's sun band and refined barrel/fuse art.
+   // Retain those sprites when rebuilding the dedicated view; imported atlas art has the old TNT lettering.
+   try{if(kind!="TNTTNTCombo")foreach(var r in view.GetComponentsInChildren<SpriteRenderer>(true))if(r.sprite&&byName.TryGetValue(System.Text.RegularExpressions.Regex.Replace(r.sprite.name,@"__\d+$",""),out var exact))r.sprite=exact;view.GetComponentInChildren<Animator>(true).runtimeAnimatorController=controller;PrefabUtility.SaveAsPrefabAsset(view,Animation+"Resources/ReferenceGameplay/Visuals/"+kind+"Rfv387.prefab");}finally{PrefabUtility.UnloadPrefabContents(view);}
   }
   AssetDatabase.SaveAssets();File.WriteAllText(Folder+"import-result.txt","PASS: "+systems+" native particle systems, "+bindings+" exact sprite bindings, 32 exact sprites, two dedicated combo views; supporting sprites retained when already exact.\n");Debug.Log("ALL_COMBO_ART_IMPORT_PASSED");
  }

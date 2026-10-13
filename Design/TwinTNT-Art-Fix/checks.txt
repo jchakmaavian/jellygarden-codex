@@ -1,0 +1,12 @@
+Royal Throne twin TNT artwork verification
+PASS Ready normal profile
+PASS Real twin TNT swap starts, pass 0
+PASS Sun band and Royal barrel/fuse artwork retained throughout animation, pass 0
+PASS Dedicated combo completes once, pass 0
+PASS Authored fuse duration preserved
+PASS Real twin TNT swap starts, pass 1
+PASS Sun band and Royal barrel/fuse artwork retained throughout animation, pass 1
+PASS Dedicated combo completes once, pass 1
+PASS Authored fuse duration preserved
+PASS Normal player data restored
+ALL CHECKS PASSED
