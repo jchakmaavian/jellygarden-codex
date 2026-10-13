@@ -320,6 +320,7 @@ namespace JellyGarden.Scripts
 
                 if (value == GameState.PrepareGame)
                 {
+                    finaleNoRefill = false;
                     passLevelCounter++;
                     MusicBase.Instance.Stop();
                     MusicBase.Instance.PlayMusic(1);
@@ -880,6 +881,8 @@ namespace JellyGarden.Scripts
             SkipWinCelebration = false;
 
             // Then the booster session, with the goal panel turned into a Reward counter that the coins fly into.
+            // From here until the next level, cleared cells stay empty (GenerateNewItems).
+            finaleNoRefill = true;
             Juice.RoyalWinSequence.BeginFinale(this);
             yield return RoyalThrone.ReferenceGameplay.ReferenceWinFinish.Play(this);
             if (gameStatus != GameState.PreWinAnimations) { preWinAnimationRunning = false; yield break; }
@@ -1394,8 +1397,14 @@ namespace JellyGarden.Scripts
 
         }
 
+        // Set when the end-of-level booster session starts; cleared when the next level is prepared.
+        bool finaleNoRefill;
+
         bool GenerateNewItems(bool falling = true, bool fillBlockedCells = false)
         {
+            // The end of a level does not refill (the user, 2026-10-13, replacing 2026-10-06's refill): the cells the
+            // boosters clear stay empty and the card opens over that board. Existing pieces still fall.
+            if (finaleNoRefill) return false;
             // A gentle refill (2026-10-04): the new pieces of each column's run of cells are stacked just above that run's top
             // edge, the lowest first, so they enter from the board's edge as one stream and fade in as they cross it
             // (Item.royalEntryEdge); the columns start in a soft wave from the centre out (Item.royalFallDelay).

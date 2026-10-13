@@ -819,16 +819,11 @@ namespace JellyGarden.Scripts.Juice
             if (!finale || !rewardIcon) yield break;
             finaleDraining = true;
             rewardTarget = Mathf.Max(rewardTarget, Coins(lm));
-            float left = Mathf.Max(0, rewardTarget - finaleBase - finaleReserved);
-            if (finaleSources.Count > 0) EmitFinaleCoins(lastFinaleSource, left, 2);
-            // A no-booster win has no invented board origin. Its fixed award still settles here.
-            float end = Time.unscaledTime + 4.8f;
-            while (Time.unscaledTime < end && FinalePendingCoinValue > .0001f && lm.gameStatus == GameState.PreWinAnimations) yield return null;
-            if (lm.gameStatus != GameState.PreWinAnimations) yield break;
+            // The card opens as soon as the last booster has cleared its cells (the user, 2026-10-13, replacing the
+            // 2026-10-06 refill and rest): no refill, no wait for coins still in flight, no rest. The counter shows its total.
+            ClearFlights();
             rewardShown = rewardTarget; if (rewardCount) rewardCount.text = rewardShown.ToString();
-            // The refilled board rests a moment, with the Reward counter at its total, before the card (0.7 s in the clip).
-            float rest = Time.unscaledTime + (lm.SkipWinCelebration ? .1f : .6f);
-            while (Time.unscaledTime < rest && lm.gameStatus == GameState.PreWinAnimations) yield return null;
+            yield break;
         }
 
         void RestoreHud()

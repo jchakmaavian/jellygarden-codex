@@ -18,7 +18,7 @@ namespace RoyalThrone.ReferenceGameplay
         bool Active=>lm&&lm.gameStatus==GameState.PreWinAnimations;
         public static IEnumerator Play(LevelManager owner){var view=owner.GetComponent<ReferenceWinFinish>();if(!view)view=owner.gameObject.AddComponent<ReferenceWinFinish>();yield return view.Run(owner);}
         IEnumerator Delay(float normal,float fast){float t=0;while(Active&&t<(lm.SkipWinCelebration?fast:normal)){t+=Time.deltaTime;yield return null;}}
-        // The board resolves after each volley: what the boosters cleared falls and refills, cascades included (at most 6 s).
+        // The board resolves after each volley: pieces fall into what the boosters cleared, with no refill (at most 6 s).
         IEnumerator Settle(){lm.FindMatches();float until=Time.unscaledTime+6;do{yield return null;}while(Active&&Time.unscaledTime<until&&(lm.IsResolvingMatches||RoyalPowerupDirector.Busy||lm.GetItems().Any(i=>i&&(i.destroying||i.falling))));}
         IEnumerator Run(LevelManager owner){lm=owner;Sent=Converted=Fired=travelling=0;Running=true;
             try{
