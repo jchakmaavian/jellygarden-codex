@@ -153,9 +153,10 @@ namespace JellyGarden.Scripts.Juice
                     int x=origin.col+dx,y=origin.row+dy;
                     if(Same(x,y,colour,true)&&Same(x+1,y,colour,true)&&Same(x,y+1,colour,true)&&Same(x+1,y+1,colour,true)){
                         var square=new[]{lm.GetSquare(x,y),lm.GetSquare(x+1,y),lm.GetSquare(x,y+1),lm.GetSquare(x+1,y+1)};
-                        // RoyalPatterns.AddSquares consumes line groups first and
-                        // rejects a helicopter square sharing any already-used item.
-                        foreach(var sq in square)if(cells.Contains(sq))return;
+                        // RoyalPatterns.AddSquares lets the square claim an overlapping plain line (the
+                        // line's extra gems still clear), but yields to a line that already makes a special.
+                        bool overlaps=false;foreach(var sq in square)overlaps|=cells.Contains(sq);
+                        if(overlaps&&(longest>=4||cross))return;
                         foreach(var sq in square)cells.Add(sq);
                         square2=true;
                         return;

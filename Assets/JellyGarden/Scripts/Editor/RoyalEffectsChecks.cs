@@ -158,8 +158,12 @@ namespace RoyalThrone.Editor
                 ItemsTypes[] powers={ItemsTypes.HORIZONTAL_STRIPPED,ItemsTypes.PACKAGE,ItemsTypes.HELICOPTER,ItemsTypes.BOMB};
                 foreach(var type in powers)
                 {
-                    Seed();yield return null;SetColours();At(3,3).currentType=type;At(3,3).DestroyItem(true);yield return Settled();
-                    Check(lm.GetItems().Count(i=>i)<63,type+" removes additional targets on impact");Capture(type.ToString());
+                    Seed();yield return null;SetColours();At(3,3).currentType=type;At(3,3).DestroyItem(true);
+                    // Count live pieces through the impact: the board may already have refilled once the queue settles.
+                    int fewest=64;float settleBy=Time.realtimeSinceStartup+10;
+                    do{yield return null;fewest=Mathf.Min(fewest,lm.GetItems().Count(i=>i&&!i.destroying));}while(RoyalPowerupDirector.Busy&&Time.realtimeSinceStartup<settleBy);
+                    yield return Settled();
+                    Check(fewest<63,type+" removes additional targets on impact (fewest live pieces "+fewest+")");Capture(type.ToString());
                 }
                 for(int a=0;a<4;a++)for(int b=a;b<4;b++)
                 {
@@ -209,7 +213,18 @@ namespace RoyalThrone.Editor
 
             PlayerPrefs.SetInt("RoyalThrone.HomeMotion",1);
             var shatter=CandyShatterService.Instance;shatter.Clear();
-            var source=At(3,1).sprRenderer;float startY=source.bounds.center.y,unit=Mathf.Max(source.bounds.size.x,source.bounds.size.y);
+            var gem=At(3,1).sprRenderer;var source=gem;
+            if(RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("MatchItemExplodeParticles"))
+            {
+                // Board gems now break with the imported match explosion; the generated fracture still serves other
+                // breaks, so its checks below run on a detached copy of the gem that is not owned by an Item.
+                int before=RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Active;shatter.Shatter(gem,1);
+                Check(RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Active>before,"Ordinary board gem break plays the imported match explosion");
+                var copy=new GameObject("Royal shatter test source").AddComponent<SpriteRenderer>();
+                copy.sprite=gem.sprite;copy.transform.position=gem.transform.position;copy.transform.localScale=gem.transform.lossyScale;
+                copy.sortingLayerID=gem.sortingLayerID;copy.sortingOrder=gem.sortingOrder;source=copy;Object.Destroy(copy.gameObject,30);
+            }
+            float startY=source.bounds.center.y,unit=Mathf.Max(source.bounds.size.x,source.bounds.size.y);
             shatter.Shatter(source,1);Check(shatter.ActiveFragments>=4,"Ordinary gem break emits recognisable supplied fracture pieces");
             yield return new WaitForSeconds(.42f);
             var fragments=shatter.GetComponentsInChildren<MeshRenderer>().Where(r=>r.enabled).ToArray();

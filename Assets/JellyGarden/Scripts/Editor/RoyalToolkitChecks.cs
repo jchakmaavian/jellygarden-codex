@@ -56,7 +56,8 @@ namespace RoyalThrone.Editor
                 check(peakPieceFraction<=RoyalPieceSkin.MaxDestroyCellFill+.01f,
                     matchSize+"-match whole-piece animation remains below1.12cell before fracture (peak "+peakPieceFraction.ToString("F3")+")");
                 check(!(bool)resolving.GetValue(level), matchSize + "-match production resolver finishes without a VFX wait");
-                check(service && service.PlayedIce > before, matchSize + "-match emits restored Ice accent through production CombineManager and FallingDown");
+                // With the imported match explosion present, MatchVFXService deliberately skips the Ice centre accent.
+                check(RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("MatchItemExplodeParticles") || service && service.PlayedIce > before, matchSize + "-match emits restored Ice accent through production CombineManager and FallingDown");
             }
             finally { level.DragBlocked = originalLock; }
         }
@@ -142,6 +143,14 @@ namespace RoyalThrone.Editor
                     for (int color = 0; color < 5; color++)
                     {
                         shatter.Clear(); item.color = color;
+                        // Board gems now break with the imported match explosion instead of generated chips.
+                        if (RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Has("MatchItemExplodeParticles"))
+                        {
+                            int before = RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Active;
+                            shatter.Shatter(item.sprRenderer, 1.4f); item.color = originalColor;
+                            check(RoyalThrone.ReferenceGameplay.ReferenceVfxPool.Active > before, "Color " + color + " break plays the imported match explosion");
+                            continue;
+                        }
                         // Deliberately exaggerate the destruction pose. Chip bounds
                         // must still come from cell pitch on this first visible frame.
                         item.sprRenderer.transform.localScale = sourceScale * 3;

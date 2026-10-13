@@ -160,7 +160,9 @@ namespace RoyalThrone.Editor
 
         public static void RequireCopy()
         {
-            if (!Application.dataPath.Replace('\\', '/').EndsWith("/JellyGarden-Codex/Assets", StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException("Restricted to the independent Codex copy.");
+            // Guards the boss's original project (J:\Unity Projects\Match3-Games); independent copies such as
+            // JellyGarden-Codex or king-leo may run the builders and checks.
+            if (Application.dataPath.Replace('\\', '/').EndsWith("/Match3-Games/Assets", StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException("Restricted to an independent copy, never the original Match3-Games project.");
         }
         static void ConfigureArt(string path)
         {

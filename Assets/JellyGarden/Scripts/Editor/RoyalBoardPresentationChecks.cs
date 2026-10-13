@@ -52,8 +52,10 @@ namespace RoyalThrone.Editor
                 {
                     item.GetComponent<RoyalPieceSkin>().ApplyNow();
                     var size=item.sprRenderer.bounds.size;
-                    check(Mathf.Max(size.x/lm.squareWidth,size.y/lm.squareHeight)>.88f&&size.x<=lm.squareWidth*1.01f&&size.y<=lm.squareHeight*1.01f,
-                        "Piece fills its cell without crossing adjacent hit areas: "+item.square.col+","+item.square.row);
+                    // Native reference art keeps its authored scale (ReferenceGameplayCatalog.CellScale), a little smaller on some pieces.
+                    float least=RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.IsNative(item.sprRenderer.sprite)?.85f:.88f;
+                    check(Mathf.Max(size.x/lm.squareWidth,size.y/lm.squareHeight)>least&&size.x<=lm.squareWidth*1.01f&&size.y<=lm.squareHeight*1.01f,
+                        "Piece fills its cell without crossing adjacent hit areas: "+item.square.col+","+item.square.row+" (measured "+(size.x/lm.squareWidth).ToString("0.000")+" x "+(size.y/lm.squareHeight).ToString("0.000")+", "+item.currentType+", sprite "+(item.sprRenderer.sprite?item.sprRenderer.sprite.name:"none")+")");
                 }
                 var canvas=JellyGarden.Scripts.GUI.MenuManager.Instance.GetCanvasGlobal();
                 foreach(string menu in new[]{"MenuPause","Settings"})

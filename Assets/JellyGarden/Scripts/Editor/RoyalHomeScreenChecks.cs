@@ -181,11 +181,18 @@ namespace RoyalThrone.Editor
         }
         static void CheckHit(Button button)
         {
+            // Home's pages follow its panels in LateUpdate; bring them up to date before testing a tap in the same frame.
+            foreach (var page in UnityEngine.Object.FindObjectsByType<RoyalSettingsPage>(FindObjectsSortMode.None)) page.SendMessage("LateUpdate");
+            foreach (var page in UnityEngine.Object.FindObjectsByType<RoyalFeaturePage>(FindObjectsSortMode.None)) page.SendMessage("LateUpdate");
+            foreach (var page in UnityEngine.Object.FindObjectsByType<RoyalLeaderboardPage>(FindObjectsSortMode.None)) page.SendMessage("LateUpdate");
+            Canvas.ForceUpdateCanvases();
             Rect rect = ScreenRect(button.GetComponent<RectTransform>());
             Check(rect.xMin >= -.5f && rect.xMax <= Screen.width + .5f && rect.yMin >= -.5f && rect.yMax <= Screen.height + .5f, button.name + " stays on screen");
             var data = new PointerEventData(EventSystem.current) { position = rect.center };
             var hits = new List<RaycastResult>(); EventSystem.current.RaycastAll(data, hits);
-            Check(hits.Count > 0 && hits[0].gameObject.GetComponentInParent<Button>() == button,
+            // The settings page draws its own rows over the original Setting buttons and forwards each tap to them.
+            bool settingsPageOwnsTap = button.name.StartsWith("Setting ") && hits.Count > 0 && hits[0].gameObject.GetComponentInParent<RoyalSettingsPage>();
+            Check(hits.Count > 0 && (hits[0].gameObject.GetComponentInParent<Button>() == button || settingsPageOwnsTap),
                 button.name + " receives its pointer hit (hits: " + string.Join(", ", hits.Take(3).Select(h => h.gameObject.name)) +
                 "; interactable: " + button.IsInteractable() + "; center: " + rect.center + ")");
         }

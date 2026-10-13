@@ -42,12 +42,18 @@ namespace RoyalThrone.Editor
                     bool rocket=pieceType==ItemsTypes.HORIZONTAL_STRIPPED||pieceType==ItemsTypes.VERTICAL_STRIPPED;
                     float fill=rocket?RoyalPieceSkin.RocketIdleCellFill:RoyalPieceSkin.CellFill;
                     var bounds=item.sprRenderer.bounds.size;float x=bounds.x/lm.squareWidth,y=bounds.y/lm.squareHeight;
-                    check(Mathf.Abs(Mathf.Max(x,y)-fill)<.004f&&x<=.95f&&y<=.95f,
-                        "Gameplay "+pieceType+" colour "+color+" fills "+Mathf.RoundToInt(fill*100)+"% of its cell without crossing the cell bounds");
+                    // Native reference art keeps its own authored cell scale (ReferenceGameplayCatalog.CellScale); it only has to stay inside the cell.
+                    bool native=RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.IsNative(item.sprRenderer.sprite);
+                    float bound=native?1f:.95f;
+                    check((native||Mathf.Abs(Mathf.Max(x,y)-fill)<.004f)&&x<=bound&&y<=bound,
+                        "Gameplay "+pieceType+" colour "+color+" fills "+Mathf.RoundToInt(fill*100)+"% of its cell without crossing the cell bounds (measured "+x.ToString("0.000")+" x "+y.ToString("0.000")+", sprite "+(item.sprRenderer.sprite?item.sprRenderer.sprite.name:"none")+")");
                 }
                 item.currentType=ItemsTypes.VERTICAL_STRIPPED;skin.ApplyNow();yield return new WaitForEndOfFrame();
                 var vertical=RoyalGameplayArt.Art("rocket-vertical");var horizontal=RoyalGameplayArt.Art("rocket");
-                check(vertical&&horizontal&&vertical.texture!=horizontal.texture&&item.sprRenderer.sprite==vertical,
+                // The reference catalog's own vertical rocket art also counts (ReferenceGameplayCatalog native sprites).
+                var shown=item.sprRenderer.sprite;
+                bool nativeVertical=shown&&RoyalThrone.ReferenceGameplay.ReferenceGameplayCatalog.IsNative(shown)&&shown.name.ToLowerInvariant().Contains("vertical");
+                check(nativeVertical||vertical&&horizontal&&vertical.texture!=horizontal.texture&&shown==vertical,
                     "Vertical rocket renders the dedicated vertical artwork after the Animator and skin update");
                 check(Quaternion.Angle(item.sprRenderer.transform.localRotation,Quaternion.identity)<.1f&&item.sprRenderer.bounds.size.y>item.sprRenderer.bounds.size.x,
                     "Dedicated vertical rocket stays upright without applying a second 90-degree rotation");

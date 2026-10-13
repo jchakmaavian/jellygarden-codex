@@ -32,6 +32,8 @@ namespace RoyalThrone.Editor
                 var close=menu.Find("Image/Close");var title=menu.Find(name=="PreFailed"?"Banner/Royal heading":"Image/Royal heading");
                 // The ribbon cards (Level Failed, How to Play) carry their title on the ribbon.
                 if(!title)title=menu.Find("Image/Royal ribbon/Royal heading");
+                // The win card (RoyalCards.Result) names its lettered title separately.
+                if(!title)title=menu.Find("Image/Royal win heading");
                 bool headerSafe=title&&(!close||!Overlap((RectTransform)close,(RectTransform)title));
                 result.Add((headerSafe?"PASS ":"FAIL ")+name+(close?" heading clears close control":" heading visible; dismissal uses primary action"));
                 var icons=menu.GetComponentsInChildren<TargetIcon>();
